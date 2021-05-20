@@ -83,14 +83,21 @@ class main(QtWidgets.QMainWindow):
         self.setCentralWidget(self.window)
 
         self.svgviewer = None
+        self.svg_material_viewer = None
 
         self.init_svg_viewer()
         self.display_svg(None)
 
-        self.display_material()
-
         # callbacks
         self.window.actionOpen_SVG.triggered.connect(self.cb_open_svg)
+
+        # display material thickness/clearance
+        self.window.doubleSpinBoxThickness.valueChanged.connect(self.cb_doubleSpinBoxThickness)
+        self.window.doubleSpinBoxClearance.valueChanged.connect(self.cb_doubleSpinBoxClearance)
+
+        default_thickness = self.window.doubleSpinBoxThickness.value()
+        default_clearance = self.window.doubleSpinBoxClearance.value()
+        self.display_material(thickness=default_thickness, clearance=default_clearance)
 
     def load_ui(self):
         loader = QUiLoader()
@@ -139,47 +146,67 @@ class main(QtWidgets.QMainWindow):
 
             self.svgviewer.set_svg(img)
 
-    def display_material(self):
+    def display_material(self, thickness, clearance):
         '''
         '''
-        img = b'''
+        thickness_level1 = 75 + thickness
+        thickness_level2 = 75 + thickness + 10
+
+        clearance_level1 = 75 - clearance
+
+        img_str = '''
         <svg viewBox='0 0 200 150' xmlns='http://www.w3.org/2000/svg'>
          <g>
-            <rect x="90" y="75" width="100" height="50" fill="white" stroke="black" stroke-width="5px" stroke-linejoin="round" />
-            <rect x="80" y="85" width="100" height="50" fill="white" stroke="black" stroke-width="5px" stroke-linejoin="round"/>
+            <rect x="90" y="75" width="100" height="%(thickness)d" fill="white" stroke="black" stroke-width="5px" stroke-linejoin="round" />
+            <rect x="80" y="85" width="100" height="%(thickness)d" fill="white" stroke="black" stroke-width="5px" stroke-linejoin="round"/>
 
-            <polyline points="80,85   90,75 190,75  180,85   80,85" fill="white" stroke="black" stroke-width="5px" stroke-linejoin="round"/>
-            <polyline points="180,85 190,75 190,125 180,135 180,85" fill="white" stroke="black" stroke-width="5px" stroke-linejoin="round"/>
+            <polyline points="80,85    90,75  190,75                   180,85                    80,85" fill="white" stroke="black" stroke-width="5px" stroke-linejoin="round"/>
+            <polyline points="180,85  190,75  190,%(thickness_level1)d 180,%(thickness_level2)d 180,85" fill="white" stroke="black" stroke-width="5px" stroke-linejoin="round"/>
 
             <!-- bit -->
-            <polyline points="130,0 130,50 150,50  150,0" fill="white" stroke="black" stroke-width="5px"/>
+            <polyline points="130,0 130,%(clearance_level1)d 150,%(clearance_level1)d  150,0" fill="white" stroke="black" stroke-width="5px"/>
 
-            <!-- levels -->
-            <polyline points="25,50  70,50"  fill="white" stroke="black" stroke-width="3px" stroke-dasharray="8,8"/>
-            <polyline points="25,85  70,85"  fill="white" stroke="black" stroke-width="3px" stroke-dasharray="8,8"/>
-            <polyline points="25,135 70,135" fill="white" stroke="black" stroke-width="3px" stroke-dasharray="8,8"/>
+            <!-- legends levels -->
+            <polyline points="25,%(clearance_level1)d   70,%(clearance_level1)d" fill="white" stroke="black" stroke-width="3px" stroke-dasharray="8,8"/>
+            <polyline points="25,85                     70,85"                   fill="white" stroke="black" stroke-width="3px" stroke-dasharray="8,8"/>
+            <polyline points="25,%(thickness_level2)d   70,%(thickness_level2)d" fill="white" stroke="black" stroke-width="3px" stroke-dasharray="8,8"/>
 
             <!-- legends -->
-            <text x="0" y="55"  fill="black">2.1</text>
-            <text x="0" y="90"  fill="black">0.0</text>
-            <text x="0" y="140" fill="black">1.1</text>
+            <text x="0" y="%(clearance_level1)d" fill="black">%(clearance)d</text>
+            <text x="0" y="90"                   fill="black">0.0</text>
+            <text x="0" y="%(thickness_level2)d" fill="black">%(thickness)d</text>
 
           </g>
-        </svg>'''
+        </svg>''' % {"thickness": thickness, "clearance": clearance, "thickness_level1": thickness_level1, "thickness_level2": thickness_level2, "clearance_level1": clearance_level1}
 
-        self.svg_mat_viewer = QtSvg.QSvgWidget()
+        img = bytes(img_str, encoding='utf-8')
+
+        if self.svg_material_viewer is None:
+            self.svg_material_viewer = QtSvg.QSvgWidget()
 
 
-        renderer = self.svg_mat_viewer.renderer()
-        renderer.setAspectRatioMode(QtCore.Qt.KeepAspectRatio)
+            renderer = self.svg_material_viewer.renderer()
+            renderer.setAspectRatioMode(QtCore.Qt.KeepAspectRatio)
 
 
-        layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(self.svg_mat_viewer)
+            layout = QtWidgets.QVBoxLayout()
+            layout.addWidget(self.svg_material_viewer)
 
-        self.window.widget_display_material.setLayout(layout)
-        self.svg_mat_viewer.load(img)
+            self.window.widget_display_material.setLayout(layout)
+            self.svg_material_viewer.load(img)
 
+        else:
+            self.svg_material_viewer.load(img)
+
+    def cb_doubleSpinBoxThickness(self):
+        thickness = self.window.doubleSpinBoxThickness.value()
+        clearance = self.window.doubleSpinBoxClearance.value()
+        self.display_material(thickness=thickness, clearance=clearance)
+
+    def cb_doubleSpinBoxClearance(self):
+        thickness = self.window.doubleSpinBoxThickness.value()
+        clearance = self.window.doubleSpinBoxClearance.value()
+        self.display_material(thickness=thickness, clearance=clearance)
 
     @QtCore.Slot()
     def cb_open_svg(self):

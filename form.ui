@@ -761,7 +761,11 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBoxThickness"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBoxThickness">
+            <property name="value">
+             <double>50.000000000000000</double>
+            </property>
+           </widget>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="labelZOrigin">
@@ -807,7 +811,11 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBoxClearance"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBoxClearance">
+            <property name="value">
+             <double>20.000000000000000</double>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
