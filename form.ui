@@ -77,7 +77,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBox_2">
+         <widget class="QComboBox" name="comboBoxOperation">
           <item>
            <property name="text">
             <string>Pocket</string>
@@ -106,174 +106,7 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <item>
-           <widget class="QDoubleSpinBox" name="doubleSpinBoxPocketDepth"/>
-          </item>
-          <item>
-           <widget class="QLabel" name="labelPocketDepth">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Deep</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QFormLayout" name="formLayout_3">
-          <property name="formAlignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_19">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Name</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="lineEdit"/>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_20">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Ramp Plunge</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QCheckBox" name="checkBox_2">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_35">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Combine</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QComboBox" name="comboBox_6">
-            <item>
-             <property name="text">
-              <string>Union</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Intersect</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Diff</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Xor</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_36">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Direction</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QComboBox" name="comboBox_5">
-            <item>
-             <property name="text">
-              <string>Conventional</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Climb</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_37">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Units</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QComboBox" name="comboBox_3">
-            <item>
-             <property name="text">
-              <string>inch</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>mm</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="label_38">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Margin</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_8"/>
-          </item>
-         </layout>
+         <widget class="QWidget" name="widget_op" native="true"/>
         </item>
        </layout>
       </item>
@@ -852,7 +685,7 @@
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
           </property>
           <property name="verticalSpacing">
-           <number>-1</number>
+           <number>6</number>
           </property>
           <item row="0" column="0">
            <widget class="QLabel" name="labelMinimumSegments">
@@ -1214,7 +1047,7 @@
      <x>0</x>
      <y>0</y>
      <width>1226</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

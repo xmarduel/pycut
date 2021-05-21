@@ -23,6 +23,7 @@ class SvgItem(QtSvg.QGraphicsSvgItem):
         self.setSharedRenderer(renderer)
         self.setElementId(id)
         bounds = renderer.boundsOnElement(id)
+        print("bounds=", bounds, bounds.topLeft())
         self.setPos(bounds.topLeft())
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
 
@@ -38,8 +39,9 @@ class SvgItem(QtSvg.QGraphicsSvgItem):
 class SvgViewer(QtWidgets.QGraphicsView):
     def __init__(self, parent):
         super(SvgViewer, self).__init__(parent)
-        self._scene = QtWidgets.QGraphicsScene(self)
+        self._scene = QtWidgets.QGraphicsScene(self,0,0,100,100)
         self._renderer = QtSvg.QSvgRenderer()
+        self._renderer.setViewBox(QtCore.QRect(0,0,100,100))
         self.setScene(self._scene)
         self.items = []
 
@@ -78,15 +80,13 @@ class SvgViewer(QtWidgets.QGraphicsView):
 class main(QtWidgets.QMainWindow):
     def __init__(self):
         super(main, self).__init__()
-        self.window = self.load_ui()
+        self.window = self.load_ui("form.ui")
 
         self.setCentralWidget(self.window)
 
-        self.svgviewer = None
-        self.svg_material_viewer = None
-
-        self.init_svg_viewer()
-        self.display_svg(None)
+        self.svgviewer = self.init_svg_viewer()
+        self.svg_material_viewer = self.init_material_viewer()
+        self.current_op_widget = None
 
         # callbacks
         self.window.actionOpen_SVG.triggered.connect(self.cb_open_svg)
@@ -95,13 +95,19 @@ class main(QtWidgets.QMainWindow):
         self.window.doubleSpinBoxThickness.valueChanged.connect(self.cb_doubleSpinBoxThickness)
         self.window.doubleSpinBoxClearance.valueChanged.connect(self.cb_doubleSpinBoxClearance)
 
+        self.window.comboBoxOperation.currentTextChanged.connect(self.display_op)
+        
+        
         default_thickness = self.window.doubleSpinBoxThickness.value()
         default_clearance = self.window.doubleSpinBoxClearance.value()
         self.display_material(thickness=default_thickness, clearance=default_clearance)
+        
+        self.display_svg(None)
+        self.display_op()
 
-    def load_ui(self):
+    def load_ui(self, ui):
         loader = QUiLoader()
-        path = os.path.join(os.path.dirname(__file__), "form.ui")
+        path = os.path.join(os.path.dirname(__file__), ui)
         ui_file = QFile(path)
         ui_file.open(QFile.ReadOnly)
         #window = loader.load(ui_file, self)
@@ -113,18 +119,19 @@ class main(QtWidgets.QMainWindow):
     def init_svg_viewer(self):
         '''
         '''
-        self.svgviewer = SvgViewer(self)
+        svgviewer = SvgViewer(self)
 
         layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(self.svgviewer)
+        layout.addWidget(svgviewer)
         layout.addStretch()
         self.window.widget.setLayout(layout)
+        
+        return svgviewer
 
     def display_svg(self, svg):
         '''
         '''
-        if self.svgviewer:
-            self.svgviewer.clean()
+        self.svgviewer.clean()
 
         if svg is None:
             img = b'''
@@ -136,6 +143,19 @@ class main(QtWidgets.QMainWindow):
                 <path id="p3" d='M385,593c0,9-6,15-13,15c-7,0-13-6-13-15c0-8,12-39,14-39c1,0,12,31,12,39'/>
               </g>
             </svg>'''
+            
+            img = b'''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+                width="100"
+                height="100"
+                viewBox="0 0 100 100"
+                version="1.1">
+                <style>svg { background-color: green; }</style>
+                <g>
+                  <path id="rect10"
+                    style="fill:#d40000;stroke-width:0.328797"
+                    d="M 20,20 H 60 V 80 H 20 Z" />
+                </g>
+             </svg>'''
             self.svgviewer.set_svg(img)
         else:
             fp = open(svg, "r");
@@ -146,6 +166,21 @@ class main(QtWidgets.QMainWindow):
 
             self.svgviewer.set_svg(img)
 
+    def init_material_viewer(self):
+        '''
+        '''
+        svg_material_viewer = QtSvg.QSvgWidget()
+
+        renderer = svg_material_viewer.renderer()
+        renderer.setAspectRatioMode(QtCore.Qt.KeepAspectRatio)
+
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(svg_material_viewer)
+
+        self.window.widget_display_material.setLayout(layout)
+        
+        return svg_material_viewer
+        
     def display_material(self, thickness, clearance):
         '''
         '''
@@ -181,22 +216,7 @@ class main(QtWidgets.QMainWindow):
 
         img = bytes(img_str, encoding='utf-8')
 
-        if self.svg_material_viewer is None:
-            self.svg_material_viewer = QtSvg.QSvgWidget()
-
-
-            renderer = self.svg_material_viewer.renderer()
-            renderer.setAspectRatioMode(QtCore.Qt.KeepAspectRatio)
-
-
-            layout = QtWidgets.QVBoxLayout()
-            layout.addWidget(self.svg_material_viewer)
-
-            self.window.widget_display_material.setLayout(layout)
-            self.svg_material_viewer.load(img)
-
-        else:
-            self.svg_material_viewer.load(img)
+        self.svg_material_viewer.load(img)
 
     def cb_doubleSpinBoxThickness(self):
         thickness = self.window.doubleSpinBoxThickness.value()
@@ -207,6 +227,34 @@ class main(QtWidgets.QMainWindow):
         thickness = self.window.doubleSpinBoxThickness.value()
         clearance = self.window.doubleSpinBoxClearance.value()
         self.display_material(thickness=thickness, clearance=clearance)
+
+    def display_op(self):
+        '''
+        '''
+        op = self.window.comboBoxOperation.currentText()
+
+        if self.current_op_widget != None:
+            self.window.verticalLayoutOperations.removeWidget(self.current_op_widget)
+            self.current_op_widget.deleteLater()
+ 
+        if op == "Pocket":
+            self.current_op_widget = self.load_ui("op_pocket.ui")
+            self.window.verticalLayoutOperations.addWidget(self.current_op_widget)
+        if op == "Inside":
+            self.current_op_widget = self.load_ui("op_inside.ui")
+            self.window.verticalLayoutOperations.addWidget(self.current_op_widget)
+        if op == "Outside":
+            self.current_op_widget = self.load_ui("op_outside.ui")
+            self.window.verticalLayoutOperations.addWidget(self.current_op_widget)
+        if op == "Engraving":
+            self.current_op_widget = self.load_ui("op_engraving.ui")
+            self.window.verticalLayoutOperations.addWidget(self.current_op_widget)
+        if op == "V-Pocket":
+            self.current_op_widget = self.load_ui("op_v_pocket.ui")
+            self.window.verticalLayoutOperations.addWidget(self.current_op_widget)
+
+        self.window.layout()
+
 
     @QtCore.Slot()
     def cb_open_svg(self):
