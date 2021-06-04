@@ -92,18 +92,26 @@ class main(QtWidgets.QMainWindow):
         self.window.actionOpen_SVG.triggered.connect(self.cb_open_svg)
 
         # display material thickness/clearance
-        self.window.doubleSpinBoxThickness.valueChanged.connect(self.cb_doubleSpinBoxThickness)
-        self.window.doubleSpinBoxClearance.valueChanged.connect(self.cb_doubleSpinBoxClearance)
+        self.window.doubleSpinBox_Material_Thickness.valueChanged.connect(self.cb_doubleSpinBoxThickness)
+        self.window.doubleSpinBox_Material_Clearance.valueChanged.connect(self.cb_doubleSpinBoxClearance)
 
         self.window.comboBoxOperation.currentTextChanged.connect(self.display_op)
         
         
-        default_thickness = self.window.doubleSpinBoxThickness.value()
-        default_clearance = self.window.doubleSpinBoxClearance.value()
+        default_thickness = self.window.doubleSpinBox_Material_Thickness.value()
+        default_clearance = self.window.doubleSpinBox_Material_Clearance.value()
         self.display_material(thickness=default_thickness, clearance=default_clearance)
         
         self.display_svg(None)
         self.display_op()
+        
+        self.window.comboBox_Tool_Units.currentTextChanged.connect(self.cb_update_tool_display)
+        self.window.comboBox_GCodeConversion_Units.currentTextChanged.connect(self.cb_update_gcodeconversion_display)
+        
+        self.window.pushButton_MakeAll_inch.clicked.connect(self.cb_make_all_inch)
+        self.window.pushButton_MakeAll_mm.clicked.connect(self.cb_make_all_mm)
+        
+        self.init_gui()
 
     def load_ui(self, ui):
         loader = QUiLoader()
@@ -115,7 +123,78 @@ class main(QtWidgets.QMainWindow):
         ui_file.close()
 
         return window
+    
+    def cb_make_all_inch(self):
+        '''
+        '''
+        self.window.comboBox_Tabs_Units.setCurrentText("inch")
+        self.window.comboBox_Tool_Units.setCurrentText("inch")
+        self.window.comboBox_Material_Units.setCurrentText("inch")
+        self.window.comboBox_GCodeConversion_Units.setCurrentText("inch")
+         
+        self.init_gui()
+    
+    def cb_make_all_mm(self):
+        '''
+        '''
+        self.window.comboBox_Tabs_Units.setCurrentText("mm")
+        self.window.comboBox_Tool_Units.setCurrentText("mm")
+        self.window.comboBox_Material_Units.setCurrentText("mm")
+        self.window.comboBox_GCodeConversion_Units.setCurrentText("mm")
+        
+        self.init_gui()
+    
+    def init_gui(self):
+        '''
+        '''
+        self.cb_update_tool_display()
+        self.cb_update_gcodeconversion_display()
+        
+    def cb_update_tool_display(self):
+        '''
+        '''
+        tool_units = self.window.comboBox_Tool_Units.currentText()
+        
+        if tool_units == "inch":
+            self.window.label_Tool_Diameter_UnitsDescr.setText("inch")
+            self.window.label_Tool_Angle_UnitsDescr.setText("degrees")
+            self.window.label_Tool_PassDepth_UnitsDescr.setText("inch")
+            self.window.label_Tool_StepOver_UnitsDescr.setText("]0:1]")
+            self.window.label_Tool_Rapid_UnitsDescr.setText("inch/min")
+            self.window.label_Tool_Plunge_UnitsDescr.setText("inch/min")
+            self.window.label_Tool_Cut_UnitsDescr.setText("inch/min")
+        if tool_units == "mm":
+            self.window.label_Tool_Diameter_UnitsDescr.setText("mm")
+            self.window.label_Tool_Angle_UnitsDescr.setText("degrees")
+            self.window.label_Tool_PassDepth_UnitsDescr.setText("mm")
+            self.window.label_Tool_StepOver_UnitsDescr.setText("]0:1]")
+            self.window.label_Tool_Rapid_UnitsDescr.setText("mm/min")
+            self.window.label_Tool_Plunge_UnitsDescr.setText("mm/min")
+            self.window.label_Tool_Cut_UnitsDescr.setText("mm/min")
 
+    def cb_update_gcodeconversion_display(self):
+        '''
+        '''
+        gcodeconversion_units = self.window.comboBox_GCodeConversion_Units.currentText()
+        
+        if gcodeconversion_units == "inch":
+            self.window.label_GCodeConversion_XOffset_UnitsDescr.setText("inch")
+            self.window.label_GCodeConversion_YOffset_UnitsDescr.setText("inch")
+            self.window.label_GCodeConversion_MinX_UnitsDescr.setText("inch")
+            self.window.label_GCodeConversion_MaxX_UnitsDescr.setText("inch")
+            self.window.label_GCodeConversion_MinY_UnitsDescr.setText("inch")
+            self.window.label_GCodeConversion_MaxY_UnitsDescr.setText("inch")
+            
+        if gcodeconversion_units == "mm":
+            self.window.label_GCodeConversion_XOffset_UnitsDescr.setText("mm")
+            self.window.label_GCodeConversion_YOffset_UnitsDescr.setText("mm")
+            self.window.label_GCodeConversion_MinX_UnitsDescr.setText("mm")
+            self.window.label_GCodeConversion_MaxX_UnitsDescr.setText("mm")
+            self.window.label_GCodeConversion_MinY_UnitsDescr.setText("mm")
+            self.window.label_GCodeConversion_MaxY_UnitsDescr.setText("mm")
+            
+            
+        
     def init_svg_viewer(self):
         '''
         '''
@@ -246,11 +325,11 @@ class main(QtWidgets.QMainWindow):
         if op == "Outside":
             self.current_op_widget = self.load_ui("op_outside.ui")
             self.window.verticalLayoutOperations.addWidget(self.current_op_widget)
-        if op == "Engraving":
-            self.current_op_widget = self.load_ui("op_engraving.ui")
+        if op == "Engrave":
+            self.current_op_widget = self.load_ui("op_engrave.ui")
             self.window.verticalLayoutOperations.addWidget(self.current_op_widget)
-        if op == "V-Pocket":
-            self.current_op_widget = self.load_ui("op_v_pocket.ui")
+        if op == "V Pocket":
+            self.current_op_widget = self.load_ui("op_vpocket.ui")
             self.window.verticalLayoutOperations.addWidget(self.current_op_widget)
 
         self.window.layout()

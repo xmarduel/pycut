@@ -113,7 +113,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayoutTabs" stretch="0,0,0">
         <item>
-         <widget class="QLabel" name="labelTabs">
+         <widget class="QLabel" name="label_Tabs">
           <property name="font">
            <font>
             <pointsize>16</pointsize>
@@ -130,7 +130,7 @@
          </widget>
         </item>
         <item>
-         <layout class="QFormLayout" name="formLayout">
+         <layout class="QFormLayout" name="formLayout_Tabs">
           <property name="labelAlignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
           </property>
@@ -138,7 +138,7 @@
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
           </property>
           <item row="0" column="0">
-           <widget class="QLabel" name="label_Units">
+           <widget class="QLabel" name="label_TabsUnits">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -151,7 +151,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="comboBoxUnits">
+           <widget class="QComboBox" name="comboBox_Tabs_Units">
             <item>
              <property name="text">
               <string>inch</string>
@@ -165,7 +165,7 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QLabel" name="label_MaxCutDepth">
+           <widget class="QLabel" name="label_Tabs_MaxCutDepth">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -178,12 +178,12 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBoxMaxCutDepth"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Tabs_MaxCutDepth"/>
           </item>
          </layout>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButtonCreateTabs">
+         <widget class="QPushButton" name="pushButton_Tabs_CreateTabs">
           <property name="text">
            <string>Create Tabs</string>
           </property>
@@ -194,7 +194,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayoutTools">
         <item>
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="label_ToolTitle">
           <property name="font">
            <font>
             <pointsize>16</pointsize>
@@ -211,9 +211,9 @@
          </widget>
         </item>
         <item>
-         <layout class="QGridLayout" name="gridLayout">
+         <layout class="QGridLayout" name="gridLayout_Tool">
           <item row="0" column="0">
-           <widget class="QLabel" name="label_2">
+           <widget class="QLabel" name="label_Tool_Units">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -226,7 +226,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="comboBox">
+           <widget class="QComboBox" name="comboBox_Tool_Units">
             <item>
              <property name="text">
               <string>inch</string>
@@ -240,7 +240,7 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QLabel" name="label_3">
+           <widget class="QLabel" name="label_Tool_Diameter">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -253,17 +253,17 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLabel" name="label_10">
+           <widget class="QLabel" name="label_Tool_Diameter_UnitsDescr">
             <property name="text">
              <string>__units__</string>
             </property>
            </widget>
           </item>
           <item row="1" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_Diameter"/>
           </item>
           <item row="2" column="0">
-           <widget class="QLabel" name="label_4">
+           <widget class="QLabel" name="label_Tool_Angle">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -276,14 +276,14 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLabel" name="label_11">
+           <widget class="QLabel" name="label_Tool_Angle_UnitsDescr">
             <property name="text">
              <string>__units__</string>
             </property>
            </widget>
           </item>
           <item row="3" column="0">
-           <widget class="QLabel" name="label_5">
+           <widget class="QLabel" name="label_Tool_PassDepth">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -296,17 +296,17 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QLabel" name="label_12">
+           <widget class="QLabel" name="label_Tool_PassDepth_UnitsDescr">
             <property name="text">
              <string>__units__</string>
             </property>
            </widget>
           </item>
           <item row="3" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_PassDepth"/>
           </item>
           <item row="4" column="0">
-           <widget class="QLabel" name="label_6">
+           <widget class="QLabel" name="label_Tool_StepOver">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -319,17 +319,17 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QLabel" name="label_13">
+           <widget class="QLabel" name="label_Tool_StepOver_UnitsDescr">
             <property name="text">
              <string>__units__</string>
             </property>
            </widget>
           </item>
           <item row="4" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_StepOver"/>
           </item>
           <item row="5" column="0">
-           <widget class="QLabel" name="label_7">
+           <widget class="QLabel" name="label_Tool_Rapid">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -342,14 +342,14 @@
            </widget>
           </item>
           <item row="5" column="1">
-           <widget class="QLabel" name="label_14">
+           <widget class="QLabel" name="label_Tool_Rapid_UnitsDescr">
             <property name="text">
              <string>__units__</string>
             </property>
            </widget>
           </item>
           <item row="6" column="0">
-           <widget class="QLabel" name="label_8">
+           <widget class="QLabel" name="label_Tool_Plunge">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -362,14 +362,14 @@
            </widget>
           </item>
           <item row="6" column="1">
-           <widget class="QLabel" name="label_15">
+           <widget class="QLabel" name="label_Tool_Plunge_UnitsDescr">
             <property name="text">
              <string>__units__</string>
             </property>
            </widget>
           </item>
           <item row="7" column="0">
-           <widget class="QLabel" name="label_9">
+           <widget class="QLabel" name="label_Tool_Cut">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -382,47 +382,37 @@
            </widget>
           </item>
           <item row="7" column="1">
-           <widget class="QLabel" name="label_16">
+           <widget class="QLabel" name="label_Tool_Cut_UnitsDescr">
             <property name="text">
              <string>__units__</string>
             </property>
            </widget>
           </item>
           <item row="7" column="2">
-           <widget class="QSpinBox" name="spinBox">
+           <widget class="QSpinBox" name="spinBox_Tool_Cut">
             <property name="toolTip">
              <string>The speed the tool moves horizontally during cutting</string>
             </property>
            </widget>
           </item>
           <item row="6" column="2">
-           <widget class="QSpinBox" name="spinBox_2">
+           <widget class="QSpinBox" name="spinBox_Tool_Plunge">
             <property name="toolTip">
              <string>The speed the tool plunges downwards into the material</string>
             </property>
            </widget>
           </item>
           <item row="5" column="2">
-           <widget class="QSpinBox" name="spinBox_3">
+           <widget class="QSpinBox" name="spinBox_Tool_Rapid">
             <property name="toolTip">
              <string>The speed the tool moves while not cutting</string>
             </property>
            </widget>
           </item>
           <item row="2" column="2">
-           <widget class="QSpinBox" name="spinBox_4"/>
+           <widget class="QSpinBox" name="spinBox_Tool_Angle"/>
           </item>
          </layout>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButtonInvisible">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>nix</string>
-          </property>
-         </widget>
         </item>
        </layout>
       </item>
@@ -482,6 +472,24 @@
          </widget>
         </item>
         <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QPushButton" name="pushButton_MakeAll_inch">
+            <property name="text">
+             <string>Make all inch</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_MakeAll_mm">
+            <property name="text">
+             <string>Make all mm</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
            <spacer name="horizontalSpacer_3">
@@ -528,25 +536,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <item>
-           <widget class="QPushButton" name="pushButton_3">
-            <property name="text">
-             <string>Make all inch</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_2">
-            <property name="text">
-             <string>Make all mm</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QFormLayout" name="formLayout_2">
+         <layout class="QFormLayout" name="formLayout_Material">
           <property name="labelAlignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
@@ -554,7 +544,7 @@
            <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
           </property>
           <item row="0" column="0">
-           <widget class="QLabel" name="labelUnits">
+           <widget class="QLabel" name="label_Material_Units">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -567,7 +557,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="comboBoxUnits_2">
+           <widget class="QComboBox" name="comboBox_Material_Units">
             <item>
              <property name="text">
               <string>inch</string>
@@ -581,7 +571,7 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QLabel" name="labelThickness">
+           <widget class="QLabel" name="label_Material_Thickness">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -594,14 +584,14 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBoxThickness">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Material_Thickness">
             <property name="value">
              <double>50.000000000000000</double>
             </property>
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QLabel" name="labelZOrigin">
+           <widget class="QLabel" name="label_Material_ZOrigin">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -614,7 +604,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QComboBox" name="comboBoxZOrigin">
+           <widget class="QComboBox" name="comboBox_Material_ZOrigin">
             <item>
              <property name="text">
               <string>Top</string>
@@ -628,7 +618,7 @@
            </widget>
           </item>
           <item row="3" column="0">
-           <widget class="QLabel" name="labelClearance">
+           <widget class="QLabel" name="label_Material_Clearance">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -644,7 +634,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBoxClearance">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Material_Clearance">
             <property name="value">
              <double>20.000000000000000</double>
             </property>
@@ -726,7 +716,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayoutGCodeConversion" stretch="0,0">
         <item>
-         <widget class="QLabel" name="labelGcodeConversion">
+         <widget class="QLabel" name="label_GCcodeConversion">
           <property name="font">
            <font>
             <pointsize>16</pointsize>
@@ -743,9 +733,9 @@
          </widget>
         </item>
         <item>
-         <layout class="QGridLayout" name="gridLayout_2">
+         <layout class="QGridLayout" name="gridLayout_GCodeConversion">
           <item row="6" column="0">
-           <widget class="QLabel" name="label_25">
+           <widget class="QLabel" name="label_GCodeConversion_MinX">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -758,27 +748,27 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QLabel" name="label_34">
+           <widget class="QLabel" name="label_GCodeConversion_XOffset_UnitsDescr">
             <property name="text">
              <string>__units__</string>
             </property>
            </widget>
           </item>
           <item row="2" column="2">
-           <widget class="QRadioButton" name="radioButton">
+           <widget class="QRadioButton" name="radioButton_GCodeConversion_ZeroLowerLeft">
             <property name="text">
              <string/>
             </property>
            </widget>
           </item>
           <item row="6" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_15"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MinX"/>
           </item>
           <item row="8" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_13"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MinY"/>
           </item>
           <item row="1" column="1">
-           <widget class="QLabel" name="label_17">
+           <widget class="QLabel" name="label_GCodeConversion_ZeroLowerLeft">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -791,7 +781,7 @@
            </widget>
           </item>
           <item row="5" column="0">
-           <widget class="QLabel" name="label_24">
+           <widget class="QLabel" name="label_GCodeConversion_YOffset">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -804,21 +794,21 @@
            </widget>
           </item>
           <item row="9" column="1">
-           <widget class="QLabel" name="label_29">
+           <widget class="QLabel" name="label_GCodeConversion_MaxY_UnitsDescr">
             <property name="text">
              <string>__units__</string>
             </property>
            </widget>
           </item>
           <item row="7" column="1">
-           <widget class="QLabel" name="label_31">
+           <widget class="QLabel" name="label_GCodeConversion_MaxX_UnitsDescr">
             <property name="text">
              <string>__units__</string>
             </property>
            </widget>
           </item>
           <item row="9" column="0">
-           <widget class="QLabel" name="label_28">
+           <widget class="QLabel" name="label_GCodeConversion_MaxY">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -831,7 +821,7 @@
            </widget>
           </item>
           <item row="8" column="0">
-           <widget class="QLabel" name="label_27">
+           <widget class="QLabel" name="label_GCodeConversion_MinY">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -844,7 +834,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLabel" name="label_18">
+           <widget class="QLabel" name="label_GCodeConversion_ZeroCenter">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -857,7 +847,7 @@
            </widget>
           </item>
           <item row="0" column="0">
-           <widget class="QLabel" name="label_21">
+           <widget class="QLabel" name="label_GCodeConversion_GCodeUnits">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -870,41 +860,41 @@
            </widget>
           </item>
           <item row="6" column="1">
-           <widget class="QLabel" name="label_32">
+           <widget class="QLabel" name="label_GCodeConversion_MinX_UnitsDescr">
             <property name="text">
              <string>__units__</string>
             </property>
            </widget>
           </item>
           <item row="1" column="2">
-           <widget class="QRadioButton" name="radioButton_2">
+           <widget class="QRadioButton" name="radioButton_GCodeConversion_ZeroCenter">
             <property name="text">
              <string/>
             </property>
            </widget>
           </item>
           <item row="8" column="1">
-           <widget class="QLabel" name="label_30">
+           <widget class="QLabel" name="label_GCodeConversion_MinY_UnitsDescr">
             <property name="text">
              <string>__units__</string>
             </property>
            </widget>
           </item>
           <item row="5" column="1">
-           <widget class="QLabel" name="label_33">
+           <widget class="QLabel" name="label_GCodeConversion_YOffset_UnitsDescr">
             <property name="text">
              <string>__units__</string>
             </property>
            </widget>
           </item>
           <item row="7" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_14"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MaxX"/>
           </item>
           <item row="4" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_16"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_XOffset"/>
           </item>
           <item row="4" column="0">
-           <widget class="QLabel" name="label_23">
+           <widget class="QLabel" name="label_GCodeConversion_XOffset">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -917,13 +907,13 @@
            </widget>
           </item>
           <item row="5" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_17"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_YOffset"/>
           </item>
           <item row="9" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_12"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MaxY"/>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="comboBox_4">
+           <widget class="QComboBox" name="comboBox_GCodeConversion_Units">
             <item>
              <property name="text">
               <string>inch</string>
@@ -937,7 +927,7 @@
            </widget>
           </item>
           <item row="7" column="0">
-           <widget class="QLabel" name="label_26">
+           <widget class="QLabel" name="label_GCodeConversion_MaxX">
             <property name="font">
              <font>
               <weight>75</weight>
