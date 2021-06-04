@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>297</width>
-    <height>208</height>
+    <height>212</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <property name="formAlignment">
       <set>Qt::AlignCenter</set>
      </property>
-     <item row="2" column="0">
+     <item row="0" column="0">
       <widget class="QLabel" name="label_Name">
        <property name="font">
         <font>
@@ -32,10 +32,10 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="0" column="1">
       <widget class="QLineEdit" name="lineEdit_Name"/>
      </item>
-     <item row="3" column="0">
+     <item row="1" column="0">
       <widget class="QLabel" name="label_RampPlunge">
        <property name="font">
         <font>
@@ -48,14 +48,14 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="1" column="1">
       <widget class="QCheckBox" name="checkBox_RampPlunge">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
+     <item row="2" column="0">
       <widget class="QLabel" name="label_Combine">
        <property name="font">
         <font>
@@ -68,7 +68,7 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="2" column="1">
       <widget class="QComboBox" name="comboBox_ComboBox">
        <item>
         <property name="text">
@@ -92,7 +92,7 @@
        </item>
       </widget>
      </item>
-     <item row="5" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="label_Direction">
        <property name="font">
         <font>
@@ -105,7 +105,7 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="1">
+     <item row="3" column="1">
       <widget class="QComboBox" name="comboBox_Direction">
        <item>
         <property name="text">
@@ -119,7 +119,7 @@
        </item>
       </widget>
      </item>
-     <item row="6" column="0">
+     <item row="4" column="0">
       <widget class="QLabel" name="label_Units">
        <property name="font">
         <font>
@@ -132,7 +132,7 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
+     <item row="4" column="1">
       <widget class="QComboBox" name="comboBox_Units">
        <item>
         <property name="text">
@@ -146,7 +146,7 @@
        </item>
       </widget>
      </item>
-     <item row="7" column="0">
+     <item row="5" column="0">
       <widget class="QLabel" name="label_Margin">
        <property name="font">
         <font>
@@ -159,31 +159,8 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="1">
+     <item row="5" column="1">
       <widget class="QDoubleSpinBox" name="doubleSpinBox_Margin"/>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_PocketDepth">
-       <property name="font">
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Deep</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_PocketDepth"/>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>

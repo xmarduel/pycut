@@ -1,4 +1,5 @@
 # This Python file uses the following encoding: utf-8
+
 import sys
 import os
 import io
@@ -14,69 +15,7 @@ from PySide2 import QtSvg
 from PySide2.QtCore import QFile
 from PySide2.QtUiTools import QUiLoader
 
-import lxml.etree as ET
-
-# https://stackoverflow.com/questions/53288926/qgraphicssvgitem-event-propagation-interactive-svg-viewer
-
-class SvgItem(QtSvg.QGraphicsSvgItem):
-    def __init__(self, id, renderer, parent=None):
-        super(SvgItem, self).__init__(parent)
-        self.id = id
-        self.setSharedRenderer(renderer)
-        self.setElementId(id)
-        bounds = renderer.boundsOnElement(id)
-        print("bounds=", bounds, bounds.topLeft())
-        self.setPos(bounds.topLeft())
-        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
-
-    def mousePressEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
-        print('svg item: ' + self.id + ' - mousePressEvent()')
-        super().mousePressEvent(event)
-
-    def mouseReleaseEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
-        print('svg item: ' + self.id + ' - mouseReleaseEvent()')
-        super().mouseReleaseEvent(event)
-
-
-class SvgViewer(QtWidgets.QGraphicsView):
-    def __init__(self, parent):
-        super(SvgViewer, self).__init__(parent)
-        self._scene = QtWidgets.QGraphicsScene(self,0,0,100,100)
-        self._renderer = QtSvg.QSvgRenderer()
-        self._renderer.setViewBox(QtCore.QRect(0,0,100,100))
-        self.setScene(self._scene)
-        self.items = []
-
-    def set_svg(self, data):
-        self.resetTransform()
-        self._scene.clear()
-        self._renderer.load(data)
-
-        svg = data.decode('utf-8')
-        root = ET.fromstring(svg)
-
-        paths = root.findall(".//{http://www.w3.org/2000/svg}path")
-        for path in paths:
-            print(path.attrib)
-            id = path.attrib['id']
-
-            item =  SvgItem(id, self._renderer)
-            self._scene.addItem(item)
-
-            self.items.append(item)
-
-    def clean(self):
-        for item in self.items:
-            self._scene.removeItem(item)
-
-
-    def mousePressEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
-        print('SvgViewer - mousePressEvent()')
-        super().mousePressEvent(event)
-
-    def mouseReleaseEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
-        print('SvgViewer - mouseReleaseEvent()')
-        super().mouseReleaseEvent(event)
+import svgviewer
 
 
 class main(QtWidgets.QMainWindow):
@@ -184,7 +123,7 @@ class main(QtWidgets.QMainWindow):
 
         self.setCentralWidget(self.window)
 
-        self.svgviewer = self.init_svg_viewer()
+        self.svg_viewer = self.init_svg_viewer()
         self.svg_material_viewer = self.init_material_viewer()
         self.current_op_widget = None
 
@@ -194,10 +133,10 @@ class main(QtWidgets.QMainWindow):
         self.window.actionOpenSettings.triggered.connect(self.cb_read_settings)
 
         # display material thickness/clearance
-        self.window.doubleSpinBox_Material_Thickness.valueChanged.connect(self.cb_doubleSpinBoxThickness)
-        self.window.doubleSpinBox_Material_Clearance.valueChanged.connect(self.cb_doubleSpinBoxClearance)
+        self.window.doubleSpinBox_Material_Thickness.valueChanged.connect(self.cb_doubleSpinBox_Material_Thickness)
+        self.window.doubleSpinBox_Material_Clearance.valueChanged.connect(self.cb_doubleSpinBox_Material_Clearance)
 
-        self.window.comboBoxOperation.currentTextChanged.connect(self.display_op)
+        self.window.comboBox_Operations_OpType.currentTextChanged.connect(self.display_op)
         
         
         default_thickness = self.window.doubleSpinBox_Material_Thickness.value()
@@ -205,7 +144,11 @@ class main(QtWidgets.QMainWindow):
         self.display_material(thickness=default_thickness, clearance=default_clearance)
         
         self.display_svg(None)
-        self.display_op()
+        self.hide_op_widgets()
+
+        self.window.pushButton_Operations_CreateNewOp.clicked.connect(self.cb_create_op)
+        self.window.pushButton_Operations_AddOp.clicked.connect(self.cb_add_op)
+        self.window.pushButton_Operations_CancelOp.clicked.connect(self.cb_cancel_op)
         
         self.window.comboBox_Tool_Units.currentTextChanged.connect(self.cb_update_tool_display)
         self.window.comboBox_GCodeConversion_Units.currentTextChanged.connect(self.cb_update_gcodeconversion_display)
@@ -473,19 +416,19 @@ class main(QtWidgets.QMainWindow):
     def init_svg_viewer(self):
         '''
         '''
-        svgviewer = SvgViewer(self)
+        svg_viewer = svgviewer.SvgViewer(self)
 
         layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(svgviewer)
+        layout.addWidget(svg_viewer)
         layout.addStretch()
         self.window.widget.setLayout(layout)
         
-        return svgviewer
+        return svg_viewer
 
     def display_svg(self, svg):
         '''
         '''
-        self.svgviewer.clean()
+        self.svg_viewer.clean()
 
         if svg is None:
             img = b'''
@@ -510,7 +453,7 @@ class main(QtWidgets.QMainWindow):
                     d="M 20,20 H 60 V 80 H 20 Z" />
                 </g>
              </svg>'''
-            self.svgviewer.set_svg(img)
+            self.svg_viewer.set_svg(img)
         else:
             fp = open(svg, "r");
 
@@ -518,7 +461,7 @@ class main(QtWidgets.QMainWindow):
             img = bytes(data, 'utf-8')
             fp.close()
 
-            self.svgviewer.set_svg(img)
+            self.svg_viewer.set_svg(img)
 
     def init_material_viewer(self):
         '''
@@ -572,40 +515,87 @@ class main(QtWidgets.QMainWindow):
 
         self.svg_material_viewer.load(img)
 
-    def cb_doubleSpinBoxThickness(self):
+    def cb_doubleSpinBox_Material_Thickness(self):
         thickness = self.window.doubleSpinBox_Material_Thickness.value()
         clearance = self.window.doubleSpinBox_Material_Clearance.value()
         self.display_material(thickness=thickness, clearance=clearance)
 
-    def cb_doubleSpinBoxClearance(self):
+    def cb_doubleSpinBox_Material_Clearance(self):
         thickness = self.window.doubleSpinBox_Material_Thickness.value()
         clearance = self.window.doubleSpinBox_Material_Clearance.value()
         self.display_material(thickness=thickness, clearance=clearance)
+
+
+    def cb_create_op(self):
+        '''
+        '''
+        self.show_op_widgets()
+
+    def cb_add_op(self):
+        '''
+        '''
+        self.hide_op_widgets()
+
+    def cb_cancel_op(self):
+        '''
+        '''
+        self.hide_op_widgets()
+
+    def hide_op_widgets(self):
+        '''
+        '''
+        self.window.comboBox_Operations_OpType.hide()
+        self.window.doubleSpinBox_Operations_OpDepth.hide()
+        self.window.label_Operations_OpDepth.hide()
+
+        self.window.pushButton_Operations_AddOp.hide()
+        self.window.pushButton_Operations_CancelOp.hide()
+
+        if self.current_op_widget != None:
+            self.current_op_widget.hide()
+
+    def show_op_widgets(self):
+        '''
+        '''
+        self.window.comboBox_Operations_OpType.show()
+        self.window.doubleSpinBox_Operations_OpDepth.show()
+        self.window.label_Operations_OpDepth.show()
+
+        self.window.pushButton_Operations_AddOp.show()
+        self.window.pushButton_Operations_CancelOp.show()
+
+        if self.current_op_widget != None:
+            self.current_op_widget.show()
+
+        self.display_op()
 
     def display_op(self):
         '''
         '''
-        op = self.window.comboBoxOperation.currentText()
+        op = self.window.comboBox_Operations_OpType.currentText()
 
         if self.current_op_widget != None:
             self.window.verticalLayoutOperations.removeWidget(self.current_op_widget)
             self.current_op_widget.deleteLater()
- 
-        if op == "Pocket":
-            self.current_op_widget = self.load_ui("op_pocket.ui")
-            self.window.verticalLayoutOperations.addWidget(self.current_op_widget)
-        if op == "Inside":
-            self.current_op_widget = self.load_ui("op_inside.ui")
-            self.window.verticalLayoutOperations.addWidget(self.current_op_widget)
-        if op == "Outside":
-            self.current_op_widget = self.load_ui("op_outside.ui")
-            self.window.verticalLayoutOperations.addWidget(self.current_op_widget)
-        if op == "Engrave":
-            self.current_op_widget = self.load_ui("op_engrave.ui")
-            self.window.verticalLayoutOperations.addWidget(self.current_op_widget)
+
+        mapp = {
+            'Pocket'   : "op_pocket.ui",
+            'Inside'   : "op_inside.ui",
+            'Outside'  : "op_outside.ui",
+            'Engrave'  : "op_engrave.ui",
+            'V Pocket' : "op_vpocket.ui",
+        }
+
+        self.current_op_widget = self.load_ui(mapp[op])
+
+        self.window.verticalLayoutOperations.insertWidget(5, self.current_op_widget, 0, QtGui.Qt.AlignLeft)
+
         if op == "V Pocket":
-            self.current_op_widget = self.load_ui("op_vpocket.ui")
-            self.window.verticalLayoutOperations.addWidget(self.current_op_widget)
+            self.window.doubleSpinBox_Operations_OpDepth.hide()
+            self.window.label_Operations_OpDepth.hide()
+        else:
+            self.window.doubleSpinBox_Operations_OpDepth.show()
+            self.window.label_Operations_OpDepth.show()
 
         self.window.layout()
 

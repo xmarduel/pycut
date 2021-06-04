@@ -14,13 +14,13 @@
    <string>main</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,1,0">
+   <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0">
     <item>
      <layout class="QVBoxLayout" name="verticalLayoutLeft" stretch="0,0,0,0">
       <item>
        <layout class="QVBoxLayout" name="verticalLayoutOperations">
         <item>
-         <widget class="QLabel" name="labelOperations">
+         <widget class="QLabel" name="label_Operations">
           <property name="font">
            <font>
             <pointsize>15</pointsize>
@@ -42,7 +42,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QLabel" name="labelPxPerInch">
+           <widget class="QLabel" name="label_PxPerInch">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -55,7 +55,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="spinBoxPxPerInch">
+           <widget class="QSpinBox" name="spinBox_PxPerInch">
             <property name="maximum">
              <number>126</number>
             </property>
@@ -67,43 +67,94 @@
          </layout>
         </item>
         <item>
-         <widget class="QTableWidget" name="tableWidget"/>
+         <widget class="QTableWidget" name="tableWidget_Operations_ViewOps"/>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="pushButton_Operations_CreateNewOp">
           <property name="text">
-           <string>Create Operation</string>
+           <string>Create New Operation</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBoxOperation">
+         <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,0,0">
           <item>
-           <property name="text">
-            <string>Pocket</string>
-           </property>
+           <widget class="QComboBox" name="comboBox_Operations_OpType">
+            <item>
+             <property name="text">
+              <string>Pocket</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Inside</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Outside</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Engrave</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>V Pocket</string>
+             </property>
+            </item>
+           </widget>
           </item>
           <item>
-           <property name="text">
-            <string>Inside</string>
-           </property>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Operations_OpDepth"/>
           </item>
           <item>
-           <property name="text">
-            <string>Outside</string>
-           </property>
+           <widget class="QLabel" name="label_Operations_OpDepth">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Depth</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_Op">
+          <item>
+           <widget class="QPushButton" name="pushButton_Operations_AddOp">
+            <property name="text">
+             <string>Add</string>
+            </property>
+           </widget>
           </item>
           <item>
-           <property name="text">
-            <string>Engrave</string>
-           </property>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item>
-           <property name="text">
-            <string>V Pocket</string>
-           </property>
+           <widget class="QPushButton" name="pushButton_Operations_CancelOp">
+            <property name="text">
+             <string>Cancel</string>
+            </property>
+           </widget>
           </item>
-         </widget>
+         </layout>
         </item>
         <item>
          <widget class="QWidget" name="widget_op" native="true"/>
@@ -448,7 +499,7 @@
      </widget>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayoutRight" stretch="0,0,0,0,0,1">
+     <layout class="QVBoxLayout" name="verticalLayoutRight" stretch="0,0,0,0,1">
       <item>
        <layout class="QVBoxLayout" name="verticalLayoutMaterial">
         <property name="bottomMargin">
@@ -678,7 +729,7 @@
            <number>6</number>
           </property>
           <item row="0" column="0">
-           <widget class="QLabel" name="labelMinimumSegments">
+           <widget class="QLabel" name="label_CurveToLineConversion_MinimumSegments">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -694,7 +745,7 @@
            <widget class="QDoubleSpinBox" name="doubleSpinBox_CurveToLineConversion_MinimumSegments"/>
           </item>
           <item row="1" column="0">
-           <widget class="QLabel" name="labelMinimumSegmentsLength">
+           <widget class="QLabel" name="label_CurveToLineConversion_MinimumSegmentsLength">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -962,55 +1013,55 @@
           </property>
          </widget>
         </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QFormLayout" name="formLayout_4">
-        <property name="formAlignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_22">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
+        <item>
+         <layout class="QFormLayout" name="formLayout_GCodeGeneration">
+          <property name="formAlignment">
+           <set>Qt::AlignCenter</set>
           </property>
-          <property name="text">
-           <string>Return to 0,0 at end</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QCheckBox" name="checkBox_GCodeGeneration_ReturnToZeroAtEnd">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="labelSpindleAutomatic">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Spindle automatic</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QCheckBox" name="checkBox_GCodeGeneration_SpindleAutomatic">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_GCodeGeneration_ReturnToZeroAtEnd">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Return to 0,0 at end</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="checkBox_GCodeGeneration_ReturnToZeroAtEnd">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="labelGCodeGenerationSpindleAutomatic">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Spindle automatic</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="checkBox_GCodeGeneration_SpindleAutomatic">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -1037,7 +1088,7 @@
      <x>0</x>
      <y>0</y>
      <width>1226</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
