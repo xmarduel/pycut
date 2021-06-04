@@ -691,7 +691,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_10"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_CurveToLineConversion_MinimumSegments"/>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="labelMinimumSegmentsLength">
@@ -707,7 +707,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_11"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength"/>
           </item>
          </layout>
         </item>
@@ -755,7 +755,7 @@
            </widget>
           </item>
           <item row="2" column="2">
-           <widget class="QRadioButton" name="radioButton_GCodeConversion_ZeroLowerLeft">
+           <widget class="QRadioButton" name="radioButton_GCodeConversion_ZeroCenter">
             <property name="text">
              <string/>
             </property>
@@ -867,7 +867,7 @@
            </widget>
           </item>
           <item row="1" column="2">
-           <widget class="QRadioButton" name="radioButton_GCodeConversion_ZeroCenter">
+           <widget class="QRadioButton" name="radioButton_GCodeConversion_ZeroLowerLeft">
             <property name="text">
              <string/>
             </property>
@@ -986,7 +986,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QCheckBox" name="checkBox">
+         <widget class="QCheckBox" name="checkBox_GCodeGeneration_ReturnToZeroAtEnd">
           <property name="text">
            <string/>
           </property>
@@ -1006,7 +1006,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QCheckBox" name="checkBox_3">
+         <widget class="QCheckBox" name="checkBox_GCodeGeneration_SpindleAutomatic">
           <property name="text">
            <string/>
           </property>

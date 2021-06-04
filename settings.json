@@ -1,0 +1,96 @@
+{
+    "px_per_inch": 96,
+    "Tabs": {
+        "Units": "mm",
+        "MaxCutDepth": 1.0
+    },
+    "Tool": {
+        "Units": "mm",
+        "Diameter": 1.0,
+        "Angle": 2,
+        "PassDepth": 3.0,
+        "StepOver": 4.0,
+        "Rapid": 5,
+        "Plunge": 6,
+        "Cut": 7
+    },
+    "Material": {
+        "Units": "mm",
+        "Thickness": 50.0,
+        "ZOrigin": "Top",
+        "Clearance": 10.0
+    },
+    "CurveToLineConversion": {
+        "MinimumSegments": 1.0,
+        "MinimumSegmentsLength": 0.0
+    },
+    "GCodeConversion": {
+        "Units": "mm",
+        "ZeroLowerLeft": true,
+        "ZeroCenter": false,
+        "XOffset": 1.0,
+        "YOffset": 2.0,
+        "MinX": 3.0,
+        "MaxX": 4.0,
+        "MinY": 5.0,
+        "MaxY": 6.0
+    },
+    "GCodeGeneration": {
+        "ReturnToZeroAtEnd": true,
+        "SpindleAutomatic": true
+    },
+    "session": {
+        "svg": "xxx.svg",
+        "operations": [
+            {
+                "type": "Pockect",
+                "Deep": 0.2,
+                "Name": "op1",
+                "RampPlunge": true,
+                "Combine": "Union",
+                "Direction": "Conventional",
+                "Units": "mm",
+                "Margin": 0.0
+            },
+            {
+                "type": "Inside",
+                "Deep": 0.2,
+                "Name": "op1",
+                "RampPlunge": true,
+                "Combine": "Union",
+                "Direction": "Conventional",
+                "Units": "mm",
+                "Margin": 0.0,
+                "Width": 1.1
+            },
+            {
+                "type": "Outside",
+                "Deep": 0.2,
+                "Name": "op1",
+                "RampPlunge": true,
+                "Combine": "Union",
+                "Direction": "Conventional",
+                "Units": "mm",
+                "Margin": 0.0,
+                "Width": 1.1
+            },
+            {
+                "type": "Engrave",
+                "Deep": 0.2,
+                "Name": "op1",
+                "RampPlunge": true,
+                "Combine": "Union",
+                "Direction": "Conventional",
+                "Units": "mm",
+                "Margin": 0.0
+            },
+            {
+                "type": "V Pocket",
+                "Name": "op2",
+                "Combine": "Union",
+                "Units": "mm",
+                "Margin": 0.0
+            }
+        ]
+    }
+}

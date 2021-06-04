@@ -3,6 +3,8 @@ import sys
 import os
 import io
 
+import json
+
 from PySide2 import QtCore
 from PySide2 import QtGui
 from PySide2 import QtWidgets
@@ -78,6 +80,104 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
 
 class main(QtWidgets.QMainWindow):
+    default_settings = {
+        "px_per_inch" : 96,
+        "Tabs": {
+            "Units"       : "mm",
+            "MaxCutDepth" : 1.0
+        },
+        "Tool" : {
+            "Units"       : "mm",
+            "Diameter"    : 1.0,
+            "Angle"       : 2,
+            "PassDepth"   : 3.0,
+            "StepOver"    : 4.0,
+            "Rapid"       : 5.0,
+            "Plunge"      : 6.0,
+            "Cut"         : 7.0,
+        },
+        "Material" : {
+            "Units"       : "mm",
+            "Thickness"   : 50.0,
+            "ZOrigin"     : "Top",
+            "Clearance"   : 10.0,
+        },
+        "CurveToLineConversion" : {
+            "MinimumSegments"       : 1,
+            "MinimumSegmentsLength" : 0.001,
+        },
+        "GCodeConversion" : {
+            "Units"         : "mm",
+            "ZeroLowerLeft" : True,
+            "ZeroCenter"    : False,
+            "XOffset"       : 1.0,
+            "YOffset"       : 2.0,
+            "MinX"          : 3.0,
+            "MaxX"          : 4.0,
+            "MinY"          : 5.0,
+            "MaxY"          : 6.0,
+        },
+        "GCodeGeneration" : {
+            "ReturnToZeroAtEnd" : True,
+            "SpindleAutomatic"  : True,
+        },
+        "session" : {
+            "svg" : "xxx.svg",
+            "operations": [
+                {
+                    "type"       : "Pockect",
+                    "Deep"       : 0.2,
+                    "Name"       : "op1",
+                    "RampPlunge" : True,
+                    "Combine"    : "Union",
+                    "Direction"  : "Conventional",
+                    "Units"      : "mm",
+                    "Margin"     : 0.0
+                },
+                {
+                    "type": "Inside",
+                    "Deep"       : 0.2,
+                    "Name"       : "op1",
+                    "RampPlunge" : True,
+                    "Combine"    : "Union",
+                    "Direction"  : "Conventional",
+                    "Units"      : "mm",
+                    "Margin"     : 0.0,
+                    "Width"      : 1.1
+                },
+                {
+                    "type": "Outside",
+                    "Deep"       : 0.2,
+                    "Name"       : "op1",
+                    "RampPlunge" : True,
+                    "Combine"    : "Union",
+                    "Direction"  : "Conventional",
+                    "Units"      : "mm",
+                    "Margin"     : 0.0,
+                    "Width"      : 1.1
+                },
+                {
+                    "type": "Engrave",
+                    "Deep"       : 0.2,
+                    "Name"       : "op1",
+                    "RampPlunge" : True,
+                    "Combine"    : "Union",
+                    "Direction"  : "Conventional",
+                    "Units"      : "mm",
+                    "Margin"     : 0.0
+                },
+                {
+                    "type": "V Pocket",
+                    "Name"       : "op2",
+                    "Combine"    : "Union",
+                    "Units"      : "mm",
+                    "Margin"     : 0.0
+                },
+          
+            ]
+        }
+    }
+    
     def __init__(self):
         super(main, self).__init__()
         self.window = self.load_ui("form.ui")
@@ -90,6 +190,8 @@ class main(QtWidgets.QMainWindow):
 
         # callbacks
         self.window.actionOpen_SVG.triggered.connect(self.cb_open_svg)
+        self.window.actionSaveSettings.triggered.connect(self.cb_save_settings)
+        self.window.actionOpenSettings.triggered.connect(self.cb_read_settings)
 
         # display material thickness/clearance
         self.window.doubleSpinBox_Material_Thickness.valueChanged.connect(self.cb_doubleSpinBoxThickness)
@@ -112,18 +214,197 @@ class main(QtWidgets.QMainWindow):
         self.window.pushButton_MakeAll_mm.clicked.connect(self.cb_make_all_mm)
         
         self.init_gui()
+        
+        self.set_settings(self.default_settings)
 
     def load_ui(self, ui):
+        '''
+        '''
         loader = QUiLoader()
         path = os.path.join(os.path.dirname(__file__), ui)
         ui_file = QFile(path)
         ui_file.open(QFile.ReadOnly)
-        #window = loader.load(ui_file, self)
         window = loader.load(ui_file)
         ui_file.close()
 
         return window
     
+    def init_gui(self):
+        '''
+        '''
+        self.cb_update_tool_display()
+        self.cb_update_gcodeconversion_display()
+        
+    def cb_save_settings(self):
+        '''
+        '''
+        settings = {
+            "px_per_inch" : 96,
+            "Tabs": {
+                "Units"      : self.window.comboBox_Tabs_Units.currentText(),
+                "MaxCutDepth": self.window.doubleSpinBox_Tabs_MaxCutDepth.value()
+            },
+            "Tool" : {
+                "Units"      : self.window.comboBox_Tool_Units.currentText(),
+                "Diameter"   : self.window.doubleSpinBox_Tool_Diameter.value(),
+                "Angle"      : self.window.spinBox_Tool_Angle.value(),
+                "PassDepth"  : self.window.doubleSpinBox_Tool_PassDepth.value(),
+                "StepOver"   : self.window.doubleSpinBox_Tool_StepOver.value(),
+                "Rapid"      : self.window.spinBox_Tool_Rapid.value(),
+                "Plunge"     : self.window.spinBox_Tool_Plunge.value(),
+                "Cut"        : self.window.spinBox_Tool_Cut.value()
+            },
+            "Material" : {
+                "Units"      : self.window.comboBox_Material_Units.currentText(),
+                "Thickness"  : self.window.doubleSpinBox_Material_Thickness.value(),
+                "ZOrigin"    : self.window.comboBox_Material_ZOrigin.currentText(),
+                "Clearance"  : self.window.doubleSpinBox_Material_Clearance.value(),
+            },
+            "CurveToLineConversion" : {
+                "MinimumSegments"       : self.window.doubleSpinBox_CurveToLineConversion_MinimumSegments.value(),
+                "MinimumSegmentsLength" : self.window.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.value(),
+            },
+            "GCodeConversion" : {
+                "Units"           : self.window.comboBox_GCodeConversion_Units.currentText(),
+                "ZeroLowerLeft"   : self.window.radioButton_GCodeConversion_ZeroLowerLeft.isChecked(),
+                "ZeroCenter"      : self.window.radioButton_GCodeConversion_ZeroCenter.isChecked(),
+                "XOffset"         : self.window.doubleSpinBox_GCodeConversion_XOffset.value(),
+                "YOffset"         : self.window.doubleSpinBox_GCodeConversion_YOffset.value(),
+                "MinX"            : self.window.doubleSpinBox_GCodeConversion_MinX.value(),
+                "MaxX"            : self.window.doubleSpinBox_GCodeConversion_MaxX.value(),
+                "MinY"            : self.window.doubleSpinBox_GCodeConversion_MinY.value(),
+                "MaxY"            : self.window.doubleSpinBox_GCodeConversion_MaxY.value(),
+            },
+            "GCodeGeneration" : {
+                "ReturnToZeroAtEnd" : self.window.checkBox_GCodeGeneration_ReturnToZeroAtEnd.isChecked(),
+                "SpindleAutomatic"  : self.window.checkBox_GCodeGeneration_SpindleAutomatic.isChecked(),
+            },
+            "session" : {
+            "svg" : "xxx.svg",
+            "operations": [
+                {
+                    "type"       : "Pockect",
+                    "Deep"       : 0.2,
+                    "Name"       : "op1",
+                    "RampPlunge" : True,
+                    "Combine"    : "Union",
+                    "Direction"  : "Conventional",
+                    "Units"      : "mm",
+                    "Margin"     : 0.0
+                },
+                {
+                    "type": "Inside",
+                    "Deep"       : 0.2,
+                    "Name"       : "op1",
+                    "RampPlunge" : True,
+                    "Combine"    : "Union",
+                    "Direction"  : "Conventional",
+                    "Units"      : "mm",
+                    "Margin"     : 0.0,
+                    "Width"      : 1.1
+                },
+                {
+                    "type": "Outside",
+                    "Deep"       : 0.2,
+                    "Name"       : "op1",
+                    "RampPlunge" : True,
+                    "Combine"    : "Union",
+                    "Direction"  : "Conventional",
+                    "Units"      : "mm",
+                    "Margin"     : 0.0,
+                    "Width"      : 1.1
+                },
+                {
+                    "type": "Engrave",
+                    "Deep"       : 0.2,
+                    "Name"       : "op1",
+                    "RampPlunge" : True,
+                    "Combine"    : "Union",
+                    "Direction"  : "Conventional",
+                    "Units"      : "mm",
+                    "Margin"     : 0.0
+                },
+                {
+                    "type": "V Pocket",
+                    "Name"       : "op2",
+                    "Combine"    : "Union",
+                    "Units"      : "mm",
+                    "Margin"     : 0.0
+                },
+          
+            ]
+        }
+        }
+        
+        # write settings to json file
+        print(settings)
+        
+        with open('settings.json', 'w') as json_file:
+            json.dump(settings, json_file, indent=4)
+        
+    def cb_read_settings(self):
+        # read json
+        xfilter = "JSON Files (*.json)"
+        json_file, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
+        
+        with open(json_file) as f:
+            settings = json.load(f)
+            self.set_settings(settings)
+        
+    def set_settings(self, settings):
+        '''
+        '''
+        # Tabs
+        self.window.comboBox_Tabs_Units.setCurrentText(settings["Tabs"]["Units"])
+        self.window.doubleSpinBox_Tabs_MaxCutDepth.setValue(settings["Tabs"]["MaxCutDepth"])
+            
+        # Tool
+        self.window.comboBox_Tool_Units.setCurrentText(settings["Tool"]["Units"])
+        self.window.doubleSpinBox_Tool_Diameter.setValue(settings["Tool"]["Diameter"])
+        self.window.spinBox_Tool_Angle.setValue(settings["Tool"]["Angle"])
+        self.window.doubleSpinBox_Tool_PassDepth.setValue(settings["Tool"]["PassDepth"])
+        self.window.doubleSpinBox_Tool_StepOver.setValue(settings["Tool"]["StepOver"])
+        self.window.spinBox_Tool_Rapid.setValue(settings["Tool"]["Rapid"])
+        self.window.spinBox_Tool_Plunge.setValue(settings["Tool"]["Plunge"])
+        self.window.spinBox_Tool_Cut.setValue(settings["Tool"]["Cut"])
+        
+        # Material
+        self.window.comboBox_Material_Units.setCurrentText(settings["Material"]["Units"])
+        self.window.doubleSpinBox_Material_Thickness.setValue(settings["Material"]["Thickness"])
+        self.window.comboBox_Material_ZOrigin.setCurrentText(settings["Material"]["ZOrigin"])
+        self.window.doubleSpinBox_Material_Clearance.setValue(settings["Material"]["Clearance"])
+            
+        # CurveToLineConversion 
+        self.window.doubleSpinBox_CurveToLineConversion_MinimumSegments.setValue(settings["CurveToLineConversion"]["MinimumSegments"]),
+        self.window.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.setValue(settings["CurveToLineConversion"]["MinimumSegmentsLength"]),
+            
+        # GCodeConversion
+        self.window.comboBox_GCodeConversion_Units.setCurrentText(settings["GCodeConversion"]["Units"])
+        self.window.radioButton_GCodeConversion_ZeroLowerLeft.setChecked(settings["GCodeConversion"]["ZeroLowerLeft"])
+        self.window.radioButton_GCodeConversion_ZeroCenter.setChecked(settings["GCodeConversion"]["ZeroCenter"])
+        self.window.doubleSpinBox_GCodeConversion_XOffset.setValue(settings["GCodeConversion"]["XOffset"])
+        self.window.doubleSpinBox_GCodeConversion_YOffset.setValue(settings["GCodeConversion"]["YOffset"])
+        self.window.doubleSpinBox_GCodeConversion_MinX.setValue(settings["GCodeConversion"]["MinX"])
+        self.window.doubleSpinBox_GCodeConversion_MaxX.setValue(settings["GCodeConversion"]["MaxX"])
+        self.window.doubleSpinBox_GCodeConversion_MinY.setValue(settings["GCodeConversion"]["MinY"])
+        self.window.doubleSpinBox_GCodeConversion_MaxY.setValue(settings["GCodeConversion"]["MaxY"])
+            
+        # GCodeGeneration 
+        self.window.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setChecked(settings["GCodeGeneration"]["ReturnToZeroAtEnd"]),
+        self.window.checkBox_GCodeGeneration_SpindleAutomatic.setChecked(settings["GCodeGeneration"]["SpindleAutomatic"]),
+            
+        # session
+        svg = settings["session"]["svg"]
+        if svg :
+            # load
+            pass
+        
+            operations = settings["session"]["operations"]
+            
+            for op in operations:
+                #
+                pass
+        
     def cb_make_all_inch(self):
         '''
         '''
@@ -143,12 +424,6 @@ class main(QtWidgets.QMainWindow):
         self.window.comboBox_GCodeConversion_Units.setCurrentText("mm")
         
         self.init_gui()
-    
-    def init_gui(self):
-        '''
-        '''
-        self.cb_update_tool_display()
-        self.cb_update_gcodeconversion_display()
         
     def cb_update_tool_display(self):
         '''
@@ -298,13 +573,13 @@ class main(QtWidgets.QMainWindow):
         self.svg_material_viewer.load(img)
 
     def cb_doubleSpinBoxThickness(self):
-        thickness = self.window.doubleSpinBoxThickness.value()
-        clearance = self.window.doubleSpinBoxClearance.value()
+        thickness = self.window.doubleSpinBox_Material_Thickness.value()
+        clearance = self.window.doubleSpinBox_Material_Clearance.value()
         self.display_material(thickness=thickness, clearance=clearance)
 
     def cb_doubleSpinBoxClearance(self):
-        thickness = self.window.doubleSpinBoxThickness.value()
-        clearance = self.window.doubleSpinBoxClearance.value()
+        thickness = self.window.doubleSpinBox_Material_Thickness.value()
+        clearance = self.window.doubleSpinBox_Material_Clearance.value()
         self.display_material(thickness=thickness, clearance=clearance)
 
     def display_op(self):
