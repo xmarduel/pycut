@@ -16,9 +16,9 @@ from PySide2.QtCore import QFile
 from PySide2.QtUiTools import QUiLoader
 
 import svgviewer
+import svgmaterial
 
-
-class main(QtWidgets.QMainWindow):
+class PyCutMainWindow(QtWidgets.QMainWindow):
     default_settings = {
         "px_per_inch" : 96,
         "Tabs": {
@@ -61,8 +61,8 @@ class main(QtWidgets.QMainWindow):
             "SpindleAutomatic"  : True,
         },
         "session" : {
-            "svg" : "xxx.svg",
-            "operations": [
+            "svg" : None,
+            "cnc_operations": [
                 {
                     "type"       : "Pockect",
                     "Deep"       : 0.2,
@@ -118,8 +118,12 @@ class main(QtWidgets.QMainWindow):
     }
     
     def __init__(self):
-        super(main, self).__init__()
+        super(PyCutMainWindow, self).__init__()
         self.window = self.load_ui("form.ui")
+
+        # the data
+        self.svg_file = None
+        self.operations = self.default_settings["session"]["cnc_operations"]  # fixme
 
         self.setCentralWidget(self.window)
 
@@ -133,15 +137,15 @@ class main(QtWidgets.QMainWindow):
         self.window.actionOpenSettings.triggered.connect(self.cb_read_settings)
 
         # display material thickness/clearance
-        self.window.doubleSpinBox_Material_Thickness.valueChanged.connect(self.cb_doubleSpinBox_Material_Thickness)
-        self.window.doubleSpinBox_Material_Clearance.valueChanged.connect(self.cb_doubleSpinBox_Material_Clearance)
+        self.window.doubleSpinBox_Material_Thickness.valueChanged.connect(self.cb_display_material_thickness)
+        self.window.doubleSpinBox_Material_Clearance.valueChanged.connect(self.cb_display_material_clearance)
 
         self.window.comboBox_Operations_OpType.currentTextChanged.connect(self.display_op)
         
         
         default_thickness = self.window.doubleSpinBox_Material_Thickness.value()
         default_clearance = self.window.doubleSpinBox_Material_Clearance.value()
-        self.display_material(thickness=default_thickness, clearance=default_clearance)
+        self.svg_material_viewer.display_material(thickness=default_thickness, clearance=default_clearance)
         
         self.display_svg(None)
         self.hide_op_widgets()
@@ -223,60 +227,9 @@ class main(QtWidgets.QMainWindow):
                 "SpindleAutomatic"  : self.window.checkBox_GCodeGeneration_SpindleAutomatic.isChecked(),
             },
             "session" : {
-            "svg" : "xxx.svg",
-            "operations": [
-                {
-                    "type"       : "Pockect",
-                    "Deep"       : 0.2,
-                    "Name"       : "op1",
-                    "RampPlunge" : True,
-                    "Combine"    : "Union",
-                    "Direction"  : "Conventional",
-                    "Units"      : "mm",
-                    "Margin"     : 0.0
-                },
-                {
-                    "type": "Inside",
-                    "Deep"       : 0.2,
-                    "Name"       : "op1",
-                    "RampPlunge" : True,
-                    "Combine"    : "Union",
-                    "Direction"  : "Conventional",
-                    "Units"      : "mm",
-                    "Margin"     : 0.0,
-                    "Width"      : 1.1
-                },
-                {
-                    "type": "Outside",
-                    "Deep"       : 0.2,
-                    "Name"       : "op1",
-                    "RampPlunge" : True,
-                    "Combine"    : "Union",
-                    "Direction"  : "Conventional",
-                    "Units"      : "mm",
-                    "Margin"     : 0.0,
-                    "Width"      : 1.1
-                },
-                {
-                    "type": "Engrave",
-                    "Deep"       : 0.2,
-                    "Name"       : "op1",
-                    "RampPlunge" : True,
-                    "Combine"    : "Union",
-                    "Direction"  : "Conventional",
-                    "Units"      : "mm",
-                    "Margin"     : 0.0
-                },
-                {
-                    "type": "V Pocket",
-                    "Name"       : "op2",
-                    "Combine"    : "Union",
-                    "Units"      : "mm",
-                    "Margin"     : 0.0
-                },
-          
-            ]
-        }
+                "svg" : self.svg_file,
+                "cnc_operations": self.cnc_operations
+            }
         }
         
         # write settings to json file
@@ -337,16 +290,16 @@ class main(QtWidgets.QMainWindow):
         self.window.checkBox_GCodeGeneration_SpindleAutomatic.setChecked(settings["GCodeGeneration"]["SpindleAutomatic"]),
             
         # session
-        svg = settings["session"]["svg"]
-        if svg :
-            # load
-            pass
-        
-            operations = settings["session"]["operations"]
-            
-            for op in operations:
-                #
-                pass
+        self.svg_file = settings["session"]["svg"]
+        if self.svg_file :
+            # display
+            self.display_svg(self.svg_file)
+            self.cnc_operations = settings["session"]["cnc_operations"]
+        else:
+            self.cnc_operations = []
+
+        # display operation in table
+        self.display_cnc_operations()
         
     def cb_make_all_inch(self):
         '''
@@ -431,7 +384,7 @@ class main(QtWidgets.QMainWindow):
         self.svg_viewer.clean()
 
         if svg is None:
-            img = b'''
+            img1 = b'''
             <svg viewBox='0 0 108 95' xmlns='http://www.w3.org/2000/svg'>
               <g transform='scale(0.1)'>
                 <path id="p2" d='M249,699v43h211v-43h-64l-2,3l-2,4l-4,3c0,0-1,2-2,2h-4c-2,0-3,0-4,1c-1,1-3,1-3,
@@ -441,19 +394,20 @@ class main(QtWidgets.QMainWindow):
               </g>
             </svg>'''
             
-            img = b'''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+            img2 = b'''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
                 width="100"
                 height="100"
                 viewBox="0 0 100 100"
                 version="1.1">
                 <style>svg { background-color: green; }</style>
                 <g>
-                  <path id="rect10"
-                    style="fill:#d40000;stroke-width:0.328797"
+                  <path id="rect10" style="fill:#d40000;stroke-width:1;stroke:#00ff00"
                     d="M 20,20 H 60 V 80 H 20 Z" />
+                  <path id="rect11" style="fill:#0000ff;stroke-width:0"
+                    d="M 40,40 H 70 V 90 H 40 Z" />
                 </g>
              </svg>'''
-            self.svg_viewer.set_svg(img)
+            self.svg_viewer.set_svg(img2)
         else:
             fp = open(svg, "r");
 
@@ -463,67 +417,27 @@ class main(QtWidgets.QMainWindow):
 
             self.svg_viewer.set_svg(img)
 
+    def display_cnc_operations(self):
+        '''
+        '''
+        for op in self.cnc_operations:
+            # fill table
+            pass  # TODO
+
     def init_material_viewer(self):
         '''
         '''
-        svg_material_viewer = QtSvg.QSvgWidget()
+        return svgmaterial.SvgMaterialWidget(self.window.widget_display_material)
 
-        renderer = svg_material_viewer.renderer()
-        renderer.setAspectRatioMode(QtCore.Qt.KeepAspectRatio)
-
-        layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(svg_material_viewer)
-
-        self.window.widget_display_material.setLayout(layout)
-        
-        return svg_material_viewer
-        
-    def display_material(self, thickness, clearance):
-        '''
-        '''
-        thickness_level1 = 75 + thickness
-        thickness_level2 = 75 + thickness + 10
-
-        clearance_level1 = 75 - clearance
-
-        img_str = '''
-        <svg viewBox='0 0 200 150' xmlns='http://www.w3.org/2000/svg'>
-         <g>
-            <rect x="90" y="75" width="100" height="%(thickness)d" fill="white" stroke="black" stroke-width="5px" stroke-linejoin="round" />
-            <rect x="80" y="85" width="100" height="%(thickness)d" fill="white" stroke="black" stroke-width="5px" stroke-linejoin="round"/>
-
-            <polyline points="80,85    90,75  190,75                   180,85                    80,85" fill="white" stroke="black" stroke-width="5px" stroke-linejoin="round"/>
-            <polyline points="180,85  190,75  190,%(thickness_level1)d 180,%(thickness_level2)d 180,85" fill="white" stroke="black" stroke-width="5px" stroke-linejoin="round"/>
-
-            <!-- bit -->
-            <polyline points="130,0 130,%(clearance_level1)d 150,%(clearance_level1)d  150,0" fill="white" stroke="black" stroke-width="5px"/>
-
-            <!-- legends levels -->
-            <polyline points="25,%(clearance_level1)d   70,%(clearance_level1)d" fill="white" stroke="black" stroke-width="3px" stroke-dasharray="8,8"/>
-            <polyline points="25,85                     70,85"                   fill="white" stroke="black" stroke-width="3px" stroke-dasharray="8,8"/>
-            <polyline points="25,%(thickness_level2)d   70,%(thickness_level2)d" fill="white" stroke="black" stroke-width="3px" stroke-dasharray="8,8"/>
-
-            <!-- legends -->
-            <text x="0" y="%(clearance_level1)d" fill="black">%(clearance)d</text>
-            <text x="0" y="90"                   fill="black">0.0</text>
-            <text x="0" y="%(thickness_level2)d" fill="black">%(thickness)d</text>
-
-          </g>
-        </svg>''' % {"thickness": thickness, "clearance": clearance, "thickness_level1": thickness_level1, "thickness_level2": thickness_level2, "clearance_level1": clearance_level1}
-
-        img = bytes(img_str, encoding='utf-8')
-
-        self.svg_material_viewer.load(img)
-
-    def cb_doubleSpinBox_Material_Thickness(self):
+    def cb_display_material_thickness(self):
         thickness = self.window.doubleSpinBox_Material_Thickness.value()
         clearance = self.window.doubleSpinBox_Material_Clearance.value()
-        self.display_material(thickness=thickness, clearance=clearance)
+        self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
 
-    def cb_doubleSpinBox_Material_Clearance(self):
+    def cb_display_material_clearance(self):
         thickness = self.window.doubleSpinBox_Material_Thickness.value()
         clearance = self.window.doubleSpinBox_Material_Clearance.value()
-        self.display_material(thickness=thickness, clearance=clearance)
+        self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
 
 
     def cb_create_op(self):
@@ -608,12 +522,15 @@ class main(QtWidgets.QMainWindow):
         svg, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
 
         if svg:
-            self.display_svg(svg)
+            self.svg_file = svg
+            self.display_svg(self.svg_file)
+            self.cnc_operations = []
+            self.display_cnc_operations()
 
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
-    widget = main()
-    widget.show()
+    pycut = PyCutMainWindow()
+    pycut.show()
     sys.exit(app.exec_())

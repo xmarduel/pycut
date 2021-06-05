@@ -1,8 +1,12 @@
 # This Python file uses the following encoding: utf-8
 
+import math
+
 from PySide2 import QtCore
 from PySide2 import QtGui
 from PySide2 import QtWidgets
+
+from PySide2.QtCore import SIGNAL, QObject
 
 from PySide2 import QtSvg
 
@@ -13,24 +17,26 @@ import lxml.etree as ET
 class SvgItem(QtSvg.QGraphicsSvgItem):
     def __init__(self, id, renderer, parent=None):
         super(SvgItem, self).__init__(parent)
-        self.id = id
         self.setSharedRenderer(renderer)
         self.setElementId(id)
         bounds = renderer.boundsOnElement(id)
-        print("bounds=", bounds, bounds.topLeft())
+        print("bounds on id=", bounds)
+        print("bounds  rect=", self.boundingRect())
         self.setPos(bounds.topLeft())
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
 
     def mousePressEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
-        print('svg item: ' + self.id + ' - mousePressEvent()')
+        print('svg item: ' + self.elementId() + ' - mousePressEvent()')
         super().mousePressEvent(event)
 
     def mouseReleaseEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
-        print('svg item: ' + self.id + ' - mouseReleaseEvent()')
+        print('svg item: ' + self.elementId() + ' - mouseReleaseEvent()')
         super().mouseReleaseEvent(event)
 
 
 class SvgViewer(QtWidgets.QGraphicsView):
+    zoomChanged = QtCore.Signal()
+
     def __init__(self, parent):
         super(SvgViewer, self).__init__(parent)
         self._scene = QtWidgets.QGraphicsScene(self,0,0,100,100)
@@ -39,9 +45,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.setScene(self._scene)
         self.items = []
 
+        #self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
+        self.setViewportUpdateMode(QtWidgets.QGraphicsView.FullViewportUpdate);
+
+
+
     def set_svg(self, data):
-        self.resetTransform()
         self._scene.clear()
+        self.resetTransform()
         self._renderer.load(data)
 
         svg = data.decode('utf-8')
@@ -52,7 +63,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
             print(path.attrib)
             id = path.attrib['id']
 
-            item =  SvgItem(id, self._renderer)
+            item = SvgItem(id, self._renderer)
             self._scene.addItem(item)
 
             self.items.append(item)
@@ -70,3 +81,27 @@ class SvgViewer(QtWidgets.QGraphicsView):
         print('SvgViewer - mouseReleaseEvent()')
         super().mouseReleaseEvent(event)
 
+
+    def wheelEvent(self, event):
+        self.zoomBy(math.pow(1.2, event.angleDelta().y() / 240.0))
+
+    def zoomFactor(self):
+        return self.transform().m11()
+
+    def zoomIn(self):
+        self.zoomBy(2)
+
+    def zoomOut(self):
+        self.zoomBy(0.5)
+
+    def resetZoom(self):
+        if self.zoomFactor() != 1 :
+            self.resetTransform()
+            self.zoomChanged.emit()
+
+    def zoomBy(self, factor):
+        currentZoom = self.zoomFactor()
+        if (factor < 1 and currentZoom < 0.1) or (factor > 1 and currentZoom > 10) :
+            return
+        self.scale(factor, factor)
+        self.zoomChanged.emit()

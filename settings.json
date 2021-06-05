@@ -40,8 +40,8 @@
         "SpindleAutomatic": true
     },
     "session": {
-        "svg": "xxx.svg",
-        "operations": [
+        "svg_file": "xxx.svg",
+        "cnc_operations": [
             {
                 "type": "Pockect",
                 "Deep": 0.2,
