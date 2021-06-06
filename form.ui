@@ -67,7 +67,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QTableWidget" name="tableWidget_Operations_ViewOps"/>
+         <widget class="PyCutSimpleTable" name="tableView_Operations_ViewOps"/>
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_Operations_CreateNewOp">
@@ -1095,7 +1095,10 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionOpen_SVG"/>
+    <addaction name="actionOpenSvg"/>
+    <addaction name="separator"/>
+    <addaction name="actionOpenJob"/>
+    <addaction name="actionSaveJob"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
@@ -1104,18 +1107,11 @@
     <addaction name="actionSaveSettings"/>
     <addaction name="actionOpenSettings"/>
    </widget>
-   <widget class="QMenu" name="menuGCODE">
-    <property name="title">
-     <string>GCODE</string>
-    </property>
-    <addaction name="actionSaveGCode"/>
-   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSettings"/>
-   <addaction name="menuGCODE"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionOpen_SVG">
+  <action name="actionOpenSvg">
    <property name="text">
     <string>Open SVG</string>
    </property>
@@ -1130,12 +1126,24 @@
     <string>Open...</string>
    </property>
   </action>
-  <action name="actionSaveGCode">
+  <action name="actionOpenJob">
    <property name="text">
-    <string>Save</string>
+    <string>Open Job</string>
+   </property>
+  </action>
+  <action name="actionSaveJob">
+   <property name="text">
+    <string>Save Job</string>
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PyCutSimpleTable</class>
+   <extends>QTableView</extends>
+   <header location="global">cncoperationsview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

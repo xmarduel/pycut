@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.14.0, 2021-06-05T10:46:43. -->
+<!-- Written by QtCreator 4.14.0, 2021-06-06T17:00:18. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -315,6 +315,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">svgmaterial</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svgmaterial.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svgmaterial.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{137fea30-701e-40ee-875d-db02541e5690}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svgmaterial.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -386,6 +387,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">toto</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/toto.svg</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/toto.svg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{137fea30-701e-40ee-875d-db02541e5690}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/toto.svg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -457,6 +459,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">test_rect_path</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/test_rect_path.svg</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/test_rect_path.svg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{137fea30-701e-40ee-875d-db02541e5690}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/test_rect_path.svg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -528,6 +531,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">test_nc</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/test_nc.svg</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/test_nc.svg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{137fea30-701e-40ee-875d-db02541e5690}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/test_nc.svg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -599,6 +603,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">test_rect_path_clean</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/test_rect_path_clean.svg</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/test_rect_path_clean.svg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{137fea30-701e-40ee-875d-db02541e5690}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/test_rect_path_clean.svg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -670,6 +675,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">default</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/default.svg</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/default.svg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{137fea30-701e-40ee-875d-db02541e5690}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/default.svg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -741,6 +747,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">test_rect</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/test_rect.svg</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/test_rect.svg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{137fea30-701e-40ee-875d-db02541e5690}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/svg/test_rect.svg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>

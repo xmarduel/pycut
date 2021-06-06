@@ -17,6 +17,7 @@ from PySide2.QtUiTools import QUiLoader
 
 import svgviewer
 import svgmaterial
+import cncoperationsview
 
 class PyCutMainWindow(QtWidgets.QMainWindow):
     default_settings = {
@@ -59,61 +60,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         "GCodeGeneration" : {
             "ReturnToZeroAtEnd" : True,
             "SpindleAutomatic"  : True,
-        },
-        "session" : {
-            "svg" : None,
-            "cnc_operations": [
-                {
-                    "type"       : "Pockect",
-                    "Deep"       : 0.2,
-                    "Name"       : "op1",
-                    "RampPlunge" : True,
-                    "Combine"    : "Union",
-                    "Direction"  : "Conventional",
-                    "Units"      : "mm",
-                    "Margin"     : 0.0
-                },
-                {
-                    "type": "Inside",
-                    "Deep"       : 0.2,
-                    "Name"       : "op1",
-                    "RampPlunge" : True,
-                    "Combine"    : "Union",
-                    "Direction"  : "Conventional",
-                    "Units"      : "mm",
-                    "Margin"     : 0.0,
-                    "Width"      : 1.1
-                },
-                {
-                    "type": "Outside",
-                    "Deep"       : 0.2,
-                    "Name"       : "op1",
-                    "RampPlunge" : True,
-                    "Combine"    : "Union",
-                    "Direction"  : "Conventional",
-                    "Units"      : "mm",
-                    "Margin"     : 0.0,
-                    "Width"      : 1.1
-                },
-                {
-                    "type": "Engrave",
-                    "Deep"       : 0.2,
-                    "Name"       : "op1",
-                    "RampPlunge" : True,
-                    "Combine"    : "Union",
-                    "Direction"  : "Conventional",
-                    "Units"      : "mm",
-                    "Margin"     : 0.0
-                },
-                {
-                    "type": "V Pocket",
-                    "Name"       : "op2",
-                    "Combine"    : "Union",
-                    "Units"      : "mm",
-                    "Margin"     : 0.0
-                },
-          
-            ]
         }
     }
     
@@ -123,7 +69,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         # the data
         self.svg_file = None
-        self.operations = self.default_settings["session"]["cnc_operations"]  # fixme
+        self.operations = []
 
         self.setCentralWidget(self.window)
 
@@ -132,7 +78,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.current_op_widget = None
 
         # callbacks
-        self.window.actionOpen_SVG.triggered.connect(self.cb_open_svg)
+        self.window.actionOpenSvg.triggered.connect(self.cb_open_svg)
+        self.window.actionOpenJob.triggered.connect(self.cb_open_job)
         self.window.actionSaveSettings.triggered.connect(self.cb_save_settings)
         self.window.actionOpenSettings.triggered.connect(self.cb_read_settings)
 
@@ -186,6 +133,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         '''
         settings = {
+            "name" : "xxxx",
             "px_per_inch" : 96,
             "Tabs": {
                 "Units"      : self.window.comboBox_Tabs_Units.currentText(),
@@ -225,18 +173,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "GCodeGeneration" : {
                 "ReturnToZeroAtEnd" : self.window.checkBox_GCodeGeneration_ReturnToZeroAtEnd.isChecked(),
                 "SpindleAutomatic"  : self.window.checkBox_GCodeGeneration_SpindleAutomatic.isChecked(),
-            },
-            "session" : {
-                "svg" : self.svg_file,
-                "cnc_operations": self.cnc_operations
             }
         }
         
         # write settings to json file
-        print(settings)
+        settings_file = 'settings.json'
         
-        with open('settings.json', 'w') as json_file:
-            json.dump(settings, json_file, indent=4)
+        with open(settings_file, 'w') as json_file:
+            json.dump(settings, json_file, indent=2)
         
     def cb_read_settings(self):
         # read json
@@ -289,18 +233,37 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setChecked(settings["GCodeGeneration"]["ReturnToZeroAtEnd"]),
         self.window.checkBox_GCodeGeneration_SpindleAutomatic.setChecked(settings["GCodeGeneration"]["SpindleAutomatic"]),
             
-        # session
-        self.svg_file = settings["session"]["svg"]
-        if self.svg_file :
+    def cb_open_job(self):
+        '''
+        '''
+        # read json
+        xfilter = "JSON Files (*.json)"
+        json_file, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
+        
+        with open(json_file) as f:
+            job = json.load(f)
+        
+            self.svg_file = job["svg_file"]
+            self.operations = job["operations"]
+        
             # display
             self.display_svg(self.svg_file)
-            self.cnc_operations = settings["session"]["cnc_operations"]
-        else:
-            self.cnc_operations = []
-
-        # display operation in table
-        self.display_cnc_operations()
+            # display operations in table
+            self.display_cnc_operations(self.operations)
         
+    def save_job(self):
+        '''
+        '''
+        job = {
+            "svg_file" : self.svg_file,
+            "operations": self.operations
+        }
+            
+        job_file_name = 'job_%s.json' % self.svg 
+        
+        with open(job_file_name, 'w') as json_file:
+            json.dump(job, json_file, indent=2)   
+            
     def cb_make_all_inch(self):
         '''
         '''
@@ -363,8 +326,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.window.label_GCodeConversion_MaxX_UnitsDescr.setText("mm")
             self.window.label_GCodeConversion_MinY_UnitsDescr.setText("mm")
             self.window.label_GCodeConversion_MaxY_UnitsDescr.setText("mm")
-            
-            
         
     def init_svg_viewer(self):
         '''
@@ -401,9 +362,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 version="1.1">
                 <style>svg { background-color: green; }</style>
                 <g>
-                  <path id="rect10" style="fill:#d40000;stroke-width:1;stroke:#00ff00"
+                  <path id="p1" style="fill:#d40000;stroke-width:1;stroke:#00ff00"
                     d="M 20,20 H 60 V 80 H 20 Z" />
-                  <path id="rect11" style="fill:#0000ff;stroke-width:0"
+                  <path id="p2" style="fill:#0000ff;stroke-width:0"
                     d="M 40,40 H 70 V 90 H 40 Z" />
                 </g>
              </svg>'''
@@ -417,12 +378,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             self.svg_viewer.set_svg(img)
 
-    def display_cnc_operations(self):
+    def display_cnc_operations(self, operations):
         '''
         '''
-        for op in self.cnc_operations:
-            # fill table
-            pass  # TODO
+        model = cncoperationsview.PyCutSimpleTableModel(operations)
+        self.window.tableView_Operations_ViewOps.setModel(model)
 
     def init_material_viewer(self):
         '''
@@ -523,9 +483,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         if svg:
             self.svg_file = svg
-            self.display_svg(self.svg_file)
             self.cnc_operations = []
-            self.display_cnc_operations()
+            
+            self.display_svg(self.svg_file)
+            self.display_cnc_operations(self.cnc_operations)
 
 
 

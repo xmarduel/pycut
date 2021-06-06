@@ -1,0 +1,59 @@
+{
+  "svg_file": "svg/two_rects.svg",
+  "operations": [
+    {
+      "Name": "op1",
+      "paths": ["p1", "p2"],
+      "type": "Pockect",
+      "Deep": 0.2,       
+      "RampPlunge": true,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0
+    },
+    {
+      "Name": "op2",
+      "paths": ["p1", "p2"],
+      "type": "Inside",
+      "Deep": 0.2,
+      "RampPlunge": true,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 1.1
+    },
+    {
+      "Name": "op3",
+      "paths": ["p1", "p2"],
+      "type": "Outside",
+      "Deep": 0.2,
+      "RampPlunge": true,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 1.1
+    },
+    {
+      "Name": "op4",
+      "paths": ["p1", "p2"],
+      "type": "Engrave",
+      "Deep": 0.2,
+      "RampPlunge": true,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0
+    },
+    {
+      "Name": "op5",
+      "paths": ["p1", "p2"],
+      "type": "V Pocket",
+      "Combine": "Union",
+      "Units": "mm",
+      "Margin": 0.0
+    }
+  ]
+}
