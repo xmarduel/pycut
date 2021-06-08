@@ -21,6 +21,7 @@ import cncoperationsview
 
 class PyCutMainWindow(QtWidgets.QMainWindow):
     default_settings = {
+        "name" : "standart",
         "px_per_inch" : 96,
         "Tabs": {
             "Units"       : "mm",
@@ -32,9 +33,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "Angle"       : 2,
             "PassDepth"   : 3.0,
             "StepOver"    : 4.0,
-            "Rapid"       : 5.0,
-            "Plunge"      : 6.0,
-            "Cut"         : 7.0,
+            "Rapid"       : 500,
+            "Plunge"      : 100,
+            "Cut"         : 200,
         },
         "Material" : {
             "Units"       : "mm",
@@ -80,15 +81,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # callbacks
         self.window.actionOpenSvg.triggered.connect(self.cb_open_svg)
         self.window.actionOpenJob.triggered.connect(self.cb_open_job)
-        self.window.actionSaveSettings.triggered.connect(self.cb_save_settings)
-        self.window.actionOpenSettings.triggered.connect(self.cb_read_settings)
+        
+        self.window.pushButton_Settings_Save.clicked.connect(self.cb_save_settings)
+        self.window.pushButton_Settings_Save.clicked.connect(self.cb_save_as_settings)
+        
+        self.window.comboBox_Settings_SettingsList.currentTextChanged.connect(self.cb_set_settings)
 
         # display material thickness/clearance
         self.window.doubleSpinBox_Material_Thickness.valueChanged.connect(self.cb_display_material_thickness)
         self.window.doubleSpinBox_Material_Clearance.valueChanged.connect(self.cb_display_material_clearance)
 
-        self.window.comboBox_Operations_OpType.currentTextChanged.connect(self.display_op)
-        
         
         default_thickness = self.window.doubleSpinBox_Material_Thickness.value()
         default_clearance = self.window.doubleSpinBox_Material_Clearance.value()
@@ -96,6 +98,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         
         self.display_svg(None)
         self.hide_op_widgets()
+
+        self.window.comboBox_Operations_OpType.currentTextChanged.connect(self.display_op)
 
         self.window.pushButton_Operations_CreateNewOp.clicked.connect(self.cb_create_op)
         self.window.pushButton_Operations_AddOp.clicked.connect(self.cb_add_op)
@@ -109,7 +113,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         
         self.init_gui()
         
-        self.set_settings(self.default_settings)
+        self.init_settings()
 
     def load_ui(self, ui):
         '''
@@ -129,11 +133,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.cb_update_tool_display()
         self.cb_update_gcodeconversion_display()
         
+    def cb_save_as_settings(self):
+        '''
+        '''
+        pass
+    
     def cb_save_settings(self):
         '''
         '''
         settings = {
-            "name" : "xxxx",
+            "name" : self.active_settings,
             "px_per_inch" : 96,
             "Tabs": {
                 "Units"      : self.window.comboBox_Tabs_Units.currentText(),
@@ -176,11 +185,18 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             }
         }
         
+        self.settings[self.active_settings] = settings
+        
         # write settings to json file
         settings_file = 'settings.json'
+         
+        full_settings = {
+            "active_settings": self.active_settings,
+            "settings" : self.settings.values()
+        }
         
         with open(settings_file, 'w') as json_file:
-            json.dump(settings, json_file, indent=2)
+            json.dump(full_settings, json_file, indent=2)
         
     def cb_read_settings(self):
         # read json
@@ -191,7 +207,39 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             settings = json.load(f)
             self.set_settings(settings)
         
-    def set_settings(self, settings):
+    def init_settings(self):
+        '''
+        '''
+        # read settings file
+        json_file = "settings.json"
+        
+        with open(json_file) as f:
+            full_settings = json.load(f)
+            
+            self.active_settings = full_settings["active_settings"]
+            
+            settings_list = [settings["name"] for settings in full_settings["settings"]]
+            
+            self.settings = {}
+            for settings_name  in settings_list:
+                for settings in full_settings["settings"]:
+                    if settings["name"] == settings_name:
+                        self.settings[settings_name] = settings
+            
+            # set the combobox
+            self.window.comboBox_Settings_SettingsList.insertItems(0, settings_list)
+            self.window.comboBox_Settings_SettingsList.setCurrentText(self.active_settings)
+            
+            self.apply_settings(self.settings[self.active_settings] )
+        
+    def cb_set_settings(self):
+        '''
+        '''
+        settings_name = self.window.comboBox_Settings_SettingsList.currentText()
+        settings = self.settings[settings_name]
+        self.apply_settings(settings)
+        
+    def apply_settings(self, settings):
         '''
         '''
         # Tabs

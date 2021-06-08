@@ -11,12 +11,12 @@
        "Tool": {
          "Units": "mm",
          "Diameter": 1.0,
-         "Angle": 2,
-         "PassDepth": 3.0,
-         "StepOver": 4.0,
-         "Rapid": 5,
-         "Plunge": 6,
-         "Cut": 7
+         "Angle": 180,
+         "PassDepth": 0.25,
+         "StepOver": 0.4,
+         "Rapid": 500,
+         "Plunge": 100,
+         "Cut": 200
        },
        "Material": {
          "Units": "mm",

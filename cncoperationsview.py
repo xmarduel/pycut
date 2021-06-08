@@ -17,6 +17,7 @@ class PyCutSimpleTable(QtWidgets.QTableView):
         # Fixes the width of columns and the height of rows.
         try:
             self.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Fixed)
+            
             self.verticalHeader().setResizeMode(QtWidgets.QHeaderView.Fixed)
         except Exception:
             pass
@@ -27,6 +28,7 @@ class PyCutSimpleTable(QtWidgets.QTableView):
         model = PyCutSimpleTableModel(operations)
         self.setModel(model)
         
+        self.horizontalHeader().setStretchLastSection(True)
         
 class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
     '''

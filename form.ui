@@ -16,7 +16,86 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayoutLeft" stretch="0,0,0,0">
+     <layout class="QVBoxLayout" name="verticalLayoutLeft" stretch="0,0,0,0,0">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayoutSettings" stretch="0,0,0,0,0">
+        <item>
+         <widget class="QLabel" name="label_Settings">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(187, 187, 187);</string>
+          </property>
+          <property name="text">
+           <string>Settings</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QPushButton" name="pushButton_MakeAll_inch">
+            <property name="text">
+             <string>Make all inch</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_MakeAll_mm">
+            <property name="text">
+             <string>Make all mm</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBox_Settings_SettingsList"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_Settings_DeleteCurrent">
+          <property name="text">
+           <string>Delete Current Settings</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="pushButton_Settings_Save">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Save Current Settings</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="pushButton_Settings_SaveAs">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Save Current Settings As...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayoutOperations">
         <item>
@@ -72,7 +151,7 @@
         <item>
          <widget class="QPushButton" name="pushButton_Operations_CreateNewOp">
           <property name="text">
-           <string>Create New Operation</string>
+           <string>New Operation</string>
           </property>
          </widget>
         </item>
@@ -108,7 +187,17 @@
            </widget>
           </item>
           <item>
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_Operations_OpDepth"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Operations_OpDepth">
+            <property name="maximum">
+             <double>10.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+            <property name="value">
+             <double>0.200000000000000</double>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QLabel" name="label_Operations_OpDepth">
@@ -311,7 +400,14 @@
            </widget>
           </item>
           <item row="1" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_Diameter"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_Diameter">
+            <property name="maximum">
+             <double>32.000000000000000</double>
+            </property>
+            <property name="value">
+             <double>1.000000000000000</double>
+            </property>
+           </widget>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_Tool_Angle">
@@ -354,7 +450,17 @@
            </widget>
           </item>
           <item row="3" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_PassDepth"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_PassDepth">
+            <property name="maximum">
+             <double>10.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.500000000000000</double>
+            </property>
+            <property name="value">
+             <double>0.200000000000000</double>
+            </property>
+           </widget>
           </item>
           <item row="4" column="0">
            <widget class="QLabel" name="label_Tool_StepOver">
@@ -377,7 +483,17 @@
            </widget>
           </item>
           <item row="4" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_StepOver"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_StepOver">
+            <property name="maximum">
+             <double>1.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.010000000000000</double>
+            </property>
+            <property name="value">
+             <double>0.400000000000000</double>
+            </property>
+           </widget>
           </item>
           <item row="5" column="0">
            <widget class="QLabel" name="label_Tool_Rapid">
@@ -444,12 +560,24 @@
             <property name="toolTip">
              <string>The speed the tool moves horizontally during cutting</string>
             </property>
+            <property name="maximum">
+             <number>1000</number>
+            </property>
+            <property name="value">
+             <number>200</number>
+            </property>
            </widget>
           </item>
           <item row="6" column="2">
            <widget class="QSpinBox" name="spinBox_Tool_Plunge">
             <property name="toolTip">
              <string>The speed the tool plunges downwards into the material</string>
+            </property>
+            <property name="maximum">
+             <number>1000</number>
+            </property>
+            <property name="value">
+             <number>100</number>
             </property>
            </widget>
           </item>
@@ -458,10 +586,23 @@
             <property name="toolTip">
              <string>The speed the tool moves while not cutting</string>
             </property>
+            <property name="maximum">
+             <number>1000</number>
+            </property>
+            <property name="value">
+             <number>500</number>
+            </property>
            </widget>
           </item>
           <item row="2" column="2">
-           <widget class="QSpinBox" name="spinBox_Tool_Angle"/>
+           <widget class="QSpinBox" name="spinBox_Tool_Angle">
+            <property name="maximum">
+             <number>180</number>
+            </property>
+            <property name="value">
+             <number>180</number>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -523,24 +664,6 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <item>
-           <widget class="QPushButton" name="pushButton_MakeAll_inch">
-            <property name="text">
-             <string>Make all inch</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_MakeAll_mm">
-            <property name="text">
-             <string>Make all mm</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
            <spacer name="horizontalSpacer_3">
@@ -589,7 +712,7 @@
         <item>
          <layout class="QFormLayout" name="formLayout_Material">
           <property name="labelAlignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
           </property>
           <property name="formAlignment">
            <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
@@ -656,6 +779,12 @@
           </item>
           <item row="2" column="1">
            <widget class="QComboBox" name="comboBox_Material_ZOrigin">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <item>
              <property name="text">
               <string>Top</string>
@@ -677,7 +806,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Cleareance</string>
+             <string>Cleareance                                     </string>
             </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1097,18 +1226,17 @@
     </property>
     <addaction name="actionOpenSvg"/>
     <addaction name="separator"/>
-    <addaction name="actionOpenJob"/>
-    <addaction name="actionSaveJob"/>
    </widget>
-   <widget class="QMenu" name="menuSettings">
+   <widget class="QMenu" name="menuJobs">
     <property name="title">
-     <string>Settings</string>
+     <string>Jobs</string>
     </property>
-    <addaction name="actionSaveSettings"/>
-    <addaction name="actionOpenSettings"/>
+    <addaction name="actionNewJob"/>
+    <addaction name="actionOpenJob"/>
+    <addaction name="actionSaveJobAs"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuSettings"/>
+   <addaction name="menuJobs"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpenSvg">
@@ -1116,24 +1244,19 @@
     <string>Open SVG</string>
    </property>
   </action>
-  <action name="actionSaveSettings">
+  <action name="actionNewJob">
    <property name="text">
-    <string>Save</string>
-   </property>
-  </action>
-  <action name="actionOpenSettings">
-   <property name="text">
-    <string>Open...</string>
+    <string>New Job</string>
    </property>
   </action>
   <action name="actionOpenJob">
    <property name="text">
-    <string>Open Job</string>
+    <string>Open Job...</string>
    </property>
   </action>
-  <action name="actionSaveJob">
+  <action name="actionSaveJobAs">
    <property name="text">
-    <string>Save Job</string>
+    <string>Save Job As...</string>
    </property>
   </action>
  </widget>
