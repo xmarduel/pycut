@@ -18,7 +18,7 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayoutLeft" stretch="0,0,0,0,0">
       <item>
-       <layout class="QVBoxLayout" name="verticalLayoutSettings" stretch="0,0,0,0,0">
+       <layout class="QVBoxLayout" name="verticalLayoutSettings" stretch="0,0,0,0,0,0">
         <item>
          <widget class="QLabel" name="label_Settings">
           <property name="font">
@@ -35,6 +35,33 @@
            <string>Settings</string>
           </property>
          </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="label_PxPerInch">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>px per inch</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="spinBox_PxPerInch">
+            <property name="maximum">
+             <number>126</number>
+            </property>
+            <property name="value">
+             <number>96</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -55,7 +82,24 @@
          </layout>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBox_Settings_SettingsList"/>
+         <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Select Settings</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_Settings_SettingsList"/>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_Settings_DeleteCurrent">
@@ -117,33 +161,6 @@
            <string>Operations</string>
           </property>
          </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QLabel" name="label_PxPerInch">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>px per inch</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="spinBox_PxPerInch">
-            <property name="maximum">
-             <number>126</number>
-            </property>
-            <property name="value">
-             <number>96</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </item>
         <item>
          <widget class="PyCutSimpleTable" name="tableView_Operations_ViewOps"/>
