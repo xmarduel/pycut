@@ -520,8 +520,53 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.window.label_Operations_OpDepth.show()
 
         self.window.layout()
-
-
+        
+        # and fill widget
+        #curr_op_name = self.window.comboBox_Operations_OpType.currentText()
+        
+        #operations = dict( zip([ op.Name for op in self.operations], self.operations))
+        #operation = operations[curr_op_name]
+        
+        operation_type = self.window.comboBox_Operations_OpType.currentText()
+        
+        # fill widget with default values
+        
+        if operation_type == "Pocket":
+            self.current_op_widget.lineEdit_Name.setText("-- op pocket --")
+            self.current_op_widget.checkBox_RampPlunge.setChecked(False)
+            self.current_op_widget.comboBox_Combine.setCurrentText("Union")  # "Intersect",  "Diff", "Xor"
+            self.current_op_widget.comboBox_Direction.setCurrentText("Conventional")  # "Plunge"
+            self.current_op_widget.comboBox_Units.setCurrentText("mm")
+            self.current_op_widget.doubleSpinBox_Margin.setValue(0.1)
+        if operation_type == "Inside":
+            self.current_op_widget.lineEdit_Name.setText("-- op inside --")
+            self.current_op_widget.checkBox_RampPlunge.setChecked(False)
+            self.current_op_widget.comboBox_Combine.setCurrentText("Union")  # "Intersect",  "Diff", "Xor"
+            self.current_op_widget.comboBox_Direction.setCurrentText("Conventional")  # "Plunge"
+            self.current_op_widget.comboBox_Units.setCurrentText("mm")
+            self.current_op_widget.doubleSpinBox_Margin.setValue(0.2)
+            self.current_op_widget.doubleSpinBox_Width.setValue(0.3)
+        if operation_type == "Outside":
+            self.current_op_widget.lineEdit_Name.setText("-- op outside --")
+            self.current_op_widget.checkBox_RampPlunge.setChecked(False)
+            self.current_op_widget.comboBox_Combine.setCurrentText("Union")  # "Intersect",  "Diff", "Xor"
+            self.current_op_widget.comboBox_Direction.setCurrentText("Conventional")  # "Plunge"
+            self.current_op_widget.comboBox_Units.setCurrentText("mm")
+            self.current_op_widget.doubleSpinBox_Margin.setValue(0.4)
+            self.current_op_widget.doubleSpinBox_Width.setValue(0.5)
+        if operation_type == "Engrave":
+            self.current_op_widget.lineEdit_Name.setText("-- op engrave --")
+            self.current_op_widget.checkBox_RampPlunge.setChecked(False)
+            self.current_op_widget.comboBox_Combine.setCurrentText("Union")  # "Intersect",  "Diff", "Xor"
+            self.current_op_widget.comboBox_Direction.setCurrentText("Conventional")  # "Plunge"
+            self.current_op_widget.comboBox_Units.setCurrentText("mm")
+            self.current_op_widget.doubleSpinBox_Margin.setValue(0.6)
+        if operation_type == "V Pocket":
+            self.current_op_widget.lineEdit_Name.setText("-- op v-pocket --")
+            self.current_op_widget.comboBox_Combine.setCurrentText("Union")  # "Intersect",  "Diff", "Xor"  
+            self.current_op_widget.comboBox_Units.setCurrentText("mm")
+            self.current_op_widget.doubleSpinBox_Margin.setValue(0.7)
+                
     @QtCore.Slot()
     def cb_open_svg(self):
         '''

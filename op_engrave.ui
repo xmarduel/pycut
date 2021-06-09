@@ -33,7 +33,7 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="lineEdit_Name"/>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_20">
@@ -49,7 +49,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QCheckBox" name="checkBox_2">
+      <widget class="QCheckBox" name="checkBox_RampPlunge">
        <property name="text">
         <string/>
        </property>
@@ -69,7 +69,7 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QComboBox" name="comboBox_6">
+      <widget class="QComboBox" name="comboBox_Combine">
        <item>
         <property name="text">
          <string>Union</string>
@@ -106,7 +106,7 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QComboBox" name="comboBox_5">
+      <widget class="QComboBox" name="comboBox_Direction">
        <item>
         <property name="text">
          <string>Conventional</string>
@@ -133,7 +133,7 @@
       </widget>
      </item>
      <item row="4" column="1">
-      <widget class="QComboBox" name="comboBox_3">
+      <widget class="QComboBox" name="comboBox_Units">
        <item>
         <property name="text">
          <string>inch</string>
@@ -160,7 +160,7 @@
       </widget>
      </item>
      <item row="5" column="1">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_8"/>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_Margin"/>
      </item>
     </layout>
    </item>

@@ -10,7 +10,7 @@
       "Combine": "Union",
       "Direction": "Conventional",
       "Units": "mm",
-      "Margin": 0.0
+      "Margin": 0.1
     },
     {
       "Name": "op2",
