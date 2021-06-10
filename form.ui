@@ -163,7 +163,7 @@
          </widget>
         </item>
         <item>
-         <widget class="PyCutSimpleTable" name="tableView_Operations_ViewOps"/>
+         <widget class="PyCutSimpleTableWidget" name="tableWidget_Operations_ViewOps"/>
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_Operations_CreateNewOp">
@@ -1279,9 +1279,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PyCutSimpleTable</class>
-   <extends>QTableView</extends>
-   <header location="global">cncoperationsview.h</header>
+   <class>PyCutSimpleTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header>pycut_operations_simpletablewidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

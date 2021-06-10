@@ -4,7 +4,7 @@
     {
       "Name": "op1",
       "paths": ["p1", "p2"],
-      "type": "Pockect",
+      "type": "Pocket",
       "Deep": 0.2,       
       "RampPlunge": true,
       "Combine": "Union",

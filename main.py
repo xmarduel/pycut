@@ -17,8 +17,10 @@ from PySide2.QtUiTools import QUiLoader
 
 import svgviewer
 import svgmaterial
-import cncoperationsview
+import pycut_operations_simpletablewidget
 
+
+  
 class PyCutMainWindow(QtWidgets.QMainWindow):
     default_settings = {
         "name" : "standart",
@@ -114,16 +116,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.init_gui()
         
         self.init_settings()
+        
+        self.open_job("/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/jobs/cnc_two_rects.json")
 
-    def load_ui(self, ui):
+    def load_ui(self, uifile):
         '''
         '''
-        loader = QUiLoader()
-        path = os.path.join(os.path.dirname(__file__), ui)
-        ui_file = QFile(path)
-        ui_file.open(QFile.ReadOnly)
-        window = loader.load(ui_file)
-        ui_file.close()
+        loader = QUiLoader(self)
+        loader.registerCustomWidget(pycut_operations_simpletablewidget.PyCutSimpleTableWidget)
+        
+        window = loader.load(uifile)
 
         return window
     
@@ -288,6 +290,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         xfilter = "JSON Files (*.json)"
         json_file, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
         
+        self.open_job(json_file)
+        
+    def open_job(self, json_file):
         with open(json_file) as f:
             job = json.load(f)
         
@@ -429,8 +434,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def display_cnc_operations(self, operations):
         '''
         '''
-        model = cncoperationsview.PyCutSimpleTableModel(operations)
-        self.window.tableView_Operations_ViewOps.setModel(model)
+        self.window.tableWidget_Operations_ViewOps.setData(operations)
 
     def init_material_viewer(self):
         '''
@@ -521,66 +525,126 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.window.layout()
         
-        # and fill widget
-        #curr_op_name = self.window.comboBox_Operations_OpType.currentText()
-        
-        #operations = dict( zip([ op.Name for op in self.operations], self.operations))
-        #operation = operations[curr_op_name]
-        
         operation_type = self.window.comboBox_Operations_OpType.currentText()
         
         # fill widget with default values
         
         if operation_type == "Pocket":
-            self.current_op_widget.lineEdit_Name.setText("-- op pocket --")
-            self.current_op_widget.checkBox_RampPlunge.setChecked(False)
-            self.current_op_widget.comboBox_Combine.setCurrentText("Union")  # "Intersect",  "Diff", "Xor"
-            self.current_op_widget.comboBox_Direction.setCurrentText("Conventional")  # "Plunge"
-            self.current_op_widget.comboBox_Units.setCurrentText("mm")
-            self.current_op_widget.doubleSpinBox_Margin.setValue(0.1)
+            operation = {
+                "Name": "-- op pocket --",
+                "paths": [],
+                "type": "Pocket",
+                "Deep": 0.2,       
+                "RampPlunge": True,
+                "Combine": "Union",
+                "Direction": "Conventional",
+                "Units": "mm",
+                "Margin": 0.1
+            }
         if operation_type == "Inside":
-            self.current_op_widget.lineEdit_Name.setText("-- op inside --")
-            self.current_op_widget.checkBox_RampPlunge.setChecked(False)
-            self.current_op_widget.comboBox_Combine.setCurrentText("Union")  # "Intersect",  "Diff", "Xor"
-            self.current_op_widget.comboBox_Direction.setCurrentText("Conventional")  # "Plunge"
-            self.current_op_widget.comboBox_Units.setCurrentText("mm")
-            self.current_op_widget.doubleSpinBox_Margin.setValue(0.2)
-            self.current_op_widget.doubleSpinBox_Width.setValue(0.3)
+            operation = {
+                "Name": "-- op inside --",
+                "paths": [],
+                "type": "Pocket",
+                "Deep": 0.2,       
+                "RampPlunge": True,
+                "Combine": "Union",
+                "Direction": "Conventional",
+                "Units": "mm",
+                "Margin": 0.1,
+                "Width": 1.1
+            }
         if operation_type == "Outside":
-            self.current_op_widget.lineEdit_Name.setText("-- op outside --")
-            self.current_op_widget.checkBox_RampPlunge.setChecked(False)
-            self.current_op_widget.comboBox_Combine.setCurrentText("Union")  # "Intersect",  "Diff", "Xor"
-            self.current_op_widget.comboBox_Direction.setCurrentText("Conventional")  # "Plunge"
-            self.current_op_widget.comboBox_Units.setCurrentText("mm")
-            self.current_op_widget.doubleSpinBox_Margin.setValue(0.4)
-            self.current_op_widget.doubleSpinBox_Width.setValue(0.5)
+            operation = {
+                "Name": "-- op outside --",
+                "paths": [],
+                "type": "Pocket",
+                "Deep": 0.2,       
+                "RampPlunge": True,
+                "Combine": "Union",
+                "Direction": "Conventional",
+                "Units": "mm",
+                "Margin": 0.1,
+                "Width": 1.1
+            }
         if operation_type == "Engrave":
-            self.current_op_widget.lineEdit_Name.setText("-- op engrave --")
-            self.current_op_widget.checkBox_RampPlunge.setChecked(False)
-            self.current_op_widget.comboBox_Combine.setCurrentText("Union")  # "Intersect",  "Diff", "Xor"
-            self.current_op_widget.comboBox_Direction.setCurrentText("Conventional")  # "Plunge"
-            self.current_op_widget.comboBox_Units.setCurrentText("mm")
-            self.current_op_widget.doubleSpinBox_Margin.setValue(0.6)
+            operation = {
+                "Name": "-- op outside --",
+                "paths": [],
+                "type": "Pocket",
+                "Combine": "Union",
+                "Direction": "Conventional",
+                "Units": "mm",
+                "Margin": 0.1,
+            }
         if operation_type == "V Pocket":
-            self.current_op_widget.lineEdit_Name.setText("-- op v-pocket --")
-            self.current_op_widget.comboBox_Combine.setCurrentText("Union")  # "Intersect",  "Diff", "Xor"  
-            self.current_op_widget.comboBox_Units.setCurrentText("mm")
-            self.current_op_widget.doubleSpinBox_Margin.setValue(0.7)
+            operation = {
+                "Name": "-- op v-pocket --",
+                "paths": [],
+                "type": "V Pocket",
+                "Combine": "Union",
+                "Units": "mm",
+                "Margin": 0.1,
+            }
+            
+        self.display_operation(operation)
                 
+    def display_op_at_row(self, row):
+        operation = self.operations[row]
+        self.display_operation(operation)
+        
+    def display_operation(self, operation):
+        '''
+        '''
+        if operation["type"] == "Pocket":
+            self.current_op_widget.lineEdit_Name.setText(operation["Name"])
+            self.current_op_widget.checkBox_RampPlunge.setChecked(operation["RampPlunge"])
+            self.current_op_widget.comboBox_Combine.setCurrentText(operation["Combine"])  # "Union", "Intersect",  "Diff", "Xor"
+            self.current_op_widget.comboBox_Direction.setCurrentText(operation["Direction"])  # "Conventional", "Plunge"
+            self.current_op_widget.comboBox_Units.setCurrentText(operation["Units"]) # mm, "inch"
+            self.current_op_widget.doubleSpinBox_Margin.setValue(operation["Margin"])
+        if operation["type"] == "Inside":
+            self.current_op_widget.lineEdit_Name.setText(operation["Name"])
+            self.current_op_widget.checkBox_RampPlunge.setChecked(operation["RampPlunge"])
+            self.current_op_widget.comboBox_Combine.setCurrentText(operation["Combine"])  # "Intersect",  "Diff", "Xor"
+            self.current_op_widget.comboBox_Direction.setCurrentText(operation["Direction"])  # "Plunge"
+            self.current_op_widget.comboBox_Units.setCurrentText(operation["Units"])
+            self.current_op_widget.doubleSpinBox_Margin.setValue(operation["Margin"])
+            self.current_op_widget.doubleSpinBox_Width.setValue(operation["Width"])
+        if operation["type"] == "Outside":
+            self.current_op_widget.lineEdit_Name.setText(operation["Name"])
+            self.current_op_widget.checkBox_RampPlunge.setChecked(operation["RampPlunge"])
+            self.current_op_widget.comboBox_Combine.setCurrentText(operation["Combine"])  # "Intersect",  "Diff", "Xor"
+            self.current_op_widget.comboBox_Direction.setCurrentText(operation["Direction"])  # "Plunge"
+            self.current_op_widget.comboBox_Units.setCurrentText(operation["Units"])
+            self.current_op_widget.doubleSpinBox_Margin.setValue(operation["Margin"])
+            self.current_op_widget.doubleSpinBox_Width.setValue(operation["Width"])
+        if operation["type"] == "Engrave":
+            self.current_op_widget.lineEdit_Name.setText(operation["Name"])
+            self.current_op_widget.checkBox_RampPlunge.setChecked(operation["RampPlunge"])
+            self.current_op_widget.comboBox_Combine.setCurrentText(operation["Combine"])  # "Intersect",  "Diff", "Xor"
+            self.current_op_widget.comboBox_Direction.setCurrentText(operation["Direction"])  # "Plunge"
+            self.current_op_widget.comboBox_Units.setCurrentText(operation["Units"])
+            self.current_op_widget.doubleSpinBox_Margin.setValue(operation["Margin"])
+        if operation["type"] == "V Pocket":
+            self.current_op_widget.lineEdit_Name.setText(operation["Name"])
+            self.current_op_widget.comboBox_Combine.setCurrentText(operation["Combine"])  # "Intersect",  "Diff", "Xor"  
+            self.current_op_widget.comboBox_Units.setCurrentText(operation["Units"])
+            self.current_op_widget.doubleSpinBox_Margin.setValue(operation["Margin"])
+        
     @QtCore.Slot()
     def cb_open_svg(self):
         '''
         '''
         xfilter = "SVG Files (*.svg)"
-        svg, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
+        svg_file, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
 
-        if svg:
-            self.svg_file = svg
-            self.cnc_operations = []
+        if svg_file:
+            self.svg_file = svg_file
+            self.operations = []
             
             self.display_svg(self.svg_file)
-            self.display_cnc_operations(self.cnc_operations)
-
+            self.display_cnc_operations(self.operations)
 
 
 if __name__ == "__main__":
