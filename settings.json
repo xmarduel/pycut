@@ -33,11 +33,7 @@
          "ZeroLowerLeft": true,
          "ZeroCenter": false,
          "XOffset": 1.0,
-         "YOffset": 2.0,
-         "MinX": 3.0,
-         "MaxX": 4.0,
-         "MinY": 5.0,
-         "MaxY": 6.0
+         "YOffset": 2.0
       },
       "GCodeGeneration": {
         "ReturnToZeroAtEnd": true,

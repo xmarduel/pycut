@@ -37,7 +37,9 @@ class PyCutSimpleTableWidget(QtWidgets.QTableWidget):
             
             widget = QtWidgets.QWidget()
             btn_show_op = QtWidgets.QPushButton()
-            btn_show_op.setText("Show")
+            #btn_show_op.setText("Show")
+            btn_show_op.setIcon(QtGui.QIcon('images/tango/22x22/actions/system-search.png'))
+            btn_show_op.setToolTip("Activate")
             layout = QtWidgets.QHBoxLayout(widget)
             layout.addWidget(btn_show_op);
             layout.setAlignment(QtGui.Qt.AlignCenter)
@@ -46,24 +48,29 @@ class PyCutSimpleTableWidget(QtWidgets.QTableWidget):
             self.setCellWidget(i, 2, widget)
             
             widget = QtWidgets.QWidget()
-            btn_generate_gcode_op = QtWidgets.QPushButton()
-            btn_generate_gcode_op.setText("Generate GCode")
+            btn_del_op = QtWidgets.QPushButton()
+            #btn_del_op.setText("Del")
+            btn_del_op.setIcon(QtGui.QIcon('images/tango/22x22/actions/edit-clear.png'))
+            btn_del_op.setToolTip("Delete")
             layout = QtWidgets.QHBoxLayout(widget)
-            layout.addWidget(btn_generate_gcode_op);
+            layout.addWidget(btn_del_op);
             layout.setAlignment(QtGui.Qt.AlignCenter)
             layout.setContentsMargins(0, 0, 0, 0)
             widget.setLayout(layout)
             self.setCellWidget(i, 3, widget)
             
             widget = QtWidgets.QWidget()
-            btn_del_op = QtWidgets.QPushButton()
-            btn_del_op.setText("Del")
+            btn_generate_gcode_op = QtWidgets.QPushButton()
+            btn_generate_gcode_op.setText("Generate GCode")
+            btn_generate_gcode_op.setIcon(QtGui.QIcon('images/tango/22x22/actions/edit-clear.png'))
+            btn_generate_gcode_op.setToolTip("Generate GCode")
             layout = QtWidgets.QHBoxLayout(widget)
-            layout.addWidget(btn_del_op);
+            layout.addWidget(btn_generate_gcode_op);
             layout.setAlignment(QtGui.Qt.AlignCenter)
             layout.setContentsMargins(0, 0, 0, 0)
             widget.setLayout(layout)
             self.setCellWidget(i, 4, widget)
+            
             
         self.resizeColumnsToContents()
         self.horizontalHeader().setStretchLastSection(True)
@@ -77,5 +84,4 @@ class PyCutSimpleTableWidget(QtWidgets.QTableWidget):
         item = self.selectedItems()[0]
         print(str(item.text()), item.row())
         
-        self.parent.parent().parent().display_op()
         self.parent.parent().parent().display_op_at_row(item.row())

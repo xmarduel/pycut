@@ -10,8 +10,6 @@ from PySide2 import QtCore
 from PySide2 import QtGui
 from PySide2 import QtWidgets
 
-from PySide2 import QtSvg
-
 from PySide2.QtCore import QFile
 from PySide2.QtUiTools import QUiLoader
 
@@ -55,10 +53,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "ZeroCenter"    : False,
             "XOffset"       : 1.0,
             "YOffset"       : 2.0,
-            "MinX"          : 3.0,
-            "MaxX"          : 4.0,
-            "MinY"          : 5.0,
-            "MaxY"          : 6.0,
         },
         "GCodeGeneration" : {
             "ReturnToZeroAtEnd" : True,
@@ -73,6 +67,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # the data
         self.svg_file = None
         self.operations = []
+        
+        self.active_settings = None
+        self.all_settings = {}
 
         self.setCentralWidget(self.window)
 
@@ -104,7 +101,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.comboBox_Operations_OpType.currentTextChanged.connect(self.display_op)
 
         self.window.pushButton_Operations_CreateNewOp.clicked.connect(self.cb_create_op)
-        self.window.pushButton_Operations_AddOp.clicked.connect(self.cb_add_op)
+        self.window.pushButton_Operations_SaveOp.clicked.connect(self.cb_save_op)
         self.window.pushButton_Operations_CancelOp.clicked.connect(self.cb_cancel_op)
         
         self.window.comboBox_Tool_Units.currentTextChanged.connect(self.cb_update_tool_display)
@@ -138,13 +135,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def cb_save_as_settings(self):
         '''
         '''
+        # ask new settings name -- must be unique --
         pass
     
     def cb_save_settings(self):
         '''
         '''
         settings = {
-            "name" : self.active_settings,
+            "name" : self.active_settings["name"],
             "px_per_inch" : 96,
             "Tabs": {
                 "Units"      : self.window.comboBox_Tabs_Units.currentText(),
@@ -175,11 +173,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "ZeroLowerLeft"   : self.window.radioButton_GCodeConversion_ZeroLowerLeft.isChecked(),
                 "ZeroCenter"      : self.window.radioButton_GCodeConversion_ZeroCenter.isChecked(),
                 "XOffset"         : self.window.doubleSpinBox_GCodeConversion_XOffset.value(),
-                "YOffset"         : self.window.doubleSpinBox_GCodeConversion_YOffset.value(),
-                "MinX"            : self.window.doubleSpinBox_GCodeConversion_MinX.value(),
-                "MaxX"            : self.window.doubleSpinBox_GCodeConversion_MaxX.value(),
-                "MinY"            : self.window.doubleSpinBox_GCodeConversion_MinY.value(),
-                "MaxY"            : self.window.doubleSpinBox_GCodeConversion_MaxY.value(),
+                "YOffset"         : self.window.doubleSpinBox_GCodeConversion_YOffset.value()
             },
             "GCodeGeneration" : {
                 "ReturnToZeroAtEnd" : self.window.checkBox_GCodeGeneration_ReturnToZeroAtEnd.isChecked(),
@@ -187,27 +181,18 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             }
         }
         
-        self.settings[self.active_settings] = settings
+        self.active_settings = settings
         
         # write settings to json file
-        settings_file = 'settings.json'
+        full_settings_file = 'settings.json'
          
         full_settings = {
-            "active_settings": self.active_settings,
-            "settings" : self.settings.values()
+            "active_settings": self.active_settings["name"],
+            "settings" : list(self.all_settings.values())
         }
         
-        with open(settings_file, 'w') as json_file:
+        with open(full_settings_file, 'w') as json_file:
             json.dump(full_settings, json_file, indent=2)
-        
-    def cb_read_settings(self):
-        # read json
-        xfilter = "JSON Files (*.json)"
-        json_file, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
-        
-        with open(json_file) as f:
-            settings = json.load(f)
-            self.set_settings(settings)
         
     def init_settings(self):
         '''
@@ -215,31 +200,31 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # read settings file
         json_file = "settings.json"
         
-        with open(json_file) as f:
-            full_settings = json.load(f)
+        if os.path.exists(json_file):
+            with open(json_file) as f:
+                full_settings = json.load(f)
             
-            self.active_settings = full_settings["active_settings"]
+                self.all_settings = dict(zip([settings["name"] for settings in full_settings["settings"]], full_settings["settings"]))
+                self.active_settings = self.all_settings[full_settings["active_settings"]]
+        else:
+            self.active_settings = self.default_settings
+            self.all_settings = {
+                "standart": self.default_settings
+            }
             
-            settings_list = [settings["name"] for settings in full_settings["settings"]]
+        settings_list = list(self.all_settings.keys())   
+        # set the combobox
+        self.window.comboBox_Settings_SettingsList.insertItems(0, settings_list)
+        self.window.comboBox_Settings_SettingsList.setCurrentText(self.active_settings["name"])
             
-            self.settings = {}
-            for settings_name  in settings_list:
-                for settings in full_settings["settings"]:
-                    if settings["name"] == settings_name:
-                        self.settings[settings_name] = settings
-            
-            # set the combobox
-            self.window.comboBox_Settings_SettingsList.insertItems(0, settings_list)
-            self.window.comboBox_Settings_SettingsList.setCurrentText(self.active_settings)
-            
-            self.apply_settings(self.settings[self.active_settings] )
+        self.apply_settings(self.active_settings)
         
     def cb_set_settings(self):
         '''
         '''
         settings_name = self.window.comboBox_Settings_SettingsList.currentText()
-        settings = self.settings[settings_name]
-        self.apply_settings(settings)
+        self.active_settings = self.all_settings[settings_name]
+        self.apply_settings(self.active_settings)
         
     def apply_settings(self, settings):
         '''
@@ -274,10 +259,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.radioButton_GCodeConversion_ZeroCenter.setChecked(settings["GCodeConversion"]["ZeroCenter"])
         self.window.doubleSpinBox_GCodeConversion_XOffset.setValue(settings["GCodeConversion"]["XOffset"])
         self.window.doubleSpinBox_GCodeConversion_YOffset.setValue(settings["GCodeConversion"]["YOffset"])
-        self.window.doubleSpinBox_GCodeConversion_MinX.setValue(settings["GCodeConversion"]["MinX"])
-        self.window.doubleSpinBox_GCodeConversion_MaxX.setValue(settings["GCodeConversion"]["MaxX"])
-        self.window.doubleSpinBox_GCodeConversion_MinY.setValue(settings["GCodeConversion"]["MinY"])
-        self.window.doubleSpinBox_GCodeConversion_MaxY.setValue(settings["GCodeConversion"]["MaxY"])
             
         # GCodeGeneration 
         self.window.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setChecked(settings["GCodeGeneration"]["ReturnToZeroAtEnd"]),
@@ -303,13 +284,19 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.display_svg(self.svg_file)
             # display operations in table
             self.display_cnc_operations(self.operations)
+            
+            self.active_settings = job["settings"]
+            self.all_settings[self.active_settings["name"]] = self.active_settings
+            
+            self.window.comboBox_Settings_SettingsList.setCurrentText(self.active_settings["name"])
         
     def save_job(self):
         '''
         '''
         job = {
             "svg_file" : self.svg_file,
-            "operations": self.operations
+            "operations": self.operations,
+            "settings": self.active_settings
         }
             
         job_file_name = 'job_%s.json' % self.svg 
@@ -456,8 +443,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         '''
         self.show_op_widgets()
+        self.window.comboBox_Operations_OpType.show()
+        self.window.comboBox_Operations_OpType.setEnabled(True)
 
-    def cb_add_op(self):
+    def cb_save_op(self):
         '''
         '''
         self.hide_op_widgets()
@@ -474,7 +463,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.doubleSpinBox_Operations_OpDepth.hide()
         self.window.label_Operations_OpDepth.hide()
 
-        self.window.pushButton_Operations_AddOp.hide()
+        self.window.pushButton_Operations_SaveOp.hide()
         self.window.pushButton_Operations_CancelOp.hide()
 
         if self.current_op_widget != None:
@@ -487,19 +476,30 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.doubleSpinBox_Operations_OpDepth.show()
         self.window.label_Operations_OpDepth.show()
 
-        self.window.pushButton_Operations_AddOp.show()
+        self.window.pushButton_Operations_SaveOp.show()
         self.window.pushButton_Operations_CancelOp.show()
 
         if self.current_op_widget != None:
             self.current_op_widget.show()
 
-        self.display_op()
-
+        self.display_op()    
+        
     def display_op(self):
         '''
         '''
-        op = self.window.comboBox_Operations_OpType.currentText()
+        op_type = self.window.comboBox_Operations_OpType.currentText()
 
+        self.display_op_type(op_type)
+        
+    def display_op_type(self, op_type):
+        '''
+        '''
+        self.window.comboBox_Operations_OpType.show()
+        self.window.doubleSpinBox_Operations_OpDepth.show()
+        self.window.label_Operations_OpDepth.show()
+        
+        self.window.comboBox_Operations_OpType.setCurrentText(op_type)
+        
         if self.current_op_widget != None:
             self.window.verticalLayoutOperations.removeWidget(self.current_op_widget)
             self.current_op_widget.deleteLater()
@@ -512,11 +512,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             'V Pocket' : "op_vpocket.ui",
         }
 
-        self.current_op_widget = self.load_ui(mapp[op])
+        self.current_op_widget = self.load_ui(mapp[op_type])
 
-        self.window.verticalLayoutOperations.insertWidget(5, self.current_op_widget, 0, QtGui.Qt.AlignLeft)
+        self.window.verticalLayoutOperations.insertWidget(4, self.current_op_widget, 0, QtGui.Qt.AlignLeft)
 
-        if op == "V Pocket":
+        if op_type == "V Pocket":
             self.window.doubleSpinBox_Operations_OpDepth.hide()
             self.window.label_Operations_OpDepth.hide()
         else:
@@ -525,11 +525,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.window.layout()
         
-        operation_type = self.window.comboBox_Operations_OpType.currentText()
-        
         # fill widget with default values
         
-        if operation_type == "Pocket":
+        if op_type == "Pocket":
             operation = {
                 "Name": "-- op pocket --",
                 "paths": [],
@@ -541,11 +539,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "Units": "mm",
                 "Margin": 0.1
             }
-        if operation_type == "Inside":
+        if op_type == "Inside":
             operation = {
                 "Name": "-- op inside --",
                 "paths": [],
-                "type": "Pocket",
+                "type": "Inside",
                 "Deep": 0.2,       
                 "RampPlunge": True,
                 "Combine": "Union",
@@ -554,11 +552,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "Margin": 0.1,
                 "Width": 1.1
             }
-        if operation_type == "Outside":
+        if op_type == "Outside":
             operation = {
                 "Name": "-- op outside --",
                 "paths": [],
-                "type": "Pocket",
+                "type": "Outside",
                 "Deep": 0.2,       
                 "RampPlunge": True,
                 "Combine": "Union",
@@ -567,17 +565,18 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "Margin": 0.1,
                 "Width": 1.1
             }
-        if operation_type == "Engrave":
+        if op_type == "Engrave":
             operation = {
                 "Name": "-- op outside --",
                 "paths": [],
-                "type": "Pocket",
+                "type": "Engrave",
+                "RampPlunge": True,
                 "Combine": "Union",
                 "Direction": "Conventional",
                 "Units": "mm",
                 "Margin": 0.1,
             }
-        if operation_type == "V Pocket":
+        if op_type == "V Pocket":
             operation = {
                 "Name": "-- op v-pocket --",
                 "paths": [],
@@ -590,7 +589,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.display_operation(operation)
                 
     def display_op_at_row(self, row):
+        self.window.comboBox_Operations_OpType.show()
+        self.window.comboBox_Operations_OpType.setEnabled(False)
+        
         operation = self.operations[row]
+        self.display_op_type(operation["type"])
         self.display_operation(operation)
         
     def display_operation(self, operation):

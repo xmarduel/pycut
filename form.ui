@@ -234,9 +234,9 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_Op">
           <item>
-           <widget class="QPushButton" name="pushButton_Operations_AddOp">
+           <widget class="QPushButton" name="pushButton_Operations_SaveOp">
             <property name="text">
-             <string>Add</string>
+             <string>Save</string>
             </property>
            </widget>
           </item>
