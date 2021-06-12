@@ -114,7 +114,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         
         self.init_settings()
         
-        self.open_job("/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/jobs/cnc_two_rects.json")
+        self.open_job("/Users/xavier/PYTHON_TOOLS/GITHUB/pycut/jobs/cnc_three_rects.json")
 
     def load_ui(self, uifile):
         '''

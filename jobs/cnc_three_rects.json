@@ -1,0 +1,98 @@
+{
+  "svg_file": "svg/three_rects.svg",
+  "operations": [
+    {
+      "Name": "op1",
+      "paths": ["p1", "p2", "p3"],
+      "type": "Pocket",
+      "Deep": 0.2,       
+      "RampPlunge": true,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.1
+    },
+    {
+      "Name": "op2",
+      "paths": ["p1", "p2"],
+      "type": "Inside",
+      "Deep": 0.2,
+      "RampPlunge": true,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 1.1
+    },
+    {
+      "Name": "op3",
+      "paths": ["p1", "p2"],
+      "type": "Outside",
+      "Deep": 0.2,
+      "RampPlunge": true,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 1.1
+    },
+    {
+      "Name": "op4",
+      "paths": ["p1", "p2"],
+      "type": "Engrave",
+      "Deep": 0.2,
+      "RampPlunge": true,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0
+    },
+    {
+      "Name": "op5",
+      "paths": ["p1", "p2"],
+      "type": "V Pocket",
+      "Combine": "Union",
+      "Units": "mm",
+      "Margin": 0.0
+    }
+  ],
+  "settings" : {
+    "name": "standart",
+    "x_per_inch": 96,
+    "Tabs": {
+       "Units": "mm",
+       "MaxCutDepth": 1.0
+     },
+     "Tool": {
+       "Units": "mm",
+       "Diameter": 1.0,
+       "Angle": 180,
+       "PassDepth": 0.25,
+       "StepOver": 0.4,
+       "Rapid": 500,
+       "Plunge": 100,
+       "Cut": 200
+     },
+     "Material": {
+       "Units": "mm",
+       "Thickness": 50.0,
+       "ZOrigin": "Top",
+       "Clearance": 10.0
+     },
+     "CurveToLineConversion": {
+       "MinimumSegments": 1.0,
+       "MinimumSegmentsLength": 0.0
+     },
+     "GCodeConversion": {
+       "Units": "mm",
+       "ZeroLowerLeft": true,
+       "ZeroCenter": false,
+       "XOffset": 1.0,
+       "YOffset": 2.0
+    },
+    "GCodeGeneration": {
+      "ReturnToZeroAtEnd": true,
+      "SpindleAutomatic": true
+    }
+  }
+}
