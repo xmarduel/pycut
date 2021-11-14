@@ -1,0 +1,76 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>ELEGOO</title>
+  <link href="css/prism.css" rel="stylesheet">
+  <link href="css/pycut.css" rel="stylesheet">
+  <link href="css/simpletree.css" rel="stylesheet"/>
+  
+  <script type="text/javascript" src="js/prism.js"></script>
+</head>
+
+<body>
+
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+
+<div class="sidenav">
+
+<h3 class="title_sidenav">Contents</h3>
+
+<ul class="tree">
+  <li><a href="#P-01">Introduction</a></li>
+  <li><a href="#P-02">The GUI</a></li>
+  <li><a href="#P-03">...</a> 
+</ul>
+
+<script>
+var tree = document.querySelectorAll('ul.tree a:not(:last-child)');
+for (var i = 0; i < tree.length; i++){
+    tree[i].addEventListener('click', function(e) {
+        var parent = e.target.parentElement;
+        var classList = parent.classList;
+        if (classList.contains("open")) {
+            classList.remove('open');
+            var opensubs = parent.querySelectorAll(':scope .open');
+            for (var i = 0; i < opensubs.length; i++) {
+                opensubs[i].classList.remove('open');
+            }
+        } else {
+            classList.add('open');
+        }
+        if (classList.contains("open")) {
+            //e.preventDefault(); // on open -> jump (default)
+          
+        } else {
+            e.preventDefault(); // on close
+        }
+    });
+}
+</script>
+
+</div>
+
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+
+<div class="main">
+
+<h1 class="etitle">PyCut Tutorial</h1>
+
+<h2 id="P-01">Introduction</h2>
+
+<p>PyCut is a clone of jsCut, the excellent CAM, web-based programm, 
+that takes as input svg files and generates G-Code.</p>
+
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+
+<h2 id="P-02">The GUI</h2>
+
+</body>
+</html>
