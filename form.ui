@@ -628,7 +628,7 @@
      </layout>
     </item>
     <item>
-     <widget class="QWidget" name="widget" native="true">
+     <widget class="QWidget" name="centralArea" native="true">
       <property name="minimumSize">
        <size>
         <width>400</width>

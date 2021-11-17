@@ -375,7 +375,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(svg_viewer)
         layout.addStretch()
-        self.window.widget.setLayout(layout)
+        self.window.centralArea.setLayout(layout)
         
         return svg_viewer
 
