@@ -1,7 +1,7 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>ELEGOO</title>
+  <title>PYCUT</title>
   <link href="css/prism.css" rel="stylesheet">
   <link href="css/pycut.css" rel="stylesheet">
   <link href="css/simpletree.css" rel="stylesheet"/>
@@ -65,7 +65,32 @@ for (var i = 0; i < tree.length; i++){
 <h2 id="P-01">Introduction</h2>
 
 <p>PyCut is a clone of jsCut, the excellent CAM, web-based programm, 
-that takes as input svg files and generates G-Code.</p>
+that takes as input svg files and generates G-Code. Why this rewrite ?</p>
+
+<p>It begins as a "fun" project, in order to understand how a G-code generator works,
+and how easy (or hard) it is to achieve.</p>
+
+<p>A second point is the major shortcoming of jsCut: the fact that it is a web application: 
+sure for developpers who know javascript technology it is very productive, how many users are able to 
+improve it on their own? only a few I guess: it is not as easy as one may think.
+This is due and to my opinion to the fact that it is written in javascript/webassembly. 
+It is just a pain to understand it for people not used to web technologies (which change every 3 years...). 
+Traditional desktop application are a lot easyier to hack (yes!)</p>
+
+<p>An example is the GUI itself: how many html files/lines of code are neccessary to achieve the task,
+compared to, written in python, only 1 Qt Ui file is needed for the design 
+and the python main program with max 500 lines of code?</p>
+
+<p>So pyCut is written in python, with the GUI with PySide. 
+Hopefully there will be users that will be abel to contribute.</p>
+
+<p>The excellent things from jsCut are (if you did not realized it) among others:</p>
+<ul>
+    <li>svg viewer, with an API to add svg path to the viewer</li>
+    <li>svg structur viewer (unfortunately not yet in jsCut, but in LaserWeb-4) to select path items</li>
+    <li>job viewer - in wed-gl - unfortunately not in "standalone version" (need a webserver)</li>
+    <li>the c++ CAM stuff: hopefully a swig wrapper or something equivalent is feasible</li>
+</ul>
 
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->

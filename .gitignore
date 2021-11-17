@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+lib/*
+cpp/*
+api/*
+js/*
