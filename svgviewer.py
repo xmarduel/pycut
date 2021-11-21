@@ -24,13 +24,30 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
         self.setPos(bounds.topLeft())
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
 
+        self.selected_effect = None
+        self.makeGraphicsEffect()
+
+    def makeGraphicsEffect(self):
+        if self.selected_effect is None:
+            self.selected_effect = QtWidgets.QGraphicsColorizeEffect()    
+            self.selected_effect.setColor(QtCore.Qt.darkYellow)
+            self.selected_effect.setStrength(1)
+    
     def mousePressEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
-        print('svg item: ' + self.elementId() + ' - mousePressEvent()')
+        print('svg item: ' + self.elementId() + ' - mousePressEvent()' + str(self.isSelected()))
         super().mousePressEvent(event)
 
     def mouseReleaseEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
-        print('svg item: ' + self.elementId() + ' - mouseReleaseEvent()')
+        print('svg item: ' + self.elementId() + ' - mouseReleaseEvent()' + str(self.isSelected()))
         super().mouseReleaseEvent(event)
+
+    def colorizeWhenSelected(self):
+        if self.isSelected():
+            self.makeGraphicsEffect()
+            self.setGraphicsEffect(self.selected_effect) 
+        else:
+            self.setGraphicsEffect(None) 
+            self.selected_effect = None
 
 
 class SvgViewer(QtWidgets.QGraphicsView):
@@ -63,20 +80,29 @@ class SvgViewer(QtWidgets.QGraphicsView):
             item = SvgItem(id, self._renderer)
             self._scene.addItem(item)
 
-            self.items.append(item)
+            self.items.append(item)  
 
     def clean(self):
         for item in self.items:
             self._scene.removeItem(item)
 
+        self.items = []
 
     def mousePressEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
         print('SvgViewer - mousePressEvent()')
         super().mousePressEvent(event)
+        print("    --> List of selected items")
+        for item in self.items:
+            print("    item %s -> %s" % (item.elementId(), item.isSelected()))
+            item.colorizeWhenSelected()
 
     def mouseReleaseEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
         print('SvgViewer - mouseReleaseEvent()')
         super().mouseReleaseEvent(event)
+        print("    --> List of selected items")
+        for item in self.items:
+            print("    item %s -> %s" % (item.elementId(), item.isSelected()))
+            item.colorizeWhenSelected()
 
 
     def wheelEvent(self, event):
