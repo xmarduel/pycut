@@ -113,6 +113,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.pushButton_MakeAll_inch.clicked.connect(self.cb_make_all_inch)
         self.window.pushButton_MakeAll_mm.clicked.connect(self.cb_make_all_mm)
         
+        self.window.pushButton_ShowHideTabs.setIcon(QtGui.QIcon(":/images/tango/16x16/actions/media-playback-start.png"))
+        self.window.pushButton_ShowHideTabs.clicked.connect(self.cb_show_hide_tabs)
+        
+        self.window.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango/16x16/actions/media-playback-start.png"))
+        self.window.pushButton_ShowHideTool.clicked.connect(self.cb_show_hide_tool)
+
+
+
         self.init_gui()
         
         self.init_settings()
@@ -129,8 +137,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "height" : "400",
             "gcode": gcode,
             "cutterDiameter" : "4", 
-            "cutterHeight" : "14",
-            "cutterHeight" : "44",
+            "cutterHeight" : "24",
+            #"cutterAngle" : undefined,
             "elementsUrl" : "http://api.jscut.org/elements"
         }
         
@@ -150,6 +158,27 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         return window
     
+    def cb_show_hide_tool(self):
+        '''
+        '''
+        if self.window.grid_Tool.isHidden():
+            self.window.grid_Tool.show()
+            self.window.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango/16x16/actions/media-playback-stop.png"))
+        else:
+            self.window.grid_Tool.hide()
+            self.window.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango/16x16/actions/media-playback-start.png"))
+
+    def cb_show_hide_tabs(self):
+        '''
+        '''
+        if self.window.grid_Tabs.isHidden():
+            self.window.grid_Tabs.show()
+            self.window.pushButton_ShowHideTabs.setIcon(QtGui.QIcon(":/images/tango/16x16/actions/media-playback-stop.png"))
+        else:
+            self.window.grid_Tabs.hide()
+            self.window.pushButton_ShowHideTabs.setIcon(QtGui.QIcon(":/images/tango/16x16/actions/media-playback-start.png"))
+
+
     def init_gui(self):
         '''
         '''
