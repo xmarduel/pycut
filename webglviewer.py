@@ -135,19 +135,17 @@ var gcode_simulator = null;
 function sliderChangeVal(newVal) {
   if (gcode_simulator) {
     gcode_simulator.timeChanged(0, newVal);
-    // force redraw - seems to be necessary
-    var canvas = document.querySelector("#glCanvas");
   }
 }
 </script>
 
 <!-- Controls with parameters bound to simulator -->
 <div class="slidecontainer">
-  <input id="input_slider" type="range" min="1" max="100" value="50" onchange="sliderChangeVal(this.value)">
+  <input id="input_slider" type="range" min="1" max="100" value="50" oninput="sliderChangeVal(this.value)" style="width: 480px">
 </div>
 <div class="textarea">
   <!-- not too much rows to avoid a scrollbar -->
-  <textarea id="textarea_gcode" value="M1" rows="24" style="font-size: 8pt; width: 480px"></textarea>
+  <textarea id="textarea_gcode" value="M1" rows="23" style="font-size: 8pt; width: 480px"></textarea>
 </div>
 
 </body>
@@ -208,7 +206,8 @@ class GCodeSimulator {
         const input_slider = document.getElementById('input_slider');
         input_slider.min = 0;
         if ( self.maxTimeRounded > 0 ) {
-          input_slider.max = self.maxTimeRounded + 10;
+          input_slider.max = self.maxTimeRounded + 2;
+          input_slider.value = self.maxTimeRounded + 2;
         }
       });
     });
