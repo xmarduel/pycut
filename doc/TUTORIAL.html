@@ -64,34 +64,56 @@ for (var i = 0; i < tree.length; i++){
 
 <h2 id="P-01">Introduction</h2>
 
-<p>PyCut is a clone of jsCut, the excellent CAM, web-based programm, 
-that takes as input svg files and generates G-Code. Why this rewrite ?</p>
+<p>PyCut is a clone of jsCut, the excellent (at least for beginners) CAM, web-based programm, 
+that takes as input svg files and generates G-Code. So why this rewrite ?</p>
 
 <p>It begins as a "fun" project, in order to understand how a G-code generator works,
-and how easy (or hard) it is to achieve.</p>
+and how easy (or hard) it is to achieve. Well, it is hard.</p>
 
 <p>A second point is the major shortcoming of jsCut: the fact that it is a web application: 
-sure for developpers who know javascript technology it is very productive, how many users are able to 
-improve it on their own? only a few I guess: it is not as easy as one may think.
-This is due and to my opinion to the fact that it is written in javascript/webassembly. 
-It is just a pain to understand it for people not used to web technologies (which change every 3 years...). 
+sure for developpers who know javascript technology it is very productive, but how many users are able to 
+improve jsCut on their own? only a few I guess: it is not as easy as one may think.
+This is due to my opinion to the fact javascript is just a pain to understand
+for people not used to the web technologies (which by the way change every 3 years...). 
 Traditional desktop application are a lot easyier to hack (yes!)</p>
 
 <p>An example is the GUI itself: how many html files/lines of code are neccessary to achieve the task,
-compared to, written in python, only 1 Qt Ui file is needed for the design 
-and the python main program with max 500 lines of code?</p>
+compared to, written in python, only a few Qt Ui files are needed for the design 
+and the python main program with max 500 lines of code? 
+Even the javascript GUI is written with the **polymer** library (as far as I have understood).
+Who has ever heard of this lib before?!</p>
 
 <p>So pyCut is written in python, with the GUI with PySide. 
-Hopefully there will be users that will be abel to contribute.</p>
+Hopefully there will be users that will be able to contribute.</p>
 
 <p>The excellent things from jsCut are (if you did not realized it) among others:</p>
 <ul>
-    <li>svg viewer, with an API to add svg path to the viewer</li>
-    <li>svg structur viewer (unfortunately not yet in jsCut, but in LaserWeb-4) to select path items</li>
+    <li>svg viewer, with an API to add svg path(s) to the viewer content</li>
     <li>job viewer - in wed-gl - unfortunately not in "standalone version" (need a webserver)</li>
     <li>the c++ CAM stuff: hopefully a swig wrapper or something equivalent is feasible</li>
 </ul>
 
+<p>Especially, the SVG viewer is great with the ability to svg paths to the view "on the fly"</p>
+<p>The WebGL view is also great</p>
+
+<p>So the idea is following</p>
+<ul>
+    <li>in PySide, display the WebGL stuff (QEngineView) </li>
+    <li>in PySide, display the SVG viewer stuff (QEngineView) </li>
+    <li>Rest of the MainWindow in PySide</li>
+    <li>G-Code Generation with interface to the javascript stuff</li>
+</ul>
+<p>After that</p>
+<ul>
+    <li>Migrating WebGL stuff to "native" python (QGraphicsView I guess)</li>
+    <li>Migrating SVG Viewer stuff  to "native" python (QSvgView I guess)</li>
+    <li>Migrating CAM stuff from javascript interface to python interface (c++ sources are there)</li>
+</ul>
+<p>Nice to have would be:</p>
+<ul>
+    <li>Extension: G-Code generation with spindle control (actually absent in jsCut)</li>
+    <li>Similar feature as in LaserWeb-4 for <strong>SVG structure viewer</strong> / SVG viewer</li>
+</ul>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 

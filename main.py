@@ -6,19 +6,21 @@ import io
 
 import json
 
-from PySide2 import QtCore
-from PySide2 import QtGui
-from PySide2 import QtWidgets
+from PySide6 import QtCore
+from PySide6 import QtGui
+from PySide6 import QtWidgets
 
-from PySide2.QtCore import QFile
-from PySide2.QtUiTools import QUiLoader
+from PySide6.QtCore import QFile
+from PySide6.QtUiTools import QUiLoader
 
 import svgviewer
+import webglviewer
 import svgmaterial
 import pycut_operations_simpletablewidget
 
 
-  
+import resources_rc
+
 class PyCutMainWindow(QtWidgets.QMainWindow):
     default_settings = {
         "name" : "standart",
@@ -76,6 +78,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_viewer = self.init_svg_viewer()
         self.svg_material_viewer = self.init_material_viewer()
         self.current_op_widget = None
+        self.webgl_viewer = self.init_webgl_viewer()
 
         # callbacks
         self.window.actionOpenSvg.triggered.connect(self.cb_open_svg)
@@ -90,7 +93,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.doubleSpinBox_Material_Thickness.valueChanged.connect(self.cb_display_material_thickness)
         self.window.doubleSpinBox_Material_Clearance.valueChanged.connect(self.cb_display_material_clearance)
 
-        
+
         default_thickness = self.window.doubleSpinBox_Material_Thickness.value()
         default_clearance = self.window.doubleSpinBox_Material_Clearance.value()
         self.svg_material_viewer.display_material(thickness=default_thickness, clearance=default_clearance)
@@ -115,6 +118,27 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.init_settings()
         
         self.open_job("./jobs/cnc_three_rects.json")
+
+        # display gcode !
+        fp = open("gcode.gcode", "r")
+        gcode = fp.read()
+        fp.close()
+
+        simulator_data =  {
+            "width": "400",
+            "height" : "400",
+            "gcode": gcode,
+            "cutterDiameter" : "4", 
+            "cutterHeight" : "14",
+            "cutterHeight" : "44",
+            "elementsUrl" : "http://api.jscut.org/elements"
+        }
+        
+        str_simulator_data = str(simulator_data)
+        str_simulator_data = str(str_simulator_data).replace("'", '"')
+
+        self.webgl_viewer.set_webgl_data(str_simulator_data)
+        self.webgl_viewer.show_gcode()
 
     def load_ui(self, uifile):
         '''
@@ -370,14 +394,28 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def init_svg_viewer(self):
         '''
         '''
-        svg_viewer = svgviewer.SvgViewer(self)
-
-        layout = QtWidgets.QVBoxLayout()
+        svg = self.window.svg
+        layout = svg.layout()
+        
+        svg_viewer = svgviewer.SvgViewer(svg)
+        
         layout.addWidget(svg_viewer)
-        layout.addStretch()
-        self.window.centralArea.setLayout(layout)
+        layout.addStretch(0)
         
         return svg_viewer
+
+    def init_webgl_viewer(self):
+        '''
+        '''
+        webgl = self.window.webgl
+        layout = webgl.layout()
+        
+        webgl_viewer = webglviewer.WebGlViewer(webgl)
+
+        layout.addWidget(webgl_viewer)
+        layout.stretch(0)
+        
+        return webgl_viewer
 
     def display_svg(self, svg):
         '''
@@ -654,4 +692,4 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication([])
     pycut = PyCutMainWindow()
     pycut.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

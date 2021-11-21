@@ -129,7 +129,8 @@ dmypy.json
 .pyre/
 
 
-lib/*
-cpp/*
-api/*
-js/*
+lib
+cpp
+api
+js
+

@@ -1,7 +1,7 @@
 
-from PySide2 import QtCore
-from PySide2 import QtGui
-from PySide2 import QtWidgets
+from PySide6 import QtCore
+from PySide6 import QtGui
+from PySide6 import QtWidgets
 
 
 class PyCutSimpleTableWidget(QtWidgets.QTableWidget):
@@ -23,33 +23,31 @@ class PyCutSimpleTableWidget(QtWidgets.QTableWidget):
     def setData(self, operations):
         self.clear()
         
-        self.setColumnCount(5)
+        self.setColumnCount(4)
         self.setRowCount(len(operations))
     
         for i, op in enumerate(operations):
-            item0 = QtWidgets.QTableWidgetItem(op["Name"])
-            self.setItem(i, 0, item0)
-            item0.setFlags(item0.flags() ^ QtGui.Qt.ItemIsEditable)
+            
             
             item1 = QtWidgets.QTableWidgetItem(op["type"])
-            self.setItem(i, 1, item1)
+            self.setItem(i, 0, item1)
             item1.setFlags(item1.flags() ^ QtGui.Qt.ItemIsEditable)
             
             widget = QtWidgets.QWidget()
-            btn_show_op = QtWidgets.QPushButton()
+            btn_select_op = QtWidgets.QCheckBox()
             #btn_show_op.setText("Show")
-            btn_show_op.setIcon(QtGui.QIcon('images/tango/22x22/actions/system-search.png'))
-            btn_show_op.setToolTip("Activate")
+            #btn_show_op.setIcon(QtGui.QIcon('images/tango/22x22/actions/system-search.png'))
+            #btn_show_op.setToolTip("Select")
             layout = QtWidgets.QHBoxLayout(widget)
-            layout.addWidget(btn_show_op);
+            layout.addWidget(btn_select_op);
             layout.setAlignment(QtGui.Qt.AlignCenter)
             layout.setContentsMargins(0, 0, 0, 0)
             widget.setLayout(layout)
-            self.setCellWidget(i, 2, widget)
+            self.setCellWidget(i, 1, widget)
             
             widget = QtWidgets.QWidget()
             btn_del_op = QtWidgets.QPushButton()
-            #btn_del_op.setText("Del")
+            btn_del_op.setText("Del")
             btn_del_op.setIcon(QtGui.QIcon('images/tango/22x22/actions/edit-clear.png'))
             btn_del_op.setToolTip("Delete")
             layout = QtWidgets.QHBoxLayout(widget)
@@ -57,19 +55,11 @@ class PyCutSimpleTableWidget(QtWidgets.QTableWidget):
             layout.setAlignment(QtGui.Qt.AlignCenter)
             layout.setContentsMargins(0, 0, 0, 0)
             widget.setLayout(layout)
-            self.setCellWidget(i, 3, widget)
-            
-            widget = QtWidgets.QWidget()
-            btn_generate_gcode_op = QtWidgets.QPushButton()
-            btn_generate_gcode_op.setText("Generate GCode")
-            btn_generate_gcode_op.setIcon(QtGui.QIcon('images/tango/22x22/actions/edit-clear.png'))
-            btn_generate_gcode_op.setToolTip("Generate GCode")
-            layout = QtWidgets.QHBoxLayout(widget)
-            layout.addWidget(btn_generate_gcode_op);
-            layout.setAlignment(QtGui.Qt.AlignCenter)
-            layout.setContentsMargins(0, 0, 0, 0)
-            widget.setLayout(layout)
-            self.setCellWidget(i, 4, widget)
+            self.setCellWidget(i, 2, widget)
+
+            item0 = QtWidgets.QTableWidgetItem(op["Name"])
+            self.setItem(i, 3, item0)
+            item0.setFlags(item0.flags() ^ QtGui.Qt.ItemIsEditable)
             
             
         self.resizeColumnsToContents()
