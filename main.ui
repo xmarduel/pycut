@@ -321,9 +321,7 @@ text-align:left;</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_2">
-             <item>
-              <layout class="QFormLayout" name="formLayout_Tabs">
+            <layout class="QFormLayout" name="formLayout_Tabs">
                <property name="labelAlignment">
                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                </property>
@@ -374,8 +372,7 @@ text-align:left;</string>
                 <widget class="QDoubleSpinBox" name="doubleSpinBox_Tabs_MaxCutDepth"/>
                </item>
               </layout>
-             </item>
-            </layout>
+            
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_Tabs_CreateTabs">
