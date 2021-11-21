@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
+        <file>images/tango/16x16/actions/media-playback-start.png</file>
+        <file>images/tango/16x16/actions/media-playback-stop.png</file>
         <file>javascript/lib/jquery-2.1.1.min.js</file>
         <file>javascript/lib/gl-matrix-2.2.0-min.js</file>
         <file>javascript/lib/webgl-utils.js</file>
