@@ -4,29 +4,25 @@
   <title>PYCUT</title>
   <link href="css/prism.css" rel="stylesheet">
   <link href="css/pycut.css" rel="stylesheet">
-  <link href="css/simpletree.css" rel="stylesheet"/>
-  
-  <script type="text/javascript" src="js/prism.js"></script>
+  <link href="css/simpletree.css" rel="stylesheet">
+  <script type="text/javascript" src="js/prism.js">
+ </script>
 </head>
 
 <body>
-
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
 <div class="sidenav">
-
 <h3 class="title_sidenav">Contents</h3>
-
 <ul class="tree">
   <li><a href="#P-01">Introduction</a></li>
   <li><a href="#P-02">The GUI</a></li>
-  <li><a href="#P-03">...</a> 
+  <li><a href="#P-03">...</a> </li>
 </ul>
-
-<script>
+<script type="text/javascript">
 var tree = document.querySelectorAll('ul.tree a:not(:last-child)');
 for (var i = 0; i < tree.length; i++){
     tree[i].addEventListener('click', function(e) {
@@ -48,76 +44,91 @@ for (var i = 0; i < tree.length; i++){
             e.preventDefault(); // on close
         }
     });
-}
-</script>
-
+}</script>
 </div>
-
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
 <div class="main">
-
 <h1 class="etitle">PyCut Tutorial</h1>
 
 <h2 id="P-01">Introduction</h2>
 
-<p>PyCut is a clone of jsCut, the excellent (at least for beginners) CAM, web-based programm, 
-that takes as input svg files and generates G-Code. So why this rewrite ?</p>
+<p>PyCut is a clone of jsCut, the excellent (at least for beginners) CAM,
+web-based programm, that takes as input svg files and generates G-Code. So why
+this rewrite ?</p>
 
-<p>It begins as a "fun" project, in order to understand how a G-code generator works,
-and how easy (or hard) it is to achieve. Well, it is hard.</p>
+<p>It begins as a "fun" project, in order to understand how a G-code generator
+works, and how easy (or hard) it is to achieve. Well, it is hard.</p>
 
-<p>A second point is the major shortcoming of jsCut: the fact that it is a web application: 
-sure for developpers who know javascript technology it is very productive, but how many users are able to 
-improve jsCut on their own? only a few I guess: it is not as easy as one may think.
-This is due to my opinion to the fact javascript is just a pain to understand
-for people not used to the web technologies (which by the way change every 3 years...). 
-Traditional desktop application are a lot easyier to hack (yes!)</p>
+<p>A second point is the major shortcoming of jsCut: the fact that it is a web
+application: sure for developpers who know javascript technology it is very
+productive, but how many users are able to improve jsCut on their own? only a
+few I guess: it is not as easy as one may think. This is due to my opinion to
+the fact javascript is just a pain to understand for people not used to the web
+technologies (which by the way change every 3 years...). Traditional desktop
+applications are a lot easyier to hack (yes!)</p>
 
-<p>An example is the GUI itself: how many html files/lines of code are neccessary to achieve the task,
-compared to, written in python, only a few Qt Ui files are needed for the design 
-and the python main program with max 500 lines of code? 
-Even the javascript GUI is written with the **polymer** library (as far as I have understood).
-Who has ever heard of this lib before?!</p>
+<p>Web technologies change every 3 years? An example is jsCut itself, which is
+based on the "polymer" HTML framework. Who which is new to javascript has ever
+heard of this lib before?! And "polymer" is also based on so-called "html
+imports", which are in 2021 theoretically no more allowed... Consider jsCut GUI
+itself : how many html files/lines of code are neccessary to achieve the task,
+compared to, when written in python, only a few Qt Ui files for the design and
+the python main program having max 1000 lines of code?</p>
 
-<p>So pyCut is written in python, with the GUI with PySide. 
-Hopefully there will be users that will be able to contribute.</p>
+<p>So PyCut is written in python, with the GUI with PySide6. Hopefully there
+will be users that will be able to contribute.</p>
 
-<p>The excellent things from jsCut are (if you did not realized it) among others:</p>
+<p>The excellent things from jsCut are (among others):</p>
 <ul>
-    <li>svg viewer, with an API to add svg path(s) to the viewer content</li>
-    <li>job viewer - in wed-gl - unfortunately not in "standalone version" (need a webserver)</li>
-    <li>the c++ CAM stuff: hopefully a swig wrapper or something equivalent is feasible</li>
+  <li>a great svg viewer, with an API to add svg path(s) to the viewer content
+    -the gcode "paths" are the added path to the initial geometry-</li>
+  <li>a great gcode viewer -in webgl-</li>
+  <li>the c++ CAM stuff: hopefully a swig wrapper or something equivalent is
+    feasible</li>
 </ul>
 
-<p>Especially, the SVG viewer is great with the ability to svg paths to the view "on the fly"</p>
-<p>The WebGL view is also great</p>
-
-<p>So the idea is following</p>
+<p>So the idea is the following:</p>
 <ul>
-    <li>in PySide, display the WebGL stuff (QEngineView) </li>
-    <li>in PySide, display the SVG viewer stuff (QEngineView) </li>
-    <li>Rest of the MainWindow in PySide</li>
-    <li>G-Code Generation with interface to the javascript stuff</li>
+  <li>in PySide, display the WebGL stuff (QEngineView) <span
+    style="color:#00ff00"><span style="color:#008000">DONE</span></span><span
+    style="background-color:#00ff00"></span></li>
+  <li>in PySide, display the SVG viewer stuff (QEngineView) <span
+    style="color:#ff0080">TODO or directly with QtSvg ?</span></li>
+  <li>Rest of the MainWindow in PySide <span
+  style="color:#008000">DONE</span></li>
+  <li>G-Code Generation with interface to the javascript CAM interface <span
+    style="color:#ff0080">TODO</span></li>
 </ul>
+
 <p>After that</p>
 <ul>
-    <li>Migrating WebGL stuff to "native" python (QGraphicsView I guess)</li>
-    <li>Migrating SVG Viewer stuff  to "native" python (QSvgView I guess)</li>
-    <li>Migrating CAM stuff from javascript interface to python interface (c++ sources are there)</li>
+  <li>Migrating WebGL stuff to "native" python (QGraphicsView I guess) <span
+    style="color:#ff0080">TODO</span></li>
+  <li>Migrating SVG Viewer stuff to "native" python (QSvgView I guess) <span
+    style="color:#ff0080">TODO</span></li>
+  <li>Migrating CAM stuff from javascript interface to python interface (c++
+    sources are there) <span style="color:#ff0080">TODO</span></li>
 </ul>
-<p>Nice to have would be:</p>
+
+<p>Nice to have:</p>
 <ul>
-    <li>Extension: G-Code generation with spindle control (actually absent in jsCut)</li>
-    <li>Similar feature as in LaserWeb-4 for <strong>SVG structure viewer</strong> / SVG viewer</li>
+  <li>G-Code generation with spindle control (actually absent in jsCut) <span
+    style="color:#0000ff">actually in PySide GUI only, should not be too
+    difficult to add to the generated G-Code</span></li>
+  <li>Similar feature as in LaserWeb-4 for <strong>SVG structure
+    viewer</strong><strong> / SVG viewer</strong> <span
+    style="color:#ff0080"></span><span style="color:#ff0080">TODO</span></li>
 </ul>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
 <h2 id="P-02">The GUI</h2>
 
+<p>It it completely modelled after jsCut.</p>
+</div>
 </body>
 </html>

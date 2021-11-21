@@ -64,7 +64,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     
     def __init__(self):
         super(PyCutMainWindow, self).__init__()
-        self.window = self.load_ui("form.ui")
+        self.window = self.load_ui("main.ui")
 
         # the data
         self.svg_file = None
