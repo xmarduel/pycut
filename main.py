@@ -113,10 +113,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.pushButton_MakeAll_inch.clicked.connect(self.cb_make_all_inch)
         self.window.pushButton_MakeAll_mm.clicked.connect(self.cb_make_all_mm)
         
-        self.window.pushButton_ShowHideTabs.setIcon(QtGui.QIcon(":/images/tango/16x16/actions/media-playback-start.png"))
+        self.window.pushButton_ShowHideSettings.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
+        self.window.pushButton_ShowHideSettings.clicked.connect(self.cb_show_hide_settings)
+
+        self.window.pushButton_ShowHideTabs.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
         self.window.pushButton_ShowHideTabs.clicked.connect(self.cb_show_hide_tabs)
         
-        self.window.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango/16x16/actions/media-playback-start.png"))
+        self.window.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
         self.window.pushButton_ShowHideTool.clicked.connect(self.cb_show_hide_tool)
 
 
@@ -158,25 +161,35 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         return window
     
-    def cb_show_hide_tool(self):
+    def cb_show_hide_settings(self):
         '''
         '''
-        if self.window.grid_Tool.isHidden():
-            self.window.grid_Tool.show()
-            self.window.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango/16x16/actions/media-playback-stop.png"))
+        if self.window.grid_Settings.isHidden():
+            self.window.grid_Settings.show()
+            self.window.pushButton_ShowHideSettings.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
         else:
-            self.window.grid_Tool.hide()
-            self.window.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango/16x16/actions/media-playback-start.png"))
+            self.window.grid_Settings.hide()
+            self.window.pushButton_ShowHideSettings.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-right_16x16.png"))
 
     def cb_show_hide_tabs(self):
         '''
         '''
         if self.window.grid_Tabs.isHidden():
             self.window.grid_Tabs.show()
-            self.window.pushButton_ShowHideTabs.setIcon(QtGui.QIcon(":/images/tango/16x16/actions/media-playback-stop.png"))
+            self.window.pushButton_ShowHideTabs.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
         else:
             self.window.grid_Tabs.hide()
-            self.window.pushButton_ShowHideTabs.setIcon(QtGui.QIcon(":/images/tango/16x16/actions/media-playback-start.png"))
+            self.window.pushButton_ShowHideTabs.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-right_16x16.png"))
+
+    def cb_show_hide_tool(self):
+        '''
+        '''
+        if self.window.grid_Tool.isHidden():
+            self.window.grid_Tool.show()
+            self.window.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
+        else:
+            self.window.grid_Tool.hide()
+            self.window.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-right_16x16.png"))
 
 
     def init_gui(self):
@@ -452,17 +465,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_viewer.clean()
 
         if svg is None:
-            img1 = b'''
-            <svg viewBox='0 0 108 95' xmlns='http://www.w3.org/2000/svg'>
-              <g transform='scale(0.1)'>
-                <path id="p2" d='M249,699v43h211v-43h-64l-2,3l-2,4l-4,3c0,0-1,2-2,2h-4c-2,0-3,0-4,1c-1,1-3,1-3,
-                  2l-3,4c0,1-1,2-2,2h-4c0,0-2,1-3,0l-3-1c-1,0-3-1-3-2c-1-1,0-2-1-3l-1-3c-1-1-2-1-3-1c-1,0-4,
-                  0-4-1c0-2,0-3-1-4v-3v-3z'/>
-                <path id="p3" d='M385,593c0,9-6,15-13,15c-7,0-13-6-13-15c0-8,12-39,14-39c1,0,12,31,12,39'/>
-              </g>
-            </svg>'''
             
-            img2 = b'''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+            img = b'''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
                 width="100"
                 height="100"
                 viewBox="0 0 100 100"
@@ -475,9 +479,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                     d="M 40,40 H 70 V 90 H 40 Z" />
                 </g>
              </svg>'''
-            self.svg_viewer.set_svg(img2)
+            self.svg_viewer.set_svg(img)
         else:
-            fp = open(svg, "r");
+            fp = open(svg, "r")
 
             data = fp.read()
             img = bytes(data, 'utf-8')

@@ -16,152 +16,166 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,1,0">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayoutLeft" stretch="0,1,0,0,0,0">
+     <layout class="QVBoxLayout" name="verticalLayoutLeft" stretch="0,0,1,0,0,0,0">
       <item>
-       <layout class="QVBoxLayout" name="verticalLayoutSettings" stretch="0,0,0,0,0,0">
+       <layout class="QVBoxLayout" name="verticalLayoutSettings">
         <item>
-         <widget class="QLabel" name="label_Settings">
+         <widget class="QPushButton" name="pushButton_ShowHideSettings">
           <property name="font">
            <font>
-            <pointsize>16</pointsize>
+            <pointsize>12</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(187, 187, 187);</string>
+           <string notr="true">background-color: rgb(187, 187, 187);
+text-align:left;</string>
           </property>
           <property name="text">
-           <string>Settings</string>
+           <string> Settings</string>
           </property>
          </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QLabel" name="label_PxPerInch">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>px per inch</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="spinBox_PxPerInch">
-            <property name="maximum">
-             <number>126</number>
-            </property>
-            <property name="value">
-             <number>96</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <item>
-           <widget class="QPushButton" name="pushButton_MakeAll_inch">
-            <property name="text">
-             <string>Make all inch</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_MakeAll_mm">
-            <property name="text">
-             <string>Make all mm</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1">
-          <item>
-           <widget class="QLabel" name="label">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Select Settings</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBox_Settings_SettingsList"/>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_Settings_DeleteCurrent">
-          <property name="text">
-           <string>Delete Current Settings</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="1">
-           <widget class="QPushButton" name="pushButton_Settings_SaveAs">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Save Current Settings As...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QPushButton" name="pushButton_Settings_Save">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Save Current Settings</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </item>
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayoutOperations">
+       <layout class="QVBoxLayout" name="verticalLayoutSettingsContent" stretch="0,0">
         <item>
-         <spacer name="verticalSpacer">
+         <widget class="QWidget" name="grid_Settings" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>22</height>
+           </size>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout">
+               <item>
+                <widget class="QLabel" name="label_PxPerInch">
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>px per inch</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="spinBox_PxPerInch">
+                 <property name="maximum">
+                  <number>126</number>
+                 </property>
+                 <property name="value">
+                  <number>96</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_4">
+               <item>
+                <widget class="QPushButton" name="pushButton_MakeAll_inch">
+                 <property name="text">
+                  <string>Make all inch</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButton_MakeAll_mm">
+                 <property name="text">
+                  <string>Make all mm</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QGridLayout" name="gridLayout">
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_Settings_SaveAs">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Save Current Settings As...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QPushButton" name="pushButton_Settings_Save">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Save Current Settings</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_Settings_DeleteCurrent">
+             <property name="text">
+              <string>Delete Current Settings</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Select Settings</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="comboBox_Settings_SettingsList"/>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_3">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>40</height>
+            <height>20</height>
            </size>
           </property>
          </spacer>
         </item>
-        <item>
-         <widget class="QPushButton" name="pushButton">
-          <property name="text">
-           <string>Generate GCode</string>
-          </property>
-         </widget>
-        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayoutOperations" stretch="0,0,1,0,0,0,0">
         <item>
          <widget class="QLabel" name="label_Operations">
           <property name="font">
@@ -179,6 +193,13 @@
           </property>
           <property name="text">
            <string>Operations</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_GenerateGCode">
+          <property name="text">
+           <string>Generate GCode</string>
           </property>
          </widget>
         </item>
@@ -293,7 +314,7 @@
          <widget class="QPushButton" name="pushButton_ShowHideTabs">
           <property name="font">
            <font>
-            <pointsize>16</pointsize>
+            <pointsize>12</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
@@ -322,57 +343,56 @@ text-align:left;</string>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
             <layout class="QFormLayout" name="formLayout_Tabs">
-               <property name="labelAlignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             <property name="labelAlignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+             <property name="formAlignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_TabsUnits">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
                </property>
-               <property name="formAlignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+               <property name="text">
+                <string>Units</string>
                </property>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_TabsUnits">
-                 <property name="font">
-                  <font>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Units</string>
-                 </property>
-                </widget>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="comboBox_Tabs_Units">
+               <item>
+                <property name="text">
+                 <string>inch</string>
+                </property>
                </item>
-               <item row="0" column="1">
-                <widget class="QComboBox" name="comboBox_Tabs_Units">
-                 <item>
-                  <property name="text">
-                   <string>inch</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>mm</string>
-                  </property>
-                 </item>
-                </widget>
+               <item>
+                <property name="text">
+                 <string>mm</string>
+                </property>
                </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_Tabs_MaxCutDepth">
-                 <property name="font">
-                  <font>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Max Cut Depth</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QDoubleSpinBox" name="doubleSpinBox_Tabs_MaxCutDepth"/>
-               </item>
-              </layout>
-            
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_Tabs_MaxCutDepth">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Max Cut Depth</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_Tabs_MaxCutDepth"/>
+             </item>
+            </layout>
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_Tabs_CreateTabs">
@@ -406,7 +426,7 @@ text-align:left;</string>
             </property>
             <property name="font">
              <font>
-              <pointsize>16</pointsize>
+              <pointsize>12</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>

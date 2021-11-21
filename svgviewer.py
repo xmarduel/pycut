@@ -6,8 +6,6 @@ from PySide6 import QtCore
 from PySide6 import QtGui
 from PySide6 import QtWidgets
 
-from PySide6.QtCore import SIGNAL, QObject
-
 from PySide6 import QtSvg
 from PySide6 import QtSvgWidgets
 
@@ -26,11 +24,11 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
         self.setPos(bounds.topLeft())
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
 
-    def mousePressEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
+    def mousePressEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
         print('svg item: ' + self.elementId() + ' - mousePressEvent()')
         super().mousePressEvent(event)
 
-    def mouseReleaseEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
+    def mouseReleaseEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
         print('svg item: ' + self.elementId() + ' - mouseReleaseEvent()')
         super().mouseReleaseEvent(event)
 
@@ -47,9 +45,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.items = []
 
         #self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
-        self.setViewportUpdateMode(QtWidgets.QGraphicsView.FullViewportUpdate);
-
-
+        self.setViewportUpdateMode(QtWidgets.QGraphicsView.FullViewportUpdate)
 
     def set_svg(self, data):
         self._scene.clear()
@@ -61,7 +57,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         paths = root.findall(".//{http://www.w3.org/2000/svg}path")
         for path in paths:
-            print(path.attrib)
+            print("svg : found path %s" % path.attrib['id'])
             id = path.attrib['id']
 
             item = SvgItem(id, self._renderer)
