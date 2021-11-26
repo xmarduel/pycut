@@ -51,7 +51,7 @@ class PyCutSimpleTableWidget(QtWidgets.QTableWidget):
             btn_del_op.setIcon(QtGui.QIcon('images/tango/22x22/actions/edit-clear.png'))
             btn_del_op.setToolTip("Delete")
             layout = QtWidgets.QHBoxLayout(widget)
-            layout.addWidget(btn_del_op);
+            layout.addWidget(btn_del_op)
             layout.setAlignment(QtGui.Qt.AlignCenter)
             layout.setContentsMargins(0, 0, 0, 0)
             widget.setLayout(layout)

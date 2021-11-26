@@ -18,13 +18,14 @@ import webglviewer
 import svgmaterial
 import pycut_operations_simpletablewidget
 
-
 import resources_rc
+
 
 class PyCutMainWindow(QtWidgets.QMainWindow):
     default_settings = {
-        "name" : "standart",
-        "px_per_inch" : 96,
+        "svg": {
+            "px_per_inch" : 96,
+        },
         "Tabs": {
             "Units"       : "mm",
             "MaxCutDepth" : 1.0
@@ -47,7 +48,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         },
         "CurveToLineConversion" : {
             "MinimumSegments"       : 1,
-            "MinimumSegmentsLength" : 0.001,
+            "MinimumSegmentsLength" : 0.01,
         },
         "GCodeConversion" : {
             "Units"         : "mm",
@@ -59,6 +60,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         "GCodeGeneration" : {
             "ReturnToZeroAtEnd" : True,
             "SpindleAutomatic"  : True,
+            "SpindleSpeed"      : 1000
         }
     }
     
@@ -66,28 +68,21 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         super(PyCutMainWindow, self).__init__()
         self.window = self.load_ui("main.ui")
 
-        # the data
-        self.svg_file = None
-        self.operations = []
+        # the full data
+        self.job = None
+        # the operation displayed ("expanded")
+        self.current_op = None
+        self.current_op_widget = None
         
-        self.active_settings = None
-        self.all_settings = {}
-
         self.setCentralWidget(self.window)
 
-        self.svg_viewer = self.init_svg_viewer()
-        self.svg_material_viewer = self.init_material_viewer()
-        self.current_op_widget = None
-        self.webgl_viewer = self.init_webgl_viewer()
+        self.svg_viewer = self.setup_svg_viewer()
+        self.svg_material_viewer = self.setup_material_viewer()
+        self.webgl_viewer = self.setup_webgl_viewer()
 
         # callbacks
         self.window.actionOpenSvg.triggered.connect(self.cb_open_svg)
         self.window.actionOpenJob.triggered.connect(self.cb_open_job)
-        
-        self.window.pushButton_Settings_Save.clicked.connect(self.cb_save_settings)
-        self.window.pushButton_Settings_Save.clicked.connect(self.cb_save_as_settings)
-        
-        self.window.comboBox_Settings_SettingsList.currentTextChanged.connect(self.cb_set_settings)
 
         # display material thickness/clearance
         self.window.doubleSpinBox_Material_Thickness.valueChanged.connect(self.cb_display_material_thickness)
@@ -101,7 +96,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.display_svg(None)
         self.hide_op_widgets()
 
-        self.window.comboBox_Operations_OpType.currentTextChanged.connect(self.display_op)
+        self.window.comboBox_Operations_OpType.currentTextChanged.connect(self.display_op_widgets)
 
         self.window.pushButton_Operations_CreateNewOp.clicked.connect(self.cb_create_op)
         self.window.pushButton_Operations_SaveOp.clicked.connect(self.cb_save_op)
@@ -122,16 +117,17 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
         self.window.pushButton_ShowHideTool.clicked.connect(self.cb_show_hide_tool)
 
-
-
         self.init_gui()
-        
-        self.init_settings()
         
         self.open_job("./jobs/cnc_three_rects.json")
 
-        # display gcode !
-        fp = open("gcode.gcode", "r")
+        self.display_gcode_file("gcode.gcode")
+
+    def display_gcode_file(self, filename):
+        '''
+        display gcode in webgl!
+        '''
+        fp = open(filename, "r")
         gcode = fp.read()
         fp.close()
 
@@ -140,7 +136,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "height" : "400",
             "gcode": gcode,
             "cutterDiameter" : "4", 
-            "cutterHeight" : "24",
+            "cutterHeight" : "20",
             #"cutterAngle" : undefined,
             "elementsUrl" : "http://api.jscut.org/elements"
         }
@@ -191,25 +187,22 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.window.grid_Tool.hide()
             self.window.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-right_16x16.png"))
 
-
     def init_gui(self):
         '''
+        set the default settings in the gui 
         '''
+        self.apply_settings(self.default_settings)
+
         self.cb_update_tool_display()
         self.cb_update_gcodeconversion_display()
-        
-    def cb_save_as_settings(self):
-        '''
-        '''
-        # ask new settings name -- must be unique --
-        pass
     
-    def cb_save_settings(self):
+    def get_current_settings(self):
         '''
         '''
         settings = {
-            "name" : self.active_settings["name"],
-            "px_per_inch" : 96,
+            "svg": {
+                "px_per_inch" : 96,
+            }, 
             "Tabs": {
                 "Units"      : self.window.comboBox_Tabs_Units.currentText(),
                 "MaxCutDepth": self.window.doubleSpinBox_Tabs_MaxCutDepth.value()
@@ -244,54 +237,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "GCodeGeneration" : {
                 "ReturnToZeroAtEnd" : self.window.checkBox_GCodeGeneration_ReturnToZeroAtEnd.isChecked(),
                 "SpindleAutomatic"  : self.window.checkBox_GCodeGeneration_SpindleAutomatic.isChecked(),
+                "SpindleSpeed"      : self.window.checkBox_GCodeGeneration_SpindleSpeed.value(),
             }
         }
         
-        self.active_settings = settings
-        
-        # write settings to json file
-        full_settings_file = 'settings.json'
-         
-        full_settings = {
-            "active_settings": self.active_settings["name"],
-            "settings" : list(self.all_settings.values())
-        }
-        
-        with open(full_settings_file, 'w') as json_file:
-            json.dump(full_settings, json_file, indent=2)
-        
-    def init_settings(self):
-        '''
-        '''
-        # read settings file
-        json_file = "settings.json"
-        
-        if os.path.exists(json_file):
-            with open(json_file) as f:
-                full_settings = json.load(f)
-            
-                self.all_settings = dict(zip([settings["name"] for settings in full_settings["settings"]], full_settings["settings"]))
-                self.active_settings = self.all_settings[full_settings["active_settings"]]
-        else:
-            self.active_settings = self.default_settings
-            self.all_settings = {
-                "standart": self.default_settings
-            }
-            
-        settings_list = list(self.all_settings.keys())   
-        # set the combobox
-        self.window.comboBox_Settings_SettingsList.insertItems(0, settings_list)
-        self.window.comboBox_Settings_SettingsList.setCurrentText(self.active_settings["name"])
-            
-        self.apply_settings(self.active_settings)
-        
-    def cb_set_settings(self):
-        '''
-        '''
-        settings_name = self.window.comboBox_Settings_SettingsList.currentText()
-        self.active_settings = self.all_settings[settings_name]
-        self.apply_settings(self.active_settings)
-        
+        return settings
+
     def apply_settings(self, settings):
         '''
         '''
@@ -329,6 +280,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # GCodeGeneration 
         self.window.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setChecked(settings["GCodeGeneration"]["ReturnToZeroAtEnd"]),
         self.window.checkBox_GCodeGeneration_SpindleAutomatic.setChecked(settings["GCodeGeneration"]["SpindleAutomatic"]),
+        self.window.spinBox_GCodeGeneration_SpindleSpeed.setValue(settings["GCodeGeneration"]["SpindleSpeed"]),
             
     def cb_open_job(self):
         '''
@@ -341,7 +293,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         
     def open_job(self, json_file):
         with open(json_file) as f:
-            job = json.load(f)
+            self.job = job = json.load(f)
         
             self.svg_file = job["svg_file"]
             self.operations = job["operations"]
@@ -351,10 +303,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             # display operations in table
             self.display_cnc_operations(self.operations)
             
-            self.active_settings = job["settings"]
-            self.all_settings[self.active_settings["name"]] = self.active_settings
-            
-            self.window.comboBox_Settings_SettingsList.setCurrentText(self.active_settings["name"])
+            # and fill the whole gui
+            self.apply_settings(job["settings"])
         
     def save_job(self):
         '''
@@ -362,7 +312,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         job = {
             "svg_file" : self.svg_file,
             "operations": self.operations,
-            "settings": self.active_settings
+            "settings": self.get_current_settings()
         }
             
         job_file_name = 'job_%s.json' % self.svg 
@@ -384,14 +334,15 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         '''
         self.window.comboBox_Tabs_Units.setCurrentText("mm")
-        self.window.comboBox_Tool_Units.setCurrentText("mm")
         self.window.comboBox_Material_Units.setCurrentText("mm")
         self.window.comboBox_GCodeConversion_Units.setCurrentText("mm")
         
-        self.init_gui()
+        self.cb_update_tool_display()
+        self.cb_update_gcodeconversion_display()
         
     def cb_update_tool_display(self):
         '''
+        This updates the legends of the tool model widget
         '''
         tool_units = self.window.comboBox_Tool_Units.currentText()
         
@@ -414,6 +365,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
     def cb_update_gcodeconversion_display(self):
         '''
+        This updates the legends of the gcode_conversion model widget
         '''
         gcodeconversion_units = self.window.comboBox_GCodeConversion_Units.currentText()
         
@@ -432,8 +384,23 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.window.label_GCodeConversion_MaxX_UnitsDescr.setText("mm")
             self.window.label_GCodeConversion_MinY_UnitsDescr.setText("mm")
             self.window.label_GCodeConversion_MaxY_UnitsDescr.setText("mm")
-        
-    def init_svg_viewer(self):
+
+    def cb_display_material_thickness(self):
+        thickness = self.window.doubleSpinBox_Material_Thickness.value()
+        clearance = self.window.doubleSpinBox_Material_Clearance.value()
+        self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
+
+    def cb_display_material_clearance(self):
+        thickness = self.window.doubleSpinBox_Material_Thickness.value()
+        clearance = self.window.doubleSpinBox_Material_Clearance.value()
+        self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
+
+    def setup_material_viewer(self):
+        '''
+        '''
+        return svgmaterial.SvgMaterialWidget(self.window.widget_display_material)
+
+    def setup_svg_viewer(self):
         '''
         '''
         svg = self.window.svg
@@ -446,7 +413,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         
         return svg_viewer
 
-    def init_webgl_viewer(self):
+    def setup_webgl_viewer(self):
         '''
         '''
         webgl = self.window.webgl
@@ -494,21 +461,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         self.window.tableWidget_Operations_ViewOps.setData(operations)
 
-    def init_material_viewer(self):
-        '''
-        '''
-        return svgmaterial.SvgMaterialWidget(self.window.widget_display_material)
-
-    def cb_display_material_thickness(self):
-        thickness = self.window.doubleSpinBox_Material_Thickness.value()
-        clearance = self.window.doubleSpinBox_Material_Clearance.value()
-        self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
-
-    def cb_display_material_clearance(self):
-        thickness = self.window.doubleSpinBox_Material_Thickness.value()
-        clearance = self.window.doubleSpinBox_Material_Clearance.value()
-        self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
-
+    
 
     def cb_create_op(self):
         '''
@@ -553,24 +506,35 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         if self.current_op_widget != None:
             self.current_op_widget.show()
 
-        self.display_op()    
+        self.display_op_widgets()    
         
-    def display_op(self):
+    def display_op_widgets(self):
         '''
         '''
         op_type = self.window.comboBox_Operations_OpType.currentText()
 
-        self.display_op_type(op_type)
+        self.display_op_widgets_type(op_type)
+
+    def display_op_at_row(self, row):
+        '''
+        callback on row selection
+        '''
+        operation = self.operations[row]
         
-    def display_op_type(self, op_type):
-        '''
-        '''
         self.window.comboBox_Operations_OpType.show()
+        self.window.comboBox_Operations_OpType.setEnabled(False)
+        
         self.window.doubleSpinBox_Operations_OpDepth.show()
         self.window.label_Operations_OpDepth.show()
         
-        self.window.comboBox_Operations_OpType.setCurrentText(op_type)
-        
+        self.window.comboBox_Operations_OpType.setCurrentText(operation["type"])
+        self.display_op_widgets_type(operation["type"])
+
+        self.display_operation(operation)
+       
+    def display_op_widgets_type(self, op_type):
+        '''
+        '''
         if self.current_op_widget != None:
             self.window.verticalLayoutOperations.removeWidget(self.current_op_widget)
             self.current_op_widget.deleteLater()
@@ -657,14 +621,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "Margin": 0.1,
             }
             
-        self.display_operation(operation)
-                
-    def display_op_at_row(self, row):
-        self.window.comboBox_Operations_OpType.show()
-        self.window.comboBox_Operations_OpType.setEnabled(False)
-        
-        operation = self.operations[row]
-        self.display_op_type(operation["type"])
         self.display_operation(operation)
         
     def display_operation(self, operation):
