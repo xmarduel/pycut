@@ -57,8 +57,9 @@
     }
   ],
   "settings" : {
-    "name": "standart",
-    "x_per_inch": 96,
+    "svg": {
+      "x_per_inch": 96
+    },
     "Tabs": {
        "Units": "mm",
        "MaxCutDepth": 1.0
@@ -92,7 +93,8 @@
     },
     "GCodeGeneration": {
       "ReturnToZeroAtEnd": true,
-      "SpindleAutomatic": true
+      "SpindleAutomatic": true,
+      "SpindleSpeed": 1000
     }
   }
 }
