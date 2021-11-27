@@ -40,7 +40,7 @@ def test1():
     clipper.dumpPaths("clip", clip)
     clipper.dumpPaths("solution", solution)
 
-def test2():
+def test(clipType: clipper.ClipType):
     c1 = clipper.IntPointVector()
     c1.append(clipper.IntPoint(20,20))
     c1.append(clipper.IntPoint(20,60))
@@ -65,7 +65,7 @@ def test2():
 
     solution = clipper.PathVector()
     
-    c.Execute(clipper.ClipType.ctUnion, 
+    c.Execute(clipType, 
             solution,
             clipper.PolyFillType.pftNonZero, 
             clipper.PolyFillType.pftNonZero)
@@ -75,5 +75,8 @@ def test2():
     clipper.dumpPaths("solution", solution)
 
 if __name__ == '__main__':
-    test1()
-    test2()
+    #test1()
+    #test(clipper.ClipType.ctUnion)
+    #test(clipper.ClipType.ctIntersection)
+    test(clipper.ClipType.ctXor)
+    #test(clipper.ClipType.ctDifferences)

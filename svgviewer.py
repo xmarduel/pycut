@@ -148,24 +148,28 @@ class SvgViewer(QtWidgets.QGraphicsView):
     def display_op_svg_paths(self, combined_svg_paths: List['SvgPath']):
         '''
         '''
-        for svg_path in combined_svg_paths:
+        all_paths = ""
+
+        for k, svg_path in enumerate(combined_svg_paths):
             id = svg_path.p_id
             dd = svg_path.p_attrs['d']
 
-            img = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+            all_paths += '<path id="%s_%d" style="fill:#111111;stroke-width:1;stroke:#00ff00"  d="%s" />'  % (id, k, dd)
+        
+        img = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
                 width="100"
                 height="100"
                 viewBox="0 0 100 100"
                 version="1.1">
                 <style>svg { background-color: green; }</style>
                 <g>
-                  <path id="%s" style="fill:#111111;stroke-width:1;stroke:#00ff00"  d="%s" />
+                 %s
                 </g> 
-             </svg>''' % (id, dd)
+             </svg>''' % all_paths
         
-            data = img.encode('utf-8')
+        data = img.encode('utf-8')
 
-            self.set_svg(data)
+        self.set_svg(data)
 
 
             

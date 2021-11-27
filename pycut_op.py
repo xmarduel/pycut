@@ -77,8 +77,8 @@ class SvgOp:
         clipType :ClipperLib.ClipType  = {
             "Union": ClipperLib.ClipType.ctUnion,
             "Intersection": ClipperLib.ClipType.ctIntersection,
-            "XOR": ClipperLib.ClipType.ctXor,
             "Difference": ClipperLib.ClipType.ctDifference,
+            "Xor": ClipperLib.ClipType.ctXor,
         } [self.operation["Combine"]]    
 
         c.Execute(clipType, 

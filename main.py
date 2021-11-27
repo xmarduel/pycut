@@ -584,7 +584,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         if op_type == "Pocket":
             operation = {
                 "Name": "-- op pocket --",
-                "paths": [],
+                "paths": ['p1', 'p2'],
                 "type": "Pocket",
                 "Deep": 0.2,       
                 "RampPlunge": True,
@@ -609,11 +609,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         if op_type == "Outside":
             operation = {
                 "Name": "-- op outside --",
-                "paths": [],
+                "paths": ['p1', 'p2'],
                 "type": "Outside",
                 "Deep": 0.2,       
                 "RampPlunge": True,
-                "Combine": "Union",
+                "Combine": "Difference",
                 "Direction": "Conventional",
                 "Units": "mm",
                 "Margin": 0.1,
@@ -622,10 +622,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         if op_type == "Engrave":
             operation = {
                 "Name": "-- op outside --",
-                "paths": [],
+                "paths": ['p1', 'p2'],
                 "type": "Engrave",
                 "RampPlunge": True,
-                "Combine": "Union",
+                "Combine": "Xor",
                 "Direction": "Conventional",
                 "Units": "mm",
                 "Margin": 0.1,
