@@ -19,7 +19,7 @@ import math
 
 from typing import List
 
-import clipper as ClipperLib
+import clipper.clipper as ClipperLib
 
 
 def dist(x1, y1, x2, y2):

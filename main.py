@@ -568,7 +568,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.current_op_widget = self.load_ui(mapp[op_type])
 
-        self.window.verticalLayoutOperations.insertWidget(4, self.current_op_widget, 0, QtGui.Qt.AlignLeft)
+        self.window.verticalLayoutOperations.insertWidget(5, self.current_op_widget, 0, QtGui.Qt.AlignLeft)
 
         if op_type == "V Pocket":
             self.window.doubleSpinBox_Operations_OpDepth.hide()

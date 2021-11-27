@@ -7,6 +7,10 @@ from svgviewer import SvgViewer
 
 import clipper.clipper as ClipperLib
 
+inchToClipperScale = 100000  # Scale inch to Clipper
+cleanPolyDist = inchToClipperScale / 100000
+arcTolerance = inchToClipperScale / 40000
+
 class SvgOp:
     '''
     '''
@@ -85,7 +89,6 @@ class SvgOp:
                 self.combined_clipper_paths,
                 ClipperLib.PolyFillType.pftNonZero, 
                 ClipperLib.PolyFillType.pftNonZero)
-
 
     def calculate_gcode(self):
         '''

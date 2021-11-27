@@ -33,7 +33,7 @@
 text-align:left;</string>
           </property>
           <property name="text">
-           <string> Settings</string>
+           <string> Svg Settings</string>
           </property>
          </widget>
         </item>
@@ -51,7 +51,7 @@ text-align:left;</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0">
+            <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0">
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout">
                <item>
@@ -79,24 +79,6 @@ text-align:left;</string>
                </item>
               </layout>
              </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_4">
-               <item>
-                <widget class="QPushButton" name="pushButton_MakeAll_inch">
-                 <property name="text">
-                  <string>Make all inch</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="pushButton_MakeAll_mm">
-                 <property name="text">
-                  <string>Make all mm</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
             </layout>
            </item>
           </layout>
@@ -118,7 +100,7 @@ text-align:left;</string>
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayoutOperations" stretch="0,0,1,0,0,0,0">
+       <layout class="QVBoxLayout" name="verticalLayoutOperations" stretch="0,0,0,1,0,0,0">
         <item>
          <widget class="QLabel" name="label_Operations">
           <property name="font">
@@ -136,6 +118,13 @@ text-align:left;</string>
           </property>
           <property name="text">
            <string>Operations</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_Operations_CreateNewOp">
+          <property name="text">
+           <string>New Operation</string>
           </property>
          </widget>
         </item>
@@ -207,13 +196,6 @@ text-align:left;</string>
            </widget>
           </item>
          </layout>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_Operations_CreateNewOp">
-          <property name="text">
-           <string>New Operation</string>
-          </property>
-         </widget>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_OpSaveCancel">
@@ -394,43 +376,10 @@ text-align:left;</string>
           <layout class="QGridLayout" name="gridLayout_2">
            <item row="0" column="0">
             <layout class="QGridLayout" name="gridLayout_Tool">
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_Tool_Units">
-               <property name="font">
-                <font>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
+             <item row="6" column="1">
+              <widget class="QLabel" name="label_Tool_Plunge_UnitsDescr">
                <property name="text">
-                <string>Units</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QComboBox" name="comboBox_Tool_Units">
-               <item>
-                <property name="text">
-                 <string>inch</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>mm</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="label_Tool_Diameter">
-               <property name="font">
-                <font>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Diameter</string>
+                <string>__units__</string>
                </property>
               </widget>
              </item>
@@ -438,69 +387,6 @@ text-align:left;</string>
               <widget class="QLabel" name="label_Tool_Diameter_UnitsDescr">
                <property name="text">
                 <string>__units__</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="2">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_Diameter">
-               <property name="maximum">
-                <double>32.000000000000000</double>
-               </property>
-               <property name="value">
-                <double>1.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_Tool_Angle">
-               <property name="font">
-                <font>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Angle</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QLabel" name="label_Tool_Angle_UnitsDescr">
-               <property name="text">
-                <string>__units__</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="label_Tool_PassDepth">
-               <property name="font">
-                <font>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Pass Depth</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <widget class="QLabel" name="label_Tool_PassDepth_UnitsDescr">
-               <property name="text">
-                <string>__units__</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="2">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_PassDepth">
-               <property name="maximum">
-                <double>10.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.500000000000000</double>
-               </property>
-               <property name="value">
-                <double>0.200000000000000</double>
                </property>
               </widget>
              </item>
@@ -517,28 +403,21 @@ text-align:left;</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="1">
-              <widget class="QLabel" name="label_Tool_StepOver_UnitsDescr">
-               <property name="text">
-                <string>__units__</string>
+             <item row="5" column="2">
+              <widget class="QSpinBox" name="spinBox_Tool_Rapid">
+               <property name="toolTip">
+                <string>The speed the tool moves while not cutting</string>
                </property>
-              </widget>
-             </item>
-             <item row="4" column="2">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_StepOver">
                <property name="maximum">
-                <double>1.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.010000000000000</double>
+                <number>1000</number>
                </property>
                <property name="value">
-                <double>0.400000000000000</double>
+                <number>500</number>
                </property>
               </widget>
              </item>
-             <item row="5" column="0">
-              <widget class="QLabel" name="label_Tool_Rapid">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_Tool_Units">
                <property name="font">
                 <font>
                  <weight>75</weight>
@@ -546,7 +425,20 @@ text-align:left;</string>
                 </font>
                </property>
                <property name="text">
-                <string>Rapid</string>
+                <string>Units</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_Tool_PassDepth">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Pass Depth</string>
                </property>
               </widget>
              </item>
@@ -570,8 +462,101 @@ text-align:left;</string>
                </property>
               </widget>
              </item>
-             <item row="6" column="1">
-              <widget class="QLabel" name="label_Tool_Plunge_UnitsDescr">
+             <item row="2" column="1">
+              <widget class="QLabel" name="label_Tool_Angle_UnitsDescr">
+               <property name="text">
+                <string>__units__</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="1">
+              <widget class="QLabel" name="label_Tool_Cut_UnitsDescr">
+               <property name="text">
+                <string>__units__</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_Tool_Angle">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Angle</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="label_Tool_Rapid">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Rapid</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QSpinBox" name="spinBox_Tool_Angle">
+               <property name="maximum">
+                <number>180</number>
+               </property>
+               <property name="value">
+                <number>180</number>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QLabel" name="label_Tool_StepOver_UnitsDescr">
+               <property name="text">
+                <string>__units__</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_Diameter">
+               <property name="maximum">
+                <double>32.000000000000000</double>
+               </property>
+               <property name="value">
+                <double>1.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_Tool_Diameter">
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Diameter</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="2">
+              <widget class="QSpinBox" name="spinBox_Tool_Plunge">
+               <property name="toolTip">
+                <string>The speed the tool plunges downwards into the material</string>
+               </property>
+               <property name="maximum">
+                <number>1000</number>
+               </property>
+               <property name="value">
+                <number>100</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QLabel" name="label_Tool_PassDepth_UnitsDescr">
                <property name="text">
                 <string>__units__</string>
                </property>
@@ -590,10 +575,43 @@ text-align:left;</string>
                </property>
               </widget>
              </item>
-             <item row="7" column="1">
-              <widget class="QLabel" name="label_Tool_Cut_UnitsDescr">
-               <property name="text">
-                <string>__units__</string>
+             <item row="4" column="2">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_StepOver">
+               <property name="maximum">
+                <double>1.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.400000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="comboBox_Tool_Units">
+               <item>
+                <property name="text">
+                 <string>inch</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>mm</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_PassDepth">
+               <property name="maximum">
+                <double>10.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.500000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.200000000000000</double>
                </property>
               </widget>
              </item>
@@ -607,42 +625,6 @@ text-align:left;</string>
                </property>
                <property name="value">
                 <number>200</number>
-               </property>
-              </widget>
-             </item>
-             <item row="6" column="2">
-              <widget class="QSpinBox" name="spinBox_Tool_Plunge">
-               <property name="toolTip">
-                <string>The speed the tool plunges downwards into the material</string>
-               </property>
-               <property name="maximum">
-                <number>1000</number>
-               </property>
-               <property name="value">
-                <number>100</number>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="2">
-              <widget class="QSpinBox" name="spinBox_Tool_Rapid">
-               <property name="toolTip">
-                <string>The speed the tool moves while not cutting</string>
-               </property>
-               <property name="maximum">
-                <number>1000</number>
-               </property>
-               <property name="value">
-                <number>500</number>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="2">
-              <widget class="QSpinBox" name="spinBox_Tool_Angle">
-               <property name="maximum">
-                <number>180</number>
-               </property>
-               <property name="value">
-                <number>180</number>
                </property>
               </widget>
              </item>
@@ -715,6 +697,24 @@ text-align:left;</string>
            <string>Material</string>
           </property>
          </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QPushButton" name="pushButton_MakeAll_inch">
+            <property name="text">
+             <string>Make all inch</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_MakeAll_mm">
+            <property name="text">
+             <string>Make all mm</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -1273,7 +1273,11 @@ text-align:left;</string>
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QSpinBox" name="spinBox_GCodeGeneration_SpindleSpeed"/>
+           <widget class="QSpinBox" name="spinBox_GCodeGeneration_SpindleSpeed">
+            <property name="maximum">
+             <number>50000</number>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>

@@ -15,20 +15,240 @@
 # You should have received a copy of the GNU General Public License
 # along with pycut.  If not, see <http:#www.gnu.org/licenses/>.
 
-import time
-
 from typing import List
 
-import UnitConverter
+import clipper as ClipperLib
 
-from MaterialViewModel import MaterialViewModel
-from ToolViewModel import ToolModel
 from OperationsViewModel import OperationsViewModel
 from OperationsViewModel import Operation
-from TabsViewModel import TabsViewModel
 
-import clipper as ClipperLib
-import jscut
+import cam_op
+
+
+class UnitConverter:
+    '''
+    '''
+    def __init__(self, units: str):
+        '''
+        '''
+        self.units = units
+
+    def toInch(self, x):
+        '''
+        Convert x from the current unit to inch
+        '''
+        if self.units == "inch":
+            return x
+        else:
+            return x / 25.4
+    
+    def fromInch(self, x):
+        '''
+        Convert x from inch to the current unit
+        '''
+        if self.units == "inch":
+            return x
+        else:
+            return x * 25.4
+
+class SvgViewModel:
+    '''
+    '''
+    def __init__(self):
+        self.pxPerInch = 96
+
+class ToolModel:
+    '''
+    '''
+    def __init__(self):
+        self.units = "inch"
+        self.diameter = 0.125
+        self.angle = 180
+        self.passDepth = 0.125
+        self.stepover = 0.4
+        self.rapidRate = 100
+        self.plungeRate = 5
+        self.cutRate = 40
+
+    def getCamArgs(self):
+        result = {
+            "diameterClipper": self.diameter.toInch() * cam_op.inchToClipperScale,
+            "passDepthClipper": self.passDepth.toInch() * cam_op.inchToClipperScale,
+            "stepover": self.stepover
+        }
+
+        if result.diameterClipper <= 0:
+            #showAlert("Tool diameter must be greater than 0", "alert-danger")
+            return None
+        
+        if result.stepover <= 0:
+            #showAlert("Tool stepover must be geater than 0", "alert-danger")
+            return None
+        
+        if result.stepover > 1:
+            #showAlert("Tool stepover must be less than or equal to 1", "alert-danger")
+            return None
+        
+        return result
+        
+class MaterialViewModel:
+    '''
+    '''
+    def __init__(self):
+        self.matUnits = "inch"
+        self.matThickness = 1.0
+        self.matZOrigin = "Top"
+        self.matClearance = 0.1
+
+    @property
+    def matBotZ(self):
+        if self.matZOrigin == "Bottom":
+            return 0
+        else:
+            return - self.matThickness
+
+    @property
+    def matTopZ(self):
+        if self.matZOrigin == "Top":
+            return 0
+        else:
+            return self.matThickness
+
+    @property
+    def matZSafeMove(self):
+        if self.matZOrigin == "Top":
+            return self.matClearance
+        else:
+            return self.matThickness + self.matClearance
+
+class Tab:
+    '''
+    '''
+    def __init__(self,
+            svgViewModel: SvgViewModel, 
+            tabsViewModel: 'TabsViewModel', 
+            tabsGroup, 
+            rawPaths, 
+            toolPathsChanged, 
+            loading) :
+        '''
+        '''
+        self.svgViewModel = svgViewModel
+        self.tabsViewModel = tabsViewModel
+        self.tabsGroup = tabsGroup
+        self.rawPaths = rawPaths
+        self.toolPathsChanged = toolPathsChanged
+        self.loading = loading
+
+        self.enabled = True
+        self.margin = 0.0
+        
+        self.combinedGeometry = []
+        self.combinedGeometrySvg = None
+
+        tabsViewModel.unitConverter.addComputed(self.margin)
+
+        def xxxx(newValue):
+            if newValue:
+                v = "visible"
+            else:
+                v = "hidden"
+            if self.combinedGeometrySvg:
+                self.combinedGeometrySvg.attr("visibility", v)
+    
+
+        self.enabled.subscribe(xxxx)
+        self.margin.subscribe(self.recombine)
+        self.recombine()
+
+    def removeCombinedGeometrySvg(self):
+        if self.combinedGeometrySvg:
+            self.combinedGeometrySvg.remove()
+            self.combinedGeometrySvg = None
+
+
+    def recombine(self):
+        if self.loading:
+            return
+
+        self.removeCombinedGeometrySvg()
+
+        def alert(msg):
+            showAlert(msg, "alert-warning")
+
+        all = []
+        for rawPath in self.rawPaths:
+            geometry = cam_op.getClipperPathsFromSnapPath(rawPath.path, self.svgViewModel.pxPerInch, alert)
+            if geometry != None:
+                if rawPath.nonzero:
+                    fillRule = ClipperLib.PolyFillType.pftNonZero
+                else:
+                    fillRule = ClipperLib.PolyFillType.pftEvenOdd
+                all.append(cam_op.simplifyAndClean(geometry, fillRule))
+
+        if len(all) == 0:
+            self.combinedGeometry = []
+        else :
+            self.combinedGeometry = all[0]
+            for o in all:
+                self.combinedGeometry = cam_op.clip(self.combinedGeometry, o, ClipperLib.ClipType.ctUnion)
+
+        offset = self.margin.toInch() * cam_op.inchToClipperScale
+        if offset != 0:
+            self.combinedGeometry = cam_op.offset(self.combinedGeometry, offset)
+
+        if len(self.combinedGeometry) != 0:
+            path = cam_op.getSnapPathFromClipperPaths(self.combinedGeometry, self.svgViewModel.pxPerInch())
+            if path != None:
+                self.combinedGeometrySvg = self.tabsGroup.path(path).attr("class", "tabsGeometry")
+
+        self.enabled(True)
+        self.toolPathsChanged()
+
+class TabsViewModel:
+    '''
+    '''
+    def __init__(self, 
+            svgViewModel: SvgViewModel, 
+            materialViewModel: MaterialViewModel, 
+            selectionViewModel: 'SelectionViewModel', 
+            tabsGroup, 
+            toolPathsChanged):
+    
+        self.svgViewModel = svgViewModel
+        self.materialViewModel = materialViewModel
+        self.selectionViewModel = selectionViewModel
+        self.tabsGroup = tabsGroup 
+        self.toolPathsChanged = toolPathsChanged
+
+        self.tabs: List[Tab] = []
+        self.units = self.materialViewModel.matUnits
+        self.maxCutDepth = 0
+
+    def addTab(self):
+        rawPaths = []
+
+        for element in self.selectionViewModel.getSelection():
+            rawPaths.append({
+                'path': Snap.parsePathString(element.attr('d')),
+                'nonzero': element.attr("fill-rule") != "evenodd",
+            })
+
+        self.selectionViewModel.clearSelection()
+        tab = Tab(self.svgViewModel, self, self.tabsGroup, rawPaths, self.toolPathsChanged, False)
+        self.tabs.append(tab)
+        self.toolPathsChanged()
+
+    def removeTab(self, tab):
+        tab.removeCombinedGeometrySvg()
+        self.tabs.remove(tab)
+        self.toolPathsChanged()
+
+    def clickOnSvg(self, elem) :
+        if elem.attr("class") == "tabsGeometry":
+            return True
+        return False
+
 
 
 class GcodeConversionViewModel:
@@ -39,8 +259,6 @@ class GcodeConversionViewModel:
             toolModel: ToolModel, 
             operationsViewModel: OperationsViewModel, 
             tabsViewModel: TabsViewModel):
-
-        self.allowGen = True
 
         self.materialViewModel = materialViewModel
         self.toolModel = toolModel
@@ -60,38 +278,31 @@ class GcodeConversionViewModel:
 
     @property
     def minX(self):
-        return self.unitConverter.fromInch(self.operationsViewModel.minX / jscut.priv.path.inchToClipperScale) + self.offsetX
+        return self.unitConverter.fromInch(self.operationsViewModel.minX / cam_op.inchToClipperScale) + self.offsetX
 
     @property
     def maxX(self):
-        return self.unitConverter.fromInch(self.operationsViewModel.maxX / jscut.priv.path.inchToClipperScale) + self.offsetX
+        return self.unitConverter.fromInch(self.operationsViewModel.maxX / cam_op.inchToClipperScale) + self.offsetX
     
     @property
     def minY(self):
-        return -(self.unitConverter.fromInch(self.operationsViewModel.maxY / jscut.priv.path.inchToClipperScale) + self.offsetY)
+        return -(self.unitConverter.fromInch(self.operationsViewModel.maxY / cam_op.inchToClipperScale) + self.offsetY)
    
     @property
-    def  maxY(self):
-        return -(self.unitConverter.fromInch(self.operationsViewModel.minY / jscut.priv.path.inchToClipperScale) + self.offsetY)
+    def maxY(self):
+        return -(self.unitConverter.fromInch(self.operationsViewModel.minY / cam_op.inchToClipperScale) + self.offsetY)
 
     def zeroLowerLeft(self):
-        self.allowGen = False
-        self.offsetX = - self.unitConverter.fromInch(self.operationsViewModel.minX / jscut.priv.path.inchToClipperScale)
-        self.offsetY = - self.unitConverter.fromInch(-self.operationsViewModel.maxY / jscut.priv.path.inchToClipperScale)
-        self.allowGen = True
+        self.offsetX = - self.unitConverter.fromInch(self.operationsViewModel.minX / cam_op.inchToClipperScale)
+        self.offsetY = - self.unitConverter.fromInch(-self.operationsViewModel.maxY / cam_op.inchToClipperScale)
         self.generateGcode()
 
     def zeroCenter(self):
-        self.allowGen = False
-        self.offsetX = - self.unitConverter.fromInch((self.operationsViewModel.minX + self.operationsViewModel.maxX) / 2 / jscut.priv.path.inchToClipperScale)
-        self.offsetY = - self.unitConverter.fromInch(-(self.operationsViewModel.minY + self.operationsViewModel.maxY) / 2 / jscut.priv.path.inchToClipperScale)
-        self.allowGen = True
+        self.offsetX = - self.unitConverter.fromInch((self.operationsViewModel.minX + self.operationsViewModel.maxX) / 2 / cam_op.inchToClipperScale)
+        self.offsetY = - self.unitConverter.fromInch(-(self.operationsViewModel.minY + self.operationsViewModel.maxY) / 2 / cam_op.inchToClipperScale)
         self.generateGcode()
 
     def generateGcode(self):
-        if not self.allowGen:
-            return
-
         ops: List[Operation] = []
         for op in self.operationsViewModel.operations:
             if op.enabled:
@@ -115,16 +326,16 @@ class GcodeConversionViewModel:
             return
 
         if self.units == "inch":
-            scale = 1 / jscut.priv.path.inchToClipperScale
+            scale = 1 / cam_op.inchToClipperScale
         else:
-            scale = 25.4 / jscut.priv.path.inchToClipperScale
+            scale = 25.4 / cam_op.inchToClipperScale
 
         tabGeometry = []
         for tab in self.tabsViewModel.tabs:
             if tab.enabled:
-                offset = self.toolModel.diameter.toInch() / 2 * jscut.priv.path.inchToClipperScale
-                geometry = jscut.priv.path.offset(tab.combinedGeometry, offset)
-                tabGeometry = jscut.priv.path.clip(tabGeometry, geometry, ClipperLib.ClipType.ctUnion)
+                offset = self.toolModel.diameter.toInch() / 2 * cam_op.inchToClipperScale
+                geometry = cam_op.offset(tab.combinedGeometry, offset)
+                tabGeometry = cam_op.clip(tabGeometry, geometry, ClipperLib.ClipType.ctUnion)
 
         gcode = ""
         if self.units == "inch":

@@ -22,13 +22,13 @@ from typing import List
 
 import clipper as ClipperLib
 import Snap
-import jscut
+import pycut
 
-import UnitConverter
 
-from ToolViewModel import ToolModel
-from MaterialViewModel import MaterialViewModel
-from SvgViewModel import SvgViewModel
+from GcodeConversionViewModel import ToolModel
+from GcodeConversionViewModel import MaterialViewModel
+from GcodeConversionViewModel import SvgViewModel
+
 from SelectionViewModel import SelectionViewModel
 
 

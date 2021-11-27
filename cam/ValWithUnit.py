@@ -1,7 +1,7 @@
 
 class ValWithUnit(float):
     '''
-    A wrapper for float values
+    A wrapper for float values with handy units conversion
     
     >>> x = ValWithUnit(22, "mm")
     >>> x
@@ -49,6 +49,7 @@ class ValWithUnit(float):
 
     def toFixed(self, level):
         '''
+        Format float value
         '''
         return "%4.*f" % (level, self)
 
