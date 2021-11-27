@@ -61,6 +61,67 @@ class _SwigNonDynamicMeta(type):
     __setattr__ = _swig_setattr_nondynamic_class_variable(type.__setattr__)
 
 
+class SwigPyIterator(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined - class is abstract")
+    __repr__ = _swig_repr
+    __swig_destroy__ = _clipper.delete_SwigPyIterator
+
+    def value(self):
+        return _clipper.SwigPyIterator_value(self)
+
+    def incr(self, n=1):
+        return _clipper.SwigPyIterator_incr(self, n)
+
+    def decr(self, n=1):
+        return _clipper.SwigPyIterator_decr(self, n)
+
+    def distance(self, x):
+        return _clipper.SwigPyIterator_distance(self, x)
+
+    def equal(self, x):
+        return _clipper.SwigPyIterator_equal(self, x)
+
+    def copy(self):
+        return _clipper.SwigPyIterator_copy(self)
+
+    def next(self):
+        return _clipper.SwigPyIterator_next(self)
+
+    def __next__(self):
+        return _clipper.SwigPyIterator___next__(self)
+
+    def previous(self):
+        return _clipper.SwigPyIterator_previous(self)
+
+    def advance(self, n):
+        return _clipper.SwigPyIterator_advance(self, n)
+
+    def __eq__(self, x):
+        return _clipper.SwigPyIterator___eq__(self, x)
+
+    def __ne__(self, x):
+        return _clipper.SwigPyIterator___ne__(self, x)
+
+    def __iadd__(self, n):
+        return _clipper.SwigPyIterator___iadd__(self, n)
+
+    def __isub__(self, n):
+        return _clipper.SwigPyIterator___isub__(self, n)
+
+    def __add__(self, n):
+        return _clipper.SwigPyIterator___add__(self, n)
+
+    def __sub__(self, *args):
+        return _clipper.SwigPyIterator___sub__(self, *args)
+    def __iter__(self):
+        return self
+
+# Register SwigPyIterator in _clipper:
+_clipper.SwigPyIterator_swigregister(SwigPyIterator)
+
 CLIPPER_VERSION = _clipper.CLIPPER_VERSION
 ctIntersection = _clipper.ctIntersection
 ctUnion = _clipper.ctUnion
@@ -305,6 +366,218 @@ class clipperException(object):
 # Register clipperException in _clipper:
 _clipper.clipperException_swigregister(clipperException)
 
+class IntPointVector(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def iterator(self):
+        return _clipper.IntPointVector_iterator(self)
+    def __iter__(self):
+        return self.iterator()
+
+    def __nonzero__(self):
+        return _clipper.IntPointVector___nonzero__(self)
+
+    def __bool__(self):
+        return _clipper.IntPointVector___bool__(self)
+
+    def __len__(self):
+        return _clipper.IntPointVector___len__(self)
+
+    def __getslice__(self, i, j):
+        return _clipper.IntPointVector___getslice__(self, i, j)
+
+    def __setslice__(self, *args):
+        return _clipper.IntPointVector___setslice__(self, *args)
+
+    def __delslice__(self, i, j):
+        return _clipper.IntPointVector___delslice__(self, i, j)
+
+    def __delitem__(self, *args):
+        return _clipper.IntPointVector___delitem__(self, *args)
+
+    def __getitem__(self, *args):
+        return _clipper.IntPointVector___getitem__(self, *args)
+
+    def __setitem__(self, *args):
+        return _clipper.IntPointVector___setitem__(self, *args)
+
+    def pop(self):
+        return _clipper.IntPointVector_pop(self)
+
+    def append(self, x):
+        return _clipper.IntPointVector_append(self, x)
+
+    def empty(self):
+        return _clipper.IntPointVector_empty(self)
+
+    def size(self):
+        return _clipper.IntPointVector_size(self)
+
+    def swap(self, v):
+        return _clipper.IntPointVector_swap(self, v)
+
+    def begin(self):
+        return _clipper.IntPointVector_begin(self)
+
+    def end(self):
+        return _clipper.IntPointVector_end(self)
+
+    def rbegin(self):
+        return _clipper.IntPointVector_rbegin(self)
+
+    def rend(self):
+        return _clipper.IntPointVector_rend(self)
+
+    def clear(self):
+        return _clipper.IntPointVector_clear(self)
+
+    def get_allocator(self):
+        return _clipper.IntPointVector_get_allocator(self)
+
+    def pop_back(self):
+        return _clipper.IntPointVector_pop_back(self)
+
+    def erase(self, *args):
+        return _clipper.IntPointVector_erase(self, *args)
+
+    def __init__(self, *args):
+        _clipper.IntPointVector_swiginit(self, _clipper.new_IntPointVector(*args))
+
+    def push_back(self, x):
+        return _clipper.IntPointVector_push_back(self, x)
+
+    def front(self):
+        return _clipper.IntPointVector_front(self)
+
+    def back(self):
+        return _clipper.IntPointVector_back(self)
+
+    def assign(self, n, x):
+        return _clipper.IntPointVector_assign(self, n, x)
+
+    def resize(self, *args):
+        return _clipper.IntPointVector_resize(self, *args)
+
+    def insert(self, *args):
+        return _clipper.IntPointVector_insert(self, *args)
+
+    def reserve(self, n):
+        return _clipper.IntPointVector_reserve(self, n)
+
+    def capacity(self):
+        return _clipper.IntPointVector_capacity(self)
+    __swig_destroy__ = _clipper.delete_IntPointVector
+
+# Register IntPointVector in _clipper:
+_clipper.IntPointVector_swigregister(IntPointVector)
+
+class PathVector(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def iterator(self):
+        return _clipper.PathVector_iterator(self)
+    def __iter__(self):
+        return self.iterator()
+
+    def __nonzero__(self):
+        return _clipper.PathVector___nonzero__(self)
+
+    def __bool__(self):
+        return _clipper.PathVector___bool__(self)
+
+    def __len__(self):
+        return _clipper.PathVector___len__(self)
+
+    def __getslice__(self, i, j):
+        return _clipper.PathVector___getslice__(self, i, j)
+
+    def __setslice__(self, *args):
+        return _clipper.PathVector___setslice__(self, *args)
+
+    def __delslice__(self, i, j):
+        return _clipper.PathVector___delslice__(self, i, j)
+
+    def __delitem__(self, *args):
+        return _clipper.PathVector___delitem__(self, *args)
+
+    def __getitem__(self, *args):
+        return _clipper.PathVector___getitem__(self, *args)
+
+    def __setitem__(self, *args):
+        return _clipper.PathVector___setitem__(self, *args)
+
+    def pop(self):
+        return _clipper.PathVector_pop(self)
+
+    def append(self, x):
+        return _clipper.PathVector_append(self, x)
+
+    def empty(self):
+        return _clipper.PathVector_empty(self)
+
+    def size(self):
+        return _clipper.PathVector_size(self)
+
+    def swap(self, v):
+        return _clipper.PathVector_swap(self, v)
+
+    def begin(self):
+        return _clipper.PathVector_begin(self)
+
+    def end(self):
+        return _clipper.PathVector_end(self)
+
+    def rbegin(self):
+        return _clipper.PathVector_rbegin(self)
+
+    def rend(self):
+        return _clipper.PathVector_rend(self)
+
+    def clear(self):
+        return _clipper.PathVector_clear(self)
+
+    def get_allocator(self):
+        return _clipper.PathVector_get_allocator(self)
+
+    def pop_back(self):
+        return _clipper.PathVector_pop_back(self)
+
+    def erase(self, *args):
+        return _clipper.PathVector_erase(self, *args)
+
+    def __init__(self, *args):
+        _clipper.PathVector_swiginit(self, _clipper.new_PathVector(*args))
+
+    def push_back(self, x):
+        return _clipper.PathVector_push_back(self, x)
+
+    def front(self):
+        return _clipper.PathVector_front(self)
+
+    def back(self):
+        return _clipper.PathVector_back(self)
+
+    def assign(self, n, x):
+        return _clipper.PathVector_assign(self, n, x)
+
+    def resize(self, *args):
+        return _clipper.PathVector_resize(self, *args)
+
+    def insert(self, *args):
+        return _clipper.PathVector_insert(self, *args)
+
+    def reserve(self, n):
+        return _clipper.PathVector_reserve(self, n)
+
+    def capacity(self):
+        return _clipper.PathVector_capacity(self)
+    __swig_destroy__ = _clipper.delete_PathVector
+
+# Register PathVector in _clipper:
+_clipper.PathVector_swigregister(PathVector)
+
 
 
 class ClipType:
@@ -343,6 +616,21 @@ class EndType:
 class EdgeSide:
     esLeft = 1
     esRight = 2
+
+def dumpIntPoint(label, pt):
+    if label: print(label)
+    print(pt.X, pt.Y)
+
+def dumpPath(label, path):
+    if label: print("---- path  len", len(path))
+    for pt in path:
+        dumpIntPoint(None, pt)
+
+def dumpPaths(label, paths):
+    print(label)
+    for path in paths:
+        print("-----")
+        dumpPath(None, path)
 
 
 

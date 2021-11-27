@@ -18,6 +18,8 @@ import webglviewer
 import svgmaterial
 import pycut_operations_simpletablewidget
 
+from pycut_op import SvgOp
+
 import resources_rc
 
 
@@ -470,6 +472,23 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.comboBox_Operations_OpType.show()
         self.window.comboBox_Operations_OpType.setEnabled(True)
 
+        # now the real stuff - svg entities ("paths") have been selected
+        # -> they can be "combined" with the operation setting (Union, Interection, XOR, Diff)
+
+        # 1- first, we calculate the resuting paths as results of the combination.
+        # -> we display as svg this results (as in jscut) in black in the svg viewer
+        operation = self.operation
+        operation["paths"] = self.svg_viewer.selected_items
+        full_op = SvgOp(operation)
+        full_op.calculate()
+        # full_op contains svg paths of the resulting combination
+        #self.display_cam_op_region(full_op)
+        # full_op contains also sone gcode !
+        # TODO
+
+        # 2- the gcode calculation
+        # TODO
+
     def cb_save_op(self):
         '''
         '''
@@ -577,7 +596,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         if op_type == "Inside":
             operation = {
                 "Name": "-- op inside --",
-                "paths": [],
+                "paths": ['p1', 'p2'],
                 "type": "Inside",
                 "Deep": 0.2,       
                 "RampPlunge": True,
@@ -621,7 +640,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "Margin": 0.1,
             }
             
+        self.operation = operation
         self.display_operation(operation)
+        self.display_operation_on_svg_canvas(operation)
         
     def display_operation(self, operation):
         '''
@@ -662,6 +683,17 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.current_op_widget.comboBox_Units.setCurrentText(operation["Units"])
             self.current_op_widget.doubleSpinBox_Margin.setValue(operation["Margin"])
         
+    def display_operation_on_svg_canvas(self, operation):
+        '''
+        '''
+        svg_op = SvgOp(operation)
+        svg_op.setup(self.svg_viewer)
+        svg_op.calculate()
+
+        print(svg_op.combined_svg_paths)
+
+        self.svg_viewer.display_op_svg_paths(svg_op.combined_svg_paths)
+
     @QtCore.Slot()
     def cb_open_svg(self):
         '''
