@@ -18,7 +18,7 @@ import webglviewer
 import svgmaterial
 import pycut_operations_simpletablewidget
 
-from pycut_op import SvgOp
+from cam_op import SvgOp
 
 import resources_rc
 

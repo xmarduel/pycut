@@ -57,10 +57,10 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
     def __init__(self, parent):
         super(SvgViewer, self).__init__(parent)
-        self._scene = QtWidgets.QGraphicsScene(self,0,0,100,100)
-        self._renderer = QtSvg.QSvgRenderer()
-        self._renderer.setViewBox(QtCore.QRect(0,0,100,100))
-        self.setScene(self._scene)
+        self.scene = QtWidgets.QGraphicsScene(self,0,0,100,100)
+        self.renderer = QtSvg.QSvgRenderer()
+        self.renderer.setViewBox(QtCore.QRect(0,0,100,100))
+        self.setScene(self.scene)
 
         self.svg = None
         self.path_d = {}
@@ -72,9 +72,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.setViewportUpdateMode(QtWidgets.QGraphicsView.FullViewportUpdate)
 
     def set_svg(self, data):
-        self._scene.clear()
+        self.scene.clear()
         self.resetTransform()
-        self._renderer.load(data)
+        self.renderer.load(data)
 
         svg = data.decode('utf-8')
         self.svg = svg
@@ -89,8 +89,8 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
             self.path_d[id] = dd
 
-            item = SvgItem(id, self._renderer)
-            self._scene.addItem(item)
+            item = SvgItem(id, self.renderer)
+            self.scene.addItem(item)
 
             self.items.append(item)
 
@@ -99,7 +99,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
     
     def clean(self):
         for item in self.items:
-            self._scene.removeItem(item)
+            self.scene.removeItem(item)
 
         self.items = []
         self.selected_items = []
