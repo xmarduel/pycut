@@ -78,23 +78,28 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.path_d = {}
 
         self.items = []
+        # ordered list of items - TODO
         self.selected_items = []
 
         #self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         self.setViewportUpdateMode(QtWidgets.QGraphicsView.FullViewportUpdate)
 
-    def set_svg(self, svg):
+    def set_svg(self, svg: str):
         '''
         This sets the 'real' svg file data, not the later 'augmented' svg
         '''
         self.svg = svg
         self.fill_svg_viewer(self.svg)
 
-    def fill_svg_viewer(self, svg):
+    def fill_svg_viewer(self, svg: str):
         '''
         '''
         self.scene.clear()
         self.resetTransform()
+
+        self.items = []
+        self.selected_items = []
+
         self.renderer.load(bytes(svg, 'utf-8'))
 
         root = ET.fromstring(svg)
