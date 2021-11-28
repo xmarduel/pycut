@@ -47,6 +47,18 @@
       "Units": "mm",
       "Margin": 0.0,
       "Width": 1.1
+    },
+    {
+      "Name": "op5 - 1 path selected",
+      "paths": ["c1"],
+      "type": "Pocket",
+      "Deep": 0.2,
+      "RampPlunge": true,
+      "Combine": "Intersection",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 1.1
     }
   ],
   "settings" : {

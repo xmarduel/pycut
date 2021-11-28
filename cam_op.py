@@ -67,6 +67,11 @@ class CncOp:
     def combine_clipper_paths(self):
         '''
         '''
+        # special case : only 1 path selected 
+        if len(self.clipper_paths) == 1:
+            self.combined_clipper_paths = self.clipper_paths
+            return
+
         subj = ClipperLib.PathVector()
         subj.append(self.clipper_paths[0])
 
