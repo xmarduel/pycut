@@ -67,9 +67,9 @@ works, and how easy (or hard) it is to achieve. Well, it is hard.</p>
 application: sure for developpers who know javascript technology it is very
 productive, but how many users are able to improve jsCut on their own? only a
 few I guess: it is not as easy as one may think. This is due to my opinion to
-the fact javascript is just a pain to understand for people not used to the web
-technologies (which by the way change every 3 years...). Traditional desktop
-applications are a lot easyier to hack (yes!)</p>
+the fact javascript/htlm frameworks are just a pain to understand for people not
+used to the web technologies (which by the way change lets say every 3 years...). 
+Traditional desktop applications are a lot easyier to hack (yes!)</p>
 
 <p>Web technologies change every 3 years? An example is jsCut itself, which is
 based on the "polymer" HTML framework. Who which is new to javascript has ever
@@ -96,22 +96,18 @@ will be users that will be able to contribute.</p>
   <li>in PySide, display the WebGL stuff (QEngineView) <span
     style="color:#00ff00"><span style="color:#008000">DONE</span></span><span
     style="background-color:#00ff00"></span></li>
-  <li>in PySide, display the SVG viewer stuff (QEngineView) <span
-    style="color:#ff0080">TODO or directly with QtSvg ?</span></li>
+  <li>in PySide, display the SVG viewer stuff (QGraphicsView with SvgItem) <span 
+    style="color:#008000">DONE (well, the op. Union/Interect etc. only)</span></span></li>
   <li>Rest of the MainWindow in PySide <span
-  style="color:#008000">DONE</span></li>
-  <li>G-Code Generation with interface to the javascript CAM interface <span
+  style="color:#008000">DONE (nearly)</span></li>
+  <li>G-Code Generation with interface to the C++ CAM interface (lot of js code to understand) <span
     style="color:#ff0080">TODO</span></li>
 </ul>
 
 <p>After that</p>
 <ul>
-  <li>Migrating WebGL stuff to "native" python (QGraphicsView I guess) <span
+  <li>Migrating WebGL stuff to "native" python (QGraphicsView I guess, or PyOpenGL ?) <span
     style="color:#ff0080">TODO</span></li>
-  <li>Migrating SVG Viewer stuff to "native" python (QSvgView I guess) <span
-    style="color:#ff0080">TODO</span></li>
-  <li>Migrating CAM stuff from javascript interface to python interface (c++
-    sources are there) <span style="color:#ff0080">TODO</span></li>
 </ul>
 
 <p>Nice to have:</p>
