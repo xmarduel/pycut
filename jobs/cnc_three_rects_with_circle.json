@@ -23,6 +23,30 @@
       "Units": "mm",
       "Margin": 0.0,
       "Width": 1.1
+    },
+    {
+      "Name": "op3",
+      "paths": ["r1", "c1"],
+      "type": "Pocket",
+      "Deep": 0.2,
+      "RampPlunge": true,
+      "Combine": "Difference",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 1.1
+    },
+    {
+      "Name": "op4",
+      "paths": ["r1", "c1"],
+      "type": "Pocket",
+      "Deep": 0.2,
+      "RampPlunge": true,
+      "Combine": "Xor",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 1.1
     }
   ],
   "settings" : {
