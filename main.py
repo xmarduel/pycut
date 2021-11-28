@@ -16,7 +16,7 @@ from PySide6.QtUiTools import QUiLoader
 import svgviewer
 import webglviewer
 import svgmaterial
-import pycut_operations_simpletablewidget
+import operations_simpletablewidget
 
 from cam_op import CncOp
 
@@ -156,7 +156,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         '''
         loader = QUiLoader(self)
-        loader.registerCustomWidget(pycut_operations_simpletablewidget.PyCutSimpleTableWidget)
+        loader.registerCustomWidget(operations_simpletablewidget.PyCutSimpleTableWidget)
         
         window = loader.load(uifile)
 

@@ -1383,7 +1383,7 @@ text-align:left;</string>
   <customwidget>
    <class>PyCutSimpleTableWidget</class>
    <extends>QTableWidget</extends>
-   <header>pycut_operations_simpletablewidget.h</header>
+   <header>operations_simpletablewidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
