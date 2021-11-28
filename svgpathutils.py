@@ -45,10 +45,24 @@ class SvgPath:
             if segment.__class__.__name__ == 'Line':
                 # start and end
                 pts = segment.points([0,1])
-            else:  # 'Arc', 'QuadraticBezier', 'CubicBezier'
+            elif segment.__class__.__name__ == 'Arc':
                 seg_length = segment.length()
 
-                nb_samples = seg_length * self.samples_coeff
+                nb_samples = int(seg_length * self.samples_coeff)
+                
+                # no 'points' method for 'Arc'!
+                _pts = []
+                for k in range(nb_samples):
+                    _pts.append(segment.point(float(k)/float(nb_samples)))
+                # and the last
+                _pts.append(segment.point(1))
+
+                pts = np.array(_pts, dtype=np.complex128)
+
+            else:  # 'QuadraticBezier', 'CubicBezier'
+                seg_length = segment.length()
+
+                nb_samples = int(seg_length * self.samples_coeff)
                 incr = 1.0 / nb_samples
 
                 samples = [x* incr for x in range(0, nb_samples)]
@@ -78,7 +92,7 @@ class SvgPath:
         '''
         '''
         svgpathtools_pts : List[complex] = [  \
-                complex(int(pt.X / 1000), int(pt.Y / 1000)) for pt in clipper_path]
+                complex(pt.X / 1000, pt.Y / 1000) for pt in clipper_path]
 
 
         svgpathtools_path = svgpathtools.Path()
@@ -125,7 +139,7 @@ class SvgTransformer:
             id = svg_path.p_id
             dd = svg_path.p_attrs['d']
 
-            all_paths += '<path id="%s_%d" style="fill:#111111;stroke-width:1;stroke:#00ff00"  d="%s" />'  % (id, k, dd)
+            all_paths += '<path id="%s_%d" style="fill:#111111;stroke-width:0;stroke:#00ff00"  d="%s" />'  % (id, k, dd)
         
         svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
                 width="100"
