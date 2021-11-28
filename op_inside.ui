@@ -77,12 +77,12 @@
        </item>
        <item>
         <property name="text">
-         <string>Intersect</string>
+         <string>Intersection</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Diff</string>
+         <string>Difference</string>
         </property>
        </item>
        <item>

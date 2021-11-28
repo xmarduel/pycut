@@ -121,7 +121,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.init_gui()
         
-        self.open_job("./jobs/cnc_three_rects.json")
+        #self.open_job("./jobs/cnc_three_rects.json")
+        self.open_job("./jobs/cnc_three_rects_with_circle.json")
 
         self.display_gcode_file("gcode.gcode")
 
@@ -565,6 +566,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.display_op_widgets_type(operation["type"])
 
         self.display_operation(operation)
+        self.display_operation_on_svg_canvas(operation)
        
     def display_op_widgets_type(self, op_type):
         '''
@@ -599,7 +601,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         if op_type == "Pocket":
             operation = {
                 "Name": "-- op pocket --",
-                "paths": ['p1', 'p2'],
+                "paths": [],
                 "type": "Pocket",
                 "Deep": 0.2,       
                 "RampPlunge": True,
@@ -611,7 +613,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         if op_type == "Inside":
             operation = {
                 "Name": "-- op inside --",
-                "paths": ['p1', 'p2'],
+                "paths": [],
                 "type": "Inside",
                 "Deep": 0.2,       
                 "RampPlunge": True,
@@ -624,7 +626,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         if op_type == "Outside":
             operation = {
                 "Name": "-- op outside --",
-                "paths": ['p1', 'p2'],
+                "paths": [],
                 "type": "Outside",
                 "Deep": 0.2,       
                 "RampPlunge": True,
@@ -637,7 +639,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         if op_type == "Engrave":
             operation = {
                 "Name": "-- op outside --",
-                "paths": ['p1', 'p2'],
+                "paths": [],
                 "type": "Engrave",
                 "RampPlunge": True,
                 "Combine": "Xor",
@@ -654,10 +656,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "Units": "mm",
                 "Margin": 0.1,
             }
-            
-        self.operation = operation
         self.display_operation(operation)
-        self.display_operation_on_svg_canvas(operation)
         
     def display_operation(self, operation):
         '''

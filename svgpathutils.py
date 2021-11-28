@@ -119,7 +119,7 @@ class SvgTransformer:
             for key, value in init_attrib.items():
                 svg_attrs += ' %s="%s"' % (key, value)
 
-            all_paths += '<path %s> />' % svg_attrs
+            all_paths += '<path %s />' % svg_attrs
 
         for k, svg_path in enumerate(svg_paths):
             id = svg_path.p_id
@@ -138,6 +138,8 @@ class SvgTransformer:
                 </g> 
              </svg>''' % all_paths
 
+        print(svg)
+        
         return svg
     
 

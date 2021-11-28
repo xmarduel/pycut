@@ -1,0 +1,69 @@
+{
+  "svg_file": "svg/three_rects_with_circle.svg",
+  "operations": [
+    {
+      "Name": "op1",
+      "paths": ["r1", "r2", "r3"],
+      "type": "Pocket",
+      "Deep": 0.2,       
+      "RampPlunge": true,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.1
+    },
+    {
+      "Name": "op2",
+      "paths": ["r1", "c1"],
+      "type": "Pocket",
+      "Deep": 0.2,
+      "RampPlunge": true,
+      "Combine": "Intersection",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 1.1
+    }
+  ],
+  "settings" : {
+    "svg": {
+        "x_per_inch": 96
+    },
+    "Tabs": {
+       "Units": "mm",
+       "MaxCutDepth": 1.0
+     },
+     "Tool": {
+       "Units": "mm",
+       "Diameter": 1.0,
+       "Angle": 180,
+       "PassDepth": 0.25,
+       "StepOver": 0.4,
+       "Rapid": 500,
+       "Plunge": 100,
+       "Cut": 200
+     },
+     "Material": {
+       "Units": "mm",
+       "Thickness": 50.0,
+       "ZOrigin": "Top",
+       "Clearance": 10.0
+     },
+     "CurveToLineConversion": {
+       "MinimumSegments": 1.0,
+       "MinimumSegmentsLength": 0.01
+     },
+     "GCodeConversion": {
+       "Units": "mm",
+       "ZeroLowerLeft": true,
+       "ZeroCenter": false,
+       "XOffset": 1.0,
+       "YOffset": 2.0
+    },
+    "GCodeGeneration": {
+      "ReturnToZeroAtEnd": true,
+      "SpindleAutomatic": true,
+      "SpindleSpeed": 1000
+    }
+  }
+}
