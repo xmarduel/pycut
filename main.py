@@ -18,7 +18,7 @@ import webglviewer
 import svgmaterial
 import pycut_operations_simpletablewidget
 
-from cam_op import SvgOp
+from cam_op import CncOp
 
 import resources_rc
 
@@ -283,7 +283,23 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setChecked(settings["GCodeGeneration"]["ReturnToZeroAtEnd"]),
         self.window.checkBox_GCodeGeneration_SpindleAutomatic.setChecked(settings["GCodeGeneration"]["SpindleAutomatic"]),
         self.window.spinBox_GCodeGeneration_SpindleSpeed.setValue(settings["GCodeGeneration"]["SpindleSpeed"]),
+
+
+    @QtCore.Slot()
+    def cb_open_svg(self):
+        '''
+        not a job, a svg only -> no oerations
+        '''
+        xfilter = "SVG Files (*.svg)"
+        svg_file, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
+
+        if svg_file:
+            self.svg_file = svg_file
+            self.operations = []
             
+            self.display_svg(self.svg_file)
+            self.display_operations(self.operations)
+ 
     def cb_open_job(self):
         '''
         '''
@@ -303,7 +319,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             # display
             self.display_svg(self.svg_file)
             # display operations in table
-            self.display_cnc_operations(self.operations)
+            self.display_operations(self.operations)
             
             # and fill the whole gui
             self.apply_settings(job["settings"])
@@ -458,7 +474,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             self.svg_viewer.set_svg(img)
 
-    def display_cnc_operations(self, operations):
+    def display_operations(self, operations):
         '''
         '''
         self.window.tableWidget_Operations_ViewOps.setData(operations)
@@ -479,14 +495,15 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # -> we display as svg this results (as in jscut) in black in the svg viewer
         operation = self.operation
         operation["paths"] = self.svg_viewer.selected_items
-        full_op = SvgOp(operation)
-        full_op.calculate()
-        # full_op contains svg paths of the resulting combination
-        #self.display_cam_op_region(full_op)
-        # full_op contains also sone gcode !
-        # TODO
 
-        # 2- the gcode calculation
+        cnc_op = CncOp(operation)
+        cnc_op.setup(self.svg_viewer)
+        cnc_op.calculate()
+
+        # 1- the gcode 'region'
+        self.svg_viewer.display_cnc_op_svg_paths(cnc_op.combined_svg_paths)
+
+        # 2- the gcode calculation and display
         # TODO
 
     def cb_save_op(self):
@@ -686,27 +703,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def display_operation_on_svg_canvas(self, operation):
         '''
         '''
-        svg_op = SvgOp(operation)
-        svg_op.setup(self.svg_viewer)
-        svg_op.calculate()
+        cnc_op = CncOp(operation)
+        cnc_op.setup(self.svg_viewer)
+        cnc_op.calculate()
 
-        print(svg_op.combined_svg_paths)
+        self.svg_viewer.display_cnc_op_svg_paths(cnc_op.combined_svg_paths)
 
-        self.svg_viewer.display_op_svg_paths(svg_op.combined_svg_paths)
 
-    @QtCore.Slot()
-    def cb_open_svg(self):
-        '''
-        '''
-        xfilter = "SVG Files (*.svg)"
-        svg_file, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
-
-        if svg_file:
-            self.svg_file = svg_file
-            self.operations = []
-            
-            self.display_svg(self.svg_file)
-            self.display_cnc_operations(self.operations)
 
 
 if __name__ == "__main__":

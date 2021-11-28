@@ -53,6 +53,16 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
 
 
 class SvgViewer(QtWidgets.QGraphicsView):
+    '''
+    The SvgViewer can 'only' load full svg files. 
+    It cannot increment the view with single "Paths
+    
+    So when augmenting the view, we have to pass all cnc operations
+    and build a custom svg file on its own.
+    This is possible with the help of the svgpathtools.
+
+    Note that still only the paths from the original svg are selectable.
+    '''
     zoomChanged = QtCore.Signal()
 
     def __init__(self, parent):
@@ -145,7 +155,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.scale(factor, factor)
         self.zoomChanged.emit()
 
-    def display_op_svg_paths(self, combined_svg_paths: List['SvgPath']):
+    def display_cnc_op_svg_paths(self, combined_svg_paths: List['SvgPath']):
         '''
         '''
         all_paths = ""

@@ -11,7 +11,7 @@ inchToClipperScale = 100000  # Scale inch to Clipper
 cleanPolyDist = inchToClipperScale / 100000
 arcTolerance = inchToClipperScale / 40000
 
-class SvgOp:
+class CncOp:
     '''
     '''
     inchToClipperScale = 100000  # Scale inch to Clipper
