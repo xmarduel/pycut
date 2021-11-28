@@ -57,10 +57,11 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
 class SvgViewer(QtWidgets.QGraphicsView):
     '''
     The SvgViewer can 'only' load full svg files. 
-    It cannot increment the view with single "Paths
+    It cannot increment the view with single "Paths"
     
     So when augmenting the view, we have to pass all cnc operations
-    and build a custom svg file on its own.
+    and build a custom svg file on its own with all these new paths.
+
     This is possible with the help of the svgpathtools.
 
     Note that still only the paths from the original svg are selectable.
@@ -77,12 +78,22 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.svg = None
         self.path_d = {}
 
-        self.items = []
+        self.items : List[SvgItem] = []
         # ordered list of items - TODO
-        self.selected_items = []
+        self.selected_items : List[SvgItem] = []
 
         #self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         self.setViewportUpdateMode(QtWidgets.QGraphicsView.FullViewportUpdate)
+
+    def clean(self):
+        self.scene.clear()
+        self.resetTransform()
+        
+        #for item in self.items:
+        #    self.scene.removeItem(item)
+
+        self.items : List[SvgItem] = []
+        self.selected_items : List[SvgItem] = []
 
     def set_svg(self, svg: str):
         '''
@@ -94,11 +105,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
     def fill_svg_viewer(self, svg: str):
         '''
         '''
-        self.scene.clear()
-        self.resetTransform()
-
-        self.items = []
-        self.selected_items = []
+        self.clean()
 
         self.renderer.load(bytes(svg, 'utf-8'))
 
@@ -119,13 +126,6 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
     def get_path_d(self, p_id):
         return self.path_d[p_id]
-    
-    def clean(self):
-        for item in self.items:
-            self.scene.removeItem(item)
-
-        self.items = []
-        self.selected_items = []
 
     def mousePressEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
         print('SvgViewer - mousePressEvent()')

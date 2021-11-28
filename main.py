@@ -119,6 +119,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
         self.window.pushButton_ShowHideTool.clicked.connect(self.cb_show_hide_tool)
 
+        self.window.checkBox_GCodeGeneration_SpindleAutomatic.clicked.connect(self.cb_spindle_automatic)
+
         self.init_gui()
         
         #self.open_job("./jobs/cnc_three_rects.json")
@@ -413,6 +415,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         thickness = self.window.doubleSpinBox_Material_Thickness.value()
         clearance = self.window.doubleSpinBox_Material_Clearance.value()
         self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
+
+    def cb_spindle_automatic(self):
+        val = self.window.checkBox_GCodeGeneration_SpindleAutomatic.isChecked()
+        self.window.spinBox_GCodeGeneration_SpindleSpeed.setEnabled(val)
 
     def setup_material_viewer(self):
         '''
