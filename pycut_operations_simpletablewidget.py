@@ -36,7 +36,7 @@ class PyCutSimpleTableWidget(QtWidgets.QTableWidget):
             widget = QtWidgets.QWidget()
             btn_select_op = QtWidgets.QCheckBox()
             #btn_show_op.setText("Show")
-            #btn_show_op.setIcon(QtGui.QIcon('images/tango/22x22/actions/system-search.png'))
+            #btn_show_op.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/system-search.png'))
             #btn_show_op.setToolTip("Select")
             layout = QtWidgets.QHBoxLayout(widget)
             layout.addWidget(btn_select_op);
@@ -48,7 +48,7 @@ class PyCutSimpleTableWidget(QtWidgets.QTableWidget):
             widget = QtWidgets.QWidget()
             btn_del_op = QtWidgets.QPushButton()
             btn_del_op.setText("Del")
-            btn_del_op.setIcon(QtGui.QIcon('images/tango/22x22/actions/edit-clear.png'))
+            btn_del_op.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/edit-clear.png'))
             btn_del_op.setToolTip("Delete")
             layout = QtWidgets.QHBoxLayout(widget)
             layout.addWidget(btn_del_op)

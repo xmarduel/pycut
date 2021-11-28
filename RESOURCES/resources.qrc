@@ -4,6 +4,8 @@
         <file>images/tango/16x16/actions/media-playback-stop.png</file>
         <file>images/tango_inofficial/caret-right_16x16.png</file>
         <file>images/tango_inofficial/caret-down_16x16.png</file>
+        <file>images/tango/22x22/actions/edit-clear.png</file>
+        <file>images/tango/22x22/actions/system-search.png</file>
         <file>javascript/lib/jquery-2.1.1.min.js</file>
         <file>javascript/lib/gl-matrix-2.2.0-min.js</file>
         <file>javascript/lib/webgl-utils.js</file>

@@ -15,10 +15,6 @@ arcTolerance = inchToClipperScale / 40000
 class CncOp:
     '''
     '''
-    inchToClipperScale = 100000  # Scale inch to Clipper
-    cleanPolyDist = inchToClipperScale / 100000
-    arcTolerance = inchToClipperScale / 40000
-
     pxPerInch = 96
 
     def __init__(self, operation):
@@ -48,10 +44,10 @@ class CncOp:
     def calculate(self):
         '''
         '''
-        self.calculate_op_region()
+        self.calculate_regions()
         self.calculate_gcode()
            
-    def calculate_op_region(self):
+    def calculate_regions(self):
         '''
         '''
         for svg_path in self.svg_paths:
@@ -105,7 +101,23 @@ class CncOp:
 class CncJob:
     '''
     '''
+    pxPerInch = 96
+
     def __init__(self, cnc_ops: List[CncOp]):
         self.cnc_ops = cnc_ops
+
+        self.combined_clipper_paths = []
     
- 
+    def get_regions(self):
+        for cnc_op in self.cnc_ops:
+            cnc_op.calculate_regions()
+
+        # gather the regions
+        for cnc_op in self.cnc_ops:
+            self.combined_clipper_paths = cnc_op.combined_clipper_paths
+
+    def calculate_gcode(self):
+        '''
+        the BIG stuff
+        '''
+        pass
