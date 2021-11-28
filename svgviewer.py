@@ -81,12 +81,11 @@ class SvgViewer(QtWidgets.QGraphicsView):
         #self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         self.setViewportUpdateMode(QtWidgets.QGraphicsView.FullViewportUpdate)
 
-    def set_svg(self, data):
+    def set_svg(self, svg):
         self.scene.clear()
         self.resetTransform()
-        self.renderer.load(data)
+        self.renderer.load(bytes(svg, 'utf-8'))
 
-        svg = data.decode('utf-8')
         self.svg = svg
 
         root = ET.fromstring(svg)
@@ -166,7 +165,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
             all_paths += '<path id="%s_%d" style="fill:#111111;stroke-width:1;stroke:#00ff00"  d="%s" />'  % (id, k, dd)
         
-        img = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+        svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
                 width="100"
                 height="100"
                 viewBox="0 0 100 100"
@@ -176,10 +175,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
                  %s
                 </g> 
              </svg>''' % all_paths
-        
-        data = img.encode('utf-8')
+    
 
-        self.set_svg(data)
+        self.set_svg(svg)
 
 
             

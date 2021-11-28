@@ -451,7 +451,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         if svg is None:
             
-            img = b'''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+            svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
                 width="100"
                 height="100"
                 viewBox="0 0 100 100"
@@ -464,15 +464,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                     d="M 40,40 H 70 V 90 H 40 Z" />
                 </g>
              </svg>'''
-            self.svg_viewer.set_svg(img)
+            self.svg_viewer.set_svg(svg)
         else:
             fp = open(svg, "r")
-
-            data = fp.read()
-            img = bytes(data, 'utf-8')
+            svg = fp.read()
             fp.close()
 
-            self.svg_viewer.set_svg(img)
+            self.svg_viewer.set_svg(svg)
 
     def display_operations(self, operations):
         '''
