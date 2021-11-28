@@ -499,7 +499,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         cnc_op.calculate()
 
         # 1- the gcode 'region'
-        self.svg_viewer.display_cnc_op_svg_paths(cnc_op.combined_svg_paths)
+        self.svg_viewer.display_cnc_op(cnc_op.combined_svg_paths)
 
         # 2- the gcode calculation and display
         # TODO
@@ -705,7 +705,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         cnc_op.setup(self.svg_viewer)
         cnc_op.calculate()
 
-        self.svg_viewer.display_cnc_op_svg_paths(cnc_op.combined_svg_paths)
+        self.svg_viewer.display_cnc_op(cnc_op.combined_svg_paths)
 
 
 

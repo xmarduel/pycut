@@ -11,6 +11,7 @@ inchToClipperScale = 100000  # Scale inch to Clipper
 cleanPolyDist = inchToClipperScale / 100000
 arcTolerance = inchToClipperScale / 40000
 
+
 class CncOp:
     '''
     '''
@@ -94,3 +95,12 @@ class CncOp:
         '''
         '''
         pass
+
+
+class CncJob:
+    '''
+    '''
+    def __init__(self, cnc_ops: List[CncOp]):
+        self.cnc_ops = cnc_ops
+    
+ 

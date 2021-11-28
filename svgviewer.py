@@ -13,6 +13,8 @@ from PySide6 import QtSvgWidgets
 
 import lxml.etree as ET
 
+import svgpathutils
+
 # https://stackoverflow.com/questions/53288926/qgraphicssvgitem-event-propagation-interactive-svg-viewer
 
 class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
@@ -82,11 +84,18 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.setViewportUpdateMode(QtWidgets.QGraphicsView.FullViewportUpdate)
 
     def set_svg(self, svg):
+        '''
+        This sets the 'real' svg file data, not the later 'augmented' svg
+        '''
+        self.svg = svg
+        self.fill_svg_viewer(self.svg)
+
+    def fill_svg_viewer(self, svg):
+        '''
+        '''
         self.scene.clear()
         self.resetTransform()
         self.renderer.load(bytes(svg, 'utf-8'))
-
-        self.svg = svg
 
         root = ET.fromstring(svg)
 
@@ -154,30 +163,29 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.scale(factor, factor)
         self.zoomChanged.emit()
 
-    def display_cnc_op_svg_paths(self, combined_svg_paths: List['SvgPath']):
+    def display_cnc_op(self, combined_svg_paths: List['SvgPath']):
         '''
         '''
-        all_paths = ""
+        tr = svgpathutils.SvgTransformer(self.svg)
+        aug_svg = tr.augment(combined_svg_paths)
 
-        for k, svg_path in enumerate(combined_svg_paths):
-            id = svg_path.p_id
-            dd = svg_path.p_attrs['d']
+        self.fill_svg_viewer(aug_svg)
 
-            all_paths += '<path id="%s_%d" style="fill:#111111;stroke-width:1;stroke:#00ff00"  d="%s" />'  % (id, k, dd)
-        
-        svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
-                width="100"
-                height="100"
-                viewBox="0 0 100 100"
-                version="1.1">
-                <style>svg { background-color: green; }</style>
-                <g>
-                 %s
-                </g> 
-             </svg>''' % all_paths
-    
+    #def display_cnc_job(self, cnc_job):
+    #    '''
+    #    '''
+    #    svg = self.make_svg_from_cnc_job(cnc_job)
+    #    self.fill_svg_viewer(svg)
 
-        self.set_svg(svg)
+    #def make_svg_from_cnc_job(self, cnc_job):
+    #    '''
+    #    '''
+    #    all_svg_paths = []
+
+    #    for cnc_op in cnc_job:
+    #        all_svg_paths += cnc_op.svg_paths
+
+    #  self.display_cnc_op(all_svg_paths)
 
 
             
