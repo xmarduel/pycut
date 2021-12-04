@@ -20,24 +20,24 @@ import math
 
 from typing import List
 
-import clipper as ClipperLib
+import clipper.clipper as ClipperLib
+
 import Snap
-import cam.pycut as pycut
 
+import cam
+import clipper_utils
 
-from GcodeConversionViewModel import ToolModel
-from GcodeConversionViewModel import MaterialViewModel
-from GcodeConversionViewModel import SvgViewModel
-
-from SelectionViewModel import SelectionViewModel
+from pycut import ToolModel
+from pycut import MaterialModel
+from pycut import SvgModel
 
 
 class Operation:
     '''
     '''
     def __init__(self, 
-            svgViewModel : SvgViewModel, 
-            materialViewModel : MaterialViewModel, 
+            svgViewModel : SvgModel, 
+            materialViewModel : MaterialModel, 
             operationsViewModel : 'OperationsViewModel', 
             toolModel : ToolModel, 
             combinedGeometryGroup, 
@@ -111,14 +111,14 @@ class Operation:
 
         all = []
         for rawPath in self.rawPaths:
-            geometry = jscut.priv.path.getClipperPathsFromSnapPath(rawPath, self.svgViewModel.pxPerInch, alertMsg)
+            geometry = clipper_utils.ClipperUtils.getClipperPathsFromSnapPath(rawPath, self.svgViewModel.pxPerInch, alertMsg)
             
             if geometry != None:
                 if rawPath.nonzero:
                     fillRule = ClipperLib.PolyFillType.pftNonZero
                 else:
                     fillRule = ClipperLib.PolyFillType.pftEvenOdd
-                all.append(jscut.priv.path.simplifyAndClean(geometry, fillRule))
+                all.append(clipper_utils.ClipperUtils.simplifyAndClean(geometry, fillRule))
 
         if len(all) == 0:
             self.combinedGeometry = []
@@ -132,30 +132,30 @@ class Operation:
             elif self.combineOp() == "Xor":
                 clipType = ClipperLib.ClipType.ctXor
             for item in all:
-                self.combinedGeometry = jscut.priv.path.clip(self.combinedGeometry, item, clipType)
+                self.combinedGeometry = clipper_utils.ClipperUtils.clip(self.combinedGeometry, item, clipType)
 
         previewGeometry = self.combinedGeometry
 
         if len(previewGeometry) != 0:
-            offset = self.margin.toInch() * jscut.priv.path.inchToClipperScale
+            offset = self.margin.toInch() * clipper_utils.ClipperUtils.inchToClipperScale
             if self.camOp == "Pocket" or self.camOp == "V Pocket" or self.camOp == "Inside":
                 offset = -offset
             if self.camOp() != "Engrave" and offset != 0:
-                previewGeometry = jscut.priv.path.offset(previewGeometry, offset)
+                previewGeometry = clipper_utils.ClipperUtils.offset(previewGeometry, offset)
 
             if self.camOp == "Inside" or self.camOp == "Outside" :
                 toolCamArgs = self.toolModel.getCamArgs()
                 if toolCamArgs != None:
-                    width = self.width.toInch() * jscut.priv.path.inchToClipperScale
+                    width = self.width.toInch() * clipper_utils.ClipperUtils.inchToClipperScale
                     if width < toolCamArgs.diameterClipper:
                         width = toolCamArgs.diameterClipper
                     if self.camOp == "Inside":
-                        previewGeometry = jscut.priv.path.diff(previewGeometry, jscut.priv.path.offset(previewGeometry, -width))
+                        previewGeometry = clipper_utils.ClipperUtils.diff(previewGeometry, clipper_utils.ClipperUtils.offset(previewGeometry, -width))
                     else:
-                        previewGeometry = jscut.priv.path.diff(jscut.priv.path.offset(previewGeometry, width), previewGeometry)
+                        previewGeometry = clipper_utils.ClipperUtils.diff(clipper_utils.ClipperUtils.offset(previewGeometry, width), previewGeometry)
 
         if len(previewGeometry) != 0:
-            path = jscut.priv.path.getSnapPathFromClipperPaths(previewGeometry, self.svgViewModel.pxPerInch)
+            path = clipper_utils.ClipperUtils.getSnapPathFromClipperPaths(previewGeometry, self.svgViewModel.pxPerInch)
             if path != None:
                 self.combinedGeometrySvg = self.combinedGeometryGroup.path(path).attr("class", "combinedGeometry")
 
@@ -165,7 +165,7 @@ class Operation:
         self.enabled(True)
 
     def generateToolPath(self):
-        toolCamArgs = self.toolModel.getCamArgs()
+        toolCamArgs = self.toolModel.getCamData()
         if toolCamArgs == None:
             return
 
@@ -177,25 +177,25 @@ class Operation:
         self.removeToolPaths()
 
         geometry = self.combinedGeometry
-        offset = self.margin.toInch() * jscut.priv.path.inchToClipperScale
+        offset = self.margin.toInch() * clipper_utils.ClipperUtils.inchToClipperScale
         if self.camOp == "Pocket" or self.camOp == "V Pocket" or self.camOp == "Inside":
             offset = -offset
         if self.camOp != "Engrave" and offset != 0:
-            geometry = jscut.priv.path.offset(geometry, offset)
+            geometry = clipper_utils.ClipperUtils.offset(geometry, offset)
 
         if self.camOp == "Pocket":
-            self.toolPaths(jscut.priv.cam.pocket(geometry, toolCamArgs.diameterClipper, 1 - toolCamArgs.stepover, self.direction == "Climb"))
+            self.toolPaths(cam.cam.pocket(geometry, toolCamArgs.diameterClipper, 1 - toolCamArgs.stepover, self.direction == "Climb"))
         elif self.camOp == "V Pocket":
-            self.toolPaths(jscut.priv.cam.vPocket(geometry, self.toolModel.angle, toolCamArgs.passDepthClipper, self.cutDepth.toInch() * jscut.priv.path.inchToClipperScale, toolCamArgs.stepover, self.direction == "Climb"))
+            self.toolPaths(cam.cam.vPocket(geometry, self.toolModel.angle, toolCamArgs.passDepthClipper, self.cutDepth.toInch() * jscut.priv.path.inchToClipperScale, toolCamArgs.stepover, self.direction == "Climb"))
         elif self.camOp == "Inside" or self.camOp == "Outside":
-            width = self.width.toInch() * jscut.priv.path.inchToClipperScale
+            width = self.width.toInch() * clipper_utils.ClipperUtils.inchToClipperScale
             if width < toolCamArgs.diameterClipper:
                 width = toolCamArgs.diameterClipper
-            self.toolPaths(jscut.priv.cam.outline(geometry, toolCamArgs.diameterClipper, self.camOp() == "Inside", width, 1 - toolCamArgs.stepover, self.direction == "Climb"))
+            self.toolPaths(cam.cam.outline(geometry, toolCamArgs.diameterClipper, self.camOp() == "Inside", width, 1 - toolCamArgs.stepover, self.direction == "Climb"))
         elif self.camOp == "Engrave":
-            self.toolPaths(jscut.priv.cam.engrave(geometry, self.direction() == "Climb"))
+            self.toolPaths(cam.cam.engrave(geometry, self.direction() == "Climb"))
 
-        path = jscut.priv.path.getSnapPathFromClipperPaths(jscut.priv.cam.getClipperPathsFromCamPaths(self.toolPaths()), self.svgViewModel.pxPerInch())
+        path = clipper_utils.ClipperUtils.getSnapPathFromClipperPaths(cam.cam.getClipperPathsFromCamPaths(self.toolPaths()), self.svgViewModel.pxPerInch())
         if path != None and len(path):
             self.toolPathSvg = self.toolPathsGroup.path(path).attr("class", "toolPath")
 
@@ -211,9 +211,9 @@ class OperationsViewModel:
     '''
     '''
     def __init__(self, 
-            svgViewModel: SvgViewModel, 
-            materialViewModel: MaterialViewModel, 
-            selectionViewModel : 'SelectionViewModel', 
+            svgViewModel: SvgModel, 
+            materialViewModel: MaterialModel, 
+            selectionViewModel : 'SelectionModel', 
             toolModel: ToolModel, 
             combinedGeometryGroup, 
             toolPathsGroup, 

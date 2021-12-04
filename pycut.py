@@ -1,4 +1,4 @@
-# Copyright 2014 Xavier
+# Copyright 2022 Xavier
 #
 # This file is part of pycut.
 #
@@ -15,463 +15,359 @@
 # You should have received a copy of the GNU General Public License
 # along with pycut.  If not, see <http:#www.gnu.org/licenses/>.
 
-import math
-
 from typing import List
 
 import clipper.clipper as ClipperLib
 
 
-def dist(x1, y1, x2, y2):
-    dx = x2 - x1
-    dy = y2 - y1
-    return math.sqrt(dx *dx + dy * dy)
+from clipper_utils import ClipperUtils
 
-def distP(p1, p2):
-    return dist(p1.X, p1.Y, p2.X, p2.Y)
+from cnc_op import CncOp
+from cnc_op import JobModel
+
+import cam
 
 
-# Does the line from p1 to p2 cross outside of bounds?
-def crosses(bounds, p1: ClipperLib.IntPoint, p2: ClipperLib.IntPoint):
-    if bounds == None:
-        return True
-    if p1.X == p2.X and p1.Y == p2.Y :
+class UnitConverter:
+    '''
+    '''
+    def __init__(self, units: str):
+        '''
+        '''
+        self.units = units
+
+    def toInch(self, x):
+        '''
+        Convert x from the current unit to inch
+        '''
+        if self.units == "inch":
+            return x
+        else:
+            return x / 25.4
+    
+    def fromInch(self, x):
+        '''
+        Convert x from inch to the current unit
+        '''
+        if self.units == "inch":
+            return x
+        else:
+            return x * 25.4
+
+class SvgModel:
+    '''
+    '''
+    def __init__(self):
+        self.pxPerInch = 96
+
+class ToolModel:
+    '''
+    '''
+    def __init__(self):
+        self.units = "inch"
+        self.diameter = 0.125
+        self.angle = 180
+        self.passDepth = 0.125
+        self.stepover = 0.4
+        self.rapidRate = 100
+        self.plungeRate = 5
+        self.cutRate = 40
+
+    def getCamData(self):
+        result = {
+            "diameterClipper": self.diameter.toInch() * ClipperUtils.inchToClipperScale,
+            "passDepthClipper": self.passDepth.toInch() * ClipperUtils.inchToClipperScale,
+            "stepover": self.stepover
+        }
+        
+        return result
+        
+class MaterialModel:
+    '''
+    '''
+    def __init__(self):
+        self.matUnits = "inch"
+        self.matThickness = 1.0
+        self.matZOrigin = "Top"
+        self.matClearance = 0.1
+
+    @property
+    def matBotZ(self):
+        if self.matZOrigin == "Bottom":
+            return 0
+        else:
+            return - self.matThickness
+
+    @property
+    def matTopZ(self):
+        if self.matZOrigin == "Top":
+            return 0
+        else:
+            return self.matThickness
+
+    @property
+    def matZSafeMove(self):
+        if self.matZOrigin == "Top":
+            return self.matClearance
+        else:
+            return self.matThickness + self.matClearance
+
+class Tab:
+    '''
+    '''
+    def __init__(self,
+            svgViewModel: SvgModel, 
+            tabsModel: 'TabsModel', 
+            tabsGroup, 
+            rawPaths, 
+            toolPathsChanged, 
+            loading) :
+        '''
+        '''
+        self.svgViewModel = svgViewModel
+        self.tabsModel = tabsModel
+        self.tabsGroup = tabsGroup
+        self.rawPaths = rawPaths
+        self.toolPathsChanged = toolPathsChanged
+        self.loading = loading
+
+        self.enabled = True
+        self.margin = 0.0
+        
+        self.combinedGeometry = []
+        self.combinedGeometrySvg = None
+
+        tabsModel.unitConverter.addComputed(self.margin)
+
+        def xxxx(newValue):
+            if newValue:
+                v = "visible"
+            else:
+                v = "hidden"
+            if self.combinedGeometrySvg:
+                self.combinedGeometrySvg.attr("visibility", v)
+    
+
+        self.enabled.subscribe(xxxx)
+        self.margin.subscribe(self.recombine)
+        self.recombine()
+
+    def removeCombinedGeometrySvg(self):
+        if self.combinedGeometrySvg:
+            self.combinedGeometrySvg.remove()
+            self.combinedGeometrySvg = None
+
+
+    def recombine(self):
+        if self.loading:
+            return
+
+        self.removeCombinedGeometrySvg()
+
+        def alert(msg):
+            showAlert(msg, "alert-warning")
+
+        all = []
+        for rawPath in self.rawPaths:
+            geometry = ClipperUtils.getClipperPathsFromSnapPath(rawPath.path, self.svgViewModel.pxPerInch, alert)
+            if geometry != None:
+                if rawPath.nonzero:
+                    fillRule = ClipperLib.PolyFillType.pftNonZero
+                else:
+                    fillRule = ClipperLib.PolyFillType.pftEvenOdd
+                all.append(ClipperUtils.simplifyAndClean(geometry, fillRule))
+
+        if len(all) == 0:
+            self.combinedGeometry = []
+        else :
+            self.combinedGeometry = all[0]
+            for o in all:
+                self.combinedGeometry = ClipperUtils.clip(self.combinedGeometry, o, ClipperLib.ClipType.ctUnion)
+
+        offset = self.margin.toInch() * ClipperUtils.inchToClipperScale
+        if offset != 0:
+            self.combinedGeometry = ClipperUtils.offset(self.combinedGeometry, offset)
+
+        if len(self.combinedGeometry) != 0:
+            path = ClipperUtils.getSnapPathFromClipperPaths(self.combinedGeometry, self.svgViewModel.pxPerInch())
+            if path != None:
+                self.combinedGeometrySvg = self.tabsGroup.path(path).attr("class", "tabsGeometry")
+
+        self.enabled(True)
+        self.toolPathsChanged()
+
+class TabsModel:
+    '''
+    '''
+    def __init__(self, 
+            svgViewModel: SvgModel, 
+            materialModel: MaterialModel, 
+            tabsGroup, 
+            toolPathsChanged):
+    
+        self.svgViewModel = svgViewModel
+        self.materialModel = materialModel
+        self.tabsGroup = tabsGroup 
+        self.toolPathsChanged = toolPathsChanged
+
+        self.tabs: List[Tab] = []
+        self.units = self.materialModel.matUnits
+        self.maxCutDepth = 0
+
+    def addTab(self):
+        rawPaths = []
+
+        for element in self.selectionViewModel.getSelection():
+            rawPaths.append({
+                'path': Snap.parsePathString(element.attr('d')),
+                'nonzero': element.attr("fill-rule") != "evenodd",
+            })
+
+        self.selectionViewModel.clearSelection()
+        tab = Tab(self.svgViewModel, self, self.tabsGroup, rawPaths, self.toolPathsChanged, False)
+        self.tabs.append(tab)
+        self.toolPathsChanged()
+
+    def removeTab(self, tab):
+        tab.removeCombinedGeometrySvg()
+        self.tabs.remove(tab)
+        self.toolPathsChanged()
+
+    def clickOnSvg(self, elem) :
+        if elem.attr("class") == "tabsGeometry":
+            return True
         return False
 
-    clipper = ClipperLib.Clipper()
-    clipper.AddPath([p1, p2], ClipperLib.PolyType.ptSubject, False)
-    clipper.AddPaths(bounds, ClipperLib.PolyType.ptClip, True)
-    result = ClipperLib.PolyTree()
-    clipper.Execute(ClipperLib.ClipType.ctIntersection, result, ClipperLib.PolyFillType.pftEvenOdd, ClipperLib.PolyFillType.pftEvenOdd)
-    if result.ChildCount() == 1:
-        child : ClipperLib.PolyNode = result.Childs[0] 
-        points : List[ClipperLib.IntPoint]= child.Contour
-        if len(points) == 2:
-            if points[0].X == p1.X and points[1].X == p2.X and points[0].Y == p1.Y and points[1].Y == p2.Y :
-                return False
-            if points[0].X == p2.X and points[1].X == p1.X and points[0].Y == p2.Y and points[1].Y == p1.Y :
-                return False
 
-    return True
+
+class GcodeGenerator:
+    '''
+    '''
+    def __init__(self, 
+            materialModel: MaterialModel, 
+            toolModel: ToolModel, 
+            tabsModel: TabsModel,
+            jobModel: JobModel):
+
+        self.materialModel = materialModel
+        self.toolModel = toolModel
+        self.tabsModel = tabsModel
+        self.jobModel = jobModel
+
+        self.returnTo00 = False
+
+        self.units = "mm"
+        self.unitConverter: UnitConverter = UnitConverter(self.units)
+
+        self.offsetX = 0
+        self.offsetY = 0
+
+        self.gcode = ""
+        self.gcodeFilename = "gcode.gcode"
+
+    @property
+    def minX(self):
+        return self.unitConverter.fromInch(self.jobModel.minX / ClipperUtils.inchToClipperScale) + self.offsetX
+
+    @property
+    def maxX(self):
+        return self.unitConverter.fromInch(self.jobModel.maxX / ClipperUtils.inchToClipperScale) + self.offsetX
+    
+    @property
+    def minY(self):
+        return -(self.unitConverter.fromInch(self.jobModel.maxY / ClipperUtils.inchToClipperScale) + self.offsetY)
    
-# CamPath has this format: {
-#      path:               Clipper path
-#      safeToClose:        Is it safe to close the path without retracting?
-# }
+    @property
+    def maxY(self):
+        return -(self.unitConverter.fromInch(self.jobModel.minY / ClipperUtils.inchToClipperScale) + self.offsetY)
 
-# Try to merge paths. A merged path doesn't cross outside of bounds. Returns array of CamPath.
-def mergePaths(bounds, paths) :
-    if len(paths) == 0:
-        return None
+    def zeroLowerLeft(self):
+        self.offsetX = - self.unitConverter.fromInch(self.jobModel.minX / ClipperUtils.inchToClipperScale)
+        self.offsetY = - self.unitConverter.fromInch(-self.jobModel.maxY / ClipperUtils.inchToClipperScale)
+        self.generateGcode()
 
-    currentPath = paths[0]
-    currentPath.append(currentPath[0])
-    currentPoint = currentPath[-1]
-    paths[0] = []
+    def zeroCenter(self):
+        self.offsetX = - self.unitConverter.fromInch((self.jobModel.minX + self.jobModel.maxX) / 2 / ClipperUtils.inchToClipperScale)
+        self.offsetY = - self.unitConverter.fromInch(-(self.jobModel.minY + self.jobModel.maxY) / 2 / ClipperUtils.inchToClipperScale)
+        self.generateGcode()
 
-    mergedPaths = []
-    numLeft = paths.length - 1
-    while numLeft > 0 :
-        closestPathIndex = None
-        closestPointIndex = None
-        closestPointDist = None
-        for pathIndex, path in enumerate(paths):
-            for pointIndex, point in enumerate(path):
-                dist = distP(currentPoint, point)
-                if closestPointDist == None or dist < closestPointDist:
-                    closestPathIndex = pathIndex
-                    closestPointIndex = pointIndex
-                    closestPointDist = dist
+    def generateGcode(self):
+        cnc_ops: List[CncOp] = []
+        for cnc_op in self.jobModel.operations:
+            if cnc_op.enabled:
+                if len(cnc_op.cam_paths) > 0:
+                    cnc_ops.append(cnc_op)
+            
+        if len(cnc_ops) == 0:
+            return
 
-        path = paths[closestPathIndex]
-        paths[closestPathIndex] = []
-        numLeft -= 1
-        needNew = crosses(bounds, currentPoint, path[closestPointIndex])
-        path = path.slice(closestPointIndex, path.length).concat(path.slice(0, closestPointIndex))
-        path.append(path[0])
-        if needNew:
-            mergedPaths.append(currentPath)
-            currentPath = path
-            currentPoint = currentPath[-1]
+        safeZ = self.unitConverter.fromInch(self.materialModel.matZSafeMove.toInch())
+        rapidRate = self.unitConverter.fromInch(self.toolModel.rapidRate.toInch())
+        plungeRate = self.unitConverter.fromInch(self.toolModel.plungeRate.toInch())
+        cutRate = self.unitConverter.fromInch(self.toolModel.cutRate.toInch())
+        passDepth = self.unitConverter.fromInch(self.toolModel.passDepth.toInch())
+        topZ = self.unitConverter.fromInch(self.materialModel.matTopZ.toInch())
+        tabCutDepth = self.unitConverter.fromInch(self.tabsModel.maxCutDepth.toInch())
+        tabZ = topZ - tabCutDepth
+
+        if self.units == "inch":
+            scale = 1 / ClipperUtils.inchToClipperScale
         else:
-            currentPath = currentPath + [path]
-            currentPoint = currentPath[-1]
+            scale = 25.4 / ClipperUtils.inchToClipperScale
 
-    mergedPaths.append(currentPath)
-
-    camPaths = []
-    for path in mergedPaths:
-        camPaths.push({
-            "path": path,
-            "safeToClose": not crosses(bounds, path[0], path[-1])
-        })
-
-    return camPaths
-    
-
-
-class cam:
-    '''
-    '''
-    # Compute paths for pocket operation on Clipper geometry. Returns array
-    # of CamPath. cutterDia is in Clipper units. overlap is in the range [0, 1).
-    def pocket(self, geometry, cutterDia, overlap, climb):
-        current = jscut.priv.path.offset(geometry, -cutterDia / 2)
-        bounds = current.slice(0)
-        allPaths = []
-        while len(current) != 0:
-            if climb:
-                for i in range(len(current)):
-                    current[i].reverse()
-            allPaths = current.concat(allPaths)
-            current = jscut.priv.path.offset(current, -cutterDia * (1 - overlap))
-         
-        return mergePaths(bounds, allPaths)
-
-    # Compute paths for pocket operation on Clipper geometry. Returns array
-    # of CamPath. cutterDia is in Clipper units. overlap is in the range [0, 1).
-    def hspocket(self, geometry, cutterDia, overlap, climb) :
-
-        memoryBlocks = []
-
-        cGeometry = jscut.priv.path.convertPathsToCpp(memoryBlocks, geometry)
-
-        resultPathsRef = Module._malloc(4)
-        resultNumPathsRef = Module._malloc(4)
-        resultPathSizesRef = Module._malloc(4)
-        memoryBlocks.push(resultPathsRef)
-        memoryBlocks.push(resultNumPathsRef)
-        memoryBlocks.push(resultPathSizesRef)
-
-        #extern "C" void hspocket(
-        #    double** paths, int numPaths, int* pathSizes, double cutterDia,
-        #    double**& resultPaths, int& resultNumPaths, int*& resultPathSizes)
-        Module.ccall(
-            'hspocket',
-            'void', ['number', 'number', 'number', 'number', 'number', 'number', 'number'],
-            [cGeometry[0], cGeometry[1], cGeometry[2], cutterDia, resultPathsRef, resultNumPathsRef, resultPathSizesRef]);self
-
-        result = jscut.priv.path.convertPathsFromCppToCamPath(memoryBlocks, resultPathsRef, resultNumPathsRef, resultPathSizesRef);
-
-        for i in range(len(memoryBlocks)):
-            Module._free(memoryBlocks[i])
-
-        return result
-
-
-    # Compute paths for outline operation on Clipper geometry. Returns array
-    # of CamPath. cutterDia and width are in Clipper units. overlap is in the :
-    # range [0, 1).
-    def outline(self, geometry, cutterDia, isInside, width, overlap, climb) :
-        var currentWidth = cutterDia;
-        var allPaths = [];
-        var eachWidth = cutterDia * (1 - overlap);
-
-        var current;
-        var bounds;
-        var eachOffset;
-        var needReverse;
-
-        if (isInside) {
-            current = jscut.priv.path.offset(geometry, -cutterDia / 2);
-            bounds = jscut.priv.path.diff(current, jscut.priv.path.offset(geometry, -(width - cutterDia / 2)));
-            eachOffset = -eachWidth;
-            needReverse = climb;
-        } else {
-            current = jscut.priv.path.offset(geometry, cutterDia / 2);
-            bounds = jscut.priv.path.diff(jscut.priv.path.offset(geometry, width - cutterDia / 2), current);
-            eachOffset = eachWidth;
-            needReverse = !climb;
-        }
-
-        while (currentWidth <= width) {
-            if (needReverse)
-                for (var i = 0; i < current.length; ++i)
-                    current[i].reverse();
-            allPaths = current.concat(allPaths);
-            var nextWidth = currentWidth + eachWidth;
-            if (nextWidth > width and width - currentWidth > 0) {
-                current = jscut.priv.path.offset(current, width - currentWidth);
-                if (needReverse)
-                    for (var i = 0; i < current.length; ++i)
-                        current[i].reverse();
-                allPaths = current.concat(allPaths);
-                break;
-            }
-            currentWidth = nextWidth;
-            current = jscut.priv.path.offset(current, eachOffset);
-        }
-        return mergePaths(bounds, allPaths);
-
-    # Compute paths for engrave operation on Clipper geometry. Returns array
-    # of CamPath.
-    def engrave(self, geometry, climb):
-        allPaths = [];
-        for paths in geometry:
-            path = paths.slice(0)
-            if not climb:
-                path.reverse()
-            path.append(path[0])
-            allPaths.append(path)
-            
-        result = mergePaths(None, allPaths)
-        for ares in result:
-            ares.safeToClose = True
-        return result
-
-
-    def vPocket(self, geometry, cutterAngle, passDepth, maxDepth):
-        if cutterAngle <= 0 or cutterAngle >= 180:
-            return []
-
-        memoryBlocks = []
-
-        cGeometry = jscut.priv.path.convertPathsToCpp(memoryBlocks, geometry)
-
-        resultPathsRef = Module._malloc(4);
-        resultNumPathsRef = Module._malloc(4);
-        resultPathSizesRef = Module._malloc(4);
-        memoryBlocks.append(resultPathsRef);
-        memoryBlocks.append(resultNumPathsRef);
-        memoryBlocks.append(resultPathSizesRef);
-
-        #extern "C" void vPocket(
-        #    int debugArg0, int debugArg1,
-        #    double** paths, int numPaths, int* pathSizes,
-        #    double cutterAngle, double passDepth, double maxDepth,
-        #    double**& resultPaths, int& resultNumPaths, int*& resultPathSizes)self, self, 
-        Module.ccall(
-            'vPocket',
-            'void', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
-            [miscViewModel.debugArg0(), miscViewModel.debugArg1(), cGeometry[0], cGeometry[1], cGeometry[2], cutterAngle, passDepth, maxDepth, resultPathsRef, resultNumPathsRef, resultPathSizesRef]);
-
-        result = jscut.priv.path.convertPathsFromCppToCamPath(memoryBlocks, resultPathsRef, resultNumPathsRef, resultPathSizesRef)
-
-        for memoryBlock in memoryBlocks:
-            Module._free(memoryBlock)
-
-        return result
-
-    # Convert array of CamPath to array of Clipper path
-    def getClipperPathsFromCamPaths(self, paths) :
-        result = []
-        if paths != None:
-            for apath in paths:
-                result.append(apath.path);
-        return result
-    
-
-    displayedCppTabError1 = False
-    displayedCppTabError2 = False
-
-    def separateTabs(self, cutterPath, tabGeometry):
-
-        if tabGeometry.length == 0:
-            return [cutterPath]
-        if typeof Module == 'undefined':
-            if not displayedCppTabError1:
-                showAlert("Failed to load cam-cpp.js; tabs will be missing. This message will not repeat.", "alert-danger", False)
-                displayedCppTabError1 = True
-            
-            return cutterPath
-
-        memoryBlocks = []
-
-        cCutterPath = jscut.priv.path.convertPathsToCpp(memoryBlocks, [cutterPath]);
-        cTabGeometry = jscut.priv.path.convertPathsToCpp(memoryBlocks, tabGeometry);
-
-        errorRef = Module._malloc(4);
-        resultPathsRef = Module._malloc(4);
-        resultNumPathsRef = Module._malloc(4);
-        resultPathSizesRef = Module._malloc(4);
-        memoryBlocks.append(errorRef);
-        memoryBlocks.append(resultPathsRef);
-        memoryBlocks.append(resultNumPathsRef);
-        memoryBlocks.append(resultPathSizesRef);
-
-        #extern "C" void separateTabs(
-        #    double** pathPolygons, int numPaths, int* pathSizes,
-        #    double** tabPolygons, int numTabPolygons, int* tabPolygonSizes,
-        #    bool& error,
-        #    double**& resultPaths, int& resultNumPaths, int*& resultPathSizes)
-        Module.ccall(
-            'separateTabs',
-            'void', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
-            [cCutterPath[0], cCutterPath[1], cCutterPath[2], cTabGeometry[0], cTabGeometry[1], cTabGeometry[2], errorRef, resultPathsRef, resultNumPathsRef, resultPathSizesRef]);
-
-        if Module.HEAPU32[errorRef >> 2] and  not displayedCppTabError2:
-            showAlert("Internal error processing tabs; tabs will be missing. This message will not repeat.", "alert-danger", False)
-            displayedCppTabError2 = True
-
-        result = jscut.priv.path.convertPathsFromCpp(memoryBlocks, resultPathsRef, resultNumPathsRef, resultPathSizesRef)
-
-        for memoryBlock in memoryBlocks:
-            Module._free(memoryBlock)
-
-        return result
-
-
-
-    def getGcode(self, namedArgs):
-        '''
-        Convert paths to gcode. getGcode() assumes that the current Z position is at safeZ.
-        getGcode()'s gcode returns Z to this position at the end.
-        namedArgs must have:
-          paths:          Array of CamPath
-          ramp:           Ramp these paths?
-          scale:          Factor to convert Clipper units to gcode units
-          useZ:           Use Z coordinates in paths? (optional, defaults to False)
-          offsetX:        Offset X (gcode units)
-          offsetY:        Offset Y (gcode units)
-          decimal:        Number of decimal places to keep in gcode
-          topZ:           Top of area to cut (gcode units)
-          botZ:           Bottom of area to cut (gcode units)
-          safeZ:          Z position to safely move over uncut areas (gcode units)
-          passDepth:      Cut depth for each pass (gcode units)
-          plungeFeed:     Feedrate to plunge cutter (gcode units)
-          retractFeed:    Feedrate to retract cutter (gcode units)
-          cutFeed:        Feedrate for horizontal cuts (gcode units)
-          rapidFeed:      Feedrate for rapid moves (gcode units)
-          tabGeometry:    Tab geometry (optional)
-          tabZ:           Z position over tabs (required if tabGeometry is not empty) (gcode units)
-        '''
-        paths = namedArgs.paths
-        ramp = namedArgs.ramp
-        scale = namedArgs.scale
-        useZ = namedArgs.useZ
-        offsetX = namedArgs.offsetX
-        offsetY = namedArgs.offsetY
-        decimal = namedArgs.decimal
-        topZ = namedArgs.topZ
-        botZ = namedArgs.botZ
-        safeZ = namedArgs.safeZ
-        passDepth = namedArgs.passDepth
-        plungeFeedGcode = ' F' + namedArgs.plungeFeed
-        retractFeedGcode = ' F' + namedArgs.retractFeed
-        cutFeedGcode = ' F' + namedArgs.cutFeed
-        rapidFeedGcode = ' F' + namedArgs.rapidFeed
-        tabGeometry = namedArgs.tabGeometry
-        tabZ = namedArgs.tabZ
-
-        if useZ == None:
-            useZ = False
-
-        if tabGeometry == None or tabZ <= botZ:
-            tabGeometry = []
-            tabZ = botZ
+        tabGeometry = []
+        for tab in self.tabsModel.tabs:
+            if tab.enabled:
+                offset = self.toolModel.diameter.toInch() / 2 * ClipperUtils.inchToClipperScale
+                geometry = ClipperUtils.offset(tab.combinedGeometry, offset)
+                tabGeometry = ClipperUtils.clip(tabGeometry, geometry, ClipperLib.ClipType.ctUnion)
 
         gcode = ""
+        if self.units == "inch":
+            gcode += "G20         ; Set units to inches\r\n"
+        else:
+            gcode += "G21         ; Set units to mm\r\n"
+        gcode += "G90         ; Absolute positioning\r\n"
+        gcode += "G1 Z" + safeZ + " F" + rapidRate + "      ; Move to clearance level\r\n"
 
-        retractGcode = '; Retract\r\n' + \
-            'G1 Z' + safeZ.toFixed(decimal) + rapidFeedGcode + '\r\n'
+        for idx, cnc_op in enumerate(cnc_ops):
+            cutDepth = self.unitConverter.fromInch(cnc_op.cutDepth.toInch())
 
-        retractForTabGcode = '; Retract for tab\r\n' + \
-            'G1 Z' + tabZ.toFixed(decimal) + rapidFeedGcode + '\r\n'
+            gcode += "\r\n;"
+            gcode += "\r\n; Operation:    " + idx
+            gcode += "\r\n; Name:         " + cnc_op.name
+            gcode += "\r\n; Type:         " + cnc_op.cam_op
+            gcode += "\r\n; Paths:        " + len(cnc_op.cam_paths)
+            gcode += "\r\n; Direction:    " + cnc_op.direction
+            gcode += "\r\n; Cut Depth:    " + cutDepth
+            gcode += "\r\n; Pass Depth:   " + passDepth
+            gcode += "\r\n; Plunge rate:  " + plungeRate
+            gcode += "\r\n; Cut rate:     " + cutRate
+            gcode += "\r\n;\r\n"
 
-        def getX(p: ClipperLib.IntPoint) :
-            return p.X * scale + offsetX
+            gcode += cam.cam.getGcode({
+                "paths":          cnc_op.cam_paths,
+                "ramp":           cnc_op.ramp,
+                "scale":          scale,
+                "useZ":           cnc_op.cam_op == "V Pocket",
+                "offsetX":        self.offsetX,
+                "offsetY":        self.offsetY,
+                "decimal":        4,
+                "topZ":           topZ,
+                "botZ":           topZ - cutDepth,
+                "safeZ":          safeZ,
+                "passDepth":      passDepth,
+                "plungeFeed":     plungeRate,
+                "retractFeed":    rapidRate,
+                "cutFeed":        cutRate,
+                "rapidFeed":      rapidRate,
+                "tabGeometry":    tabGeometry,
+                "tabZ":           tabZ,
+            })
 
-        def getY(p : ClipperLib.IntPoint):
-            return -p.Y * scale + offsetY
+        if self.returnTo00:
+            gcode += "\r\n; Return to 0,0\r\n"
+            gcode += "G0 X0 Y0 F" + rapidRate + "\r\n"
 
-        def convertPoint(p: ClipperLib.IntPoint):
-            result = ' X' + (p.X * scale + offsetX).toFixed(decimal) + ' Y' + (-p.Y * scale + offsetY).toFixed(decimal);
-            if useZ:
-                result += ' Z' + (p.Z * scale + topZ).toFixed(decimal);
-            return result
+        self.gcode = gcode
 
-        for pathIndex, path in enumerate(paths):
-            origPath = path.path;
-            if len(origPath) == 0:
-                continue
-            separatedPaths = separateTabs(origPath, tabGeometry)
-
-            gcode += \
-                '\r\n' + \
-                '; Path ' + pathIndex + '\r\n'
-
-            currentZ = safeZ
-            finishedZ = topZ
-            while finishedZ > botZ:
-                nextZ = math.max(finishedZ - passDepth, botZ)
-                if (currentZ < safeZ and ((not path.safeToClose) or tabGeometry.length > 0)) :
-                    gcode += retractGcode
-                    currentZ = safeZ
-
-                if len(tabGeometry)== 0:
-                    currentZ = finishedZ
-                else:
-                    currentZ = math.max(finishedZ, tabZ)
-                
-                gcode += '; Rapid to initial position\r\n' + \
-                    'G1' + convertPoint(origPath[0]) + rapidFeedGcode + '\r\n' + \
-                    'G1 Z' + currentZ.toFixed(decimal) + '\r\n'
-
-                if nextZ >= tabZ or useZ:
-                    selectedPaths = [origPath]
-                else:
-                    selectedPaths = separatedPaths
-
-                for selectedPath in selectedPaths:
-                    if len(selectedPath) == 0:
-                        continue
-
-                    if not useZ:
-                        if selectedIndex & 1:
-                            selectedZ = tabZ
-                        else
-                            selectedZ = nextZ
-
-                        if selectedZ < currentZ:
-                            executedRamp = False
-                            if ramp:
-                                minPlungeTime = (currentZ - selectedZ) / namedArgs.plungeFeed
-                                idealDist = namedArgs.cutFeed * minPlungeTime
-                                totalDist = 0
-                                for end in range(1, len(selectedPath)):
-                                    if totalDist > idealDist:
-                                        break
-
-                                    pt1 = selectedPath[end - 1]
-                                    pt2 = selectedPath[end]
-                                    totalDist += 2 * distP(pt1, pt2)
-                                
-                                if totalDist > 0:
-                                    gcode += '; ramp\r\n'
-                                    executedRamp = True
-                                    rampPath = selectedPath.slice(0, end).concat(selectedPath.slice(0, end - 1).reverse())
-                                    distTravelled = 0
-                                    for i in range(1,len(rampPath):
-                                        distTravelled += dist(getX(rampPath[i - 1]), getY(rampPath[i - 1]), getX(rampPath[i]), getY(rampPath[i]))
-                                        newZ = currentZ + distTravelled / totalDist * (selectedZ - currentZ)
-                                        gcode += 'G1' + convertPoint(rampPath[i]) + ' Z' + newZ.toFixed(decimal)
-                                        if i == 1:
-                                            gcode += ' F' + math.min(totalDist / minPlungeTime, namedArgs.cutFeed).toFixed(decimal) + '\r\n'
-                                        else:
-                                            gcode += '\r\n' 
-
-                            if not executedRamp:
-                                gcode +=
-                                    '; plunge\r\n' +
-                                    'G1 Z' + selectedZ.toFixed(decimal) + plungeFeedGcode + '\r\n'
-                        elif selectedZ > currentZ:
-                            gcode += retractForTabGcode
-                        
-                        currentZ = selectedZ
-
-                    gcode += '; cut\r\n'
-
-                    for point in selectedPath:
-                        gcode += 'G1' + convertPoint(point)
-                        if i == 1:
-                            gcode += cutFeedGcode + '\r\n'
-                        else:
-                            gcode += '\r\n'
-
-                finishedZ = nextZ
-                if useZ:
-                    break
-            
-            gcode += retractGcode
-
-        return gcode

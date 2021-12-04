@@ -18,8 +18,8 @@
 import jscut
 import showAlert
 
-from GcodeConversionViewModel import SvgViewModel
-from GcodeConversionViewModel import MaterialViewModel
+from pycut import SvgViewModel
+from pycut import MaterialViewModel
 
 class SelectionViewModel:
     '''

@@ -18,7 +18,7 @@ import webglviewer
 import svgmaterial
 import operations_simpletablewidget
 
-from cam_op import CncOp
+from cnc_op import CncOp
 
 import resources_rc
 
