@@ -19,13 +19,18 @@ class PyCutSimpleTableWidget(QtWidgets.QTableWidget):
         
         self.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectItems)
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+
+        self.operations = []
+        self.checkboxes = []
         
     def setData(self, operations):
         self.clear()
+
+        self.operations = operations
         
         self.setColumnCount(4)
         self.setRowCount(len(operations))
-    
+
         for i, op in enumerate(operations):
             
             
@@ -39,11 +44,14 @@ class PyCutSimpleTableWidget(QtWidgets.QTableWidget):
             #btn_show_op.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/system-search.png'))
             #btn_show_op.setToolTip("Select")
             layout = QtWidgets.QHBoxLayout(widget)
-            layout.addWidget(btn_select_op);
+            layout.addWidget(btn_select_op)
             layout.setAlignment(QtGui.Qt.AlignCenter)
             layout.setContentsMargins(0, 0, 0, 0)
             widget.setLayout(layout)
             self.setCellWidget(i, 1, widget)
+
+            btn_select_op.stateChanged.connect(self.cb_checkbox)
+            self.checkboxes.append(btn_select_op)
             
             widget = QtWidgets.QWidget()
             btn_del_op = QtWidgets.QPushButton()
@@ -75,3 +83,12 @@ class PyCutSimpleTableWidget(QtWidgets.QTableWidget):
         print(str(item.text()), item.row())
         
         self.parent.parent().parent().display_op_at_row(item.row())
+
+    def cb_checkbox(self, index):
+        '''
+        '''
+        for k, checkbox in enumerate(self.checkboxes):
+            if checkbox.checkState() == QtCore.Qt.Checked:
+                self.operations[k]["enabled"] = True
+            else:
+                self.operations[k]["enabled"] = False

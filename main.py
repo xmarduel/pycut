@@ -19,6 +19,13 @@ import svgmaterial
 import operations_simpletablewidget
 
 from cnc_op import CncOp
+from cnc_op import JobModel
+
+from pycut import ToolModel
+from pycut import SvgModel
+from pycut import MaterialModel
+
+from pycut import GcodeGenerator
 
 import resources_rc
 
@@ -120,6 +127,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.pushButton_ShowHideTool.clicked.connect(self.cb_show_hide_tool)
 
         self.window.checkBox_GCodeGeneration_SpindleAutomatic.clicked.connect(self.cb_spindle_automatic)
+
+        self.window.pushButton_GenerateGCode.clicked.connect(self.cb_generate_g_code)
 
         self.init_gui()
         
@@ -484,8 +493,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         self.window.tableWidget_Operations_ViewOps.setData(operations)
 
-    
-
     def cb_create_op(self):
         '''
         '''
@@ -503,7 +510,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         cnc_op = CncOp(operation)
         cnc_op.setup(self.svg_viewer)
-        cnc_op.calculate()
+        cnc_op.calculate_geometry()
 
         # 1- the gcode 'region'
         self.svg_viewer.display_cnc_op(cnc_op.combined_svg_paths)
@@ -708,11 +715,25 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         cnc_op = CncOp(operation)
         cnc_op.setup(self.svg_viewer)
-        cnc_op.calculate()
+        cnc_op.calculate_geometry()
 
         self.svg_viewer.display_cnc_op(cnc_op.combined_svg_paths)
 
+    def cb_generate_g_code(self):
+        '''
+        '''
+        cnc_ops = []
+        for op in self.operations:
+            cnc_op = CncOp(op)  
+            cnc_ops.append(cnc_op)
 
+        materialModel = MaterialModel()
+        svgModel = SvgModel()
+        toolModel = ToolModel()
+        
+        job = JobModel(self.svg_viewer, cnc_ops, materialModel, svgModel, toolModel)
+        generator = GcodeGenerator(job)
+        generator.generateGcode()
 
 
 if __name__ == "__main__":

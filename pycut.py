@@ -22,11 +22,12 @@ import clipper.clipper as ClipperLib
 
 from clipper_utils import ClipperUtils
 
-from cnc_op import CncOp
-from cnc_op import JobModel
+#from cnc_op import CncOp
+#from cnc_op import JobModel
 
 import cam
 
+from ValWithUnit import ValWithUnit
 
 class UnitConverter:
     '''
@@ -65,9 +66,9 @@ class ToolModel:
     '''
     def __init__(self):
         self.units = "inch"
-        self.diameter = 0.125
+        self.diameter = ValWithUnit(0.125, self.units)
         self.angle = 180
-        self.passDepth = 0.125
+        self.passDepth = ValWithUnit(0.125, self.units)
         self.stepover = 0.4
         self.rapidRate = 100
         self.plungeRate = 5
@@ -243,16 +244,13 @@ class TabsModel:
 class GcodeGenerator:
     '''
     '''
-    def __init__(self, 
-            materialModel: MaterialModel, 
-            toolModel: ToolModel, 
-            tabsModel: TabsModel,
-            jobModel: JobModel):
+    def __init__(self, job):
+        self.jobModel = job
 
-        self.materialModel = materialModel
-        self.toolModel = toolModel
-        self.tabsModel = tabsModel
-        self.jobModel = jobModel
+        self.materialModel = job.materialModel
+        self.toolModel = job.toolModel
+        self.tabsModel = job.tabsModel
+        
 
         self.returnTo00 = False
 
@@ -292,7 +290,7 @@ class GcodeGenerator:
         self.generateGcode()
 
     def generateGcode(self):
-        cnc_ops: List[CncOp] = []
+        cnc_ops: List['CncOp'] = []
         for cnc_op in self.jobModel.operations:
             if cnc_op.enabled:
                 if len(cnc_op.cam_paths) > 0:

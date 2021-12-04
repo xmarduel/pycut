@@ -1,4 +1,6 @@
 
+from typing import List
+
 import clipper.clipper as ClipperLib
 
 
@@ -66,15 +68,15 @@ class ClipperUtils:
         return offsetted
 
     @classmethod
-    def combine(cls, clipper_paths: ClipperLib.PathVector, clipType: ClipperLib.ClipType) -> ClipperLib.PathVector:
+    def combine(cls, clipper_paths: List[ClipperLib.IntPointVector], clipType: ClipperLib.ClipType) -> ClipperLib.PathVector:
         '''
         '''
-        # special case : only 1 path selected 
-        if len(clipper_paths) == 1:
-            return clipper_paths
-
         subj = ClipperLib.PathVector()
         subj.append(clipper_paths[0])
+
+        # special case : only 1 path selected 
+        if len(clipper_paths) == 1:
+            return subj
 
         clip = ClipperLib.PathVector()
         for path in clipper_paths[1:]:

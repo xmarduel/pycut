@@ -1,6 +1,7 @@
 import math
 from typing import List
 
+from ValWithUnit import ValWithUnit
 
 from svgpathutils import SvgPath
 from svgviewer import SvgViewer
@@ -9,6 +10,7 @@ from cam import cam
 
 import clipper.clipper as ClipperLib
 import clipper_utils
+from clipper_utils import ClipperUtils
 
 from pycut import ToolModel
 from pycut import SvgModel
@@ -19,14 +21,16 @@ class CncOp:
     '''
     def __init__(self, operation):
         self.operation = operation
+        self.enabled = operation.get("enabled", False)
 
-        self.name = self.operation.Name
-        self.ramp = self.operation.RampPlunge
-        self.cam_op = self.operation.type
-        self.direction = self.operation.Direction
-        self.cutDepth = self.operation.Deep
-        self.width = self.operation.Width
-        self.margin = self.operation.Margin
+        self.units = self.operation["Units"]
+
+        self.name = self.operation["Name"]
+        self.ramp = self.operation["RampPlunge"]
+        self.cam_op = self.operation["type"]
+        self.direction = self.operation["Direction"]
+        self.cutDepth = ValWithUnit(self.operation["Deep"], self.units)
+        self.margin = ValWithUnit(self.operation["Margin"], self.units)
         
         # the input
         self.svg_paths : List[SvgPath] = [] # to fill at "setup"
@@ -34,7 +38,7 @@ class CncOp:
         self.clipper_paths : List[List[ClipperLib.IntPoint]] = []
         
         # the resulting paths from the op combinaison setting + selected scg paths
-        self.combined_geometry = ClipperLib.PathVector()
+        self.geometry = ClipperLib.PathVector()
         # and the resulting svg paths from the combinaison, to be displayed
         # in the svg viewer
         self.combined_svg_paths : List[SvgPath] = []
@@ -50,13 +54,8 @@ class CncOp:
             svg_path = SvgPath(svg_path_id, {'d': svg_path_d})
 
             self.svg_paths.append(svg_path)
-
-    def calculate(self):
-        '''
-        '''
-        self.calculate_regions()
-           
-    def calculate_regions(self):
+   
+    def calculate_geometry(self):
         '''
         '''
         for svg_path in self.svg_paths:
@@ -70,9 +69,9 @@ class CncOp:
             "Xor": ClipperLib.ClipType.ctXor,
         } [self.operation["Combine"]] 
         
-        self.combined_geometry = clipper_utils.ClipperUtils.combine(self.clipper_paths, clipType)
+        self.geometry = ClipperUtils.combine(self.clipper_paths, clipType)
 
-        for clipper_path in self.combined_geometry:
+        for clipper_path in self.geometry:
             svg_path = SvgPath.fromClipperPath(clipper_path)
             self.combined_svg_paths.append(svg_path)
 
@@ -81,32 +80,33 @@ class CncOp:
         '''
         toolData = toolModel.getCamData()
 
-        cam_op = self.operation.camOp
-        direction = self.operation.direction
-        cutDepth = self.operation.Deep
-        width = self.operation.Width
-        margin = self.operation.Margin
+        name = self.name
+        ramp = self.ramp
+        cam_op = self.cam_op
+        direction = self.direction
+        cutDepth = self.cutDepth
+        margin = self.margin
 
-        geometry = self.combined_geometry
-        offset = margin.toInch() * clipper_utils.ClipperUtils.inchToClipperScale
+        geometry = self.geometry
+        offset = margin.toInch() * ClipperUtils.inchToClipperScale
         if cam_op == "Pocket" or cam_op == "V Pocket" or cam_op == "Inside":
             offset = -offset
         if cam_op != "Engrave" and offset != 0:
-            geometry = clipper_utils.ClipperUtils.offset(geometry, offset)
+            geometry = ClipperUtils.offset(geometry, offset)
 
         if cam_op == "Pocket":
-            self.cam_paths = cam.pocket(geometry, toolData.diameterClipper, 1 - toolData.stepover, direction == "Climb")
+            self.cam_paths = cam.pocket(geometry, toolData["diameterClipper"], 1 - toolData["stepover"], direction == "Climb")
         elif cam_op == "V Pocket":
-            self.cam_paths = cam.vPocket(geometry, toolModel.angle, toolData.passDepthClipper, cutDepth.toInch() * clipper_utils.ClipperUtils.inchToClipperScale, toolData.stepover, direction == "Climb")
+            self.cam_paths = cam.vPocket(geometry, toolModel.angle, toolData["passDepthClipper"], cutDepth.toInch() * ClipperUtils.inchToClipperScale, toolData["stepover"], direction == "Climb")
         elif cam_op == "Inside" or cam_op == "Outside":
-            width = width.toInch() * clipper_utils.ClipperUtils.inchToClipperScale
-            if width < toolData.diameterClipper:
-                width = toolData.diameterClipper
-            self.cam_paths = cam.outline(geometry, toolData.diameterClipper, cam_op == "Inside", width, 1 - toolData.stepover, direction == "Climb")
+            width = width.toInch() * ClipperUtils.inchToClipperScale
+            if width < toolData["passDepthClipper"]:
+                width = toolData["passDepthClipper"]
+            self.cam_paths = cam.outline(geometry, toolData["passDepthClipper"], cam_op == "Inside", width, 1 - toolData["stepover"], direction == "Climb")
         elif cam_op == "Engrave":
             self.cam_paths = cam.engrave(geometry, direction == "Climb")
 
-        #path = clipper_utils.ClipperUtils.getSnapPathFromClipperPaths(cam.getClipperPathsFromCamPaths(self.cam_paths), svgModel.pxPerInch)
+        #path = ClipperUtils.getSnapPathFromClipperPaths(cam.getClipperPathsFromCamPaths(self.cam_paths), svgModel.pxPerInch)
         
         #if path != None and len(path):
         #    self.toolPathSvg = self.cam_pathsGroup.path(path).attr("class", "toolPath")
@@ -116,16 +116,20 @@ class JobModel:
     '''
     '''
     def __init__(self, 
+            svg_viewer,
             cnc_ops: List[CncOp], 
             materialModel: MaterialModel, 
             svgModel: SvgModel, 
             toolModel: ToolModel):
 
+        self.svg_viewer = svg_viewer
+        
         self.operations = cnc_ops
         
         self.svgModel = svgModel
         self.materialModel = materialModel
         self.toolModel = toolModel
+        self.tabsModel = None
 
         self.minX = 0
         self.minY = 0
@@ -138,6 +142,8 @@ class JobModel:
     def calculate_operation_cam_paths(self):
         for op in self.operations:
             if op.enabled :
+                op.setup(self.svg_viewer)
+                op.calculate_geometry()
                 op.calculate_toolpaths(self.svgModel, self.toolModel, self.materialModel)
     
     def findMinMax(self):

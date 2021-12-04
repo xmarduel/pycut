@@ -74,9 +74,36 @@ def test(clipType: clipper.ClipType):
     clipper.dumpPaths("clip", clip)
     clipper.dumpPaths("solution", solution)
 
+def  test_offset():
+    outer = clipper.IntPointVector()
+    outer.append(clipper.IntPoint(180,200))
+    outer.append(clipper.IntPoint(260,200))
+    outer.append(clipper.IntPoint(260,150))
+    outer.append(clipper.IntPoint(180,150))
+
+    subj = clipper.PathVector()
+    subj.append(outer)
+
+    joinType = clipper.JoinType.jtRound
+    endType = clipper.EndType.etClosedPolygon
+
+    co = clipper.ClipperOffset(2, 0.1)
+    co.AddPaths(subj, joinType, endType)
+        
+    offsetted = clipper.PathVector()
+    co.Execute(offsetted, -1)
+
+    clipper.dumpPaths("offset input", subj)
+    clipper.dumpPaths("solution offset", offsetted)
+
+    #offsetted = ClipperLib.Clipper.CleanPolygons(offsetted, cleanPolyDist);
+    return offsetted
+
 if __name__ == '__main__':
     #test1()
     #test(clipper.ClipType.ctUnion)
     #test(clipper.ClipType.ctIntersection)
-    test(clipper.ClipType.ctXor)
+    #test(clipper.ClipType.ctXor)
     #test(clipper.ClipType.ctDifferences)
+
+    test_offset()

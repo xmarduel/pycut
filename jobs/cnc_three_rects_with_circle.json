@@ -2,7 +2,7 @@
   "svg_file": "svg/three_rects_with_circle.svg",
   "operations": [
     {
-      "Name": "op1",
+      "Name": "op1 - Union",
       "paths": ["r1", "r2", "r3"],
       "type": "Pocket",
       "Deep": 0.2,       
@@ -13,7 +13,7 @@
       "Margin": 0.1
     },
     {
-      "Name": "op2",
+      "Name": "op2 - Intersection",
       "paths": ["r1", "c1"],
       "type": "Pocket",
       "Deep": 0.2,
@@ -25,7 +25,7 @@
       "Width": 1.1
     },
     {
-      "Name": "op3",
+      "Name": "op3 - Diff",
       "paths": ["r1", "c1"],
       "type": "Pocket",
       "Deep": 0.2,
@@ -37,7 +37,7 @@
       "Width": 1.1
     },
     {
-      "Name": "op4",
+      "Name": "op4 - Xor",
       "paths": ["r1", "c1"],
       "type": "Pocket",
       "Deep": 0.2,
@@ -49,10 +49,10 @@
       "Width": 1.1
     },
     {
-      "Name": "op5 - 1 path selected",
-      "paths": ["c1"],
+      "Name": "op5 - only 1 pat",
+      "paths": ["r1"],
       "type": "Pocket",
-      "Deep": 0.2,
+      "Deep": 0.45,
       "RampPlunge": true,
       "Combine": "Intersection",
       "Direction": "Conventional",
