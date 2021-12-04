@@ -61,13 +61,13 @@ class cam:
         overlap is in the range [0, 1).
         '''
         current = clipper_utils.ClipperUtils.offset(geometry, -cutterDia / 2)
-        bounds = current.slice(0)
+        bounds = clipper_utils.ClipperUtils.clone_pathvector(current)  # JS: current.slice(0)
         allPaths = []
         while len(current) != 0:
             if climb:
                 for i in range(len(current)):
                     current[i].reverse()
-            allPaths = current.concat(allPaths)
+            allPaths = allPaths + [current]  # JS: current.concat(allPaths)
             current = clipper_utils.ClipperUtils.offset(current, -cutterDia * (1 - overlap))
          
         return cls.mergePaths(bounds, allPaths)

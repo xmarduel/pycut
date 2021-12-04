@@ -97,7 +97,7 @@ class ClipperUtils:
         return combined_clipper_paths
 
     @classmethod
-    def crosses(bounds, p1: ClipperLib.IntPoint, p2: ClipperLib.IntPoint):
+    def crosses(cls, bounds, p1: ClipperLib.IntPoint, p2: ClipperLib.IntPoint):
         '''
         Does the line from p1 to p2 cross outside of bounds?
         '''
@@ -123,3 +123,27 @@ class ClipperUtils:
                     return False
 
         return True
+
+    @classmethod
+    def clone_pathvector(cls, path: ClipperLib.PathVector) -> ClipperLib.PathVector:
+        '''
+        '''
+        clone = ClipperLib.PathVector()
+
+        for intvector in path:
+            iv_clone = ClipperUtils.clone_intpointvector(intvector)
+            clone.append(iv_clone)
+
+        return clone
+
+    @classmethod
+    def clone_intpointvector(cls, vector: ClipperLib.IntPointVector) -> ClipperLib.IntPointVector:
+        '''
+        '''
+        clone = ClipperLib.IntPointVector()
+
+        for intpt in vector:
+            pt_clone = ClipperLib.IntPoint(intpt.X, intpt.Y)
+            clone.append(pt_clone)
+
+        return clone
