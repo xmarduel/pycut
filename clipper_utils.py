@@ -4,6 +4,7 @@ import clipper.clipper as ClipperLib
 
 class ClipperUtils:
     '''
+    Wrapper functions on ClipperLib
     '''
     inchToClipperScale = 100000  # Scale inch to Clipper
     cleanPolyDist = inchToClipperScale / 100000
