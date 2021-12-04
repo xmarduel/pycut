@@ -13,7 +13,9 @@ from PySide6 import QtSvgWidgets
 
 import lxml.etree as ET
 
-import svgpathutils
+from svgpathutils import SvgPath
+from svgpathutils import SvgTransformer
+
 
 # https://stackoverflow.com/questions/53288926/qgraphicssvgitem-event-propagation-interactive-svg-viewer
 
@@ -75,11 +77,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.renderer.setViewBox(QtCore.QRect(0,0,100,100))
         self.setScene(self.scene)
 
+        # the content of the svf file as string
         self.svg = None
-        self.path_d = {}
+        # dictionnay path id -> path d def for all path definition in the svg
+        self.svg_path_d = {}
 
+        # the graphical items in the view
         self.items : List[SvgItem] = []
-        # ordered list of items - TODO
+        # ordered list of selected items - TODO
         self.selected_items : List[SvgItem] = []
 
         #self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
@@ -88,9 +93,6 @@ class SvgViewer(QtWidgets.QGraphicsView):
     def clean(self):
         self.scene.clear()
         self.resetTransform()
-        
-        #for item in self.items:
-        #    self.scene.removeItem(item)
 
         self.items : List[SvgItem] = []
         self.selected_items : List[SvgItem] = []
@@ -117,15 +119,15 @@ class SvgViewer(QtWidgets.QGraphicsView):
             id = path.attrib['id']
             dd = path.attrib['d']
 
-            self.path_d[id] = dd
+            self.svg_path_d[id] = dd
 
             item = SvgItem(id, self.renderer)
             self.scene.addItem(item)
 
             self.items.append(item)
 
-    def get_path_d(self, p_id):
-        return self.path_d[p_id]
+    def get_svg_path_d(self, p_id):
+        return self.svg_path_d[p_id]
 
     def mousePressEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
         print('SvgViewer - mousePressEvent()')
@@ -135,6 +137,8 @@ class SvgViewer(QtWidgets.QGraphicsView):
             print("    item %s -> %s" % (item.elementId(), item.isSelected()))
             item.colorizeWhenSelected()
 
+        self.update_selected_items_list()
+
     def mouseReleaseEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
         print('SvgViewer - mouseReleaseEvent()')
         super().mouseReleaseEvent(event)
@@ -143,6 +147,45 @@ class SvgViewer(QtWidgets.QGraphicsView):
             print("    item %s -> %s" % (item.elementId(), item.isSelected()))
             item.colorizeWhenSelected()
 
+        self.update_selected_items_list()
+
+    def update_selected_items_list(self):
+        '''
+        by comparing the current one with the new evaluation of 
+        the selected items
+        '''
+        selected_items = []
+        for item in self.items:
+            if item.isSelected():
+                selected_items.append(item)
+        
+        if len(selected_items) == 0:
+            self.selected_items = []
+        else:
+            # compare old/new
+            oldLen = len(self.selected_items)
+            newLen = len(selected_items)
+
+            if newLen < oldLen:
+                # remove lost items
+                items_to_remove = []
+                for item in self.selected_items:
+                    if not item in selected_items:
+                        items_to_remove.append(item)
+                # finally
+                for item in items_to_remove:
+                    if item in self.selected_items:
+                        self.selected_items.remove(item)
+
+            if newLen > oldLen:
+                # append the new items
+                for item in selected_items:
+                    if not item in self.selected_items:
+                        self.selected_items.append(item)
+
+        print("    ---> List ordered selected item:")
+        for item in self.selected_items:
+            print("        %s -> %s" % (item.elementId(), item.isSelected()))
 
     def wheelEvent(self, event):
         self.zoomBy(math.pow(1.2, event.angleDelta().y() / 240.0))
@@ -168,29 +211,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.scale(factor, factor)
         self.zoomChanged.emit()
 
-    def display_cnc_op(self, combined_svg_paths: List['SvgPath']):
+    def display_cnc_op(self, svg_paths: List[SvgPath]):
         '''
+        The list of svg_paths results of the operation 'combinaison' of the 
+        svg selected path 'items' in the graphics view
+
+        The resulting svg_paths will the displayed in black together with the original svg
         '''
-        tr = svgpathutils.SvgTransformer(self.svg)
-        aug_svg = tr.augment(combined_svg_paths)
+        transformer = SvgTransformer(self.svg)
+        augmented_svg = transformer.augment(svg_paths)
 
-        self.fill_svg_viewer(aug_svg)
-
-    #def display_cnc_job(self, cnc_job):
-    #    '''
-    #    '''
-    #    svg = self.make_svg_from_cnc_job(cnc_job)
-    #    self.fill_svg_viewer(svg)
-
-    #def make_svg_from_cnc_job(self, cnc_job):
-    #    '''
-    #    '''
-    #    all_svg_paths = []
-
-    #    for cnc_op in cnc_job:
-    #        all_svg_paths += cnc_op.svg_paths
-
-    #  self.display_cnc_op(all_svg_paths)
-
-
-            
+        self.fill_svg_viewer(augmented_svg)

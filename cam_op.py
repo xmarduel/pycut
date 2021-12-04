@@ -36,7 +36,7 @@ class CncOp:
         '''
         for svg_path_id in self.operation["paths"]:
 
-            svg_path_d = svg_viewer.get_path_d(svg_path_id)
+            svg_path_d = svg_viewer.get_svg_path_d(svg_path_id)
             svg_path = SvgPath(svg_path_id, {'d': svg_path_d})
 
             self.svg_paths.append(svg_path)

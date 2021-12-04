@@ -1,5 +1,6 @@
 
 from typing import List
+from typing import Dict
 
 import tempfile
 
@@ -18,39 +19,51 @@ class SvgPath:
     - ClipperLib 'Path' are list of IntPoint (X,Y)
 
     so the transformation is straightforward
-    '''
-    samples_coeff = 2
 
+    Convention:
+    - a svg <path> definition is noted: svg_path_d
+    - a path from svgpathtools is noted: svg_path
+    - the discretization of a svg_path results in a numpy array, noted: np_svg_path
+    - a clipper path is noted: clipper_path  (a 'ClipperLib.IntPointVector')
+    '''
     inchToClipperScale = 100000  # Scale inch to Clipper
+
     cleanPolyDist = inchToClipperScale / 100000
     arcTolerance = inchToClipperScale / 40000
 
-    def __init__(self, p_id: str, p_attrs):
+    PYCUT_SCALE = 1000 # fixme: use inchToClipperScale
+    PYCUT_SAMPLE_LEN_COEFF = 2
+
+    def __init__(self, p_id: str, p_attrs: Dict):
         '''
         '''
+        # the 'id' of a svg <path> definition
         self.p_id = p_id
+        # and the attributes of the <path>
         self.p_attrs = p_attrs
 
-    def discretize(self):
-        '''
-        Transform a list of svgpathtools Segments info complex points
-        - Line: omly 2 points
-        - Others: discretize
-        '''
-        path = svgpathtools.parse_path(self.p_attrs['d'])
+        # the transformation of the svg_path_d to a svgpathtools 'path'
+        self.svg_path = svgpathtools.parse_path(self.p_attrs['d'])
 
+    def discretize(self) -> np.array :
+        '''
+        Transform the svg_path (a list of svgpathtools Segments) into a list of 'complex' points
+        - Line: only 2 points
+        - Arc: discretize per hand
+        - QuadraticBezier, CubicBezier: discretize per hand
+        '''
         points = np.array([], dtype=np.complex128)
         
-        for segment in path:
+        for segment in self.svg_path:
             if segment.__class__.__name__ == 'Line':
                 # start and end
                 pts = segment.points([0,1])
             elif segment.__class__.__name__ == 'Arc':
+                # no 'points' method for 'Arc'!
                 seg_length = segment.length()
 
-                nb_samples = int(seg_length * self.samples_coeff)
+                nb_samples = int(seg_length * self.PYCUT_SAMPLE_LEN_COEFF)
                 
-                # no 'points' method for 'Arc'!
                 _pts = []
                 for k in range(nb_samples):
                     _pts.append(segment.point(float(k)/float(nb_samples)))
@@ -62,7 +75,7 @@ class SvgPath:
             else:  # 'QuadraticBezier', 'CubicBezier'
                 seg_length = segment.length()
 
-                nb_samples = int(seg_length * self.samples_coeff)
+                nb_samples = int(seg_length * self.PYCUT_SAMPLE_LEN_COEFF)
                 incr = 1.0 / nb_samples
 
                 samples = [x* incr for x in range(0, nb_samples)]
@@ -77,35 +90,33 @@ class SvgPath:
     def toClipperPath(self) -> ClipperLib.IntPointVector:
         '''
         '''
-        discretized_svg_path = self.discretize()
+        np_svg_path = self.discretize()
 
-        path = ClipperLib.IntPointVector()
+        clipper_path = ClipperLib.IntPointVector()
 
-        for ppc in discretized_svg_path:
-            pt = ClipperLib.IntPoint(int(ppc.real*1000), int(ppc.imag*1000))
-            path.append(pt)
+        for complex_pt in np_svg_path:
+            pt = ClipperLib.IntPoint(int(complex_pt.real * self.PYCUT_SCALE), int(complex_pt.imag * self.PYCUT_SCALE))
+            clipper_path.append(pt)
 
-        return path
+        return clipper_path
 
     @classmethod
     def fromClipperPath(cls, clipper_path: ClipperLib.IntPointVector) -> 'SvgPath':
         '''
         '''
-        svgpathtools_pts : List[complex] = [  \
-                complex(pt.X / 1000, pt.Y / 1000) for pt in clipper_path]
+        diescretized_svg_path : List[complex] = [  \
+                complex(pt.X / cls.PYCUT_SCALE, pt.Y / cls.PYCUT_SCALE) for pt in clipper_path]
 
 
-        svgpathtools_path = svgpathtools.Path()
+        svg_path = svgpathtools.Path()
 
-        for i in range(len(svgpathtools_pts)-1):
-            start = svgpathtools_pts[i]
-            end   = svgpathtools_pts[i+1]
+        for i in range(len(diescretized_svg_path)-1):
+            start = diescretized_svg_path[i]
+            end   = diescretized_svg_path[i+1]
 
-            svgpathtools_path.append(svgpathtools.Line(start, end))
+            svg_path.append(svgpathtools.Line(start, end))
 
-        svg_d = svgpathtools_path.d()
-
-        return SvgPath('clipper', {'d': svg_d})
+        return SvgPath('clipper', {'d': svg_path.d()})
 
 
 class SvgTransformer:

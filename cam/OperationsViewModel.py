@@ -22,7 +22,7 @@ from typing import List
 
 import clipper as ClipperLib
 import Snap
-import pycut
+import cam.pycut as pycut
 
 
 from GcodeConversionViewModel import ToolModel
