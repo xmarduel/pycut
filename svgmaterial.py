@@ -7,11 +7,11 @@ from PySide6 import QtWidgets
 from PySide6 import QtSvg
 from PySide6 import QtSvgWidgets
 
-class SvgMaterialWidget(QtSvgWidgets.QSvgWidget):
+class MaterialWidget(QtSvgWidgets.QSvgWidget):
     '''
     '''
     def __init__(self, parent=None):
-        super(SvgMaterialWidget, self).__init__(parent)
+        super(MaterialWidget, self).__init__(parent)
 
         renderer = self.renderer()
         renderer.setAspectRatioMode(QtCore.Qt.KeepAspectRatio)

@@ -433,7 +433,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def setup_material_viewer(self):
         '''
         '''
-        return svgmaterial.SvgMaterialWidget(self.window.widget_display_material)
+        return svgmaterial.MaterialWidget(self.window.widget_display_material)
 
     def setup_svg_viewer(self):
         '''
