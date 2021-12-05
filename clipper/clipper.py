@@ -622,7 +622,7 @@ def dumpIntPoint(label, pt):
     print(pt.X, pt.Y)
 
 def dumpPath(label, path):
-    if label: print("---- path  len", len(path))
+    if label: print("---- path  ", label , "  len#", len(path))
     for pt in path:
         dumpIntPoint(None, pt)
 
