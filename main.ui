@@ -1316,6 +1316,7 @@ text-align:left;</string>
     </item>
    </layout>
   </widget>
+  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -1340,20 +1341,9 @@ text-align:left;</string>
     <addaction name="actionOpenJob"/>
     <addaction name="actionSaveJobAs"/>
    </widget>
-   <widget class="QMenu" name="menuSettings">
-    <property name="title">
-     <string>Settings</string>
-    </property>
-    <addaction name="actionSavr_Current_Settings"/>
-    <addaction name="actionSave_As"/>
-    <addaction name="actionDelete_Current_Settings"/>
-    <addaction name="actionSelect_Settings"/>
-   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuJobs"/>
-   <addaction name="menuSettings"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpenSvg">
    <property name="text">
     <string>Open SVG</string>
