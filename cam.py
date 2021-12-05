@@ -63,13 +63,13 @@ class cam:
         ClipperLib.dumpPaths("geometry", geometry)
 
         current = clipper_utils.ClipperUtils.offset(geometry, -cutterDia / 2)
-        bounds = clipper_utils.ClipperUtils.clone_pathvector(current)  # JS: current.slice(0)
+        bounds = clipper_utils.ClipperUtils.clone_pathvector(current)  # JSCUT: current.slice(0)
         allPaths : List[ClipperLib.IntPointVector] = []
         while len(current) != 0:
             if climb:
                 for iv in current:
                     iv.reverse()
-            allPaths = [p for p in current] + allPaths # JS: current.concat(allPaths)
+            allPaths = [p for p in current] + allPaths # JSCUT: current.concat(allPaths)
             current = clipper_utils.ClipperUtils.offset(current, -cutterDia * (1 - overlap))
             
         return cls.mergePaths(bounds, allPaths)
@@ -125,7 +125,7 @@ class cam:
         overlap is in the  range [0, 1).
         '''
         currentWidth = cutterDia
-        allPaths = []
+        allPaths  : List[ClipperLib.IntPointVector] = []
         eachWidth = cutterDia * (1 - overlap)
 
         if isInside :
@@ -143,14 +143,14 @@ class cam:
             if needReverse:
                 for i in range(len(current)):
                     current[i].reverse()
-            allPaths = current.concat(allPaths)
+            [p for p in current] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
             nextWidth = currentWidth + eachWidth
             if nextWidth > width and width - currentWidth > 0 :
                 current = clipper_utils.ClipperUtils.offset(current, width - currentWidth)
                 if needReverse:
                     for i in range(len(current)):
                         current[i].reverse()
-                allPaths = current.concat(allPaths)
+                allPaths = [p for p in current] + allPaths # JSCUT: allPaths = current.concat(allPaths)
                 break
             
             currentWidth = nextWidth
@@ -167,7 +167,7 @@ class cam:
         '''
         allPaths = []
         for paths in geometry:
-            path = paths.slice(0)
+            path = clipper_utils.ClipperUtils.clone_intpointvector(paths[0])  # JSCUT: path = paths.slice(0)
             if not climb:
                 path.reverse()
             path.append(path[0])
@@ -223,9 +223,6 @@ class cam:
         '''
         # strange, transform all these "PathVector" in "IntPointvector"
         bounds = _bounds[0]
-
-        for path in paths:
-            print("xxxx", len(path))
 
         currentPath = list(paths[0]) # not as tuple, but as list
         currentPath.append(currentPath[0])
