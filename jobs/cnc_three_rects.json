@@ -20,9 +20,9 @@
       "RampPlunge": true,
       "Combine": "Union",
       "Direction": "Conventional",
-      "Units": "mm",
+      "Units": "inch",
       "Margin": 0.0,
-      "Width": 1.1
+      "Width": 0.0
     },
     {
       "Name": "op3",
@@ -32,9 +32,9 @@
       "RampPlunge": true,
       "Combine": "Union",
       "Direction": "Conventional",
-      "Units": "mm",
+      "Units": "inch",
       "Margin": 0.0,
-      "Width": 1.1
+      "Width": 0.0
     },
     {
       "Name": "op4",
