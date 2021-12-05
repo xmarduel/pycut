@@ -1,9 +1,6 @@
 # This Python file uses the following encoding: utf-8
 
 import sys
-import os
-import io
-
 import json
 
 from PySide6 import QtCore
@@ -15,7 +12,7 @@ from PySide6.QtUiTools import QUiLoader
 
 import svgviewer
 import webglviewer
-import svgmaterial
+import material_widget
 import operations_simpletablewidget
 
 from pycut import ToolModel
@@ -433,7 +430,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def setup_material_viewer(self):
         '''
         '''
-        return svgmaterial.MaterialWidget(self.window.widget_display_material)
+        return material_widget.MaterialWidget(self.window.widget_display_material)
 
     def setup_svg_viewer(self):
         '''
