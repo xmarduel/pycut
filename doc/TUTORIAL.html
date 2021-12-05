@@ -61,7 +61,10 @@ web-based programm, that takes as input svg files and generates G-Code. So why
 this rewrite ?</p>
 
 <p>It begins as a "fun" project, in order to understand how a G-code generator
-works, and how easy (or hard) it is to achieve. Well, it is hard.</p>
+works, and how easy (or hard) it is to achieve. Well, it is not so easy.</p>
+
+<p>Infact, I began to use jscut because Easel, although free, makes limitations on the
+choices of the fonts (among others) - which is quite a shame...</p>
 
 <p>A second point is the major shortcoming of jsCut: the fact that it is a web
 application: sure for developpers who know javascript technology it is very
@@ -77,10 +80,12 @@ heard of this lib before?! And "polymer" is also based on so-called "html
 imports", which are in 2021 theoretically no more allowed... Consider jsCut GUI
 itself : how many html files/lines of code are neccessary to achieve the task,
 compared to, when written in python, only a few Qt Ui files for the design and
-the python main program having max 1000 lines of code?</p>
+the python main program having max 1000 lines of code? I believe too that the 
+rest of the python code is also quite easy to understand.</p>
 
 <p>So PyCut is written in python, with the GUI with PySide6. Hopefully there
-will be users that will be able to contribute.</p>
+will be users that will be able to contribute. There is a developper doc for 
+this purpose (TODO)</p>
 
 <p>The excellent things from jsCut are (among others):</p>
 <ul>
@@ -94,12 +99,12 @@ will be users that will be able to contribute.</p>
 <p>So the idea is the following:</p>
 <ul>
   <li>in PySide, display the WebGL stuff (QEngineView) <span
-    style="color:#00ff00"><span style="color:#008000">DONE</span></span><span
+    style="color:#00ff00"><span style="color:#00a000">DONE</span></span><span
     style="background-color:#00ff00"></span></li>
   <li>in PySide, display the SVG viewer stuff (QGraphicsView with SvgItem) <span 
-    style="color:#008000">DONE (well, the op. Union/Interect etc. only)</span></span></li>
+    style="color:#00a000">DONE (well, the op. Union/Interect etc. only)</span></span></li>
   <li>Rest of the MainWindow in PySide <span
-  style="color:#008000">DONE (nearly)</span></li>
+  style="color:#00a000">DONE (nearly)</span></li>
   <li>G-Code Generation with interface to the C++ CAM interface (lot of js code to understand) <span
     style="color:#ff0080">TODO</span></li>
 </ul>
@@ -113,8 +118,7 @@ will be users that will be able to contribute.</p>
 <p>Nice to have:</p>
 <ul>
   <li>G-Code generation with spindle control (actually absent in jsCut) <span
-    style="color:#0000ff">actually in PySide GUI only, should not be too
-    difficult to add to the generated G-Code</span></li>
+    style="color:#00a000">DONE</span></li>
   <li>Similar feature as in LaserWeb-4 for <strong>SVG structure
     viewer</strong><strong> / SVG viewer</strong> <span
     style="color:#ff0080"></span><span style="color:#ff0080">TODO</span></li>

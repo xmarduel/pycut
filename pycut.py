@@ -528,6 +528,9 @@ class GcodeGenerator:
 
         self.returnTo00 = False
 
+        self.spindleControl = True
+        self.spindleSpeed = 1000
+
         self.units = "mm"
         self.unitConverter: UnitConverter = UnitConverter(self.units)
 
@@ -602,6 +605,10 @@ class GcodeGenerator:
         gcode += "G90         ; Absolute positioning\r\n"
         gcode += "G1 Z {safeZ}  F   {rapidRate}      ; Move to clearance level\r\n"
 
+        if self.spindleControl:
+            gcode += "\r\n; Start the spindle\r\n"
+            gcode += "M3 S{spindleSpeed}\r\n"
+
         for idx, cnc_op in enumerate(cnc_ops):
             cutDepth = self.unitConverter.fromInch(cnc_op.cutDepth.toInch())
 
@@ -638,6 +645,10 @@ class GcodeGenerator:
                 "tabGeometry":    tabGeometry,
                 "tabZ":           tabZ,
             })
+
+        if self.spindleControl:
+            gcode += "\r\n; Stop the spindle\r\n"
+            gcode += "M5 \r\n"
 
         if self.returnTo00:
             gcode += "\r\n; Return to 0,0\r\n"
