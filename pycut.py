@@ -410,8 +410,8 @@ class JobModel:
 class GcodeGenerator:
     '''
     '''
-    def __init__(self, job):
-        self.jobModel = job
+    def __init__(self, job: JobModel):
+        self.job = job
 
         self.materialModel = job.materialModel
         self.toolModel = job.toolModel
@@ -431,33 +431,33 @@ class GcodeGenerator:
 
     @property
     def minX(self):
-        return self.unitConverter.fromInch(self.jobModel.minX / ClipperUtils.inchToClipperScale) + self.offsetX
+        return self.unitConverter.fromInch(self.job.minX / ClipperUtils.inchToClipperScale) + self.offsetX
 
     @property
     def maxX(self):
-        return self.unitConverter.fromInch(self.jobModel.maxX / ClipperUtils.inchToClipperScale) + self.offsetX
+        return self.unitConverter.fromInch(self.job.maxX / ClipperUtils.inchToClipperScale) + self.offsetX
     
     @property
     def minY(self):
-        return -(self.unitConverter.fromInch(self.jobModel.maxY / ClipperUtils.inchToClipperScale) + self.offsetY)
+        return -(self.unitConverter.fromInch(self.job.maxY / ClipperUtils.inchToClipperScale) + self.offsetY)
    
     @property
     def maxY(self):
-        return -(self.unitConverter.fromInch(self.jobModel.minY / ClipperUtils.inchToClipperScale) + self.offsetY)
+        return -(self.unitConverter.fromInch(self.job.minY / ClipperUtils.inchToClipperScale) + self.offsetY)
 
     def zeroLowerLeft(self):
-        self.offsetX = - self.unitConverter.fromInch(self.jobModel.minX / ClipperUtils.inchToClipperScale)
-        self.offsetY = - self.unitConverter.fromInch(-self.jobModel.maxY / ClipperUtils.inchToClipperScale)
+        self.offsetX = - self.unitConverter.fromInch(self.job.minX / ClipperUtils.inchToClipperScale)
+        self.offsetY = - self.unitConverter.fromInch(-self.job.maxY / ClipperUtils.inchToClipperScale)
         self.generateGcode()
 
     def zeroCenter(self):
-        self.offsetX = - self.unitConverter.fromInch((self.jobModel.minX + self.jobModel.maxX) / 2 / ClipperUtils.inchToClipperScale)
-        self.offsetY = - self.unitConverter.fromInch(-(self.jobModel.minY + self.jobModel.maxY) / 2 / ClipperUtils.inchToClipperScale)
+        self.offsetX = - self.unitConverter.fromInch((self.job.minX + self.job.maxX) / 2 / ClipperUtils.inchToClipperScale)
+        self.offsetY = - self.unitConverter.fromInch(-(self.job.minY + self.job.maxY) / 2 / ClipperUtils.inchToClipperScale)
         self.generateGcode()
 
     def generateGcode(self):
         cnc_ops: List['CncOp'] = []
-        for cnc_op in self.jobModel.operations:
+        for cnc_op in self.job.operations:
             if cnc_op.enabled:
                 if len(cnc_op.cam_paths) > 0:
                     cnc_ops.append(cnc_op)
@@ -497,7 +497,7 @@ class GcodeGenerator:
         for idx, cnc_op in enumerate(cnc_ops):
             cutDepth = self.unitConverter.fromInch(cnc_op.cutDepth.toInch())
 
-            nb_paths = len(cnc_op.cam_paths)
+            nb_paths = len(cnc_op.cam_paths)  # in use!
 
             gcode += "\r\n;"
             gcode += "\r\n; Operation:    {idx}"
@@ -511,7 +511,7 @@ class GcodeGenerator:
             gcode += "\r\n; Cut rate:     {cutRate}"
             gcode += "\r\n;\r\n"
 
-            gcode += cam.cam.getGcode({
+            gcode += cam.getGcode({
                 "paths":          cnc_op.cam_paths,
                 "ramp":           cnc_op.ramp,
                 "scale":          scale,
