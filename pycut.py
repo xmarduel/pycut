@@ -252,6 +252,11 @@ class CncOp:
         self.direction = self.operation["Direction"]
         self.cutDepth = ValWithUnit(self.operation["Deep"], self.units)
         self.margin = ValWithUnit(self.operation["Margin"], self.units)
+
+        if "Width" in self.operation:
+            self.width = ValWithUnit(self.operation["Width"], self.units)
+        else:
+            self.width = None
         
         # the input
         self.svg_paths : List[SvgPath] = [] # to fill at "setup"
@@ -312,6 +317,7 @@ class CncOp:
         direction = self.direction
         cutDepth = self.cutDepth
         margin = self.margin
+        width = self.width
 
         geometry = self.geometry
         offset = margin.toInch() * ClipperUtils.inchToClipperScale

@@ -142,14 +142,14 @@ class cam:
         while currentWidth <= width :
             if needReverse:
                 for i in range(len(current)):
-                    current[i].reverse()
-            [p for p in current] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+                    list(current[i]).reverse()
+            allPaths = [p for p in current] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
             nextWidth = currentWidth + eachWidth
             if nextWidth > width and width - currentWidth > 0 :
                 current = clipper_utils.ClipperUtils.offset(current, width - currentWidth)
                 if needReverse:
                     for i in range(len(current)):
-                        current[i].reverse()
+                        list(current[i]).reverse()
                 allPaths = [p for p in current] + allPaths # JSCUT: allPaths = current.concat(allPaths)
                 break
             
