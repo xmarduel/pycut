@@ -8,6 +8,8 @@ import svgpathtools
 import numpy as np
 import clipper.clipper as ClipperLib
 
+from clipper_utils import ClipperUtils
+
 
 class SvgPath:
     '''
@@ -26,12 +28,6 @@ class SvgPath:
     - the discretization of a svg_path results in a numpy array, noted: np_svg_path
     - a clipper path is noted: clipper_path  (a 'ClipperLib.IntPointVector')
     '''
-    inchToClipperScale = 100000  # Scale inch to Clipper
-
-    cleanPolyDist = inchToClipperScale / 100000
-    arcTolerance = inchToClipperScale / 40000
-
-    PYCUT_SCALE = 1000 # fixme: use inchToClipperScale
     PYCUT_SAMPLE_LEN_COEFF = 2
 
     def __init__(self, p_id: str, p_attrs: Dict):
@@ -51,13 +47,21 @@ class SvgPath:
         - Line: only 2 points
         - Arc: discretize per hand
         - QuadraticBezier, CubicBezier: discretize per hand
+
+        FIXME: Take care not to add twice the same points
         '''
         points = np.array([], dtype=np.complex128)
         
-        for segment in self.svg_path:
+        for k, segment in enumerate(self.svg_path):
             if segment.__class__.__name__ == 'Line':
                 # start and end
-                pts = segment.points([0,1])
+                if len(self.svg_path) == 1:
+                    pts = segment.points([0,1])
+                else:
+                    if k < len(self.svg_path)-1:
+                        pts = segment.points([0])
+                    else:
+                        pts = segment.points([0, 1])
             elif segment.__class__.__name__ == 'Arc':
                 # no 'points' method for 'Arc'!
                 seg_length = segment.length()
@@ -95,7 +99,9 @@ class SvgPath:
         clipper_path = ClipperLib.IntPointVector()
 
         for complex_pt in np_svg_path:
-            pt = ClipperLib.IntPoint(int(complex_pt.real * self.PYCUT_SCALE), int(complex_pt.imag * self.PYCUT_SCALE))
+            pt = ClipperLib.IntPoint( \
+                int(complex_pt.real * (ClipperUtils.inchToClipperScale / 25.4)),
+                int(complex_pt.imag * (ClipperUtils.inchToClipperScale / 25.4)))
             clipper_path.append(pt)
 
         return clipper_path
@@ -104,15 +110,16 @@ class SvgPath:
     def fromClipperPath(cls, clipper_path: ClipperLib.IntPointVector) -> 'SvgPath':
         '''
         '''
-        diescretized_svg_path : List[complex] = [  \
-                complex(pt.X / cls.PYCUT_SCALE, pt.Y / cls.PYCUT_SCALE) for pt in clipper_path]
+        discretized_svg_path : List[complex] = [ complex( \
+                    pt.X / (ClipperUtils.inchToClipperScale / 25.4), 
+                    pt.Y / (ClipperUtils.inchToClipperScale / 25.4)) for pt in clipper_path]
 
 
         svg_path = svgpathtools.Path()
 
-        for i in range(len(diescretized_svg_path)-1):
-            start = diescretized_svg_path[i]
-            end   = diescretized_svg_path[i+1]
+        for i in range(len(discretized_svg_path)-1):
+            start = discretized_svg_path[i]
+            end   = discretized_svg_path[i+1]
 
             svg_path.append(svgpathtools.Line(start, end))
 

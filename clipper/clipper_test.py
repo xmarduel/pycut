@@ -74,7 +74,7 @@ def test(clipType: clipper.ClipType):
     clipper.dumpPaths("clip", clip)
     clipper.dumpPaths("solution", solution)
 
-def  test_offset():
+def test_offset():
     outer = clipper.IntPointVector()
     outer.append(clipper.IntPoint(180,200))
     outer.append(clipper.IntPoint(260,200))

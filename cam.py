@@ -60,6 +60,8 @@ class cam:
         cutterDia is in Clipper units. 
         overlap is in the range [0, 1).
         '''
+        ClipperLib.dumpPaths("geometry", geometry)
+
         current = clipper_utils.ClipperUtils.offset(geometry, -cutterDia / 2)
         bounds = clipper_utils.ClipperUtils.clone_pathvector(current)  # JS: current.slice(0)
         allPaths = []
@@ -67,9 +69,16 @@ class cam:
             if climb:
                 for i in range(len(current)):
                     current[i].reverse()
-            allPaths = allPaths + [current]  # JS: current.concat(allPaths)
+            allPaths.append(current)  # JS: current.concat(allPaths)
             current = clipper_utils.ClipperUtils.offset(current, -cutterDia * (1 - overlap))
          
+        allPaths.reverse()
+
+        # XAM
+        for path in allPaths:
+            ClipperLib.dumpPaths("path", path)
+        # XAM
+            
         return cls.mergePaths(bounds, allPaths)
 
     @classmethod
@@ -213,21 +222,25 @@ class cam:
         '''
 
     @classmethod
-    def mergePaths(cls, bounds: ClipperLib.PathVector, paths: ClipperLib.PathVector) -> List[CamPath] :
+    def mergePaths(cls, _bounds: ClipperLib.PathVector, _paths: List[ClipperLib.PathVector]) -> List[CamPath] :
         '''
         Try to merge paths. A merged path doesn't cross outside of bounds. 
         
         Returns array of CamPath.
         '''
+        # strange, transform all these "PathVector" in "IntPointvector"
+        bounds = _bounds[0]
+        paths = [path[0] for path in _paths]
+
         if len(paths) == 0:
             return None
 
-        currentPath = paths[0]
+        currentPath = list(paths[0]) # not as tuple, but as list
         currentPath.append(currentPath[0])
         currentPoint = currentPath[-1]
         paths[0] = []
 
-        mergedPaths : ClipperLib.PathVector = [] 
+        mergedPaths : List[ClipperLib.IntPointVector] = [] 
         numLeft = len(paths) - 1
 
         while numLeft > 0 :
@@ -242,11 +255,19 @@ class cam:
                         closestPointIndex = pointIndex
                         closestPointDist = dist
 
-            path = paths[closestPathIndex]
+            path = list(paths[closestPathIndex])
             paths[closestPathIndex] = []
             numLeft -= 1
             needNew = clipper_utils.ClipperUtils.crosses(bounds, currentPoint, path[closestPointIndex])
-            path = path.slice(closestPointIndex, len(path)).concat(path.slice(0, closestPointIndex))
+
+            # JSCUT path = path.slice(closestPointIndex, len(path)).concat(path.slice(0, closestPointIndex))
+            # --> just put the first indices until closestPointIndex at the last pos
+            for k in range(closestPointIndex):
+                pt = path.pop(0)
+                path.append(pt)
+            # <--
+            
+            
             path.append(path[0])
 
             if needNew:
@@ -254,8 +275,10 @@ class cam:
                 currentPath = path
                 currentPoint = currentPath[-1]
             else:
-                currentPath = currentPath + [path]
+                currentPath = currentPath + path
                 currentPoint = currentPath[-1]
+
+        ClipperLib.dumpPath("currentPath", currentPath)
 
         mergedPaths.append(currentPath)
 
@@ -368,15 +391,15 @@ class cam:
         safeZ = args["safeZ"]
         passDepth = args["passDepth"]
         
-        plungeFeedGcode = ' F' + args["plungeFeed"]
-        retractFeedGcode = ' F' + args["retractFeed"]
-        cutFeedGcode = ' F' + args["cutFeed"]
-        rapidFeedGcode = ' F' + args["rapidFeed"]
+        plungeFeedGcode = ' F%d' % args["plungeFeed"]
+        retractFeedGcode = ' F%d' % args["retractFeed"]
+        cutFeedGcode = ' F%d' % args["cutFeed"]
+        rapidFeedGcode = ' F%d' % args["rapidFeed"]
 
-        plungeFeed = ' F' + args["plungeFeed"]
-        retractFeed = ' F' + args["retractFeed"]
-        cutFeed = ' F' + args["cutFeed"]
-        rapidFeed = ' F' + args["rapidFeed"]
+        plungeFeed = ' F%d' % args["plungeFeed"]
+        retractFeed = ' F%d' % args["retractFeed"]
+        cutFeed = ' F%d' % args["cutFeed"]
+        rapidFeed = ' F%d' % args["rapidFeed"]
 
         tabGeometry = args["tabGeometry"]
         tabZ = args["tabZ"]
@@ -391,10 +414,10 @@ class cam:
         gcode = ""
 
         retractGcode = '; Retract\r\n' + \
-            'G1 Z' + safeZ.toFixed(decimal) + rapidFeedGcode + '\r\n'
+            'G1 Z' + safeZ.toFixed(decimal) + '{rapidFeedGcode} \r\n'
 
         retractForTabGcode = '; Retract for tab\r\n' + \
-            'G1 Z' + tabZ.toFixed(decimal) + rapidFeedGcode + '\r\n'
+            'G1 Z' + tabZ.toFixed(decimal) + '{rapidFeedGcode} \r\n'
 
         def getX(p: ClipperLib.IntPoint) :
             return p.X * scale + offsetX

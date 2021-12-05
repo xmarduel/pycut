@@ -1,4 +1,4 @@
-import math
+
 from typing import List
 
 from ValWithUnit import ValWithUnit
@@ -15,6 +15,8 @@ from clipper_utils import ClipperUtils
 from pycut import ToolModel
 from pycut import SvgModel
 from pycut import MaterialModel
+from pycut import TabsModel
+
 
 class CncOp:
     '''
@@ -71,6 +73,8 @@ class CncOp:
         
         self.geometry = ClipperUtils.combine(self.clipper_paths, clipType)
 
+        ClipperLib.dumpPaths("geometry", self.geometry)
+
         for clipper_path in self.geometry:
             svg_path = SvgPath.fromClipperPath(clipper_path)
             self.combined_svg_paths.append(svg_path)
@@ -120,7 +124,8 @@ class JobModel:
             cnc_ops: List[CncOp], 
             materialModel: MaterialModel, 
             svgModel: SvgModel, 
-            toolModel: ToolModel):
+            toolModel: ToolModel,
+            tabsModel: TabsModel):
 
         self.svg_viewer = svg_viewer
         
@@ -129,7 +134,7 @@ class JobModel:
         self.svgModel = svgModel
         self.materialModel = materialModel
         self.toolModel = toolModel
-        self.tabsModel = None
+        self.tabsModel = tabsModel
 
         self.minX = 0
         self.minY = 0
@@ -165,10 +170,10 @@ class JobModel:
                             maxY = point.Y
                             foundFirst = True
                         else:
-                            minX = math.min(minX, point.X)
-                            minY = math.min(minY, point.Y)
-                            maxX = math.max(maxX, point.X)
-                            maxY = math.max(maxY, point.Y)
+                            minX = min(minX, point.X)
+                            minY = min(minY, point.Y)
+                            maxX = max(maxX, point.X)
+                            maxY = max(maxY, point.Y)
                         
         self.minX = minX
         self.maxX = maxX

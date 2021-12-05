@@ -24,6 +24,7 @@ from cnc_op import JobModel
 from pycut import ToolModel
 from pycut import SvgModel
 from pycut import MaterialModel
+from pycut import TabsModel
 
 from pycut import GcodeGenerator
 
@@ -133,7 +134,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.init_gui()
         
         #self.open_job("./jobs/cnc_three_rects.json")
-        self.open_job("./jobs/cnc_three_rects_with_circle.json")
+        #self.open_job("./jobs/cnc_three_rects_with_circle.json")
+        self.open_job("./jobs/cnc_one_rect.json")
 
         self.display_gcode_file("gcode.gcode")
 
@@ -730,8 +732,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         materialModel = MaterialModel()
         svgModel = SvgModel()
         toolModel = ToolModel()
+        tabsmodel = TabsModel(svgModel, materialModel, None, None)
         
-        job = JobModel(self.svg_viewer, cnc_ops, materialModel, svgModel, toolModel)
+        job = JobModel(self.svg_viewer, cnc_ops, materialModel, svgModel, toolModel, tabsmodel)
         generator = GcodeGenerator(job)
         generator.generateGcode()
 

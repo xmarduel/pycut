@@ -70,9 +70,9 @@ class ToolModel:
         self.angle = 180
         self.passDepth = ValWithUnit(0.125, self.units)
         self.stepover = 0.4
-        self.rapidRate = 100
-        self.plungeRate = 5
-        self.cutRate = 40
+        self.rapidRate = ValWithUnit(100, self.units)
+        self.plungeRate = ValWithUnit(5, self.units)
+        self.cutRate = ValWithUnit(40, self.units)
 
     def getCamData(self):
         result = {
@@ -88,9 +88,9 @@ class MaterialModel:
     '''
     def __init__(self):
         self.matUnits = "inch"
-        self.matThickness = 1.0
+        self.matThickness = ValWithUnit(1.0, self.matUnits)
         self.matZOrigin = "Top"
-        self.matClearance = 0.1
+        self.matClearance = ValWithUnit(0.1, self.matUnits)
 
     @property
     def matBotZ(self):
@@ -102,7 +102,7 @@ class MaterialModel:
     @property
     def matTopZ(self):
         if self.matZOrigin == "Top":
-            return 0
+            return ValWithUnit(0, self.matUnits)
         else:
             return self.matThickness
 
@@ -213,7 +213,7 @@ class TabsModel:
 
         self.tabs: List[Tab] = []
         self.units = self.materialModel.matUnits
-        self.maxCutDepth = 0
+        self.maxCutDepth = ValWithUnit(0, self.units)
 
     def addTab(self):
         rawPaths = []
@@ -326,21 +326,23 @@ class GcodeGenerator:
         else:
             gcode += "G21         ; Set units to mm\r\n"
         gcode += "G90         ; Absolute positioning\r\n"
-        gcode += "G1 Z" + safeZ + " F" + rapidRate + "      ; Move to clearance level\r\n"
+        gcode += "G1 Z {safeZ}  F   {rapidRate}      ; Move to clearance level\r\n"
 
         for idx, cnc_op in enumerate(cnc_ops):
             cutDepth = self.unitConverter.fromInch(cnc_op.cutDepth.toInch())
 
+            nb_paths = len(cnc_op.cam_paths)
+
             gcode += "\r\n;"
-            gcode += "\r\n; Operation:    " + idx
-            gcode += "\r\n; Name:         " + cnc_op.name
-            gcode += "\r\n; Type:         " + cnc_op.cam_op
-            gcode += "\r\n; Paths:        " + len(cnc_op.cam_paths)
-            gcode += "\r\n; Direction:    " + cnc_op.direction
-            gcode += "\r\n; Cut Depth:    " + cutDepth
-            gcode += "\r\n; Pass Depth:   " + passDepth
-            gcode += "\r\n; Plunge rate:  " + plungeRate
-            gcode += "\r\n; Cut rate:     " + cutRate
+            gcode += "\r\n; Operation:    {idx}"
+            gcode += "\r\n; Name:         {cnc_op.name}"
+            gcode += "\r\n; Type:         {cnc_op.cam_op}"
+            gcode += "\r\n; Paths:        {nb_paths}"
+            gcode += "\r\n; Direction:    {cnc_op.direction}"
+            gcode += "\r\n; Cut Depth:    {cutDepth}"
+            gcode += "\r\n; Pass Depth:   {passDepth}"
+            gcode += "\r\n; Plunge rate:  {plungeRate}"
+            gcode += "\r\n; Cut rate:     {cutRate}"
             gcode += "\r\n;\r\n"
 
             gcode += cam.cam.getGcode({
@@ -365,7 +367,7 @@ class GcodeGenerator:
 
         if self.returnTo00:
             gcode += "\r\n; Return to 0,0\r\n"
-            gcode += "G0 X0 Y0 F" + rapidRate + "\r\n"
+            gcode += "G0 X0 Y0 F  {rapidRate} \r\n"
 
         self.gcode = gcode
 

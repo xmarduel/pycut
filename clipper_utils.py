@@ -107,14 +107,26 @@ class ClipperUtils:
             return False
 
         clipper = ClipperLib.Clipper()
-        clipper.AddPath([p1, p2], ClipperLib.PolyType.ptSubject, False)
-        clipper.AddPaths(bounds, ClipperLib.PolyType.ptClip, True)
+        # JSCUT clipper.AddPath([p1, p2], ClipperLib.PolyType.ptSubject, False)
+        # JSCUT clipper.AddPaths(bounds, ClipperLib.PolyType.ptClip, True)
+
+        # XAM unfortunately bad wrapper... accept only PathVector ???
+        p1_p2 = ClipperLib.IntPointVector()
+        p1_p2.append(p1)
+        p1_p2.append(p2)
+        
+        bound_pv = ClipperLib.PathVector()
+        bound_pv.append(bounds)
+
+        clipper.AddPath(p1_p2, ClipperLib.PolyType.ptSubject, False)
+        clipper.AddPaths(bound_pv, ClipperLib.PolyType.ptClip, True)
 
         result = ClipperLib.PolyTree()
         clipper.Execute(ClipperLib.ClipType.ctIntersection, result, ClipperLib.PolyFillType.pftEvenOdd, ClipperLib.PolyFillType.pftEvenOdd)
     
         if result.ChildCount() == 1:
-            child : ClipperLib.PolyNode = result.Childs[0] 
+            # JSCUT child : ClipperLib.PolyNode = result.Childs[0] 
+            child : ClipperLib.PolyNode = result.GetNext() 
             points = child.Contour
             if len(points) == 2:
                 if points[0].X == p1.X and points[1].X == p2.X and points[0].Y == p1.Y and points[1].Y == p2.Y :
