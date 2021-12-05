@@ -43,7 +43,7 @@ class CncOp:
         self.geometry = ClipperLib.PathVector()
         # and the resulting svg paths from the combinaison, to be displayed
         # in the svg viewer
-        self.combined_svg_paths : List[SvgPath] = []
+        self.geometry_svg_paths : List[SvgPath] = []
 
         self.cam_paths = []
 
@@ -77,7 +77,7 @@ class CncOp:
 
         for clipper_path in self.geometry:
             svg_path = SvgPath.fromClipperPath(clipper_path)
-            self.combined_svg_paths.append(svg_path)
+            self.geometry_svg_paths.append(svg_path)
 
     def calculate_toolpaths(self,  svgModel: SvgModel, toolModel: ToolModel, materialModel: MaterialModel):
         '''
