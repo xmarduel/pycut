@@ -99,13 +99,6 @@ class Operation:
             pass
             #showAlert(msg, "alert-warning")
 
-        if self.loading:
-            return
-
-        startTime = time.time()
-        if self.options.profile:
-            print("recombine...")
-
         self.removeCombinedGeometrySvg()
         self.removeToolPaths()
 
@@ -158,9 +151,6 @@ class Operation:
             path = clipper_utils.ClipperUtils.getSnapPathFromClipperPaths(previewGeometry, self.svgViewModel.pxPerInch)
             if path != None:
                 self.combinedGeometrySvg = self.combinedGeometryGroup.path(path).attr("class", "combinedGeometry")
-
-        if self.options.profile:
-            print("recombine: " + (time.time() - startTime))
 
         self.enabled(True)
 
