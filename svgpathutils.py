@@ -3,6 +3,7 @@ from typing import List
 from typing import Dict
 
 import tempfile
+import lxml.etree as ET
 
 import svgpathtools
 import numpy as np
@@ -159,16 +160,19 @@ class SvgTransformer:
 
             all_paths += '<path id="%s_%d" style="fill:#111111;stroke-width:0;stroke:#00ff00"  d="%s" />'  % (id, k, dd)
         
+        root = ET.fromstring(self.svg)
+        root_attrib = root.attrib
+        
         svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
-                width="100mm"
-                height="100mm"
-                viewBox="0 0 100 100"
+                width="%s"
+                height="%s"
+                viewBox="%s"
                 version="1.1">
                 <style>svg { background-color: green; }</style>
                 <g>
                  %s
                 </g> 
-             </svg>''' % all_paths
+             </svg>''' % (root_attrib["width"], root_attrib["height"], root_attrib["viewBox"],  all_paths)
 
         print(svg)
         
@@ -194,16 +198,19 @@ class SvgTransformer:
 
             all_paths += '<path id="%s_%d" style="fill:none;stroke-width:0.2;stroke:#00ff00"  d="%s" />'  % (id, k, dd)
         
+        root = ET.fromstring(self.svg)
+        root_attrib = root.attrib
+
         svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
-                width="100mm"
-                height="100mm"
-                viewBox="0 0 100 100"
+                width="%s"
+                height="%s"
+                viewBox="%s"
                 version="1.1">
                 <style>svg { background-color: green; }</style>
                 <g>
                  %s
                 </g> 
-             </svg>''' % all_paths
+             </svg>''' % (root_attrib["width"], root_attrib["height"], root_attrib["viewBox"], all_paths)
 
         print(svg)
         
