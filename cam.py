@@ -66,18 +66,11 @@ class cam:
         bounds = clipper_utils.ClipperUtils.clone_pathvector(current)  # JS: current.slice(0)
         allPaths : List[ClipperLib.IntPointVector] = []
         while len(current) != 0:
-            curr_len = len(current)  # debug
-            curr_len_v = len(current[0])
             if climb:
-                for i in range(len(current)):
-                    current[i].reverse()
+                for iv in current:
+                    iv.reverse()
             allPaths = [p for p in current] + allPaths # JS: current.concat(allPaths)
             current = clipper_utils.ClipperUtils.offset(current, -cutterDia * (1 - overlap))
-
-        # XAM
-        #for path in allPaths:
-        #   ClipperLib.dumpPath("path", path)
-        # XAM
             
         return cls.mergePaths(bounds, allPaths)
 

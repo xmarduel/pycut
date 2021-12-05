@@ -171,6 +171,9 @@ text-align:left;</string>
           </item>
           <item>
            <widget class="QDoubleSpinBox" name="doubleSpinBox_Operations_OpDepth">
+            <property name="decimals">
+             <number>3</number>
+            </property>
             <property name="maximum">
              <double>10.000000000000000</double>
             </property>
@@ -315,7 +318,11 @@ text-align:left;</string>
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QDoubleSpinBox" name="doubleSpinBox_Tabs_MaxCutDepth"/>
+              <widget class="QDoubleSpinBox" name="doubleSpinBox_Tabs_MaxCutDepth">
+               <property name="decimals">
+                <number>3</number>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -521,6 +528,9 @@ text-align:left;</string>
              </item>
              <item row="1" column="2">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_Diameter">
+               <property name="decimals">
+                <number>3</number>
+               </property>
                <property name="maximum">
                 <double>32.000000000000000</double>
                </property>
@@ -577,6 +587,9 @@ text-align:left;</string>
              </item>
              <item row="4" column="2">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_StepOver">
+               <property name="decimals">
+                <number>3</number>
+               </property>
                <property name="maximum">
                 <double>1.000000000000000</double>
                </property>
@@ -604,6 +617,9 @@ text-align:left;</string>
              </item>
              <item row="3" column="2">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_PassDepth">
+               <property name="decimals">
+                <number>3</number>
+               </property>
                <property name="maximum">
                 <double>10.000000000000000</double>
                </property>
