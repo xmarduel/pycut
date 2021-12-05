@@ -18,13 +18,12 @@ import webglviewer
 import svgmaterial
 import operations_simpletablewidget
 
-from cnc_op import CncOp
-from cnc_op import JobModel
-
 from pycut import ToolModel
 from pycut import SvgModel
 from pycut import MaterialModel
 from pycut import TabsModel
+from pycut import CncOp
+from pycut import JobModel
 
 from pycut import GcodeGenerator
 
@@ -137,7 +136,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         #self.open_job("./jobs/cnc_three_rects_with_circle.json")
         #self.open_job("./jobs/cnc_one_rect.json")
 
-        self.display_gcode_file("gcode.gcode")
+        self.display_gcode_file("test/gcode.gcode")
 
     def display_gcode_file(self, filename):
         '''
