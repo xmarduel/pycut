@@ -64,19 +64,19 @@ class cam:
 
         current = clipper_utils.ClipperUtils.offset(geometry, -cutterDia / 2)
         bounds = clipper_utils.ClipperUtils.clone_pathvector(current)  # JS: current.slice(0)
-        allPaths = []
+        allPaths : List[ClipperLib.IntPointVector] = []
         while len(current) != 0:
+            curr_len = len(current)  # debug
+            curr_len_v = len(current[0])
             if climb:
                 for i in range(len(current)):
                     current[i].reverse()
-            allPaths.append(current)  # JS: current.concat(allPaths)
+            allPaths = [p for p in current] + allPaths # JS: current.concat(allPaths)
             current = clipper_utils.ClipperUtils.offset(current, -cutterDia * (1 - overlap))
-         
-        allPaths.reverse()
 
         # XAM
-        for path in allPaths:
-            ClipperLib.dumpPaths("path", path)
+        #for path in allPaths:
+        #   ClipperLib.dumpPath("path", path)
         # XAM
             
         return cls.mergePaths(bounds, allPaths)
@@ -222,7 +222,7 @@ class cam:
         '''
 
     @classmethod
-    def mergePaths(cls, _bounds: ClipperLib.PathVector, _paths: List[ClipperLib.PathVector]) -> List[CamPath] :
+    def mergePaths(cls, _bounds: ClipperLib.PathVector, paths: List[ClipperLib.IntPointVector]) -> List[CamPath] :
         '''
         Try to merge paths. A merged path doesn't cross outside of bounds. 
         
@@ -230,10 +230,9 @@ class cam:
         '''
         # strange, transform all these "PathVector" in "IntPointvector"
         bounds = _bounds[0]
-        paths = [path[0] for path in _paths]
 
-        if len(paths) == 0:
-            return None
+        for path in paths:
+            print("xxxx", len(path))
 
         currentPath = list(paths[0]) # not as tuple, but as list
         currentPath.append(currentPath[0])
@@ -278,7 +277,7 @@ class cam:
                 currentPath = currentPath + path
                 currentPoint = currentPath[-1]
 
-        ClipperLib.dumpPath("currentPath", currentPath)
+        #ClipperLib.dumpPath("currentPath", currentPath)
 
         mergedPaths.append(currentPath)
 
