@@ -126,6 +126,10 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
             self.items.append(item)
 
+        # bad zoom
+        self.zoomIn()
+        self.zoomIn()
+
     def get_svg_path_d(self, p_id):
         return self.svg_path_d[p_id]
 
