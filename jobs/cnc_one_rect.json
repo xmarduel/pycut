@@ -23,6 +23,18 @@
       "Units": "inch",
       "Margin": 0.0,
       "Width": 0.0
+    },
+    {
+      "Name": "op3",
+      "paths": ["r1"],
+      "type": "Outside",
+      "Deep": 0.5,       
+      "RampPlunge": true,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "inch",
+      "Margin": 0.0,
+      "Width": 0.0
     }
   ],
   "settings" : {
