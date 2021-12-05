@@ -284,7 +284,21 @@ class CncOp:
 
             self.svg_paths.append(svg_path)
    
-    def calculate_geometry(self):
+    def calculate_geometry(self, toolModel: ToolModel):
+        '''
+        '''
+        if self.cam_op == "Pocket":
+            self.calculate_geometry_pocket()
+        elif self.cam_op == "Inside":
+            self.calculate_geometry_inside(toolModel)
+        elif self.cam_op == "Outside":
+            self.calculate_geometry_outside(toolModel)
+        elif self.cam_op == "Engrave":
+            self.calculate_geometry_engrave()
+        elif self.cam_op == "VPocket":
+            self.calculate_geometry_vpocket()
+
+    def calculate_geometry_pocket(self):
         '''
         '''
         for svg_path in self.svg_paths:
@@ -305,6 +319,94 @@ class CncOp:
         for clipper_path in self.geometry:
             svg_path = SvgPath.fromClipperPath("geometry", clipper_path)
             self.geometry_svg_paths.append(svg_path)
+
+    def calculate_geometry_inside(self, toolModel: ToolModel):
+        '''
+        '''
+        for svg_path in self.svg_paths:
+            clipper_path = svg_path.toClipperPath()
+            self.clipper_paths.append(clipper_path)
+
+        clipType = {
+            "Union": ClipperLib.ClipType.ctUnion,
+            "Intersection": ClipperLib.ClipType.ctIntersection,
+            "Difference": ClipperLib.ClipType.ctDifference,
+            "Xor": ClipperLib.ClipType.ctXor,
+        } [self.operation["Combine"]] 
+        
+        self.geometry = ClipperUtils.combine(self.clipper_paths, clipType)
+
+        if len(self.geometry) != 0:
+            offset = self.margin.toInch() * ClipperUtils.inchToClipperScale
+            offset = -offset
+
+            if offset != 0:
+                geometry = ClipperUtils.offset(self.geometry, offset)
+            else:
+                geometry = self.geometry
+
+            toolData = toolModel.getCamData()
+               
+            width = self.width.toInch() * ClipperUtils.inchToClipperScale
+        
+            if width < toolData["diameterClipper"]:
+                width = toolData["diameterClipper"]
+        
+            self.preview_geometry = ClipperUtils.diff(geometry, ClipperUtils.offset(geometry, -width))
+
+            ClipperLib.dumpPaths("geometry", self.preview_geometry)
+
+        for clipper_path in self.preview_geometry:
+            svg_path = SvgPath.fromClipperPath("geometry", clipper_path)
+            self.geometry_svg_paths.append(svg_path)
+
+    def calculate_geometry_outside(self, toolModel: ToolModel):
+        '''
+        '''
+        for svg_path in self.svg_paths:
+            clipper_path = svg_path.toClipperPath()
+            self.clipper_paths.append(clipper_path)
+
+        clipType = {
+            "Union": ClipperLib.ClipType.ctUnion,
+            "Intersection": ClipperLib.ClipType.ctIntersection,
+            "Difference": ClipperLib.ClipType.ctDifference,
+            "Xor": ClipperLib.ClipType.ctXor,
+        } [self.operation["Combine"]] 
+        
+        self.geometry = ClipperUtils.combine(self.clipper_paths, clipType)
+
+        if len(self.geometry) != 0:
+            offset = self.margin.toInch() * ClipperUtils.inchToClipperScale
+           
+            if offset != 0:
+                geometry = ClipperUtils.offset(self.geometry, offset)
+            else:
+                geometry = self.geometry
+            
+            toolData = toolModel.getCamData()
+            
+            width = self.width.toInch() * ClipperUtils.inchToClipperScale
+            if width < toolData["diameterClipper"]:
+                width = toolData["diameterClipper"]
+                  
+            self.preview_geometry = ClipperUtils.diff(ClipperUtils.offset(geometry, width), geometry)
+
+            ClipperLib.dumpPaths("geometry", self.preview_geometry)
+
+        for clipper_path in self.preview_geometry:
+            svg_path = SvgPath.fromClipperPath("geometry", clipper_path)
+            self.geometry_svg_paths.append(svg_path)
+
+    def calculate_geometry_engrave(self):
+        '''
+        '''
+        pass
+
+    def calculate_geometry_vpocket(self):
+        '''
+        '''
+        pass
 
     def calculate_toolpaths(self,  svgModel: SvgModel, toolModel: ToolModel, materialModel: MaterialModel):
         '''
@@ -379,7 +481,7 @@ class JobModel:
         for op in self.operations:
             if op.enabled :
                 op.setup(self.svg_viewer)
-                op.calculate_geometry()
+                op.calculate_geometry(self.toolModel)
                 op.calculate_toolpaths(self.svgModel, self.toolModel, self.materialModel)
     
     def findMinMax(self):

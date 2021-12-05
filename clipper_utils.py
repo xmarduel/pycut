@@ -32,7 +32,7 @@ class ClipperUtils:
         clipper.AddPaths(paths2, ClipperLib.PolyType.ptClip, True)
         
         result = ClipperLib.PathVector()
-        clipper.Execute(clipType, result, ClipperLib.PolyFillType.pftEvenOdd, ClipperLib.PolyFillType.pftEvenOdd);
+        clipper.Execute(clipType, result, ClipperLib.PolyFillType.pftEvenOdd, ClipperLib.PolyFillType.pftEvenOdd)
         
         return result
 

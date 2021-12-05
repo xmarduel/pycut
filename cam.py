@@ -222,7 +222,11 @@ class cam:
         Returns array of CamPath.
         '''
         # strange, transform all these "PathVector" in "IntPointvector"
-        bounds = _bounds[0]
+        if len(_bounds) > 0:
+            bounds = _bounds[0]
+        else: 
+            bounds = []
+ 
 
         currentPath = list(paths[0]) # not as tuple, but as list
         currentPath.append(currentPath[0])
