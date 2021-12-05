@@ -108,8 +108,10 @@ class SvgPath:
         return clipper_path
 
     @classmethod
-    def fromClipperPath(cls, clipper_path: ClipperLib.IntPointVector) -> 'SvgPath':
+    def fromClipperPath(cls, prefix: str, clipper_path: ClipperLib.IntPointVector) -> 'SvgPath':
         '''
+        Note:
+            the path 'id' are quite important for the svg viewer
         '''
         discretized_svg_path : List[complex] = [ complex( \
                     pt.X / (ClipperUtils.inchToClipperScale / 25.4), 
@@ -124,7 +126,7 @@ class SvgPath:
 
             svg_path.append(svgpathtools.Line(start, end))
 
-        return SvgPath('clipper', {'d': svg_path.d()})
+        return SvgPath(prefix, {'d': svg_path.d()})
 
 
 class SvgTransformer:

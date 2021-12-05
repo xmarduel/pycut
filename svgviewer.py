@@ -233,3 +233,17 @@ class SvgViewer(QtWidgets.QGraphicsView):
         augmented_svg = transformer.augment_with_lines(svg_paths)
 
         self.fill_svg_viewer(augmented_svg)
+
+    def display_op(self, cnc_op):
+        '''
+        The list of svg_paths results of the toolpath calculation
+
+        The resulting svg_paths will the displayed in yellow together with the original svg
+        '''
+        transformer = SvgTransformer(self.svg)
+        augmented_svg = transformer.augment(cnc_op.geometry_svg_paths)
+
+        transformer = SvgTransformer(augmented_svg)
+        augmented_svg = transformer.augment_with_lines(cnc_op.cam_paths_svg_paths)
+
+        self.fill_svg_viewer(augmented_svg)

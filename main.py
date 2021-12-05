@@ -740,7 +740,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         for cnc_op in cnc_ops:
             if cnc_op.enabled:
-                self.svg_viewer.display_toolpaths_op(cnc_op.cam_paths_svg_paths)
+                self.svg_viewer.display_op(cnc_op)
 
 
 if __name__ == "__main__":

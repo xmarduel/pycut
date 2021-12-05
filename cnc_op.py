@@ -78,7 +78,7 @@ class CncOp:
         ClipperLib.dumpPaths("geometry", self.geometry)
 
         for clipper_path in self.geometry:
-            svg_path = SvgPath.fromClipperPath(clipper_path)
+            svg_path = SvgPath.fromClipperPath("geometry", clipper_path)
             self.geometry_svg_paths.append(svg_path)
 
     def calculate_toolpaths(self,  svgModel: SvgModel, toolModel: ToolModel, materialModel: MaterialModel):
@@ -118,7 +118,7 @@ class CncOp:
         #    self.toolPathSvg = self.cam_pathsGroup.path(path).attr("class", "toolPath")
 
         for cam_path in self.cam_paths:
-            svg_path = SvgPath.fromClipperPath(cam_path.path)
+            svg_path = SvgPath.fromClipperPath("campath", cam_path.path)
             self.cam_paths_svg_paths.append(svg_path)
 
 
