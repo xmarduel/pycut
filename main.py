@@ -515,7 +515,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         cnc_op.calculate_geometry()
 
         # 1- the gcode 'region'
-        self.svg_viewer.display_cnc_op(cnc_op.geometry_svg_paths)
+        self.svg_viewer.display_geometry_op(cnc_op.geometry_svg_paths)
 
         # 2- the gcode calculation and display
         # TODO
@@ -719,7 +719,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         cnc_op.setup(self.svg_viewer)
         cnc_op.calculate_geometry()
 
-        self.svg_viewer.display_cnc_op(cnc_op.geometry_svg_paths)
+        self.svg_viewer.display_geometry_op(cnc_op.geometry_svg_paths)
 
     def cb_generate_g_code(self):
         '''
@@ -736,7 +736,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         
         job = JobModel(self.svg_viewer, cnc_ops, materialModel, svgModel, toolModel, tabsmodel)
         generator = GcodeGenerator(job)
-        generator.generateGcode()
+        #generator.generateGcode()
+
+        for cnc_op in cnc_ops:
+            if cnc_op.enabled:
+                self.svg_viewer.display_toolpaths_op(cnc_op.cam_paths_svg_paths)
 
 
 if __name__ == "__main__":

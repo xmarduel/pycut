@@ -6,11 +6,10 @@ from ValWithUnit import ValWithUnit
 from svgpathutils import SvgPath
 from svgviewer import SvgViewer
 
-from cam import cam
-
 import clipper.clipper as ClipperLib
-import clipper_utils
 from clipper_utils import ClipperUtils
+
+from cam import cam
 
 from pycut import ToolModel
 from pycut import SvgModel
@@ -46,6 +45,9 @@ class CncOp:
         self.geometry_svg_paths : List[SvgPath] = []
 
         self.cam_paths = []
+        # and the resulting svg paths, to be displayed
+        # in the svg viewer
+        self.cam_paths_svg_paths : List[SvgPath] = []
 
     def setup(self, svg_viewer: SvgViewer):
         '''
@@ -114,6 +116,10 @@ class CncOp:
         
         #if path != None and len(path):
         #    self.toolPathSvg = self.cam_pathsGroup.path(path).attr("class", "toolPath")
+
+        for cam_path in self.cam_paths:
+            svg_path = SvgPath.fromClipperPath(cam_path.path)
+            self.cam_paths_svg_paths.append(svg_path)
 
 
 class JobModel:

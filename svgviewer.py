@@ -211,7 +211,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.scale(factor, factor)
         self.zoomChanged.emit()
 
-    def display_cnc_op(self, svg_paths: List[SvgPath]):
+    def display_geometry_op(self, svg_paths: List[SvgPath]):
         '''
         The list of svg_paths results of the operation 'combinaison' of the 
         svg selected path 'items' in the graphics view
@@ -220,5 +220,16 @@ class SvgViewer(QtWidgets.QGraphicsView):
         '''
         transformer = SvgTransformer(self.svg)
         augmented_svg = transformer.augment(svg_paths)
+
+        self.fill_svg_viewer(augmented_svg)
+
+    def display_toolpaths_op(self, svg_paths: List[SvgPath]):
+        '''
+        The list of svg_paths results of the toolpath calculation
+
+        The resulting svg_paths will the displayed in yellow together with the original svg
+        '''
+        transformer = SvgTransformer(self.svg)
+        augmented_svg = transformer.augment_with_lines(svg_paths)
 
         self.fill_svg_viewer(augmented_svg)

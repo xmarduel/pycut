@@ -160,8 +160,8 @@ class SvgTransformer:
             all_paths += '<path id="%s_%d" style="fill:#111111;stroke-width:0;stroke:#00ff00"  d="%s" />'  % (id, k, dd)
         
         svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
-                width="100"
-                height="100"
+                width="100mm"
+                height="100mm"
                 viewBox="0 0 100 100"
                 version="1.1">
                 <style>svg { background-color: green; }</style>
@@ -173,5 +173,44 @@ class SvgTransformer:
         print(svg)
         
         return svg
+
+    def augment_with_lines(self, svg_paths: List[SvgPath]) -> str:
+        '''
+        '''
+        all_paths = ""
+
+        for k, svg_path in enumerate(self.ini_svg_paths):
+            init_attrib = self.ini_attribs[k]
+
+            svg_attrs = ''
+            for key, value in init_attrib.items():
+                svg_attrs += ' %s="%s"' % (key, value)
+
+            all_paths += '<path %s />' % svg_attrs
+
+        for k, svg_path in enumerate(svg_paths):
+            id = svg_path.p_id
+            dd = svg_path.p_attrs['d']
+
+            all_paths += '<path id="%s_%d" style="fill:none;stroke-width:0.2;stroke:#00ff00"  d="%s" />'  % (id, k, dd)
+        
+        svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+                width="100mm"
+                height="100mm"
+                viewBox="0 0 100 100"
+                version="1.1">
+                <style>svg { background-color: green; }</style>
+                <g>
+                 %s
+                </g> 
+             </svg>''' % all_paths
+
+        print(svg)
+        
+        return svg
+
+
+
+
     
 
