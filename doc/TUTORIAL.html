@@ -60,28 +60,34 @@ for (var i = 0; i < tree.length; i++){
 web-based programm, that takes as input svg files and generates G-Code. So why
 this rewrite ?</p>
 
-<p>It begins as a "fun" project, in order to understand how a G-code generator
+<p>The true reason is: I wanted the spindle control (M3/M5) codes inside 
+the generated g-code. It is worth a rewrite!</p>
+
+<p>By the way,I began to use jscut because Easel (for beginners too),
+although free, makes limitations on the choices of the fonts (among others)
+- which is quite a shame...</p>
+
+<p>So it begins as a "fun" project, in order to understand how a G-code generator
 works, and how easy (or hard) it is to achieve. Well, it is not so easy.</p>
 
-<p>Infact, I began to use jscut because Easel, although free, makes limitations on the
-choices of the fonts (among others) - which is quite a shame...</p>
-
-<p>A second point is the major shortcoming of jsCut: the fact that it is a web
+<p>An other point is the "major" shortcoming of jsCut: the fact that it is a web
 application: sure for developpers who know javascript technology it is very
 productive, but how many users are able to improve jsCut on their own? only a
 few I guess: it is not as easy as one may think. This is due to my opinion to
-the fact javascript/htlm frameworks are just a pain to understand for people not
+the fact javascript/html frameworks are just a pain to understand for people not
 used to the web technologies (which by the way change lets say every 3 years...). 
 Traditional desktop applications are a lot easyier to hack (yes!)</p>
 
 <p>Web technologies change every 3 years? An example is jsCut itself, which is
 based on the "polymer" HTML framework. Who which is new to javascript has ever
-heard of this lib before?! And "polymer" is also based on so-called "html
-imports", which are in 2021 theoretically no more allowed... Consider jsCut GUI
-itself : how many html files/lines of code are neccessary to achieve the task,
-compared to, when written in python, only a few Qt Ui files for the design and
-the python main program having max 1000 lines of code? I believe too that the 
-rest of the python code is also quite easy to understand.</p>
+heard of this lib before?! It is even not that old! And "polymer" is also based on so-called "html
+imports", which are in 2022 theoretically no more allowed (as far as know)... 
+Consider jsCut GUI itself : how many html files/lines of code are neccessary 
+to achieve the task, compared to, when written in python, only a few Qt Ui files 
+for the design and the python main program having max 1000 lines of code? 
+(Ok,there are other files around)
+I believe as well that the rest of the python code is also much easier to understand
+than the jscut code. Nothing at all against jscut, it is just the web stuff.</p>
 
 <p>So PyCut is written in python, with the GUI with PySide6. Hopefully there
 will be users that will be able to contribute. There is a developper doc for 
@@ -90,10 +96,15 @@ this purpose (TODO)</p>
 <p>The excellent things from jsCut are (among others):</p>
 <ul>
   <li>a great svg viewer, with an API to add svg path(s) to the viewer content
-    -the gcode "paths" are the added path to the initial geometry-</li>
+    -the gcode "paths" are the added path to the initial geometry-
+	<ul>
+	  <li>in black the regions of the geometry that will be affected</li>
+	  <li>the toolpaths as well</li>
+	</ul>
+  </li>
   <li>a great gcode viewer -in webgl-</li>
-  <li>the c++ CAM stuff: hopefully a swig wrapper or something equivalent is
-    feasible</li>
+  <li>the CAM stuff, based on the Clipper library as well as some c++ code with js wrapper:
+     hopefully a swig wrapper or something equivalent is feasible</li>
 </ul>
 
 <p>So the idea is the following:</p>
@@ -102,27 +113,32 @@ this purpose (TODO)</p>
     style="color:#00ff00"><span style="color:#00a000">DONE</span></span><span
     style="background-color:#00ff00"></span></li>
   <li>in PySide, display the SVG viewer stuff (QGraphicsView with SvgItem) <span 
-    style="color:#00a000">DONE (well, the op. Union/Interect etc. only)</span></span></li>
+    style="color:#00a000">IN PROGRESS (the op. Combinaisons, geometry previews
+	as well as the toolpaths)</span></span></li>
   <li>Rest of the MainWindow in PySide <span
-  style="color:#00a000">DONE (nearly)</span></li>
-  <li>G-Code Generation with interface to the C++ CAM interface (lot of js code to understand) <span
+  style="color:#00a000">DONE (nearly, still table of ops to improve)</span></li>
+  <li>G-Code Generation (lot of js code to understand) <span
+    style="color:#ff0080">IN PROGRESS</span></li>
+  <li>Toolpaths for engrave and vPocket operations (nothing done at this point)<span
     style="color:#ff0080">TODO</span></li>
+  <li>G-Code generation with spindle control (actually absent in jsCut -wow! what a feature!-) <span
+    style="color:#00a000">DONE</span></li>
 </ul>
 
 <p>After that</p>
 <ul>
+  <li>Tabs handling<span style="color:#ff0080">TODO</span></li>
   <li>Migrating WebGL stuff to "native" python (QGraphicsView I guess, or PyOpenGL ?) <span
     style="color:#ff0080">TODO</span></li>
 </ul>
 
 <p>Nice to have:</p>
 <ul>
-  <li>G-Code generation with spindle control (actually absent in jsCut) <span
-    style="color:#00a000">DONE</span></li>
   <li>Similar feature as in LaserWeb-4 for <strong>SVG structure
     viewer</strong><strong> / SVG viewer</strong> <span
     style="color:#ff0080"></span><span style="color:#ff0080">TODO</span></li>
 </ul>
+
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
