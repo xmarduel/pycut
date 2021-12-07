@@ -5,9 +5,9 @@
    version="1.1">
    <style>svg { background-color: green; }</style>
   <g>
-    <path id="rect10"
+    <path id="rect1"
        style="fill:#d40000;stroke-width:0.328797"
-       d="M 20,20 H 60 V 80 H 20 Z" />
+       d="M 20,20 H 60 V 60 H 20 Z" />
   </g>
 </svg>
 

@@ -18,6 +18,7 @@
 import math
 
 from typing import List
+from ValWithUnit import ValWithUnit
 
 import clipper_utils
 import clipper.clipper as ClipperLib
@@ -34,7 +35,7 @@ class CamPath:
         # clipper path
         self.path = path
         # is it safe to close the path without retracting?
-        self.safeToClase = safeToClose
+        self.safeToClose = safeToClose
 
 
 class cam:
@@ -389,10 +390,10 @@ class cam:
         cutFeedGcode = ' F%d' % args["cutFeed"]
         rapidFeedGcode = ' F%d' % args["rapidFeed"]
 
-        plungeFeed = ' F%d' % args["plungeFeed"]
-        retractFeed = ' F%d' % args["retractFeed"]
-        cutFeed = ' F%d' % args["cutFeed"]
-        rapidFeed = ' F%d' % args["rapidFeed"]
+        plungeFeed = args["plungeFeed"]
+        retractFeed = args["retractFeed"]
+        cutFeed = args["cutFeed"]
+        rapidFeed = args["rapidFeed"]
 
         tabGeometry = args["tabGeometry"]
         tabZ = args["tabZ"]
@@ -407,10 +408,10 @@ class cam:
         gcode = ""
 
         retractGcode = '; Retract\r\n' + \
-            'G1 Z' + safeZ.toFixed(decimal) + '{rapidFeedGcode} \r\n'
+            f'G1 Z' + safeZ.toFixed(decimal) + f'{rapidFeedGcode} \r\n'
 
         retractForTabGcode = '; Retract for tab\r\n' + \
-            'G1 Z' + tabZ.toFixed(decimal) + '{rapidFeedGcode} \r\n'
+            f'G1 Z' + tabZ.toFixed(decimal) + f'{rapidFeedGcode} \r\n'
 
         def getX(p: ClipperLib.IntPoint) :
             return p.X * scale + offsetX
@@ -419,9 +420,10 @@ class cam:
             return -p.Y * scale + offsetY
 
         def convertPoint(p: ClipperLib.IntPoint):
-            result = ' X' + (p.X * scale + offsetX).toFixed(decimal) + ' Y' + (-p.Y * scale + offsetY).toFixed(decimal)
+            result = ' X' + ValWithUnit(p.X * scale + offsetX, "-").toFixed(decimal) +  \
+                     ' Y' + ValWithUnit(-p.Y * scale + offsetY, "-").toFixed(decimal)
             if useZ:
-                result += ' Z' + (p.Z * scale + topZ).toFixed(decimal)
+                result += ' Z' + ValWithUnit(p.Z * scale + topZ, "-").toFixed(decimal)
             return result
 
         for pathIndex, path in enumerate(paths):
@@ -431,25 +433,25 @@ class cam:
             separatedPaths = cls.separateTabs(origPath, tabGeometry)
 
             gcode += \
-                '\r\n' + \
-                '; Path ' + pathIndex + '\r\n'
+                f'\r\n' + \
+                f'; Path  {pathIndex} \r\n'
 
             currentZ = safeZ
             finishedZ = topZ
             while finishedZ > botZ:
-                nextZ = math.max(finishedZ - passDepth, botZ)
-                if (currentZ < safeZ and ((not path.safeToClose) or tabGeometry.length > 0)) :
+                nextZ = max(finishedZ - passDepth, botZ)
+                if (currentZ < safeZ and ((not path.safeToClose) or len(tabGeometry) > 0)) :
                     gcode += retractGcode
                     currentZ = safeZ
 
                 if len(tabGeometry)== 0:
                     currentZ = finishedZ
                 else:
-                    currentZ = math.max(finishedZ, tabZ)
+                    currentZ = max(finishedZ, tabZ)
                 
                 gcode += '; Rapid to initial position\r\n' + \
                     'G1' + convertPoint(origPath[0]) + rapidFeedGcode + '\r\n' + \
-                    'G1 Z' + currentZ.toFixed(decimal) + '\r\n'
+                    'G1 Z' + ValWithUnit(currentZ, "-").toFixed(decimal) + '\r\n'
 
                 if nextZ >= tabZ or useZ:
                     selectedPaths = [origPath]
@@ -478,26 +480,35 @@ class cam:
 
                                     pt1 = selectedPath[end - 1]
                                     pt2 = selectedPath[end]
-                                    totalDist += 2 * cam.distP(pt1, pt2)
+                                    totalDist += 2 * cam.dist(getX(pt1), getY(pt1), getX(pt2), getY(pt2))
                                 
                                 if totalDist > 0:
                                     gcode += '; ramp\r\n'
                                     executedRamp = True
-                                    rampPath = selectedPath.slice(0, end).concat(selectedPath.slice(0, end - 1).reverse())
+                                    # XAM [1,2,3,4,5] -> [1,2,3,2,1]
+                                    #rampPath = selectedPath.slice(0, end)
+                                    rampPath = [ selectedPath[k] for k in range(0,end) ] 
+
+                                    #rampPathEnd = selectedPath.slice(0, end - 1).reverse()
+                                    rampPathEnd = [ selectedPath[k] for k in range(end,len(selectedPath)) ]
+                                    rampPathEnd.reverse()
+
+                                    rampPath = rampPath + rampPathEnd
+                                
                                     distTravelled = 0
                                     for i in range(1,len(rampPath)):
                                         distTravelled += cam.dist(getX(rampPath[i - 1]), getY(rampPath[i - 1]), getX(rampPath[i]), getY(rampPath[i]))
                                         newZ = currentZ + distTravelled / totalDist * (selectedZ - currentZ)
-                                        gcode += 'G1' + convertPoint(rampPath[i]) + ' Z' + newZ.toFixed(decimal)
+                                        gcode += 'G1' + convertPoint(rampPath[i]) + ' Z' + ValWithUnit(newZ, "-").toFixed(decimal)
                                         if i == 1:
-                                            gcode += ' F' + math.min(totalDist / minPlungeTime, cutFeed).toFixed(decimal) + '\r\n'
+                                            gcode += ' F' + ValWithUnit(min(totalDist / minPlungeTime, cutFeed), "-").toFixed(decimal) + '\r\n'
                                         else:
                                             gcode += '\r\n' 
 
                             if not executedRamp:
                                 gcode += \
                                     '; plunge\r\n' + \
-                                    'G1 Z' + selectedZ.toFixed(decimal) + plungeFeedGcode + '\r\n'
+                                    'G1 Z' + ValWithUnit(selectedZ, "-").toFixed(decimal) + plungeFeedGcode + '\r\n'
                         elif selectedZ > currentZ:
                             gcode += retractForTabGcode
                         
@@ -505,7 +516,7 @@ class cam:
 
                     gcode += '; cut\r\n'
 
-                    for point in selectedPath:
+                    for i, point in enumerate(selectedPath):
                         gcode += 'G1' + convertPoint(point)
                         if i == 1:
                             gcode += cutFeedGcode + '\r\n'

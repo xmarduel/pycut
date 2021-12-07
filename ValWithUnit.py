@@ -19,6 +19,10 @@ class ValWithUnit(float):
         cls.units = units
         return x
 
+    def __init__(self, value, units):
+        self.value = value
+        self.units = units
+        
     def toInch(self):
         if self.units == "inch":
             return ValWithUnit(self, "inch")

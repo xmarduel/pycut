@@ -49,9 +49,9 @@ class UnitConverter:
         Convert x from inch to the current unit
         '''
         if self.units == "inch":
-            return x
+            return ValWithUnit(x, "inch")
         else:
-            return x * 25.4
+            return ValWithUnit(x * 25.4, "mm")
 
 class GcodeModel:
     '''
@@ -584,7 +584,7 @@ class GcodeGenerator:
         passDepth = self.unitConverter.fromInch(self.toolModel.passDepth.toInch())
         topZ = self.unitConverter.fromInch(self.materialModel.matTopZ.toInch())
         tabCutDepth = self.unitConverter.fromInch(self.tabsModel.maxCutDepth.toInch())
-        tabZ = topZ - tabCutDepth
+        tabZ = ValWithUnit(topZ - tabCutDepth, self.gcodeModel.units) # CHEKME
 
         if self.units == "inch":
             scale = 1 / ClipperUtils.inchToClipperScale
@@ -603,29 +603,29 @@ class GcodeGenerator:
             gcode += "G20         ; Set units to inches\r\n"
         else:
             gcode += "G21         ; Set units to mm\r\n"
-        gcode += "G90         ; Absolute positioning\r\n"
-        gcode += "G1 Z {safeZ}  F   {rapidRate}      ; Move to clearance level\r\n"
+        gcode += f"G90         ; Absolute positioning\r\n"
+        gcode += f"G1 Z {safeZ}  F {rapidRate}      ; Move to clearance level\r\n"
 
         if self.gcodeModel.spindleControl:
-            gcode += "\r\n; Start the spindle\r\n"
-            gcode += "M3 S{self.gcodeModel.spindleSpeed}\r\n"
+            gcode += f"\r\n; Start the spindle\r\n"
+            gcode += f"M3 S{self.gcodeModel.spindleSpeed}\r\n"
 
         for idx, cnc_op in enumerate(cnc_ops):
             cutDepth = self.unitConverter.fromInch(cnc_op.cutDepth.toInch())
 
             nb_paths = len(cnc_op.cam_paths)  # in use!
 
-            gcode += "\r\n;"
-            gcode += "\r\n; Operation:    {idx}"
-            gcode += "\r\n; Name:         {cnc_op.name}"
-            gcode += "\r\n; Type:         {cnc_op.cam_op}"
-            gcode += "\r\n; Paths:        {nb_paths}"
-            gcode += "\r\n; Direction:    {cnc_op.direction}"
-            gcode += "\r\n; Cut Depth:    {cutDepth}"
-            gcode += "\r\n; Pass Depth:   {passDepth}"
-            gcode += "\r\n; Plunge rate:  {plungeRate}"
-            gcode += "\r\n; Cut rate:     {cutRate}"
-            gcode += "\r\n;\r\n"
+            gcode += f"\r\n;"
+            gcode += f"\r\n; Operation:    {idx}"
+            gcode += f"\r\n; Name:         {cnc_op.name}"
+            gcode += f"\r\n; Type:         {cnc_op.cam_op}"
+            gcode += f"\r\n; Paths:        {nb_paths}"
+            gcode += f"\r\n; Direction:    {cnc_op.direction}"
+            gcode += f"\r\n; Cut Depth:    {cutDepth}"
+            gcode += f"\r\n; Pass Depth:   {passDepth}"
+            gcode += f"\r\n; Plunge rate:  {plungeRate}"
+            gcode += f"\r\n; Cut rate:     {cutRate}"
+            gcode += f"\r\n;\r\n"
 
             gcode += cam.getGcode({
                 "paths":          cnc_op.cam_paths,
@@ -648,12 +648,12 @@ class GcodeGenerator:
             })
 
         if self.gcodeModel.spindleControl:
-            gcode += "\r\n; Stop the spindle\r\n"
-            gcode += "M5 \r\n"
+            gcode += f"\r\n; Stop the spindle\r\n"
+            gcode += f"M5 \r\n"
 
         if self.gcodeModel.returnTo00:
-            gcode += "\r\n; Return to 0,0\r\n"
-            gcode += "G0 X0 Y0 F  {rapidRate} \r\n"
+            gcode += f"\r\n; Return to 0,0\r\n"
+            gcode += f"G0 X0 Y0 F {rapidRate} \r\n"
 
         self.gcode = gcode
 

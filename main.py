@@ -145,6 +145,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         gcode = fp.read()
         fp.close()
 
+        self.display_gcode(gcode)
+
+    def display_gcode(self, gcode: str):
+        '''
+        display gcode in webgl!
+        '''
         simulator_data =  {
             "width": "400",
             "height" : "400",
@@ -713,9 +719,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def display_operation_on_svg_canvas(self, operation):
         '''
         '''
+        toolModel = ToolModel() 
+
         cnc_op = CncOp(operation)
         cnc_op.setup(self.svg_viewer)
-        cnc_op.calculate_geometry()
+        cnc_op.calculate_geometry(toolModel)
 
         self.svg_viewer.display_geometry_op(cnc_op.geometry_svg_paths)
 
@@ -758,7 +766,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         
         job = JobModel(self.svg_viewer, cnc_ops, materialModel, svgModel, toolModel, tabsmodel, gcodeModel)
         generator = GcodeGenerator(job)
-        #generator.generateGcode()
+        generator.generateGcode()
+
+        gcode = generator.gcode
+        print(gcode)
+        self.display_gcode(gcode)
 
         for cnc_op in cnc_ops:
             if cnc_op.enabled:
