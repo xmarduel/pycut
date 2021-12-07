@@ -3,7 +3,7 @@ clone of jscut  in python - only the very beginning
 
 
 what is currently working:
-- read "config" files : so called job file with all settings -> GUI updated
+- read "config" files : so called job file with all settings and ops
 - select 1 op  in the list and "generate" Gcode -> toolpaths OK for
    + pocket   YES
    + outside  YES
