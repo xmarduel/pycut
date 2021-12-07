@@ -251,7 +251,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "GCodeGeneration" : {
                 "ReturnToZeroAtEnd" : self.window.checkBox_GCodeGeneration_ReturnToZeroAtEnd.isChecked(),
                 "SpindleAutomatic"  : self.window.checkBox_GCodeGeneration_SpindleAutomatic.isChecked(),
-                "SpindleSpeed"      : self.window.checkBox_GCodeGeneration_SpindleSpeed.value(),
+                "SpindleSpeed"      : self.window.spinBox_GCodeGeneration_SpindleSpeed.value(),
             }
         }
         

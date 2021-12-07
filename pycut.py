@@ -367,7 +367,7 @@ class CncOp:
 
         # should have 2 paths, one inner, one outer -> show the "ring"
         if len(self.preview_geometry) > 1:
-            self.geometry_svg_paths = SvgPath.fromClipperPaths("geometry_inside", self.preview_geometry)
+            self.geometry_svg_paths = [SvgPath.fromClipperPaths("geometry_inside", self.preview_geometry)]
 
     def calculate_preview_geometry_outside(self, toolModel: ToolModel):
         '''
@@ -392,7 +392,7 @@ class CncOp:
 
         # should have 2 paths, one inner, one outer -> show the "ring"
         if len(self.preview_geometry) > 1:
-            self.geometry_svg_paths = SvgPath.fromClipperPaths("geometry_outside", self.preview_geometry)
+            self.geometry_svg_paths = [SvgPath.fromClipperPaths("geometry_outside", self.preview_geometry)]
 
     def calculate_preview_geometry_engrave(self):
         '''
