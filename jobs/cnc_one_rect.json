@@ -35,6 +35,16 @@
       "Units": "inch",
       "Margin": 0.0,
       "Width": 0.0
+    },
+    {
+      "Name": "op4",
+      "paths": ["r1"],
+      "type": "Engrave",
+      "Deep": 0.5,       
+      "RampPlunge": true,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "inch"
     }
   ],
   "settings" : {

@@ -126,8 +126,8 @@ class cam:
         Returns array of CamPath.
         '''
         allPaths = []
-        for paths in geometry:
-            path = clipper_utils.ClipperUtils.clone_intpointvector(paths[0])  # JSCUT: path = paths.slice(0)
+        for xpath in geometry:
+            path = clipper_utils.ClipperUtils.clone_intpointvector(xpath)  # JSCUT: path = paths.slice(0)
             if not climb:
                 path.reverse()
             path.append(path[0])
@@ -222,7 +222,7 @@ class cam:
         Returns array of CamPath.
         '''
         # strange, transform all these "PathVector" in "IntPointvector"
-        if len(_bounds) > 0:
+        if _bounds and len(_bounds) > 0:
             bounds = _bounds[0]
         else: 
             bounds = []

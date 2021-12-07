@@ -268,7 +268,11 @@ class CncOp:
         self.cam_op = self.operation["type"]
         self.direction = self.operation["Direction"]
         self.cutDepth = ValWithUnit(self.operation["Deep"], self.units)
-        self.margin = ValWithUnit(self.operation["Margin"], self.units)
+
+        if "Margin" in self.operation:
+            self.margin = ValWithUnit(self.operation["Margin"], self.units)
+        else:
+            self.margin = None
 
         if "Width" in self.operation:
             self.width = ValWithUnit(self.operation["Width"], self.units)
@@ -397,7 +401,9 @@ class CncOp:
     def calculate_preview_geometry_engrave(self):
         '''
         '''
-        pass
+        for clipper_path in self.geometry:
+            svg_path = SvgPath.fromClipperPath("geometry_engrave", clipper_path)
+            self.geometry_svg_paths.append(svg_path)
 
     def calculate_preview_geometry_vpocket(self):
         '''
@@ -418,8 +424,11 @@ class CncOp:
         width = self.width
 
         geometry = self.geometry
-        offset = margin.toInch() * ClipperUtils.inchToClipperScale
+        
+        offset = 0
+        
         if cam_op == "Pocket" or cam_op == "V Pocket" or cam_op == "Inside":
+            offset = margin.toInch() * ClipperUtils.inchToClipperScale
             offset = -offset
         if cam_op != "Engrave" and offset != 0:
             geometry = ClipperUtils.offset(geometry, offset)

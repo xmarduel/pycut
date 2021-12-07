@@ -21,6 +21,14 @@ namespace std
 //%rename(IntPoint_eq) operator==(IntPoint, IntPoint);
 
 
+
+%extend std::vector<ClipperLib::IntPoint>{
+    void reverse() {
+        std::reverse((*self).begin(), (*self).end());
+    }
+}
+
+
 %pythoncode %{
 
 class ClipType:

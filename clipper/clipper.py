@@ -467,6 +467,9 @@ class IntPointVector(object):
 
     def capacity(self):
         return _clipper.IntPointVector_capacity(self)
+
+    def reverse(self):
+        return _clipper.IntPointVector_reverse(self)
     __swig_destroy__ = _clipper.delete_IntPointVector
 
 # Register IntPointVector in _clipper:

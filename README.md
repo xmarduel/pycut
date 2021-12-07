@@ -8,7 +8,7 @@ what is currently working:
    + pocket   YES
    + outside  YES
    + inside   YES
-   + engrave   NO
+   + engrave  YES
    + vPocket   NO
 - svg items selection and new op with combinaison (geometry calculated)
 
