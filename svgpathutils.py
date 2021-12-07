@@ -152,7 +152,7 @@ class SvgPath:
 
                 svg_path.append(svgpathtools.Line(start, end))
 
-        return SvgPath(prefix, {'d': svg_path.d()})
+        return SvgPath(prefix, {'d': svg_path.d(), 'fill-rule': 'evenodd'})
 
 
 class SvgTransformer:
@@ -185,8 +185,14 @@ class SvgTransformer:
         for k, svg_path in enumerate(svg_paths):
             id = svg_path.p_id
             dd = svg_path.p_attrs['d']
+            
+            if 'fill-rule' in svg_path.p_attrs:
+                path = '<path id="%s_%d" style="fill:#111111;stroke-width:0;stroke:#00ff00;fill-rule:%s;"  d="%s" />' % (id, k, svg_path.p_attrs['fill-rule'], dd)
+            else:
+                path = '<path id="%s_%d" style="fill:#111111;stroke-width:0;stroke:#00ff00"  d="%s" />' % (id, k, dd)
 
-            all_paths += '<path id="%s_%d" style="fill:#111111;stroke-width:0;stroke:#00ff00"  d="%s" />'  % (id, k, dd)
+
+            all_paths += path + '\r\n'
         
         root = ET.fromstring(self.svg)
         root_attrib = root.attrib
@@ -200,7 +206,7 @@ class SvgTransformer:
                 <g>
                  %s
                 </g> 
-             </svg>''' % (root_attrib["width"], root_attrib["height"], root_attrib["viewBox"],  all_paths)
+             </svg>''' % (root_attrib["width"], root_attrib["height"], root_attrib["viewBox"], all_paths)
 
         print(svg)
         
@@ -224,7 +230,7 @@ class SvgTransformer:
             id = svg_path.p_id
             dd = svg_path.p_attrs['d']
 
-            all_paths += '<path id="%s_%d" style="fill:none;stroke-width:0.2;stroke:#00ff00"  d="%s" />'  % (id, k, dd)
+            all_paths += '<path id="%s_%d" style="fill:none;stroke-width:0.2;stroke:#00ff00"  d="%s" />' % (id, k, dd)
         
         root = ET.fromstring(self.svg)
         root_attrib = root.attrib
