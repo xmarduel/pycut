@@ -75,46 +75,6 @@ class cam:
         return cls.mergePaths(bounds, allPaths)
 
     @classmethod
-    def hspocket(cls, geometry: ClipperLib.PathVector, cutterDia: float, overlap: float, climb: bool) -> List[CamPath] :
-        '''
-        Compute paths for pocket operation on Clipper geometry. 
-        
-        Returns array of CamPath. 
-        
-        cutterDia is in Clipper units. 
-        overlap is in the range [0, 1).
-        '''
-        
-        return []
-        '''
-        memoryBlocks = []
-
-        cGeometry = jscut.priv.path.convertPathsToCpp(memoryBlocks, geometry)
-
-        resultPathsRef = Module._malloc(4)
-        resultNumPathsRef = Module._malloc(4)
-        resultPathSizesRef = Module._malloc(4)
-        memoryBlocks.push(resultPathsRef)
-        memoryBlocks.push(resultNumPathsRef)
-        memoryBlocks.push(resultPathSizesRef)
-
-        #extern "C" void hspocket(
-        #    double** paths, int numPaths, int* pathSizes, double cutterDia,
-        #    double**& resultPaths, int& resultNumPaths, int*& resultPathSizes)
-        Module.ccall(
-            'hspocket',
-            'void', ['number', 'number', 'number', 'number', 'number', 'number', 'number'],
-            [cGeometry[0], cGeometry[1], cGeometry[2], cutterDia, resultPathsRef, resultNumPathsRef, resultPathSizesRef]);self
-
-        result = jscut.priv.path.convertPathsFromCppToCamPath(memoryBlocks, resultPathsRef, resultNumPathsRef, resultPathSizesRef);
-
-        for i in range(len(memoryBlocks)):
-            Module._free(memoryBlocks[i])
-
-        return result
-        '''
-
-    @classmethod
     def outline(cls, geometry: ClipperLib.PathVector, cutterDia: float, isInside: bool, width: float, overlap: float, climb: bool) -> List[CamPath] :
         '''
         Compute paths for outline operation on Clipper geometry. 
@@ -178,6 +138,46 @@ class cam:
             campath.safeToClose = True
         return campaths
 
+    @classmethod
+    def hspocket(cls, geometry: ClipperLib.PathVector, cutterDia: float, overlap: float, climb: bool) -> List[CamPath] :
+        '''
+        Compute paths for pocket operation on Clipper geometry. 
+        
+        Returns array of CamPath. 
+        
+        cutterDia is in Clipper units. 
+        overlap is in the range [0, 1).
+        '''
+        
+        return []
+        '''
+        memoryBlocks = []
+
+        cGeometry = jscut.priv.path.convertPathsToCpp(memoryBlocks, geometry)
+
+        resultPathsRef = Module._malloc(4)
+        resultNumPathsRef = Module._malloc(4)
+        resultPathSizesRef = Module._malloc(4)
+        memoryBlocks.push(resultPathsRef)
+        memoryBlocks.push(resultNumPathsRef)
+        memoryBlocks.push(resultPathSizesRef)
+
+        #extern "C" void hspocket(
+        #    double** paths, int numPaths, int* pathSizes, double cutterDia,
+        #    double**& resultPaths, int& resultNumPaths, int*& resultPathSizes)
+        Module.ccall(
+            'hspocket',
+            'void', ['number', 'number', 'number', 'number', 'number', 'number', 'number'],
+            [cGeometry[0], cGeometry[1], cGeometry[2], cutterDia, resultPathsRef, resultNumPathsRef, resultPathSizesRef]);self
+
+        result = jscut.priv.path.convertPathsFromCppToCamPath(memoryBlocks, resultPathsRef, resultNumPathsRef, resultPathSizesRef);
+
+        for i in range(len(memoryBlocks)):
+            Module._free(memoryBlocks[i])
+
+        return result
+        '''
+        
     @classmethod
     def vPocket(cls, geometry: ClipperLib.PathVector, cutterAngle:float, passDepth:float, maxDepth: float) -> List[CamPath] :
         if cutterAngle <= 0 or cutterAngle >= 180:

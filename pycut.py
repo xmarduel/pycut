@@ -301,21 +301,7 @@ class CncOp:
 
             self.svg_paths.append(svg_path)
    
-    def calculate_geometry(self, toolModel: ToolModel):
-        '''
-        '''
-        if self.cam_op == "Pocket":
-            self.calculate_geometry_pocket()
-        elif self.cam_op == "Inside":
-            self.calculate_geometry_inside(toolModel)
-        elif self.cam_op == "Outside":
-            self.calculate_geometry_outside(toolModel)
-        elif self.cam_op == "Engrave":
-            self.calculate_geometry_engrave()
-        elif self.cam_op == "VPocket":
-            self.calculate_geometry_vpocket()
-
-    def calculate_geometry_pocket(self):
+    def combine(self):
         '''
         '''
         for svg_path in self.svg_paths:
@@ -332,27 +318,33 @@ class CncOp:
         self.geometry = ClipperUtils.combine(self.clipper_paths, clipType)
 
         ClipperLib.dumpPaths("geometry", self.geometry)
+        
+    def calculate_geometry(self, toolModel: ToolModel):
+        '''
+        '''
+        self.combine()
 
+        if self.cam_op == "Pocket":
+            self.calculate_preview_geometry_pocket()
+        elif self.cam_op == "Inside":
+            self.calculate_preview_geometry_inside(toolModel)
+        elif self.cam_op == "Outside":
+            self.calculate_preview_geometry_outside(toolModel)
+        elif self.cam_op == "Engrave":
+            self.calculate_preview_geometry_engrave()
+        elif self.cam_op == "VPocket":
+            self.calculate_preview_geometry_vpocket()
+
+    def calculate_preview_geometry_pocket(self):
+        '''
+        '''
         for clipper_path in self.geometry:
             svg_path = SvgPath.fromClipperPath("geometry", clipper_path)
             self.geometry_svg_paths.append(svg_path)
 
-    def calculate_geometry_inside(self, toolModel: ToolModel):
+    def calculate_preview_geometry_inside(self, toolModel: ToolModel):
         '''
         '''
-        for svg_path in self.svg_paths:
-            clipper_path = svg_path.toClipperPath()
-            self.clipper_paths.append(clipper_path)
-
-        clipType = {
-            "Union": ClipperLib.ClipType.ctUnion,
-            "Intersection": ClipperLib.ClipType.ctIntersection,
-            "Difference": ClipperLib.ClipType.ctDifference,
-            "Xor": ClipperLib.ClipType.ctXor,
-        } [self.operation["Combine"]] 
-        
-        self.geometry = ClipperUtils.combine(self.clipper_paths, clipType)
-
         if len(self.geometry) != 0:
             offset = self.margin.toInch() * ClipperUtils.inchToClipperScale
             offset = -offset
@@ -373,26 +365,13 @@ class CncOp:
 
             ClipperLib.dumpPaths("geometry", self.preview_geometry)
 
-        for clipper_path in self.preview_geometry:
-            svg_path = SvgPath.fromClipperPath("geometry", clipper_path)
-            self.geometry_svg_paths.append(svg_path)
+        # should have 2 paths, one inner, one outer -> show the "ring"
+        if len(self.preview_geometry) > 1:
+            self.geometry_svg_paths = SvgPath.fromClipperPaths("geometry", self.preview_geometry)
 
-    def calculate_geometry_outside(self, toolModel: ToolModel):
+    def calculate_preview_geometry_outside(self, toolModel: ToolModel):
         '''
         '''
-        for svg_path in self.svg_paths:
-            clipper_path = svg_path.toClipperPath()
-            self.clipper_paths.append(clipper_path)
-
-        clipType = {
-            "Union": ClipperLib.ClipType.ctUnion,
-            "Intersection": ClipperLib.ClipType.ctIntersection,
-            "Difference": ClipperLib.ClipType.ctDifference,
-            "Xor": ClipperLib.ClipType.ctXor,
-        } [self.operation["Combine"]] 
-        
-        self.geometry = ClipperUtils.combine(self.clipper_paths, clipType)
-
         if len(self.geometry) != 0:
             offset = self.margin.toInch() * ClipperUtils.inchToClipperScale
            
@@ -411,16 +390,16 @@ class CncOp:
 
             ClipperLib.dumpPaths("geometry", self.preview_geometry)
 
-        for clipper_path in self.preview_geometry:
-            svg_path = SvgPath.fromClipperPath("geometry", clipper_path)
-            self.geometry_svg_paths.append(svg_path)
+        # should have 2 paths, one inner, one outer -> show the "ring"
+        if len(self.preview_geometry) > 1:
+            self.geometry_svg_paths = SvgPath.fromClipperPaths("geometry", self.preview_geometry)
 
-    def calculate_geometry_engrave(self):
+    def calculate_preview_geometry_engrave(self):
         '''
         '''
         pass
 
-    def calculate_geometry_vpocket(self):
+    def calculate_preview_geometry_vpocket(self):
         '''
         '''
         pass

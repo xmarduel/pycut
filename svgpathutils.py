@@ -128,6 +128,32 @@ class SvgPath:
 
         return SvgPath(prefix, {'d': svg_path.d()})
 
+    @classmethod
+    def fromClipperPaths(cls, prefix: str, clipper_paths: ClipperLib.PathVector) -> 'SvgPath':
+        '''
+        Note:
+            only 1 path "def" consisting of 2 or more lines
+            the interior can be be filled in color
+        '''
+        discretized_svg_paths = []
+        for clipper_path in clipper_paths:
+            discretized_svg_path : List[complex] = [ complex( \
+                    pt.X / (ClipperUtils.inchToClipperScale / 25.4), 
+                    pt.Y / (ClipperUtils.inchToClipperScale / 25.4)) for pt in clipper_path]
+            
+            discretized_svg_paths.append(discretized_svg_path)
+
+        svg_path = svgpathtools.Path()
+
+        for discretized_svg_path in discretized_svg_paths:
+            for i in range(len(discretized_svg_path)-1):
+                start = discretized_svg_path[i]
+                end   = discretized_svg_path[i+1]
+
+                svg_path.append(svgpathtools.Line(start, end))
+
+        return SvgPath(prefix, {'d': svg_path.d()})
+
 
 class SvgTransformer:
     '''
