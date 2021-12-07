@@ -9,12 +9,14 @@ from PySide6 import QtWidgets
 
 from PySide6.QtCore import QFile
 from PySide6.QtUiTools import QUiLoader
+from ValWithUnit import ValWithUnit
 
 import svgviewer
 import webglviewer
 import material_widget
 import operations_simpletablewidget
 
+from pycut import GcodeModel
 from pycut import ToolModel
 from pycut import SvgModel
 from pycut import MaterialModel
@@ -563,7 +565,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
     def display_op_at_row(self, row):
         '''
-        callback on row selection
+        callback on row selection  FIXME: should be on "set active"
         '''
         operation = self.operations[row]
         
@@ -725,12 +727,36 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             cnc_op = CncOp(op)  
             cnc_ops.append(cnc_op)
 
+        settings = self.get_current_settings()
+
         materialModel = MaterialModel()
+        #materialModel.matUnits = settings["Material"]["Units"]
+        #materialModel.matThickness = ValWithUnit(1.0, materialModel.matUnits)
+        #materialModel.matZOrigin = settings["Material"]["ZOrigin"]
+        #materialModel.matClearance = ValWithUnit(0.1, materialModel.matUnits)
+        gcodeModel = GcodeModel()
+        #gcodeModel.units = settings["GCodeConversion"]["Units"]
+        #gcodeModel.ZeroLowerLeft = settings["GCodeConversion"]["ZeroLowerLeft"]
+        #gcodeModel.ZeroCenter = settings["GCodeConversion"]["ZeroCenter"]
+        #gcodeModel.XOffset = settings["GCodeConversion"]["XOffset"]
+        #gcodeModel.YOffset = settings["GCodeConversion"]["YOffset"]
+        #gcodeModel.returnTo00 = settings["GCodeGeneration"]["ReturnToZeroAtEnd"]
+        #gcodeModel.spindleControl = settings["GCodeGeneration"]["SpindleAutomatic"]
+        #gcodeModel.spindleSpeed = settings["GCodeGeneration"]["SpindleSpeed"]
         svgModel = SvgModel()
+        #svgModel.pxPerInch = 96
         toolModel = ToolModel()
+        #toolModel.units = settings["Tool"]["Units"]
+        #toolModel.diameter = ValWithUnit(settings["Tool"]["Diameter"], toolModel.units)
+        #toolModel.angle = settings["Tool"]["Angle"]
+        #toolModel.passDepth = ValWithUnit(settings["Tool"]["PassDepth"], toolModel.units)
+        #toolModel.stepover = settings["Tool"]["StepOver"]
+        #toolModel.rapidRate = ValWithUnit(settings["Tool"]["Rapid"], toolModel.units)
+        #toolModel.plungeRate = ValWithUnit(settings["Tool"]["Plunge"], toolModel.units)
+        #toolModel.cutRate = ValWithUnit(settings["Tool"]["Cut"], toolModel.units)
         tabsmodel = TabsModel(svgModel, materialModel, None, None)
         
-        job = JobModel(self.svg_viewer, cnc_ops, materialModel, svgModel, toolModel, tabsmodel)
+        job = JobModel(self.svg_viewer, cnc_ops, materialModel, svgModel, toolModel, tabsmodel, gcodeModel)
         generator = GcodeGenerator(job)
         #generator.generateGcode()
 

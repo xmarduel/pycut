@@ -53,6 +53,23 @@ class UnitConverter:
         else:
             return x * 25.4
 
+class GcodeModel:
+    '''
+    '''
+    def __init__(self):
+        # --------------------------- not sure yet for these
+        self.units = "mm"
+        self.ZeroLowerLeft = True
+        self.ZeroCenter = False
+        self.XOffset = 0.0
+        self.YOffset = 0.0
+
+        # ----------------------------
+        self.returnTo00 = False
+
+        self.spindleControl = True
+        self.spindleSpeed = 1000
+
 class SvgModel:
     '''
     '''
@@ -458,7 +475,8 @@ class JobModel:
             materialModel: MaterialModel, 
             svgModel: SvgModel, 
             toolModel: ToolModel,
-            tabsModel: TabsModel):
+            tabsModel: TabsModel,
+            gcodeModel: GcodeModel):
 
         self.svg_viewer = svg_viewer
         
@@ -468,6 +486,7 @@ class JobModel:
         self.materialModel = materialModel
         self.toolModel = toolModel
         self.tabsModel = tabsModel
+        self.gcodeModel = gcodeModel
 
         self.minX = 0
         self.minY = 0
@@ -524,12 +543,7 @@ class GcodeGenerator:
         self.materialModel = job.materialModel
         self.toolModel = job.toolModel
         self.tabsModel = job.tabsModel
-        
-
-        self.returnTo00 = False
-
-        self.spindleControl = True
-        self.spindleSpeed = 1000
+        self.gcodeModel = job.gcodeModel
 
         self.units = "mm"
         self.unitConverter: UnitConverter = UnitConverter(self.units)
@@ -538,7 +552,6 @@ class GcodeGenerator:
         self.offsetY = 0
 
         self.gcode = ""
-        self.gcodeFilename = "gcode.gcode"
 
     @property
     def minX(self):
@@ -605,9 +618,9 @@ class GcodeGenerator:
         gcode += "G90         ; Absolute positioning\r\n"
         gcode += "G1 Z {safeZ}  F   {rapidRate}      ; Move to clearance level\r\n"
 
-        if self.spindleControl:
+        if self.gcodeModel.spindleControl:
             gcode += "\r\n; Start the spindle\r\n"
-            gcode += "M3 S{spindleSpeed}\r\n"
+            gcode += "M3 S{self.gcodeModel.spindleSpeed}\r\n"
 
         for idx, cnc_op in enumerate(cnc_ops):
             cutDepth = self.unitConverter.fromInch(cnc_op.cutDepth.toInch())
@@ -646,11 +659,11 @@ class GcodeGenerator:
                 "tabZ":           tabZ,
             })
 
-        if self.spindleControl:
+        if self.gcodeModel.spindleControl:
             gcode += "\r\n; Stop the spindle\r\n"
             gcode += "M5 \r\n"
 
-        if self.returnTo00:
+        if self.gcodeModel.returnTo00:
             gcode += "\r\n; Return to 0,0\r\n"
             gcode += "G0 X0 Y0 F  {rapidRate} \r\n"
 
