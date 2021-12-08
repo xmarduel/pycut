@@ -583,6 +583,25 @@ _clipper.PathVector_swigregister(PathVector)
 
 
 
+# simply add python code like this
+def IntPointVector__repr__(self):
+    res = "IntPointVector #%d\n" % len(self)
+    for i, pt in enumerate(self):
+       res += "  [%d] %8d %8d\n" % (i, pt.X, pt.Y)
+    return res 
+IntPointVector.__repr__ = IntPointVector__repr__
+
+
+def PathVector__repr__(self):
+    res = "PathVector #%d\n" % len(self)
+    for k, path in enumerate(self):
+#res += repr(path)
+        for i, pt in enumerate(path):
+            res += "  [%d] %8d %8d\n" % (i, pt.X, pt.Y)
+    return res 
+PathVector.__repr__ = PathVector__repr__
+
+
 class ClipType:
     ctIntersection = 0
     ctUnion = 1
