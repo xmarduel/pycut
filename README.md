@@ -2,7 +2,7 @@
 clone of jscut  in python - only the very beginning
 
 
-what is currently working:
+what is currently working: basic
 - read "config" files : so called job file with all settings and ops
 - select 1 op in the list and "generate" Gcode -> toolpaths OK for
    + pocket   YES
@@ -11,13 +11,14 @@ what is currently working:
    + engrave  YES
    + vPocket   NO
 - svg items selection and new op with combinaison (geometry calculated)
-
-
+- preview geom displayed in svg viewer
+- toolpaths displayed in svg viewer
+- gcode produced
 
 TODO:
 - all the rest
 - tabs completely ignored
-
+- vPocket ?
 
 BUGS:
 - improve clipper swig wrapper (make it more pythonic)
