@@ -14,12 +14,8 @@
 namespace std
 {
   %template(IntPointVector) vector<ClipperLib::IntPoint>;
-  %template(PathVector) vector<ClipperLib::Path>;
+  %template(PathVector) vector<IntPointVector>;
 }
-
-//%rename(__eq__)     IntPoint::operator==;
-//%rename(IntPoint_eq) operator==(IntPoint, IntPoint);
-
 
 
 %extend std::vector<ClipperLib::IntPoint>{
@@ -35,7 +31,7 @@ class ClipType:
     ctIntersection = 0
     ctUnion = 1
     ctDifference = 2
-    ctXor =3
+    ctXor = 3
 
 class PolyType:
     ptSubject = 0
