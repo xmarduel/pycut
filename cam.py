@@ -485,12 +485,12 @@ class cam:
                                 if totalDist > 0:
                                     gcode += '; ramp\r\n'
                                     executedRamp = True
-                                    # XAM [1,2,3,4,5] -> [1,2,3,2,1]
+                                    
                                     #rampPath = selectedPath.slice(0, end)
                                     rampPath = [ selectedPath[k] for k in range(0,end) ] 
 
                                     #rampPathEnd = selectedPath.slice(0, end - 1).reverse()
-                                    rampPathEnd = [ selectedPath[k] for k in range(end,len(selectedPath)) ]
+                                    rampPathEnd = [ selectedPath[k] for k in range(0,end-1) ]
                                     rampPathEnd.reverse()
 
                                     rampPath = rampPath + rampPathEnd
@@ -516,7 +516,8 @@ class cam:
 
                     gcode += '; cut\r\n'
 
-                    for i, point in enumerate(selectedPath):
+                    for i in range(1, len(selectedPath)):
+                        point = selectedPath[i]
                         gcode += 'G1' + convertPoint(point)
                         if i == 1:
                             gcode += cutFeedGcode + '\r\n'

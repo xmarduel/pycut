@@ -319,7 +319,10 @@ class CncOp:
             "Xor": ClipperLib.ClipType.ctXor,
         } [self.operation["Combine"]] 
         
-        self.geometry = ClipperUtils.combine(self.clipper_paths, clipType)
+        geometry = ClipperUtils.combine(self.clipper_paths, clipType)
+
+        self.geometry = ClipperUtils.simplifyAndClean(geometry, ClipperLib.PolyFillType.pftNonZero)
+        #self.geometry = geometry
 
         ClipperLib.dumpPaths("geometry", self.geometry)
         

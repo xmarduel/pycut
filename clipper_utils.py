@@ -17,8 +17,8 @@ class ClipperUtils:
         '''
         Simplify and clean up Clipper geometry
         '''
-        geometry = ClipperLib.CleanPolygons(geometry, cls.cleanPolyDist)
-        geometry = ClipperLib.SimplifyPolygons(geometry, fillRule)
+        ClipperLib.CleanPolygons(geometry, cls.cleanPolyDist)
+        ClipperLib.SimplifyPolygons(geometry, fillRule)
 
         return geometry
 
