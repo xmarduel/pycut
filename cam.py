@@ -102,9 +102,12 @@ class cam:
 
         while currentWidth <= width :
             if needReverse:
-                for i in range(len(current)):
-                    list(current[i]).reverse()
-            allPaths = [p for p in current] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+                reversed = []
+                for path in current:
+                    path_as_list = list(path)  # is a tuple!
+                    path_as_list.reverse()
+                    reversed.append(path_as_list)
+            allPaths = reversed + allPaths  # JSCUT: allPaths = current.concat(allPaths)
             nextWidth = currentWidth + eachWidth
             if nextWidth > width and width - currentWidth > 0 :
                 current = clipper_utils.ClipperUtils.offset(current, width - currentWidth)
@@ -434,7 +437,7 @@ class cam:
 
             gcode += \
                 f'\r\n' + \
-                f'; Path  {pathIndex} \r\n'
+                f'; Path {pathIndex}\r\n'
 
             currentZ = safeZ
             finishedZ = topZ

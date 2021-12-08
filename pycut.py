@@ -395,7 +395,7 @@ class CncOp:
                   
             self.preview_geometry = ClipperUtils.diff(ClipperUtils.offset(geometry, width), geometry)
 
-            ClipperLib.dumpPaths("geometry", self.preview_geometry)
+            ClipperLib.dumpPaths("preview geometry", self.preview_geometry)
 
         # should have 2 paths, one inner, one outer -> show the "ring"
         if len(self.preview_geometry) > 1:
@@ -581,9 +581,9 @@ class GcodeGenerator:
             return
 
         safeZ = self.unitConverter.fromInch(self.materialModel.matZSafeMove.toInch())
-        rapidRate = self.unitConverter.fromInch(self.toolModel.rapidRate.toInch())
-        plungeRate = self.unitConverter.fromInch(self.toolModel.plungeRate.toInch())
-        cutRate = self.unitConverter.fromInch(self.toolModel.cutRate.toInch())
+        rapidRate = int(self.unitConverter.fromInch(self.toolModel.rapidRate.toInch()))
+        plungeRate = int(self.unitConverter.fromInch(self.toolModel.plungeRate.toInch()))
+        cutRate = int(self.unitConverter.fromInch(self.toolModel.cutRate.toInch()))
         passDepth = self.unitConverter.fromInch(self.toolModel.passDepth.toInch())
         topZ = self.unitConverter.fromInch(self.materialModel.matTopZ.toInch())
         tabCutDepth = self.unitConverter.fromInch(self.tabsModel.maxCutDepth.toInch())
@@ -607,7 +607,7 @@ class GcodeGenerator:
         else:
             gcode += "G21         ; Set units to mm\r\n"
         gcode += f"G90         ; Absolute positioning\r\n"
-        gcode += f"G1 Z {safeZ}  F {rapidRate}      ; Move to clearance level\r\n"
+        gcode += f"G1 Z{safeZ} F{rapidRate}      ; Move to clearance level\r\n"
 
         if self.gcodeModel.spindleControl:
             gcode += f"\r\n; Start the spindle\r\n"

@@ -135,8 +135,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         #self.open_job("./jobs/cnc_three_rects_with_circle.json")
         self.open_job("./jobs/cnc_one_rect.json")
 
-        self.display_gcode_file("test/gcode.gcode")
-
     def display_gcode_file(self, filename):
         '''
         display gcode in webgl!
