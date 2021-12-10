@@ -55,15 +55,15 @@ operations = [
 
 class CncOp:
     def __init__(self, data):
-        self.Name = data.get("Name", "op")
+        self.name = data.get("Name", "op")
         self.cam_op = data.get("type", "Pocket")
-        self.Deep = data.get("Deep", 0.125)
-        self.paths = str(data.get("paths", []))      
-        self.RampPlunge = data.get("RampPlunge", False)
-        self.Combine = data.get("Combine", "Union")
-        self.Direction = data.get("Direction", "Conventional")
-        self.Units = data.get("Units", "inch")
-        self.Margin = data.get("Margin", 0.0)
+        self.cutDepth = data.get("Deep", 0.125)
+        self.paths = data.get("paths", [])      
+        self.ramp_plunge = data.get("RampPlunge", False)
+        self.combine = data.get("Combine", "Union")
+        self.direction = data.get("Direction", "Conventional")
+        self.units = data.get("Units", "inch")
+        self.margin = data.get("Margin", 0.0)
 
         # not in the data
         self.selected = False
@@ -72,8 +72,69 @@ class CncOp:
         setattr(self, attr, value)
         
     def __str__(self):
-        return "op: %s %s [%f] %s" % (self.Name, self.cam_op, self.Deep, self.selected)
-    
+        return "op: %s %s [%f] %s" % (self.name, self.cam_op, self.Deep, self.selected)
+
+
+
+class PMFDoubleSpinBox(QtWidgets.QDoubleSpinBox):
+    '''
+    '''
+
+    def __init__(self, parent):
+        '''
+        '''
+        QtWidgets.QDoubleSpinBox.__init__(self, parent)
+
+        self.o = None
+        self.attribute = ""
+
+        self.setMinimum(0)
+        self.setMaximum(100)
+        self.setSingleStep(0.001)
+        self.setDecimals(3)
+
+        self.valueChanged.connect(self.cb_spinbox)
+
+    def cb_disconnect(self):
+        '''
+        '''
+        self.valueChanged.disconnect(self.cb_spinbox)
+
+    def cb_connect(self):
+        '''
+        '''
+        self.valueChanged.connect(self.cb_spinbox)
+
+    def assign_object(self, o):
+        '''
+        '''
+        self.o = o
+
+    def assign_object_attribute(self, attribute):
+        '''
+        '''
+        self.attribute = attribute
+
+    def set_value(self):
+        '''
+        '''
+        self.cb_disconnect()
+
+        try:
+            val = getattr(self.o, self.attribute)
+        except Exception:
+            val = 0
+
+        self.setValue(val)
+
+        self.cb_connect()
+
+    def cb_spinbox(self):
+        '''
+        '''
+        val = self.value()
+        self.o.put_value(self.attribute, val)
+
 class PMFCheckBox(QtWidgets.QCheckBox):
     '''
     '''
@@ -248,6 +309,30 @@ class PMFComboBoxDelegate(QtWidgets.QItemDelegate):
     def updateEditorGeometry(self, editor, option, index):
         editor.setGeometry(option.rect)
 
+class PMFDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
+    def __init__(self, parent):
+        QtWidgets.QItemDelegate.__init__(self, parent)
+
+    def createEditor(self, parent, option, index):
+        editor = PMFDoubleSpinBox(parent)
+
+        op = index.model().get_operation(index)
+        attr = index.model().get_operation_attr(index)
+
+        editor.assign_object(op)
+        editor.assign_object_attribute(attr)
+
+        return editor
+
+    def setEditorData(self, spinBox, index):
+        spinBox.set_value()
+
+    def setModelData(self, spinBox, model, index):
+        return
+
+    def updateEditorGeometry(self, editor, option, index):
+        editor.setGeometry(option.rect)
+
 
 class PMFTableViewManager(QtWidgets.QWidget):
 
@@ -379,7 +464,6 @@ class PMFTableViewManager(QtWidgets.QWidget):
         for op in self._table.model().operations:
             print(op)
 
-
 class PMFSimpleTable(QtWidgets.QTableView):
     '''
     '''
@@ -410,6 +494,9 @@ class PMFSimpleTable(QtWidgets.QTableView):
         delegate = PMFCheckBoxDelegate(self)
         self.setItemDelegateForColumn(2, delegate)
         
+        delegate = PMFDoubleSpinBoxDelegate(self)
+        self.setItemDelegateForColumn(4, delegate)
+
         delegate = PMFCheckBoxDelegate(self)
         self.setItemDelegateForColumn(5, delegate)
     
@@ -422,14 +509,19 @@ class PMFSimpleTable(QtWidgets.QTableView):
         delegate = PMFComboBoxDelegate(self)
         self.setItemDelegateForColumn(8, delegate)
 
+        delegate = PMFDoubleSpinBoxDelegate(self)
+        self.setItemDelegateForColumn(9, delegate)
+
         # Make the combo boxes / check boxes / others spacials always displayed.
         for k in range(self.model().rowCount(None)):
             self.openPersistentEditor(self.model().index(k, 1))
             self.openPersistentEditor(self.model().index(k, 2))
+            self.openPersistentEditor(self.model().index(k, 4))
             self.openPersistentEditor(self.model().index(k, 5))
             self.openPersistentEditor(self.model().index(k, 6))
             self.openPersistentEditor(self.model().index(k, 7))
             self.openPersistentEditor(self.model().index(k, 8))
+            self.openPersistentEditor(self.model().index(k, 9))
 
         
 
@@ -454,7 +546,6 @@ class PMFSimpleTable(QtWidgets.QTableView):
     def swapItems(self, idx1, idx2):
         self.model().swapItems(idx1, idx2)
 
-
 class PMFSimpleTableModel(QtCore.QAbstractTableModel):
     '''
     model for the table view
@@ -464,16 +555,16 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
         
         self.operations = operations
 
-        self.header =  ["Name",
+        self.header =  ["name",
           "cam_op",
           "selected",
           "paths",
-          "Deep",
-          "RampPlunge",
-          "Combine",
-          "Direction",
-          "Units",
-          "Margin"
+          "cutDepth",
+          "ramp_plunge",
+          "combine",
+          "direction",
+          "units",
+          "margin"
         ]
         
     def headerData(self, col, orientation, role):
@@ -502,9 +593,19 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
 
         if role == QtCore.Qt.DisplayRole:
             val = getattr(op, attr)
+
+            if col == 3:
+                # list of svg paths ids
+                val = str(val)
+
             return val
         if role == QtCore.Qt.EditRole:
             val = getattr(op, attr)
+
+            if col == 3:
+                # list of svg paths ids
+                val = str(val)
+
             return val
 
         return None
