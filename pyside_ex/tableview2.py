@@ -43,41 +43,36 @@ operations = [
     },
     {
       "Name": "op4",
-      "paths": ["p1", "p2"],
+      "paths": ["p4"],
       "type": "Engrave",
-      "Deep": 0.125,
+      "Deep": 1.125,
       "RampPlunge": False,
-      "Combine": "Union",
-      "Direction": "Conventional",
+      "Combine": "Difference",
+      "Direction": "Climb",
       "Units": "mm"
     }
 ]
 
 class CncOp:
-    def __init__(self):
-        self.Name = "op1"
-        self.paths = ["p1", "p2"]
-        self.cam_op = "Pocket"
-        self.Deep = 0.125      
-        self.RampPlunge = True
-        self.Combine = "Union"
-        self.Direction = "Conventional"
-        self.Units = "inch"
-        self.Margin = 0.0
-        
-    def set_data(self, json):
-        self.Name = json["Name"]
-        self.paths = str(json["paths"])
-        self.cam_op = json["type"]
-        self.Deep = json["Deep"]    
-        self.RampPlunge = json["RampPlunge"]
-        self.Combine = json["Combine"]
-        self.Direction = json["Direction"]
-        self.Units = json["Units"]
-        self.Margin = json.get("Margin", 0.0)
+    def __init__(self, data):
+        self.Name = data.get("Name", "op")
+        self.cam_op = data.get("type", "Pocket")
+        self.Deep = data.get("Deep", 0.125)
+        self.paths = str(data.get("paths", []))      
+        self.RampPlunge = data.get("RampPlunge", False)
+        self.Combine = data.get("Combine", "Union")
+        self.Direction = data.get("Direction", "Conventional")
+        self.Units = data.get("Units", "inch")
+        self.Margin = data.get("Margin", 0.0)
+
+        # not in the data
+        self.selected = False
 
     def put_value(self, attr, value):
         setattr(self, attr, value)
+        
+    def __str__(self):
+        return "op: %s %s [%f] %s" % (self.Name, self.cam_op, self.Deep, self.selected)
     
 class PMFCheckBox(QtWidgets.QCheckBox):
     '''
@@ -226,11 +221,11 @@ class PMFComboBoxDelegate(QtWidgets.QItemDelegate):
         self.items = []
         if col == 1:
             self.items = ["Pocket", "Inside", "Outside", "Engrave"]
-        if col == 5:
-            self.items = ["Union", "Intersection", "Difference", "Xor"]
         if col == 6:
-            self.items = ["Conventional", "Climb"]
+            self.items = ["Union", "Intersection", "Difference", "Xor"]
         if col == 7:
+            self.items = ["Conventional", "Climb"]
+        if col == 8:
             self.items = ["inch", "mm"]
 
         editor = PMFComboBox(parent, self.items)
@@ -269,13 +264,12 @@ class PMFTableViewManager(QtWidgets.QWidget):
 
         # let's add two views of the same data source we just created:
         self._table = PMFSimpleTable(self)
-        #self._table.resizeColumnsToContents()
+        self._table.resizeColumnsToContents()
         #self._table.setMinimumWidth(800)
         
         cnc_ops = []
         for op in operations:
-            cnc_op = CncOp()
-            cnc_op.set_data(op)
+            cnc_op = CncOp(op)
             cnc_ops.append(cnc_op)
             
             
@@ -292,21 +286,21 @@ class PMFTableViewManager(QtWidgets.QWidget):
         # create the button, and hook it up to the slot below.
         self._button_add = QtWidgets.QPushButton("Add Item")
         self._button_add.clicked.connect(self.add_item)
-        self._button_add.setIcon(QtGui.QIcon(":/images/tango/32x32/actions/list-add"))
+        self._button_add.setIcon(QtGui.QIcon("./images/tango/32x32/actions/list-add"))
 
         # create the button, and hook it up to the slot below.
         self._button_up = QtWidgets.QPushButton("")
         self._button_up.clicked.connect(self.up_item)
-        self._button_up.setIcon(QtGui.QIcon(":/images/tango/32x32/actions/go-up"))
+        self._button_up.setIcon(QtGui.QIcon("./images/tango/32x32/actions/go-up"))
 
         # create the button, and hook it up to the slot below.
         self._button_down = QtWidgets.QPushButton("")
         self._button_down.clicked.connect(self.down_item)
-        self._button_down.setIcon(QtGui.QIcon(":/images/tango/32x32/actions/go-down"))
+        self._button_down.setIcon(QtGui.QIcon("./images/tango/32x32/actions/go-down"))
 
-        self._button_del = QtWidgets.QPushButton("")
+        self._button_del = QtWidgets.QPushButton("Del Item")
         self._button_del.clicked.connect(self.del_item)
-        self._button_del.setIcon(QtGui.QIcon(":/images/tango/32x32/actions/list-remove"))
+        self._button_del.setIcon(QtGui.QIcon("./images/tango/32x32/actions/list-remove"))
 
         hbox.addWidget(self._button_add)
         hbox.addWidget(self._button_up)
@@ -343,12 +337,20 @@ class PMFTableViewManager(QtWidgets.QWidget):
     def add_item(self):
         # instruct the model to add an item
         self._table.addItem()
+        
+        print("ADD")
+        for op in self._table.model().operations:
+            print(op)
 
     def del_item(self):
         index = self._table.currentIndex()
         idx = index.row()
         # instruct the model to del an item
         self._table.delItem(idx)
+        
+        print("DEL")
+        for op in self._table.model().operations:
+            print(op)
 
     def down_item(self):
         index = self._table.currentIndex()
@@ -356,10 +358,13 @@ class PMFTableViewManager(QtWidgets.QWidget):
         if idx < self._table.model().rowCount(None) - 1:
             self._table.swapItems(idx, idx + 1)
 
-        # to be sure to update the table... # BUGGY sonce
-        #model = PMFSimpleTableModel(s)
-        #self.set_model(model)
-        #self.setup_table()
+        # to be sure to update the table... and all its delegates
+        self._table.setup()
+        
+        print("DOWN")
+        for op in self._table.model().operations:
+            print(op)
+        
 
     def up_item(self):
         index = self._table.currentIndex()
@@ -367,10 +372,12 @@ class PMFTableViewManager(QtWidgets.QWidget):
         if idx > 0:
             self._table.swapItems(idx, idx - 1)
 
-        # to be sure to update the table... # BUGGY sonce
-        #model = PMFSimpleTableModel()
-        #self.set_model(model)
-        #self.setup_table()
+        # to be sure to update the table... and all its delegates
+        self._table.setup()
+        
+        print("UP")
+        for op in self._table.model().operations:
+            print(op)
 
 
 class PMFSimpleTable(QtWidgets.QTableView):
@@ -383,15 +390,15 @@ class PMFSimpleTable(QtWidgets.QTableView):
 
         self.parent = parent
 
-        #self.resizeColumnsToContents()
+        self.resizeColumnsToContents()
         # Fixes the width of columns and the height of rows.
         try:
-            self.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Fixed)
-            self.verticalHeader().setResizeMode(QtWidgets.QHeaderView.Fixed)
+            #self.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Fixed)
+            #self.verticalHeader().setResizeMode(QtWidgets.QHeaderView.Fixed)
+            pass
         except Exception:
             pass  # PySide
 
-        # unlike the previous tutorial, we'll do background colours 'properly'. ;)
         self.setAlternatingRowColors(True)
 
     def setup(self):
@@ -399,26 +406,30 @@ class PMFSimpleTable(QtWidgets.QTableView):
         '''
         delegate = PMFComboBoxDelegate(self)
         self.setItemDelegateForColumn(1, delegate)
+
+        delegate = PMFCheckBoxDelegate(self)
+        self.setItemDelegateForColumn(2, delegate)
         
         delegate = PMFCheckBoxDelegate(self)
-        self.setItemDelegateForColumn(4, delegate)
-    
-        delegate = PMFComboBoxDelegate(self)
         self.setItemDelegateForColumn(5, delegate)
-        
+    
         delegate = PMFComboBoxDelegate(self)
         self.setItemDelegateForColumn(6, delegate)
         
         delegate = PMFComboBoxDelegate(self)
         self.setItemDelegateForColumn(7, delegate)
+        
+        delegate = PMFComboBoxDelegate(self)
+        self.setItemDelegateForColumn(8, delegate)
 
         # Make the combo boxes / check boxes / others spacials always displayed.
         for k in range(self.model().rowCount(None)):
             self.openPersistentEditor(self.model().index(k, 1))
-            self.openPersistentEditor(self.model().index(k, 4))
+            self.openPersistentEditor(self.model().index(k, 2))
             self.openPersistentEditor(self.model().index(k, 5))
             self.openPersistentEditor(self.model().index(k, 6))
             self.openPersistentEditor(self.model().index(k, 7))
+            self.openPersistentEditor(self.model().index(k, 8))
 
         
 
@@ -429,7 +440,9 @@ class PMFSimpleTable(QtWidgets.QTableView):
         fwidth = self.frameWidth() * 2
 
         #self.setFixedWidth(vwidth + hwidth + swidth + fwidth)
-        self.setMinimumWidth(vwidth + hwidth + swidth + fwidth)
+        #self.setMinimumWidth(vwidth + hwidth + swidth + fwidth)
+
+        self.resizeColumnsToContents() # now!
 
     def addItem(self):
         self.model().addItem()
@@ -453,6 +466,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
 
         self.header =  ["Name",
           "cam_op",
+          "selected",
           "paths",
           "Deep",
           "RampPlunge",
@@ -480,7 +494,10 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
         # for check box, data is displayed in the "editor"
         col = index.column()
         
-        if col == 4:
+        # for checkboxes only
+        if col == 2:
+            return None
+        if col == 5:
             return None
 
         if role == QtCore.Qt.DisplayRole:
@@ -504,7 +521,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
         return flags
 
     def addItem(self):
-        op = CncOp()
+        op = CncOp({})
 
         self.beginInsertRows(QtCore.QModelIndex(), len(self.operations), len(self.operations))
         self.operations.append(op)
@@ -518,12 +535,10 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
         self.endRemoveRows()
 
     def swapItems(self, idx1, idx2):
+        self.beginResetModel()
         self.operations[idx1], self.operations[idx2] = self.operations[idx2], self.operations[idx1]
-        if idx1 < idx2:
-            self.dataChanged.emit(self.index(idx1, 0), self.index(idx2, 0))   # BUGGY : "delegate" editors not updated
-        else:
-            self.dataChanged.emit(self.index(idx2, 0), self.index(idx1, 0))   # BUGGY : "delegate" editors not updated
-
+        self.endResetModel()
+        
     def get_operation(self, index):
         return self.operations[index.row()]
 

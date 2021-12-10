@@ -140,3 +140,4 @@ clipper/clipper.o
 clipper/clipper_test.exe
 clipper/clipper_test.o
 clipper/clipper_ver6.4.2.zip
+pyside_ex/images
