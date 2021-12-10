@@ -11,7 +11,7 @@ from PySide6 import QtWidgets
 from PySide6 import QtSvg
 from PySide6 import QtSvgWidgets
 
-import lxml.etree as ET
+import xml.etree.ElementTree as ET
 
 from svgpathutils import SvgPath
 from svgpathutils import SvgTransformer

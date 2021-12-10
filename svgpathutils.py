@@ -3,7 +3,8 @@ from typing import List
 from typing import Dict
 
 import tempfile
-import lxml.etree as ET
+
+import xml.etree.ElementTree as ET
 
 import svgpathtools
 import numpy as np
@@ -49,7 +50,9 @@ class SvgPath:
         - Arc: discretize per hand
         - QuadraticBezier, CubicBezier: discretize per hand
 
-        FIXME: Take care not to add twice the same points
+        TODO: Take care not to add twice the same points
+        - Arc
+        - Beziers
         '''
         points = np.array([], dtype=np.complex128)
         
