@@ -419,10 +419,10 @@ class cam:
         gcode = ""
 
         retractGcode = '; Retract\r\n' + \
-            f'G1 Z' + safeZ.toFixed(decimal) + f'{rapidFeedGcode} \r\n'
+            f'G1 Z' + safeZ.toFixed(decimal) + f'{rapidFeedGcode}\r\n'
 
         retractForTabGcode = '; Retract for tab\r\n' + \
-            f'G1 Z' + tabZ.toFixed(decimal) + f'{rapidFeedGcode} \r\n'
+            f'G1 Z' + tabZ.toFixed(decimal) + f'{rapidFeedGcode}\r\n'
 
         def getX(p: ClipperLib.IntPoint) :
             return p.X * scale + offsetX

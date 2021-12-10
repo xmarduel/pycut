@@ -537,7 +537,7 @@ class GcodeGenerator:
         self.gcodeModel = job.gcodeModel
 
         self.units = "mm"
-        self.unitConverter: UnitConverter = UnitConverter(self.units)
+        self.unitConverter = UnitConverter(self.units)
 
         self.offsetX = 0
         self.offsetY = 0
@@ -656,7 +656,7 @@ class GcodeGenerator:
 
         if self.gcodeModel.returnTo00:
             gcode += f"\r\n; Return to 0,0\r\n"
-            gcode += f"G0 X0 Y0 F {rapidRate} \r\n"
+            gcode += f"G0 X0 Y0 F {rapidRate}\r\n"
 
         self.gcode = gcode
 
