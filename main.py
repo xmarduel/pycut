@@ -110,7 +110,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.pushButton_Operations_SaveOp.clicked.connect(self.cb_save_op)
         self.window.pushButton_Operations_CancelOp.clicked.connect(self.cb_cancel_op)
         
+        self.window.comboBox_Tabs_Units.currentTextChanged.connect(self.cb_update_tabs_display)
         self.window.comboBox_Tool_Units.currentTextChanged.connect(self.cb_update_tool_display)
+        self.window.comboBox_Material_Units.currentTextChanged.connect(self.cb_update_material_display)
         self.window.comboBox_GCodeConversion_Units.currentTextChanged.connect(self.cb_update_gcodeconversion_display)
         
         self.window.pushButton_MakeAll_inch.clicked.connect(self.cb_make_all_inch)
@@ -130,7 +132,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.pushButton_GenerateGCode.clicked.connect(self.cb_generate_g_code)
 
         self.init_gui()
-        
+
         #self.open_job("./jobs/cnc_three_rects.json")
         #self.open_job("./jobs/cnc_three_rects_with_circle.json")
         self.open_job("./jobs/cnc_one_rect.json")
@@ -211,7 +213,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         self.apply_settings(self.default_settings)
 
+        self.cb_update_tabs_display()
         self.cb_update_tool_display()
+        self.cb_update_material_display()
         self.cb_update_gcodeconversion_display()
     
     def get_current_settings(self):
@@ -356,27 +360,36 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             
     def cb_make_all_inch(self):
         '''
+        not the tool
+
+        TODO: the ops (cutDeepth)
         '''
         self.window.comboBox_Tabs_Units.setCurrentText("inch")
-        self.window.comboBox_Tool_Units.setCurrentText("inch")
         self.window.comboBox_Material_Units.setCurrentText("inch")
         self.window.comboBox_GCodeConversion_Units.setCurrentText("inch")
-         
-        self.init_gui()
     
     def cb_make_all_mm(self):
         '''
+        not the tool
+
+        TODO: the ops (cutDeepth)
         '''
         self.window.comboBox_Tabs_Units.setCurrentText("mm")
         self.window.comboBox_Material_Units.setCurrentText("mm")
         self.window.comboBox_GCodeConversion_Units.setCurrentText("mm")
         
-        self.cb_update_tool_display()
-        self.cb_update_gcodeconversion_display()
+    def cb_update_tabs_display(self):
+        tabs_units = self.window.comboBox_Tabs_Units.currentText()
         
+        if tabs_units == "inch":
+            self.window.doubleSpinBox_Tabs_MaxCutDepth.setValue( self.window.doubleSpinBox_Tabs_MaxCutDepth.value() / 25.4 )
+
+        if tabs_units == "mm":
+            self.window.doubleSpinBox_Tabs_MaxCutDepth.setValue( self.window.doubleSpinBox_Tabs_MaxCutDepth.value() * 25.4 )
+    
     def cb_update_tool_display(self):
         '''
-        This updates the legends of the tool model widget
+        This updates the legends of the tool model widget **and** the values
         '''
         tool_units = self.window.comboBox_Tool_Units.currentText()
         
@@ -388,6 +401,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.window.label_Tool_Rapid_UnitsDescr.setText("inch/min")
             self.window.label_Tool_Plunge_UnitsDescr.setText("inch/min")
             self.window.label_Tool_Cut_UnitsDescr.setText("inch/min")
+
+            self.window.doubleSpinBox_Tool_Diameter.setValue( self.window.doubleSpinBox_Tool_Diameter.value() / 25.4 )
+            self.window.doubleSpinBox_Tool_PassDepth.setValue( self.window.doubleSpinBox_Tool_PassDepth.value() / 25.4 )
+            self.window.spinBox_Tool_Rapid.setValue( self.window.spinBox_Tool_Rapid.value() / 25.4 )
+            self.window.spinBox_Tool_Plunge.setValue( self.window.spinBox_Tool_Plunge.value() / 25.4 )
+            self.window.spinBox_Tool_Cut.setValue( self.window.spinBox_Tool_Cut.value() / 25.4 )
+
         if tool_units == "mm":
             self.window.label_Tool_Diameter_UnitsDescr.setText("mm")
             self.window.label_Tool_Angle_UnitsDescr.setText("degrees")
@@ -396,6 +416,25 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.window.label_Tool_Rapid_UnitsDescr.setText("mm/min")
             self.window.label_Tool_Plunge_UnitsDescr.setText("mm/min")
             self.window.label_Tool_Cut_UnitsDescr.setText("mm/min")
+
+            self.window.doubleSpinBox_Tool_Diameter.setValue( self.window.doubleSpinBox_Tool_Diameter.value() * 25.4 )
+            self.window.doubleSpinBox_Tool_PassDepth.setValue( self.window.doubleSpinBox_Tool_PassDepth.value() * 25.4 )
+            self.window.spinBox_Tool_Rapid.setValue( self.window.spinBox_Tool_Rapid.value() * 25.4 )
+            self.window.spinBox_Tool_Plunge.setValue( self.window.spinBox_Tool_Plunge.value() * 25.4 )
+            self.window.spinBox_Tool_Cut.setValue( self.window.spinBox_Tool_Cut.value() * 25.4 )
+
+    def cb_update_material_display(self):
+        '''
+        '''
+        material_units = self.window.comboBox_Material_Units.currentText()
+        
+        if material_units == "inch":
+            self.window.doubleSpinBox_Material_Thickness.setValue( self.window.doubleSpinBox_Material_Thickness.value() / 25.4 )
+            self.window.doubleSpinBox_Material_Clearance.setValue( self.window.doubleSpinBox_Material_Clearance.value() / 25.4 )
+
+        if material_units == "mm":
+            self.window.doubleSpinBox_Material_Thickness.setValue( self.window.doubleSpinBox_Material_Thickness.value() * 25.4 )
+            self.window.doubleSpinBox_Material_Clearance.setValue( self.window.doubleSpinBox_Material_Clearance.value() * 25.4 )
 
     def cb_update_gcodeconversion_display(self):
         '''
@@ -410,6 +449,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.window.label_GCodeConversion_MaxX_UnitsDescr.setText("inch")
             self.window.label_GCodeConversion_MinY_UnitsDescr.setText("inch")
             self.window.label_GCodeConversion_MaxY_UnitsDescr.setText("inch")
+
+            self.window.doubleSpinBox_GCodeConversion_XOffset.setValue( self.window.doubleSpinBox_GCodeConversion_XOffset.value() / 25.4 )
+            self.window.doubleSpinBox_GCodeConversion_YOffset.setValue(self.window.doubleSpinBox_GCodeConversion_YOffset.value() / 25.4 )
+            self.window.doubleSpinBox_GCodeConversion_MinX.setValue(self.window.doubleSpinBox_GCodeConversion_MinX.value() / 25.4 )
+            self.window.doubleSpinBox_GCodeConversion_MaxX.setValue(self.window.doubleSpinBox_GCodeConversion_MaxX.value() / 25.4 )
+            self.window.doubleSpinBox_GCodeConversion_MinY.setValue(self.window.doubleSpinBox_GCodeConversion_MinY.value() / 25.4 )
+            self.window.doubleSpinBox_GCodeConversion_MaxY.setValue(self.window.doubleSpinBox_GCodeConversion_MaxY.value() / 25.4 )
             
         if gcodeconversion_units == "mm":
             self.window.label_GCodeConversion_XOffset_UnitsDescr.setText("mm")
@@ -418,6 +464,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.window.label_GCodeConversion_MaxX_UnitsDescr.setText("mm")
             self.window.label_GCodeConversion_MinY_UnitsDescr.setText("mm")
             self.window.label_GCodeConversion_MaxY_UnitsDescr.setText("mm")
+
+            self.window.doubleSpinBox_GCodeConversion_XOffset.setValue( self.window.doubleSpinBox_GCodeConversion_XOffset.value() * 25.4 )
+            self.window.doubleSpinBox_GCodeConversion_YOffset.setValue(self.window.doubleSpinBox_GCodeConversion_YOffset.value() * 25.4 )
+            self.window.doubleSpinBox_GCodeConversion_MinX.setValue(self.window.doubleSpinBox_GCodeConversion_MinX.value() * 25.4 )
+            self.window.doubleSpinBox_GCodeConversion_MaxX.setValue(self.window.doubleSpinBox_GCodeConversion_MaxX.value() * 25.4 )
+            self.window.doubleSpinBox_GCodeConversion_MinY.setValue(self.window.doubleSpinBox_GCodeConversion_MinY.value() * 25.4 )
+            self.window.doubleSpinBox_GCodeConversion_MaxY.setValue(self.window.doubleSpinBox_GCodeConversion_MaxY.value() * 25.4 )
+            
 
     def cb_display_material_thickness(self):
         thickness = self.window.doubleSpinBox_Material_Thickness.value()
