@@ -997,93 +997,41 @@ text-align:left;</string>
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_GCodeConversion">
-          <item row="6" column="0">
-           <widget class="QLabel" name="label_GCodeConversion_MinX">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Min X</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QLabel" name="label_GCodeConversion_XOffset_UnitsDescr">
-            <property name="text">
-             <string>__units__</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QRadioButton" name="radioButton_GCodeConversion_ZeroCenter">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MinX"/>
-          </item>
-          <item row="8" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MinY"/>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLabel" name="label_GCodeConversion_ZeroLowerLeft">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Zero lower left</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="label_GCodeConversion_YOffset">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Y Offset</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="1">
-           <widget class="QLabel" name="label_GCodeConversion_MaxY_UnitsDescr">
-            <property name="text">
-             <string>__units__</string>
-            </property>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="comboBox_GCodeConversion_Units">
+            <item>
+             <property name="text">
+              <string>inch</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>mm</string>
+             </property>
+            </item>
            </widget>
           </item>
           <item row="7" column="1">
-           <widget class="QLabel" name="label_GCodeConversion_MaxX_UnitsDescr">
+           <widget class="QLabel" name="label_GCodeConversion_MinX_UnitsDescr">
             <property name="text">
              <string>__units__</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="0">
-           <widget class="QLabel" name="label_GCodeConversion_MaxY">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Max Y</string>
             </property>
            </widget>
           </item>
           <item row="8" column="0">
+           <widget class="QLabel" name="label_GCodeConversion_MaxX">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Max X</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
            <widget class="QLabel" name="label_GCodeConversion_MinY">
             <property name="font">
              <font>
@@ -1096,8 +1044,87 @@ text-align:left;</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QLabel" name="label_GCodeConversion_ZeroCenter">
+          <item row="9" column="2">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MinY">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="minimum">
+             <double>-1000.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="2">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MaxY">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="minimum">
+             <double>-1000.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000.000000000000000</double>
+            </property>
+            <property name="value">
+             <double>0.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1">
+           <widget class="QLabel" name="label_GCodeConversion_MaxY_UnitsDescr">
+            <property name="text">
+             <string>__units__</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="2">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_YOffset">
+            <property name="minimum">
+             <double>-100.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>100.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="2">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MaxX">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="minimum">
+             <double>-1000.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="2">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MinX">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="minimum">
+             <double>-1000.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QLabel" name="label_GCodeConversion_MaxX_UnitsDescr">
+            <property name="text">
+             <string>__units__</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_GCodeConversion_XOffset">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -1105,7 +1132,28 @@ text-align:left;</string>
              </font>
             </property>
             <property name="text">
-             <string>Zero center</string>
+             <string>X Offset</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLabel" name="label_GCodeConversion_XOffset_UnitsDescr">
+            <property name="text">
+             <string>__units__</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLabel" name="label_GCodeConversion_YOffset_UnitsDescr">
+            <property name="text">
+             <string>__units__</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QLabel" name="label_GCodeConversion_MinY_UnitsDescr">
+            <property name="text">
+             <string>__units__</string>
             </property>
            </widget>
           </item>
@@ -1122,42 +1170,18 @@ text-align:left;</string>
             </property>
            </widget>
           </item>
-          <item row="6" column="1">
-           <widget class="QLabel" name="label_GCodeConversion_MinX_UnitsDescr">
-            <property name="text">
-             <string>__units__</string>
+          <item row="5" column="2">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_XOffset">
+            <property name="minimum">
+             <double>-100.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>100.000000000000000</double>
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QRadioButton" name="radioButton_GCodeConversion_ZeroLowerLeft">
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="1">
-           <widget class="QLabel" name="label_GCodeConversion_MinY_UnitsDescr">
-            <property name="text">
-             <string>__units__</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QLabel" name="label_GCodeConversion_YOffset_UnitsDescr">
-            <property name="text">
-             <string>__units__</string>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MaxX"/>
-          </item>
-          <item row="4" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_XOffset"/>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_GCodeConversion_XOffset">
+          <item row="6" column="0">
+           <widget class="QLabel" name="label_GCodeConversion_YOffset">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -1165,32 +1189,12 @@ text-align:left;</string>
              </font>
             </property>
             <property name="text">
-             <string>X Offset</string>
+             <string>Y Offset</string>
             </property>
-           </widget>
-          </item>
-          <item row="5" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_YOffset"/>
-          </item>
-          <item row="9" column="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MaxY"/>
-          </item>
-          <item row="0" column="1">
-           <widget class="QComboBox" name="comboBox_GCodeConversion_Units">
-            <item>
-             <property name="text">
-              <string>inch</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>mm</string>
-             </property>
-            </item>
            </widget>
           </item>
           <item row="7" column="0">
-           <widget class="QLabel" name="label_GCodeConversion_MaxX">
+           <widget class="QLabel" name="label_GCodeConversion_MinX">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -1198,7 +1202,46 @@ text-align:left;</string>
              </font>
             </property>
             <property name="text">
-             <string>Max X</string>
+             <string>Min X</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="0">
+           <widget class="QLabel" name="label_GCodeConversion_MaxY">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Max Y</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QPushButton" name="pushButton_GCodeConversion_ZeroLowerLeft">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Zero lower left</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QPushButton" name="pushButton_GCodeConversion_ZeroCenter">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Zero center</string>
             </property>
            </widget>
           </item>

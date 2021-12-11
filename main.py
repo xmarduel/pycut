@@ -61,10 +61,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         },
         "GCodeConversion" : {
             "Units"         : "mm",
-            "ZeroLowerLeft" : True,
-            "ZeroCenter"    : False,
-            "XOffset"       : 1.0,
-            "YOffset"       : 2.0,
+            "XOffset"       : 0.0,
+            "YOffset"       : 0.0,
         },
         "GCodeGeneration" : {
             "ReturnToZeroAtEnd" : True,
@@ -131,6 +129,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.checkBox_GCodeGeneration_SpindleAutomatic.clicked.connect(self.cb_spindle_automatic)
 
         self.window.pushButton_GenerateGCode.clicked.connect(self.cb_generate_g_code)
+
+        self.window.pushButton_GCodeConversion_ZeroLowerLeft.clicked.connect(self.cb_generate_g_code_zerolowerleft)
+        self.window.pushButton_GCodeConversion_ZeroCenter.clicked.connect(self.cb_generate_g_code_zerocenter)
+
+        self.window.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_g_code)
+        self.window.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_g_code)
+
+        
 
         self.init_gui()
 
@@ -252,8 +258,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             },
             "GCodeConversion" : {
                 "Units"           : self.window.comboBox_GCodeConversion_Units.currentText(),
-                "ZeroLowerLeft"   : self.window.radioButton_GCodeConversion_ZeroLowerLeft.isChecked(),
-                "ZeroCenter"      : self.window.radioButton_GCodeConversion_ZeroCenter.isChecked(),
                 "XOffset"         : self.window.doubleSpinBox_GCodeConversion_XOffset.value(),
                 "YOffset"         : self.window.doubleSpinBox_GCodeConversion_YOffset.value()
             },
@@ -295,8 +299,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             
         # GCodeConversion
         self.window.comboBox_GCodeConversion_Units.setCurrentText(settings["GCodeConversion"]["Units"])
-        self.window.radioButton_GCodeConversion_ZeroLowerLeft.setChecked(settings["GCodeConversion"]["ZeroLowerLeft"])
-        self.window.radioButton_GCodeConversion_ZeroCenter.setChecked(settings["GCodeConversion"]["ZeroCenter"])
         self.window.doubleSpinBox_GCodeConversion_XOffset.setValue(settings["GCodeConversion"]["XOffset"])
         self.window.doubleSpinBox_GCodeConversion_YOffset.setValue(settings["GCodeConversion"]["YOffset"])
             
@@ -479,6 +481,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             
 
     def cb_display_material_thickness(self):
+        '''
+        svg display only in mm
+        '''
         material_units = self.window.comboBox_Material_Units.currentText()
 
         thickness = ValWithUnit(self.window.doubleSpinBox_Material_Thickness.value(), material_units).toMn()
@@ -487,6 +492,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
 
     def cb_display_material_clearance(self):
+        '''
+        svg display only in mm
+        '''
         material_units = self.window.comboBox_Material_Units.currentText()
 
         thickness = ValWithUnit(self.window.doubleSpinBox_Material_Thickness.value(), material_units).toMn()
@@ -790,6 +798,88 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.svg_viewer.display_geometry_op(cnc_op.geometry_svg_paths)
 
+    def cb_generate_g_code_zerolowerleft(self):
+        '''
+        '''
+        cnc_ops = []
+        for op in self.operations:
+            cnc_op = CncOp(op)  
+            cnc_ops.append(cnc_op)
+
+        settings = self.get_current_settings()
+
+        svgModel = SvgModel()
+        svgModel.pxPerInch = 96
+        materialModel = MaterialModel()
+        materialModel.matUnits = settings["Material"]["Units"]
+        materialModel.matThickness = ValWithUnit(1.0, materialModel.matUnits)
+        materialModel.matZOrigin = settings["Material"]["ZOrigin"]
+        materialModel.matClearance = ValWithUnit(0.1, materialModel.matUnits)
+        toolModel = ToolModel()
+        toolModel.units = settings["Tool"]["Units"]
+        toolModel.diameter = ValWithUnit(settings["Tool"]["Diameter"], toolModel.units)
+        toolModel.angle = settings["Tool"]["Angle"]
+        toolModel.passDepth = ValWithUnit(settings["Tool"]["PassDepth"], toolModel.units)
+        toolModel.stepover = settings["Tool"]["StepOver"]
+        toolModel.rapidRate = ValWithUnit(settings["Tool"]["Rapid"], toolModel.units)
+        toolModel.plungeRate = ValWithUnit(settings["Tool"]["Plunge"], toolModel.units)
+        toolModel.cutRate = ValWithUnit(settings["Tool"]["Cut"], toolModel.units)
+        tabsmodel = TabsModel(svgModel, materialModel, None, None)
+        gcodeModel = GcodeModel()
+        gcodeModel.units = settings["GCodeConversion"]["Units"]
+        gcodeModel.XOffset = settings["GCodeConversion"]["XOffset"]
+        gcodeModel.YOffset = settings["GCodeConversion"]["YOffset"]
+        gcodeModel.returnTo00 = settings["GCodeGeneration"]["ReturnToZeroAtEnd"]
+        gcodeModel.spindleControl = settings["GCodeGeneration"]["SpindleAutomatic"]
+        gcodeModel.spindleSpeed = settings["GCodeGeneration"]["SpindleSpeed"]
+
+        job = JobModel(self.svg_viewer, cnc_ops, materialModel, svgModel, toolModel, tabsmodel, gcodeModel)
+        generator = GcodeGenerator(job)
+        generator.generateGcode_zeroLowerLeft()
+
+        self.after_gcode_generation(generator, cnc_ops)
+
+    def cb_generate_g_code_zerocenter(self):
+        '''
+        '''
+        cnc_ops = []
+        for op in self.operations:
+            cnc_op = CncOp(op)  
+            cnc_ops.append(cnc_op)
+
+        settings = self.get_current_settings()
+
+        svgModel = SvgModel()
+        svgModel.pxPerInch = 96
+        materialModel = MaterialModel()
+        materialModel.matUnits = settings["Material"]["Units"]
+        materialModel.matThickness = ValWithUnit(1.0, materialModel.matUnits)
+        materialModel.matZOrigin = settings["Material"]["ZOrigin"]
+        materialModel.matClearance = ValWithUnit(0.1, materialModel.matUnits)
+        toolModel = ToolModel()
+        toolModel.units = settings["Tool"]["Units"]
+        toolModel.diameter = ValWithUnit(settings["Tool"]["Diameter"], toolModel.units)
+        toolModel.angle = settings["Tool"]["Angle"]
+        toolModel.passDepth = ValWithUnit(settings["Tool"]["PassDepth"], toolModel.units)
+        toolModel.stepover = settings["Tool"]["StepOver"]
+        toolModel.rapidRate = ValWithUnit(settings["Tool"]["Rapid"], toolModel.units)
+        toolModel.plungeRate = ValWithUnit(settings["Tool"]["Plunge"], toolModel.units)
+        toolModel.cutRate = ValWithUnit(settings["Tool"]["Cut"], toolModel.units)
+        tabsmodel = TabsModel(svgModel, materialModel, None, None)
+        gcodeModel = GcodeModel()
+        gcodeModel.units = settings["GCodeConversion"]["Units"]
+        gcodeModel.XOffset = settings["GCodeConversion"]["XOffset"]
+        gcodeModel.YOffset = settings["GCodeConversion"]["YOffset"]
+        gcodeModel.returnTo00 = settings["GCodeGeneration"]["ReturnToZeroAtEnd"]
+        gcodeModel.spindleControl = settings["GCodeGeneration"]["SpindleAutomatic"]
+        gcodeModel.spindleSpeed = settings["GCodeGeneration"]["SpindleSpeed"]
+
+        job = JobModel(self.svg_viewer, cnc_ops, materialModel, svgModel, toolModel, tabsmodel, gcodeModel)
+        generator = GcodeGenerator(job)
+        generator.generateGcode_zeroCenter()
+
+        self.after_gcode_generation(generator, cnc_ops)
+
     def cb_generate_g_code(self):
         '''
         '''
@@ -800,39 +890,47 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         settings = self.get_current_settings()
 
-        materialModel = MaterialModel()
-        #materialModel.matUnits = settings["Material"]["Units"]
-        #materialModel.matThickness = ValWithUnit(1.0, materialModel.matUnits)
-        #materialModel.matZOrigin = settings["Material"]["ZOrigin"]
-        #materialModel.matClearance = ValWithUnit(0.1, materialModel.matUnits)
-        gcodeModel = GcodeModel()
-        #gcodeModel.units = settings["GCodeConversion"]["Units"]
-        #gcodeModel.ZeroLowerLeft = settings["GCodeConversion"]["ZeroLowerLeft"]
-        #gcodeModel.ZeroCenter = settings["GCodeConversion"]["ZeroCenter"]
-        #gcodeModel.XOffset = settings["GCodeConversion"]["XOffset"]
-        #gcodeModel.YOffset = settings["GCodeConversion"]["YOffset"]
-        #gcodeModel.returnTo00 = settings["GCodeGeneration"]["ReturnToZeroAtEnd"]
-        #gcodeModel.spindleControl = settings["GCodeGeneration"]["SpindleAutomatic"]
-        #gcodeModel.spindleSpeed = settings["GCodeGeneration"]["SpindleSpeed"]
         svgModel = SvgModel()
-        #svgModel.pxPerInch = 96
+        svgModel.pxPerInch = 96
+        materialModel = MaterialModel()
+        materialModel.matUnits = settings["Material"]["Units"]
+        materialModel.matThickness = ValWithUnit(1.0, materialModel.matUnits)
+        materialModel.matZOrigin = settings["Material"]["ZOrigin"]
+        materialModel.matClearance = ValWithUnit(0.1, materialModel.matUnits)
         toolModel = ToolModel()
-        #toolModel.units = settings["Tool"]["Units"]
-        #toolModel.diameter = ValWithUnit(settings["Tool"]["Diameter"], toolModel.units)
-        #toolModel.angle = settings["Tool"]["Angle"]
-        #toolModel.passDepth = ValWithUnit(settings["Tool"]["PassDepth"], toolModel.units)
-        #toolModel.stepover = settings["Tool"]["StepOver"]
-        #toolModel.rapidRate = ValWithUnit(settings["Tool"]["Rapid"], toolModel.units)
-        #toolModel.plungeRate = ValWithUnit(settings["Tool"]["Plunge"], toolModel.units)
-        #toolModel.cutRate = ValWithUnit(settings["Tool"]["Cut"], toolModel.units)
+        toolModel.units = settings["Tool"]["Units"]
+        toolModel.diameter = ValWithUnit(settings["Tool"]["Diameter"], toolModel.units)
+        toolModel.angle = settings["Tool"]["Angle"]
+        toolModel.passDepth = ValWithUnit(settings["Tool"]["PassDepth"], toolModel.units)
+        toolModel.stepover = settings["Tool"]["StepOver"]
+        toolModel.rapidRate = ValWithUnit(settings["Tool"]["Rapid"], toolModel.units)
+        toolModel.plungeRate = ValWithUnit(settings["Tool"]["Plunge"], toolModel.units)
+        toolModel.cutRate = ValWithUnit(settings["Tool"]["Cut"], toolModel.units)
         tabsmodel = TabsModel(svgModel, materialModel, None, None)
-        
+        gcodeModel = GcodeModel()
+        gcodeModel.units = settings["GCodeConversion"]["Units"]
+        gcodeModel.XOffset = settings["GCodeConversion"]["XOffset"]
+        gcodeModel.YOffset = settings["GCodeConversion"]["YOffset"]
+        gcodeModel.returnTo00 = settings["GCodeGeneration"]["ReturnToZeroAtEnd"]
+        gcodeModel.spindleControl = settings["GCodeGeneration"]["SpindleAutomatic"]
+        gcodeModel.spindleSpeed = settings["GCodeGeneration"]["SpindleSpeed"]
+
         job = JobModel(self.svg_viewer, cnc_ops, materialModel, svgModel, toolModel, tabsmodel, gcodeModel)
         generator = GcodeGenerator(job)
         generator.generateGcode()
 
+        self.after_gcode_generation(generator, cnc_ops)
+
+    def after_gcode_generation(self, generator, cnc_ops):
+        # with the resulting calculation, we can fill the min/max in X/Y as well as the offsets
+        self.window.doubleSpinBox_GCodeConversion_XOffset.setValue(generator.offsetX)
+        self.window.doubleSpinBox_GCodeConversion_YOffset.setValue(generator.offsetY)
+        self.window.doubleSpinBox_GCodeConversion_MinX.setValue(generator.minX)
+        self.window.doubleSpinBox_GCodeConversion_MinY.setValue(generator.minY)
+        self.window.doubleSpinBox_GCodeConversion_MaxX.setValue(generator.maxX)
+        self.window.doubleSpinBox_GCodeConversion_MaxY.setValue(generator.maxY)
+
         gcode = generator.gcode
-        print(gcode)
         self.display_gcode(gcode)
 
         for cnc_op in cnc_ops:

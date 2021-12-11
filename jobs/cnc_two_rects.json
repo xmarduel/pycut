@@ -86,10 +86,8 @@
      },
      "GCodeConversion": {
        "Units": "mm",
-       "ZeroLowerLeft": true,
-       "ZeroCenter": false,
-       "XOffset": 1.0,
-       "YOffset": 2.0
+       "XOffset": 0.0,
+       "YOffset": 0.0
     },
     "GCodeGeneration": {
       "ReturnToZeroAtEnd": true,

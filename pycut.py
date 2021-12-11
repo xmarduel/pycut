@@ -59,8 +59,6 @@ class GcodeModel:
     def __init__(self):
         # --------------------------- not sure yet for these
         self.units = "mm"
-        self.ZeroLowerLeft = True
-        self.ZeroCenter = False
         self.XOffset = 0.0
         self.YOffset = 0.0
 
@@ -536,11 +534,11 @@ class GcodeGenerator:
         self.tabsModel = job.tabsModel
         self.gcodeModel = job.gcodeModel
 
-        self.units = "mm"
+        self.units = self.gcodeModel.units
         self.unitConverter = UnitConverter(self.units)
 
-        self.offsetX = 0
-        self.offsetY = 0
+        self.offsetX = self.gcodeModel.XOffset
+        self.offsetY = self.gcodeModel.YOffset
 
         self.gcode = ""
 
@@ -554,20 +552,28 @@ class GcodeGenerator:
     
     @property
     def minY(self):
-        return -(self.unitConverter.fromInch(self.job.maxY / ClipperUtils.inchToClipperScale) + self.offsetY)
+        return  -self.unitConverter.fromInch(self.job.maxY / ClipperUtils.inchToClipperScale) + self.offsetY
    
     @property
     def maxY(self):
-        return -(self.unitConverter.fromInch(self.job.minY / ClipperUtils.inchToClipperScale) + self.offsetY)
+        return  -self.unitConverter.fromInch(self.job.minY / ClipperUtils.inchToClipperScale) + self.offsetY
 
-    def zeroLowerLeft(self):
+    def generateGcode_zeroLowerLeft(self):
         self.offsetX = - self.unitConverter.fromInch(self.job.minX / ClipperUtils.inchToClipperScale)
         self.offsetY = - self.unitConverter.fromInch(-self.job.maxY / ClipperUtils.inchToClipperScale)
         self.generateGcode()
 
-    def zeroCenter(self):
+    def generateGcode_zeroCenter(self):
         self.offsetX = - self.unitConverter.fromInch((self.job.minX + self.job.maxX) / 2 / ClipperUtils.inchToClipperScale)
         self.offsetY = - self.unitConverter.fromInch(-(self.job.minY + self.job.maxY) / 2 / ClipperUtils.inchToClipperScale)
+        self.generateGcode()
+
+    def setXOffset(self, value):
+        self.offsetX = value
+        self.generateGcode()
+
+    def setYOffset(self, value):
+        self.offsetY = value
         self.generateGcode()
 
     def generateGcode(self):
