@@ -45,6 +45,42 @@
       "Combine": "Union",
       "Direction": "Conventional",
       "Units": "mm"
+    },
+    {
+      "Name": "opx_p1",
+      "paths": ["p1"],
+      "type": "Inside",
+      "Deep": 0.125,
+      "RampPlunge": true,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "opx_p2",
+      "paths": ["p2"],
+      "type": "Pocket",
+      "Deep": 0.125,
+      "RampPlunge": true,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "opx_p3",
+      "paths": ["p3"],
+      "type": "Inside",
+      "Deep": 0.125,
+      "RampPlunge": true,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 5.0,
+      "Width": 5.0
     }
   ],
   "settings" : {
