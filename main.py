@@ -9,6 +9,7 @@ from PySide6 import QtWidgets
 
 from PySide6.QtCore import QFile
 from PySide6.QtUiTools import QUiLoader
+
 from ValWithUnit import ValWithUnit
 
 import svgviewer
@@ -362,7 +363,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         not the tool
 
-        TODO: the ops (cutDeepth)
+        TODO: the ops (cutDeepth) ?
         '''
         self.window.comboBox_Tabs_Units.setCurrentText("inch")
         self.window.comboBox_Material_Units.setCurrentText("inch")
@@ -372,13 +373,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         not the tool
 
-        TODO: the ops (cutDeepth)
+        TODO: the ops (cutDeepth) ?
         '''
         self.window.comboBox_Tabs_Units.setCurrentText("mm")
         self.window.comboBox_Material_Units.setCurrentText("mm")
         self.window.comboBox_GCodeConversion_Units.setCurrentText("mm")
         
     def cb_update_tabs_display(self):
+        '''
+        This updates the legends of the tsbs model widget **and** the values
+        '''
         tabs_units = self.window.comboBox_Tabs_Units.currentText()
         
         if tabs_units == "inch":
@@ -425,6 +429,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
     def cb_update_material_display(self):
         '''
+        This updates the legends of the material model widget **and** the values
         '''
         material_units = self.window.comboBox_Material_Units.currentText()
         
@@ -438,7 +443,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
     def cb_update_gcodeconversion_display(self):
         '''
-        This updates the legends of the gcode_conversion model widget
+        This updates the legends of the gcode_conversion model widget **and** the values
         '''
         gcodeconversion_units = self.window.comboBox_GCodeConversion_Units.currentText()
         
@@ -474,13 +479,19 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             
 
     def cb_display_material_thickness(self):
-        thickness = self.window.doubleSpinBox_Material_Thickness.value()
-        clearance = self.window.doubleSpinBox_Material_Clearance.value()
+        material_units = self.window.comboBox_Material_Units.currentText()
+
+        thickness = ValWithUnit(self.window.doubleSpinBox_Material_Thickness.value(), material_units).toMn()
+        clearance = ValWithUnit(self.window.doubleSpinBox_Material_Clearance.value(), material_units).toMn()
+
         self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
 
     def cb_display_material_clearance(self):
-        thickness = self.window.doubleSpinBox_Material_Thickness.value()
-        clearance = self.window.doubleSpinBox_Material_Clearance.value()
+        material_units = self.window.comboBox_Material_Units.currentText()
+
+        thickness = ValWithUnit(self.window.doubleSpinBox_Material_Thickness.value(), material_units).toMn()
+        clearance = ValWithUnit(self.window.doubleSpinBox_Material_Clearance.value(), material_units).toMn()
+
         self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
 
     def cb_spindle_automatic(self):
