@@ -1,6 +1,4 @@
 
-import sys
-
 from PySide6 import QtCore
 from PySide6 import QtGui
 from PySide6 import QtWidgets
@@ -22,9 +20,13 @@ class CncOp:
         self.enabled = False
 
     def put_value(self, attr, value):
+        '''
+        '''
         setattr(self, attr, value)
         
     def __str__(self):
+        '''
+        '''
         return "op: %s %s [%f] %s" % (self.name, self.cam_op, self.cutDepth, self.enabled)
 
 

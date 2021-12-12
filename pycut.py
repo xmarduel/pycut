@@ -16,6 +16,8 @@
 # along with pycut.  If not, see <http:#www.gnu.org/licenses/>.
 
 from typing import List
+from typing import Dict
+from typing import Any
 
 import clipper.clipper as ClipperLib
 from clipper_utils import ClipperUtils
@@ -162,8 +164,8 @@ class Tab:
                 self.combinedGeometrySvg.attr("visibility", v)
     
 
-        self.enabled.subscribe(xxxx)
-        self.margin.subscribe(self.recombine)
+        #self.enabled.subscribe(xxxx)
+        #self.margin.subscribe(self.recombine)
         self.recombine()
 
     def removeCombinedGeometrySvg(self):
@@ -255,26 +257,25 @@ class TabsModel:
 class CncOp:
     '''
     '''
-    def __init__(self, operation_data):
-        self.operation = operation_data
-        self.enabled = self.operation.get("enabled", False)
+    def __init__(self, operation: Dict[str,Any]):
+        self.units = operation["Units"]
+        self.name = operation["Name"]
+        self.paths = operation["paths"]
+        self.combinaison = operation["Combine"]
+        self.ramp = operation["RampPlunge"]
+        self.cam_op = operation["type"]
+        self.direction = operation["Direction"]
+        self.cutDepth = ValWithUnit(operation["Deep"], self.units)
 
-        self.units = self.operation["Units"]
+        self.enabled = operation.get("enabled", False)
 
-        self.name = self.operation["Name"]
-        self.combinaison = self.operation["Combine"]
-        self.ramp = self.operation["RampPlunge"]
-        self.cam_op = self.operation["type"]
-        self.direction = self.operation["Direction"]
-        self.cutDepth = ValWithUnit(self.operation["Deep"], self.units)
-
-        if "Margin" in self.operation:
-            self.margin = ValWithUnit(self.operation["Margin"], self.units)
+        if "Margin" in operation:
+            self.margin = ValWithUnit(operation["Margin"], self.units)
         else:
             self.margin = None
 
-        if "Width" in self.operation:
-            self.width = ValWithUnit(self.operation["Width"], self.units)
+        if "Width" in operation:
+            self.width = ValWithUnit(operation["Width"], self.units)
         else:
             self.width = None
         
@@ -283,7 +284,7 @@ class CncOp:
         # the input "transformed"
         self.clipper_paths : List[List[ClipperLib.IntPoint]] = []
         
-        # the resulting paths from the op combinaison setting + selected scg paths
+        # the resulting paths from the op combinaison setting + enabled svg paths
         self.geometry = ClipperLib.PathVector()
         # and the resulting svg paths from the combinaison, to be displayed
         # in the svg viewer
@@ -295,15 +296,19 @@ class CncOp:
         self.cam_paths_svg_paths : List[SvgPath] = []
 
     def put_value(self, attr, value):
+        '''
+        '''
         setattr(self, attr, value)
 
     def __str__(self):
-        return "op: %s %s [%f] %s" % (self.name, self.cam_op, self.Deep, self.selected)
+        '''
+        '''
+        return "op: %s %s [%f] %s" % (self.name, self.cam_op, self.Deep, self.enabled)
 
     def setup(self, svg_viewer: SvgViewer):
         '''
         '''
-        for svg_path_id in self.operation["paths"]:
+        for svg_path_id in self.paths:
 
             svg_path_d = svg_viewer.get_svg_path_d(svg_path_id)
             svg_path = SvgPath(svg_path_id, {'d': svg_path_d})
@@ -322,7 +327,7 @@ class CncOp:
             "Intersection": ClipperLib.ClipType.ctIntersection,
             "Difference": ClipperLib.ClipType.ctDifference,
             "Xor": ClipperLib.ClipType.ctXor,
-        } [self.operation["Combine"]] 
+        } [self.combinaison] 
         
         geometry = ClipperUtils.combine(self.clipper_paths, clipType)
 
@@ -603,7 +608,7 @@ class GcodeGenerator:
         tabZ = ValWithUnit(topZ - tabCutDepth, self.gcodeModel.units) # CHEKME
 
         if self.units == "inch":
-            scale = 1 / ClipperUtils.inchToClipperScale
+            scale = 1.0 / ClipperUtils.inchToClipperScale
         else:
             scale = 25.4 / ClipperUtils.inchToClipperScale
 
