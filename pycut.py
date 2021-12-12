@@ -255,13 +255,14 @@ class TabsModel:
 class CncOp:
     '''
     '''
-    def __init__(self, operation):
-        self.operation = operation
-        self.enabled = operation.get("enabled", False)
+    def __init__(self, operation_data):
+        self.operation = operation_data
+        self.enabled = self.operation.get("enabled", False)
 
         self.units = self.operation["Units"]
 
         self.name = self.operation["Name"]
+        self.combinaison = self.operation["Combine"]
         self.ramp = self.operation["RampPlunge"]
         self.cam_op = self.operation["type"]
         self.direction = self.operation["Direction"]
@@ -292,6 +293,12 @@ class CncOp:
         # and the resulting svg paths, to be displayed
         # in the svg viewer
         self.cam_paths_svg_paths : List[SvgPath] = []
+
+    def put_value(self, attr, value):
+        setattr(self, attr, value)
+
+    def __str__(self):
+        return "op: %s %s [%f] %s" % (self.name, self.cam_op, self.Deep, self.selected)
 
     def setup(self, svg_viewer: SvgViewer):
         '''

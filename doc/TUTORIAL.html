@@ -46,6 +46,7 @@ for (var i = 0; i < tree.length; i++){
     });
 }</script>
 </div>
+
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
@@ -56,19 +57,21 @@ for (var i = 0; i < tree.length; i++){
 
 <h2 id="P-01">Introduction</h2>
 
-<p><strong>PyCut</strong> is a clone of <strong>jsCut</strong>, the excellent (at least for beginners) CAM,
-web-based programm, that takes as input svg files and generates G-Code. So why
-this rewrite ?</p>
+<p><strong>PyCut</strong> is a clone of <strong>jsCut</strong>, the excellent (at least for beginners) 
+CAM, web-based programm, that takes as input svg files and generates G-Code. 
+So why this rewrite ?</p>
 
-<p>The true reason is: I wanted the spindle control (M3/M5) codes inside 
+<p>One reason is: I wanted the spindle control (M3/M5) codes inside 
 the generated g-code. It is worth a rewrite!</p>
+
+<p>So it begins as a "fun" project, in order to understand how a G-code generator
+works, and how easy (or hard) it is to achieve. Well, it is not so easy 
+(but stealing jsCut code helps). And I learned about jsCut through the 
+<a href="https://cncphilosophy.com/svg-to-G-Code">CnC Philosophy</a> page.</p>
 
 <p>By the way,I began to use <strong>jsCut</strong> because Easel (for beginners too),
 although free, makes limitations (among others) on the choices of the fonts
 - which is quite a shame...</p>
-
-<p>So it begins as a "fun" project, in order to understand how a G-code generator
-works, and how easy (or hard) it is to achieve. Well, it is not so easy (but stealing jsCut code helps).</p>
 
 <p>An other point is the "major" shortcoming of <strong>jsCut</strong>: the fact that it is a web
 application: sure for developpers who know javascript technology it is very

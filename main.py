@@ -15,7 +15,7 @@ from ValWithUnit import ValWithUnit
 import svgviewer
 import webglviewer
 import material_widget
-import operations_simpletablewidget
+import operations_tablewidget
 
 from pycut import GcodeModel
 from pycut import ToolModel
@@ -178,7 +178,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         '''
         loader = QUiLoader(self)
-        loader.registerCustomWidget(operations_simpletablewidget.PyCutSimpleTableWidget)
+        loader.registerCustomWidget(operations_tablewidget.PyCutSimpleTableWidget)
         
         window = loader.load(uifile)
 
@@ -307,8 +307,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.checkBox_GCodeGeneration_SpindleAutomatic.setChecked(settings["GCodeGeneration"]["SpindleAutomatic"]),
         self.window.spinBox_GCodeGeneration_SpindleSpeed.setValue(settings["GCodeGeneration"]["SpindleSpeed"]),
 
-
-    @QtCore.Slot()
     def cb_open_svg(self):
         '''
         not a job, a svg only -> no oerations
@@ -321,7 +319,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.operations = []
             
             self.display_svg(self.svg_file)
-            self.display_operations(self.operations)
  
     def cb_open_job(self):
         '''
@@ -486,8 +483,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         material_units = self.window.comboBox_Material_Units.currentText()
 
-        thickness = ValWithUnit(self.window.doubleSpinBox_Material_Thickness.value(), material_units).toMn()
-        clearance = ValWithUnit(self.window.doubleSpinBox_Material_Clearance.value(), material_units).toMn()
+        thickness = ValWithUnit(self.window.doubleSpinBox_Material_Thickness.value(), material_units).toMm()
+        clearance = ValWithUnit(self.window.doubleSpinBox_Material_Clearance.value(), material_units).toMm()
 
         self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
 
@@ -497,8 +494,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         material_units = self.window.comboBox_Material_Units.currentText()
 
-        thickness = ValWithUnit(self.window.doubleSpinBox_Material_Thickness.value(), material_units).toMn()
-        clearance = ValWithUnit(self.window.doubleSpinBox_Material_Clearance.value(), material_units).toMn()
+        thickness = ValWithUnit(self.window.doubleSpinBox_Material_Thickness.value(), material_units).toMm()
+        clearance = ValWithUnit(self.window.doubleSpinBox_Material_Clearance.value(), material_units).toMm()
 
         self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
 
@@ -670,7 +667,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             'Inside'   : "op_inside.ui",
             'Outside'  : "op_outside.ui",
             'Engrave'  : "op_engrave.ui",
-            'V Pocket' : "op_vpocket.ui",
         }
 
         self.current_op_widget = self.load_ui(mapp[op_type])
@@ -737,15 +733,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "Units": "mm",
                 "Margin": 0.1,
             }
-        if op_type == "V Pocket":
-            operation = {
-                "Name": "-- op v-pocket --",
-                "paths": [],
-                "type": "V Pocket",
-                "Combine": "Union",
-                "Units": "mm",
-                "Margin": 0.1,
-            }
+
         self.display_operation(operation)
         
     def display_operation(self, operation):

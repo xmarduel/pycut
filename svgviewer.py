@@ -238,16 +238,28 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         self.fill_svg_viewer(augmented_svg)
 
-    def display_op(self, cnc_op):
+    def display_job(self, cnc_ops: List['CncOp']):
         '''
-        The list of svg_paths results of the toolpath calculation
+        Display more than 1 cnc_op
 
+        The list of svg_paths results of the toolpath calculation for given ops
         The resulting svg_paths will the displayed in yellow together with the original svg
         '''
         transformer = SvgTransformer(self.svg)
-        augmented_svg = transformer.augment(cnc_op.geometry_svg_paths)
+
+        geometry_svg_paths = []
+        for cnc_op in cnc_ops:
+                geometry_svg_paths += cnc_op.geometry_svg_paths
+
+        augmented_svg = transformer.augment(geometry_svg_paths)
+
 
         transformer = SvgTransformer(augmented_svg)
-        augmented_svg = transformer.augment_with_lines(cnc_op.cam_paths_svg_paths)
+
+        cam_paths_svg_paths = []
+        for cnc_op in cnc_ops:
+                cam_paths_svg_paths += cnc_op.cam_paths_svg_paths
+
+        augmented_svg = transformer.augment_with_lines(cam_paths_svg_paths)
 
         self.fill_svg_viewer(augmented_svg)
