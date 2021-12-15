@@ -112,7 +112,7 @@ class cam:
                 allPaths = [p for p in current] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
 
             nextWidth = currentWidth + eachWidth
-            if nextWidth > width and width - currentWidth > 0 :
+            if nextWidth > width and (width - currentWidth) > 0 :
                 current = clipper_utils.ClipperUtils.offset(current, width - currentWidth)
                 if needReverse:
                     reversed = []
@@ -235,9 +235,9 @@ class cam:
         '''
         # strange, transform all these "PathVector" in "IntPointvector"
         if _bounds and len(_bounds) > 0:
-            bounds = _bounds[0]
+            bounds = _bounds
         else: 
-            bounds = []
+            bounds = ClipperLib.PathVector()
  
 
         currentPath = list(paths[0]) # not as tuple, but as list

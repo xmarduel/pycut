@@ -110,16 +110,12 @@ class ClipperUtils:
         # JSCUT clipper.AddPath([p1, p2], ClipperLib.PolyType.ptSubject, False)
         # JSCUT clipper.AddPaths(bounds, ClipperLib.PolyType.ptClip, True)
 
-        # XAM unfortunately bad wrapper... accept only PathVector ???
         p1_p2 = ClipperLib.IntPointVector()
         p1_p2.append(p1)
         p1_p2.append(p2)
-        
-        bound_pv = ClipperLib.PathVector()
-        bound_pv.append(bounds)
 
         clipper.AddPath(p1_p2, ClipperLib.PolyType.ptSubject, False)
-        clipper.AddPaths(bound_pv, ClipperLib.PolyType.ptClip, True)
+        clipper.AddPaths(bounds, ClipperLib.PolyType.ptClip, True)
 
         result = ClipperLib.PolyTree()
         clipper.Execute(ClipperLib.ClipType.ctIntersection, result, ClipperLib.PolyFillType.pftEvenOdd, ClipperLib.PolyFillType.pftEvenOdd)

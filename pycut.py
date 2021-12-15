@@ -438,10 +438,9 @@ class CncOp:
 
         geometry = self.geometry
         
-        offset = 0
-        
+        offset = margin.toInch() * ClipperUtils.inchToClipperScale
+
         if cam_op == "Pocket" or cam_op == "V Pocket" or cam_op == "Inside":
-            offset = margin.toInch() * ClipperUtils.inchToClipperScale
             offset = -offset
         if cam_op != "Engrave" and offset != 0:
             geometry = ClipperUtils.offset(geometry, offset)

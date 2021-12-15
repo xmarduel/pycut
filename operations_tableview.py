@@ -47,7 +47,7 @@ class PMFDoubleSpinBox(QtWidgets.QDoubleSpinBox):
 
         self.setMinimum(0)
         self.setMaximum(100)
-        self.setSingleStep(0.001)
+        self.setSingleStep(0.1)
         self.setDecimals(3)
 
         self.valueChanged.connect(self.cb_spinbox)
@@ -445,9 +445,10 @@ class PMFSimpleTableView(QtWidgets.QTableView):
             "combinaison",
             "direction",
             "margin",                   # [10] float
-            "del",                      # [11] button
-            "up",                       # [12] button
-            "down",                     # [13] button
+            "width",                    # [11] float
+            "del",                      # [12] button
+            "up",                       # [13] button
+            "down",                     # [14] button
         ]
         '''
         delegate = PMFComboBoxDelegate(self)
@@ -474,6 +475,9 @@ class PMFSimpleTableView(QtWidgets.QTableView):
         delegate = PMFDoubleSpinBoxDelegate(self)
         self.setItemDelegateForColumn(10, delegate)
 
+        delegate = PMFDoubleSpinBoxDelegate(self)
+        self.setItemDelegateForColumn(11, delegate)
+
         # Make the combo boxes / check boxes / others spacials always displayed.
         for k in range(self.model().rowCount(None)):
             self.openPersistentEditor(self.model().index(k, 2)) # cam_op
@@ -484,6 +488,7 @@ class PMFSimpleTableView(QtWidgets.QTableView):
             self.openPersistentEditor(self.model().index(k, 8)) # combinaison
             self.openPersistentEditor(self.model().index(k, 9)) # direction
             self.openPersistentEditor(self.model().index(k, 10)) #          margin
+            self.openPersistentEditor(self.model().index(k, 11)) #          width
 
         for row in range(self.model().rowCount(None)):
             btn_gcode_op = QtWidgets.QPushButton()
@@ -498,21 +503,21 @@ class PMFSimpleTableView(QtWidgets.QTableView):
             btn_del_op.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/edit-clear.png'))
             btn_del_op.setToolTip("Delete Op")
             btn_del_op.clicked.connect(self.cb_delete_op)
-            self.setIndexWidget(self.model().index(row, 11), btn_del_op)
+            self.setIndexWidget(self.model().index(row, 12), btn_del_op)
 
             btn_up_op = QtWidgets.QPushButton()
             btn_up_op.setText("")
             btn_up_op.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/go-up.png'))
             btn_up_op.setToolTip("Up")
             btn_up_op.clicked.connect(self.cb_move_up_op)
-            self.setIndexWidget(self.model().index(row, 12), btn_up_op)
+            self.setIndexWidget(self.model().index(row, 13), btn_up_op)
 
             btn_dw_op = QtWidgets.QPushButton()
             btn_dw_op.setText("")
             btn_dw_op.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/go-down.png'))
             btn_dw_op.setToolTip("Down")
             btn_dw_op.clicked.connect(self.cb_move_down_op)
-            self.setIndexWidget(self.model().index(row, 13), btn_dw_op)
+            self.setIndexWidget(self.model().index(row, 14), btn_dw_op)
 
         # setup a right grid size
         vwidth = self.verticalHeader().width()
@@ -597,9 +602,10 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
             "combinaison",
             "direction",
             "margin",                   # [10] float
-            "del",                      # [11] button
-            "up",                       # [12] button
-            "down",                     # [13] button
+            "width",                    # [11] float
+            "del",                      # [12] button
+            "up",                       # [13] button
+            "down",                     # [14] button
         ]
 
         self.cnt = 0
@@ -623,7 +629,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
         print("handleNewvalue NEW -> %s %s" % (attrib, value))
 
         # TODO: action on pycut GUI
-        if attrib in ["enabled", "margin"]:
+        if attrib in ["enabled", "margin", "width", "combinaison", "cam_ops"]:
             cnc_op = self.operations[row]
             setattr(cnc_op, attrib, value)
 
@@ -662,11 +668,11 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
 
         if col == 1:  # button
             return None
-        if col == 11:  # button
-            return None
         if col == 12:  # button
             return None
         if col == 13:  # button
+            return None
+        if col == 14:  # button
             return None
 
         # for checkboxes only
@@ -719,14 +725,10 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
         self.operations.remove(op)
         self.endRemoveRows()
 
-        self.dump()
-
     def swapItems(self, idx1, idx2):
         self.beginResetModel()
         self.operations[idx1], self.operations[idx2] = self.operations[idx2], self.operations[idx1]
         self.endResetModel()
-
-        self.dump()
         
     def get_operation(self, index):
         return self.operations[index.row()]

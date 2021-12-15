@@ -17,9 +17,10 @@ from ValWithUnit import ValWithUnit
 
 import svgviewer
 import webglviewer
-import material_widget
-import operations_tablewidget
 import operations_tableview
+
+import material_widget
+
 
 from pycut import GcodeModel
 from pycut import ToolModel
@@ -162,7 +163,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         '''
         loader = QUiLoader(self)
-        loader.registerCustomWidget(operations_tablewidget.PyCutSimpleTableWidget)
         loader.registerCustomWidget(operations_tableview.PMFTableViewManager)
         
         window = loader.load(uifile)
@@ -462,7 +462,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.window.doubleSpinBox_GCodeConversion_MinY.setValue(self.window.doubleSpinBox_GCodeConversion_MinY.value() * 25.4 )
             self.window.doubleSpinBox_GCodeConversion_MaxY.setValue(self.window.doubleSpinBox_GCodeConversion_MaxY.value() * 25.4 )
             
-
     def cb_display_material_thickness(self):
         '''
         svg display only in mm
