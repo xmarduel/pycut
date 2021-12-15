@@ -266,12 +266,13 @@ class PMFComboBoxDelegate(QtWidgets.QItemDelegate):
         self.items = []
         if col == 2:
             self.items = ["Pocket", "Inside", "Outside", "Engrave"]
-        if col == 7:
-            self.items = ["Union", "Intersection", "Difference", "Xor"]
-        if col == 8:
-            self.items = ["Conventional", "Climb"]
-        if col == 9:
+        if col == 5:
             self.items = ["inch", "mm"]
+        if col == 8:
+            self.items = ["Union", "Intersection", "Difference", "Xor"]
+        if col == 9:
+            self.items = ["Conventional", "Climb"]
+       
 
         editor = PMFComboBox(parent, self.items)
 
@@ -367,19 +368,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
         self._button_add.clicked.connect(self.add_item)
         self._button_add.setIcon(QtGui.QIcon(":/images/tango/32x32/actions/list-add"))
 
-        # create the button, and hook it up to the slot below.
-        self._button_up = QtWidgets.QPushButton("")
-        self._button_up.clicked.connect(self.up_item)
-        self._button_up.setIcon(QtGui.QIcon(":/images/tango/32x32/actions/go-up"))
-
-        # create the button, and hook it up to the slot below.
-        self._button_down = QtWidgets.QPushButton("")
-        self._button_down.clicked.connect(self.down_item)
-        self._button_down.setIcon(QtGui.QIcon(":/images/tango/32x32/actions/go-down"))
-
         hbox.addWidget(self._button_add)
-        hbox.addWidget(self._button_up)
-        hbox.addWidget(self._button_down)
 
         # add bottom to main window layout
         vbox.addLayout(hbox)
@@ -415,42 +404,6 @@ class PMFTableViewManager(QtWidgets.QWidget):
         for op in self.table.model().operations:
             print(op)
 
-    def del_item(self):
-        index = self.table.currentIndex()
-        idx = index.row()
-        # instruct the model to del an item
-        self.table.delItem(idx)
-        
-        print("DEL")
-        for op in self.table.model().operations:
-            print(op)
-
-    def down_item(self):
-        index = self.table.currentIndex()
-        idx = index.row()
-        if idx < self.table.model().rowCount(None) - 1:
-            self.table.swapItems(idx, idx + 1)
-
-        # to be sure to update the table... and all its delegates
-        self.table.setup()
-        
-        print("DOWN")
-        for op in self.table.model().operations:
-            print(op)
-        
-
-    def up_item(self):
-        index = self.table.currentIndex()
-        idx = index.row()
-        if idx > 0:
-            self.table.swapItems(idx, idx - 1)
-
-        # to be sure to update the table... and all its delegates
-        self.table.setup()
-        
-        print("UP")
-        for op in self.table.model().operations:
-            print(op)
 
 class PMFSimpleTableView(QtWidgets.QTableView):
     '''
@@ -475,6 +428,22 @@ class PMFSimpleTableView(QtWidgets.QTableView):
 
     def setup(self):
         '''
+        self.header =  [
+            "name",                     # [0] str
+            "gcode",                    # [1] button
+            "cam_op",
+            "enabled",                  # [3] checkbox
+            "paths",                    # [4] str
+            "units",
+            "cutDepth",                 # [6] float
+            "ramp",                     # [7] checkbox
+            "combinaison",
+            "direction",
+            "margin",                   # [10] float
+            "del",                      # [11] button
+            "up",                       # [12] button
+            "down",                     # [13] button
+        ]
         '''
         delegate = PMFComboBoxDelegate(self)
         self.setItemDelegateForColumn(2, delegate)
@@ -482,15 +451,15 @@ class PMFSimpleTableView(QtWidgets.QTableView):
         delegate = PMFCheckBoxDelegate(self)
         self.setItemDelegateForColumn(3, delegate)
         
-        delegate = PMFDoubleSpinBoxDelegate(self)
+        delegate = PMFComboBoxDelegate(self)
         self.setItemDelegateForColumn(5, delegate)
 
-        delegate = PMFCheckBoxDelegate(self)
+        delegate = PMFDoubleSpinBoxDelegate(self)
         self.setItemDelegateForColumn(6, delegate)
-    
-        delegate = PMFComboBoxDelegate(self)
-        self.setItemDelegateForColumn(7, delegate)
         
+        delegate = PMFCheckBoxDelegate(self)
+        self.setItemDelegateForColumn(7, delegate)
+    
         delegate = PMFComboBoxDelegate(self)
         self.setItemDelegateForColumn(8, delegate)
         
@@ -502,14 +471,14 @@ class PMFSimpleTableView(QtWidgets.QTableView):
 
         # Make the combo boxes / check boxes / others spacials always displayed.
         for k in range(self.model().rowCount(None)):
-            self.openPersistentEditor(self.model().index(k, 2))
-            self.openPersistentEditor(self.model().index(k, 3))
-            self.openPersistentEditor(self.model().index(k, 5))
-            self.openPersistentEditor(self.model().index(k, 6))
-            self.openPersistentEditor(self.model().index(k, 7))
-            self.openPersistentEditor(self.model().index(k, 8))
-            self.openPersistentEditor(self.model().index(k, 9))
-            self.openPersistentEditor(self.model().index(k, 10))
+            self.openPersistentEditor(self.model().index(k, 2)) # cam_op
+            self.openPersistentEditor(self.model().index(k, 3)) #   enabled
+            self.openPersistentEditor(self.model().index(k, 5)) # units
+            self.openPersistentEditor(self.model().index(k, 6)) #          cutDepth
+            self.openPersistentEditor(self.model().index(k, 7)) #   ramp
+            self.openPersistentEditor(self.model().index(k, 8)) # combinaison
+            self.openPersistentEditor(self.model().index(k, 9)) # direction
+            self.openPersistentEditor(self.model().index(k, 10)) #          margin
 
         for row in range(self.model().rowCount(None)):
             btn_gcode_op = QtWidgets.QPushButton()
@@ -526,6 +495,20 @@ class PMFSimpleTableView(QtWidgets.QTableView):
             btn_del_op.clicked.connect(self.cb_delete_op)
             self.setIndexWidget(self.model().index(row, 11), btn_del_op)
 
+            btn_up_op = QtWidgets.QPushButton()
+            btn_up_op.setText("")
+            btn_up_op.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/go-up.png'))
+            btn_up_op.setToolTip("Up")
+            btn_up_op.clicked.connect(self.cb_up_op)
+            self.setIndexWidget(self.model().index(row, 12), btn_up_op)
+
+            btn_dw_op = QtWidgets.QPushButton()
+            btn_dw_op.setText("")
+            btn_dw_op.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/go-down.png'))
+            btn_dw_op.setToolTip("Down")
+            btn_dw_op.clicked.connect(self.cb_dw_op)
+            self.setIndexWidget(self.model().index(row, 13), btn_dw_op)
+
         # setup a right grid size
         vwidth = self.verticalHeader().width()
         hwidth = self.horizontalHeader().length()
@@ -540,21 +523,45 @@ class PMFSimpleTableView(QtWidgets.QTableView):
         self.setColumnWidth(0, 100)  # name
         self.setColumnWidth(4, 100)  # paths
 
-    def addItem(self):
-        self.model().addItem()
-        self.setup()  # to show the editors on a new item
-
-    def delItem(self, idx):
-        self.model().delItem(idx)
-
-    def swapItems(self, idx1, idx2):
-        self.model().swapItems(idx1, idx2)
-
     def cb_delete_op(self):
         index = self.currentIndex()
         idx = index.row()
-        # instruct the model to del this item
-        self.delItem(idx)
+        # instruct the model to del an item
+        self.model().delItem(idx)
+        
+        print("DEL")
+        for op in self.model().operations:
+            print(op)
+
+    def cb_dw_op(self):
+        index = self.currentIndex()
+        idx = index.row()
+        if idx < self.model().rowCount(None) - 1:
+            self.model().swapItems(idx, idx + 1)
+
+        # to be sure to update the table... and all its delegates
+        self.setup()
+        
+        print("DOWN")
+        for op in self.model().operations:
+            print(op)
+        
+    def cb_up_op(self):
+        index = self.currentIndex()
+        idx = index.row()
+        if idx > 0:
+            self.model().swapItems(idx, idx - 1)
+
+        # to be sure to update the table... and all its delegates
+        self.setup()
+        
+        print("UP")
+        for op in self.model().operations:
+            print(op)
+
+    def addItem(self):
+        self.model().addItem()
+        self.setup()  # to show the editors on a new item
 
     def cb_gen_gcode_op(self):
         index = self.currentIndex()
@@ -562,11 +569,6 @@ class PMFSimpleTableView(QtWidgets.QTableView):
         # instruct the model to generate the g-code for this item
         pass  # TODO
 
-    def cb_select(self):
-        index = self.currentIndex()
-        idx = index.row()
-        # re-generate geometries and preview genometries for all selected
-        pass  # TODO
 
 class PMFSimpleTableModel(QtCore.QAbstractTableModel):
     '''
@@ -580,17 +582,19 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
 
         self.header =  [
             "name",                     # [0] str
-            "gen gcode",                # [1] button
+            "gcode",                    # [1] button
             "cam_op",
             "enabled",                  # [3] checkbox
             "paths",                    # [4] str
-            "cutDepth",                 # [5] float
-            "ramp",                     # [6] checkbox
+            "units",
+            "cutDepth",                 # [6] float
+            "ramp",                     # [7] checkbox
             "combinaison",
             "direction",
-            "units",
             "margin",                   # [10] float
-            "del",                      # [11] buttont
+            "del",                      # [11] button
+            "up",                       # [12] button
+            "down",                     # [13] button
         ]
 
         self.cnt = 0
@@ -651,11 +655,15 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
             return None
         if col == 11:  # button
             return None
+        if col == 12:  # button
+            return None
+        if col == 13:  # button
+            return None
 
         # for checkboxes only
         if col == 3:   # checkbox
             return None
-        if col == 6:   # checkbox
+        if col == 7:   # checkbox
             return None
 
         if role == QtCore.Qt.DisplayRole:
