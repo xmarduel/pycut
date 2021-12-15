@@ -3,6 +3,9 @@
 import sys
 import json
 
+from typing import List
+from typing import Any
+
 from PySide6 import QtCore
 from PySide6 import QtGui
 from PySide6 import QtWidgets
@@ -16,6 +19,7 @@ import svgviewer
 import webglviewer
 import material_widget
 import operations_tablewidget
+import operations_tableview
 
 from pycut import GcodeModel
 from pycut import ToolModel
@@ -77,11 +81,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         # the full data
         self.job = None
-        # the operation displayed ("expanded")
-        self.current_op = None
-        self.current_op_widget = None
         
         self.setCentralWidget(self.window)
+
+        xx = self.window.parent()
 
         self.svg_viewer = self.setup_svg_viewer()
         self.svg_material_viewer = self.setup_material_viewer()
@@ -101,13 +104,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_material_viewer.display_material(thickness=default_thickness, clearance=default_clearance)
         
         self.display_svg(None)
-        self.hide_op_widgets()
-
-        self.window.comboBox_Operations_OpType.currentTextChanged.connect(self.display_op_widgets)
-
-        self.window.pushButton_Operations_CreateNewOp.clicked.connect(self.cb_create_op)
-        self.window.pushButton_Operations_SaveOp.clicked.connect(self.cb_save_op)
-        self.window.pushButton_Operations_CancelOp.clicked.connect(self.cb_cancel_op)
         
         self.window.comboBox_Tabs_Units.currentTextChanged.connect(self.cb_update_tabs_display)
         self.window.comboBox_Tool_Units.currentTextChanged.connect(self.cb_update_tool_display)
@@ -117,26 +113,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.window.pushButton_MakeAll_inch.clicked.connect(self.cb_make_all_inch)
         self.window.pushButton_MakeAll_mm.clicked.connect(self.cb_make_all_mm)
         
-        self.window.pushButton_ShowHideSettings.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
-        self.window.pushButton_ShowHideSettings.clicked.connect(self.cb_show_hide_settings)
-
-        self.window.pushButton_ShowHideTabs.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
-        self.window.pushButton_ShowHideTabs.clicked.connect(self.cb_show_hide_tabs)
-        
-        self.window.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
-        self.window.pushButton_ShowHideTool.clicked.connect(self.cb_show_hide_tool)
 
         self.window.checkBox_GCodeGeneration_SpindleAutomatic.clicked.connect(self.cb_spindle_automatic)
 
-        self.window.pushButton_GenerateGCode.clicked.connect(self.cb_generate_g_code)
+        #self.window.pushButton_GenerateGCode.clicked.connect(self.cb_generate_g_code)
 
         self.window.pushButton_GCodeConversion_ZeroLowerLeft.clicked.connect(self.cb_generate_g_code_zerolowerleft)
         self.window.pushButton_GCodeConversion_ZeroCenter.clicked.connect(self.cb_generate_g_code_zerocenter)
 
         self.window.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_g_code)
         self.window.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_g_code)
-
-        
 
         self.init_gui()
 
@@ -179,6 +165,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         loader = QUiLoader(self)
         loader.registerCustomWidget(operations_tablewidget.PyCutSimpleTableWidget)
+        loader.registerCustomWidget(operations_tableview.PMFTableViewManager)
         
         window = loader.load(uifile)
 
@@ -338,11 +325,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         
             # display
             self.display_svg(self.svg_file)
-            # display operations in table
-            self.display_operations(self.operations)
             
             # and fill the whole gui
             self.apply_settings(job["settings"])
+
+            # fill operations table
+            self.window.operationsview_manager.set_operations(self.operations)
         
     def save_job(self):
         '''
@@ -562,229 +550,64 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             self.svg_viewer.set_svg(svg)
 
-    def display_operations(self, operations):
+    def display_cnc_op(self, op_model):
+        '''
+        callback operation "enabled"
+        '''
+        self.display_operation_on_svg_canvas([op_model])
+
+    def display_cnc_ops(self, ops_model: List[Any]):
+        '''
+        callback operation "enabled"
+        '''
+        self.display_operation_on_svg_canvas(ops_model)
+
+    def display_operation_on_svg_canvas(self, ops_model: List[Any]):
         '''
         '''
-        self.window.tableWidget_Operations_ViewOps.setData(operations)
+        settings = self.get_current_settings()
 
-    def cb_create_op(self):
-        '''
-        '''
-        self.show_op_widgets()
-        self.window.comboBox_Operations_OpType.show()
-        self.window.comboBox_Operations_OpType.setEnabled(True)
-
-        # now the real stuff - svg entities ("paths") have been selected
-        # -> they can be "combined" with the operation setting (Union, Interection, XOR, Diff)
-
-        # 1- first, we calculate the resuting paths as results of the combination.
-        # -> we display as svg this results (as in jscut) in black in the svg viewer
-        operation = self.operation
-        operation["paths"] = self.svg_viewer.selected_items
-
-        cnc_op = CncOp(operation)
-        cnc_op.setup(self.svg_viewer)
-        cnc_op.calculate_geometry()
-
-        # 1- the gcode 'region'
-        self.svg_viewer.display_geometry_op(cnc_op.geometry_svg_paths)
-
-        # 2- the gcode calculation and display
-        # TODO
-
-    def cb_save_op(self):
-        '''
-        '''
-        self.hide_op_widgets()
-
-    def cb_cancel_op(self):
-        '''
-        '''
-        self.hide_op_widgets()
-
-    def hide_op_widgets(self):
-        '''
-        '''
-        self.window.comboBox_Operations_OpType.hide()
-        self.window.doubleSpinBox_Operations_OpDepth.hide()
-        self.window.label_Operations_OpDepth.hide()
-
-        self.window.pushButton_Operations_SaveOp.hide()
-        self.window.pushButton_Operations_CancelOp.hide()
-
-        if self.current_op_widget != None:
-            self.current_op_widget.hide()
-
-    def show_op_widgets(self):
-        '''
-        '''
-        self.window.comboBox_Operations_OpType.show()
-        self.window.doubleSpinBox_Operations_OpDepth.show()
-        self.window.label_Operations_OpDepth.show()
-
-        self.window.pushButton_Operations_SaveOp.show()
-        self.window.pushButton_Operations_CancelOp.show()
-
-        if self.current_op_widget != None:
-            self.current_op_widget.show()
-
-        self.display_op_widgets()    
-        
-    def display_op_widgets(self):
-        '''
-        '''
-        op_type = self.window.comboBox_Operations_OpType.currentText()
-
-        self.display_op_widgets_type(op_type)
-
-    def display_op_at_row(self, row):
-        '''
-        callback on row selection  FIXME: should be on "set active"
-        '''
-        operation = self.operations[row]
-        
-        self.window.comboBox_Operations_OpType.show()
-        self.window.comboBox_Operations_OpType.setEnabled(False)
-        
-        self.window.doubleSpinBox_Operations_OpDepth.show()
-        self.window.label_Operations_OpDepth.show()
-        
-        self.window.comboBox_Operations_OpType.setCurrentText(operation["type"])
-        self.display_op_widgets_type(operation["type"])
-
-        self.display_operation(operation)
-        self.display_operation_on_svg_canvas(operation)
-       
-    def display_op_widgets_type(self, op_type):
-        '''
-        '''
-        if self.current_op_widget != None:
-            self.window.verticalLayoutOperations.removeWidget(self.current_op_widget)
-            self.current_op_widget.deleteLater()
-
-        mapp = {
-            'Pocket'   : "op_pocket.ui",
-            'Inside'   : "op_inside.ui",
-            'Outside'  : "op_outside.ui",
-            'Engrave'  : "op_engrave.ui",
-        }
-
-        self.current_op_widget = self.load_ui(mapp[op_type])
-
-        self.window.verticalLayoutOperations.insertWidget(5, self.current_op_widget, 0, QtGui.Qt.AlignLeft)
-
-        if op_type == "V Pocket":
-            self.window.doubleSpinBox_Operations_OpDepth.hide()
-            self.window.label_Operations_OpDepth.hide()
-        else:
-            self.window.doubleSpinBox_Operations_OpDepth.show()
-            self.window.label_Operations_OpDepth.show()
-
-        self.window.layout()
-        
-        # fill widget with default values
-        
-        if op_type == "Pocket":
-            operation = {
-                "Name": "-- op pocket --",
-                "paths": [],
-                "type": "Pocket",
-                "Deep": 0.2,       
-                "RampPlunge": True,
-                "Combine": "Union",
-                "Direction": "Conventional",
-                "Units": "mm",
-                "Margin": 0.1
-            }
-        if op_type == "Inside":
-            operation = {
-                "Name": "-- op inside --",
-                "paths": [],
-                "type": "Inside",
-                "Deep": 0.2,       
-                "RampPlunge": True,
-                "Combine": "Union",
-                "Direction": "Conventional",
-                "Units": "mm",
-                "Margin": 0.1,
-                "Width": 1.1
-            }
-        if op_type == "Outside":
-            operation = {
-                "Name": "-- op outside --",
-                "paths": [],
-                "type": "Outside",
-                "Deep": 0.2,       
-                "RampPlunge": True,
-                "Combine": "Difference",
-                "Direction": "Conventional",
-                "Units": "mm",
-                "Margin": 0.1,
-                "Width": 1.1
-            }
-        if op_type == "Engrave":
-            operation = {
-                "Name": "-- op outside --",
-                "paths": [],
-                "type": "Engrave",
-                "RampPlunge": True,
-                "Combine": "Xor",
-                "Direction": "Conventional",
-                "Units": "mm",
-                "Margin": 0.1,
-            }
-
-        self.display_operation(operation)
-        
-    def display_operation(self, operation):
-        '''
-        '''
-        if operation["type"] == "Pocket":
-            self.current_op_widget.lineEdit_Name.setText(operation["Name"])
-            self.current_op_widget.checkBox_RampPlunge.setChecked(operation["RampPlunge"])
-            self.current_op_widget.comboBox_Combine.setCurrentText(operation["Combine"])  # "Union", "Intersect",  "Diff", "Xor"
-            self.current_op_widget.comboBox_Direction.setCurrentText(operation["Direction"])  # "Conventional", "Plunge"
-            self.current_op_widget.comboBox_Units.setCurrentText(operation["Units"]) # mm, "inch"
-            self.current_op_widget.doubleSpinBox_Margin.setValue(operation["Margin"])
-        if operation["type"] == "Inside":
-            self.current_op_widget.lineEdit_Name.setText(operation["Name"])
-            self.current_op_widget.checkBox_RampPlunge.setChecked(operation["RampPlunge"])
-            self.current_op_widget.comboBox_Combine.setCurrentText(operation["Combine"])  # "Intersect",  "Diff", "Xor"
-            self.current_op_widget.comboBox_Direction.setCurrentText(operation["Direction"])  # "Plunge"
-            self.current_op_widget.comboBox_Units.setCurrentText(operation["Units"])
-            self.current_op_widget.doubleSpinBox_Margin.setValue(operation["Margin"])
-            self.current_op_widget.doubleSpinBox_Width.setValue(operation["Width"])
-        if operation["type"] == "Outside":
-            self.current_op_widget.lineEdit_Name.setText(operation["Name"])
-            self.current_op_widget.checkBox_RampPlunge.setChecked(operation["RampPlunge"])
-            self.current_op_widget.comboBox_Combine.setCurrentText(operation["Combine"])  # "Intersect",  "Diff", "Xor"
-            self.current_op_widget.comboBox_Direction.setCurrentText(operation["Direction"])  # "Plunge"
-            self.current_op_widget.comboBox_Units.setCurrentText(operation["Units"])
-            self.current_op_widget.doubleSpinBox_Margin.setValue(operation["Margin"])
-            self.current_op_widget.doubleSpinBox_Width.setValue(operation["Width"])
-        if operation["type"] == "Engrave":
-            self.current_op_widget.lineEdit_Name.setText(operation["Name"])
-            self.current_op_widget.checkBox_RampPlunge.setChecked(operation["RampPlunge"])
-            self.current_op_widget.comboBox_Combine.setCurrentText(operation["Combine"])  # "Intersect",  "Diff", "Xor"
-            self.current_op_widget.comboBox_Direction.setCurrentText(operation["Direction"])  # "Plunge"
-            self.current_op_widget.comboBox_Units.setCurrentText(operation["Units"])
-            self.current_op_widget.doubleSpinBox_Margin.setValue(operation["Margin"])
-        if operation["type"] == "V Pocket":
-            self.current_op_widget.lineEdit_Name.setText(operation["Name"])
-            self.current_op_widget.comboBox_Combine.setCurrentText(operation["Combine"])  # "Intersect",  "Diff", "Xor"  
-            self.current_op_widget.comboBox_Units.setCurrentText(operation["Units"])
-            self.current_op_widget.doubleSpinBox_Margin.setValue(operation["Margin"])
-        
-    def display_operation_on_svg_canvas(self, operation):
-        '''
-        '''
         toolModel = ToolModel() 
+        toolModel.units = settings["Tool"]["Units"]
+        toolModel.diameter = ValWithUnit(settings["Tool"]["Diameter"], toolModel.units)
+        toolModel.angle = settings["Tool"]["Angle"]
+        toolModel.passDepth = ValWithUnit(settings["Tool"]["PassDepth"], toolModel.units)
+        toolModel.stepover = settings["Tool"]["StepOver"]
+        toolModel.rapidRate = ValWithUnit(settings["Tool"]["Rapid"], toolModel.units)
+        toolModel.plungeRate = ValWithUnit(settings["Tool"]["Plunge"], toolModel.units)
+        toolModel.cutRate = ValWithUnit(settings["Tool"]["Cut"], toolModel.units)
 
-        cnc_op = CncOp(operation)
-        cnc_op.setup(self.svg_viewer)
-        cnc_op.calculate_geometry(toolModel)
+        cnc_ops = []
 
-        self.svg_viewer.display_geometry_op(cnc_op.geometry_svg_paths)
+        for op_model in ops_model:
+            if not op_model.enabled:
+                continue
+
+            cnc_op = CncOp(
+            {
+                "Units": op_model.units,
+                "Name": op_model.name,
+                "paths": op_model.paths,
+                "Combine": op_model.combinaison,
+                "RampPlunge": op_model.ramp,
+                "type": op_model.cam_op,
+                "Direction": op_model.direction,
+                "Deep": op_model.cutDepth,
+                "Margin": op_model.margin,
+                "Width": op_model.width,
+
+                "enabled": op_model.enabled
+            })
+
+            cnc_ops.append(cnc_op)
+
+        
+        for cnc_op in cnc_ops:
+            cnc_op.setup(self.svg_viewer)
+            cnc_op.calculate_geometry(toolModel)
+
+        self.svg_viewer.reinit()
+        self.svg_viewer.display_job_geometry(cnc_ops)
 
     def get_jobmodel(self) -> JobModel:
         '''
