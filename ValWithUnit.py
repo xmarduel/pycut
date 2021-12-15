@@ -37,19 +37,6 @@ class ValWithUnit(float):
         else:
             return ValWithUnit(self, "mm")
 
-    def set_units(self, units):
-        '''
-        BUGGY
-        '''
-        if units == self.units:
-            pass
-        else:
-            self.units = units
-            if units == "mm":
-                self = self * 25.4
-            else:
-                self = self / 25.4
-
     def toFixed(self, level):
         '''
         Format float value

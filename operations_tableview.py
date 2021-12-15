@@ -396,6 +396,11 @@ class PMFTableViewManager(QtWidgets.QWidget):
         '''
         self.table.setModel(model)
 
+    def get_model(self):
+        '''
+        '''
+        return self.table.model()
+
     def add_item(self):
         # instruct the model to add an item
         self.table.addItem()
@@ -499,14 +504,14 @@ class PMFSimpleTableView(QtWidgets.QTableView):
             btn_up_op.setText("")
             btn_up_op.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/go-up.png'))
             btn_up_op.setToolTip("Up")
-            btn_up_op.clicked.connect(self.cb_up_op)
+            btn_up_op.clicked.connect(self.cb_move_up_op)
             self.setIndexWidget(self.model().index(row, 12), btn_up_op)
 
             btn_dw_op = QtWidgets.QPushButton()
             btn_dw_op.setText("")
             btn_dw_op.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/go-down.png'))
             btn_dw_op.setToolTip("Down")
-            btn_dw_op.clicked.connect(self.cb_dw_op)
+            btn_dw_op.clicked.connect(self.cb_move_down_op)
             self.setIndexWidget(self.model().index(row, 13), btn_dw_op)
 
         # setup a right grid size
@@ -533,7 +538,7 @@ class PMFSimpleTableView(QtWidgets.QTableView):
         for op in self.model().operations:
             print(op)
 
-    def cb_dw_op(self):
+    def cb_move_down_op(self):
         index = self.currentIndex()
         idx = index.row()
         if idx < self.model().rowCount(None) - 1:
@@ -546,7 +551,7 @@ class PMFSimpleTableView(QtWidgets.QTableView):
         for op in self.model().operations:
             print(op)
         
-    def cb_up_op(self):
+    def cb_move_up_op(self):
         index = self.currentIndex()
         idx = index.row()
         if idx > 0:
@@ -566,8 +571,8 @@ class PMFSimpleTableView(QtWidgets.QTableView):
     def cb_gen_gcode_op(self):
         index = self.currentIndex()
         idx = index.row()
-        # instruct the model to generate the g-code for this item
-        pass  # TODO
+        # instruct the model to generate the g-code for all selected items
+        self.model().generate_gcode()
 
 
 class PMFSimpleTableModel(QtCore.QAbstractTableModel):
@@ -601,6 +606,11 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
 
 
 
+    def generate_gcode(self):
+        '''
+        '''    
+        self.main_window.parent().cb_generate_g_code()
+        
     def handleNewvalue(self, index: QtCore.QModelIndex, value: Any):
         print("--------------------------------", "handleNewvalue")
 
@@ -617,8 +627,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
             cnc_op = self.operations[row]
             setattr(cnc_op, attrib, value)
 
-            #self.main_window.parent().display_cnc_op(cnc_op)
-            self.main_window.parent().display_cnc_ops(self.operations)
+            self.main_window.parent().display_cnc_ops_geometry(self.operations)
 
     def __str__(self):
         self.cnt += 1

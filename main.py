@@ -116,8 +116,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.window.checkBox_GCodeGeneration_SpindleAutomatic.clicked.connect(self.cb_spindle_automatic)
 
-        #self.window.pushButton_GenerateGCode.clicked.connect(self.cb_generate_g_code)
-
         self.window.pushButton_GCodeConversion_ZeroLowerLeft.clicked.connect(self.cb_generate_g_code_zerolowerleft)
         self.window.pushButton_GCodeConversion_ZeroCenter.clicked.connect(self.cb_generate_g_code_zerocenter)
 
@@ -550,19 +548,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             self.svg_viewer.set_svg(svg)
 
-    def display_cnc_op(self, op_model):
-        '''
-        callback operation "enabled"
-        '''
-        self.display_operation_on_svg_canvas([op_model])
-
-    def display_cnc_ops(self, ops_model: List[Any]):
-        '''
-        callback operation "enabled"
-        '''
-        self.display_operation_on_svg_canvas(ops_model)
-
-    def display_operation_on_svg_canvas(self, ops_model: List[Any]):
+    def display_cnc_ops_geometry(self, ops_model: List[Any]):
         '''
         '''
         settings = self.get_current_settings()
@@ -609,6 +595,35 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_viewer.reinit()
         self.svg_viewer.display_job_geometry(cnc_ops)
 
+    def get_jobmodel_operations(self):
+        '''
+        '''
+        cnc_ops = []
+
+        for op_model in self.window.operationsview_manager.get_model().operations:
+            if not op_model.enabled:
+                continue
+
+            cnc_op = CncOp(
+            {
+                "Units": op_model.units,
+                "Name": op_model.name,
+                "paths": op_model.paths,
+                "Combine": op_model.combinaison,
+                "RampPlunge": op_model.ramp,
+                "type": op_model.cam_op,
+                "Direction": op_model.direction,
+                "Deep": op_model.cutDepth,
+                "Margin": op_model.margin,
+                "Width": op_model.width,
+
+                "enabled": op_model.enabled
+            })
+
+            cnc_ops.append(cnc_op)
+
+        return cnc_ops
+
     def get_jobmodel(self) -> JobModel:
         '''
         '''
@@ -639,10 +654,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         gcodeModel.spindleControl = settings["GCodeGeneration"]["SpindleAutomatic"]
         gcodeModel.spindleSpeed = settings["GCodeGeneration"]["SpindleSpeed"]
 
-        cnc_ops = []
-        for op in self.operations:
-            cnc_op = CncOp(op)  
-            cnc_ops.append(cnc_op)
+        cnc_ops = self.get_jobmodel_operations()
 
         job = JobModel(self.svg_viewer, cnc_ops, materialModel, svgModel, toolModel, tabsmodel, gcodeModel)
 
@@ -652,6 +664,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         '''
         job = self.get_jobmodel()
+
+        for cnc_op in job.operations:
+            cnc_op.setup(self.svg_viewer)
+            cnc_op.calculate_geometry(job.toolModel)
 
         generator = GcodeGenerator(job)
         generator.generateGcode_zeroLowerLeft()
@@ -663,6 +679,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         job = self.get_jobmodel()
 
+        for cnc_op in job.operations:
+            cnc_op.setup(self.svg_viewer)
+            cnc_op.calculate_geometry(job.toolModel)
+
         generator = GcodeGenerator(job)
         generator.generateGcode_zeroCenter()
 
@@ -672,6 +692,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         '''
         job = self.get_jobmodel()
+
+        for cnc_op in job.operations:
+            cnc_op.setup(self.svg_viewer)
+            cnc_op.calculate_geometry(job.toolModel)
 
         generator = GcodeGenerator(job)
         generator.generateGcode()
