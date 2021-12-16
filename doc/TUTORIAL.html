@@ -69,7 +69,7 @@ works, and how easy (or hard) it is to achieve. Well, it is not so easy
 (but stealing jsCut code helps). And I learned about jsCut through the 
 <a href="https://cncphilosophy.com/svg-to-G-Code">CnC Philosophy</a> page.</p>
 
-<p>By the way,I began to use <strong>jsCut</strong> because Easel (for beginners too),
+<p>By the way,I began to use <strong>jsCut</strong> because <strong>Easel</strong> (for beginners too),
 although free, makes limitations (among others) on the choices of the fonts
 - which is quite a shame...</p>
 
@@ -94,7 +94,7 @@ than the <strong>jsCut</strong> code. Nothing at all against <strong>jsCut</stro
 
 <p>So PyCut is written in python, with the GUI with PySide6. Hopefully there
 will be users that will be able to contribute. There is a developper doc for 
-this purpose (TODO)</p>
+this purpose (<span style="color:#ff0080">TODO</span>)</p>
 
 <p>The excellent things from <strong>jsCut</strong> are (among others):</p>
 <ul>
@@ -111,29 +111,29 @@ this purpose (TODO)</p>
 
 <p>So the idea is the following:</p>
 <ul>
-  <li>MainWindow in PySide <span style="color:#00a000">DONE</span></li>
-  <li>in PySide, display the SVG viewer stuff (QGraphicsView with SvgItem) <span style="color:#00a000">IN PROGRESS (the op. Combinaisons, geometry previews
-    as well as the toolpaths)</span></li>
-  <li>in PySide, display the WebGL stuff (QEngineView)<span style="color:#00a000">DONE</span></li>
-  <li>G-Code Generation (lot of js code to understand) <span style="color:#ff0080">IN PROGRESS</span></li>
+  <li>MainWindow in PySide <span style="color:#00a000"> DONE</span></li>
+  <li>in PySide, display the SVG viewer stuff (QGraphicsView with SvgItem) <span style="color:#00a000"> DONE (geometry previews, toolpaths)</span></li>
+  <li>in PySide, display the WebGL stuff (QEngineView)<span style="color:#00a000"> DONE</span></li>
+  <li>G-Code Generation (lot of js code to understand) <span style="color:#00a000"> DONE</span></li>
   <li>G-Code generation with spindle control (actually absent in <strong>jsCut</strong> -wow! what a feature!-) <span style="color:#00a000">DONE</span></li>
 </ul>
 
 <p>After that</p>
 <ul>
-  <li>Tabs handling<span style="color:#ff0080">TODO</span></li>
-  <li>Migrating WebGL stuff to "native" python (QGraphicsView I guess, or PyOpenGL ?) <span style="color:#ff0080">TODO</span></li>
-  <li>Toolpaths for vPocket operations (cam c++ wrapper, nothing done at this point) ?<span style="color:#ff0080">TODO</span></li>
+  <li>Tabs handling ? (cam c++ wrapper + js code, nothing done at this point) <span style="color:#ff0080">TODO</span></li>
+  <li>Migrating WebGL stuff to "native" python ? (QGraphicsView I guess, or PyOpenGL) <span style="color:#ff0080">TODO</span></li>
+  <li>Toolpaths for vPocket operations ? (cam c++ wrapper, nothing done at this point) <span style="color:#ff0080">TODO</span></li>
+  <li>Fix some jsCut bugs (example: "Inside" for a simple square with margin 2mm + width 5mm for tool 1 inch => bad paths) <span style="color:#ff0080">TODO</span></li>
 </ul>
 
 <p>Nice to Have:</p>
 <ul>
-  <li>G-Code viewer (as in Candle: can we steal it ? it is Qt c++)</li>
+  <li>G-Code viewer (as in Candle: can we steal it ? it is Qt c++, with lots of code) <span style="color:#e211a4">=> port to python (again...)</span></li>
 </ul>
 
 <p>Infact, as far as I have understood, the tabs have to be created in the original svg,
-and this is not very practical. It would be nicer to make as in GrblGru where the tabs are
-simply set "on the fly" on the svg view by indicating how many tabs one wishes
+and this is not very practical. It would be nicer to make as in <strong>GrblGru</strong> 
+where the tabs are simply set "on the fly" on the svg view by indicating how many tabs one wishes
 (with their "types": ROUND etc. plus height/length). They then appear on the viewer and can
 be interactively dragged on the toolpath.</p>
 <p>This is how the tabs should be implemented I think. So the svg viewer has to be 
