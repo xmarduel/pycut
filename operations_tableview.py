@@ -641,7 +641,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
         print("handleNewvalue NEW -> %s %s" % (attrib, value))
 
         # TODO: action on pycut GUI
-        if attrib in ["enabled", "margin", "width", "combinaison", "cam_ops"]:
+        if attrib in ["cam_ops", "enabled", "paths", "units", "cutDepth", "ramp", "combinaison", "margin", "width"]:
             cnc_op = self.operations[row]
             setattr(cnc_op, attrib, value)
 
