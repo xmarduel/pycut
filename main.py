@@ -33,7 +33,7 @@ from pycut import JobModel
 from pycut import GcodeGenerator
 
 import resources_rc
-
+from ui_mainwindow import Ui_mainwindow
 
 class PyCutMainWindow(QtWidgets.QMainWindow):
     default_settings = {
@@ -78,49 +78,47 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     
     def __init__(self):
         super(PyCutMainWindow, self).__init__()
-        self.window = self.load_ui("main.ui")
 
-        self.setCentralWidget(self.window)
-
-        xx = self.window.parent()
+        self.ui = Ui_mainwindow()
+        self.ui.setupUi(self)
 
         self.svg_viewer = self.setup_svg_viewer()
         self.svg_material_viewer = self.setup_material_viewer()
         self.webgl_viewer = self.setup_webgl_viewer()
 
-        self.window.operationsview_manager.set_svg_viewer(self.svg_viewer)
+        self.ui.operationsview_manager.set_svg_viewer(self.svg_viewer)
 
         # callbacks
-        self.window.actionOpenSvg.triggered.connect(self.cb_open_svg)
-        self.window.actionOpenJob.triggered.connect(self.cb_open_job)
+        self.ui.actionOpenSvg.triggered.connect(self.cb_open_svg)
+        self.ui.actionOpenJob.triggered.connect(self.cb_open_job)
 
         # display material thickness/clearance
-        self.window.doubleSpinBox_Material_Thickness.valueChanged.connect(self.cb_display_material_thickness)
-        self.window.doubleSpinBox_Material_Clearance.valueChanged.connect(self.cb_display_material_clearance)
+        self.ui.doubleSpinBox_Material_Thickness.valueChanged.connect(self.cb_display_material_thickness)
+        self.ui.doubleSpinBox_Material_Clearance.valueChanged.connect(self.cb_display_material_clearance)
 
 
-        default_thickness = self.window.doubleSpinBox_Material_Thickness.value()
-        default_clearance = self.window.doubleSpinBox_Material_Clearance.value()
+        default_thickness = self.ui.doubleSpinBox_Material_Thickness.value()
+        default_clearance = self.ui.doubleSpinBox_Material_Clearance.value()
         self.svg_material_viewer.display_material(thickness=default_thickness, clearance=default_clearance)
         
         self.display_svg(None)
         
-        self.window.comboBox_Tabs_Units.currentTextChanged.connect(self.cb_update_tabs_display)
-        self.window.comboBox_Tool_Units.currentTextChanged.connect(self.cb_update_tool_display)
-        self.window.comboBox_Material_Units.currentTextChanged.connect(self.cb_update_material_display)
-        self.window.comboBox_GCodeConversion_Units.currentTextChanged.connect(self.cb_update_gcodeconversion_display)
+        self.ui.comboBox_Tabs_Units.currentTextChanged.connect(self.cb_update_tabs_display)
+        self.ui.comboBox_Tool_Units.currentTextChanged.connect(self.cb_update_tool_display)
+        self.ui.comboBox_Material_Units.currentTextChanged.connect(self.cb_update_material_display)
+        self.ui.comboBox_GCodeConversion_Units.currentTextChanged.connect(self.cb_update_gcodeconversion_display)
         
-        self.window.pushButton_MakeAll_inch.clicked.connect(self.cb_make_all_inch)
-        self.window.pushButton_MakeAll_mm.clicked.connect(self.cb_make_all_mm)
+        self.ui.pushButton_MakeAll_inch.clicked.connect(self.cb_make_all_inch)
+        self.ui.pushButton_MakeAll_mm.clicked.connect(self.cb_make_all_mm)
         
 
-        self.window.checkBox_GCodeGeneration_SpindleAutomatic.clicked.connect(self.cb_spindle_automatic)
+        self.ui.checkBox_GCodeGeneration_SpindleAutomatic.clicked.connect(self.cb_spindle_automatic)
 
-        self.window.pushButton_GCodeConversion_ZeroLowerLeft.clicked.connect(self.cb_generate_g_code_zerolowerleft)
-        self.window.pushButton_GCodeConversion_ZeroCenter.clicked.connect(self.cb_generate_g_code_zerocenter)
+        self.ui.pushButton_GCodeConversion_ZeroLowerLeft.clicked.connect(self.cb_generate_g_code_zerolowerleft)
+        self.ui.pushButton_GCodeConversion_ZeroCenter.clicked.connect(self.cb_generate_g_code_zerocenter)
 
-        self.window.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_g_code)
-        self.window.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_g_code)
+        self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_g_code)
+        self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_g_code)
 
         self.init_gui()
 
@@ -171,32 +169,32 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def cb_show_hide_settings(self):
         '''
         '''
-        if self.window.grid_Settings.isHidden():
-            self.window.grid_Settings.show()
-            self.window.pushButton_ShowHideSettings.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
+        if self.ui.grid_Settings.isHidden():
+            self.ui.grid_Settings.show()
+            self.ui.pushButton_ShowHideSettings.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
         else:
-            self.window.grid_Settings.hide()
-            self.window.pushButton_ShowHideSettings.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-right_16x16.png"))
+            self.ui.grid_Settings.hide()
+            self.ui.pushButton_ShowHideSettings.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-right_16x16.png"))
 
     def cb_show_hide_tabs(self):
         '''
         '''
-        if self.window.grid_Tabs.isHidden():
-            self.window.grid_Tabs.show()
-            self.window.pushButton_ShowHideTabs.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
+        if self.ui.grid_Tabs.isHidden():
+            self.ui.grid_Tabs.show()
+            self.ui.pushButton_ShowHideTabs.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
         else:
-            self.window.grid_Tabs.hide()
-            self.window.pushButton_ShowHideTabs.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-right_16x16.png"))
+            self.ui.grid_Tabs.hide()
+            self.ui.pushButton_ShowHideTabs.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-right_16x16.png"))
 
     def cb_show_hide_tool(self):
         '''
         '''
-        if self.window.grid_Tool.isHidden():
-            self.window.grid_Tool.show()
-            self.window.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
+        if self.ui.grid_Tool.isHidden():
+            self.ui.grid_Tool.show()
+            self.ui.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
         else:
-            self.window.grid_Tool.hide()
-            self.window.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-right_16x16.png"))
+            self.ui.grid_Tool.hide()
+            self.ui.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-right_16x16.png"))
 
     def init_gui(self):
         '''
@@ -217,38 +215,38 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "px_per_inch" : 96,
             }, 
             "Tabs": {
-                "Units"      : self.window.comboBox_Tabs_Units.currentText(),
-                "MaxCutDepth": self.window.doubleSpinBox_Tabs_MaxCutDepth.value()
+                "Units"      : self.ui.comboBox_Tabs_Units.currentText(),
+                "MaxCutDepth": self.ui.doubleSpinBox_Tabs_MaxCutDepth.value()
             },
             "Tool" : {
-                "Units"      : self.window.comboBox_Tool_Units.currentText(),
-                "Diameter"   : self.window.doubleSpinBox_Tool_Diameter.value(),
-                "Angle"      : self.window.spinBox_Tool_Angle.value(),
-                "PassDepth"  : self.window.doubleSpinBox_Tool_PassDepth.value(),
-                "StepOver"   : self.window.doubleSpinBox_Tool_StepOver.value(),
-                "Rapid"      : self.window.spinBox_Tool_Rapid.value(),
-                "Plunge"     : self.window.spinBox_Tool_Plunge.value(),
-                "Cut"        : self.window.spinBox_Tool_Cut.value()
+                "Units"      : self.ui.comboBox_Tool_Units.currentText(),
+                "Diameter"   : self.ui.doubleSpinBox_Tool_Diameter.value(),
+                "Angle"      : self.ui.spinBox_Tool_Angle.value(),
+                "PassDepth"  : self.ui.doubleSpinBox_Tool_PassDepth.value(),
+                "StepOver"   : self.ui.doubleSpinBox_Tool_StepOver.value(),
+                "Rapid"      : self.ui.spinBox_Tool_Rapid.value(),
+                "Plunge"     : self.ui.spinBox_Tool_Plunge.value(),
+                "Cut"        : self.ui.spinBox_Tool_Cut.value()
             },
             "Material" : {
-                "Units"      : self.window.comboBox_Material_Units.currentText(),
-                "Thickness"  : self.window.doubleSpinBox_Material_Thickness.value(),
-                "ZOrigin"    : self.window.comboBox_Material_ZOrigin.currentText(),
-                "Clearance"  : self.window.doubleSpinBox_Material_Clearance.value(),
+                "Units"      : self.ui.comboBox_Material_Units.currentText(),
+                "Thickness"  : self.ui.doubleSpinBox_Material_Thickness.value(),
+                "ZOrigin"    : self.ui.comboBox_Material_ZOrigin.currentText(),
+                "Clearance"  : self.ui.doubleSpinBox_Material_Clearance.value(),
             },
             "CurveToLineConversion" : {
-                "MinimumSegments"       : self.window.doubleSpinBox_CurveToLineConversion_MinimumSegments.value(),
-                "MinimumSegmentsLength" : self.window.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.value(),
+                "MinimumSegments"       : self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegments.value(),
+                "MinimumSegmentsLength" : self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.value(),
             },
             "GCodeConversion" : {
-                "Units"           : self.window.comboBox_GCodeConversion_Units.currentText(),
-                "XOffset"         : self.window.doubleSpinBox_GCodeConversion_XOffset.value(),
-                "YOffset"         : self.window.doubleSpinBox_GCodeConversion_YOffset.value()
+                "Units"           : self.ui.comboBox_GCodeConversion_Units.currentText(),
+                "XOffset"         : self.ui.doubleSpinBox_GCodeConversion_XOffset.value(),
+                "YOffset"         : self.ui.doubleSpinBox_GCodeConversion_YOffset.value()
             },
             "GCodeGeneration" : {
-                "ReturnToZeroAtEnd" : self.window.checkBox_GCodeGeneration_ReturnToZeroAtEnd.isChecked(),
-                "SpindleAutomatic"  : self.window.checkBox_GCodeGeneration_SpindleAutomatic.isChecked(),
-                "SpindleSpeed"      : self.window.spinBox_GCodeGeneration_SpindleSpeed.value(),
+                "ReturnToZeroAtEnd" : self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.isChecked(),
+                "SpindleAutomatic"  : self.ui.checkBox_GCodeGeneration_SpindleAutomatic.isChecked(),
+                "SpindleSpeed"      : self.ui.spinBox_GCodeGeneration_SpindleSpeed.value(),
             }
         }
         
@@ -258,38 +256,38 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         '''
         # Tabs
-        self.window.comboBox_Tabs_Units.setCurrentText(settings["Tabs"]["Units"])
-        self.window.doubleSpinBox_Tabs_MaxCutDepth.setValue(settings["Tabs"]["MaxCutDepth"])
+        self.ui.comboBox_Tabs_Units.setCurrentText(settings["Tabs"]["Units"])
+        self.ui.doubleSpinBox_Tabs_MaxCutDepth.setValue(settings["Tabs"]["MaxCutDepth"])
             
         # Tool
-        self.window.comboBox_Tool_Units.setCurrentText(settings["Tool"]["Units"])
-        self.window.doubleSpinBox_Tool_Diameter.setValue(settings["Tool"]["Diameter"])
-        self.window.spinBox_Tool_Angle.setValue(settings["Tool"]["Angle"])
-        self.window.doubleSpinBox_Tool_PassDepth.setValue(settings["Tool"]["PassDepth"])
-        self.window.doubleSpinBox_Tool_StepOver.setValue(settings["Tool"]["StepOver"])
-        self.window.spinBox_Tool_Rapid.setValue(settings["Tool"]["Rapid"])
-        self.window.spinBox_Tool_Plunge.setValue(settings["Tool"]["Plunge"])
-        self.window.spinBox_Tool_Cut.setValue(settings["Tool"]["Cut"])
+        self.ui.comboBox_Tool_Units.setCurrentText(settings["Tool"]["Units"])
+        self.ui.doubleSpinBox_Tool_Diameter.setValue(settings["Tool"]["Diameter"])
+        self.ui.spinBox_Tool_Angle.setValue(settings["Tool"]["Angle"])
+        self.ui.doubleSpinBox_Tool_PassDepth.setValue(settings["Tool"]["PassDepth"])
+        self.ui.doubleSpinBox_Tool_StepOver.setValue(settings["Tool"]["StepOver"])
+        self.ui.spinBox_Tool_Rapid.setValue(settings["Tool"]["Rapid"])
+        self.ui.spinBox_Tool_Plunge.setValue(settings["Tool"]["Plunge"])
+        self.ui.spinBox_Tool_Cut.setValue(settings["Tool"]["Cut"])
         
         # Material
-        self.window.comboBox_Material_Units.setCurrentText(settings["Material"]["Units"])
-        self.window.doubleSpinBox_Material_Thickness.setValue(settings["Material"]["Thickness"])
-        self.window.comboBox_Material_ZOrigin.setCurrentText(settings["Material"]["ZOrigin"])
-        self.window.doubleSpinBox_Material_Clearance.setValue(settings["Material"]["Clearance"])
+        self.ui.comboBox_Material_Units.setCurrentText(settings["Material"]["Units"])
+        self.ui.doubleSpinBox_Material_Thickness.setValue(settings["Material"]["Thickness"])
+        self.ui.comboBox_Material_ZOrigin.setCurrentText(settings["Material"]["ZOrigin"])
+        self.ui.doubleSpinBox_Material_Clearance.setValue(settings["Material"]["Clearance"])
             
         # CurveToLineConversion 
-        self.window.doubleSpinBox_CurveToLineConversion_MinimumSegments.setValue(settings["CurveToLineConversion"]["MinimumSegments"]),
-        self.window.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.setValue(settings["CurveToLineConversion"]["MinimumSegmentsLength"]),
+        self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegments.setValue(settings["CurveToLineConversion"]["MinimumSegments"]),
+        self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.setValue(settings["CurveToLineConversion"]["MinimumSegmentsLength"]),
             
         # GCodeConversion
-        self.window.comboBox_GCodeConversion_Units.setCurrentText(settings["GCodeConversion"]["Units"])
-        self.window.doubleSpinBox_GCodeConversion_XOffset.setValue(settings["GCodeConversion"]["XOffset"])
-        self.window.doubleSpinBox_GCodeConversion_YOffset.setValue(settings["GCodeConversion"]["YOffset"])
+        self.ui.comboBox_GCodeConversion_Units.setCurrentText(settings["GCodeConversion"]["Units"])
+        self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue(settings["GCodeConversion"]["XOffset"])
+        self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(settings["GCodeConversion"]["YOffset"])
             
         # GCodeGeneration 
-        self.window.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setChecked(settings["GCodeGeneration"]["ReturnToZeroAtEnd"]),
-        self.window.checkBox_GCodeGeneration_SpindleAutomatic.setChecked(settings["GCodeGeneration"]["SpindleAutomatic"]),
-        self.window.spinBox_GCodeGeneration_SpindleSpeed.setValue(settings["GCodeGeneration"]["SpindleSpeed"]),
+        self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setChecked(settings["GCodeGeneration"]["ReturnToZeroAtEnd"]),
+        self.ui.checkBox_GCodeGeneration_SpindleAutomatic.setChecked(settings["GCodeGeneration"]["SpindleAutomatic"]),
+        self.ui.spinBox_GCodeGeneration_SpindleSpeed.setValue(settings["GCodeGeneration"]["SpindleSpeed"]),
 
     def cb_open_svg(self):
         '''
@@ -327,7 +325,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.apply_settings(job["settings"])
 
             # fill operations table
-            self.window.operationsview_manager.set_operations(self.operations)
+            self.ui.operationsview_manager.set_operations(self.operations)
         
     def save_job(self):
         '''
@@ -349,9 +347,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         TODO: the ops (cutDeepth) ?
         '''
-        self.window.comboBox_Tabs_Units.setCurrentText("inch")
-        self.window.comboBox_Material_Units.setCurrentText("inch")
-        self.window.comboBox_GCodeConversion_Units.setCurrentText("inch")
+        self.ui.comboBox_Tabs_Units.setCurrentText("inch")
+        self.ui.comboBox_Material_Units.setCurrentText("inch")
+        self.ui.comboBox_GCodeConversion_Units.setCurrentText("inch")
     
     def cb_make_all_mm(self):
         '''
@@ -359,116 +357,116 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         TODO: the ops (cutDeepth) ?
         '''
-        self.window.comboBox_Tabs_Units.setCurrentText("mm")
-        self.window.comboBox_Material_Units.setCurrentText("mm")
-        self.window.comboBox_GCodeConversion_Units.setCurrentText("mm")
+        self.ui.comboBox_Tabs_Units.setCurrentText("mm")
+        self.ui.comboBox_Material_Units.setCurrentText("mm")
+        self.ui.comboBox_GCodeConversion_Units.setCurrentText("mm")
         
     def cb_update_tabs_display(self):
         '''
         This updates the legends of the tsbs model widget **and** the values
         '''
-        tabs_units = self.window.comboBox_Tabs_Units.currentText()
+        tabs_units = self.ui.comboBox_Tabs_Units.currentText()
         
         if tabs_units == "inch":
-            self.window.doubleSpinBox_Tabs_MaxCutDepth.setValue( self.window.doubleSpinBox_Tabs_MaxCutDepth.value() / 25.4 )
+            self.ui.doubleSpinBox_Tabs_MaxCutDepth.setValue( self.ui.doubleSpinBox_Tabs_MaxCutDepth.value() / 25.4 )
 
         if tabs_units == "mm":
-            self.window.doubleSpinBox_Tabs_MaxCutDepth.setValue( self.window.doubleSpinBox_Tabs_MaxCutDepth.value() * 25.4 )
+            self.ui.doubleSpinBox_Tabs_MaxCutDepth.setValue( self.ui.doubleSpinBox_Tabs_MaxCutDepth.value() * 25.4 )
     
     def cb_update_tool_display(self):
         '''
         This updates the legends of the tool model widget **and** the values
         '''
-        tool_units = self.window.comboBox_Tool_Units.currentText()
+        tool_units = self.ui.comboBox_Tool_Units.currentText()
         
         if tool_units == "inch":
-            self.window.label_Tool_Diameter_UnitsDescr.setText("inch")
-            self.window.label_Tool_Angle_UnitsDescr.setText("degrees")
-            self.window.label_Tool_PassDepth_UnitsDescr.setText("inch")
-            self.window.label_Tool_StepOver_UnitsDescr.setText("]0:1]")
-            self.window.label_Tool_Rapid_UnitsDescr.setText("inch/min")
-            self.window.label_Tool_Plunge_UnitsDescr.setText("inch/min")
-            self.window.label_Tool_Cut_UnitsDescr.setText("inch/min")
+            self.ui.label_Tool_Diameter_UnitsDescr.setText("inch")
+            self.ui.label_Tool_Angle_UnitsDescr.setText("degrees")
+            self.ui.label_Tool_PassDepth_UnitsDescr.setText("inch")
+            self.ui.label_Tool_StepOver_UnitsDescr.setText("]0:1]")
+            self.ui.label_Tool_Rapid_UnitsDescr.setText("inch/min")
+            self.ui.label_Tool_Plunge_UnitsDescr.setText("inch/min")
+            self.ui.label_Tool_Cut_UnitsDescr.setText("inch/min")
 
-            self.window.doubleSpinBox_Tool_Diameter.setValue( self.window.doubleSpinBox_Tool_Diameter.value() / 25.4 )
-            self.window.doubleSpinBox_Tool_PassDepth.setValue( self.window.doubleSpinBox_Tool_PassDepth.value() / 25.4 )
-            self.window.spinBox_Tool_Rapid.setValue( self.window.spinBox_Tool_Rapid.value() / 25.4 )
-            self.window.spinBox_Tool_Plunge.setValue( self.window.spinBox_Tool_Plunge.value() / 25.4 )
-            self.window.spinBox_Tool_Cut.setValue( self.window.spinBox_Tool_Cut.value() / 25.4 )
+            self.ui.doubleSpinBox_Tool_Diameter.setValue( self.ui.doubleSpinBox_Tool_Diameter.value() / 25.4 )
+            self.ui.doubleSpinBox_Tool_PassDepth.setValue( self.ui.doubleSpinBox_Tool_PassDepth.value() / 25.4 )
+            self.ui.spinBox_Tool_Rapid.setValue( self.ui.spinBox_Tool_Rapid.value() / 25.4 )
+            self.ui.spinBox_Tool_Plunge.setValue( self.ui.spinBox_Tool_Plunge.value() / 25.4 )
+            self.ui.spinBox_Tool_Cut.setValue( self.ui.spinBox_Tool_Cut.value() / 25.4 )
 
         if tool_units == "mm":
-            self.window.label_Tool_Diameter_UnitsDescr.setText("mm")
-            self.window.label_Tool_Angle_UnitsDescr.setText("degrees")
-            self.window.label_Tool_PassDepth_UnitsDescr.setText("mm")
-            self.window.label_Tool_StepOver_UnitsDescr.setText("]0:1]")
-            self.window.label_Tool_Rapid_UnitsDescr.setText("mm/min")
-            self.window.label_Tool_Plunge_UnitsDescr.setText("mm/min")
-            self.window.label_Tool_Cut_UnitsDescr.setText("mm/min")
+            self.ui.label_Tool_Diameter_UnitsDescr.setText("mm")
+            self.ui.label_Tool_Angle_UnitsDescr.setText("degrees")
+            self.ui.label_Tool_PassDepth_UnitsDescr.setText("mm")
+            self.ui.label_Tool_StepOver_UnitsDescr.setText("]0:1]")
+            self.ui.label_Tool_Rapid_UnitsDescr.setText("mm/min")
+            self.ui.label_Tool_Plunge_UnitsDescr.setText("mm/min")
+            self.ui.label_Tool_Cut_UnitsDescr.setText("mm/min")
 
-            self.window.doubleSpinBox_Tool_Diameter.setValue( self.window.doubleSpinBox_Tool_Diameter.value() * 25.4 )
-            self.window.doubleSpinBox_Tool_PassDepth.setValue( self.window.doubleSpinBox_Tool_PassDepth.value() * 25.4 )
-            self.window.spinBox_Tool_Rapid.setValue( self.window.spinBox_Tool_Rapid.value() * 25.4 )
-            self.window.spinBox_Tool_Plunge.setValue( self.window.spinBox_Tool_Plunge.value() * 25.4 )
-            self.window.spinBox_Tool_Cut.setValue( self.window.spinBox_Tool_Cut.value() * 25.4 )
+            self.ui.doubleSpinBox_Tool_Diameter.setValue( self.ui.doubleSpinBox_Tool_Diameter.value() * 25.4 )
+            self.ui.doubleSpinBox_Tool_PassDepth.setValue( self.ui.doubleSpinBox_Tool_PassDepth.value() * 25.4 )
+            self.ui.spinBox_Tool_Rapid.setValue( self.ui.spinBox_Tool_Rapid.value() * 25.4 )
+            self.ui.spinBox_Tool_Plunge.setValue( self.ui.spinBox_Tool_Plunge.value() * 25.4 )
+            self.ui.spinBox_Tool_Cut.setValue( self.ui.spinBox_Tool_Cut.value() * 25.4 )
 
     def cb_update_material_display(self):
         '''
         This updates the legends of the material model widget **and** the values
         '''
-        material_units = self.window.comboBox_Material_Units.currentText()
+        material_units = self.ui.comboBox_Material_Units.currentText()
         
         if material_units == "inch":
-            self.window.doubleSpinBox_Material_Thickness.setValue( self.window.doubleSpinBox_Material_Thickness.value() / 25.4 )
-            self.window.doubleSpinBox_Material_Clearance.setValue( self.window.doubleSpinBox_Material_Clearance.value() / 25.4 )
+            self.ui.doubleSpinBox_Material_Thickness.setValue( self.ui.doubleSpinBox_Material_Thickness.value() / 25.4 )
+            self.ui.doubleSpinBox_Material_Clearance.setValue( self.ui.doubleSpinBox_Material_Clearance.value() / 25.4 )
 
         if material_units == "mm":
-            self.window.doubleSpinBox_Material_Thickness.setValue( self.window.doubleSpinBox_Material_Thickness.value() * 25.4 )
-            self.window.doubleSpinBox_Material_Clearance.setValue( self.window.doubleSpinBox_Material_Clearance.value() * 25.4 )
+            self.ui.doubleSpinBox_Material_Thickness.setValue( self.ui.doubleSpinBox_Material_Thickness.value() * 25.4 )
+            self.ui.doubleSpinBox_Material_Clearance.setValue( self.ui.doubleSpinBox_Material_Clearance.value() * 25.4 )
 
     def cb_update_gcodeconversion_display(self):
         '''
         This updates the legends of the gcode_conversion model widget **and** the values
         '''
-        gcodeconversion_units = self.window.comboBox_GCodeConversion_Units.currentText()
+        gcodeconversion_units = self.ui.comboBox_GCodeConversion_Units.currentText()
         
         if gcodeconversion_units == "inch":
-            self.window.label_GCodeConversion_XOffset_UnitsDescr.setText("inch")
-            self.window.label_GCodeConversion_YOffset_UnitsDescr.setText("inch")
-            self.window.label_GCodeConversion_MinX_UnitsDescr.setText("inch")
-            self.window.label_GCodeConversion_MaxX_UnitsDescr.setText("inch")
-            self.window.label_GCodeConversion_MinY_UnitsDescr.setText("inch")
-            self.window.label_GCodeConversion_MaxY_UnitsDescr.setText("inch")
+            self.ui.label_GCodeConversion_XOffset_UnitsDescr.setText("inch")
+            self.ui.label_GCodeConversion_YOffset_UnitsDescr.setText("inch")
+            self.ui.label_GCodeConversion_MinX_UnitsDescr.setText("inch")
+            self.ui.label_GCodeConversion_MaxX_UnitsDescr.setText("inch")
+            self.ui.label_GCodeConversion_MinY_UnitsDescr.setText("inch")
+            self.ui.label_GCodeConversion_MaxY_UnitsDescr.setText("inch")
 
-            self.window.doubleSpinBox_GCodeConversion_XOffset.setValue( self.window.doubleSpinBox_GCodeConversion_XOffset.value() / 25.4 )
-            self.window.doubleSpinBox_GCodeConversion_YOffset.setValue(self.window.doubleSpinBox_GCodeConversion_YOffset.value() / 25.4 )
-            self.window.doubleSpinBox_GCodeConversion_MinX.setValue(self.window.doubleSpinBox_GCodeConversion_MinX.value() / 25.4 )
-            self.window.doubleSpinBox_GCodeConversion_MaxX.setValue(self.window.doubleSpinBox_GCodeConversion_MaxX.value() / 25.4 )
-            self.window.doubleSpinBox_GCodeConversion_MinY.setValue(self.window.doubleSpinBox_GCodeConversion_MinY.value() / 25.4 )
-            self.window.doubleSpinBox_GCodeConversion_MaxY.setValue(self.window.doubleSpinBox_GCodeConversion_MaxY.value() / 25.4 )
+            self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue( self.ui.doubleSpinBox_GCodeConversion_XOffset.value() / 25.4 )
+            self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(self.ui.doubleSpinBox_GCodeConversion_YOffset.value() / 25.4 )
+            self.ui.doubleSpinBox_GCodeConversion_MinX.setValue(self.ui.doubleSpinBox_GCodeConversion_MinX.value() / 25.4 )
+            self.ui.doubleSpinBox_GCodeConversion_MaxX.setValue(self.ui.doubleSpinBox_GCodeConversion_MaxX.value() / 25.4 )
+            self.ui.doubleSpinBox_GCodeConversion_MinY.setValue(self.ui.doubleSpinBox_GCodeConversion_MinY.value() / 25.4 )
+            self.ui.doubleSpinBox_GCodeConversion_MaxY.setValue(self.ui.doubleSpinBox_GCodeConversion_MaxY.value() / 25.4 )
             
         if gcodeconversion_units == "mm":
-            self.window.label_GCodeConversion_XOffset_UnitsDescr.setText("mm")
-            self.window.label_GCodeConversion_YOffset_UnitsDescr.setText("mm")
-            self.window.label_GCodeConversion_MinX_UnitsDescr.setText("mm")
-            self.window.label_GCodeConversion_MaxX_UnitsDescr.setText("mm")
-            self.window.label_GCodeConversion_MinY_UnitsDescr.setText("mm")
-            self.window.label_GCodeConversion_MaxY_UnitsDescr.setText("mm")
+            self.ui.label_GCodeConversion_XOffset_UnitsDescr.setText("mm")
+            self.ui.label_GCodeConversion_YOffset_UnitsDescr.setText("mm")
+            self.ui.label_GCodeConversion_MinX_UnitsDescr.setText("mm")
+            self.ui.label_GCodeConversion_MaxX_UnitsDescr.setText("mm")
+            self.ui.label_GCodeConversion_MinY_UnitsDescr.setText("mm")
+            self.ui.label_GCodeConversion_MaxY_UnitsDescr.setText("mm")
 
-            self.window.doubleSpinBox_GCodeConversion_XOffset.setValue( self.window.doubleSpinBox_GCodeConversion_XOffset.value() * 25.4 )
-            self.window.doubleSpinBox_GCodeConversion_YOffset.setValue(self.window.doubleSpinBox_GCodeConversion_YOffset.value() * 25.4 )
-            self.window.doubleSpinBox_GCodeConversion_MinX.setValue(self.window.doubleSpinBox_GCodeConversion_MinX.value() * 25.4 )
-            self.window.doubleSpinBox_GCodeConversion_MaxX.setValue(self.window.doubleSpinBox_GCodeConversion_MaxX.value() * 25.4 )
-            self.window.doubleSpinBox_GCodeConversion_MinY.setValue(self.window.doubleSpinBox_GCodeConversion_MinY.value() * 25.4 )
-            self.window.doubleSpinBox_GCodeConversion_MaxY.setValue(self.window.doubleSpinBox_GCodeConversion_MaxY.value() * 25.4 )
+            self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue( self.ui.doubleSpinBox_GCodeConversion_XOffset.value() * 25.4 )
+            self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(self.ui.doubleSpinBox_GCodeConversion_YOffset.value() * 25.4 )
+            self.ui.doubleSpinBox_GCodeConversion_MinX.setValue(self.ui.doubleSpinBox_GCodeConversion_MinX.value() * 25.4 )
+            self.ui.doubleSpinBox_GCodeConversion_MaxX.setValue(self.ui.doubleSpinBox_GCodeConversion_MaxX.value() * 25.4 )
+            self.ui.doubleSpinBox_GCodeConversion_MinY.setValue(self.ui.doubleSpinBox_GCodeConversion_MinY.value() * 25.4 )
+            self.ui.doubleSpinBox_GCodeConversion_MaxY.setValue(self.ui.doubleSpinBox_GCodeConversion_MaxY.value() * 25.4 )
             
     def cb_display_material_thickness(self):
         '''
         svg display only in mm
         '''
-        material_units = self.window.comboBox_Material_Units.currentText()
+        material_units = self.ui.comboBox_Material_Units.currentText()
 
-        thickness = ValWithUnit(self.window.doubleSpinBox_Material_Thickness.value(), material_units).toMm()
-        clearance = ValWithUnit(self.window.doubleSpinBox_Material_Clearance.value(), material_units).toMm()
+        thickness = ValWithUnit(self.ui.doubleSpinBox_Material_Thickness.value(), material_units).toMm()
+        clearance = ValWithUnit(self.ui.doubleSpinBox_Material_Clearance.value(), material_units).toMm()
 
         self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
 
@@ -476,26 +474,26 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         svg display only in mm
         '''
-        material_units = self.window.comboBox_Material_Units.currentText()
+        material_units = self.ui.comboBox_Material_Units.currentText()
 
-        thickness = ValWithUnit(self.window.doubleSpinBox_Material_Thickness.value(), material_units).toMm()
-        clearance = ValWithUnit(self.window.doubleSpinBox_Material_Clearance.value(), material_units).toMm()
+        thickness = ValWithUnit(self.ui.doubleSpinBox_Material_Thickness.value(), material_units).toMm()
+        clearance = ValWithUnit(self.ui.doubleSpinBox_Material_Clearance.value(), material_units).toMm()
 
         self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
 
     def cb_spindle_automatic(self):
-        val = self.window.checkBox_GCodeGeneration_SpindleAutomatic.isChecked()
-        self.window.spinBox_GCodeGeneration_SpindleSpeed.setEnabled(val)
+        val = self.ui.checkBox_GCodeGeneration_SpindleAutomatic.isChecked()
+        self.ui.spinBox_GCodeGeneration_SpindleSpeed.setEnabled(val)
 
     def setup_material_viewer(self):
         '''
         '''
-        return material_widget.MaterialWidget(self.window.widget_display_material)
+        return material_widget.MaterialWidget(self.ui.widget_display_material)
 
     def setup_svg_viewer(self):
         '''
         '''
-        svg = self.window.svg
+        svg = self.ui.svg
         layout = svg.layout()
         
         svg_viewer = svgviewer.SvgViewer(svg)
@@ -508,7 +506,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def setup_webgl_viewer(self):
         '''
         '''
-        webgl = self.window.webgl
+        webgl = self.ui.webgl
         layout = webgl.layout()
         
         webgl_viewer = webglviewer.WebGlViewer(webgl)
@@ -598,7 +596,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         cnc_ops = []
 
-        for op_model in self.window.operationsview_manager.get_model().operations:
+        for op_model in self.ui.operationsview_manager.get_model().operations:
             if not op_model.enabled:
                 continue
 
@@ -701,12 +699,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
     def after_gcode_generation(self, generator, cnc_ops):
         # with the resulting calculation, we can fill the min/max in X/Y as well as the offsets
-        self.window.doubleSpinBox_GCodeConversion_XOffset.setValue(generator.offsetX)
-        self.window.doubleSpinBox_GCodeConversion_YOffset.setValue(generator.offsetY)
-        self.window.doubleSpinBox_GCodeConversion_MinX.setValue(generator.minX)
-        self.window.doubleSpinBox_GCodeConversion_MinY.setValue(generator.minY)
-        self.window.doubleSpinBox_GCodeConversion_MaxX.setValue(generator.maxX)
-        self.window.doubleSpinBox_GCodeConversion_MaxY.setValue(generator.maxY)
+        self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue(generator.offsetX)
+        self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(generator.offsetY)
+        self.ui.doubleSpinBox_GCodeConversion_MinX.setValue(generator.minX)
+        self.ui.doubleSpinBox_GCodeConversion_MinY.setValue(generator.minY)
+        self.ui.doubleSpinBox_GCodeConversion_MaxX.setValue(generator.maxX)
+        self.ui.doubleSpinBox_GCodeConversion_MaxY.setValue(generator.maxY)
 
         gcode = generator.gcode
         self.display_gcode(gcode)

@@ -627,7 +627,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
     def generate_gcode(self):
         '''
         '''    
-        self.main_window.parent().cb_generate_g_code()
+        self.main_window.cb_generate_g_code()
         
     def handleNewvalue(self, index: QtCore.QModelIndex, value: Any):
         print("--------------------------------", "handleNewvalue")
@@ -645,7 +645,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
             cnc_op = self.operations[row]
             setattr(cnc_op, attrib, value)
 
-            self.main_window.parent().display_cnc_ops_geometry(self.operations)
+            self.main_window.display_cnc_ops_geometry(self.operations)
 
     def __str__(self):
         self.cnt += 1

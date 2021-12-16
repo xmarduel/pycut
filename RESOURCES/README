@@ -1,4 +1,10 @@
 
 in RESOURCES
 
+
+
 C:\Users\xavie\AppData\Local\Programs\Python\Python39\Scripts\pyside6-rcc.exe -o ..\resources_rc.py C:\Users\xavie\Documents\GITHUB\pycut\RESOURCES\resources.qrc
+
+
+# to generate the main window ui
+C:\Users\xavie\AppData\Local\Programs\Python\Python39\Scripts\pyside6-uic mainwindow.ui > ui_mainwindow.py

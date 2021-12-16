@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>main</class>
- <widget class="QMainWindow" name="main">
+ <class>mainwindow</class>
+ <widget class="QMainWindow" name="mainwindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -1298,7 +1298,7 @@
   <customwidget>
    <class>PMFTableViewManager</class>
    <extends>QWidget</extends>
-   <header location="global">pmftableviewmanager.h</header>
+   <header location="global">operations_tableview.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
