@@ -402,10 +402,15 @@ class PMFTableViewManager(QtWidgets.QWidget):
         '''
         self.table.setModel(model)
 
-    def get_model(self):
+    def get_model(self) -> 'PMFSimpleTableModel' :
         '''
         '''
         return self.table.model()
+
+    def get_model_operations(self) -> List[OpItem]:
+        '''
+        '''
+        return self.get_model().operations
 
     def add_item(self):
         '''
@@ -418,9 +423,8 @@ class PMFTableViewManager(QtWidgets.QWidget):
         )
         
         print("ADD")
-        for op in self.table.model().operations:
+        for op in self.get_model_operations():
             print(op)
-
 
 class PMFSimpleTableView(QtWidgets.QTableView):
     '''
@@ -591,7 +595,6 @@ class PMFSimpleTableView(QtWidgets.QTableView):
         # instruct the model to generate the g-code for all selected items
         self.model().generate_gcode()
 
-
 class PMFSimpleTableModel(QtCore.QAbstractTableModel):
     '''
     model for the table view
@@ -640,7 +643,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
         print("handleNewvalue OLD -> %s" % (str(self.operations[row])))
         print("handleNewvalue NEW -> %s %s" % (attrib, value))
 
-        # TODO: action on pycut GUI
+        # update pycut GUI
         if attrib in ["cam_ops", "enabled", "paths", "units", "cutDepth", "ramp", "combinaison", "margin", "width"]:
             cnc_op = self.operations[row]
             setattr(cnc_op, attrib, value)

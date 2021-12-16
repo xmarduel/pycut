@@ -5,7 +5,6 @@ import os
 import json
 
 from typing import List
-from typing import Any
 
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -570,7 +569,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             self.svg_viewer.set_svg(svg)
 
-    def display_cnc_ops_geometry(self, ops_model: List[Any]):
+    def display_cnc_ops_geometry(self, operations: List[operations_tableview.OpItem]):
         '''
         '''
         settings = self.get_current_settings()
@@ -587,7 +586,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         cnc_ops = []
 
-        for op_model in ops_model:
+        for op_model in operations:
             if not op_model.enabled:
                 continue
 
@@ -617,12 +616,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_viewer.reinit()
         self.svg_viewer.display_job_geometry(cnc_ops)
 
-    def get_jobmodel_operations(self):
+    def get_jobmodel_operations(self) -> List[CncOp]:
         '''
         '''
-        cnc_ops = []
+        cnc_ops : List[CncOp] = []
 
-        for op_model in self.ui.operationsview_manager.get_model().operations:
+        for op_model in self.ui.operationsview_manager.get_model_operations():
             if not op_model.enabled:
                 continue
 
