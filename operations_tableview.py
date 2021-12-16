@@ -346,7 +346,8 @@ class PMFTableViewManager(QtWidgets.QWidget):
         '''
         QtWidgets.QWidget.__init__(self, parent)
 
-        self.main_window = parent.parent().parent()
+        # this changes when the layout (uifile) changes
+        self.main_window = parent.parent().parent().parent()
 
         self.model = None
         self.svg_viewer = None

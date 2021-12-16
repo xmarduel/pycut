@@ -508,40 +508,43 @@
         <height>16777215</height>
        </size>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,0">
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QTabWidget" name="tabWidget">
-         <property name="currentIndex">
-          <number>0</number>
+        <widget class="QSplitter" name="splitter">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
          </property>
-         <widget class="QWidget" name="svg">
-          <attribute name="title">
-           <string>SVG</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_3"/>
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="svg">
+           <attribute name="title">
+            <string>SVG</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_3"/>
+          </widget>
+          <widget class="QWidget" name="webgl">
+           <attribute name="title">
+            <string>GCode Simulator</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_5"/>
+          </widget>
          </widget>
-         <widget class="QWidget" name="webgl">
-          <attribute name="title">
-           <string>GCode Simulator</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_5"/>
+         <widget class="PMFTableViewManager" name="operationsview_manager" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>300</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>300</height>
+           </size>
+          </property>
          </widget>
-        </widget>
-       </item>
-       <item>
-        <widget class="PMFTableViewManager" name="operationsview_manager" native="true">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>300</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>300</height>
-          </size>
-         </property>
         </widget>
        </item>
        <item>

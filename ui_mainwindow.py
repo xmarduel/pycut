@@ -19,8 +19,8 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
     QFormLayout, QGridLayout, QHBoxLayout, QLabel,
     QMainWindow, QMenu, QMenuBar, QPushButton,
-    QSizePolicy, QSpacerItem, QSpinBox, QStatusBar,
-    QTabWidget, QVBoxLayout, QWidget)
+    QSizePolicy, QSpacerItem, QSpinBox, QSplitter,
+    QStatusBar, QTabWidget, QVBoxLayout, QWidget)
 
 from operations_tableview import PMFTableViewManager
 
@@ -340,7 +340,10 @@ class Ui_mainwindow(object):
         self.centralArea.setMaximumSize(QSize(16777215, 16777215))
         self.verticalLayout = QVBoxLayout(self.centralArea)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.tabWidget = QTabWidget(self.centralArea)
+        self.splitter = QSplitter(self.centralArea)
+        self.splitter.setObjectName(u"splitter")
+        self.splitter.setOrientation(Qt.Vertical)
+        self.tabWidget = QTabWidget(self.splitter)
         self.tabWidget.setObjectName(u"tabWidget")
         self.svg = QWidget()
         self.svg.setObjectName(u"svg")
@@ -352,22 +355,20 @@ class Ui_mainwindow(object):
         self.verticalLayout_5 = QVBoxLayout(self.webgl)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.tabWidget.addTab(self.webgl, "")
-
-        self.verticalLayout.addWidget(self.tabWidget)
-
-        self.operationsview_manager = PMFTableViewManager(self.centralArea)
+        self.splitter.addWidget(self.tabWidget)
+        self.operationsview_manager = PMFTableViewManager(self.splitter)
         self.operationsview_manager.setObjectName(u"operationsview_manager")
         self.operationsview_manager.setMinimumSize(QSize(0, 300))
         self.operationsview_manager.setMaximumSize(QSize(16777215, 300))
+        self.splitter.addWidget(self.operationsview_manager)
 
-        self.verticalLayout.addWidget(self.operationsview_manager)
+        self.verticalLayout.addWidget(self.splitter)
 
         self.pushButton_SaveGcode = QPushButton(self.centralArea)
         self.pushButton_SaveGcode.setObjectName(u"pushButton_SaveGcode")
 
         self.verticalLayout.addWidget(self.pushButton_SaveGcode)
 
-        self.verticalLayout.setStretch(0, 1)
 
         self.horizontalLayout_2.addWidget(self.centralArea)
 
