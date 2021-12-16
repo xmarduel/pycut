@@ -116,7 +116,7 @@ class cam:
                 current = clipper_utils.ClipperUtils.offset(current, width - currentWidth)
                 if needReverse:
                     reversed = []
-                    for i in range(len(current)):
+                    for path in current:
                         path_as_list = list(path)  # is a tuple!  JSCUT current reversed in place
                         path_as_list.reverse()
                         reversed.append(path_as_list)
@@ -128,6 +128,10 @@ class cam:
             currentWidth = nextWidth
             current = clipper_utils.ClipperUtils.offset(current, eachOffset)
         
+        # debug
+        cls.to_gnuplot_dat(allPaths)
+        # debug
+
         return cls.mergePaths(bounds, allPaths)
         
     @classmethod
@@ -266,12 +270,7 @@ class cam:
             needNew = clipper_utils.ClipperUtils.crosses(bounds, currentPoint, path[closestPointIndex])
 
             # JSCUT path = path.slice(closestPointIndex, len(path)).concat(path.slice(0, closestPointIndex))
-            # --> just put the first indices until closestPointIndex at the last pos
-            for k in range(closestPointIndex):
-                pt = path.pop(0)
-                path.append(pt)
-            # <--
-            
+            path = path[closestPointIndex:] + path[:closestPointIndex]
             
             path.append(path[0])
 
@@ -542,3 +541,16 @@ class cam:
             gcode += retractGcode
 
         return gcode
+
+    @classmethod
+    def to_gnuplot_dat(cls, paths: List[ClipperLib.IntPointVector]):
+        '''
+        '''
+        pass
+        fp = open("C:\\Users\\xavie\\Desktop\\pycut_toolpaths.dat", "w")
+        for path in paths:
+            for pt in path:
+                fp.write("%d %d\n" % (pt.X, pt.Y))
+            fp.write("\n")
+            fp.write("\n")
+        fp.close()

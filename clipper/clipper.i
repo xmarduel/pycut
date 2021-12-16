@@ -95,7 +95,7 @@ def dumpPath(label, path):
 def dumpPaths(label, paths):
     print(label)
     for path in paths:
-        print("-----")
+        print("---- path   len#", len(path))
         dumpPath(None, path)
 
 %}

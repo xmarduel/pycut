@@ -9,8 +9,8 @@
       "RampPlunge": true,
       "Combine": "Union",
       "Direction": "Conventional",
-      "Units": "inch",
-      "Margin": 0.0
+      "Units": "mm",
+      "Margin": 2.0
     },
     {
       "Name": "op2",
@@ -20,7 +20,7 @@
       "RampPlunge": true,
       "Combine": "Union",
       "Direction": "Conventional",
-      "Units": "inch",
+      "Units": "mm",
       "Margin": 0.0,
       "Width": 0.0
     },
@@ -32,7 +32,7 @@
       "RampPlunge": true,
       "Combine": "Union",
       "Direction": "Conventional",
-      "Units": "inch",
+      "Units": "mm",
       "Margin": 0.0,
       "Width": 0.0
     },
@@ -49,14 +49,14 @@
     {
       "Name": "opx_p1",
       "paths": ["p1"],
-      "type": "Inside",
-      "Deep": 0.125,
-      "RampPlunge": true,
+      "type": "Outside",
+      "Deep": 3.175,
+      "RampPlunge": false,
       "Combine": "Union",
       "Direction": "Conventional",
       "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "Margin": 2.0,
+      "Width": 5.0
     },
     {
       "Name": "opx_p2",

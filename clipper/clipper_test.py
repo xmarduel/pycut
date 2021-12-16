@@ -96,7 +96,7 @@ def test_offset():
     clipper.dumpPaths("offset input", subj)
     clipper.dumpPaths("solution offset", offsetted)
 
-    #offsetted = ClipperLib.Clipper.CleanPolygons(offsetted, cleanPolyDist);
+    #clipper.CleanPolygons(offsetted, 1)
     return offsetted
 
 if __name__ == '__main__':

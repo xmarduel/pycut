@@ -64,7 +64,7 @@ class ClipperUtils:
         offsetted = ClipperLib.PathVector()
         co.Execute(offsetted, amount)
 
-        #offsetted = ClipperLib.Clipper.CleanPolygons(offsetted, ClipperUtils.cleanPolyDist)
+        #ClipperLib.CleanPolygons(offsetted, ClipperUtils.cleanPolyDist)
         return offsetted
 
     @classmethod

@@ -694,7 +694,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         for cnc_op in job.operations:
             cnc_op.setup(self.svg_viewer)
-            cnc_op.calculate_geometry(job.toolModel)
 
         generator = GcodeGenerator(job)
         generator.generateGcode()

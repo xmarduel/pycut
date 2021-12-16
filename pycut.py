@@ -355,9 +355,15 @@ class CncOp:
     def calculate_preview_geometry_pocket(self):
         '''
         '''
-        for clipper_path in self.geometry:
-            svg_path = SvgPath.fromClipperPath("geometry_pocket", clipper_path)
-            self.geometry_svg_paths.append(svg_path)
+        if len(self.geometry) != 0:
+            offset = self.margin.toInch() * ClipperUtils.inchToClipperScale
+            offset = -offset
+
+            self.preview_geometry = ClipperUtils.offset(self.geometry, offset)
+
+            for clipper_path in self.preview_geometry:
+                svg_path = SvgPath.fromClipperPath("geometry_pocket", clipper_path)
+                self.geometry_svg_paths.append(svg_path)
 
     def calculate_preview_geometry_inside(self, toolModel: ToolModel):
         '''
