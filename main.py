@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 
 import sys
+import os
 import json
 
 from typing import List
@@ -82,6 +83,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui = Ui_mainwindow()
         self.ui.setupUi(self)
 
+        # a job to keep the generated gcode in memory (and save it)
+        self.job = None
+
         self.svg_viewer = self.setup_svg_viewer()
         self.svg_material_viewer = self.setup_material_viewer()
         self.webgl_viewer = self.setup_webgl_viewer()
@@ -89,6 +93,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.operationsview_manager.set_svg_viewer(self.svg_viewer)
 
         # callbacks
+        self.ui.pushButton_SaveGcode.clicked.connect(self.cb_save_gcode)
+
         self.ui.actionOpenSvg.triggered.connect(self.cb_open_svg)
         self.ui.actionOpenJob.triggered.connect(self.cb_open_job)
 
@@ -126,6 +132,26 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         #self.open_job("./jobs/cnc_three_rects_with_circle.json")
         #self.open_job("./jobs/cnc_one_rect.json")
 
+    def cb_save_gcode(self):
+        '''
+        '''
+        if self.job:
+            gcode = self.job.gcode
+            gcode = gcode.replace('\r\n', '\n')
+
+            filename = "pycut_gcode.gcode"
+
+            if os.path.exists(filename):
+                k = 1
+                filename = "pycut_gcode-%d.gcode" % k
+                while os.path.exists(filename):
+                    k += 1
+                    filename = "pycut_gcode-%d.gcode" % k
+
+            fp = open(filename, "w")
+            fp.write(gcode)
+            fp.close()
+        
     def display_gcode_file(self, filename):
         '''
         display gcode in webgl!
@@ -659,7 +685,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def cb_generate_g_code_zerolowerleft(self):
         '''
         '''
-        job = self.get_jobmodel()
+        self.job = job = self.get_jobmodel()
 
         for cnc_op in job.operations:
             cnc_op.setup(self.svg_viewer)
@@ -668,12 +694,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         generator = GcodeGenerator(job)
         generator.generateGcode_zeroLowerLeft()
 
-        self.after_gcode_generation(generator, job.operations)
+        self.after_gcode_generation(generator)
 
     def cb_generate_g_code_zerocenter(self):
         '''
         '''
-        job = self.get_jobmodel()
+        self.job = job = self.get_jobmodel()
 
         for cnc_op in job.operations:
             cnc_op.setup(self.svg_viewer)
@@ -682,12 +708,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         generator = GcodeGenerator(job)
         generator.generateGcode_zeroCenter()
 
-        self.after_gcode_generation(generator, job.operations)
+        self.after_gcode_generation(generator)
 
     def cb_generate_g_code(self):
         '''
         '''
-        job = self.get_jobmodel()
+        self.job = job = self.get_jobmodel()
 
         for cnc_op in job.operations:
             cnc_op.setup(self.svg_viewer)
@@ -695,9 +721,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         generator = GcodeGenerator(job)
         generator.generateGcode()
 
-        self.after_gcode_generation(generator, job.operations)
+        self.after_gcode_generation(generator)
 
-    def after_gcode_generation(self, generator, cnc_ops):
+    def after_gcode_generation(self, generator: GcodeGenerator):
+        '''
+        '''
         # with the resulting calculation, we can fill the min/max in X/Y as well as the offsets
         self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue(generator.offsetX)
         self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(generator.offsetY)
@@ -709,11 +737,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         gcode = generator.gcode
         self.display_gcode(gcode)
 
-        self.svg_viewer.display_job(cnc_ops)
+        self.svg_viewer.display_job(generator.job.operations)
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
-    pycut = PyCutMainWindow()
-    pycut.show()
+    mainwindow = PyCutMainWindow()
+    mainwindow.show()
     sys.exit(app.exec())

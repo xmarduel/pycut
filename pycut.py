@@ -502,6 +502,8 @@ class JobModel:
         self.calculate_operation_cam_paths()
         self.findMinMax()
 
+        self.gcode = ""
+
     def calculate_operation_cam_paths(self):
         for op in self.operations:
             if op.enabled :
@@ -682,4 +684,5 @@ class GcodeGenerator:
             gcode += f"G0 X0 Y0 F {rapidRate}\r\n"
 
         self.gcode = gcode
+        self.job.gcode = gcode
 

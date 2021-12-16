@@ -362,6 +362,11 @@ class Ui_mainwindow(object):
 
         self.verticalLayout.addWidget(self.operationsview_manager)
 
+        self.pushButton_SaveGcode = QPushButton(self.centralArea)
+        self.pushButton_SaveGcode.setObjectName(u"pushButton_SaveGcode")
+
+        self.verticalLayout.addWidget(self.pushButton_SaveGcode)
+
         self.verticalLayout.setStretch(0, 1)
 
         self.horizontalLayout_2.addWidget(self.centralArea)
@@ -824,6 +829,7 @@ class Ui_mainwindow(object):
         self.pushButton_Tabs_CreateTabs.setText(QCoreApplication.translate("mainwindow", u"Create Tabs", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.svg), QCoreApplication.translate("mainwindow", u"SVG", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.webgl), QCoreApplication.translate("mainwindow", u"GCode Simulator", None))
+        self.pushButton_SaveGcode.setText(QCoreApplication.translate("mainwindow", u"Save Gcode", None))
         self.labelMaterial.setText(QCoreApplication.translate("mainwindow", u" Material", None))
         self.pushButton_MakeAll_inch.setText(QCoreApplication.translate("mainwindow", u"Make all inch", None))
         self.pushButton_MakeAll_mm.setText(QCoreApplication.translate("mainwindow", u"Make all mm", None))
