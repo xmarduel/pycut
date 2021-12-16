@@ -113,6 +113,29 @@ jscut_webgl = """
   cursor: pointer;
 }
 
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-gap: 0px;
+  padding: 0px;
+  grid-auto-flow: column;
+  overflow:auto;
+  flex-wrap: nowrap
+}
+
+.grid-container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 20px 0;
+  font-size: 30px;
+}
+
+.item1 {
+  grid-column-start: 1;
+  grid-column-end: 2;
+}
+
+
 </style>
 
 <title>GCODE Simulator</title>
@@ -127,7 +150,6 @@ jscut_webgl = """
 </head>
 <body>
 
-<canvas id="glCanvas" width="480" height="480"></canvas>
 
 <script>
 var gcode_simulator = null;
@@ -140,12 +162,21 @@ function sliderChangeVal(newVal) {
 </script>
 
 <!-- Controls with parameters bound to simulator -->
-<div class="slidecontainer">
-  <input id="input_slider" type="range" min="1" max="100" value="50" oninput="sliderChangeVal(this.value)" style="width: 480px">
-</div>
-<div class="textarea">
-  <!-- not too much rows to avoid a scrollbar -->
-  <textarea id="textarea_gcode" value="M1" rows="23" style="font-size: 8pt; width: 480px"></textarea>
+
+<div class="grid-container">
+
+  <div class="item1">
+    <canvas id="glCanvas" width="480" height="480"></canvas>
+    <div class="slidecontainer">
+      <input id="input_slider" type="range" min="1" max="100" value="50" oninput="sliderChangeVal(this.value)" style="width: 480px">
+    </div>
+  </div>
+
+  <div class="item2">
+    <!-- not too much rows to avoid a scrollbar -->
+    <textarea id="textarea_gcode" value="TO-BE-SET" rows="33" style="font-size: 8pt; font-family: monospace; height: 100%; width: calc(100% - 480px); min-width: 300px"></textarea>
+  </div>
+
 </div>
 
 </body>
