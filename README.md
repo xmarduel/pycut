@@ -1,5 +1,5 @@
 # pycut
-clone of jscut  in python - only the very beginning
+clone of jscut  in python - only the very beginning - work in progress
 
 
 what is currently working: basic
@@ -21,3 +21,4 @@ TODO/BUGS:
 - vPocket ?
 - improve clipper swig wrapper (make it more pythonic)
 - should only select svg paths in viewer from the initial svg (not the generated preview geometry/toolpaths)
+- in op lists: list of paths editable (comboboxes with checkboxes, label show the list of paths names)
