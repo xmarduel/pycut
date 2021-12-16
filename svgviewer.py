@@ -84,11 +84,17 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         # the graphical items in the view
         self.items : List[SvgItem] = []
-        # ordered list of selected items - TODO
+        # ordered list of selected items
         self.selected_items : List[SvgItem] = []
 
         #self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         self.setViewportUpdateMode(QtWidgets.QGraphicsView.FullViewportUpdate)
+
+    def get_selected_items_ids(self) -> List[str]:
+        '''
+        return list of selected svg paths
+        '''
+        return [ item.elementId() for item in self.selected_items ]
 
     def clean(self):
         self.scene.clear()

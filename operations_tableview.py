@@ -6,16 +6,16 @@ from PySide6 import QtGui
 from PySide6 import QtWidgets
 
 
-class CncOp:
+class OpItem:
     def __init__(self, data):
         self.name = data.get("Name", "op")
         self.cam_op = data.get("type", "Pocket")
-        self.cutDepth = data.get("Deep", 0.125)
+        self.cutDepth = data.get("Deep", 3.175)
         self.paths = data.get("paths", [])      
         self.ramp = data.get("RampPlunge", False)
         self.combinaison = data.get("Combine", "Union")
         self.direction = data.get("Direction", "Conventional")
-        self.units = data.get("Units", "inch")
+        self.units = data.get("Units", "mm")
         self.margin = data.get("Margin", 0.0)
         self.width = data.get("Width", 0.0)
 
@@ -349,6 +349,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
         self.main_window = parent.parent().parent()
 
         self.model = None
+        self.svg_viewer = None
 
         # main section of the window
         vbox = self.vbox = QtWidgets.QVBoxLayout()
@@ -376,12 +377,17 @@ class PMFTableViewManager(QtWidgets.QWidget):
         # set layout on the window
         self.setLayout(vbox)
 
+    def set_svg_viewer(self, svg_viewer):
+        '''
+        '''
+        self.svg_viewer = svg_viewer
+
     def set_operations(self, operations):
         '''
         '''
         cnc_ops = []
         for op in operations:
-            cnc_op = CncOp(op)
+            cnc_op = OpItem(op)
             cnc_ops.append(cnc_op)
             
             
@@ -402,8 +408,14 @@ class PMFTableViewManager(QtWidgets.QWidget):
         return self.table.model()
 
     def add_item(self):
-        # instruct the model to add an item
-        self.table.addItem()
+        '''
+        instruct the model to add an item
+        '''
+        paths = self.svg_viewer.get_selected_items_ids()
+        self.table.addItem({
+            "paths": paths
+            }
+        )
         
         print("ADD")
         for op in self.table.model().operations:
@@ -569,8 +581,8 @@ class PMFSimpleTableView(QtWidgets.QTableView):
         for op in self.model().operations:
             print(op)
 
-    def addItem(self):
-        self.model().addItem()
+    def addItem(self, op_data):
+        self.model().addItem(op_data)
         self.setup()  # to show the editors on a new item
 
     def cb_gen_gcode_op(self):
@@ -711,12 +723,12 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
 
         return flags
 
-    def addItem(self):
-        op = CncOp({})
+    def addItem(self, op_data):
+        op = OpItem(op_data)
 
-        self.beginInsertRows(QtCore.QModelIndex(), len(self.operations), len(self.operations))
+        self.beginResetModel()
         self.operations.append(op)
-        self.endInsertRows()
+        self.endResetModel()
 
     def delItem(self, idx):
         op = self.operations[idx]

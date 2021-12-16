@@ -80,9 +80,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         super(PyCutMainWindow, self).__init__()
         self.window = self.load_ui("main.ui")
 
-        # the full data
-        self.job = None
-        
         self.setCentralWidget(self.window)
 
         xx = self.window.parent()
@@ -90,6 +87,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_viewer = self.setup_svg_viewer()
         self.svg_material_viewer = self.setup_material_viewer()
         self.webgl_viewer = self.setup_webgl_viewer()
+
+        self.window.operationsview_manager.set_svg_viewer(self.svg_viewer)
 
         # callbacks
         self.window.actionOpenSvg.triggered.connect(self.cb_open_svg)
@@ -316,7 +315,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         
     def open_job(self, json_file):
         with open(json_file) as f:
-            self.job = job = json.load(f)
+            job = json.load(f)
         
             self.svg_file = job["svg_file"]
             self.operations = job["operations"]
