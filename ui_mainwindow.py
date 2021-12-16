@@ -358,8 +358,8 @@ class Ui_mainwindow(object):
         self.splitter.addWidget(self.tabWidget)
         self.operationsview_manager = PMFTableViewManager(self.splitter)
         self.operationsview_manager.setObjectName(u"operationsview_manager")
-        self.operationsview_manager.setMinimumSize(QSize(0, 300))
-        self.operationsview_manager.setMaximumSize(QSize(16777215, 300))
+        self.operationsview_manager.setMinimumSize(QSize(0, 200))
+        self.operationsview_manager.setMaximumSize(QSize(16777215, 400))
         self.splitter.addWidget(self.operationsview_manager)
 
         self.verticalLayout.addWidget(self.splitter)
