@@ -82,6 +82,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui = Ui_mainwindow()
         self.ui.setupUi(self)
 
+        self.setWindowTitle("PyCut")
+        self.setWindowIcon(QtGui.QIcon(":/images/tango/32x32/categories/applications-system.png"))
+
         # a job to keep the generated gcode in memory (and save it)
         self.job = None
 
