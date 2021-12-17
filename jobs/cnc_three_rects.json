@@ -3,20 +3,27 @@
   "operations": [
     {
       "Name": "op1",
-      "paths": ["p1", "p2"],
       "type": "Pocket",
-      "Deep": 0.125,       
-      "RampPlunge": true,
+      "Deep": 0.125,
+      "paths": [
+        "p1",
+        "p2"
+      ],
+      "RampPlunge": false,
       "Combine": "Union",
       "Direction": "Conventional",
       "Units": "mm",
-      "Margin": 2.0
+      "Margin": 2.0,
+      "Width": 0.0
     },
     {
       "Name": "op2",
-      "paths": ["p1", "p2"],
       "type": "Inside",
       "Deep": 0.125,
+      "paths": [
+        "p1",
+        "p2"
+      ],
       "RampPlunge": true,
       "Combine": "Union",
       "Direction": "Conventional",
@@ -26,9 +33,12 @@
     },
     {
       "Name": "op3",
-      "paths": ["p1", "p2"],
       "type": "Outside",
       "Deep": 0.125,
+      "paths": [
+        "p1",
+        "p2"
+      ],
       "RampPlunge": true,
       "Combine": "Union",
       "Direction": "Conventional",
@@ -38,19 +48,26 @@
     },
     {
       "Name": "op4",
-      "paths": ["p1", "p2"],
       "type": "Engrave",
       "Deep": 0.125,
+      "paths": [
+        "p1",
+        "p2"
+      ],
       "RampPlunge": true,
       "Combine": "Union",
       "Direction": "Conventional",
-      "Units": "mm"
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
     },
     {
       "Name": "opx_p1",
-      "paths": ["p1"],
       "type": "Outside",
       "Deep": 3.175,
+      "paths": [
+        "p1"
+      ],
       "RampPlunge": false,
       "Combine": "Union",
       "Direction": "Conventional",
@@ -60,9 +77,11 @@
     },
     {
       "Name": "opx_p2",
-      "paths": ["p2"],
       "type": "Pocket",
       "Deep": 0.125,
+      "paths": [
+        "p2"
+      ],
       "RampPlunge": true,
       "Combine": "Union",
       "Direction": "Conventional",
@@ -72,9 +91,11 @@
     },
     {
       "Name": "opx_p3",
-      "paths": ["p3"],
       "type": "Inside",
       "Deep": 0.125,
+      "paths": [
+        "p3"
+      ],
       "RampPlunge": true,
       "Combine": "Union",
       "Direction": "Conventional",
@@ -83,13 +104,13 @@
       "Width": 5.0
     }
   ],
-  "settings" : {
+  "settings": {
     "svg": {
-        "x_per_inch": 96
+      "px_per_inch": 96
     },
     "Tabs": {
-       "Units": "mm",
-       "MaxCutDepth": 1.0
+      "Units": "mm",
+      "MaxCutDepth": 1.0
     },
     "Tool": {
       "Units": "inch",
@@ -108,13 +129,13 @@
       "Clearance": 0.1
     },
     "CurveToLineConversion": {
-       "MinimumSegments": 1.0,
-       "MinimumSegmentsLength": 0.01
+      "MinimumSegments": 1.0,
+      "MinimumSegmentsLength": 0.01
     },
     "GCodeConversion": {
-       "Units": "mm",
-       "XOffset": 0.0,
-       "YOffset": 0.0
+      "Units": "mm",
+      "XOffset": 0.0,
+      "YOffset": 0.0
     },
     "GCodeGeneration": {
       "ReturnToZeroAtEnd": true,
