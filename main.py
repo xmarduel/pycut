@@ -88,6 +88,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # a job to keep the generated gcode in memory (and save it)
         self.job = None
 
+        # open/read/write job settings
+        self.jobfilename = None
+
         self.svg_viewer = self.setup_svg_viewer()
         self.svg_material_viewer = self.setup_material_viewer()
         self.webgl_viewer = self.setup_webgl_viewer()
@@ -98,7 +101,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_SaveGcode.clicked.connect(self.cb_save_gcode)
 
         self.ui.actionOpenSvg.triggered.connect(self.cb_open_svg)
+        self.ui.actionNewJob.triggered.connect(self.cb_new_job)
         self.ui.actionOpenJob.triggered.connect(self.cb_open_job)
+        self.ui.actionSaveJobAs.triggered.connect(self.cb_save_job_as)
+        self.ui.actionSaveJob.triggered.connect(self.cb_save_job)
 
         # display material thickness/clearance
         self.ui.doubleSpinBox_Material_Thickness.valueChanged.connect(self.cb_display_material_thickness)
@@ -186,43 +192,17 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
     def load_ui(self, uifile):
         '''
+        old method th load ui, not OK when a QMainWindow ui file
+        has to be loaded, OK when simple widget.
+        Kept here to remember how it works (quite well infact, and
+        no need to generate an Ui_XXXX.py file)
         '''
         loader = QUiLoader(self)
         loader.registerCustomWidget(operations_tableview.PMFTableViewManager)
         
-        window = loader.load(uifile)
+        widget = loader.load(uifile)
 
-        return window
-    
-    def cb_show_hide_settings(self):
-        '''
-        '''
-        if self.ui.grid_Settings.isHidden():
-            self.ui.grid_Settings.show()
-            self.ui.pushButton_ShowHideSettings.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
-        else:
-            self.ui.grid_Settings.hide()
-            self.ui.pushButton_ShowHideSettings.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-right_16x16.png"))
-
-    def cb_show_hide_tabs(self):
-        '''
-        '''
-        if self.ui.grid_Tabs.isHidden():
-            self.ui.grid_Tabs.show()
-            self.ui.pushButton_ShowHideTabs.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
-        else:
-            self.ui.grid_Tabs.hide()
-            self.ui.pushButton_ShowHideTabs.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-right_16x16.png"))
-
-    def cb_show_hide_tool(self):
-        '''
-        '''
-        if self.ui.grid_Tool.isHidden():
-            self.ui.grid_Tool.show()
-            self.ui.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-down_16x16.png"))
-        else:
-            self.ui.grid_Tool.hide()
-            self.ui.pushButton_ShowHideTool.setIcon(QtGui.QIcon(":/images/tango_inofficial/caret-right_16x16.png"))
+        return widget
 
     def init_gui(self):
         '''
@@ -330,17 +310,25 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             
             self.display_svg(self.svg_file)
  
+    def cb_new_job(self):
+        '''
+        '''
+        # clean current job (table)
+        self.ui.operationsview_manager.set_operations([])
+
     def cb_open_job(self):
         '''
         '''
         # read json
         xfilter = "JSON Files (*.json)"
-        json_file, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
+        jobfilename, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
         
-        self.open_job(json_file)
+        self.open_job(jobfilename)
         
-    def open_job(self, json_file):
-        with open(json_file) as f:
+    def open_job(self, jobfilename):
+        with open(jobfilename) as f:
+            self.jobfilename = jobfilename
+
             job = json.load(f)
         
             self.svg_file = job["svg_file"]
@@ -355,25 +343,46 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             # fill operations table
             self.ui.operationsview_manager.set_operations(self.operations)
         
-    def save_job(self):
+    def cb_save_job(self):
         '''
         '''
+        operations = self.ui.operationsview_manager.get_operations()
+
         job = {
             "svg_file" : self.svg_file,
-            "operations": self.operations,
+            "operations": operations,
+            "settings": self.get_current_settings()
+        }
+        
+        with open(self.jobfilename, 'w') as json_file:
+            json.dump(job, json_file, indent=2)   
+
+    def cb_save_job_as(self):
+        '''
+        '''
+        xfilter = "JSON Files (*.json)"
+        
+        operations = self.ui.operationsview_manager.get_operations()
+
+        job = {
+            "svg_file" : self.svg_file,
+            "operations": operations,
             "settings": self.get_current_settings()
         }
             
-        job_file_name = 'job_%s.json' % self.svg 
-        
-        with open(job_file_name, 'w') as json_file:
-            json.dump(job, json_file, indent=2)   
+        # open file dialog for a file name
+        jobfilename, _ = QtWidgets.QFileDialog.getSaveFileName(self, caption="Save As", dir=".", filter=xfilter)
+
+        with open(jobfilename, 'w') as json_file:
+            json.dump(job, json_file, indent=2)
+
+        self.jobfilename = jobfilename
             
     def cb_make_all_inch(self):
         '''
         not the tool
 
-        TODO: the ops (cutDeepth) ?
+        TODO: the ops (cutDepth, Margin, Width) ?
         '''
         self.ui.comboBox_Tabs_Units.setCurrentText("inch")
         self.ui.comboBox_Material_Units.setCurrentText("inch")
@@ -383,7 +392,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         not the tool
 
-        TODO: the ops (cutDeepth) ?
+        TODO: the ops (cutDepth, Margin, Width) ?
         '''
         self.ui.comboBox_Tabs_Units.setCurrentText("mm")
         self.ui.comboBox_Material_Units.setCurrentText("mm")

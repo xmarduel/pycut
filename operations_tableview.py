@@ -1,5 +1,6 @@
 from typing import List
 from typing import Any
+from typing import Dict
 
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -32,6 +33,21 @@ class OpItem:
         '''
         return "op: %s %s [%f] %s %s %s %f" % (self.name, self.cam_op, self.cutDepth, self.ramp, self.enabled, self.combinaison, self.cutDepth)
 
+    def to_dict(self) -> Dict[str, Any]:
+        '''
+        '''
+        return {
+            "Name": self.name,
+            "type": self.cam_op,
+            "Deep": self.cutDepth,
+            "paths": self.paths,  
+            "RampPlunge": self.ramp ,
+            "Combine": self.combinaison,
+            "Direction": self.direction,
+            "Units": self.units,
+            "Margin": self.margin ,
+            "Width": self.width 
+        }
 
 class PMFDoubleSpinBox(QtWidgets.QDoubleSpinBox):
     '''
@@ -366,7 +382,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
         hbox = QtWidgets.QHBoxLayout()
 
         # create the button, and hook it up to the slot below.
-        self._button_add = QtWidgets.QPushButton("Add Item")
+        self._button_add = QtWidgets.QPushButton("Add Operation")
         self._button_add.clicked.connect(self.add_item)
         self._button_add.setIcon(QtGui.QIcon(":/images/tango/32x32/actions/list-add"))
 
@@ -397,6 +413,18 @@ class PMFTableViewManager(QtWidgets.QWidget):
         self.table.setup()
 
         self.vbox.addWidget(self.table)
+
+    def get_operations(self) -> List[Dict]:
+        '''
+        returns the list of operations ready to br saved as json data
+        '''
+        ops = []
+
+        for operation in self.get_model_operations():
+            op = operation.to_dict()
+            ops.append(op)
+
+        return ops
 
     def set_model(self, model):
         '''
