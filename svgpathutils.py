@@ -1,4 +1,6 @@
 
+import os
+
 from typing import List
 from typing import Dict
 
@@ -165,11 +167,15 @@ class SvgTransformer:
         self.svg = svg
 
         # a tmp file
-        fp = open("xx.svg", 'w')
-        fp.write(svg)
-        fp.close()
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = os.path.join(tmpdir, 'pycut_svg.svg')
+            # use path
+            fp = open(path, 'w')
+            fp.write(svg)
+            fp.close()
 
-        self.ini_svg_paths, self.ini_attribs = svgpathtools.svg2paths('xx.svg')
+            self.ini_svg_paths, self.ini_attribs = svgpathtools.svg2paths(path)
+            # then dir temp dir will be deleted
 
     def augment(self, svg_paths: List[SvgPath]) -> str:
         '''
@@ -211,7 +217,7 @@ class SvgTransformer:
                 </g> 
              </svg>''' % (root_attrib["width"], root_attrib["height"], root_attrib["viewBox"], all_paths)
 
-        print(svg)
+        #print(svg)
         
         return svg
 
@@ -249,7 +255,7 @@ class SvgTransformer:
                 </g> 
              </svg>''' % (root_attrib["width"], root_attrib["height"], root_attrib["viewBox"], all_paths)
 
-        print(svg)
+        #print(svg)
         
         return svg
 
