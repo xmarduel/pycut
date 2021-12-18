@@ -334,7 +334,7 @@ class CncOp:
         self.geometry = ClipperUtils.simplifyAndClean(geometry, ClipperLib.PolyFillType.pftNonZero)
         #self.geometry = geometry
 
-        ClipperLib.dumpPaths("geometry", self.geometry)
+        #ClipperLib.dumpPaths("geometry", self.geometry)
         
     def calculate_geometry(self, toolModel: ToolModel):
         '''
@@ -386,7 +386,7 @@ class CncOp:
         
             self.preview_geometry = ClipperUtils.diff(geometry, ClipperUtils.offset(geometry, -width))
 
-            ClipperLib.dumpPaths("geometry", self.preview_geometry)
+            #ClipperLib.dumpPaths("geometry", self.preview_geometry)
 
         # should have 2 paths, one inner, one outer -> show the "ring"
         if len(self.preview_geometry) > 1:
@@ -411,7 +411,7 @@ class CncOp:
                   
             self.preview_geometry = ClipperUtils.diff(ClipperUtils.offset(geometry, width), geometry)
 
-            ClipperLib.dumpPaths("preview geometry", self.preview_geometry)
+            #ClipperLib.dumpPaths("preview geometry", self.preview_geometry)
 
         # should have 2 paths, one inner, one outer -> show the "ring"
         if len(self.preview_geometry) > 1:
@@ -429,7 +429,7 @@ class CncOp:
         '''
         pass
 
-    def calculate_toolpaths(self,  svgModel: SvgModel, toolModel: ToolModel, materialModel: MaterialModel):
+    def calculate_toolpaths(self, svgModel: SvgModel, toolModel: ToolModel, materialModel: MaterialModel):
         '''
         '''
         toolData = toolModel.getCamData()
@@ -457,9 +457,9 @@ class CncOp:
             self.cam_paths = cam.vPocket(geometry, toolModel.angle, toolData["passDepthClipper"], cutDepth.toInch() * ClipperUtils.inchToClipperScale, toolData["stepover"], direction == "Climb")
         elif cam_op == "Inside" or cam_op == "Outside":
             width = width.toInch() * ClipperUtils.inchToClipperScale
-            if width < toolData["passDepthClipper"]:
-                width = toolData["passDepthClipper"]
-            self.cam_paths = cam.outline(geometry, toolData["passDepthClipper"], cam_op == "Inside", width, 1 - toolData["stepover"], direction == "Climb")
+            if width < toolData["diameterClipper"]:
+                width = toolData["diameterClipper"]
+            self.cam_paths = cam.outline(geometry, toolData["diameterClipper"], cam_op == "Inside", width, 1 - toolData["stepover"], direction == "Climb")
         elif cam_op == "Engrave":
             self.cam_paths = cam.engrave(geometry, direction == "Climb")
 
