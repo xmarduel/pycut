@@ -549,7 +549,7 @@ class cam:
     def to_gnuplot_dat(cls, paths: List[ClipperLib.IntPointVector]):
         '''
         '''
-        pass
+        return
         fp = open("C:\\Users\\xavie\\Desktop\\pycut_toolpaths.dat", "w")
         for path in paths:
             for pt in path:
