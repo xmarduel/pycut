@@ -113,7 +113,12 @@ class cam:
 
             nextWidth = currentWidth + eachWidth
             if nextWidth > width and (width - currentWidth) > 0 :
-                current = clipper_utils.ClipperUtils.offset(current, width - currentWidth)
+                # >>> XAM fix
+                last_delta = width - currentWidth
+                if isInside:
+                    last_delta = -last_delta
+                # <<< XAM fix
+                current = clipper_utils.ClipperUtils.offset(current, last_delta)
                 if needReverse:
                     reversed = []
                     for path in current:
