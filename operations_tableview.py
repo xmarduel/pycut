@@ -692,7 +692,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
         for op in self.operations:
             print(op)
 
-    def headerData(self, col, orientation, role):
+    def headerData(self, col: int, orientation: QtCore.Qt.Orientation, role: QtCore.Qt.EditRole):
         if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
             return self.header[col]
         return None
@@ -703,7 +703,17 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
     def columnCount(self, parent):
         return len(self.header)
 
-    def data(self, index, role):
+    def setData(self, index: QtCore.QModelIndex, value, role = QtCore.Qt.EditRole):
+        '''
+        for the cells without delegate
+        '''
+        op = self.get_operation(index)
+        attr = self.get_operation_attr(index)
+
+        if role == QtCore.Qt.EditRole:
+            setattr(op, attr, value)
+
+    def data(self, index: QtCore.QModelIndex, role: QtCore.Qt.EditRole):
         op = self.get_operation(index)
         attr = self.get_operation_attr(index)
 
@@ -744,7 +754,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
 
         return None
 
-    def flags(self, index):
+    def flags(self, index: QtCore.QModelIndex):
         flags = super(PMFSimpleTableModel, self).flags(index)
 
         flags |= QtCore.Qt.ItemIsEditable
