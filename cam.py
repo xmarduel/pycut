@@ -16,6 +16,7 @@
 # along with pycut.  If not, see <http:#www.gnu.org/licenses/>.
 
 import math
+import sys
 
 from typing import List
 from ValWithUnit import ValWithUnit
@@ -45,7 +46,7 @@ class cam:
     def dist(x1: float, y1: float, x2: float, y2: float) -> float :
         dx = x2 - x1
         dy = y2 - y1
-        return math.sqrt(dx *dx + dy * dy)
+        return dx * dx + dy * dy
     
     @staticmethod
     def distP(p1:ClipperLib.IntPoint, p2:ClipperLib.IntPoint) -> float :
@@ -61,7 +62,7 @@ class cam:
         cutterDia is in Clipper units. 
         overlap is in the range [0, 1).
         '''
-        ClipperLib.dumpPaths("geometry", geometry)
+        #ClipperLib.dumpPaths("geometry", geometry)
 
         current = clipper_utils.ClipperUtils.offset(geometry, -cutterDia / 2)
         bounds = clipper_utils.ClipperUtils.clone_pathvector(current)  # JSCUT: current.slice(0)
@@ -239,10 +240,7 @@ class cam:
     def mergePaths(cls, _bounds: ClipperLib.PathVector, paths: List[ClipperLib.IntPointVector]) -> List[CamPath] :
         '''
         Try to merge paths. A merged path doesn't cross outside of bounds. 
-        
-        Returns array of CamPath.
         '''
-        # strange, transform all these "PathVector" in "IntPointvector"
         if _bounds and len(_bounds) > 0:
             bounds = _bounds
         else: 
@@ -260,11 +258,11 @@ class cam:
         while numLeft > 0 :
             closestPathIndex = None
             closestPointIndex = None
-            closestPointDist = None
+            closestPointDist = sys.maxsize
             for pathIndex, path in enumerate(paths):
                 for pointIndex, point in enumerate(path):
                     dist = cam.distP(currentPoint, point)
-                    if closestPointDist == None or dist < closestPointDist:
+                    if dist < closestPointDist:
                         closestPathIndex = pathIndex
                         closestPointIndex = pointIndex
                         closestPointDist = dist
