@@ -665,17 +665,27 @@ class Ui_mainwindow(object):
 
         self.gridLayout_GCodeConversion.addWidget(self.label_GCodeConversion_MaxY, 10, 0, 1, 1)
 
+        self.checkBox_GCodeConversion_ZeroCenter_AsDefault = QCheckBox(self.centralwidget)
+        self.checkBox_GCodeConversion_ZeroCenter_AsDefault.setObjectName(u"checkBox_GCodeConversion_ZeroCenter_AsDefault")
+
+        self.gridLayout_GCodeConversion.addWidget(self.checkBox_GCodeConversion_ZeroCenter_AsDefault, 3, 2, 1, 1)
+
+        self.checkBox_GCodeConversion_ZeroLowerLeft_AsDefault = QCheckBox(self.centralwidget)
+        self.checkBox_GCodeConversion_ZeroLowerLeft_AsDefault.setObjectName(u"checkBox_GCodeConversion_ZeroLowerLeft_AsDefault")
+
+        self.gridLayout_GCodeConversion.addWidget(self.checkBox_GCodeConversion_ZeroLowerLeft_AsDefault, 2, 2, 1, 1)
+
         self.pushButton_GCodeConversion_ZeroLowerLeft = QPushButton(self.centralwidget)
         self.pushButton_GCodeConversion_ZeroLowerLeft.setObjectName(u"pushButton_GCodeConversion_ZeroLowerLeft")
         self.pushButton_GCodeConversion_ZeroLowerLeft.setFont(font1)
 
-        self.gridLayout_GCodeConversion.addWidget(self.pushButton_GCodeConversion_ZeroLowerLeft, 2, 2, 1, 1)
+        self.gridLayout_GCodeConversion.addWidget(self.pushButton_GCodeConversion_ZeroLowerLeft, 2, 0, 1, 2)
 
         self.pushButton_GCodeConversion_ZeroCenter = QPushButton(self.centralwidget)
         self.pushButton_GCodeConversion_ZeroCenter.setObjectName(u"pushButton_GCodeConversion_ZeroCenter")
         self.pushButton_GCodeConversion_ZeroCenter.setFont(font1)
 
-        self.gridLayout_GCodeConversion.addWidget(self.pushButton_GCodeConversion_ZeroCenter, 3, 2, 1, 1)
+        self.gridLayout_GCodeConversion.addWidget(self.pushButton_GCodeConversion_ZeroCenter, 3, 0, 1, 2)
 
 
         self.verticalLayoutGCodeConversion.addLayout(self.gridLayout_GCodeConversion)
@@ -856,6 +866,8 @@ class Ui_mainwindow(object):
         self.label_GCodeConversion_YOffset.setText(QCoreApplication.translate("mainwindow", u"Y Offset", None))
         self.label_GCodeConversion_MinX.setText(QCoreApplication.translate("mainwindow", u"Min X", None))
         self.label_GCodeConversion_MaxY.setText(QCoreApplication.translate("mainwindow", u"Max Y", None))
+        self.checkBox_GCodeConversion_ZeroCenter_AsDefault.setText(QCoreApplication.translate("mainwindow", u"as Default", None))
+        self.checkBox_GCodeConversion_ZeroLowerLeft_AsDefault.setText(QCoreApplication.translate("mainwindow", u"as Default", None))
         self.pushButton_GCodeConversion_ZeroLowerLeft.setText(QCoreApplication.translate("mainwindow", u"Zero lower left", None))
         self.pushButton_GCodeConversion_ZeroCenter.setText(QCoreApplication.translate("mainwindow", u"Zero center", None))
         self.labelGCodeGeneration.setText(QCoreApplication.translate("mainwindow", u" GCode Generation", None))

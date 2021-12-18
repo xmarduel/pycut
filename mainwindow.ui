@@ -1091,7 +1091,21 @@
             </property>
            </widget>
           </item>
+          <item row="3" column="2">
+           <widget class="QCheckBox" name="checkBox_GCodeConversion_ZeroCenter_AsDefault">
+            <property name="text">
+             <string>as Default</string>
+            </property>
+           </widget>
+          </item>
           <item row="2" column="2">
+           <widget class="QCheckBox" name="checkBox_GCodeConversion_ZeroLowerLeft_AsDefault">
+            <property name="text">
+             <string>as Default</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
            <widget class="QPushButton" name="pushButton_GCodeConversion_ZeroLowerLeft">
             <property name="font">
              <font>
@@ -1104,7 +1118,7 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="2">
+          <item row="3" column="0" colspan="2">
            <widget class="QPushButton" name="pushButton_GCodeConversion_ZeroCenter">
             <property name="font">
              <font>

@@ -724,6 +724,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def cb_generate_g_code(self):
         '''
         '''
+        if self.ui.checkBox_GCodeConversion_ZeroLowerLeft_AsDefault.isChecked():
+            self.cb_generate_g_code_zerolowerleft()
+            return
+
+        if self.ui.checkBox_GCodeConversion_ZeroCenter_AsDefault.isChecked():
+            self.cb_generate_g_code_zerocenter()
+            return
+
         self.job = job = self.get_jobmodel()
 
         for cnc_op in job.operations:
