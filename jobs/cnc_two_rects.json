@@ -1,93 +1,54 @@
 {
-  "svg_file": "svg/two_rects.svg",
+  "svg_file": "C:/Users/xavie/Documents/GITHUB/pycut/svg/two_rects.svg",
   "operations": [
     {
-      "Name": "op1",
-      "paths": ["p1", "p2"],
-      "type": "Pocket",
-      "Deep": 0.2,       
-      "RampPlunge": true,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.1
-    },
-    {
-      "Name": "op2",
-      "paths": ["p1", "p2"],
-      "type": "Inside",
-      "Deep": 0.2,
-      "RampPlunge": true,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 1.1
-    },
-    {
-      "Name": "op3",
-      "paths": ["p1", "p2"],
+      "Name": "op",
       "type": "Outside",
-      "Deep": 0.2,
-      "RampPlunge": true,
+      "Deep": 3.175,
+      "paths": [
+        "p1",
+        "p2"
+      ],
+      "RampPlunge": false,
       "Combine": "Union",
       "Direction": "Conventional",
       "Units": "mm",
       "Margin": 0.0,
-      "Width": 1.1
-    },
-    {
-      "Name": "op4",
-      "paths": ["p1", "p2"],
-      "type": "Engrave",
-      "Deep": 0.2,
-      "RampPlunge": true,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0
-    },
-    {
-      "Name": "op5",
-      "paths": ["p1", "p2"],
-      "type": "V Pocket",
-      "Combine": "Union",
-      "Units": "mm",
-      "Margin": 0.0
+      "Width": 20.0
     }
   ],
-  "settings" : {
+  "settings": {
     "svg": {
-      "x_per_inch": 96
+      "px_per_inch": 96
     },
     "Tabs": {
-       "Units": "mm",
-       "MaxCutDepth": 1.0
-     },
-     "Tool": {
-       "Units": "mm",
-       "Diameter": 1.0,
-       "Angle": 180,
-       "PassDepth": 0.25,
-       "StepOver": 0.4,
-       "Rapid": 500,
-       "Plunge": 100,
-       "Cut": 200
-     },
-     "Material": {
-       "Units": "mm",
-       "Thickness": 50.0,
-       "ZOrigin": "Top",
-       "Clearance": 10.0
-     },
-     "CurveToLineConversion": {
-       "MinimumSegments": 1.0,
-       "MinimumSegmentsLength": 0.0
-     },
-     "GCodeConversion": {
-       "Units": "mm",
-       "XOffset": 0.0,
-       "YOffset": 0.0
+      "Units": "mm",
+      "MaxCutDepth": 1.0
+    },
+    "Tool": {
+      "Units": "inch",
+      "Diameter": 0.125,
+      "Angle": 180,
+      "PassDepth": 0.125,
+      "StepOver": 0.4,
+      "Rapid": 100,
+      "Plunge": 5,
+      "Cut": 40
+    },
+    "Material": {
+      "Units": "mm",
+      "Thickness": 25.0,
+      "ZOrigin": "Top",
+      "Clearance": 10.0
+    },
+    "CurveToLineConversion": {
+      "MinimumSegments": 1.0,
+      "MinimumSegmentsLength": 0.01
+    },
+    "GCodeConversion": {
+      "Units": "mm",
+      "XOffset": -1.59,
+      "YOffset": 100.0
     },
     "GCodeGeneration": {
       "ReturnToZeroAtEnd": true,

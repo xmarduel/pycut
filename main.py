@@ -121,10 +121,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.comboBox_Tool_Units.currentTextChanged.connect(self.cb_update_tool_display)
         self.ui.comboBox_Material_Units.currentTextChanged.connect(self.cb_update_material_display)
         self.ui.comboBox_GCodeConversion_Units.currentTextChanged.connect(self.cb_update_gcodeconversion_display)
-        
-        self.ui.pushButton_MakeAll_inch.clicked.connect(self.cb_make_all_inch)
-        self.ui.pushButton_MakeAll_mm.clicked.connect(self.cb_make_all_mm)
-        
 
         self.ui.checkBox_GCodeGeneration_SpindleAutomatic.clicked.connect(self.cb_spindle_automatic)
 
@@ -377,27 +373,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             json.dump(job, json_file, indent=2)
 
         self.jobfilename = jobfilename
-            
-    def cb_make_all_inch(self):
-        '''
-        not the tool
-
-        TODO: the ops (cutDepth, Margin, Width) ?
-        '''
-        self.ui.comboBox_Tabs_Units.setCurrentText("inch")
-        self.ui.comboBox_Material_Units.setCurrentText("inch")
-        self.ui.comboBox_GCodeConversion_Units.setCurrentText("inch")
     
-    def cb_make_all_mm(self):
-        '''
-        not the tool
-
-        TODO: the ops (cutDepth, Margin, Width) ?
-        '''
-        self.ui.comboBox_Tabs_Units.setCurrentText("mm")
-        self.ui.comboBox_Material_Units.setCurrentText("mm")
-        self.ui.comboBox_GCodeConversion_Units.setCurrentText("mm")
-        
     def cb_update_tabs_display(self):
         '''
         This updates the legends of the tsbs model widget **and** the values

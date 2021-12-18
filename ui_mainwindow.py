@@ -378,21 +378,6 @@ class Ui_mainwindow(object):
 
         self.verticalLayoutMaterial.addWidget(self.labelMaterial)
 
-        self.horizontalLayout_4 = QHBoxLayout()
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.pushButton_MakeAll_inch = QPushButton(self.centralwidget)
-        self.pushButton_MakeAll_inch.setObjectName(u"pushButton_MakeAll_inch")
-
-        self.horizontalLayout_4.addWidget(self.pushButton_MakeAll_inch)
-
-        self.pushButton_MakeAll_mm = QPushButton(self.centralwidget)
-        self.pushButton_MakeAll_mm.setObjectName(u"pushButton_MakeAll_mm")
-
-        self.horizontalLayout_4.addWidget(self.pushButton_MakeAll_mm)
-
-
-        self.verticalLayoutMaterial.addLayout(self.horizontalLayout_4)
-
         self.horizontalLayout_6 = QHBoxLayout()
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -471,7 +456,6 @@ class Ui_mainwindow(object):
         self.doubleSpinBox_Material_Clearance = QDoubleSpinBox(self.centralwidget)
         self.doubleSpinBox_Material_Clearance.setObjectName(u"doubleSpinBox_Material_Clearance")
         self.doubleSpinBox_Material_Clearance.setMaximum(100.000000000000000)
-        self.doubleSpinBox_Material_Clearance.setSingleStep(0.100000000000000)
         self.doubleSpinBox_Material_Clearance.setValue(20.000000000000000)
 
         self.formLayout_Material.setWidget(3, QFormLayout.FieldRole, self.doubleSpinBox_Material_Clearance)
@@ -834,8 +818,6 @@ class Ui_mainwindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.webgl), QCoreApplication.translate("mainwindow", u"GCode Simulator", None))
         self.pushButton_SaveGcode.setText(QCoreApplication.translate("mainwindow", u"Save Gcode", None))
         self.labelMaterial.setText(QCoreApplication.translate("mainwindow", u" Material", None))
-        self.pushButton_MakeAll_inch.setText(QCoreApplication.translate("mainwindow", u"Make all inch", None))
-        self.pushButton_MakeAll_mm.setText(QCoreApplication.translate("mainwindow", u"Make all mm", None))
         self.label_Material_Units.setText(QCoreApplication.translate("mainwindow", u"Units", None))
         self.comboBox_Material_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
         self.comboBox_Material_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))

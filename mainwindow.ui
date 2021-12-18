@@ -582,24 +582,6 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <item>
-           <widget class="QPushButton" name="pushButton_MakeAll_inch">
-            <property name="text">
-             <string>Make all inch</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_MakeAll_mm">
-            <property name="text">
-             <string>Make all mm</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
            <spacer name="horizontalSpacer_3">
@@ -756,9 +738,6 @@
            <widget class="QDoubleSpinBox" name="doubleSpinBox_Material_Clearance">
             <property name="maximum">
              <double>100.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
             </property>
             <property name="value">
              <double>20.000000000000000</double>
