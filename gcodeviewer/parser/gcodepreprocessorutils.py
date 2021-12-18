@@ -5,16 +5,13 @@ from typing import List
 from PySide6.QtGui import QMatrix4x4
 from PySide6.QtGui import QVector3D
 
+from PySide6.QtCore import qIsNaN
 from PySide6.QtCore import QRegularExpression as QRegExp 
 
 from pointsegment import PointSegment
 
+from util.util import qQNaN
 
-def qQNaN():
-    return None
-
-def qIsNaN(val):
-    return val is None
 
 
 class GcodePreprocessorUtils :

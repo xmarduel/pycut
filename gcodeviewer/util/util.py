@@ -2,11 +2,14 @@
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QColor
 
-def qQNaN():
-    return None
+from PySide6.QtCore import qIsNaN
 
-def qIsNaN(val):
-    return val is None
+def qQNaN():
+    return float('NaN')
+
+def qBound(amin, val, amax):
+    return max(amin, min(val, amax))
+
     
     
 class Util:

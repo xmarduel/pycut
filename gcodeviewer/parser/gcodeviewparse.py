@@ -3,19 +3,17 @@ from typing import List
 
 from PySide6.QtGui import QVector3D
 
+from PySide6 import QtCore
+from PySide6.QtCore import qIsNaN
+
 from linesegment import LineSegment
 from gcodeparser import GcodeParser
 from gcodepreprocessorutils import GcodePreprocessorUtils
 
 from util.util import Util
+from util.util import qQNaN
 
-from PySide6 import QtCore
 
-def qQNaN():
-    return None
-
-def qIsNaN(val):
-    return val is None
 
 
 class GcodeViewParse : 
