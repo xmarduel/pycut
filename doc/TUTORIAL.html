@@ -67,13 +67,13 @@ the generated g-code. It is worth a rewrite!</p>
 <p>So it begins as a "fun" project, in order to understand how a G-code generator
 works, and how easy (or hard) it is to achieve. Well, it is not so easy 
 (but stealing jsCut code helps). And I learned about jsCut through the 
-<a href="https://cncphilosophy.com/svg-to-G-Code">CnC Philosophy</a> page.</p>
+<a href="https://cncphilosophy.com/svg-to-G-Code">CnC Philosophy</a> pages.</p>
 
 <p>By the way,I began to use <strong>jsCut</strong> because <strong>Easel</strong> (for beginners too),
 although free, makes limitations (among others) on the choices of the fonts
 - which is quite a shame...</p>
 
-<p>An other point is the "major" shortcoming of <strong>jsCut</strong>: the fact that it is a web
+<p>An other point is (to me) the "major" shortcoming of <strong>jsCut</strong>: the fact that it is a web
 application: sure for developpers who know javascript technology it is very
 productive, but how many users are able to improve <strong>jsCut</strong> on their own? only a
 few I guess: it is not as easy as one may think. This is due to my opinion to
@@ -82,8 +82,9 @@ used to the web technologies (which by the way change lets say every 3 years...)
 Traditional desktop applications are a lot easier to hack (yes!)</p>
 
 <p>Web technologies change every 3 years? Consider <strong>jsCut</strong> GUI itself, which is
-based on the "polymer" HTML framework. Who which is new to javascript has ever
-heard of this lib before?! It is even not that old! And "polymer" is also based on so-called "html
+based on the "polymer" HTML framework, which is (used to be) an excellent framework. 
+Who which is new to javascript has ever heard of this lib before?! It is even not that old! 
+And "polymer" is also based on so-called "html
 imports", which are in 2022 theoretically no more allowed (as far as know)... 
 How many html files/lines of code are neccessary 
 to achieve the task, compared to, when written in python, only a few Qt Ui files 
@@ -92,8 +93,12 @@ for the design and the python main program having max 1000 lines of code?
 I believe as well that the python code is also much easier to understand
 than the <strong>jsCut</strong> code. Nothing at all against <strong>jsCut</strong>, it is just the web stuff.</p>
 
-<p>So PyCut is written in python, with the GUI with PySide6. Hopefully there
-will be users that will be able to contribute. There is a developper doc for 
+<p>So PyCut is written in python, with the GUI with PySide6. I actually use Python-3.9. 
+It can be of importance for the Clipper SWIG wrapper. It seems different versions of python
+load DLL differently. In all cases, for Python-3.9 it seems that, for windows, some mingw64 libs are required alongside the 
+generated .pyd wrapper. These few libs have been pushed in the repository. I did not try wrappers for linux/macos.</p>
+
+<p>Hopefully there will be users that will be able to contribute. There is a developper doc for 
 this purpose (<span style="color:#ff0080">TODO</span>)</p>
 
 <p>The excellent things from <strong>jsCut</strong> are (among others):</p>
@@ -104,7 +109,7 @@ this purpose (<span style="color:#ff0080">TODO</span>)</p>
 	    <li>in green the calculated toolpaths</li>
 	  </ul>
   </li>
-  <li>a great gcode viewer -in webgl-</li>
+  <li>a great gcode simulator -in webgl-</li>
   <li>the CAM stuff, based on the Clipper library as well as some c++ code with js wrapper:
      hopefully a swig wrapper or something equivalent is feasible</li>
 </ul>
@@ -123,7 +128,6 @@ this purpose (<span style="color:#ff0080">TODO</span>)</p>
   <li>Tabs handling ? (cam c++ wrapper + js code, nothing done at this point) <span style="color:#ff0080">TODO</span></li>
   <li>Migrating WebGL stuff to "native" python ? (QGraphicsView I guess, or PyOpenGL) <span style="color:#ff0080">TODO</span></li>
   <li>Toolpaths for vPocket operations ? (cam c++ wrapper, nothing done at this point) <span style="color:#ff0080">TODO</span></li>
-  <li>Fix some jsCut bugs (example: "Inside" for a simple square with margin 2mm + width 5mm for tool 1 inch => bad paths) <span style="color:#ff0080">TODO</span></li>
 </ul>
 
 <p>Nice to Have:</p>
