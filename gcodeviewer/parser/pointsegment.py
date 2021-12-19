@@ -1,3 +1,9 @@
+# This file is a part of "pycut" application.
+# This file was originally ported from "pointsegment.cpp" class
+# of "Candle" application written by Hayrullin Denis Ravilevich
+# (https://github.com/Denvi/Candle)
+
+# Copyright 2020-2030 Xavier Marduel
 
 from typing import List
 from enum import Enum

@@ -754,7 +754,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
 
         return None
 
-    def flags(self, index: QtCore.QModelIndex):
+    def flags(self, index: QtCore.QModelIndex) -> QtCore.Qt.ItemFlags :
         flags = super(PMFSimpleTableModel, self).flags(index)
 
         flags |= QtCore.Qt.ItemIsEditable

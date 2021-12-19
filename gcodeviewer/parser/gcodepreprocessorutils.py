@@ -1,3 +1,9 @@
+# This file is a part of "pycut" application.
+# This file was originally ported from "gcodepreprocessorutils.cpp" class
+# of "Candle" application written by Hayrullin Denis Ravilevich
+# (https://github.com/Denvi/Candle)
+
+# Copyright 2020-2030 Xavier Marduel
 
 import math
 from typing import List
