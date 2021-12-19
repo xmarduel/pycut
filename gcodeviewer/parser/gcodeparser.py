@@ -31,7 +31,7 @@ class GcodeParser :
         self.m_commandNumber = 0
 
         self.m_currentPoint = QVector3D(0, 0, 0)
-        self.m_currentPlane = PointSegment.plane.XY
+        self.m_currentPlane = PointSegment.Plane.XY
 
         # Settings
         self.m_speedOverride = -1
@@ -89,23 +89,38 @@ class GcodeParser :
     def reset(self, initialPoint : QVector3D = None):
         print("reseting gp %s" % initialPoint)
 
+        if initialPoint is None:
+            initialPoint = QVector3D(0, 0, 0)
+            
         self.m_points = []
         
         # The unspoken home location.
         self.m_currentPoint = initialPoint
-        self.m_currentPlane = PointSegment.plane.XY
-        self.m_points.append(PointSegment(self.m_currentPoint, -1))
+        self.m_currentPlane = PointSegment.Plane.XY
+        self.m_points.append(PointSegment.PointSegment_FromQVector3D(self.m_currentPoint, -1))
+
+    #def addCommand(self, command: str) -> PointSegment:
+    #    stripped = GcodePreprocessorUtils.removeComment(command)
+    #    args = GcodePreprocessorUtils.splitCommand(stripped)
+    #    return self.addCommand(args)
+
+    #def addCommand(self, args: List[str]) -> PointSegment:
+    #    if len(args) == 0:
+    #        return None
+    
+    #    return self.processCommand(args)
 
     def addCommand(self, command: str) -> PointSegment:
-        stripped = GcodePreprocessorUtils.removeComment(command)
-        args = GcodePreprocessorUtils.splitCommand(stripped)
-        return self.addCommand(args)
-
-    def addCommand(self, args: List[str]) -> PointSegment:
-        if len(args) == 0:
-            return None
+        if command.__class__.__name__ == 'str':
+            stripped = GcodePreprocessorUtils.removeComment(command)
+            args = GcodePreprocessorUtils.splitCommand(stripped)
+            return self.addCommand(args)
+        else:
+            # a list of str
+            if len(command) == 0:
+                return None
     
-        return self.processCommand(args)
+            return self.processCommand(command)
 
     def getCurrentPoint(self) -> QVector3D:
         return self.m_currentPoint
@@ -309,11 +324,11 @@ class GcodeParser :
         elif code == 3.0:
             ps = self.addArcPointSegment(nextPoint, False, args)
         elif code == 17.0: 
-            self.m_currentPlane = PointSegment.plane.XY
+            self.m_currentPlane = PointSegment.Plane.XY
         elif code == 18.0: 
-            self.m_currentPlane = PointSegment.plane.ZX
+            self.m_currentPlane = PointSegment.Plane.ZX
         elif code == 19.0: 
-            self.m_currentPlane = PointSegment.plane.YZ
+            self.m_currentPlane = PointSegment.Plane.YZ
         elif code == 20.0: 
             self.m_isMetric = False
         elif code == 21.0: 
@@ -371,11 +386,11 @@ class GcodeParser :
             m = QMatrix4x4()
             m.setToIdentity()
 
-            if self.m_currentPlane == PointSegment.plane.XY:
+            if self.m_currentPlane == PointSegment.Plane.XY:
                 pass
-            elif self.m_currentPlane == PointSegment.plane.ZX:
+            elif self.m_currentPlane == PointSegment.Plane.ZX:
                 m.rotate(90, 1.0, 0.0, 0.0)
-            elif self.m_currentPlane == PointSegment.plane.YZ:
+            elif self.m_currentPlane == PointSegment.Plane.YZ:
                 m.rotate(-90, 0.0, 1.0, 0.0)
 
             radius = math.sqrt( \

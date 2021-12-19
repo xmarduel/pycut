@@ -41,7 +41,7 @@ class PointSegment:
 
     @classmethod
     def PointSegment_FromSegment(cls, ps: 'PointSegment'):
-        this = cls.PointSegment_FromVector(ps.point(), ps.getLineNumber())
+        this = cls.PointSegment_FromQVector3D(ps.point(), ps.getLineNumber())
 
         this.m_toolhead = ps.getToolhead()
         this.m_speed = ps.getSpeed()
@@ -59,7 +59,7 @@ class PointSegment:
         return this
 
     @classmethod
-    def PointSegment_FromVector(cls, b: QVector3D, num: int):
+    def PointSegment_FromQVector3D(cls, b: QVector3D, num: int):
         this = PointSegment()
         this.m_point = QVector3D(b.x(), b.y(), b.z())
         this.m_lineNumber = num
@@ -67,7 +67,7 @@ class PointSegment:
         return this
 
     @classmethod
-    def PointSegment_FromVectorVector(cls, point: QVector3D, num: int, center: QVector3D, radius: float, clockwise: bool):
+    def PointSegment_FromVectorQVector3DQVector3D(cls, point: QVector3D, num: int, center: QVector3D, radius: float, clockwise: bool):
         this = PointSegment(point, num)
         
         this.m_isArc = True

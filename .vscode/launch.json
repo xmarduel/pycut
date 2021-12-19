@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "PYCUT",
             "type": "python",
@@ -19,6 +20,15 @@
             "program": "tableview2.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\pyside_ex"
+        },
+        {
+            "name": "GCODE VIEW PARSE",
+            "type": "python",
+            "request": "launch",
+            "program": "test_gcodeparser.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": ["pycut_gcode.gcode"]
         }
     ]
 }

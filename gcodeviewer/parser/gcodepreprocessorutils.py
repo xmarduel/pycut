@@ -119,7 +119,7 @@ class GcodePreprocessorUtils :
         
         for s in args:
             if len(s) > 0 and s[0].upper() == code :
-                l.append(float(s[1,:]))
+                l.append(float(s[1:]))
     
         return l
     
@@ -176,11 +176,11 @@ class GcodePreprocessorUtils :
                 #c = commandArgs[i][0].upper().toLatin1()
                 c = commandArgs[i][0].upper()
                 if c == 'X':
-                    x = float(commandArgs[i][1,:])
+                    x = float(commandArgs[i][1:])
                 elif c == 'Y':
-                    y = float(commandArgs[i][1,:])
+                    y = float(commandArgs[i][1:])
                 elif c == 'Z':
-                    z = float(commandArgs[i][1,:])
+                    z = float(commandArgs[i][1:])
 
         return cls.updatePointWithCommand_FromVector3D(initial, x, y, z, absoluteMode)
 
@@ -215,13 +215,13 @@ class GcodePreprocessorUtils :
                 # c = t[0].upper().toLatin1()
                 c = t[0].upper()
                 if c == 'I':
-                    i = float(t[1,:])
+                    i = float(t[1:])
                 elif c == 'J':
-                    j = float(t[1,:])
+                    j = float(t[1:])
                 elif c == 'K':
-                    k = float(t[1,:])
+                    k = float(t[1:])
                 elif c == 'R':
-                    r = float(t[1,:])
+                    r = float(t[1:])
 
         if qIsNaN(i) and qIsNaN(j) and qIsNaN(k):
             return cls.convertRToCenter(initial, nextPoint, r, absoluteIJKMode, clockwise)
@@ -265,12 +265,12 @@ class GcodePreprocessorUtils :
                 l.append(sb)
                 sb = ""
                 if cls.isLetter(c):
-                    sb.append(c)
+                    sb += c
             elif cls.isDigit(c) or c == '.' or c == '-':
-                sb.append(c)
+                sb += c
                 readNumeric = True
             elif cls.isLetter(c):
-                sb.append(c)
+                sb += c
 
         if len(sb) > 0:
             l.append(sb)
@@ -285,7 +285,7 @@ class GcodePreprocessorUtils :
         '''
         for t in argList:
             if len(t) > 0 and t[0].upper() == c:
-                return float(t[1,:])
+                return float(t[1:])
     
         return qQNaN()
 
@@ -377,8 +377,6 @@ class GcodePreprocessorUtils :
                 sweep = math.fabs(endAngle - startAngle)
 
         return sweep
-    
-     @classmethod 
     
     @classmethod
     def generatePointsAlongArcBDring(cls, plane: PointSegment.Plane, start: QVector3D, end: QVector3D, center: QVector3D, clockwise: bool, R: float, minArcLength: float, arcPrecision: float, LAST_ARG: Any) -> List[QVector3D]:
