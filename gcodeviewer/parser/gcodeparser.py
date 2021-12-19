@@ -30,7 +30,7 @@ class GcodeParser :
         self.m_lastGcodeCommand = -1
         self.m_commandNumber = 0
 
-        self.m_currentPoint = QVector3D(None, None, None)
+        self.m_currentPoint = QVector3D(0, 0, 0)
         self.m_currentPlane = PointSegment.plane.XY
 
         # Settings
@@ -112,7 +112,7 @@ class GcodeParser :
 
     def expandArc(self) -> List[PointSegment]:
         startSegment = self.m_points[-2]
-        lastSegment = self.m_points[- 1]
+        lastSegment = self.m_points[-1]
 
         empty = []
 
@@ -132,7 +132,15 @@ class GcodeParser :
         # Start expansion.
         #
 
-        expandedPoints = GcodePreprocessorUtils.generatePointsAlongArcBDring(plane, *start, *end, *center, clockwise, radius, self.m_smallArcThreshold, self.m_smallArcSegmentLength, False)
+        expandedPoints = GcodePreprocessorUtils.generatePointsAlongArcBDring(plane, 
+                start, 
+                end, 
+                center, 
+                clockwise, 
+                radius, 
+                self.m_smallArcThreshold, 
+                self.m_smallArcSegmentLength, 
+                False)
 
         # Validate output of expansion.
         if len(expandedPoints) == 0:
@@ -177,12 +185,12 @@ class GcodeParser :
         # Remove comments from command.
         newCommand = GcodePreprocessorUtils.removeComment(command)
         rawCommand = newCommand
-        hasComment = (newCommand.length() != command.length())
+        hasComment = (len(newCommand) != len(command))
 
         if self.m_removeAllWhitespace:
             newCommand = GcodePreprocessorUtils.removeAllWhitespace(newCommand)
 
-        if newCommand.length() > 0:
+        if len(newCommand) > 0:
             # Override feed speed
             if self.m_speedOverride > 0:
                 newCommand = GcodePreprocessorUtils.overrideSpeed(newCommand, self.m_speedOverride)
@@ -327,7 +335,7 @@ class GcodeParser :
     def addLinearPointSegment(self, nextPoint: QVector3D, fastTraverse: bool) -> PointSegment:
         ps = PointSegment(nextPoint, self.m_commandNumber)
 
-        self.m_commandNumber = self.m_commandNumber + 1
+        self.m_commandNumber += 1
 
         zOnly = False
 
@@ -353,7 +361,7 @@ class GcodeParser :
     def addArcPointSegment(self, nextPoint: QVector3D, clockwise: bool, args: List[str]) -> PointSegment:
         ps = PointSegment(nextPoint, self.m_commandNumber)
 
-        self.m_commandNumber = self.m_commandNumber + 1
+        self.m_commandNumber += 1
 
         center = GcodePreprocessorUtils.updateCenterWithCommand(args, self.m_currentPoint, nextPoint, self.m_inAbsoluteIJKMode, clockwise)
         radius = GcodePreprocessorUtils.parseCoord(args, 'R')

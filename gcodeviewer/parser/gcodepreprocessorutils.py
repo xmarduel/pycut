@@ -6,13 +6,16 @@
 # Copyright 2020-2030 Xavier Marduel
 
 import math
+import re
+
 from typing import List
+from typing import Any
 
 from PySide6.QtGui import QMatrix4x4
 from PySide6.QtGui import QVector3D
 
 from PySide6.QtCore import qIsNaN
-from PySide6.QtCore import QRegularExpression as QRegExp 
+from PySide6.QtCore import QRegularExpression
 
 from pointsegment import PointSegment
 
@@ -23,144 +26,169 @@ from util.util import qQNaN
 class GcodePreprocessorUtils :
     '''
     '''
-    re = QRegExp("[Ff]([0-9.]+)")
+    re_speed = QRegularExpression("[Ff]([0-9.]+)")
 
-    rx1 = QRegExp("\\(+[^\\(]*\\)+")
-    rx2 = QRegExp(".*")
+    rx1_comment_parenthesis = QRegularExpression("\\(+[^\\(]*\\)+")
+    #[rx2_comment_commapoint = QRegularExpression(";.*")
+
+    re_comment = QRegularExpression("(\\([^\\(\\)]*\\)|[^].*)")
+
+    re_truncate_decimals = QRegularExpression("(\\d*\\.\\d*)")
 
     M_PI = math.acos(-1)
 
     @classmethod 
     def overrideSpeed(cls, command: str, speed: float, original: float = None) -> str:
-        if cls.re.indexIn(command) != -1:
-            command.replace(cls.re, "F%d" % (cls.re.cap(1).toDouble() / 100 * speed))
+        '''
+        Searches the command string for an 'f' and replaces the speed value
+        between the 'f' and the next space with a percentage of that speed.
+        In that way all speed values become a ratio of the provided speed
+        and don't get overridden with just a fixed speed.
+        '''
+        match = cls.re_speed.match(command)
+        if match.hasMatch():
+            command = "F%d" % float(match.captured(1)) / 100 * speed
 
+            # BUG: original does not comes back
             if original:
-                 original = cls.re.cap(1).toDouble()
+                original = float(match.captured(1))
     
         return command
+        # return command, original
     
     @classmethod 
     def removeComment(cls, command: str) -> str:
+        '''
+        Removes any comments within parentheses or beginning with a semi-colon.
+        '''
+        res = command
+
         #Remove any comments within ( parentheses ) using regex "\([^\(]*\)"
-        if '(' in command:
-            command.remove(cls.rx1)
+        match = cls.rx1_comment_parenthesis.match(command)
+        if match.hasMatch():
+            comment = match.captured(0)
+            idx = match.capturedStart()
+            len = match.capturedLength()
+            res = res[:idx] + res[idx+len:]
 
-        # Remove any comment beginning with '' using regex ".*"
-        if '' in command:
-            command.remove(cls.rx2)
+        # Remove any comment beginning with ';' using regex ";.*"
+        if ';' in res:
+            idx = res.index(";")
+            res = res[:idx]
 
-        return command.strip()
+        return res.strip()
     
     @classmethod 
     def parseComment(cls, command: str) -> str:
-        re = QRegExp("(\\([^\\(\\)]*\\)|[^].*)")
-
-        if re.indexIn(command) != -1:
-            return re.cap(1)
+        '''
+        Searches for a comment in the input string and returns the first match.
+        '''
+        match = cls.re_comment.match(command)
+        if match.hasMatch():
+            return match.captured(1)
 
         return ""
     
     @classmethod 
     def truncateDecimals(cls, length: int, command: str) -> str:
-        re = QRegExp("(\\d*\\.\\d*)")
+        res = command
         pos = 0
-        pos = re.indexIn(command, pos)
+        match = cls.re_truncate_decimals.match(res, pos)
 
-        while pos != -1:
-            format = "%%.%f" % length
-            newNum = format % float(re.cap(1))
-            command = command.left(pos) + newNum + command.mid(pos + re.matchedLength())
-            pos += newNum.length() + 1
-            pos = re.indexIn(command, pos)
+        while match.hasMatch():
+            pos = match.capturedStart()
+            len = match.capturedLength()
 
-        return command
+            newNum = "%.*f" % (length, float(match.captured(1)))
+            res = res[:pos] + newNum + res[pos + len:]
+            pos += len(newNum) + 1
+            match = cls.re_truncate_decimals.match(res, pos)
+
+        return res
     
     @classmethod 
     def removeAllWhitespace(cls, command: str) -> str:
-        rx = QRegExp("\\s")
+        #rx = QRegularExpression("\\s")
+        #return command.remove(rx)
 
-        return command.remove(rx)
+        return command.replace(" ", "")
         
     @classmethod 
     def parseCodes(cls, args: List[str], code: str) -> List[float]:
         l = []
         
         for s in args:
-            if s.length() > 0 and s[0].toUpper() == code :
-                l.append(s.mid(1).toDouble())
+            if len(s) > 0 and s[0].upper() == code :
+                l.append(float(s[1,:]))
     
         return l
     
     @classmethod 
     def parseGCodes(cls, command: str) -> List[int]:
-        re = QRegExp("[Gg]0*(\\d+)")
+        re = QRegularExpression("[Gg]0*(\\d+)")
 
         codes = []
         pos = 0
-        pos = re.indexIn(command, pos)
+        match = re.match(command, pos)
 
-        while pos != -1:
-            codes.append(re.cap(1).toInt())
-            pos += re.matchedLength()
-            pos = re.indexIn(command, pos)
+        while match.hasMatch():
+            codes.append(int(match.captured(1)))
+            pos += match.capturedLength()
+            match = re.match(command, pos)
 
         return codes
     
     @classmethod 
     def parseMCodes(cls, command: str) -> List[int]:
-        re = QRegExp("[Mm]0*(\\d+)")
+        re = QRegularExpression("[Mm]0*(\\d+)")
 
         codes = []
         pos = 0
-        pos = re.indexIn(command, pos)
+        match = re.match(command, pos)
 
-        while pos != -1:
-            codes.append(re.cap(1).toInt())
-            pos += re.matchedLength()
-            pos = re.indexIn(command, pos)
+        while match.hasMatch():
+            codes.append(int(match.captured(1)))
+            pos += match.capturedLength()
+            match = re.match(command, pos)
 
         return codes
-    
+
     @classmethod 
-    def splitCommand(cls, command: str) -> List[str]:
-        l = []
-        readNumeric = False
-        sb = ""
+    def updatePointWithCommand(cls, command: str, initial: QVector3D, absoluteMode: bool) -> QVector3D:
+        '''
+        Update a point given the arguments of a command.
+        '''
+        l = cls.splitCommand(command)
+        return cls.updatePointWithCommand_FromStringList(l, initial, absoluteMode)
 
-        ba = command.toLatin1()
-        cmd = ba.constData(); # Direct access to string data
-
-        for i in range(len(command)):
-            c = cmd[i]
-
-            if readNumeric and not cls.isDigit(c) and c != '.':
-                readNumeric = False
-                l.append(sb)
-                sb.clear()
-                if cls.isLetter(c):
-                    sb.append(c)
-            elif cls.isDigit(c) or c == '.' or c == '-':
-                sb.append(c)
-                readNumeric = True
-            elif cls.isLetter(c):
-                sb.append(c)
-
-        if len(sb) > 0:
-            l.append(sb)
-
-        return l
-    
     @classmethod 
-    def parseCoord(cls, argList: List[str], c: str) -> float:
-        for t in argList:
-            if t.length() > 0 and t[0].toUpper() == c:
-                return t.mid(1).toDouble()
-    
-        return qQNaN()
-    
+    def updatePointWithCommand_FromStringList(cls, commandArgs: List[str], initial: QVector3D,  absoluteMode: bool) -> QVector3D:
+        '''
+        Update a point given the arguments of a command, using a pre-parsed list.
+        '''
+        x = qQNaN()
+        y = qQNaN()
+        z = qQNaN()
+        c = ""
+
+        for i in range(len(commandArgs)):
+            if len(commandArgs[i]) > 0:
+                #c = commandArgs[i][0].upper().toLatin1()
+                c = commandArgs[i][0].upper()
+                if c == 'X':
+                    x = float(commandArgs[i][1,:])
+                elif c == 'Y':
+                    y = float(commandArgs[i][1,:])
+                elif c == 'Z':
+                    z = float(commandArgs[i][1,:])
+
+        return cls.updatePointWithCommand_FromVector3D(initial, x, y, z, absoluteMode)
+
     @classmethod 
-    def updatePointWithCommand(cls, initial: QVector3D, x: float, y: float, z: float, absoluteMode: bool) -> QVector3D:
+    def updatePointWithCommand_FromVector3D(cls, initial: QVector3D, x: float, y: float, z: float, absoluteMode: bool) -> QVector3D:
+        '''
+        Update a point given the new coordinates.
+        '''
         newPoint = QVector3D(initial.x(), initial.y(), initial.z())
 
         if absoluteMode:
@@ -173,31 +201,94 @@ class GcodePreprocessorUtils :
             if not qIsNaN(z) : newPoint.setZ(newPoint.z() + z)
 
         return newPoint
-    
-    @classmethod 
-    def updatePointWithCommand(cls, commandArgs: List[str], initial: QVector3D,  absoluteMode: bool) -> QVector3D:
-        x = qQNaN()
-        y = qQNaN()
-        z = qQNaN()
+
+    @classmethod
+    def updateCenterWithCommand(cls, commandArgs: List[str], initial: QVector3D, nextPoint: QVector3D, absoluteIJKMode: bool, clockwise: bool) -> QVector3D:
+        i = qQNaN()
+        j = qQNaN()
+        k = qQNaN()
+        r = qQNaN()
         c = ""
 
-        for i in range(len(commandArgs)):
-            if len(commandArgs[i]) > 0:
-                c = commandArgs[i].at(0).toUpper().toLatin1()
-                if c == 'X':
-                    x = commandArgs[i].mid(1).toDouble()
-                elif c == 'Y':
-                    y = commandArgs[i].mid(1).toDouble()
-                elif c == 'Z':
-                    z = commandArgs[i].mid(1).toDouble()
+        for t in commandArgs:
+            if len(t) > 0:
+                # c = t[0].upper().toLatin1()
+                c = t[0].upper()
+                if c == 'I':
+                    i = float(t[1,:])
+                elif c == 'J':
+                    j = float(t[1,:])
+                elif c == 'K':
+                    k = float(t[1,:])
+                elif c == 'R':
+                    r = float(t[1,:])
 
-        return cls.updatePointWithCommand(initial, x, y, z, absoluteMode)
-    
+        if qIsNaN(i) and qIsNaN(j) and qIsNaN(k):
+            return cls.convertRToCenter(initial, nextPoint, r, absoluteIJKMode, clockwise)
+
+        return cls.updatePointWithCommand_FromVector3D(initial, i, j, k, absoluteIJKMode)
+
     @classmethod 
-    def updatePointWithCommand(cls, command: str, initial: QVector3D, absoluteMode: bool) -> QVector3D:
-        l = cls.splitCommand(command)
-        return cls.updatePointWithCommand(l, initial, absoluteMode)
+    def generateG1FromPoints(cls, start: QVector3D, end: QVector3D, absoluteMode: bool, precision: int) -> str:
+        sb = "G1"
+
+        if absoluteMode:
+            if not qIsNaN(end.x()) : sb.append("X" + "%.*f" % (precision, end.x()))
+            if not qIsNaN(end.y()) : sb.append("Y" + "%.*f" % (precision, end.y()))
+            if not qIsNaN(end.z()) : sb.append("Z" + "%.*f" % (precision, end.z()))
+        else:
+            if not qIsNaN(end.x()) : sb.append("X" + "%.*f" % (precision, end.x() - start.x()))
+            if not qIsNaN(end.y()) : sb.append("Y" + "%.*f" % (precision, end.y() - start.y()))
+            if not qIsNaN(end.z()) : sb.append("Z" + "%.*f" % (precision, end.z() - start.z()))
+
+        return sb
+
+    @classmethod 
+    def splitCommand(cls, command: str) -> List[str]:
+        '''
+        Splits a gcode command by each word/argument, doesn't care about spaces.
+        This command is about the same speed as the string.split(" ") command,
+        but might be a little faster using precompiled regex.
+        '''
+        l = []
+        readNumeric = False
+        sb = ""
+
+        ba = command.encode(encoding="latin_1")
+        cmd = ba.decode() # Direct access to string data
+
+        for i in range(len(command)):
+            c = cmd[i]
+
+            if readNumeric and not cls.isDigit(c) and c != '.':
+                readNumeric = False
+                l.append(sb)
+                sb = ""
+                if cls.isLetter(c):
+                    sb.append(c)
+            elif cls.isDigit(c) or c == '.' or c == '-':
+                sb.append(c)
+                readNumeric = True
+            elif cls.isLetter(c):
+                sb.append(c)
+
+        if len(sb) > 0:
+            l.append(sb)
+
+        return l
+
+    @classmethod 
+    def parseCoord(cls, argList: List[str], c: str) -> float:
+        '''
+        TODO: Replace everything that uses this with a loop that loops through
+        the string and creates a hash with all the values.
+        '''
+        for t in argList:
+            if len(t) > 0 and t[0].upper() == c:
+                return float(t[1,:])
     
+        return qQNaN()
+
     @classmethod 
     def convertRToCenter(cls, start: QVector3D, end: QVector3D, radius: float, absoluteIJK: bool, clockwise: bool) -> QVector3D:
         R = radius
@@ -234,48 +325,11 @@ class GcodePreprocessorUtils :
 
         return center
     
-    @classmethod
-    def updateCenterWithCommand(cls, commandArgs: List[str], initial: QVector3D, nextPoint: QVector3D, absoluteIJKMode: bool, clockwise: bool) -> QVector3D:
-        i = qQNaN()
-        j = qQNaN()
-        k = qQNaN()
-        r = qQNaN()
-        c = ""
-
-        for t in commandArgs:
-            if t.length() > 0:
-                c = t[0].toUpper().toLatin1()
-                if c == 'I':
-                    i = t.mid(1).toDouble()
-                elif c == 'J':
-                    j = t.mid(1).toDouble()
-                elif c == 'K':
-                    k = t.mid(1).toDouble()
-                elif c == 'R':
-                    r = t.mid(1).toDouble()
-
-        if qIsNaN(i) and qIsNaN(j) and qIsNaN(k):
-            return cls.convertRToCenter(initial, nextPoint, r, absoluteIJKMode, clockwise)
-
-        return cls.updatePointWithCommand(initial, i, j, k, absoluteIJKMode)
-    
-    @classmethod 
-    def generateG1FromPoints(cls, start: QVector3D, end: QVector3D, absoluteMode: bool, precision: int) -> str:
-        sb = "G1"
-
-        if absoluteMode:
-            if not qIsNaN(end.x()) : sb.append("X" + "%.4f" % end.x())
-            if not qIsNaN(end.y()) : sb.append("Y" + "%.4f" % end.y())
-            if not qIsNaN(end.z()) : sb.append("Z" + "%.4f" % end.z())
-        else:
-            if not qIsNaN(end.x()) : sb.append("X" + "%.4f" %  (end.x() - start.x()))
-            if not qIsNaN(end.y()) : sb.append("Y" + "%.4f" %  (end.y() - start.y()))
-            if not qIsNaN(end.z()) : sb.append("Z" + "%.4f" %  (end.z() - start.z()))
-
-        return sb
-    
     @classmethod 
     def getAngle(cls, start: QVector3D, end: QVector3D) -> float:
+        '''
+        Return the angle in radians when going from start to end.
+        '''
         deltaX = end.x() - start.x()
         deltaY = end.y() - start.y()
 
@@ -300,7 +354,7 @@ class GcodePreprocessorUtils :
                 angle = cls.M_PI * 3.0 / 2.0
 
         return angle
-    
+
     @classmethod 
     def calculateSweep(cls, startAngle: float, endAngle: float, isCw: bool) -> float:
         sweep = 0.0
@@ -324,18 +378,33 @@ class GcodePreprocessorUtils :
 
         return sweep
     
+     @classmethod 
+    
+    @classmethod
+    def generatePointsAlongArcBDring(cls, plane: PointSegment.Plane, start: QVector3D, end: QVector3D, center: QVector3D, clockwise: bool, R: float, minArcLength: float, arcPrecision: float, LAST_ARG: Any) -> List[QVector3D]:
+        '''
+        DUMMY DISPATCH
+        '''
+        if isinstance(LAST_ARG, bool):
+            return cls.generatePointsAlongArcBDring_Arc(plane, start, end, center, clockwise, R, minArcLength, arcPrecision, LAST_ARG)
+        else:
+            return cls.generatePointsAlongArcBDring_Num(plane, start, end, center, clockwise, R, minArcLength, arcPrecision, LAST_ARG)
+
     @classmethod 
-    def generatePointsAlongArcBDring(cls, plane: PointSegment.plane, start: QVector3D, end: QVector3D, center: QVector3D, clockwise: bool, R: float, minArcLength: float, arcPrecision: float, arcDegreeMode: bool) -> List[QVector3D]:
+    def generatePointsAlongArcBDring_Arc(cls, plane: PointSegment.Plane, start: QVector3D, end: QVector3D, center: QVector3D, clockwise: bool, R: float, minArcLength: float, arcPrecision: float, arcDegreeMode: bool) -> List[QVector3D]:
+        '''
+        Generates the points along an arc including the start and end points.
+        '''
         radius = R
 
         # Rotate vectors according to plane
         m = QMatrix4x4()
         m.setToIdentity()
-        if plane == PointSegment.plane.XY:
+        if plane == PointSegment.Plane.XY:
             pass
-        elif plane == PointSegment.plane.ZX:
+        elif plane == PointSegment.Plane.ZX:
             m.rotate(90, 1.0, 0.0, 0.0)
-        elif plane == PointSegment.plane.YZ:
+        elif plane == PointSegment.Plane.YZ:
             m.rotate(-90, 0.0, 1.0, 0.0)
             
         start = m * start
@@ -368,10 +437,13 @@ class GcodePreprocessorUtils :
             numPoints = math.ceil(arcLength/arcPrecision)
         
 
-        return cls.generatePointsAlongArcBDring(plane, start, end, center, clockwise, radius, startAngle, sweep, numPoints)
+        return cls.generatePointsAlongArcBDring_Num(plane, start, end, center, clockwise, radius, startAngle, sweep, numPoints)
     
     @classmethod 
-    def generatePointsAlongArcBDring(cls, plane: PointSegment.plane, p1: QVector3D, p2: QVector3D, center: QVector3D, isCw: bool, radius: float, startAngle: float, sweep: float, numPoints: int) -> List[QVector3D]:
+    def generatePointsAlongArcBDring_Num(cls, plane: PointSegment.Plane, p1: QVector3D, p2: QVector3D, center: QVector3D, isCw: bool, radius: float, startAngle: float, sweep: float, numPoints: int) -> List[QVector3D]:
+        '''
+        Generates the points along an arc including the start and end points.
+        '''
         # Prepare rotation matrix to restore plane
         m = QMatrix4x4()
         m.setToIdentity()

@@ -20,8 +20,6 @@ from util.util import Util
 from util.util import qQNaN
 
 
-
-
 class GcodeViewParse : 
     '''
     '''
@@ -30,9 +28,9 @@ class GcodeViewParse :
         self.absoluteIJK = False
 
         # Parsed object
-        self.m_min = QVector3D(qQNaN(self), qQNaN(self), qQNaN(self))
-        self.m_max = QVector3D(qQNaN(self), qQNaN(self), qQNaN(self))
-        self.m_minLength = qQNaN(self)
+        self.m_min = QVector3D(qQNaN(), qQNaN(), qQNaN())
+        self.m_max = QVector3D(qQNaN(), qQNaN(), qQNaN())
+        self.m_minLength = qQNaN()
 
         self.m_lines : List[LineSegment] = []
         self.m_lineIndexes : List[List[int]] = [[]]   
@@ -93,7 +91,13 @@ class GcodeViewParse :
                 # Expand arc for graphics.            
                 if ps.isArc():
                     points = GcodePreprocessorUtils.generatePointsAlongArcBDring(ps.plane(),
-                        start, end, ps.center(), ps.isClockwise(), ps.getRadius(), minArcLength, arcPrecision, arcDegreeMode)
+                        start, end, 
+                        ps.center(), 
+                        ps.isClockwise(), 
+                        ps.getRadius(), 
+                        minArcLength, 
+                        arcPrecision, 
+                        arcDegreeMode)
                     # Create line segments from points.
                     if len(points) > 0:
                         startPoint = start
@@ -172,5 +176,5 @@ class GcodeViewParse :
             if qIsNaN(self.m_minLength):
                 self.m_minLength = length
             else:
-                 self.m_minLength = min(self.m_minLength, length)
+                self.m_minLength = min(self.m_minLength, length)
 
