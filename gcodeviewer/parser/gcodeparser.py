@@ -172,7 +172,7 @@ class GcodeParser :
 
         # skip first element.
         for k in range(1, len(expandedPoints)-1):
-            temp = PointSegment(expandedPoints[k+1], self.m_commandNumber)
+            temp = PointSegment.PointSegment_FromQVector3D(expandedPoints[k+1], self.m_commandNumber)
             self.m_commandNumber += 1
             temp.setIsMetric(lastSegment.isMetric())
             self.m_points.append(temp)
@@ -316,7 +316,7 @@ class GcodeParser :
         if code == 0.0: 
             ps = self.addLinearPointSegment(nextPoint, True)
         elif code == 1.0: 
-            ps = self.m_currentPlaneaddLinearPointSegment(nextPoint, False)
+            ps = self.addLinearPointSegment(nextPoint, False)
         elif code == 38.2: 
             ps = self.addLinearPointSegment(nextPoint, False)
         elif code == 2.0:
@@ -348,7 +348,7 @@ class GcodeParser :
         return ps
 
     def addLinearPointSegment(self, nextPoint: QVector3D, fastTraverse: bool) -> PointSegment:
-        ps = PointSegment(nextPoint, self.m_commandNumber)
+        ps = PointSegment.PointSegment_FromQVector3D(nextPoint, self.m_commandNumber)
 
         self.m_commandNumber += 1
 
@@ -374,7 +374,7 @@ class GcodeParser :
         return ps
 
     def addArcPointSegment(self, nextPoint: QVector3D, clockwise: bool, args: List[str]) -> PointSegment:
-        ps = PointSegment(nextPoint, self.m_commandNumber)
+        ps = PointSegment.PointSegment_FromQVector3D(nextPoint, self.m_commandNumber)
 
         self.m_commandNumber += 1
 

@@ -76,7 +76,7 @@ class GcodeViewParse :
         end = None
 
         # Prepare segments indexes
-        self.m_lineIndexes.resize(psl.count())
+        self.m_lineIndexes = [ [] for _ in range(len(psl)) ]
 
         lineIndex = 0
         for segment in psl:
@@ -104,7 +104,7 @@ class GcodeViewParse :
                         for nextPoint in points:
                             if nextPoint == startPoint:
                                 continue
-                            ls = LineSegment(startPoint, nextPoint, lineIndex)
+                            ls = LineSegment.LineSegment_FromVector3Ds(startPoint, nextPoint, lineIndex)
                             ls.setIsArc(ps.isArc())
                             ls.setIsClockwise(ps.isClockwise())
                             ls.setPlane(ps.plane())
@@ -115,7 +115,7 @@ class GcodeViewParse :
                             ls.setSpeed(ps.getSpeed())
                             ls.setSpindleSpeed(ps.getSpindleSpeed())
                             ls.setDwell(ps.getDwell())
-                            self.testExtremes(nextPoint)
+                            self.testExtremes_Vector3D(nextPoint)
                             self.m_lines.append(ls)
                             self.m_lineIndexes[ps.getLineNumber()].append(len(self.m_lines) - 1)
                             startPoint = nextPoint
@@ -124,7 +124,7 @@ class GcodeViewParse :
 
                 # Line
                 else:
-                    ls = LineSegment(start, end, lineIndex)
+                    ls = LineSegment.LineSegment_FromVector3Ds(start, end, lineIndex)
                     lineIndex += 1
                     ls.setIsArc(ps.isArc())
                     ls.setIsFastTraverse(ps.isFastTraverse())
@@ -134,7 +134,7 @@ class GcodeViewParse :
                     ls.setSpeed(ps.getSpeed())
                     ls.setSpindleSpeed(ps.getSpindleSpeed())
                     ls.setDwell(ps.getDwell())
-                    self.testExtremes(end)
+                    self.testExtremes_Vector3D(end)
                     self.testLength(start, end)
                     self.m_lines.append(ls)
                     self.m_lineIndexes[ps.getLineNumber()].append(len(self.m_lines) - 1)
@@ -158,7 +158,7 @@ class GcodeViewParse :
         self.m_max = QVector3D(qQNaN(), qQNaN(), qQNaN())
         self.m_minLength = qQNaN()
 
-    def testExtremes(self, p3d: QVector3D):
+    def testExtremes_Vector3D(self, p3d: QVector3D):
         self.testExtremes(p3d.x(), p3d.y(), p3d.z())
 
     def testExtremes(self, x: float, y: float, z: float):

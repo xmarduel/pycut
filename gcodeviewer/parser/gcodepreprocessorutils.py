@@ -158,9 +158,12 @@ class GcodePreprocessorUtils :
         '''
         Update a point given the arguments of a command.
         '''
-        l = cls.splitCommand(command)
-        return cls.updatePointWithCommand_FromStringList(l, initial, absoluteMode)
-
+        if command.__class__.__name__ == 'str':
+            l = cls.splitCommand(command)
+            return cls.updatePointWithCommand(l, initial, absoluteMode)
+        else:
+            return cls.updatePointWithCommand_FromStringList(command, initial, absoluteMode)
+            
     @classmethod 
     def updatePointWithCommand_FromStringList(cls, commandArgs: List[str], initial: QVector3D,  absoluteMode: bool) -> QVector3D:
         '''
