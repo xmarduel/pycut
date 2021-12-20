@@ -140,6 +140,6 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
             return None
 
         if index.column() == 1:
-            return QtCore.QAbstractTableModel.flags(index) | QtCore.Qt.ItemIsEditable
+            return super().flags(index) | QtCore.Qt.ItemIsEditable
         else:
-            return QtCore.QAbstractTableModel.flags(index)
+            return super().flags(index)

@@ -74,7 +74,7 @@ class GcodeDrawer(ShaderDrawable) :
         self.m_geometryUpdated = False
         super().update()
 
-    def update(self, indexes: List[int]):
+    def update_WithData(self, indexes: List[int]):
         # Store segments to update
         self.m_indexes += indexes
 

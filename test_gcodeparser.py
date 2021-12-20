@@ -3,6 +3,7 @@ import sys
 
 from typing import List
 
+from PySide6.QtCore import QElapsedTimer
 from PySide6.QtCore import QTime
 from PySide6.QtCore import Qt
 from PySide6.QtCore import QFile
@@ -10,6 +11,7 @@ from PySide6.QtCore import QTextStream
 from PySide6.QtCore import QIODevice
 
 from PySide6 import QtWidgets
+from PySide6 import QtCore
 
 from PySide6.QtWidgets import QMainWindow
 from PySide6.QtWidgets import QProgressDialog
@@ -17,7 +19,7 @@ from PySide6.QtWidgets import QMessageBox
 from PySide6.QtWidgets import QApplication
 
 from PySide6.QtGui import QVector3D
-#from PySide6.QtCore import qIsNaN
+from PySide6.QtCore import qIsNaN
 
 from gcodeviewer.parser.gcodeviewparse import GcodeViewParse 
 from gcodeviewer.parser.gcodepreprocessorutils import  GcodePreprocessorUtils  
@@ -28,7 +30,10 @@ from gcodeviewer.tables.gcodetablemodel import GCodeTableModel
 
 from gcodeviewer.drawers.gcodedrawer import GcodeDrawer
 
+from gcodeviewer.parser.linesegment import LineSegment
+
 from gcodeviewer.util.util import Util
+from gcodeviewer.util.util import qQNaN
 
 import ui_testGlWindow
 
@@ -44,6 +49,9 @@ def main(filename):
 
 PROGRESSMINLINES = 10000
 PROGRESSSTEP     =  1000
+
+
+sNan = 65536.0  # ???
 
 
 class TestGlWindow(QMainWindow):
@@ -74,6 +82,8 @@ class TestGlWindow(QMainWindow):
         #self.ui.glwVisualizer.addDrawable(self.m_selectionDrawer)
         self.ui.glwVisualizer.fitDrawable()
 
+        self.loadFile("pycut_gcode.gcode")
+
     def loadFile(self, fileName):
         file = QFile(fileName)
 
@@ -96,7 +106,7 @@ class TestGlWindow(QMainWindow):
         self.loadData(data)
 
     def loadData(self, data: List[str]):
-        time = QTime()
+        time = QElapsedTimer()
         time.start()
 
         # Reset tables
@@ -127,9 +137,11 @@ class TestGlWindow(QMainWindow):
 
         # Prepare parser
         gp = GcodeParser()
-        gp.setTraverseSpeed(self.m_settings.rapidSpeed())
+        ####gp.setTraverseSpeed(self.m_settings.rapidSpeed())
+        gp.setTraverseSpeed(100)
+
         if self.m_codeDrawer.getIgnoreZ(): 
-            gp.reset(QVector3D(Util.qQNaN(), Util.qQNaN(), 0))
+            gp.reset(QVector3D(qQNaN(), qQNaN(), 0))
 
         print("Prepared to load: %s" % time.elapsed())
         time.start()
@@ -138,13 +150,14 @@ class TestGlWindow(QMainWindow):
         self.m_programLoading = True
 
         # Prepare model
-        self.m_programModel.data().clear()
-        self.m_programModel.data().reserve(data.count())
+        self.m_programModel.m_data.clear()
+        # self.m_programModel.data().reserve(data.count()) ->
+        self.m_programModel.m_data = [ None for _ in range(len(data)) ]
 
         progress = QProgressDialog ("Opening file...", "Abort", 0, len(data), self)
         progress.setWindowModality(Qt.WindowModal)
         progress.setFixedSize(progress.sizeHint())
-        if data.count() > PROGRESSMINLINES:
+        if len(data) > PROGRESSMINLINES:
             progress.show()
             progress.setStyleSheet("QProgressBar {text-align: center qproperty-format: \"\"}")
 
@@ -155,7 +168,7 @@ class TestGlWindow(QMainWindow):
             command = data.pop()
 
             # Trim command
-            trimmed = command.trimmed()
+            trimmed = command.strip()
 
             if len(trimmed) > 0:
                 # Split command
@@ -173,11 +186,11 @@ class TestGlWindow(QMainWindow):
                 item.line = gp.getCommandNumber()
                 item.args = args
 
-                self.m_programModel.data().append(item)
+                self.m_programModel.m_data.append(item)
             
 
-            if progress.isVisible() and (data.count() % PROGRESSSTEP == 0) :
-                progress.setValue(progress.maximum() - data.count())
+            if progress.isVisible() and (len(data) % PROGRESSSTEP == 0) :
+                progress.setValue(progress.maximum() - len(data))
                 QApplication.instance().processEvents()
                 if progress.wasCanceled() :
                     break
@@ -211,18 +224,130 @@ class TestGlWindow(QMainWindow):
         #self.resetHeightmap()
         #self.updateControlsState()
 
+    def clearTable(self):
+        self.m_programModel.clear()
+        self.m_programModel.insertRow(0)
 
-if __name__ =='xx__main__':
-    '''
-    '''
-    parser = argparse.ArgumentParser(prog="test_gcodeparser", description="test gcode parser in python")
+    def updateProgramEstimatedTime(self, lines: List[LineSegment]) -> QTime:
+        time = 0
 
-    # argument
-    parser.add_argument('gcodefilename', help="gcode file to specify")
+        for line in lines:
+            ls = LineSegment(line)
+            #  foreach (LineSegment *ls, lines) {
+            length = (ls.getEnd() - ls.getStart()).length()
 
-    arguments = parser.parse_args()
+            if not qIsNaN(length) and not qIsNaN(ls.getSpeed()) and ls.getSpeed() != 0 :
+                cond1 = self.ui.slbFeedOverride.isChecked() and not ls.isFastTraverse()
+                cond2 =  self.ui.slbRapidOverride.isChecked() and ls.isFastTraverse()
+                
+                speed = ls.getSpeed()
+                val1 = (speed * self.ui.slbFeedOverride.value() / 100)
+                val2 = speed
+                
+                if cond1:
+                    time += val1
+                else:
+                    if cond2:
+                        time += val1
+                    else:
+                        time += val2   # Update for rapid override
 
-    main(arguments.gcodefilename)
+#        qDebug() << "length/time:" << length << ((self.ui.chkFeedOverride->isChecked() && !ls->isFastTraverse())
+#                                                 ? (ls->getSpeed() * self.ui.txtFeed->value() / 100) : ls->getSpeed())
+#                 << time
+
+#        if (qIsNaN(length)) qDebug() << "length nan:" << i << ls->getLineNumber() << ls->getStart() << ls->getEnd()
+#        if (qIsNaN(ls->getSpeed())) qDebug() << "speed nan:" << ls->getSpeed()
+    
+
+        time *= 60
+
+        t = QTime()
+
+        t.setHMS(0, 0, 0)
+        t = t.addSecs(time)
+
+        self.ui.glwVisualizer.setSpendTime(QTime(0, 0, 0))
+        self.ui.glwVisualizer.setEstimatedTime(t)
+
+        return t
+
+    def onTableCurrentChanged(self, idx1: QtCore.QModelIndex, idx2: QtCore.QModelIndex) :
+        # Update toolpath hightlighting
+        if idx1.row() > self.m_currentModel.rowCount() - 2:
+            idx1 = self.m_currentModel.index(self.m_currentModel.rowCount() - 2, 0)
+        if idx2.row() > self.m_currentModel.rowCount() - 2:
+            idx2 = self.m_currentModel.index(self.m_currentModel.rowCount() - 2, 0)
+
+        parser = self.m_currentDrawer.viewParser()
+        list = parser.getLineSegmentList()
+        lineIndexes = parser.getLinesIndexes()
+
+        # Update linesegments on cell changed
+        if not self.m_currentDrawer.geometryUpdated():
+            for i in range(len(list)):
+                idx1 = list[i].getLineNumber()
+                idx2 = int(self.m_currentModel.data(self.m_currentModel.index(idx1.row(), 4)))
+                list[i].setIsHightlight(idx1 <= idx2)
+            
+        # Update vertices on current cell changed
+        else:
+
+            lineFirst = int(self.m_currentModel.data(self.m_currentModel.index(idx1.row(), 4)))
+            lineLast = int(self.m_currentModel.data(self.m_currentModel.index(idx2.row(), 4)))
+            if lineLast < lineFirst:
+                #qSwap(lineLast, lineFirst)
+                lineLast, lineFirst = lineFirst, lineLast
+
+#        qDebug() << "table current changed" << idx1.row() << idx2.row() << lineFirst << lineLast
+
+            indexes = []
+            for i in range(lineFirst + 1, lineLast+1):
+                for l in  lineIndexes[i]:
+                    list[l].setIsHightlight(idx1.row() > idx2.row())
+                    indexes.append(l)
+
+            if len(indexes) == 0:
+                self.m_selectionDrawer.setEndPosition(QVector3D(sNan, sNan, sNan))
+            else:
+                if self.m_codeDrawer.getIgnoreZ():
+                    self.m_selectionDrawer.setEndPosition(QVector3D( \
+                        list[indexes[-1]].getEnd().x(), \
+                        list[indexes[-1]].getEnd().y(), \
+                        0))
+                else:
+                    self.m_selectionDrawer.setEndPosition(list[indexes[-1]].getEnd())
+            self.m_selectionDrawer.update()
+
+            if len(indexes) > 0:
+                self.m_currentDrawer.update(indexes)
+        
+
+        # Update selection marker
+        line = int(self.m_currentModel.data(self.m_currentModel.index(idx1.row(), 4)))
+        if line > 0 and lineIndexes[line] != "":
+            pos = QVector3D(list[lineIndexes[line][-1]].getEnd())
+            if self.m_codeDrawer.getIgnoreZ():
+                self.m_selectionDrawer.setEndPosition(QVector3D(pos.x(), pos.y(), 0))
+            else:
+                self.m_selectionDrawer.setEndPosition(pos)
+        else:
+            self.m_selectionDrawer.setEndPosition(QVector3D(sNan, sNan, sNan))
+        
+        self.m_selectionDrawer.update()
+
+
+#if __name__ =='__main__':
+#    '''
+#    '''
+#    parser = argparse.ArgumentParser(prog="test_gcodeparser", description="test gcode parser in python")
+
+#    # argument
+#    parser.add_argument('gcodefilename', help="gcode file to specify")
+
+#    arguments = parser.parse_args()
+
+#    main(arguments.gcodefilename)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
