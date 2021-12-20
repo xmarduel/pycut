@@ -123,6 +123,11 @@ this purpose (<span style="color:#ff0080">TODO</span>)</p>
   <li>G-Code generation with spindle control (actually absent in <strong>jsCut</strong> -wow! what a feature!-) <span style="color:#00a000">DONE</span></li>
 </ul>
 
+<p>PyCut should have a good gCode viewer:</p>
+<ul>
+  <li>G-Code viewer (as in Candle: can we steal it ? it is Qt c++, with lots of code) <span style="color:#e211a4">=> port to python (again...)</span></li>
+</ul>
+
 <p>After that</p>
 <ul>
   <li>Tabs handling ? (cam c++ wrapper + js code, nothing done at this point) <span style="color:#ff0080">TODO</span></li>
@@ -130,16 +135,11 @@ this purpose (<span style="color:#ff0080">TODO</span>)</p>
   <li>Toolpaths for vPocket operations ? (cam c++ wrapper, nothing done at this point) <span style="color:#ff0080">TODO</span></li>
 </ul>
 
-<p>Nice to Have:</p>
-<ul>
-  <li>G-Code viewer (as in Candle: can we steal it ? it is Qt c++, with lots of code) <span style="color:#e211a4">=> port to python (again...)</span></li>
-</ul>
-
 <p>Infact, as far as I have understood, the tabs have to be created in the original svg,
 and this is not very practical. It would be nicer to make as in <strong>GrblGru</strong> 
 where the tabs are simply set "on the fly" on the svg view by indicating how many tabs one wishes
 (with their "types": ROUND etc. plus height/length). They then appear on the viewer and can
-be interactively dragged on the toolpath.</p>
+be interactively dragged (Correction: thay are not draggable) on the toolpath.</p>
 <p>This is how the tabs should be implemented I think. So the svg viewer has to be 
 more widget-like and interactiv.</p>
 <p>But of course, when done, the gcode generation will be -again- stolen from jsCut...</p>
