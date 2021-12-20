@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>frmMain</class>
- <widget class="QMainWindow" name="frmMain">
+ <class>testGlWindow</class>
+ <widget class="QMainWindow" name="testGlWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -21,98 +21,7 @@
     <normaloff>:/images/candle_256.png</normaloff>:/images/candle_256.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">/*QWidget {
-	font-size: 9pt;
-}*/
-
-QSpinBox, QDoubleSpinBox {
-	padding-top: 1px;
-	padding-bottom: 1px;
-}
-
-QGroupBox {
-}
-
-QGroupBox:disabled {
-	color: palette(shadow);
-}
-
-QGroupBox[overrided=&quot;true&quot;] {
-	color: red;
-}
-
-QGroupBox[overrided=&quot;false&quot;] {
-	color: palette(windowtext);
-}
-
-QGroupBox[checkable=&quot;true&quot;]::title {
-	margin-top: 1px;
-}
-
-QGroupBox[checkable=&quot;true&quot;]::indicator {
-	padding: 0 -2 -0 2;
-	width: 13;
-	height: 13;
-}
-
-QGroupBox[checkable=&quot;true&quot;]::indicator:checked {	
-	image: url(:/images/collapse.png);
-}
-
-QGroupBox[checkable=&quot;true&quot;]::indicator:unchecked {	
-	image: url(:/images/expand.png);
-}
-
-QFrame#frameManualControlXY,#frameManualControlZ {
-	border: 1px solid lightgray;
-	border-radius: 4px;
-}
-
-QSplitter::handle {
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-
-QSplitter::handle:vertical {
-	background-image: url(&quot;:/images/handle_horizontal.png&quot;);
-}
-/*
-QSplitter::handle:horizontal {
-	background-image: url(&quot;:/images/handle_vertical.png&quot;);
-}
-*/
-QTableView {
-	selection-background-color: #cdcdff;
-	selection-color: rgb(0, 0, 0);
-}
-
-QSlider::horizontal {
-	padding-top: 1px;
-	padding-bottom: 1px;
-}
-
-QSlider::groove:horizontal {
-    border: 1px solid #999999;
-    height: 2px; 
-    background: #8f8f91;
-    margin: 2px 0;
-}
-
-QSlider::handle:horizontal {	
-	background-image: url(:/images/handle2s.png);
-    border: 0px;
-    width: 16px;
-    margin: -7px 0; 
-}
-
-QSlider::handle:horizontal:hover {
-	background-image: url(:/images/handle2sh.png);
-}
-
-/*QSlider::sub-page:horizontal {
-    background: red;
-	margin: 1px 0;
-}*/</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="100">
@@ -254,51 +163,6 @@ QSlider::handle:horizontal:hover {
     </rect>
    </property>
   </widget>
-  <action name="actFileOpen">
-   <property name="text">
-    <string>&amp;Open</string>
-   </property>
-  </action>
-  <action name="actFileExit">
-   <property name="text">
-    <string>E&amp;xit</string>
-   </property>
-  </action>
-  <action name="actServiceSettings">
-   <property name="text">
-    <string>&amp;Settings</string>
-   </property>
-  </action>
-  <action name="actFileNew">
-   <property name="text">
-    <string>&amp;New</string>
-   </property>
-  </action>
-  <action name="actFileSave">
-   <property name="text">
-    <string>&amp;Save</string>
-   </property>
-  </action>
-  <action name="actFileSaveAs">
-   <property name="text">
-    <string>Save &amp;as...</string>
-   </property>
-  </action>
-  <action name="actAbout">
-   <property name="text">
-    <string>&amp;About</string>
-   </property>
-  </action>
-  <action name="actRecentClear">
-   <property name="text">
-    <string>&amp;Clear</string>
-   </property>
-  </action>
-  <action name="actFileSaveTransformedAs">
-   <property name="text">
-    <string>Save &amp;transformed as...</string>
-   </property>
-  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -313,7 +177,6 @@ QSlider::handle:horizontal:hover {
   <tabstop>tblProgram</tabstop>
  </tabstops>
  <resources>
-  <include location="images.qrc"/>
  </resources>
  <connections/>
 </ui>

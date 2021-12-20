@@ -30,6 +30,8 @@ from gcodeviewer.drawers.gcodedrawer import GcodeDrawer
 
 from gcodeviewer.util.util import Util
 
+import ui_testGlWindow
+
 
 def main(filename):
     fp = open(filename, "r")
@@ -38,31 +40,18 @@ def main(filename):
 
     parser = GcodeViewParse()    
     parser.toObjRedux(data, 0.01, True)
-    
-    
-if __name__ =='__main__':
-    '''
-    '''
-    parser = argparse.ArgumentParser(prog="test_gcodeparser", description="test gcode parser in python")
-
-    # argument
-    parser.add_argument('gcodefilename', help="gcode file to specify")
-
-    arguments = parser.parse_args()
-
-    main(arguments.gcodefilename)
 
 
 PROGRESSMINLINES = 10000
 PROGRESSSTEP     =  1000
 
 
-class frmMain(QMainWindow):
+class TestGlWindow(QMainWindow):
 
     def __init__(self):
-        super(frmMain, self).__init__()
+        super().__init__()
 
-        self.ui = Ui_testGlWindow()
+        self.ui = ui_testGlWindow.Ui_testGlWindow()
         self.ui.setupUi(self)
 
         self.setWindowTitle("PyCut")
@@ -127,10 +116,10 @@ class frmMain(QMainWindow):
         self.updateProgramEstimatedTime([])
 
         # Update interface
-        self.ui.chkHeightMapUse.setChecked(False)
-        self.ui.grpHeightMap.setProperty("overrided", False)
-        self.style().unpolish(self.ui.grpHeightMap)
-        self.ui.grpHeightMap.ensurePolished()
+        #self.ui.chkHeightMapUse.setChecked(False)
+        #self.ui.grpHeightMap.setProperty("overrided", False)
+        #self.style().unpolish(self.ui.grpHeightMap)
+        #self.ui.grpHeightMap.ensurePolished()
 
         # Reset tableview
         headerState = self.ui.tblProgram.horizontalHeader().saveState()
@@ -200,8 +189,8 @@ class frmMain(QMainWindow):
         print("model filled: %s" % time.elapsed())
         time.start()
 
-        self.updateProgramEstimatedTime(self.m_viewParser.getLinesFromParser(gp, self.m_settings.arcPrecision(), self.m_settings.arcDegreeMode()))
-        print("view parser filled: %s" % time.elapsed())
+        #self.updateProgramEstimatedTime(self.m_viewParser.getLinesFromParser(gp, self.m_settings.arcPrecision(), self.m_settings.arcDegreeMode()))
+        #print("view parser filled: %s" % time.elapsed())
 
         self.m_programLoading = False
 
@@ -215,16 +204,28 @@ class frmMain(QMainWindow):
         
         self.ui.tblProgram.selectRow(0)
 
-        #  Update code drawer
+        # Update code drawer
         self.m_codeDrawer.update()
         self.ui.glwVisualizer.fitDrawable(self.m_codeDrawer)
 
-        self.resetHeightmap()
-        self.updateControlsState()
+        #self.resetHeightmap()
+        #self.updateControlsState()
 
+
+if __name__ =='xx__main__':
+    '''
+    '''
+    parser = argparse.ArgumentParser(prog="test_gcodeparser", description="test gcode parser in python")
+
+    # argument
+    parser.add_argument('gcodefilename', help="gcode file to specify")
+
+    arguments = parser.parse_args()
+
+    main(arguments.gcodefilename)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
-    mainwindow = frmMain()
+    mainwindow = TestGlWindow()
     mainwindow.show()
     sys.exit(app.exec())

@@ -5,6 +5,7 @@
     "version": "0.2.0",
     "configurations": [
 
+
         {
             "name": "PYCUT",
             "type": "python",
@@ -23,6 +24,15 @@
         },
         {
             "name": "GCODE VIEW PARSE",
+            "type": "python",
+            "request": "launch",
+            "program": "test_gcodeparser.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": ["pycut_gcode.gcode"]
+        },
+        {
+            "name": "GUI GCODE VIEW PARSE",
             "type": "python",
             "request": "launch",
             "program": "test_gcodeparser.py",
