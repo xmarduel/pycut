@@ -152,7 +152,7 @@ class TestGlWindow(QMainWindow):
         # Prepare model
         self.m_programModel.m_data.clear()
         # self.m_programModel.data().reserve(data.count()) ->
-        self.m_programModel.m_data = [ None for _ in range(len(data)) ]
+        self.m_programModel.m_data = [] ## ?? None for _ in range(len(data)) ]
 
         progress = QProgressDialog ("Opening file...", "Abort", 0, len(data), self)
         progress.setWindowModality(Qt.WindowModal)
@@ -165,7 +165,7 @@ class TestGlWindow(QMainWindow):
 
         while len(data) > 0:
     
-            command = data.pop()
+            command = data.pop(0)
 
             # Trim command
             trimmed = command.strip()
@@ -324,6 +324,9 @@ class TestGlWindow(QMainWindow):
         
 
         # Update selection marker
+        row = idx1.row()
+        xxx = self.m_currentModel.index(idx1.row(), 4)
+        
         line = int(self.m_currentModel.data(self.m_currentModel.index(idx1.row(), 4)))
         if line > 0 and lineIndexes[line] != "":
             pos = QVector3D(list[lineIndexes[line][-1]].getEnd())
