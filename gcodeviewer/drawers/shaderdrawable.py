@@ -110,22 +110,33 @@ class ShaderDrawable(QOpenGLFunctions):
     def needsUpdateGeometry(self) -> bool:
         return self.m_needsUpdateGeometry
 
-    def vertex_to_numpy(self, vertexData: List[VertexData]):
-        vec = np.empty(9*len(vertexData))
+    # -------------------------------------------------------------------
+    def vertexes_to_numpy(self, vertexData: List[VertexData]):
+        '''
+        #https://nrotella.github.io/journal/first-steps-python-qt-opengl.html
+
+        buffer.allocate(120) # How many bytes to allocate
+        data = numpy.array([2., 2., 2., 0.5, 0.4, 0.4, 1.], dtype = numpy.float32).toString()
+        # Write
+        buffer.write(0, data, len(data))
+        '''
+        np_array = np.empty(9*len(vertexData))
+        
         for k, vdata in enumerate(vertexData):
-            vec[9*k+0] = vdata.position[0]
-            vec[9*k+1] = vdata.position[1]
-            vec[9*k+2] = vdata.position[2]
+            np_array[9*k+0] = vdata.position.x()
+            np_array[9*k+1] = vdata.position.y()
+            np_array[9*k+2] = vdata.position.z()
 
-            vec[9*k+3] = vdata.color[0]
-            vec[9*k+4] = vdata.color[1]
-            vec[9*k+5] = vdata.color[2]
+            np_array[9*k+3] = vdata.color.x()
+            np_array[9*k+4] = vdata.color.y()
+            np_array[9*k+5] = vdata.color.z()
 
-            vec[9*k+6] = vdata.start[0]
-            vec[9*k+7] = vdata.start[1]
-            vec[9*k+8] = vdata.start[2]
-        return vec
+            np_array[9*k+6] = vdata.start.x()
+            np_array[9*k+7] = vdata.start.y()
+            np_array[9*k+8] = vdata.start.z()
 
+        return np_array
+    # -------------------------------------------------------------------
 
     def updateGeometry(self, shaderProgram : QOpenGLShaderProgram = None):
         # Init in context
@@ -146,20 +157,10 @@ class ShaderDrawable(QOpenGLFunctions):
             vertexData += self.m_lines
             vertexData += self.m_points
 
-            # XAM DEBUG
-            np_array = self.vertex_to_numpy(vertexData)
+            np_array = self.vertexes_to_numpy(vertexData)
             # get data as ByteArray
             np_bytes = np.array(np_array, dtype= np.float32).tobytes()
 
-            #https://nrotella.github.io/journal/first-steps-python-qt-opengl.html
-
-            #buffer.allocate(120) # How many bytes to allocate
-            #data = numpy.array([2., 2., 2., 0.5, 0.4, 0.4, 1.], dtype = numpy.float32).toString()
-            ## Write
-            #buffer.write(0, data, len(data))
-            # XAM DEBUG
-
-            #self.m_vbo.allocate(vertexData.constData(), len(vertexData) * sys.getsizeof(VertexData))
             self.m_vbo.write(0, np_bytes, len(np_bytes))
         else:
             self.m_vbo.release()        
@@ -172,26 +173,28 @@ class ShaderDrawable(QOpenGLFunctions):
             # Offset for position
             offset = 0
 
+            vertexdata_size = 12  # sizeof(VertexData)
+
             # Tell OpenGL programmable pipeline how to locate vertex position data
             vertexLocation = shaderProgram.attributeLocation("a_position")
             shaderProgram.enableAttributeArray(vertexLocation)
-            shaderProgram.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, 3, sys.getsizeof(VertexData))
+            shaderProgram.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, 3, vertexdata_size)
 
             # Offset for color
-            offset = sys.getsizeof(QVector3D)
+            offset = vertexdata_size
 
             # Tell OpenGL programmable pipeline how to locate vertex color data
             color = shaderProgram.attributeLocation("a_color")
             shaderProgram.enableAttributeArray(color)
-            shaderProgram.setAttributeBuffer(color, GL.GL_FLOAT, offset, 3, sys.getsizeof(VertexData))
+            shaderProgram.setAttributeBuffer(color, GL.GL_FLOAT, offset, 3, vertexdata_size)
 
             # Offset for line start point
-            offset += sys.getsizeof(QVector3D)
+            offset += vertexdata_size
 
             # Tell OpenGL programmable pipeline how to locate vertex line start point
             start = shaderProgram.attributeLocation("a_start")
             shaderProgram.enableAttributeArray(start)
-            shaderProgram.setAttributeBuffer(start, GL.GL_FLOAT, offset, 3, sys.getsizeof(VertexData))
+            shaderProgram.setAttributeBuffer(start, GL.GL_FLOAT, offset, 3, vertexdata_size)
 
             self.m_vao.release()
 

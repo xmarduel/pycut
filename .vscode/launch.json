@@ -6,6 +6,7 @@
     "configurations": [
 
 
+
         {
             "name": "PYCUT",
             "type": "python",
@@ -28,7 +29,7 @@
             "request": "launch",
             "program": "test_gcodeparser.py",
             "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodeviewer",
             "args": ["pycut_gcode.gcode"]
         },
         {
@@ -37,7 +38,7 @@
             "request": "launch",
             "program": "test_gcodeparser.py",
             "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodeviewer",
             "args": ["pycut_gcode.gcode"]
         }
     ]

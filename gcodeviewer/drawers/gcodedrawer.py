@@ -23,7 +23,7 @@ from gcodeviewer.drawers.shaderdrawable import VertexData
 from gcodeviewer.util.util import Util
 from gcodeviewer.util.util import qBound
 
-
+sNan = 65536.0  # ???
 
 
 class GcodeDrawer(ShaderDrawable) :
@@ -38,7 +38,7 @@ class GcodeDrawer(ShaderDrawable) :
         Raster = 1
 
     def __init__(self):
-        super().__init__()
+        super(GcodeDrawer, self).__init__()
 
         self.m_viewParser = None # GcodeViewParse(self)
 
@@ -80,12 +80,12 @@ class GcodeDrawer(ShaderDrawable) :
 
     def updateData(self):
         if self.m_drawMode == GcodeDrawer.DrawMode.Vectors:
-            if len(self.m_indexes):
+            if len(self.m_indexes) == 0:
                 return self.prepareVectors()
             else:
                 return self.updateVectors()
         elif self.m_drawMode == GcodeDrawer.DrawMode.Raster:
-            if len(self.m_indexes):
+            if len(self.m_indexes) == 0:
                 return self.prepareRaster()
             else:
                 return self.updateRaster()
@@ -245,7 +245,7 @@ class GcodeDrawer(ShaderDrawable) :
                 vertex.position = alist[i].getEnd()
                 if self.m_ignoreZ :
                     vertex.position.setZ(0)
-                vertex.start = QVector3D(None, None, self.m_pointSize)
+                vertex.start = QVector3D(sNan, sNan, self.m_pointSize)
                 self.m_points.append(vertex)
 
                 drawFirstPoint = False
@@ -255,7 +255,7 @@ class GcodeDrawer(ShaderDrawable) :
             if alist[i].isFastTraverse():
                 vertex.start = alist[i].getStart()
             else:
-                vertex.start = QVector3D(None, None, None)
+                vertex.start = QVector3D(sNan, sNan, sNan)
 
             # Simplify geometry
             j = i
@@ -275,19 +275,19 @@ class GcodeDrawer(ShaderDrawable) :
                         length += next.length()
                         # straight = start.crossProduct(start.normalized(), next.normalized()).length() < 0.025
                     
-                # Split short & straight lines
-                ddo = (length < self.m_simplifyPrecision or straight) \
+                    # Split short & straight lines
+                    ddo = (length < self.m_simplifyPrecision or straight) \
                         and i < len(alist) \
                         and self.getSegmentType(alist[i]) == self.getSegmentType(alist[j])
                 i -= 1
             else :
-                alist[i].setVertexIndex(self.m_lines.count()) # Store vertex index
+                alist[i].setVertexIndex(len(self.m_lines)) # Store vertex index
 
             # Set color
             vertex.color = self.getSegmentColorVector(alist[i])
 
             # Line start
-            vertex.position = list.at(j).getStart()
+            vertex.position = alist[j].getStart()
             if self.m_ignoreZ:
                 vertex.position.setZ(0)
             self.m_lines.append(vertex)
@@ -304,7 +304,7 @@ class GcodeDrawer(ShaderDrawable) :
                 vertex.position = alist[i].getEnd()
                 if self.m_ignoreZ :
                     vertex.position.setZ(0)
-                vertex.start = QVector3D(None, None, self.m_pointSize)
+                vertex.start = QVector3D(sNan, sNan, self.m_pointSize)
                 self.m_points.append(vertex)
         
         self.m_geometryUpdated = True
@@ -406,7 +406,7 @@ class GcodeDrawer(ShaderDrawable) :
         vertex.position = QVector3D(self.getMaximumExtremes().x(), self.getMinimumExtremes().y(), 0)
         vertices.append(vertex)
 
-        vertex.start = QVector3D(None, 1, 1)
+        vertex.start = QVector3D(sNan, 1, 1)
         vertex.position = QVector3D(self.getMaximumExtremes().x(), self.getMaximumExtremes().y(), 0)
         vertices.append(vertex)
 
@@ -416,7 +416,7 @@ class GcodeDrawer(ShaderDrawable) :
             self.m_image = image
         else:
             for i in range(len(vertices)):
-                vertices[i].start = QVector3D(None, None, None)
+                vertices[i].start = QVector3D(sNan, sNan, sNan)
             self.m_lines += vertices
             self.m_image = QImage()
     

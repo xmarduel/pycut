@@ -36,15 +36,6 @@ from gcodeviewer.util.util import qQNaN
 from ui_testGlWindow import Ui_testGlWindow
 
 
-def xmain(filename):
-    fp = open(filename, "r")
-    data = fp.readlines()
-    fp.close()
-
-    parser = GcodeViewParse()    
-    parser.toObjRedux(data, 0.01, True)
-
-
 PROGRESSMINLINES = 10000
 PROGRESSSTEP     =  1000
 
@@ -91,7 +82,8 @@ class TestGlWindow(QtWidgets.QMainWindow):
     
         self.clearTable()
 
-        self.loadFile("pycut_gcode.gcode")
+        #self.loadFile("pycut_gcode.gcode")
+        self.loadFile("jscut_gcode.gcode")
 
     def loadFile(self, fileName):
         file = QFile(fileName)

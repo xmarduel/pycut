@@ -359,22 +359,23 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget):
 #ifndef GLES
         # Initialize functions
         try:
-            QtGui.QOpenGLFunctions.initializeOpenGLFunctions(self)  # CHECKME
+            QtGui.QOpenGLFunctions.initializeOpenGLFunctions(QtGui.QOpenGLContext.currentContext())  # CHECKME
+
         except Exception as err:
             print("ERROR initializeOpenGLFunctions: %s" % err)
 #endif
 
         # Create shader program
-        #self.m_shaderProgram = QtOpenGL.QOpenGLShaderProgram()
-        self.m_shaderProgram = None
+        self.m_shaderProgram = QtOpenGL.QOpenGLShaderProgram()
 
         if self.m_shaderProgram:
             # Compile vertex shader
-            #self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Vertex, ":/shaders/vshader.glsl")
+            self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Vertex, ":/shaders/vshader.glsl")
             # Compile fragment shader
-            #self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Fragment, ":/shaders/fshader.glsl")
+            self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Fragment, ":/shaders/fshader.glsl")
             # Link shader pipeline
-            #self.m_shaderProgram.link()
+            self.m_shaderProgram.link()
+
             print("shader program created")
         else:
             print("shader program NOT created")
@@ -425,11 +426,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget):
 
         self.m_viewMatrix.rotate(-90, 1.0, 0.0, 0.0)
 
-
-#ifdef GLES
     def paintGL(self):
-#else
-    #def paintEvent(self, pe: QtGui.QPaintEvent):
         painter = QtGui.QPainter(self)
 
         # Segment counter

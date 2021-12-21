@@ -158,7 +158,7 @@ class LineSegment:
         return self.m_isHightlight
 
     def setIsHightlight(self, isHightlight: bool):
-        self.isHightlight = isHightlight
+        self.m_isHightlight = isHightlight
 
     def vertexIndex(self) -> int:
         return self.m_vertexIndex
