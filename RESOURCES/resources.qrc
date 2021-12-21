@@ -5,11 +5,11 @@
         <file>images/tango/22x22/actions/view-refresh.png</file>
         <file>images/tango/22x22/actions/go-up.png</file>
         <file>images/tango/22x22/actions/go-down.png</file>
-        <file>javascript/lib/jquery-2.1.1.min.js</file>
-        <file>javascript/lib/gl-matrix-2.2.0-min.js</file>
-        <file>javascript/lib/webgl-utils.js</file>
         <file>javascript/api/js/parseGcode.js</file>
         <file>javascript/js/RenderPath.js</file>
+        <file>javascript/lib/gl-matrix-2.2.0-min.js</file>
+        <file>javascript/lib/jquery-2.1.1.min.js</file>
+        <file>javascript/lib/webgl-utils.js</file>
         <file>qtwebchannel/qwebchannel.js</file>
     </qresource>
 </RCC>

@@ -128,11 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-
-lib
-cpp
-api
-js
 clipper/clipper_ver6.4.2
 clipper/clipper_wrap.cxx
 clipper/clipper_wrap.o
@@ -144,3 +139,5 @@ pyside_ex/images
 
 gcodeviewer/drawers/*h
 gcodeviewer/drawers/*cpp
+
+cam/cpp
