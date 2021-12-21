@@ -27,6 +27,13 @@ class VertexData:
         self.color = QVector3D()
         self.start = QVector3D()
 
+def VertexDataFrom(other):
+    vd = VertexData()
+    vd.position = Util.QVector3D_fromVector3D(other.position)
+    vd.color = Util.QVector3D_fromVector3D(other.color)
+    vd.start = Util.QVector3D_fromVector3D(other.start)
+    return vd
+
 
 class ShaderDrawable(QOpenGLFunctions):
     '''
@@ -36,8 +43,8 @@ class ShaderDrawable(QOpenGLFunctions):
         '''
         super().__init__()
 
-        self.m_lineWidth = 0.0
-        self.m_pointSize = 0.0
+        self.m_lineWidth = 2.0
+        self.m_pointSize = 2.0
         self.m_visible = True
         self.m_lines : List[VertexData] = []
         self.m_points : List[VertexData] = []

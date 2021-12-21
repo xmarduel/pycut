@@ -19,6 +19,7 @@ from gcodeviewer.parser.gcodeviewparse import GcodeViewParse
 
 from gcodeviewer.drawers.shaderdrawable import ShaderDrawable
 from gcodeviewer.drawers.shaderdrawable import VertexData
+from gcodeviewer.drawers.shaderdrawable import VertexDataFrom
 
 from gcodeviewer.util.util import Util
 from gcodeviewer.util.util import qBound
@@ -246,7 +247,7 @@ class GcodeDrawer(ShaderDrawable) :
                 if self.m_ignoreZ :
                     vertex.position.setZ(0)
                 vertex.start = QVector3D(sNan, sNan, self.m_pointSize)
-                self.m_points.append(vertex)
+                self.m_points.append(VertexDataFrom(vertex))
 
                 drawFirstPoint = False
                 continue
@@ -290,13 +291,13 @@ class GcodeDrawer(ShaderDrawable) :
             vertex.position = alist[j].getStart()
             if self.m_ignoreZ:
                 vertex.position.setZ(0)
-            self.m_lines.append(vertex)
+            self.m_lines.append(VertexDataFrom(vertex))
 
             # Line end
             vertex.position = alist[i].getEnd()
             if self.m_ignoreZ:
                 vertex.position.setZ(0)
-            self.m_lines.append(vertex)
+            self.m_lines.append(VertexDataFrom(vertex))
 
             # Draw last toolpath point
             if i == len(alist) - 1:
@@ -305,7 +306,7 @@ class GcodeDrawer(ShaderDrawable) :
                 if self.m_ignoreZ :
                     vertex.position.setZ(0)
                 vertex.start = QVector3D(sNan, sNan, self.m_pointSize)
-                self.m_points.append(vertex)
+                self.m_points.append(VertexDataFrom(vertex))
         
         self.m_geometryUpdated = True
         self.m_indexes = []
@@ -370,9 +371,9 @@ class GcodeDrawer(ShaderDrawable) :
 
         # Create vertices array
         # Clear all vertex data
-        self.m_lines.clear()
-        self.m_points.clear()
-        self.m_triangles.clear()
+        self.m_lines = []
+        self.m_points = []
+        self.m_triangles = []
 
         if self.m_texture:
             self.m_texture.destroy()

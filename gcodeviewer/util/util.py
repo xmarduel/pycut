@@ -39,3 +39,12 @@ class Util:
     @classmethod
     def colorToVector(cls, color: QColor) -> QVector3D:
         return QVector3D(color.redF(), color.greenF(), color.blueF())
+
+    @classmethod
+    def QVector3D_fromVector3D(cls, v: QVector3D) -> QVector3D:
+        vec = QVector3D()
+        vec.setX(v.x())
+        vec.setY(v.y())
+        vec.setZ(v.z())
+        return vec
+
