@@ -9,7 +9,7 @@ from typing import List
 
 from PySide6.QtGui import QVector3D
 
-from pointsegment import PointSegment
+from gcodeviewer.parser.pointsegment import PointSegment
 
 
 class LineSegment:

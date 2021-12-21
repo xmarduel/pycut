@@ -13,8 +13,10 @@ from PySide6.QtOpenGL import QOpenGLTexture
 
 from OpenGL import GL
 
-from util.util import Util
-from util.util import qQNaN
+from gcodeviewer.util.util import Util
+from gcodeviewer.util.util import qQNaN
+
+import numpy as np
 
 
 sNan = 65536.0  # ???
@@ -39,11 +41,11 @@ class ShaderDrawable(QOpenGLFunctions):
         self.m_visible = True
         self.m_lines : List[VertexData] = []
         self.m_points : List[VertexData] = []
-        self. m_triangles  : List[VertexData]  = []
+        self.m_triangles : List[VertexData]  = []
         self.m_texture : QOpenGLTexture = None
 
-        self.m_vbo : QOpenGLBuffer = None
-        self.m_vao : QOpenGLVertexArrayObject = None
+        self.m_vbo = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
+        self.m_vao = QOpenGLVertexArrayObject()
 
         self.m_needsUpdateGeometry = False
     
@@ -108,6 +110,23 @@ class ShaderDrawable(QOpenGLFunctions):
     def needsUpdateGeometry(self) -> bool:
         return self.m_needsUpdateGeometry
 
+    def vertex_to_numpy(self, vertexData: List[VertexData]):
+        vec = np.empty(9*len(vertexData))
+        for k, vdata in enumerate(vertexData):
+            vec[9*k+0] = vdata.position[0]
+            vec[9*k+1] = vdata.position[1]
+            vec[9*k+2] = vdata.position[2]
+
+            vec[9*k+3] = vdata.color[0]
+            vec[9*k+4] = vdata.color[1]
+            vec[9*k+5] = vdata.color[2]
+
+            vec[9*k+6] = vdata.start[0]
+            vec[9*k+7] = vdata.start[1]
+            vec[9*k+8] = vdata.start[2]
+        return vec
+
+
     def updateGeometry(self, shaderProgram : QOpenGLShaderProgram = None):
         # Init in context
         if not self.m_vbo.isCreated():
@@ -123,10 +142,25 @@ class ShaderDrawable(QOpenGLFunctions):
         # Update vertex buffer
         if self.updateData():
             # Fill vertices buffer
-            vertexData = self.m_triangles # FIXME a copy ??
+            vertexData = self.m_triangles
             vertexData += self.m_lines
             vertexData += self.m_points
-            self.m_vbo.allocate(vertexData.constData(), len(vertexData) * sys.getsizeof(VertexData))
+
+            # XAM DEBUG
+            np_array = self.vertex_to_numpy(vertexData)
+            # get data as ByteArray
+            np_bytes = np.array(np_array, dtype= np.float32).tobytes()
+
+            #https://nrotella.github.io/journal/first-steps-python-qt-opengl.html
+
+            #buffer.allocate(120) # How many bytes to allocate
+            #data = numpy.array([2., 2., 2., 0.5, 0.4, 0.4, 1.], dtype = numpy.float32).toString()
+            ## Write
+            #buffer.write(0, data, len(data))
+            # XAM DEBUG
+
+            #self.m_vbo.allocate(vertexData.constData(), len(vertexData) * sys.getsizeof(VertexData))
+            self.m_vbo.write(0, np_bytes, len(np_bytes))
         else:
             self.m_vbo.release()        
             if self.m_vao.isCreated():
@@ -175,7 +209,7 @@ class ShaderDrawable(QOpenGLFunctions):
         return QVector3D(0, 0, 0)
 
     def getVertexCount(self) -> int:
-        return self.m_lines.count() + self.m_points.count() + self.m_triangles.count()
+        return len(self.m_lines) + len(self.m_points) + len(self.m_triangles)
 
     def lineWidth(self) -> float:
         return self.m_lineWidth

@@ -15,14 +15,18 @@ from PySide6.QtCore import qIsNaN
 
 from OpenGL.GL import *
 
-from shaderdrawable import ShaderDrawable
+from gcodeviewer.drawers.shaderdrawable import ShaderDrawable
+
+
+import resources_rc
+
 
 M_PI = math.acos(-1)
 ZOOMSTEP = 1.1
 
 
-#class GLWidget(QtOpenGLWidgets.QOpenGLWidget):
-class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
+class GLWidget(QtOpenGLWidgets.QOpenGLWidget):
+#class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
     '''
     '''
     rotationChanged = Signal()
@@ -31,7 +35,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
     def __init__(self, parent : QtWidgets.QWidget = None):
         '''
         '''
-        super().__init__(parent)
+        super(GLWidget, self).__init__(parent)
 
         self.m_shaderProgram : QtOpenGL.QOpenGLShaderProgram = None
 
@@ -99,6 +103,9 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.m_targetFps = 60
 
         QtCore.QTimer.singleShot(1000, self.onFramesTimer)
+
+        # XAM
+        self.setColorBackground(QtGui.QColor(255,255,255))
 
     def calculateVolume(self, size: QtGui.QVector3D) -> float:
         return size.x() * size.y() * size.z()
@@ -351,20 +358,26 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
     def initializeGL(self):
 #ifndef GLES
         # Initialize functions
-        self.initializeOpenGLFunctions()  # CHECKME
+        try:
+            QtGui.QOpenGLFunctions.initializeOpenGLFunctions(self)  # CHECKME
+        except Exception as err:
+            print("ERROR initializeOpenGLFunctions: %s" % err)
 #endif
 
         # Create shader program
-        self.m_shaderProgram = QtOpenGL.QOpenGLShaderProgram()
+        #self.m_shaderProgram = QtOpenGL.QOpenGLShaderProgram()
+        self.m_shaderProgram = None
 
         if self.m_shaderProgram:
             # Compile vertex shader
-            self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Vertex, ":/shaders/vshader.glsl")
+            #self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Vertex, ":/shaders/vshader.glsl")
             # Compile fragment shader
-            self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Fragment, ":/shaders/fshader.glsl")
+            #self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Fragment, ":/shaders/fshader.glsl")
             # Link shader pipeline
-            self.m_shaderProgram.link()
+            #self.m_shaderProgram.link()
             print("shader program created")
+        else:
+            print("shader program NOT created")
 
     def resizeGL(self, width: int, height: int):
         glViewport(0, 0, width, height)
@@ -414,9 +427,9 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
 
 
 #ifdef GLES
-    def paintGL(self): pass
+    def paintGL(self):
 #else
-    def paintEvent(self, pe: QtGui.QPaintEvent):
+    #def paintEvent(self, pe: QtGui.QPaintEvent):
         painter = QtGui.QPainter(self)
 
         # Segment counter
@@ -494,22 +507,20 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         painter.drawText(QtCore.QPoint(x, fm.height() * 3 + 10), self.m_pinState)
 
         xstr = "Vertices: %d" % vertices
-        painter.drawText(QtCore.QPoint(self.width() - fm.width(xstr) - 10, y + 30), xstr)
+        painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y + 30), xstr)
         xstr = "FPS: %d" % self.m_fps
-        painter.drawText(QtCore.QPoint(self.width() - fm.width(xstr) - 10, y + 45), xstr)
+        painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y + 45), xstr)
 
         xstr = self.m_spendTime.toString("hh:mm:ss") + " / " + self.m_estimatedTime.toString("hh:mm:ss")
-        painter.drawText(QtCore.QPoint(self.width() - fm.width(xstr) - 10, y), xstr)
+        painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y), xstr)
 
         xstr = self.m_bufferState
-        painter.drawText(QtCore.QPoint(self.width() - fm.width(xstr) - 10, y + 15), xstr)
+        painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y + 15), xstr)
 
         self.m_frames += 1
 
 #ifdef GLES
         self.update()
-#endif
-
 #endif
 
     def mousePressEvent(self, event: QtGui.QMouseEvent):
@@ -543,14 +554,14 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
             self.updateProjection()
 
     def wheelEvent(self, we: QtGui.QWheelEvent):
-        if self.m_zoom > 0.1 and we.delta() < 0:
-            self.m_xPan -= ((float)(we.pos().x() / self.width() - 0.5 + self.m_xPan)) * (1 - 1 / ZOOMSTEP)
-            self.m_yPan += ((float)(we.pos().y() / self.height() - 0.5 - self.m_yPan)) * (1 - 1 / ZOOMSTEP)
+        if self.m_zoom > 0.1 and we.angleDelta().y() < 0:
+            self.m_xPan -= ((float)(we.position().x() / self.width() - 0.5 + self.m_xPan)) * (1 - 1 / ZOOMSTEP)
+            self.m_yPan += ((float)(we.position().y() / self.height() - 0.5 - self.m_yPan)) * (1 - 1 / ZOOMSTEP)
 
             self.m_zoom /= ZOOMSTEP
-        elif self. m_zoom < 10 and we.delta() > 0:
-            self.m_xPan -= ((float)(we.pos().x() / self.width() - 0.5 + self.m_xPan)) * (1 - ZOOMSTEP)
-            self.m_yPan += ((float)(we.pos().y() / self.height() - 0.5 - self.m_yPan)) * (1 - ZOOMSTEP)
+        elif self.m_zoom < 10 and we.angleDelta().y() > 0:
+            self.m_xPan -= ((float)(we.position().x() / self.width() - 0.5 + self.m_xPan)) * (1 - ZOOMSTEP)
+            self.m_yPan += ((float)(we.position().y() / self.height() - 0.5 - self.m_yPan)) * (1 - ZOOMSTEP)
 
             self.m_zoom *= ZOOMSTEP
 
@@ -561,14 +572,8 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         if te.timerId() == self.m_timerPaint.timerId():
             if self.m_animateView:
                 self.viewAnimation()
-#ifndef GLES
             if self.m_updatesEnabled:
                 self.update()
-#endif
         else:
-#ifdef GLES
-            #self.timerEvent(te)
-#else
             self.timerEvent(te)
-#endif
 

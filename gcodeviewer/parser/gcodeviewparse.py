@@ -12,12 +12,12 @@ from PySide6.QtGui import QVector3D
 from PySide6 import QtCore
 from PySide6.QtCore import qIsNaN
 
-from linesegment import LineSegment
-from gcodeparser import GcodeParser
-from gcodepreprocessorutils import GcodePreprocessorUtils
+from gcodeviewer.parser.linesegment import LineSegment
+from gcodeviewer.parser.gcodeparser import GcodeParser
+from gcodeviewer.parser.gcodepreprocessorutils import GcodePreprocessorUtils
 
-from util.util import Util
-from util.util import qQNaN
+from gcodeviewer.util.util import Util
+from gcodeviewer.util.util import qQNaN
 
 
 class GcodeViewParse : 

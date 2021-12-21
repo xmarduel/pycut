@@ -13,8 +13,8 @@ from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QMatrix4x4
 from PySide6.QtCore import qIsNaN
 
-from pointsegment import PointSegment
-from gcodepreprocessorutils import GcodePreprocessorUtils
+from gcodeviewer.parser.pointsegment import PointSegment
+from gcodeviewer.parser.gcodepreprocessorutils import GcodePreprocessorUtils
 
 
 class GcodeParser : 

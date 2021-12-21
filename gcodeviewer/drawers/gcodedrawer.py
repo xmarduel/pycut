@@ -14,14 +14,14 @@ from PySide6.QtCore import qIsNaN
 from PySide6.QtOpenGL import QOpenGLTexture
 from PySide6.QtOpenGL import QOpenGLBuffer
 
-from linesegment import LineSegment
-from gcodeviewparse import GcodeViewParse
+from gcodeviewer.parser.linesegment import LineSegment
+from gcodeviewer.parser.gcodeviewparse import GcodeViewParse
 
-from shaderdrawable import ShaderDrawable
-from shaderdrawable import VertexData
+from gcodeviewer.drawers.shaderdrawable import ShaderDrawable
+from gcodeviewer.drawers.shaderdrawable import VertexData
 
-from util.util import Util
-from util.util import qBound
+from gcodeviewer.util.util import Util
+from gcodeviewer.util.util import qBound
 
 
 
@@ -40,7 +40,7 @@ class GcodeDrawer(ShaderDrawable) :
     def __init__(self):
         super().__init__()
 
-        self.m_viewParser = GcodeViewParse(self)
+        self.m_viewParser = None # GcodeViewParse(self)
 
         self.m_drawMode = GcodeDrawer.DrawMode.Vectors
         self.m_simplify = True
@@ -113,10 +113,10 @@ class GcodeDrawer(ShaderDrawable) :
     def setViewParser(self, viewParser: GcodeViewParse):
         self.m_viewParser = viewParser
 
-    def viewParser(self) ->GcodeViewParse :
+    def viewParser(self) -> GcodeViewParse :
         return self.m_viewParser 
 
-    def simplify(self) -> bool:
+    def simplify(self) -> bool :
         return self.m_simplify
 
     def setSimplify(self, simplify: bool):
@@ -128,7 +128,7 @@ class GcodeDrawer(ShaderDrawable) :
     def setSimplifyPrecision(self, simplifyPrecision: float):
         self.m_simplifyPrecision = simplifyPrecision
 
-    def geometryUpdated(self) -> bool:
+    def geometryUpdated(self) -> bool :
         return self.m_geometryUpdated
 
     def colorNormal(self) -> QColor :
