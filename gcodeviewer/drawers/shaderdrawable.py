@@ -1,5 +1,7 @@
 ﻿
+
 import sys
+import ctypes
 
 from typing import List
 
@@ -41,10 +43,10 @@ class ShaderDrawable(QOpenGLFunctions):
     def __init__(self):
         '''
         '''
-        super().__init__()
+        QOpenGLFunctions.__init__(self)
 
-        self.m_lineWidth = 2.0
-        self.m_pointSize = 2.0
+        self.m_lineWidth = 1.0
+        self.m_pointSize = 1.0
         self.m_visible = True
         self.m_lines : List[VertexData] = []
         self.m_points : List[VertexData] = []
@@ -73,26 +75,28 @@ class ShaderDrawable(QOpenGLFunctions):
             # Offset for position
             offset = 0
 
+            vertexdata_size = 12  # sizeof(VertexData)
+
             # Tell OpenGL programmable pipeline how to locate vertex position data
             vertexLocation = shaderProgram.attributeLocation("a_position")
             shaderProgram.enableAttributeArray(vertexLocation)
-            shaderProgram.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, 3, sys.getsizeof(VertexData))
+            shaderProgram.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, 3, vertexdata_size)
 
             # Offset for color
-            offset = sys.getsizeof(QVector3D)
+            offset = 12
 
             # Tell OpenGL programmable pipeline how to locate vertex color data
             color = shaderProgram.attributeLocation("a_color")
             shaderProgram.enableAttributeArray(color)
-            shaderProgram.setAttributeBuffer(color, GL.GL_FLOAT, offset, 3, sys.getsizeof(VertexData))
+            shaderProgram.setAttributeBuffer(color, GL.GL_FLOAT, offset, 3, vertexdata_size)
 
             # Offset for line start point
-            offset += sys.getsizeof(QVector3D)
+            offset += 12
 
             # Tell OpenGL programmable pipeline how to locate vertex line start point
             start = shaderProgram.attributeLocation("a_start")
             shaderProgram.enableAttributeArray(start)
-            shaderProgram.setAttributeBuffer(start, GL.GL_FLOAT, offset, 3, sys.getsizeof(VertexData))
+            shaderProgram.setAttributeBuffer(start, GL.GL_FLOAT, offset, 3, vertexdata_size)
     
 
         if len(self.m_triangles) != 0:
@@ -100,14 +104,14 @@ class ShaderDrawable(QOpenGLFunctions):
                 self.m_texture.bind()
                 shaderProgram.setUniformValue("texture", 0)
         
-            GL.glDrawArrays(GL.GL_TRIANGLES, 0, len(self.m_triangles))
+            self.glDrawArrays(GL.GL_TRIANGLES, 0, len(self.m_triangles))
 
         if len(self.m_lines) != 0:
-            GL.glLineWidth(self.m_lineWidth)
-            GL.glDrawArrays(GL.GL_LINES, len(self.m_triangles), len(self.m_lines))
+            self.glLineWidth(self.m_lineWidth)
+            self.glDrawArrays(GL.GL_LINES, len(self.m_triangles), len(self.m_lines))
 
         if len(self.m_points) != 0:
-            GL.glDrawArrays(GL.GL_POINTS, len(self.m_triangles) + len(self.m_lines), len(self.m_points))
+            self.glDrawArrays(GL.GL_POINTS, len(self.m_triangles) + len(self.m_lines), len(self.m_points))
 
         if self.m_vao.isCreated():
             self.m_vao.release()
@@ -127,7 +131,7 @@ class ShaderDrawable(QOpenGLFunctions):
         # Write
         buffer.write(0, data, len(data))
         '''
-        np_array = np.empty(9*len(vertexData))
+        np_array = np.empty(9*len(vertexData), dtype=ctypes.c_float)
         
         for k, vdata in enumerate(vertexData):
             np_array[9*k+0] = vdata.position.x()
@@ -152,7 +156,8 @@ class ShaderDrawable(QOpenGLFunctions):
 
         if self.m_vao.isCreated():
             # Prepare vao
-            self.m_vao.bind()
+            pass
+            #self.m_vao.bind()  # see demo ?
 
         # Prepare vbo
         self.m_vbo.bind()
@@ -165,8 +170,12 @@ class ShaderDrawable(QOpenGLFunctions):
             vertexData += self.m_points
 
             np_array = self.vertexes_to_numpy(vertexData)
+            float_size = ctypes.sizeof(ctypes.c_float)
             # get data as ByteArray
             np_bytes = np.array(np_array, dtype= np.float32).tobytes()
+
+            # demo
+            #self.m_vbo.allocate(np_bytes, len(np_bytes) * float_size)
 
             self.m_vbo.write(0, np_bytes, len(np_bytes))
         else:
@@ -258,6 +267,8 @@ class ShaderDrawable(QOpenGLFunctions):
 
         # Create buffers
         self.m_vao.create()
+        vao_binder = QOpenGLVertexArrayObject.Binder(self.m_vao)
+
         self.m_vbo.create()
 
 

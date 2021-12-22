@@ -52,12 +52,12 @@ class GcodeDrawer(ShaderDrawable) :
         self.m_grayscaleMin = 0
         self.m_grayscaleMax = 255
    
-        self.m_colorNormal = QColor()
-        self.m_colorDrawn = QColor()
-        self.m_colorHighlight = QColor()
-        self.m_colorZMovement = QColor()
-        self.m_colorStart = QColor()
-        self.m_colorEnd = QColor()
+        self.m_colorNormal = QColor(255,0,0)
+        self.m_colorDrawn = QColor(255,0,0)
+        self.m_colorHighlight = QColor(255,255,0)
+        self.m_colorZMovement = QColor(255,0,0)
+        self.m_colorStart = QColor(255,0,0)
+        self.m_colorEnd = QColor(255,0,0)
 
         self.m_timerVertexUpdate = QTimer()
 

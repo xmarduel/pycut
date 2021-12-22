@@ -10,13 +10,12 @@ from PySide6 import QtGui
 from PySide6 import QtOpenGLWidgets
 from PySide6 import QtOpenGL
 
+from OpenGL import GL
+
 from PySide6.QtCore import Signal, Slot
 from PySide6.QtCore import qIsNaN
 
-from OpenGL.GL import *
-
 from gcodeviewer.drawers.shaderdrawable import ShaderDrawable
-
 
 import resources_rc
 
@@ -25,19 +24,18 @@ M_PI = math.acos(-1)
 ZOOMSTEP = 1.1
 
 
-class GLWidget(QtOpenGLWidgets.QOpenGLWidget):
-#class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
+#class GLWidget(QtOpenGLWidgets.QOpenGLWidget):
+class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
     '''
     '''
     rotationChanged = Signal()
     resized = Signal()
 
-    def __init__(self, parent : QtWidgets.QWidget = None):
-        '''
-        '''
-        super(GLWidget, self).__init__(parent)
+    def __init__(self, parent=None):
+        QtOpenGLWidgets.QOpenGLWidget.__init__(self, parent)
+        QtGui.QOpenGLFunctions.__init__(self)
 
-        self.m_shaderProgram : QtOpenGL.QOpenGLShaderProgram = None
+        self.m_shaderProgram = QtOpenGL.QOpenGLShaderProgram()
 
         self.m_xRot = 90.0 
         self.m_yRot = 0.0 
@@ -85,7 +83,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget):
         self.m_projectionMatrix = QtGui.QMatrix4x4()
         self.m_viewMatrix = QtGui.QMatrix4x4()
 
-        self.m_colorBackground = QtGui.QColor()
+        self.m_colorBackground = QtGui.QColor(100,250,250)
         self.m_colorText = QtGui.QColor()
 
         self.m_shaderDrawables : List[ShaderDrawable] = []
@@ -104,14 +102,12 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget):
 
         QtCore.QTimer.singleShot(1000, self.onFramesTimer)
 
-        # XAM
-        self.setColorBackground(QtGui.QColor(255,255,255))
-
     def calculateVolume(self, size: QtGui.QVector3D) -> float:
         return size.x() * size.y() * size.z()
         
     def addDrawable(self, drawable: ShaderDrawable):
-        self.m_shaderDrawables.append(drawable)
+        pass
+        #self.m_shaderDrawables.append(drawable)
 
     def fitDrawable(self, drawable : ShaderDrawable = None):
         self.stopViewAnimation()
@@ -354,34 +350,118 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget):
 
         self.updateView()
 
-   
+    def cleanup(self):
+        pass
+
     def initializeGL(self):
-#ifndef GLES
-        # Initialize functions
-        try:
-            QtGui.QOpenGLFunctions.initializeOpenGLFunctions(QtGui.QOpenGLContext.currentContext())  # CHECKME
+        self.context().aboutToBeDestroyed.connect(self.cleanup)
+        self.initializeOpenGLFunctions()
 
-        except Exception as err:
-            print("ERROR initializeOpenGLFunctions: %s" % err)
-#endif
-
-        # Create shader program
         self.m_shaderProgram = QtOpenGL.QOpenGLShaderProgram()
 
-        if self.m_shaderProgram:
-            # Compile vertex shader
-            self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Vertex, ":/shaders/vshader.glsl")
-            # Compile fragment shader
-            self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Fragment, ":/shaders/fshader.glsl")
-            # Link shader pipeline
-            self.m_shaderProgram.link()
+        # Compile vertex shader
+        self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Vertex, ":/shaders/vshader.glsl")
+        # Compile fragment shader
+        self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Fragment, ":/shaders/fshader.glsl")
+        # Link shader pipeline
+        self.m_shaderProgram.link()
+        self.m_shaderProgram.bind()  # view demo ?
 
-            print("shader program created")
-        else:
-            print("shader program NOT created")
+    def paintGL(self):
+        # Segment counter
+        vertices = 0
+
+        # Clear viewport
+        self.glClearColor(self.m_colorBackground.redF(), self.m_colorBackground.greenF(), self.m_colorBackground.blueF(), 1.0)
+        self.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+
+        # Shader drawable points
+        self.glEnable(GL.GL_PROGRAM_POINT_SIZE)
+
+        # Update settings
+        if self.m_antialiasing:
+            if self.m_msaa:
+                self.glEnable(GL.GL_MULTISAMPLE)
+            else:
+                self.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST)
+                self.glEnable(GL.GL_LINE_SMOOTH)
+                self.glHint(GL.GL_POINT_SMOOTH_HINT, GL.GL_NICEST)
+                self.glEnable(GL.GL_POINT_SMOOTH)
+
+                self.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
+                self.glEnable(GL.GL_BLEND)
+        
+        if self.m_zBuffer:
+            self.glEnable(GL.GL_DEPTH_TEST)
+
+        if self.m_shaderProgram:
+            # Draw 3d
+            self.m_shaderProgram.bind()
+
+            # Set modelview-projection matrix
+            self.m_shaderProgram.setUniformValue("mvp_matrix", self.m_projectionMatrix * self.m_viewMatrix)
+            self.m_shaderProgram.setUniformValue("mv_matrix", self.m_viewMatrix)
+
+            # Update geometries in current opengl context
+            for drawable in self.m_shaderDrawables:
+                if drawable.needsUpdateGeometry():
+                    drawable.updateGeometry(self.m_shaderProgram)
+
+            # Draw geometries
+            for drawable in self.m_shaderDrawables:
+                drawable.draw(self.m_shaderProgram)
+                if drawable.visible():
+                    vertices += drawable.getVertexCount()
+
+            self.m_shaderProgram.release()
+
+        # Draw 2D
+        self.glDisable(GL.GL_DEPTH_TEST)
+        self.glDisable(GL.GL_MULTISAMPLE)
+        self.glDisable(GL.GL_LINE_SMOOTH)
+        self.glDisable(GL.GL_BLEND)
+
+        if False: 
+            painter = QtGui.QPainter(self)
+
+            painter.beginNativePainting()
+            painter.endNativePainting()
+
+            pen = QtGui.QPen(self.m_colorText)
+            painter.setPen(pen)
+
+            x = 10
+            y = self.height() - 60
+
+            painter.drawText(QtCore.QPoint(x, y), "X: %0.*f ... %0.*f" % (3, self.m_xMin , 3,self.m_xMax))
+            painter.drawText(QtCore.QPoint(x, y + 15), "Y: %0.*f ... %0.*f" % (3, self.m_yMin, 3, self.m_yMax))
+            painter.drawText(QtCore.QPoint(x, y + 30), "Z: %0.*f ... %0.*f" % (3, self.m_zMin, 3, self.m_zMax))
+            painter.drawText(QtCore.QPoint(x, y + 45), "%0.*f / %0.*f / %0.*f" % (3, self.m_xSize, 3, self.m_ySize, 3, self.m_zSize))
+
+            fm = QtGui.QFontMetrics(painter.font())
+
+            painter.drawText(QtCore.QPoint(x, fm.height() + 10), self.m_parserStatus)
+            painter.drawText(QtCore.QPoint(x, fm.height() * 2 + 10), self.m_speedState)
+            painter.drawText(QtCore.QPoint(x, fm.height() * 3 + 10), self.m_pinState)
+
+            xstr = "Vertices: %d" % vertices
+            painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y + 30), xstr)
+            xstr = "FPS: %d" % self.m_fps
+            painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y + 45), xstr)
+
+            xstr = self.m_spendTime.toString("hh:mm:ss") + " / " + self.m_estimatedTime.toString("hh:mm:ss")
+            painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y), xstr)
+
+            xstr = self.m_bufferState
+            painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y + 15), xstr)
+
+            self.m_frames += 1
+
+        self.m_frames += 1
+        #self.update()
 
     def resizeGL(self, width: int, height: int):
-        glViewport(0, 0, width, height)
+        self.glViewport(0, 0, width, height)
         self.updateProjection()
         self.resized.emit()
 
@@ -425,100 +505,6 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget):
         self.m_viewMatrix.translate(-self.m_xLookAt, -self.m_yLookAt, -self.m_zLookAt)
 
         self.m_viewMatrix.rotate(-90, 1.0, 0.0, 0.0)
-
-    def paintGL(self):
-        painter = QtGui.QPainter(self)
-
-        # Segment counter
-        vertices = 0
-
-        painter.beginNativePainting()
-
-        # Clear viewport
-        glClearColor(self.m_colorBackground.redF(), self.m_colorBackground.greenF(), self.m_colorBackground.blueF(), 1.0)
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
-        # Shader drawable points
-        glEnable(GL_PROGRAM_POINT_SIZE)
-
-        # Update settings
-        if self.m_antialiasing:
-            if self.m_msaa:
-                glEnable(GL_MULTISAMPLE)
-            else:
-                glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
-                glEnable(GL_LINE_SMOOTH)
-                glHint(GL_POINT_SMOOTH_HINT, GL_NICEST)
-                glEnable(GL_POINT_SMOOTH)
-
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-                glEnable(GL_BLEND)
-        
-        if self.m_zBuffer:
-            glEnable(GL_DEPTH_TEST)
-
-        if self.m_shaderProgram:
-            # Draw 3d
-            self.m_shaderProgram.bind()
-
-            # Set modelview-projection matrix
-            self.m_shaderProgram.setUniformValue("mvp_matrix", self.m_projectionMatrix * self.m_viewMatrix)
-            self.m_shaderProgram.setUniformValue("mv_matrix", self.m_viewMatrix)
-
-            # Update geometries in current opengl context
-            for drawable in self.m_shaderDrawables:
-                if drawable.needsUpdateGeometry():
-                    drawable.updateGeometry(self.m_shaderProgram)
-
-            # Draw geometries
-            for drawable in self.m_shaderDrawables:
-                drawable.draw(self.m_shaderProgram)
-                if drawable.visible():
-                    vertices += drawable.getVertexCount()
-
-            self.m_shaderProgram.release()
-
-        # Draw 2D
-        glDisable(GL_DEPTH_TEST)
-        glDisable(GL_MULTISAMPLE)
-        glDisable(GL_LINE_SMOOTH)
-        glDisable(GL_BLEND)
-
-        painter.endNativePainting()
-
-        pen = QtGui.QPen(self.m_colorText)
-        painter.setPen(pen)
-
-        x = 10
-        y = self.height() - 60
-
-        painter.drawText(QtCore.QPoint(x, y), "X: %0.*f ... %0.*f" % (3, self.m_xMin , 3,self.m_xMax))
-        painter.drawText(QtCore.QPoint(x, y + 15), "Y: %0.*f ... %0.*f" % (3, self.m_yMin, 3, self.m_yMax))
-        painter.drawText(QtCore.QPoint(x, y + 30), "Z: %0.*f ... %0.*f" % (3, self.m_zMin, 3, self.m_zMax))
-        painter.drawText(QtCore.QPoint(x, y + 45), "%0.*f / %0.*f / %0.*f" % (3, self.m_xSize, 3, self.m_ySize, 3, self.m_zSize))
-
-        fm = QtGui.QFontMetrics(painter.font())
-
-        painter.drawText(QtCore.QPoint(x, fm.height() + 10), self.m_parserStatus)
-        painter.drawText(QtCore.QPoint(x, fm.height() * 2 + 10), self.m_speedState)
-        painter.drawText(QtCore.QPoint(x, fm.height() * 3 + 10), self.m_pinState)
-
-        xstr = "Vertices: %d" % vertices
-        painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y + 30), xstr)
-        xstr = "FPS: %d" % self.m_fps
-        painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y + 45), xstr)
-
-        xstr = self.m_spendTime.toString("hh:mm:ss") + " / " + self.m_estimatedTime.toString("hh:mm:ss")
-        painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y), xstr)
-
-        xstr = self.m_bufferState
-        painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y + 15), xstr)
-
-        self.m_frames += 1
-
-#ifdef GLES
-        self.update()
-#endif
 
     def mousePressEvent(self, event: QtGui.QMouseEvent):
         self.m_lastPos = event.pos()
@@ -566,6 +552,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget):
         self.updateView()
 
     def timerEvent(self, te: QtCore.QTimerEvent):
+        return
         if te.timerId() == self.m_timerPaint.timerId():
             if self.m_animateView:
                 self.viewAnimation()

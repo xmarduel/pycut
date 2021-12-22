@@ -101,9 +101,6 @@
            <property name="bottomMargin">
             <number>1</number>
            </property>
-           <item>
-            <widget class="GLWidget" name="glwVisualizer" native="true"/>
-           </item>
           </layout>
          </widget>
          <widget class="QWidget" name="layoutWidget">
@@ -165,18 +162,9 @@
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>GLWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">gcodeviewer/widgets/glwidget.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <tabstops>
   <tabstop>tblProgram</tabstop>
  </tabstops>
- <resources>
- </resources>
+ <resources/>
  <connections/>
 </ui>

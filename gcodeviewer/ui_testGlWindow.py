@@ -19,8 +19,6 @@ from PySide6.QtWidgets import (QAbstractItemView, QApplication, QGroupBox, QHBox
     QHeaderView, QMainWindow, QMenuBar, QSizePolicy,
     QSplitter, QTableView, QVBoxLayout, QWidget)
 
-from gcodeviewer.widgets.glwidget import GLWidget
-
 class Ui_testGlWindow(object):
     def setupUi(self, testGlWindow):
         if not testGlWindow.objectName():
@@ -64,11 +62,6 @@ class Ui_testGlWindow(object):
         self.verticalLayout_8.setContentsMargins(11, 11, 11, 11)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.verticalLayout_8.setContentsMargins(1, 1, 1, 1)
-        self.glwVisualizer = GLWidget(self.frame)
-        self.glwVisualizer.setObjectName(u"glwVisualizer")
-
-        self.verticalLayout_8.addWidget(self.glwVisualizer)
-
         self.splitter.addWidget(self.frame)
         self.layoutWidget = QWidget(self.splitter)
         self.layoutWidget.setObjectName(u"layoutWidget")

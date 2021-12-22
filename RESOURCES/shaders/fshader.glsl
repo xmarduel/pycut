@@ -1,8 +1,4 @@
-#ifdef GL_ES
-// Set default precision to medium
-precision mediump int;
-precision mediump float;
-#endif
+#version 150
 
 //Dash grid (px) = factor * pi;
 const float factor = 2.0;

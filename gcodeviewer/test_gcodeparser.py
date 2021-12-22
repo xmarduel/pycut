@@ -15,6 +15,7 @@ from PySide6.QtGui import QVector3D
 
 from PySide6 import QtWidgets
 from PySide6 import QtCore
+from PySide6 import QtGui
 
 from PySide6.QtWidgets import QProgressDialog
 from PySide6.QtWidgets import QMessageBox
@@ -33,6 +34,8 @@ from gcodeviewer.parser.linesegment import LineSegment
 
 from gcodeviewer.util.util import qQNaN
 
+from gcodeviewer.widgets.glwidget import GLWidget
+
 from ui_testGlWindow import Ui_testGlWindow
 
 
@@ -50,7 +53,10 @@ class TestGlWindow(QtWidgets.QMainWindow):
 
         self.ui = Ui_testGlWindow()
         self.ui.setupUi(self)
-        
+
+        self.ui.glwVisualizer = GLWidget(self.ui.frame)
+        self.ui.frame.layout().addWidget(self.ui.glwVisualizer)
+
         self.setWindowTitle("PyCut")
 
         self.m_programFileName = None
@@ -60,6 +66,7 @@ class TestGlWindow(QtWidgets.QMainWindow):
 
         self.m_codeDrawer = GcodeDrawer()
         self.m_codeDrawer.setViewParser(self.m_viewParser)
+        self.m_codeDrawer.update()
 
         #self.ui.glwVisualizer.addDrawable(self.m_originDrawer)
         self.ui.glwVisualizer.addDrawable(self.m_codeDrawer)
@@ -71,14 +78,21 @@ class TestGlWindow(QtWidgets.QMainWindow):
         #self.ui.glwVisualizer.addDrawable(self.m_selectionDrawer)
         self.ui.glwVisualizer.fitDrawable()
 
-        #self.ui.glwVisualizer.rotationChanged.connect(self.onVisualizatorRotationChanged)
+        self.ui.glwVisualizer.rotationChanged.connect(self.onVisualizatorRotationChanged)
         #self.ui.glwVisualizer.resized.connect(self.placeVisualizerButtons)
         self.m_programModel.dataChanged.connect(self.onTableCellChanged)
 
         self.ui.tblProgram.setModel(self.m_programModel)
         self.ui.tblProgram.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
         #self.ui.tblProgram.verticalScrollBar().actionTriggered.connect(self.onScroolBarAction)
-        #self.ui.tblProgram.selectionModel().currentChanged.connect(self.onTableCurrentChanged)    
+        self.ui.tblProgram.selectionModel().currentChanged.connect(self.onTableCurrentChanged)   
+        # 
+
+        self.ui.tblProgram.hideColumn(4)
+        self.ui.tblProgram.hideColumn(5)
+
+        # # XAM
+        #self.ui.glwVisualizer.setColorBackground(QtGui.QColor(200,200,200)) 
     
         self.clearTable()
 
@@ -152,8 +166,7 @@ class TestGlWindow(QtWidgets.QMainWindow):
 
         # Prepare model
         self.m_programModel.m_data.clear()
-        # self.m_programModel.data().reserve(data.count()) ->
-        self.m_programModel.m_data = [] ## ?? None for _ in range(len(data)) ]
+        self.m_programModel.m_data = []
 
         progress = QProgressDialog ("Opening file...", "Abort", 0, len(data), self)
         progress.setWindowModality(Qt.WindowModal)
@@ -161,8 +174,6 @@ class TestGlWindow(QtWidgets.QMainWindow):
         if len(data) > PROGRESSMINLINES:
             progress.show()
             progress.setStyleSheet("QProgressBar {text-align: center qproperty-format: \"\"}")
-
-        item = GCodeItem()
 
         while len(data) > 0:
     
@@ -181,6 +192,8 @@ class TestGlWindow(QtWidgets.QMainWindow):
 
     #            if (ps && (qIsNaN(ps.point().x()) || qIsNaN(ps.point().y()) || qIsNaN(ps.point().z())))
     #                       qDebug() << "nan point segment added:" << *ps.point()
+
+                item = GCodeItem()
 
                 item.command = trimmed
                 item.state = GCodeItem.States.InQueue
@@ -218,8 +231,6 @@ class TestGlWindow(QtWidgets.QMainWindow):
         self.ui.tblProgram.horizontalHeader().restoreState(headerState)
 
         # Update tableview
-        self.ui.tblProgram.selectionModel().currentChanged.connect(self.onTableCurrentChanged)
-        
         self.ui.tblProgram.selectRow(0)
 
         # Update code drawer
@@ -460,6 +471,10 @@ class TestGlWindow(QtWidgets.QMainWindow):
             self.m_fileChanged = True
 
         print("Update parser time: %s" % time.elapsed())
+
+    def onVisualizatorRotationChanged(self):
+        pass
+        #self.ui.cmdIsometric.setChecked(False)
 
 #if __name__ =='__main__':
 #    '''
