@@ -24,6 +24,7 @@ from PySide6.QtWidgets import QApplication
 from gcodeviewer.drawers.gcodedrawer import GcodeDrawer
 from gcodeviewer.drawers.origindrawer import OriginDrawer
 from gcodeviewer.drawers.tooldrawer import ToolDrawer
+from gcodeviewer.drawers.selectiondrawer import SelectionDrawer
 
 from gcodeviewer.parser.gcodeviewparse import GcodeViewParse 
 from gcodeviewer.parser.gcodepreprocessorutils import  GcodePreprocessorUtils  
@@ -78,15 +79,20 @@ class TestGlWindow(QtWidgets.QMainWindow):
         self.m_toolDrawer.setToolPosition(QVector3D(0, 0, 0))
         self.m_toolDrawer.update()
 
+        self.m_selectionDrawer = SelectionDrawer()
+        self.m_selectionDrawer.update()
+
+
 
         self.ui.glwVisualizer.addDrawable(self.m_originDrawer)
-        #self.ui.glwVisualizer.addDrawable(self.m_codeDrawer)
+        self.ui.glwVisualizer.addDrawable(self.m_codeDrawer)
         #self.ui.glwVisualizer.addDrawable(self.m_probeDrawer)
         self.ui.glwVisualizer.addDrawable(self.m_toolDrawer)
+        self.ui.glwVisualizer.addDrawable(self.m_selectionDrawer)
         #self.ui.glwVisualizer.addDrawable(self.m_heightMapBorderDrawer)
         #self.ui.glwVisualizer.addDrawable(self.m_heightMapGridDrawer)
         #self.ui.glwVisualizer.addDrawable(self.m_heightMapInterpolationDrawer)
-        #self.ui.glwVisualizer.addDrawable(self.m_selectionDrawer)
+        
         self.ui.glwVisualizer.fitDrawable()
 
         self.ui.glwVisualizer.rotationChanged.connect(self.onVisualizatorRotationChanged)
@@ -106,8 +112,8 @@ class TestGlWindow(QtWidgets.QMainWindow):
     
         self.clearTable()
 
-        #self.loadFile("pycut_gcode.gcode")
-        self.loadFile("jscut_gcode.gcode")
+        self.loadFile("pycut_gcode.gcode")
+        #self.loadFile("jscut_gcode.gcode")
 
     def loadFile(self, fileName):
         file = QFile(fileName)
@@ -331,17 +337,17 @@ class TestGlWindow(QtWidgets.QMainWindow):
                     list[l].setIsHightlight(idx1.row() > idx2.row())
                     indexes.append(l)
 
-            #if len(indexes) == 0:
-            #    self.m_selectionDrawer.setEndPosition(QVector3D(sNan, sNan, sNan))
-            #else:
-            #    if self.m_codeDrawer.getIgnoreZ():
-            #        self.m_selectionDrawer.setEndPosition(QVector3D( \
-            #            list[indexes[-1]].getEnd().x(), \
-            #            list[indexes[-1]].getEnd().y(), \
-            #            0))
-            #    else:
-            #        self.m_selectionDrawer.setEndPosition(list[indexes[-1]].getEnd())
-            #self.m_selectionDrawer.update()
+            if len(indexes) == 0:
+                self.m_selectionDrawer.setEndPosition(QVector3D(sNan, sNan, sNan))
+            else:
+                if self.m_codeDrawer.getIgnoreZ():
+                    self.m_selectionDrawer.setEndPosition(QVector3D( \
+                        list[indexes[-1]].getEnd().x(), \
+                        list[indexes[-1]].getEnd().y(), \
+                        0))
+                else:
+                    self.m_selectionDrawer.setEndPosition(list[indexes[-1]].getEnd())
+            self.m_selectionDrawer.update()
 
             if len(indexes) > 0:
                 self.m_currentDrawer.update(indexes)
@@ -352,16 +358,14 @@ class TestGlWindow(QtWidgets.QMainWindow):
         line = int(self.m_currentModel.data(self.m_currentModel.index(idx1.row(), 4)))
         if line > 0 and lineIndexes[line] != "":
             pos = list[lineIndexes[line][-1]].getEnd()
-            #if self.m_codeDrawer.getIgnoreZ():
-            #    self.m_selectionDrawer.setEndPosition(QVector3D(pos.x(), pos.y(), 0))
-            #else:
-            #    self.m_selectionDrawer.setEndPosition(pos)
+            if self.m_codeDrawer.getIgnoreZ():
+                self.m_selectionDrawer.setEndPosition(QVector3D(pos.x(), pos.y(), 0))
+            else:
+                self.m_selectionDrawer.setEndPosition(pos)
         else:
-            pass
-            #self.m_selectionDrawer.setEndPosition(QVector3D(sNan, sNan, sNan))
+            self.m_selectionDrawer.setEndPosition(QVector3D(sNan, sNan, sNan))
         
-        #self.m_selectionDrawer.update()
-
+        self.m_selectionDrawer.update()
 
     def onTableCellChanged(self, i1: QtCore.QModelIndex, i2: QtCore.QModelIndex):
 
@@ -372,7 +376,7 @@ class TestGlWindow(QtWidgets.QMainWindow):
 
         # Inserting new line at end
         if i1.row() == (model.rowCount() - 1) and str(model.data(model.index(i1.row(), 1))) != "":
-            model.setData(model.index(model.rowCount() - 1, 2), GCodeItem.InQueue)
+            model.setData(model.index(model.rowCount() - 1, 2), GCodeItem.States.InQueue)
             model.insertRow(model.rowCount())
             
             if not self.m_programLoading:
@@ -449,7 +453,7 @@ class TestGlWindow(QtWidgets.QMainWindow):
             gp.addCommand(args)
 
             # Update table model
-            self.m_currentModel.m_data[i].state = GCodeItem.InQueue
+            self.m_currentModel.m_data[i].state = GCodeItem.States.InQueue
             self.m_currentModel.m_data[i].response = ""
             self.m_currentModel.m_data[i].line = gp.getCommandNumber()
 
@@ -486,17 +490,6 @@ class TestGlWindow(QtWidgets.QMainWindow):
         pass
         #self.ui.cmdIsometric.setChecked(False)
 
-#if __name__ =='__main__':
-#    '''
-#    '''
-#    parser = argparse.ArgumentParser(prog="test_gcodeparser", description="test gcode parser in python")
-
-#    # argument
-#    parser.add_argument('gcodefilename', help="gcode file to specify")
-
-#    arguments = parser.parse_args()
-
-#    main(arguments.gcodefilename)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
