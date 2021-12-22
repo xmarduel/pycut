@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'testGlWindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.2.0
+## Created by: Qt User Interface Compiler version 6.2.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -55,7 +55,7 @@ class Ui_testGlWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
         self.frame.setSizePolicy(sizePolicy)
-        self.frame.setMinimumSize(QSize(0, 200))
+        self.frame.setMinimumSize(QSize(0, 600))
         self.frame.setStyleSheet(u"border: 1px solid gray;")
         self.verticalLayout_8 = QVBoxLayout(self.frame)
         self.verticalLayout_8.setSpacing(6)

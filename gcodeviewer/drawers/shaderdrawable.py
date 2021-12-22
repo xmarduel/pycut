@@ -29,11 +29,18 @@ class VertexData:
         self.color = QVector3D()
         self.start = QVector3D()
 
-def VertexDataFrom(other):
+def VertexDataFrom(other: VertexData):
     vd = VertexData()
     vd.position = Util.QVector3D_fromVector3D(other.position)
     vd.color = Util.QVector3D_fromVector3D(other.color)
     vd.start = Util.QVector3D_fromVector3D(other.start)
+    return vd
+
+def VertexDataFrom3V(v1: QVector3D, v2: QVector3D, v3: QVector3D):
+    vd = VertexData()
+    vd.position = v1
+    vd.color = v2
+    vd.start = v3
     return vd
 
 
@@ -178,6 +185,9 @@ class ShaderDrawable(QOpenGLFunctions):
             #self.m_vbo.allocate(np_bytes, len(np_bytes) * float_size)
 
             self.m_vbo.write(0, np_bytes, len(np_bytes))
+
+            # demo
+            self.m_vbo.bind()
         else:
             self.m_vbo.release()        
             if self.m_vao.isCreated():

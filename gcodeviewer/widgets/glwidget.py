@@ -106,8 +106,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         return size.x() * size.y() * size.z()
         
     def addDrawable(self, drawable: ShaderDrawable):
-        pass
-        #self.m_shaderDrawables.append(drawable)
+        self.m_shaderDrawables.append(drawable)
 
     def fitDrawable(self, drawable : ShaderDrawable = None):
         self.stopViewAnimation()

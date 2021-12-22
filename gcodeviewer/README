@@ -1,1 +1,5 @@
 In progress, not yet used at all
+
+
+# to generate the test gcodewindow ui
+C:\Users\xavie\AppData\Local\Programs\Python\Python39\Scripts\pyside6-uic testGlWindow.ui > ui_testGlWindow.py

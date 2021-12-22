@@ -22,6 +22,8 @@ from PySide6.QtWidgets import QMessageBox
 from PySide6.QtWidgets import QApplication
 
 from gcodeviewer.drawers.gcodedrawer import GcodeDrawer
+from gcodeviewer.drawers.origindrawer import OriginDrawer
+from gcodeviewer.drawers.tooldrawer import ToolDrawer
 
 from gcodeviewer.parser.gcodeviewparse import GcodeViewParse 
 from gcodeviewer.parser.gcodepreprocessorutils import  GcodePreprocessorUtils  
@@ -68,10 +70,19 @@ class TestGlWindow(QtWidgets.QMainWindow):
         self.m_codeDrawer.setViewParser(self.m_viewParser)
         self.m_codeDrawer.update()
 
-        #self.ui.glwVisualizer.addDrawable(self.m_originDrawer)
-        self.ui.glwVisualizer.addDrawable(self.m_codeDrawer)
+        self.m_originDrawer = OriginDrawer()
+        self.m_originDrawer.setLineWidth(2.0)
+        self.m_originDrawer.update()
+
+        self.m_toolDrawer = ToolDrawer()
+        self.m_toolDrawer.setToolPosition(QVector3D(0, 0, 0))
+        self.m_toolDrawer.update()
+
+
+        self.ui.glwVisualizer.addDrawable(self.m_originDrawer)
+        #self.ui.glwVisualizer.addDrawable(self.m_codeDrawer)
         #self.ui.glwVisualizer.addDrawable(self.m_probeDrawer)
-        #self.ui.glwVisualizer.addDrawable(self.m_toolDrawer)
+        self.ui.glwVisualizer.addDrawable(self.m_toolDrawer)
         #self.ui.glwVisualizer.addDrawable(self.m_heightMapBorderDrawer)
         #self.ui.glwVisualizer.addDrawable(self.m_heightMapGridDrawer)
         #self.ui.glwVisualizer.addDrawable(self.m_heightMapInterpolationDrawer)
@@ -83,16 +94,15 @@ class TestGlWindow(QtWidgets.QMainWindow):
         self.m_programModel.dataChanged.connect(self.onTableCellChanged)
 
         self.ui.tblProgram.setModel(self.m_programModel)
-        self.ui.tblProgram.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
+        self.ui.tblProgram.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         #self.ui.tblProgram.verticalScrollBar().actionTriggered.connect(self.onScroolBarAction)
         self.ui.tblProgram.selectionModel().currentChanged.connect(self.onTableCurrentChanged)   
         # 
 
+        self.ui.tblProgram.hideColumn(2)
+        self.ui.tblProgram.hideColumn(3)
         self.ui.tblProgram.hideColumn(4)
         self.ui.tblProgram.hideColumn(5)
-
-        # # XAM
-        #self.ui.glwVisualizer.setColorBackground(QtGui.QColor(200,200,200)) 
     
         self.clearTable()
 
