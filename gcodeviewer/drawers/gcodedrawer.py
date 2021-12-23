@@ -53,8 +53,8 @@ class GcodeDrawer(ShaderDrawable) :
         self.m_grayscaleMax = 255
    
         self.m_colorNormal = QColor(255,0,0)
-        self.m_colorDrawn = QColor(255,0,0)
-        self.m_colorHighlight = QColor(255,255,0)
+        self.m_colorDrawn = QColor(0,255,0)
+        self.m_colorHighlight = QColor(25,25,30)
         self.m_colorZMovement = QColor(255,0,0)
         self.m_colorStart = QColor(255,0,0)
         self.m_colorEnd = QColor(255,0,0)

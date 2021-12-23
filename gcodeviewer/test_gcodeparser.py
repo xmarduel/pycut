@@ -242,6 +242,9 @@ class TestGlWindow(QtWidgets.QMainWindow):
         self.ui.tblProgram.setModel(self.m_programModel)
         self.ui.tblProgram.horizontalHeader().restoreState(headerState)
 
+        # connect this model
+        self.ui.tblProgram.selectionModel().currentChanged.connect(self.onTableCurrentChanged) 
+
         # Update tableview
         self.ui.tblProgram.selectRow(0)
 
@@ -336,7 +339,7 @@ class TestGlWindow(QtWidgets.QMainWindow):
             self.m_selectionDrawer.update()
 
             if len(indexes) > 0:
-                self.m_currentDrawer.update(indexes)
+                self.m_currentDrawer.update_WithData(indexes)
         
 
         # Update selection marker
