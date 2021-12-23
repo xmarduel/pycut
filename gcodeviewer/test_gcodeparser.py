@@ -112,8 +112,8 @@ class TestGlWindow(QtWidgets.QMainWindow):
     
         self.clearTable()
 
-        #self.loadFile("pycut_gcode.gcode")
-        self.loadFile("jscut_gcode.gcode")
+        self.loadFile("pycut_gcode.gcode")
+        #self.loadFile("jscut_gcode.gcode")
 
     def loadFile(self, fileName):
         file = QFile(fileName)
@@ -341,7 +341,6 @@ class TestGlWindow(QtWidgets.QMainWindow):
             if len(indexes) > 0:
                 self.m_currentDrawer.update_WithData(indexes)
         
-
         # Update selection marker
         
         line = int(self.m_currentModel.data(self.m_currentModel.index(idx1.row(), 4)))
@@ -351,6 +350,12 @@ class TestGlWindow(QtWidgets.QMainWindow):
                 self.m_selectionDrawer.setEndPosition(QVector3D(pos.x(), pos.y(), 0))
             else:
                 self.m_selectionDrawer.setEndPosition(pos)
+
+            # >>>> XAM: and position the tool at the current position
+            self.m_toolDrawer.setToolPosition(pos)
+            self.m_toolDrawer.update()
+            # >>>> XAM: and position the tool at the current position
+
         else:
             self.m_selectionDrawer.setEndPosition(QVector3D(sNan, sNan, sNan))
         
