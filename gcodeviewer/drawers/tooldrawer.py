@@ -7,10 +7,12 @@ from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QColor
 
 from gcodeviewer.drawers.shaderdrawable import ShaderDrawable, VertexData
-from gcodeviewer.drawers.shaderdrawable import VertexDataFrom
+from gcodeviewer.drawers.shaderdrawable import VertexData
 from gcodeviewer.util.util import Util
 
 sNan = 65536.0  # ???
+sNaN = float('NaN')
+
 M_PI = math.acos(-1)
 
 
@@ -28,7 +30,7 @@ class ToolDrawer(ShaderDrawable):
         self.m_toolPosition = QVector3D(0,0,0)
         self.m_rotationAngle = 0.0
         self.m_toolAngle = 0.0
-        self.m_color = QColor(120,200,200)
+        self.m_color = QVector3D(1.0, 0.6, 0.0)
 
     def toolDiameter(self) -> float :
         return self.m_toolDiameter
@@ -85,7 +87,7 @@ class ToolDrawer(ShaderDrawable):
         # Prepare vertex
         vertex = VertexData()
         vertex.color = Util.colorToVector(self.m_color) #QVector3D(1.0, 0.6, 0.0)
-        vertex.start = QVector3D(sNan, sNan, sNan)
+        vertex.start = QVector3D(sNaN, sNaN, sNaN)
 
         # Draw lines
         for i in range(self.arcs):
@@ -94,28 +96,28 @@ class ToolDrawer(ShaderDrawable):
 
             # Side lines
             vertex.position = QVector3D(x, y, self.m_toolPosition.z() + self.m_endLength)
-            self.m_lines.append(VertexDataFrom(vertex))
+            self.m_lines.append(VertexData.fromVertexData(vertex))
 
             vertex.position = QVector3D(x, y, self.m_toolPosition.z() + self.m_toolLength)
-            self.m_lines.append(VertexDataFrom(vertex))
+            self.m_lines.append(VertexData.fromVertexData(vertex))
 
             # Bottom lines
             vertex.position = QVector3D(self.m_toolPosition.x(), self.m_toolPosition.y(), self.m_toolPosition.z())
-            self.m_lines.append(VertexDataFrom(vertex))
+            self.m_lines.append(VertexData.fromVertexData(vertex))
             vertex.position = QVector3D(x, y, self.m_toolPosition.z() + self.m_endLength)
-            self.m_lines.append(VertexDataFrom(vertex))
+            self.m_lines.append(VertexData.fromVertexData(vertex))
 
             # Top lines
             vertex.position = QVector3D(self.m_toolPosition.x(), self.m_toolPosition.y(), self.m_toolPosition.z() + self.m_toolLength)
-            self.m_lines.append(VertexDataFrom(vertex))
+            self.m_lines.append(VertexData.fromVertexData(vertex))
             vertex.position = QVector3D(x, y, self.m_toolPosition.z() + self.m_toolLength)
-            self.m_lines.append(VertexDataFrom(vertex))
+            self.m_lines.append(VertexData.v(vertex))
 
             # Zero Z lines
             vertex.position = QVector3D(self.m_toolPosition.x(), self.m_toolPosition.y(), 0)
-            self.m_lines.append(VertexDataFrom(vertex))
+            self.m_lines.append(VertexData.fromVertexData(vertex))
             vertex.position = QVector3D(x, y, 0)
-            self.m_lines.append(VertexDataFrom(vertex))
+            self.m_lines.append(VertexData.v(vertex))
 
         # Draw circles
         # Bottom
@@ -141,7 +143,7 @@ class ToolDrawer(ShaderDrawable):
         vertex = VertexData()
 
         vertex.color = color
-        vertex.start = QVector3D(sNan, sNan, sNan)
+        vertex.start = QVector3D(sNaN, sNaN, sNaN)
 
         # Create line loop
         for i in range(self.arcs+1):
@@ -150,11 +152,11 @@ class ToolDrawer(ShaderDrawable):
             y = center.y() + radius * math.sin(angle)
 
             if i > 1:
-                circle.append(circle[-1])
+                circle.append(VertexData.fromVertexData(circle[-1]))
             elif i == self.arcs:
-                circle.append(circle[0])
+                circle.append(VertexData.fromVertexData(circle[0]))
 
             vertex.position = QVector3D(x, y, center.z())
-            circle.append(VertexDataFrom(vertex))
+            circle.append(VertexData.fromVertexData(vertex))
 
         return circle

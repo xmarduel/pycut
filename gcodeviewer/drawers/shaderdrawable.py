@@ -8,6 +8,8 @@ from typing import List
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QOpenGLFunctions
 
+from PySide6.QtCore import qIsNaN
+
 from PySide6.QtOpenGL import QOpenGLShaderProgram
 from PySide6.QtOpenGL import QOpenGLBuffer
 from PySide6.QtOpenGL import QOpenGLVertexArrayObject
@@ -16,12 +18,12 @@ from PySide6.QtOpenGL import QOpenGLTexture
 from OpenGL import GL
 
 from gcodeviewer.util.util import Util
-from gcodeviewer.util.util import qQNaN
 
 import numpy as np
 
-
 sNan = 65536.0  # ???
+sNaN = float('NaN')
+
 
 class VertexData:
     def __init__(self):
@@ -29,19 +31,23 @@ class VertexData:
         self.color = QVector3D()
         self.start = QVector3D()
 
-def VertexDataFrom(other: VertexData):
-    vd = VertexData()
-    vd.position = Util.QVector3D_fromVector3D(other.position)
-    vd.color = Util.QVector3D_fromVector3D(other.color)
-    vd.start = Util.QVector3D_fromVector3D(other.start)
-    return vd
+    @classmethod
+    def fromVectors(cls, position: QVector3D, color: QVector3D, start: QVector3D):
+        vd = VertexData()
+        vd.position = position
+        vd.color = color
+        vd.start = start
+        return vd
 
-def VertexDataFrom3V(v1: QVector3D, v2: QVector3D, v3: QVector3D):
-    vd = VertexData()
-    vd.position = v1
-    vd.color = v2
-    vd.start = v3
-    return vd
+    @classmethod
+    def fromVertexData(cls, other: 'VertexData'):
+        vd = VertexData()
+        vd.position = Util.QVector3D_fromVector3D(other.position)
+        vd.color = Util.QVector3D_fromVector3D(other.color)
+        vd.start = Util.QVector3D_fromVector3D(other.start)
+        return vd
+
+
 
 
 class ShaderDrawable(QOpenGLFunctions):
@@ -133,25 +139,30 @@ class ShaderDrawable(QOpenGLFunctions):
         '''
         #https://nrotella.github.io/journal/first-steps-python-qt-opengl.html
 
-        buffer.allocate(120) # How many bytes to allocate
         data = numpy.array([2., 2., 2., 0.5, 0.4, 0.4, 1.], dtype = numpy.float32).toString()
         # Write
+        buffer.allocate(120) # How many bytes to allocate
         buffer.write(0, data, len(data))
         '''
+        def NaN_to_Val(val):
+            if qIsNaN(val):
+                return 65536.0
+            return val
+
         np_array = np.empty(9*len(vertexData), dtype=ctypes.c_float)
         
         for k, vdata in enumerate(vertexData):
-            np_array[9*k+0] = vdata.position.x()
-            np_array[9*k+1] = vdata.position.y()
-            np_array[9*k+2] = vdata.position.z()
+            np_array[9*k+0] = NaN_to_Val(vdata.position.x())
+            np_array[9*k+1] = NaN_to_Val(vdata.position.y())
+            np_array[9*k+2] = NaN_to_Val(vdata.position.z())
 
-            np_array[9*k+3] = vdata.color.x()
-            np_array[9*k+4] = vdata.color.y()
-            np_array[9*k+5] = vdata.color.z()
+            np_array[9*k+3] = NaN_to_Val(vdata.color.x())
+            np_array[9*k+4] = NaN_to_Val(vdata.color.y())
+            np_array[9*k+5] = NaN_to_Val(vdata.color.z())
 
-            np_array[9*k+6] = vdata.start.x()
-            np_array[9*k+7] = vdata.start.y()
-            np_array[9*k+8] = vdata.start.z()
+            np_array[9*k+6] = NaN_to_Val(vdata.start.x())
+            np_array[9*k+7] = NaN_to_Val(vdata.start.y())
+            np_array[9*k+8] = NaN_to_Val(vdata.start.z())
 
         return np_array
     # -------------------------------------------------------------------
@@ -171,7 +182,8 @@ class ShaderDrawable(QOpenGLFunctions):
         # Update vertex buffer
         if self.updateData():
             # Fill vertices buffer
-            vertexData = self.m_triangles
+            vertexData = []
+            vertexData += self.m_triangles
             vertexData += self.m_lines
             vertexData += self.m_points
 
@@ -257,12 +269,12 @@ class ShaderDrawable(QOpenGLFunctions):
     def updateData(self) -> bool:
         # Test data
         self.m_lineslines = [
-            VertexDataFrom3V(QVector3D(0, 0, 0), QVector3D(1, 0, 0), QVector3D(sNan, 0, 0)),
-            VertexDataFrom3V(QVector3D(10, 0, 0), QVector3D(1, 0, 0), QVector3D(sNan, 0, 0)),
-            VertexDataFrom3V(QVector3D(0, 0, 0), QVector3D(0, 1, 0), QVector3D(sNan, 0, 0)),
-            VertexDataFrom3V(QVector3D(0, 10, 0), QVector3D(0, 1, 0), QVector3D(sNan, 0, 0)),
-            VertexDataFrom3V(QVector3D(0, 0, 0), QVector3D(0, 0, 1), QVector3D(sNan, 0, 0)),
-            VertexDataFrom3V(QVector3D(0, 0, 10), QVector3D(0, 0, 1), QVector3D(sNan, 0, 0))
+            VertexData.fromVectors(QVector3D(0, 0, 0), QVector3D(1, 0, 0), QVector3D(sNaN, 0, 0)),
+            VertexData.fromVectors(QVector3D(10, 0, 0), QVector3D(1, 0, 0), QVector3D(sNaN, 0, 0)),
+            VertexData.fromVectors(QVector3D(0, 0, 0), QVector3D(0, 1, 0), QVector3D(sNaN, 0, 0)),
+            VertexData.fromVectors(QVector3D(0, 10, 0), QVector3D(0, 1, 0), QVector3D(sNaN, 0, 0)),
+            VertexData.fromVectors(QVector3D(0, 0, 0), QVector3D(0, 0, 1), QVector3D(sNaN, 0, 0)),
+            VertexData.fromVectors(QVector3D(0, 0, 10), QVector3D(0, 0, 1), QVector3D(sNaN, 0, 0))
         ]
 
         return True

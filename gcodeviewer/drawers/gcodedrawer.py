@@ -19,12 +19,12 @@ from gcodeviewer.parser.gcodeviewparse import GcodeViewParse
 
 from gcodeviewer.drawers.shaderdrawable import ShaderDrawable
 from gcodeviewer.drawers.shaderdrawable import VertexData
-from gcodeviewer.drawers.shaderdrawable import VertexDataFrom
 
 from gcodeviewer.util.util import Util
 from gcodeviewer.util.util import qBound
 
 sNan = 65536.0  # ???
+sNaN = float('NaN')
 
 
 class GcodeDrawer(ShaderDrawable) :
@@ -246,8 +246,8 @@ class GcodeDrawer(ShaderDrawable) :
                 vertex.position = alist[i].getEnd()
                 if self.m_ignoreZ :
                     vertex.position.setZ(0)
-                vertex.start = QVector3D(sNan, sNan, self.m_pointSize)
-                self.m_points.append(VertexDataFrom(vertex))
+                vertex.start = QVector3D(sNaN, sNaN, self.m_pointSize)
+                self.m_points.append(VertexData.fromVertexData(vertex))
 
                 drawFirstPoint = False
                 continue
@@ -256,7 +256,7 @@ class GcodeDrawer(ShaderDrawable) :
             if alist[i].isFastTraverse():
                 vertex.start = alist[i].getStart()
             else:
-                vertex.start = QVector3D(sNan, sNan, sNan)
+                vertex.start = QVector3D(sNaN, sNaN, sNaN)
 
             # Simplify geometry
             j = i
@@ -291,13 +291,13 @@ class GcodeDrawer(ShaderDrawable) :
             vertex.position = alist[j].getStart()
             if self.m_ignoreZ:
                 vertex.position.setZ(0)
-            self.m_lines.append(VertexDataFrom(vertex))
+            self.m_lines.append(VertexData.fromVertexData(vertex))
 
             # Line end
             vertex.position = alist[i].getEnd()
             if self.m_ignoreZ:
                 vertex.position.setZ(0)
-            self.m_lines.append(VertexDataFrom(vertex))
+            self.m_lines.append(VertexData.fromVertexData(vertex))
 
             # Draw last toolpath point
             if i == len(alist) - 1:
@@ -305,8 +305,8 @@ class GcodeDrawer(ShaderDrawable) :
                 vertex.position = alist[i].getEnd()
                 if self.m_ignoreZ :
                     vertex.position.setZ(0)
-                vertex.start = QVector3D(sNan, sNan, self.m_pointSize)
-                self.m_points.append(VertexDataFrom(vertex))
+                vertex.start = QVector3D(sNaN, sNaN, self.m_pointSize)
+                self.m_points.append(VertexData.fromVertexData(vertex))
         
         self.m_geometryUpdated = True
         self.m_indexes = []
@@ -387,27 +387,27 @@ class GcodeDrawer(ShaderDrawable) :
         vertex.color = Util.colorToVector(QColor("red"))
 
         # Rect
-        vertex.start = QVector3D(None, 0, 0)
+        vertex.start = QVector3D(sNaN, 0, 0)
         vertex.position = QVector3D(self.getMinimumExtremes().x(), self.getMinimumExtremes().y(), 0)
         vertices.append(vertex)
 
-        vertex.start = QVector3D(None, 1, 1)
+        vertex.start = QVector3D(sNaN, 1, 1)
         vertex.position = QVector3D(self.getMaximumExtremes().x(), self.getMaximumExtremes().y(), 0)
         vertices.append(vertex)
 
-        vertex.start = QVector3D(None, 0, 1)
+        vertex.start = QVector3D(sNaN, 0, 1)
         vertex.position = QVector3D(self.getMinimumExtremes().x(), self.getMaximumExtremes().y(), 0)
         vertices.append(vertex)
 
-        vertex.start = QVector3D(None, 0, 0)
+        vertex.start = QVector3D(sNaN, 0, 0)
         vertex.position = QVector3D(self.getMinimumExtremes().x(), self.getMinimumExtremes().y(), 0)
         vertices.append(vertex)
 
-        vertex.start = QVector3D(None, 1, 0)
+        vertex.start = QVector3D(sNaN, 1, 0)
         vertex.position = QVector3D(self.getMaximumExtremes().x(), self.getMinimumExtremes().y(), 0)
         vertices.append(vertex)
 
-        vertex.start = QVector3D(sNan, 1, 1)
+        vertex.start = QVector3D(sNaN, 1, 1)
         vertex.position = QVector3D(self.getMaximumExtremes().x(), self.getMaximumExtremes().y(), 0)
         vertices.append(vertex)
 
@@ -417,7 +417,7 @@ class GcodeDrawer(ShaderDrawable) :
             self.m_image = image
         else:
             for i in range(len(vertices)):
-                vertices[i].start = QVector3D(sNan, sNan, sNan)
+                vertices[i].start = QVector3D(sNaN, sNaN, sNaN)
             self.m_lines += vertices
             self.m_image = QImage()
     

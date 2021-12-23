@@ -45,8 +45,8 @@ from ui_testGlWindow import Ui_testGlWindow
 PROGRESSMINLINES = 10000
 PROGRESSSTEP     =  1000
 
-
 sNan = 65536.0  # ???
+sNan = float('NaN')
 
 
 class TestGlWindow(QtWidgets.QMainWindow):
@@ -85,10 +85,10 @@ class TestGlWindow(QtWidgets.QMainWindow):
 
 
         self.ui.glwVisualizer.addDrawable(self.m_originDrawer)
-        self.ui.glwVisualizer.addDrawable(self.m_codeDrawer)
+        #self.ui.glwVisualizer.addDrawable(self.m_codeDrawer)
         #self.ui.glwVisualizer.addDrawable(self.m_probeDrawer)
-        self.ui.glwVisualizer.addDrawable(self.m_toolDrawer)
-        self.ui.glwVisualizer.addDrawable(self.m_selectionDrawer)
+        #self.ui.glwVisualizer.addDrawable(self.m_toolDrawer)
+        #self.ui.glwVisualizer.addDrawable(self.m_selectionDrawer)
         #self.ui.glwVisualizer.addDrawable(self.m_heightMapBorderDrawer)
         #self.ui.glwVisualizer.addDrawable(self.m_heightMapGridDrawer)
         #self.ui.glwVisualizer.addDrawable(self.m_heightMapInterpolationDrawer)

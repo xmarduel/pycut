@@ -10,6 +10,7 @@ from gcodeviewer.drawers.shaderdrawable import ShaderDrawable, VertexData
 from gcodeviewer.util.util import Util
 
 sNan = 65536.0
+sNaN = float('NaN')
 
 
 class SelectionDrawer(ShaderDrawable):
@@ -49,7 +50,7 @@ class SelectionDrawer(ShaderDrawable):
 
         vertex.color = Util.colorToVector(self.m_color)
         vertex.position = self.m_endPosition
-        vertex.start = QVector3D(sNan, sNan, self.m_pointSize)
+        vertex.start = QVector3D(sNaN, sNaN, self.m_pointSize)
         self.m_points.append(vertex)
 
         return True
