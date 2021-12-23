@@ -179,8 +179,7 @@ class ShaderDrawable(QOpenGLFunctions):
             np_bytes = np_array.tobytes()
 
             # demo
-            #self.m_vbo.allocate(np_bytes, len(np_bytes) * float_size)
-
+            self.m_vbo.allocate(len(np_bytes))
             self.m_vbo.write(0, np_bytes, len(np_bytes))
 
             # demo

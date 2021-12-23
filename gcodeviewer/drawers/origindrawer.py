@@ -5,7 +5,7 @@ from gcodeviewer.drawers.shaderdrawable import ShaderDrawable
 
 from gcodeviewer.drawers.shaderdrawable import VertexDataFrom3V
 
-sNan = 65536.0  # ???
+sNan = 65536.0
 
 
 class OriginDrawer(ShaderDrawable):

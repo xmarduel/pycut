@@ -35,7 +35,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         QtOpenGLWidgets.QOpenGLWidget.__init__(self, parent)
         QtGui.QOpenGLFunctions.__init__(self)
 
-        self.m_shaderProgram = QtOpenGL.QOpenGLShaderProgram()
+        self.m_shaderProgram = None
 
         self.m_xRot = 90.0 
         self.m_yRot = 0.0 
@@ -83,7 +83,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.m_projectionMatrix = QtGui.QMatrix4x4()
         self.m_viewMatrix = QtGui.QMatrix4x4()
 
-        self.m_colorBackground = QtGui.QColor(100,250,250)
+        self.m_colorBackground = QtGui.QColor(100,255,255)
         self.m_colorText = QtGui.QColor()
 
         self.m_shaderDrawables : List[ShaderDrawable] = []
@@ -362,9 +362,9 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Vertex, ":/shaders/vshader.glsl")
         # Compile fragment shader
         self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Fragment, ":/shaders/fshader.glsl")
+  
         # Link shader pipeline
         self.m_shaderProgram.link()
-        self.m_shaderProgram.bind()  # view demo ?
 
     def paintGL(self):
         # Segment counter
