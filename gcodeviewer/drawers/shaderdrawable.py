@@ -88,7 +88,8 @@ class ShaderDrawable(QOpenGLFunctions):
             # Offset for position
             offset = 0
 
-            vertexdata_size = 12  # sizeof(VertexData)
+            vertexdata_size = 36  # sizeof(VertexData)
+            vector3D_size = 12
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
             vertexLocation = shaderProgram.attributeLocation("a_position")
@@ -96,7 +97,7 @@ class ShaderDrawable(QOpenGLFunctions):
             shaderProgram.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, 3, vertexdata_size)
 
             # Offset for color
-            offset = 12
+            offset = vector3D_size
 
             # Tell OpenGL programmable pipeline how to locate vertex color data
             color = shaderProgram.attributeLocation("a_color")
@@ -104,7 +105,7 @@ class ShaderDrawable(QOpenGLFunctions):
             shaderProgram.setAttributeBuffer(color, GL.GL_FLOAT, offset, 3, vertexdata_size)
 
             # Offset for line start point
-            offset += 12
+            offset += vector3D_size
 
             # Tell OpenGL programmable pipeline how to locate vertex line start point
             start = shaderProgram.attributeLocation("a_start")
@@ -207,7 +208,8 @@ class ShaderDrawable(QOpenGLFunctions):
             # Offset for position
             offset = 0
 
-            vertexdata_size = 12  # sizeof(VertexData)
+            vertexdata_size = 36
+            vector3D_size = 12
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
             vertexLocation = shaderProgram.attributeLocation("a_position")
@@ -215,7 +217,7 @@ class ShaderDrawable(QOpenGLFunctions):
             shaderProgram.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, 3, vertexdata_size)
 
             # Offset for color
-            offset = vertexdata_size
+            offset = vector3D_size
 
             # Tell OpenGL programmable pipeline how to locate vertex color data
             color = shaderProgram.attributeLocation("a_color")
@@ -223,7 +225,7 @@ class ShaderDrawable(QOpenGLFunctions):
             shaderProgram.setAttributeBuffer(color, GL.GL_FLOAT, offset, 3, vertexdata_size)
 
             # Offset for line start point
-            offset += vertexdata_size
+            offset += vector3D_size
 
             # Tell OpenGL programmable pipeline how to locate vertex line start point
             start = shaderProgram.attributeLocation("a_start")

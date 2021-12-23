@@ -85,10 +85,10 @@ class TestGlWindow(QtWidgets.QMainWindow):
 
 
         self.ui.glwVisualizer.addDrawable(self.m_originDrawer)
-        #self.ui.glwVisualizer.addDrawable(self.m_codeDrawer)
+        self.ui.glwVisualizer.addDrawable(self.m_codeDrawer)
         #self.ui.glwVisualizer.addDrawable(self.m_probeDrawer)
-        #self.ui.glwVisualizer.addDrawable(self.m_toolDrawer)
-        #self.ui.glwVisualizer.addDrawable(self.m_selectionDrawer)
+        self.ui.glwVisualizer.addDrawable(self.m_toolDrawer)
+        self.ui.glwVisualizer.addDrawable(self.m_selectionDrawer)
         #self.ui.glwVisualizer.addDrawable(self.m_heightMapBorderDrawer)
         #self.ui.glwVisualizer.addDrawable(self.m_heightMapGridDrawer)
         #self.ui.glwVisualizer.addDrawable(self.m_heightMapInterpolationDrawer)
@@ -203,11 +203,7 @@ class TestGlWindow(QtWidgets.QMainWindow):
                 stripped = GcodePreprocessorUtils.removeComment(command)
                 args = GcodePreprocessorUtils.splitCommand(stripped)
 
-#               PointSegment *ps = gp.addCommand(args)
                 gp.addCommand(args)
-
-    #            if (ps && (qIsNaN(ps.point().x()) || qIsNaN(ps.point().y()) || qIsNaN(ps.point().z())))
-    #                       qDebug() << "nan point segment added:" << *ps.point()
 
                 item = GCodeItem()
 
@@ -284,14 +280,6 @@ class TestGlWindow(QtWidgets.QMainWindow):
                     else:
                         time += val2   # Update for rapid override
 
-#        qDebug() << "length/time:" << length << ((self.ui.chkFeedOverride->isChecked() && !ls->isFastTraverse())
-#                                                 ? (ls->getSpeed() * self.ui.txtFeed->value() / 100) : ls->getSpeed())
-#                 << time
-
-#        if (qIsNaN(length)) qDebug() << "length nan:" << i << ls->getLineNumber() << ls->getStart() << ls->getEnd()
-#        if (qIsNaN(ls->getSpeed())) qDebug() << "speed nan:" << ls->getSpeed()
-    
-
         time *= 60
 
         t = QTime()
@@ -328,8 +316,6 @@ class TestGlWindow(QtWidgets.QMainWindow):
             lineLast = int(self.m_currentModel.data(self.m_currentModel.index(idx2.row(), 4)))
             if lineLast < lineFirst:
                 lineLast, lineFirst = lineFirst, lineLast
-
-#        qDebug() << "table current changed" << idx1.row() << idx2.row() << lineFirst << lineLast
 
             indexes = []
             for i in range(lineFirst + 1, lineLast+1):
@@ -487,7 +473,7 @@ class TestGlWindow(QtWidgets.QMainWindow):
         print("Update parser time: %s" % time.elapsed())
 
     def onVisualizatorRotationChanged(self):
-        pass
+        self.ui.glwVisualizer.update()
         #self.ui.cmdIsometric.setChecked(False)
 
 

@@ -19,7 +19,7 @@ M_PI = math.acos(-1)
 class ToolDrawer(ShaderDrawable):
     '''
     '''
-    arcs = 4
+    arcs = 12
 
     def __init__(self):
         super(ToolDrawer, self).__init__()
@@ -30,7 +30,7 @@ class ToolDrawer(ShaderDrawable):
         self.m_toolPosition = QVector3D(0,0,0)
         self.m_rotationAngle = 0.0
         self.m_toolAngle = 0.0
-        self.m_color = QVector3D(1.0, 0.6, 0.0)
+        self.m_color = QColor(1.0, 0.6, 4.0)
 
     def toolDiameter(self) -> float :
         return self.m_toolDiameter
@@ -111,13 +111,13 @@ class ToolDrawer(ShaderDrawable):
             vertex.position = QVector3D(self.m_toolPosition.x(), self.m_toolPosition.y(), self.m_toolPosition.z() + self.m_toolLength)
             self.m_lines.append(VertexData.fromVertexData(vertex))
             vertex.position = QVector3D(x, y, self.m_toolPosition.z() + self.m_toolLength)
-            self.m_lines.append(VertexData.v(vertex))
+            self.m_lines.append(VertexData.fromVertexData(vertex))
 
             # Zero Z lines
             vertex.position = QVector3D(self.m_toolPosition.x(), self.m_toolPosition.y(), 0)
             self.m_lines.append(VertexData.fromVertexData(vertex))
             vertex.position = QVector3D(x, y, 0)
-            self.m_lines.append(VertexData.v(vertex))
+            self.m_lines.append(VertexData.fromVertexData(vertex))
 
         # Draw circles
         # Bottom

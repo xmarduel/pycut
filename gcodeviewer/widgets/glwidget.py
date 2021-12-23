@@ -83,7 +83,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.m_projectionMatrix = QtGui.QMatrix4x4()
         self.m_viewMatrix = QtGui.QMatrix4x4()
 
-        self.m_colorBackground = QtGui.QColor(100,255,255)
+        self.m_colorBackground = QtGui.QColor(255,255,255)
         self.m_colorText = QtGui.QColor()
 
         self.m_shaderDrawables : List[ShaderDrawable] = []
@@ -352,17 +352,115 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
     def cleanup(self):
         pass
 
+    def vertex_shader_source(self):
+        return """#ifdef GL_ES
+// Set default precision to medium
+precision mediump int;
+precision mediump float;
+#endif
+
+uniform mat4 mvp_matrix;
+uniform mat4 mv_matrix;
+
+attribute vec4 a_position;
+attribute vec4 a_color;
+attribute vec4 a_start;
+
+varying vec4 v_color;
+varying vec2 v_position;
+varying vec2 v_start;
+varying vec2 v_texture;
+
+bool isNan(float val)
+{
+    return (val > 65535.0);
+}
+
+void main()
+{
+    // Calculate interpolated vertex position & line start point
+    v_position = (mv_matrix * a_position).xy;
+
+    if (!isNan(a_start.x) && !isNan(a_start.y)) {
+        v_start = (mv_matrix * a_start).xy;
+        v_texture = vec2(65536.0, 0);
+    } else {
+        // v_start.x should be Nan to draw solid lines
+        v_start = a_start.xy;
+
+        // set texture coord
+        v_texture = a_start.yz;
+
+        // set point size
+        if (isNan(a_start.y) && !isNan(a_start.z)) gl_PointSize = a_start.z;
+    }
+
+    // Calculate vertex position in screen space
+    gl_Position = mvp_matrix * a_position;
+
+    v_color = a_color;
+}
+"""
+
+    def fragment_shader_source(self):
+        return """#ifdef GL_ES
+// Set default precision to medium
+precision mediump int;
+precision mediump float;
+#endif
+
+//Dash grid (px) = factor * pi;
+const float factor = 2.0;
+
+varying vec4 v_color;
+varying vec2 v_position;
+varying vec2 v_start;
+varying vec2 v_texture;
+
+uniform sampler2D texture;
+
+bool isNan(float val)
+{
+    return (val > 65535.0);
+}
+
+void main()
+{
+    // Draw dash lines
+    if (!isNan(v_start.x)) {
+        vec2 sub = v_position - v_start;
+        float coord = length(sub.x) > length(sub.y) ? gl_FragCoord.x : gl_FragCoord.y;
+        if (cos(coord / factor) > 0.0) discard;
+    }
+
+    // Set fragment color
+    if (!isNan(v_texture.x)) {
+        gl_FragColor = texture2D(texture, v_texture);
+    } else {
+        gl_FragColor = v_color;
+    }
+}"""
+
+
     def initializeGL(self):
-        self.context().aboutToBeDestroyed.connect(self.cleanup)
         self.initializeOpenGLFunctions()
 
         self.m_shaderProgram = QtOpenGL.QOpenGLShaderProgram()
 
-        # Compile vertex shader
-        self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Vertex, ":/shaders/vshader.glsl")
-        # Compile fragment shader
-        self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Fragment, ":/shaders/fshader.glsl")
-  
+        with_resource = False
+
+        if with_resource:
+            # Compile vertex shader
+            self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Vertex, ":/shaders/vshader.glsl")
+            # Compile fragment shader
+            self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Fragment, ":/shaders/fshader.glsl")
+        else:
+            _vertex_shader = self.vertex_shader_source()
+            _fragment_shader = self.fragment_shader_source()
+
+            self.m_shaderProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Vertex, _vertex_shader)
+            self.m_shaderProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Fragment, _fragment_shader)
+            
         # Link shader pipeline
         self.m_shaderProgram.link()
 
@@ -457,7 +555,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
             self.m_frames += 1
 
         self.m_frames += 1
-        #self.update()
+        self.update()
 
     def resizeGL(self, width: int, height: int):
         self.glViewport(0, 0, width, height)
@@ -535,6 +633,9 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
 
             self.updateProjection()
 
+        # it seems i need this
+        self.update()
+
     def wheelEvent(self, we: QtGui.QWheelEvent):
         if self.m_zoom > 0.1 and we.angleDelta().y() < 0:
             self.m_xPan -= ((float)(we.position().x() / self.width() - 0.5 + self.m_xPan)) * (1 - 1 / ZOOMSTEP)
@@ -549,6 +650,9 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
 
         self.updateProjection()
         self.updateView()
+
+        # it seems i need this
+        self.update()
 
     def timerEvent(self, te: QtCore.QTimerEvent):
         return
