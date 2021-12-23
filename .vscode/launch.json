@@ -32,6 +32,15 @@
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodeviewer",
             "args": ["pycut_gcode.gcode"]
+        },
+        {
+            "name": "OPENGL TEST1",
+            "type": "python",
+            "request": "launch",
+            "program": "openGL_demo1.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodeviewer",
+            "args": []
         }
     ]
 }

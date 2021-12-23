@@ -64,7 +64,7 @@ class ToolDrawer(ShaderDrawable):
         self.m_toolAngle = toolAngle
 
     def color(self) -> QColor :
-        return self.self.m_color
+        return self.m_color
 
     def setColor(self, color: QColor):
         self.m_color = color
@@ -144,7 +144,7 @@ class ToolDrawer(ShaderDrawable):
         vertex.start = QVector3D(sNan, sNan, sNan)
 
         # Create line loop
-        for i in range(self.arcs):
+        for i in range(self.arcs+1):
             angle = 2 * M_PI * i / self.arcs
             x = center.x() + radius * math.cos(angle)
             y = center.y() + radius * math.sin(angle)

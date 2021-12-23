@@ -112,8 +112,8 @@ class TestGlWindow(QtWidgets.QMainWindow):
     
         self.clearTable()
 
-        self.loadFile("pycut_gcode.gcode")
-        #self.loadFile("jscut_gcode.gcode")
+        #self.loadFile("pycut_gcode.gcode")
+        self.loadFile("jscut_gcode.gcode")
 
     def loadFile(self, fileName):
         file = QFile(fileName)

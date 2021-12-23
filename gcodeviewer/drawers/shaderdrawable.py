@@ -163,8 +163,7 @@ class ShaderDrawable(QOpenGLFunctions):
 
         if self.m_vao.isCreated():
             # Prepare vao
-            pass
-            #self.m_vao.bind()  # see demo ?
+            self.m_vao.bind()
 
         # Prepare vbo
         self.m_vbo.bind()
@@ -177,9 +176,7 @@ class ShaderDrawable(QOpenGLFunctions):
             vertexData += self.m_points
 
             np_array = self.vertexes_to_numpy(vertexData)
-            float_size = ctypes.sizeof(ctypes.c_float)
-            # get data as ByteArray
-            np_bytes = np.array(np_array, dtype= np.float32).tobytes()
+            np_bytes = np_array.tobytes()
 
             # demo
             #self.m_vbo.allocate(np_bytes, len(np_bytes) * float_size)
@@ -260,14 +257,14 @@ class ShaderDrawable(QOpenGLFunctions):
 
     def updateData(self) -> bool:
         # Test data
-        self.m_lineslines = {
-            {QVector3D(0, 0, 0), QVector3D(1, 0, 0), QVector3D(sNan, 0, 0)},
-            {QVector3D(10, 0, 0), QVector3D(1, 0, 0), QVector3D(sNan, 0, 0)},
-            {QVector3D(0, 0, 0), QVector3D(0, 1, 0), QVector3D(sNan, 0, 0)},
-            {QVector3D(0, 10, 0), QVector3D(0, 1, 0), QVector3D(sNan, 0, 0)},
-            {QVector3D(0, 0, 0), QVector3D(0, 0, 1), QVector3D(sNan, 0, 0)},
-            {QVector3D(0, 0, 10), QVector3D(0, 0, 1), QVector3D(sNan, 0, 0)}
-        }
+        self.m_lineslines = [
+            VertexDataFrom3V(QVector3D(0, 0, 0), QVector3D(1, 0, 0), QVector3D(sNan, 0, 0)),
+            VertexDataFrom3V(QVector3D(10, 0, 0), QVector3D(1, 0, 0), QVector3D(sNan, 0, 0)),
+            VertexDataFrom3V(QVector3D(0, 0, 0), QVector3D(0, 1, 0), QVector3D(sNan, 0, 0)),
+            VertexDataFrom3V(QVector3D(0, 10, 0), QVector3D(0, 1, 0), QVector3D(sNan, 0, 0)),
+            VertexDataFrom3V(QVector3D(0, 0, 0), QVector3D(0, 0, 1), QVector3D(sNan, 0, 0)),
+            VertexDataFrom3V(QVector3D(0, 0, 10), QVector3D(0, 0, 1), QVector3D(sNan, 0, 0))
+        ]
 
         return True
 
