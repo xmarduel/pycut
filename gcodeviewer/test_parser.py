@@ -1,18 +1,10 @@
 
-import sys
-
 from typing import List
 
 from PySide6.QtCore import QElapsedTimer
-from PySide6.QtCore import QTime
-from PySide6.QtCore import Qt
 from PySide6.QtCore import QFile
 from PySide6.QtCore import QTextStream
 from PySide6.QtCore import QIODevice
-from PySide6.QtCore import qIsNaN
-
-from PySide6.QtWidgets import QProgressDialog
-from PySide6.QtWidgets import QMessageBox
 
 from gcodeviewer.parser.gcodeviewparse import GcodeViewParse 
 from gcodeviewer.parser.gcodepreprocessorutils import  GcodePreprocessorUtils  
