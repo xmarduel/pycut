@@ -1,4 +1,5 @@
 # This file is a part of "pycut" application.
+
 # This file was originally ported from "gcodeparser.cpp" class
 # of "Candle" application written by Hayrullin Denis Ravilevich
 # (https://github.com/Denvi/Candle)
@@ -111,7 +112,7 @@ class GcodeParser :
     #    return self.processCommand(args)
 
     def addCommand(self, command: str) -> PointSegment:
-        if command.__class__.__name__ == 'str':
+        if isinstance(command, str):
             stripped = GcodePreprocessorUtils.removeComment(command)
             args = GcodePreprocessorUtils.splitCommand(stripped)
             return self.addCommand(args)

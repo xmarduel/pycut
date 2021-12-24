@@ -1,4 +1,5 @@
 # This file is a part of "pycut" application.
+
 # This file was originally ported from "linesegment.cpp" class
 # of "Candle" application written by Hayrullin Denis Ravilevich
 # (https://github.com/Denvi/Candle)

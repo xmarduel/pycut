@@ -1,4 +1,5 @@
 # This file is a part of "pycut" application.
+
 # This file was originally ported from "pointsegment.cpp" class
 # of "Candle" application written by Hayrullin Denis Ravilevich
 # (https://github.com/Denvi/Candle)
@@ -83,11 +84,11 @@ class PointSegment:
         return self.m_point
 
     def points(self) -> List[float]:
-       points = []
-       points.append(self.m_point.x())
-       points.append(self.m_point.y())
+        points = []
+        points.append(self.m_point.x())
+        points.append(self.m_point.y())
     
-       return points
+        return points
 
     def setToolHead(self, head: int):
         self.m_toolhead = head
@@ -207,7 +208,7 @@ class PointSegment:
         return self.m_spindleSpeed
     
     def setSpindleSpeed(self, spindleSpeed: float):
-        self.m_spindleSpeed = spindleSpeed;   
+        self.m_spindleSpeed = spindleSpeed
 
     def getDwell(self) -> float:
         return self.m_dwell
