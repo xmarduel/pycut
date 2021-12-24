@@ -8,9 +8,18 @@ class ClipperUtils:
     '''
     Wrapper functions on ClipperLib
     '''
+    print("Using ClipperLib version %s" % ClipperLib.CLIPPER_VERSION)
+
     inchToClipperScale = 100000  # Scale inch to Clipper
     cleanPolyDist = inchToClipperScale / 100000
-    arcTolerance = inchToClipperScale / 40000
+    # clipper-6.1.3
+    arcTolerance = 2.5 # -> ok, like jscut
+    
+    # clipper-6.4.2 ?? strange I don't known the rght settigns
+    if ClipperLib.CLIPPER_VERSION == '6.4.2':
+        # -> much too fine, but increasing produces loss bad of precision
+        arcTolerance = 2.5
+    
 
     @classmethod
     def simplifyAndClean(cls, geometry: ClipperLib.PathVector, fillRule: ClipperLib.PolyFillType) -> ClipperLib.PathVector :

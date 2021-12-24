@@ -129,6 +129,8 @@ dmypy.json
 .pyre/
 
 clipper/clipper_ver6.4.2
+clipper/clipper_ver6.1.3
+clipper/clipper_ver6.2.1_crash
 clipper/clipper_wrap.cxx
 clipper/clipper_wrap.o
 clipper/clipper.o
