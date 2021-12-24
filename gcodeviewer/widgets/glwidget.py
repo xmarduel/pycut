@@ -633,9 +633,6 @@ void main()
 
             self.updateProjection()
 
-        # it seems i need this
-        self.update()
-
     def wheelEvent(self, we: QtGui.QWheelEvent):
         if self.m_zoom > 0.1 and we.angleDelta().y() < 0:
             self.m_xPan -= ((float)(we.position().x() / self.width() - 0.5 + self.m_xPan)) * (1 - 1 / ZOOMSTEP)
@@ -650,9 +647,6 @@ void main()
 
         self.updateProjection()
         self.updateView()
-
-        # it seems i need this
-        self.update()
 
     def timerEvent(self, te: QtCore.QTimerEvent):
         return
