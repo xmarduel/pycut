@@ -10,12 +10,12 @@ from PySide6 import QtCore
 from PySide6 import QtGui
 from PySide6 import QtWidgets
 
-from PySide6.QtCore import QFile
 from PySide6.QtUiTools import QUiLoader
 
-from ValWithUnit import ValWithUnit
+from val_with_unit import ValWithUnit
 
 import svgviewer
+import gcodeviewer.widgets.glwidget_container as glwidget_container
 import webglviewer
 import operations_tableview
 
@@ -94,6 +94,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_viewer = self.setup_svg_viewer()
         self.svg_material_viewer = self.setup_material_viewer()
         self.webgl_viewer = self.setup_webgl_viewer()
+        self.candle_viewer = self.setup_candle_viewer()
 
         self.ui.operationsview_manager.set_svg_viewer(self.svg_viewer)
 
@@ -185,6 +186,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.webgl_viewer.set_webgl_data(str_simulator_data)
         self.webgl_viewer.show_gcode()
+
+        self.candle_viewer.loadData(gcode.split("\r\n"))
 
     def load_ui(self, uifile):
         '''
@@ -516,10 +519,23 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         
         return svg_viewer
 
+    def setup_candle_viewer(self):
+        '''
+        '''
+        viewer = self.ui.viewer
+        layout = viewer.layout()
+        
+        candle_viewer = glwidget_container.GLWidgetContainer(viewer)
+
+        layout.addWidget(candle_viewer)
+        layout.stretch(1)
+        
+        return candle_viewer
+
     def setup_webgl_viewer(self):
         '''
         '''
-        webgl = self.ui.webgl
+        webgl = self.ui.simulator
         layout = webgl.layout()
         
         webgl_viewer = webglviewer.WebGlViewer(webgl)

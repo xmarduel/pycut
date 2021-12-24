@@ -24,7 +24,6 @@ M_PI = math.acos(-1)
 ZOOMSTEP = 1.1
 
 
-#class GLWidget(QtOpenGLWidgets.QOpenGLWidget):
 class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
     '''
     '''

@@ -27,7 +27,7 @@ from svgviewer import SvgViewer
 
 from cam import cam
 
-from ValWithUnit import ValWithUnit
+from val_with_unit import ValWithUnit
 
 class UnitConverter:
     '''

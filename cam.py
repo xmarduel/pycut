@@ -19,7 +19,7 @@ import math
 import sys
 
 from typing import List
-from ValWithUnit import ValWithUnit
+from val_with_unit import ValWithUnit
 
 import clipper_utils
 import clipper.clipper as ClipperLib
