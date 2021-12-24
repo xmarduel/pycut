@@ -658,9 +658,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         svgModel.pxPerInch = 96
         materialModel = MaterialModel()
         materialModel.matUnits = settings["Material"]["Units"]
-        materialModel.matThickness = ValWithUnit(1.0, materialModel.matUnits)
+        materialModel.matThickness = ValWithUnit(settings["Material"]["Thickness"], materialModel.matUnits)
         materialModel.matZOrigin = settings["Material"]["ZOrigin"]
-        materialModel.matClearance = ValWithUnit(0.1, materialModel.matUnits)
+        materialModel.matClearance = ValWithUnit(settings["Material"]["Clearance"], materialModel.matUnits)
         toolModel = ToolModel()
         toolModel.units = settings["Tool"]["Units"]
         toolModel.diameter = ValWithUnit(settings["Tool"]["Diameter"], toolModel.units)

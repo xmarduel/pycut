@@ -631,8 +631,8 @@ class GcodeGenerator:
             gcode += "G20         ; Set units to inches\r\n"
         else:
             gcode += "G21         ; Set units to mm\r\n"
-        gcode += f"G90         ; Absolute positioning\r\n"
-        gcode += f"G1 Z{safeZ} F{rapidRate}      ; Move to clearance level\r\n"
+        gcode += "G90         ; Absolute positioning\r\n"
+        gcode += "G1 Z%s    F%d      ; Move to clearance level\r\n" % (safeZ.toFixed(4), rapidRate)
 
         if self.gcodeModel.spindleControl:
             gcode += f"\r\n; Start the spindle\r\n"
