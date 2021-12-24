@@ -42,6 +42,7 @@ class Util:
 
     @classmethod
     def QVector3D_fromVector3D(cls, v: QVector3D) -> QVector3D:
+        ''' faster as deepcopy '''
         vec = QVector3D()
         vec.setX(v.x())
         vec.setY(v.y())

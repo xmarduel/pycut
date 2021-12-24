@@ -140,4 +140,7 @@ pyside_ex/images
 gcodeviewer/drawers/*h
 gcodeviewer/drawers/*cpp
 
+gcodeviewer/*.bin
+gcodeviewer/*.prof
+
 cam/cpp
