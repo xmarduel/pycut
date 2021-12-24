@@ -224,8 +224,8 @@ class TestGlWindow(QtWidgets.QMainWindow):
         progress.close()
 
         self.m_programModel.insertRow(self.m_programModel.rowCount())
-
         print("model filled: %s ms." % time.elapsed())
+
         time.start()
 
         arcPrecision = 0.0 # TODO self.m_settings.arcPrecision()
@@ -234,7 +234,7 @@ class TestGlWindow(QtWidgets.QMainWindow):
         all_lines = self.m_viewParser.getLinesFromParser(gp, arcPrecision, arcDegreeMode)
 
         #self.updateProgramEstimatedTime(all_lines)
-        print("view parser filled: %s" % time.elapsed())
+        print("view parser filled: %s ms" % time.elapsed())
 
         self.m_programLoading = False
 

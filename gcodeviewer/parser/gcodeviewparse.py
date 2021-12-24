@@ -105,16 +105,28 @@ class GcodeViewParse :
                             if nextPoint == startPoint:
                                 continue
                             ls = LineSegment.LineSegment_FromVector3Ds(startPoint, nextPoint, lineIndex)
-                            ls.setIsArc(ps.isArc())
-                            ls.setIsClockwise(ps.isClockwise())
-                            ls.setPlane(ps.plane())
-                            ls.setIsFastTraverse(ps.isFastTraverse())
-                            ls.setIsZMovement(ps.isZMovement())
-                            ls.setIsMetric(isMetric)
-                            ls.setIsAbsolute(ps.isAbsolute())
-                            ls.setSpeed(ps.getSpeed())
-                            ls.setSpindleSpeed(ps.getSpindleSpeed())
-                            ls.setDwell(ps.getDwell())
+                            #ls.setIsArc(ps.isArc())
+                            #ls.setIsClockwise(ps.isClockwise())
+                            #ls.setPlane(ps.plane())
+                            #ls.setIsFastTraverse(ps.isFastTraverse())
+                            l#s.setIsZMovement(ps.isZMovement())
+                            l#s.setIsMetric(isMetric)
+                            #ls.setIsAbsolute(ps.isAbsolute())
+                            #ls.setSpeed(ps.getSpeed())
+                            #ls.setSpindleSpeed(ps.getSpindleSpeed())
+                            #ls.setDwell(ps.getDwell())
+                            #self.testExtremes_Vector3D(nextPoint)
+
+                            ls.m_isArc = ps.m_isArc
+                            ls.m_isClockwise = ps.isClockwise()
+                            ls.m_plane = ps.m_plane
+                            ls.m_isFastTraverse = ps.m_isFastTraverse
+                            ls.m_isZMovement = ps.m_isZMovement
+                            ls.m_isMetric = isMetric
+                            ls.m_isAbsolute = ps.m_isAbsolute
+                            ls.m_speed = ps.m_speed
+                            ls.m_spindleSpeed = ps.m_spindleSpeed
+                            ls.m_dwell = ps.m_dwell
                             self.testExtremes_Vector3D(nextPoint)
                             self.m_lines.append(ls)
                             self.m_lineIndexes[ps.getLineNumber()].append(len(self.m_lines) - 1)

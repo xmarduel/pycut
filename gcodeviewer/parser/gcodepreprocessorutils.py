@@ -66,7 +66,7 @@ class GcodePreprocessorUtils :
         #Remove any comments within ( parentheses ) using regex "\([^\(]*\)"
         match = cls.rx1_comment_parenthesis.match(command)
         if match.hasMatch():
-            comment = match.captured(0)
+            #comment = match.captured(0)
             idx = match.capturedStart()
             len = match.capturedLength()
             res = res[:idx] + res[idx+len:]
@@ -174,16 +174,16 @@ class GcodePreprocessorUtils :
         z = qQNaN()
         c = ""
 
-        for i in range(len(commandArgs)):
-            if len(commandArgs[i]) > 0:
-                #c = commandArgs[i][0].upper().toLatin1()
-                c = commandArgs[i][0].upper()
+        for command in commandArgs:
+            if len(command) > 0:
+                #c = command.upper().toLatin1()
+                c = command[0].upper()
                 if c == 'X':
-                    x = float(commandArgs[i][1:])
+                    x = float(command[1:])
                 elif c == 'Y':
-                    y = float(commandArgs[i][1:])
+                    y = float(command[1:])
                 elif c == 'Z':
-                    z = float(commandArgs[i][1:])
+                    z = float(command[1:])
 
         return cls.updatePointWithCommand_FromVector3D(initial, x, y, z, absoluteMode)
 
@@ -257,22 +257,21 @@ class GcodePreprocessorUtils :
         readNumeric = False
         sb = ""
 
-        ba = command.encode(encoding="latin_1")
-        cmd = ba.decode() # Direct access to string data
+        # NO UNICODE STUFF
+        #ba = command.encode(encoding="latin_1")
+        #cmd = ba.decode() # Direct access to string data
 
-        for i in range(len(command)):
-            c = cmd[i]
-
-            if readNumeric and not cls.isDigit(c) and c != '.':
+        for c in command:
+            if readNumeric and not c.isdigit() and c != '.':
                 readNumeric = False
                 l.append(sb)
                 sb = ""
-                if cls.isLetter(c):
+                if c.isalpha():
                     sb += c
-            elif cls.isDigit(c) or c == '.' or c == '-':
+            elif c.isdigit() or c == '.' or c == '-':
                 sb += c
                 readNumeric = True
-            elif cls.isLetter(c):
+            elif c.isalpha():
                 sb += c
 
         if len(sb) > 0:
@@ -484,15 +483,4 @@ class GcodePreprocessorUtils :
         segments.append(m * p2)
 
         return segments
-    
-    @classmethod 
-    def isDigit(cls, c: str) -> bool:
-        return c.isdigit()
-    
-    @classmethod 
-    def isLetter(cls, c: str) -> bool:
-        return c.isalpha()
-    
-    @classmethod 
-    def toUpper(cls, c: str) -> str:       
-        return c.upper()
+
