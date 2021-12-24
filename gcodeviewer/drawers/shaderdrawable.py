@@ -1,6 +1,4 @@
 ﻿
-
-import sys
 import ctypes
 
 from typing import List
@@ -40,119 +38,31 @@ class VertexData:
         return vd
 
     @classmethod
-    def fromVertexData(cls, other: 'VertexData'):
+    def clone(cls, other: 'VertexData'):
         vd = VertexData()
-        vd.position = Util.QVector3D_fromVector3D(other.position)
-        vd.color = Util.QVector3D_fromVector3D(other.color)
-        vd.start = Util.QVector3D_fromVector3D(other.start)
+        vd.position = Util.cloneQVector3D(other.position)
+        vd.color = Util.cloneQVector3D(other.color)
+        vd.start = Util.cloneQVector3D(other.start)
         return vd
 
-
-
-
-class ShaderDrawable(QOpenGLFunctions):
-    '''
-    '''
-    def __init__(self):
+    @classmethod
+    def VertexDataListToNumPy(cls, alist: List['VertexData']):
         '''
-        '''
-        QOpenGLFunctions.__init__(self)
-
-        self.m_lineWidth = 1.0
-        self.m_pointSize = 1.0
-        self.m_visible = True
-        self.m_lines : List[VertexData] = []
-        self.m_points : List[VertexData] = []
-        self.m_triangles : List[VertexData]  = []
-        self.m_texture : QOpenGLTexture = None
-
-        self.m_vbo = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
-        self.m_vao = QOpenGLVertexArrayObject()
-
-        self.m_needsUpdateGeometry = False
-    
-    def update(self):
-        self.m_needsUpdateGeometry = True
-
-    def draw(self, shaderProgram: QOpenGLShaderProgram):
-        if not self.m_visible:
-            return
-
-        if self.m_vao.isCreated():
-            # Prepare vao
-            self.m_vao.bind()
-        else:
-            # Prepare vbo
-            self.m_vbo.bind()
-
-            # Offset for position
-            offset = 0
-
-            vertexdata_size = 36  # sizeof(VertexData)
-            vector3D_size = 12
-
-            # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation = shaderProgram.attributeLocation("a_position")
-            shaderProgram.enableAttributeArray(vertexLocation)
-            shaderProgram.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, 3, vertexdata_size)
-
-            # Offset for color
-            offset = vector3D_size
-
-            # Tell OpenGL programmable pipeline how to locate vertex color data
-            color = shaderProgram.attributeLocation("a_color")
-            shaderProgram.enableAttributeArray(color)
-            shaderProgram.setAttributeBuffer(color, GL.GL_FLOAT, offset, 3, vertexdata_size)
-
-            # Offset for line start point
-            offset += vector3D_size
-
-            # Tell OpenGL programmable pipeline how to locate vertex line start point
-            start = shaderProgram.attributeLocation("a_start")
-            shaderProgram.enableAttributeArray(start)
-            shaderProgram.setAttributeBuffer(start, GL.GL_FLOAT, offset, 3, vertexdata_size)
-    
-
-        if len(self.m_triangles) != 0:
-            if self.m_texture:
-                self.m_texture.bind()
-                shaderProgram.setUniformValue("texture", 0)
-        
-            self.glDrawArrays(GL.GL_TRIANGLES, 0, len(self.m_triangles))
-
-        if len(self.m_lines) != 0:
-            self.glLineWidth(self.m_lineWidth)
-            self.glDrawArrays(GL.GL_LINES, len(self.m_triangles), len(self.m_lines))
-
-        if len(self.m_points) != 0:
-            self.glDrawArrays(GL.GL_POINTS, len(self.m_triangles) + len(self.m_lines), len(self.m_points))
-
-        if self.m_vao.isCreated():
-            self.m_vao.release()
-        else:
-            self.m_vbo.release()
-
-    def needsUpdateGeometry(self) -> bool:
-        return self.m_needsUpdateGeometry
-
-    # -------------------------------------------------------------------
-    def vertexes_to_numpy(self, vertexData: List[VertexData]):
-        '''
-        #https://nrotella.github.io/journal/first-steps-python-qt-opengl.html
+        https://nrotella.github.io/journal/first-steps-python-qt-opengl.html
 
         data = numpy.array([2., 2., 2., 0.5, 0.4, 0.4, 1.], dtype = numpy.float32).toString()
-        # Write
+
         buffer.allocate(120) # How many bytes to allocate
         buffer.write(0, data, len(data))
         '''
         def NaN_to_Val(val):
-            if qIsNaN(val):
-                return 65536.0
+            #if qIsNaN(val):
+            #    return 65536.0
             return val
 
-        np_array = np.empty(9*len(vertexData), dtype=ctypes.c_float)
+        np_array = np.empty(9*len(alist), dtype=ctypes.c_float)
         
-        for k, vdata in enumerate(vertexData):
+        for k, vdata in enumerate(alist):
             np_array[9*k+0] = NaN_to_Val(vdata.position.x())
             np_array[9*k+1] = NaN_to_Val(vdata.position.y())
             np_array[9*k+2] = NaN_to_Val(vdata.position.z())
@@ -166,7 +76,46 @@ class ShaderDrawable(QOpenGLFunctions):
             np_array[9*k+8] = NaN_to_Val(vdata.start.z())
 
         return np_array
-    # -------------------------------------------------------------------
+
+
+class ShaderDrawable(QOpenGLFunctions):
+    '''
+    '''
+    sizeof_vertexdata = 36
+    sizeof_vector3D = 12
+
+    def __init__(self):
+        '''
+        '''
+        QOpenGLFunctions.__init__(self)
+
+        self.m_needsUpdateGeometry = True
+        self.m_visible = True
+        self.m_lineWidth = 1.0
+        self.m_pointSize = 1.0
+        self.m_texture : QOpenGLTexture = None
+        self.m_lines : List[VertexData] = []
+        self.m_points : List[VertexData] = []
+        self.m_triangles : List[VertexData]  = []
+        
+
+        self.m_vbo = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
+        self.m_vao = QOpenGLVertexArrayObject()
+    
+    def init(self):
+        # Init openGL functions
+        self.initializeOpenGLFunctions()
+
+        # Create buffers
+        self.m_vao.create()
+        self.m_vbo.create()
+
+    def update(self):
+        self.m_needsUpdateGeometry = True
+
+
+    def needsUpdateGeometry(self) -> bool:
+        return self.m_needsUpdateGeometry
 
     def updateGeometry(self, shaderProgram : QOpenGLShaderProgram = None):
         # Init in context
@@ -188,15 +137,12 @@ class ShaderDrawable(QOpenGLFunctions):
             vertexData += self.m_lines
             vertexData += self.m_points
 
-            np_array = self.vertexes_to_numpy(vertexData)
+            # python handling of vbo - with numpy -
+            np_array = VertexData.VertexDataListToNumPy(vertexData)
             np_bytes = np_array.tobytes()
 
-            # demo
             self.m_vbo.allocate(len(np_bytes))
             self.m_vbo.write(0, np_bytes, len(np_bytes))
-
-            # demo
-            self.m_vbo.bind()
         else:
             self.m_vbo.release()        
             if self.m_vao.isCreated():
@@ -208,35 +154,102 @@ class ShaderDrawable(QOpenGLFunctions):
             # Offset for position
             offset = 0
 
-            vertexdata_size = 36
-            vector3D_size = 12
-
             # Tell OpenGL programmable pipeline how to locate vertex position data
             vertexLocation = shaderProgram.attributeLocation("a_position")
             shaderProgram.enableAttributeArray(vertexLocation)
-            shaderProgram.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, 3, vertexdata_size)
+            shaderProgram.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
 
             # Offset for color
-            offset = vector3D_size
+            offset = self.sizeof_vector3D
 
             # Tell OpenGL programmable pipeline how to locate vertex color data
             color = shaderProgram.attributeLocation("a_color")
             shaderProgram.enableAttributeArray(color)
-            shaderProgram.setAttributeBuffer(color, GL.GL_FLOAT, offset, 3, vertexdata_size)
+            shaderProgram.setAttributeBuffer(color, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
 
             # Offset for line start point
-            offset += vector3D_size
+            offset += self.sizeof_vector3D
 
             # Tell OpenGL programmable pipeline how to locate vertex line start point
             start = shaderProgram.attributeLocation("a_start")
             shaderProgram.enableAttributeArray(start)
-            shaderProgram.setAttributeBuffer(start, GL.GL_FLOAT, offset, 3, vertexdata_size)
+            shaderProgram.setAttributeBuffer(start, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
 
             self.m_vao.release()
 
         self.m_vbo.release()
 
         self.m_needsUpdateGeometry = False
+
+    def updateData(self) -> bool:
+        '''
+        Test data
+        '''
+        self.m_lines = [
+            VertexData.fromVectors(QVector3D(0, 0, 0), QVector3D(1, 0, 0), QVector3D(sNaN, 0, 0)),
+            VertexData.fromVectors(QVector3D(10, 0, 0), QVector3D(1, 0, 0), QVector3D(sNaN, 0, 0)),
+            VertexData.fromVectors(QVector3D(0, 0, 0), QVector3D(0, 1, 0), QVector3D(sNaN, 0, 0)),
+            VertexData.fromVectors(QVector3D(0, 10, 0), QVector3D(0, 1, 0), QVector3D(sNaN, 0, 0)),
+            VertexData.fromVectors(QVector3D(0, 0, 0), QVector3D(0, 0, 1), QVector3D(sNaN, 0, 0)),
+            VertexData.fromVectors(QVector3D(0, 0, 10), QVector3D(0, 0, 1), QVector3D(sNaN, 0, 0))
+        ]
+
+        return True
+
+    def draw(self, shaderProgram: QOpenGLShaderProgram):
+        if not self.m_visible:
+            return
+
+        if self.m_vao.isCreated():
+            # Prepare vao
+            self.m_vao.bind()
+        else:
+            # Prepare vbo
+            self.m_vbo.bind()
+
+            # Offset for position
+            offset = 0
+
+            # Tell OpenGL programmable pipeline how to locate vertex position data
+            vertexLocation = shaderProgram.attributeLocation("a_position")
+            shaderProgram.enableAttributeArray(vertexLocation)
+            shaderProgram.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
+
+            # Offset for color
+            offset = self.sizeof_vector3D
+
+            # Tell OpenGL programmable pipeline how to locate vertex color data
+            color = shaderProgram.attributeLocation("a_color")
+            shaderProgram.enableAttributeArray(color)
+            shaderProgram.setAttributeBuffer(color, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
+
+            # Offset for line start point
+            offset += self.sizeof_vector3D
+
+            # Tell OpenGL programmable pipeline how to locate vertex line start point
+            start = shaderProgram.attributeLocation("a_start")
+            shaderProgram.enableAttributeArray(start)
+            shaderProgram.setAttributeBuffer(start, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
+    
+
+        if len(self.m_triangles) != 0:
+            if self.m_texture:
+                self.m_texture.bind()
+                shaderProgram.setUniformValue("texture", 0)
+        
+            self.glDrawArrays(GL.GL_TRIANGLES, 0, len(self.m_triangles))
+
+        if len(self.m_lines) != 0:
+            self.glLineWidth(self.m_lineWidth)
+            self.glDrawArrays(GL.GL_LINES, len(self.m_triangles), len(self.m_lines))
+
+        if len(self.m_points) != 0:
+            self.glDrawArrays(GL.GL_POINTS, len(self.m_triangles) + len(self.m_lines), len(self.m_points))
+
+        if self.m_vao.isCreated():
+            self.m_vao.release()
+        else:
+            self.m_vbo.release()
 
     def getSizes(self) -> QVector3D:
         return QVector3D(0, 0, 0)
@@ -267,29 +280,5 @@ class ShaderDrawable(QOpenGLFunctions):
 
     def setPointSize(self, pointSize: float) :
         self.m_pointSize = pointSize
-
-    def updateData(self) -> bool:
-        # Test data
-        self.m_lineslines = [
-            VertexData.fromVectors(QVector3D(0, 0, 0), QVector3D(1, 0, 0), QVector3D(sNaN, 0, 0)),
-            VertexData.fromVectors(QVector3D(10, 0, 0), QVector3D(1, 0, 0), QVector3D(sNaN, 0, 0)),
-            VertexData.fromVectors(QVector3D(0, 0, 0), QVector3D(0, 1, 0), QVector3D(sNaN, 0, 0)),
-            VertexData.fromVectors(QVector3D(0, 10, 0), QVector3D(0, 1, 0), QVector3D(sNaN, 0, 0)),
-            VertexData.fromVectors(QVector3D(0, 0, 0), QVector3D(0, 0, 1), QVector3D(sNaN, 0, 0)),
-            VertexData.fromVectors(QVector3D(0, 0, 10), QVector3D(0, 0, 1), QVector3D(sNaN, 0, 0))
-        ]
-
-        return True
-
-    def init(self):
-        # Init openGL functions
-        self.initializeOpenGLFunctions()
-
-        # Create buffers
-        self.m_vao.create()
-        vao_binder = QOpenGLVertexArrayObject.Binder(self.m_vao)
-
-        self.m_vbo.create()
-
 
 

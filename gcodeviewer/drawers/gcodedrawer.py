@@ -75,7 +75,7 @@ class GcodeDrawer(ShaderDrawable) :
         self.m_geometryUpdated = False
         super().update()
 
-    def update_WithData(self, indexes: List[int]):
+    def update_indexes(self, indexes: List[int]):
         # Store segments to update
         self.m_indexes += indexes
 
@@ -212,9 +212,9 @@ class GcodeDrawer(ShaderDrawable) :
     def prepareVectors(self) -> bool: 
         print("preparing vectors : %s" % self)
 
-        alist = self.m_viewParser.getLines()
+        lines = self.m_viewParser.getLines()
 
-        print("lines count: %d" % len(alist))
+        print("lines count: %d" % len(lines))
 
         vertex = VertexData()
 
@@ -230,38 +230,42 @@ class GcodeDrawer(ShaderDrawable) :
 
 
         drawFirstPoint = True
-        for i in range(len(alist)):
+        i = 0
+        # i will be changed in the while-loop!
+        while i < len(lines):
+            i_mem = i
+            line = lines[i]
 
-            if qIsNaN(alist[i].getEnd().z()):
+            if qIsNaN(line.getEnd().z()):
                 continue
 
             # Find first point of toolpath
             if drawFirstPoint:
 
-                if qIsNaN(alist[i].getEnd().x()) or qIsNaN(alist[i].getEnd().y()) :
+                if qIsNaN(line.getEnd().x()) or qIsNaN(line.getEnd().y()) :
                     continue
 
                 # Draw first toolpath point
                 vertex.color = Util.colorToVector(self.m_colorStart)
-                vertex.position = alist[i].getEnd()
+                vertex.position = line.getEnd()
                 if self.m_ignoreZ :
                     vertex.position.setZ(0)
                 vertex.start = QVector3D(sNaN, sNaN, self.m_pointSize)
-                self.m_points.append(VertexData.fromVertexData(vertex))
+                self.m_points.append(VertexData.clone(vertex))
 
                 drawFirstPoint = False
                 continue
 
             # Prepare vertices
-            if alist[i].isFastTraverse():
-                vertex.start = alist[i].getStart()
+            if line.isFastTraverse():
+                vertex.start = line.getStart()
             else:
                 vertex.start = QVector3D(sNaN, sNaN, sNaN)
 
             # Simplify geometry
             j = i
-            if self.m_simplify and i < len(alist) - 1:
-                start = alist[i].getEnd() - alist[i].getStart()
+            if self.m_simplify and i < len(lines) - 1:
+                start = line.getEnd() - line.getStart()
                 next = QVector3D()
                 length = start.length()
                 straight = False
@@ -269,52 +273,57 @@ class GcodeDrawer(ShaderDrawable) :
                 ddo = True
                 
                 while ddo :
-                    alist[i].setVertexIndex(len(self.m_lines)) # Store vertex index
+                    line.setVertexIndex(len(self.m_lines)) # Store vertex index
                     i += 1
-                    if i < len(alist) - 1:
-                        next = alist[i].getEnd() - alist[i].getStart()
+                    
+                    if i < len(lines) - 1:
+                        next = lines[i].getEnd() - lines[i].getStart()
                         length += next.length()
                         # straight = start.crossProduct(start.normalized(), next.normalized()).length() < 0.025
                     
                     # Split short & straight lines
                     ddo = (length < self.m_simplifyPrecision or straight) \
-                        and i < len(alist) \
-                        and self.getSegmentType(alist[i]) == self.getSegmentType(alist[j])
+                        and i < len(lines) \
+                        and self.getSegmentType(lines[i]) == self.getSegmentType(lines[j])
                 i -= 1
             else :
-                alist[i].setVertexIndex(len(self.m_lines)) # Store vertex index
+                line.setVertexIndex(len(self.m_lines)) # Store vertex index
 
             # Set color
-            vertex.color = self.getSegmentColorVector(alist[i])
+            vertex.color = self.getSegmentColorVector(lines[i])
 
             # Line start
-            vertex.position = alist[j].getStart()
+            vertex.position = lines[j].getStart()
             if self.m_ignoreZ:
                 vertex.position.setZ(0)
-            self.m_lines.append(VertexData.fromVertexData(vertex))
+            self.m_lines.append(VertexData.clone(vertex))
 
             # Line end
-            vertex.position = alist[i].getEnd()
+            vertex.position = lines[i].getEnd()
             if self.m_ignoreZ:
                 vertex.position.setZ(0)
-            self.m_lines.append(VertexData.fromVertexData(vertex))
+            self.m_lines.append(VertexData.clone(vertex))
 
             # Draw last toolpath point
-            if i == len(alist) - 1:
+            if i == len(lines) - 1:
                 vertex.color = Util.colorToVector(self.m_colorEnd)
-                vertex.position = alist[i].getEnd()
+                vertex.position = lines[i].getEnd()
                 if self.m_ignoreZ :
                     vertex.position.setZ(0)
                 vertex.start = QVector3D(sNaN, sNaN, self.m_pointSize)
-                self.m_points.append(VertexData.fromVertexData(vertex))
+                self.m_points.append(VertexData.clone(vertex))
         
+            # do not forget to increment if i has not been icrementd in the loop
+            if i == i_mem:
+                i += 1
+
         self.m_geometryUpdated = True
         self.m_indexes = []
         return True
 
     def updateVectors(self) -> bool: 
         # Update vertices
-        alist = self.m_viewParser.getLines()
+        lines = self.m_viewParser.getLines()
 
         # Map buffer
         data = self.m_vbo.map(QOpenGLBuffer.WriteOnly)
@@ -322,16 +331,19 @@ class GcodeDrawer(ShaderDrawable) :
         # Update vertices for each line segment
         for i in self.m_indexes:
             #Update vertex pair
-            if i < 0 or i > len(alist) - 1 :
+            if i < 0 or i > len(lines) - 1 :
                 continue
-            vertexIndex = alist[i].vertexIndex()
+
+            line = lines[i]
+
+            vertexIndex = line.vertexIndex()
             if vertexIndex >= 0:
                 # Update vertex array            
                 if data:
-                    data[vertexIndex].color = self.getSegmentColorVector(alist[i])
+                    data[vertexIndex].color = self.getSegmentColorVector(line)
                     data[vertexIndex + 1].color = data[vertexIndex].color
                 else:
-                    self.m_lines[vertexIndex].color = self.getSegmentColorVector(alist[i])
+                    self.m_lines[vertexIndex].color = self.getSegmentColorVector(line)
                     self.m_lines[vertexIndex + 1].color = self.m_lines[vertexIndex].color
 
         self.m_indexes = []
@@ -355,18 +367,18 @@ class GcodeDrawer(ShaderDrawable) :
             image = QImage(self.m_viewParser.getResolution(), QImage.Format_RGB888)
             image.fill(QColor("white"))
 
-            alist = self.m_viewParser.getLines()
-            print("lines count: %d" % len(alist))
+            lines = self.m_viewParser.getLines()
+            print("lines count: %d" % len(lines))
 
             pixelSize = self.m_viewParser.getMinLength()
             origin = self.m_viewParser.getMinimumExtremes()
 
-            for i in range(len(alist)):
-                if not qIsNaN(alist[i].getEnd().length()):
+            for line in lines:
+                if not qIsNaN(line.getEnd().length()):
                     self.setImagePixelColor(image, 
-                            (alist[i].getEnd().x() - origin.x()) / pixelSize,
-                            (alist[i].getEnd().y() - origin.y()) / pixelSize, 
-                            self.getSegmentColor(alist[i]).rgb())
+                            (line.getEnd().x() - origin.x()) / pixelSize,
+                            (line.getEnd().y() - origin.y()) / pixelSize, 
+                            self.getSegmentColor(line).rgb())
 
 
         # Create vertices array
@@ -427,17 +439,18 @@ class GcodeDrawer(ShaderDrawable) :
 
     def updateRaster(self) -> bool:
         if not self.m_image is None:
-            alist = self.m_viewParser.getLines()
+            lines = self.m_viewParser.getLines()
 
             pixelSize = self.m_viewParser.getMinLength()
             origin = self.m_viewParser.getMinimumExtremes()
 
-            for val in self.m_indexes:
+            for idx in self.m_indexes:
+                line = lines[idx]
                 self.setImagePixelColor( \
                     self.m_image, \
-                    (alist[val].getEnd().x() - origin.x()) / pixelSize,
-                    (alist[val].getEnd().y() - origin.y()) / pixelSize,
-                    self.getSegmentColor(alist[val].rgb()))
+                    (line.getEnd().x() - origin.x()) / pixelSize,
+                    (line.getEnd().y() - origin.y()) / pixelSize,
+                    self.getSegmentColor(line.rgb()))
 
             if self.m_texture:
                 self.m_texture.setData(QOpenGLTexture.RGB, QOpenGLTexture.UInt8, self.m_image.bits())
@@ -481,8 +494,9 @@ class GcodeDrawer(ShaderDrawable) :
 
         image.setPixel(ix, iy, color)
         
-        #pixel = image.scanLine((int)y)
-
+        pixel = image.scanLine(int(y))
+        
+        # TODO
         #*(pixel + (int)x * 3) = qRed(color)
         #*(pixel + (int)x * 3 + 1) = qGreen(color)
         #*(pixel + (int)x * 3 + 2) = qBlue(color)

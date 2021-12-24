@@ -41,11 +41,7 @@ class Util:
         return QVector3D(color.redF(), color.greenF(), color.blueF())
 
     @classmethod
-    def QVector3D_fromVector3D(cls, v: QVector3D) -> QVector3D:
+    def cloneQVector3D(cls, v: QVector3D) -> QVector3D:
         ''' faster as deepcopy '''
-        vec = QVector3D()
-        vec.setX(v.x())
-        vec.setY(v.y())
-        vec.setZ(v.z())
-        return vec
+        return QVector3D(v.x(), v.y(), v.z())
 

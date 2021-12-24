@@ -339,7 +339,7 @@ class TestGlWindow(QtWidgets.QMainWindow):
             self.m_selectionDrawer.update()
 
             if len(indexes) > 0:
-                self.m_currentDrawer.update_WithData(indexes)
+                self.m_currentDrawer.update_indexes(indexes)
         
         # Update selection marker
         
@@ -490,3 +490,8 @@ if __name__ == "__main__":
     mainwindow = TestGlWindow()
     mainwindow.show()
     sys.exit(app.exec())
+
+
+'''
+python -m cProfile -o test_gcodeparser.prof test_gcodeparser.py
+'''

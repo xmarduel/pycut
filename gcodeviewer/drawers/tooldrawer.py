@@ -96,28 +96,28 @@ class ToolDrawer(ShaderDrawable):
 
             # Side lines
             vertex.position = QVector3D(x, y, self.m_toolPosition.z() + self.m_endLength)
-            self.m_lines.append(VertexData.fromVertexData(vertex))
+            self.m_lines.append(VertexData.clone(vertex))
 
             vertex.position = QVector3D(x, y, self.m_toolPosition.z() + self.m_toolLength)
-            self.m_lines.append(VertexData.fromVertexData(vertex))
+            self.m_lines.append(VertexData.clone(vertex))
 
             # Bottom lines
             vertex.position = QVector3D(self.m_toolPosition.x(), self.m_toolPosition.y(), self.m_toolPosition.z())
-            self.m_lines.append(VertexData.fromVertexData(vertex))
+            self.m_lines.append(VertexData.clone(vertex))
             vertex.position = QVector3D(x, y, self.m_toolPosition.z() + self.m_endLength)
-            self.m_lines.append(VertexData.fromVertexData(vertex))
+            self.m_lines.append(VertexData.clone(vertex))
 
             # Top lines
             vertex.position = QVector3D(self.m_toolPosition.x(), self.m_toolPosition.y(), self.m_toolPosition.z() + self.m_toolLength)
-            self.m_lines.append(VertexData.fromVertexData(vertex))
+            self.m_lines.append(VertexData.clone(vertex))
             vertex.position = QVector3D(x, y, self.m_toolPosition.z() + self.m_toolLength)
-            self.m_lines.append(VertexData.fromVertexData(vertex))
+            self.m_lines.append(VertexData.clone(vertex))
 
             # Zero Z lines
             vertex.position = QVector3D(self.m_toolPosition.x(), self.m_toolPosition.y(), 0)
-            self.m_lines.append(VertexData.fromVertexData(vertex))
+            self.m_lines.append(VertexData.clone(vertex))
             vertex.position = QVector3D(x, y, 0)
-            self.m_lines.append(VertexData.fromVertexData(vertex))
+            self.m_lines.append(VertexData.clone(vertex))
 
         # Draw circles
         # Bottom
@@ -152,11 +152,11 @@ class ToolDrawer(ShaderDrawable):
             y = center.y() + radius * math.sin(angle)
 
             if i > 1:
-                circle.append(VertexData.fromVertexData(circle[-1]))
+                circle.append(VertexData.clone(circle[-1]))
             elif i == self.arcs:
-                circle.append(VertexData.fromVertexData(circle[0]))
+                circle.append(VertexData.clone(circle[0]))
 
             vertex.position = QVector3D(x, y, center.z())
-            circle.append(VertexData.fromVertexData(vertex))
+            circle.append(VertexData.clone(vertex))
 
         return circle
