@@ -57,7 +57,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.splitter = QtWidgets.QSplitter(self)
         self.splitter.setObjectName(u"splitter")
         self.splitter.setOrientation(Qt.Vertical)
-        self.splitter.setHandleWidth(12)
+        self.splitter.setHandleWidth(6)
 
         self.glwVisualizer = GLWidget(self.splitter)
         self.tblProgram = QTableView(self.splitter)
@@ -75,6 +75,9 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.tblProgram.horizontalHeader().setMinimumSectionSize(50)
         self.tblProgram.horizontalHeader().setHighlightSections(False)
         self.tblProgram.verticalHeader().setVisible(False)
+        #self.tblProgram.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
+        #self.tblProgram.verticalHeader().setDefaultSectionSize(12)
+        self.tblProgram.setStyleSheet("background-color: rgb(255,255,255); gridline-color: rgb(255,255,255);" )
 
         self.splitter.addWidget(self.glwVisualizer)
         self.splitter.addWidget(self.tblProgram)
