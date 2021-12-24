@@ -1,5 +1,5 @@
 # pycut
-clone of jscut  in python - only the very beginning - work in progress
+clone of jscut  in python - only the very beginning - work in progress - windows only (because of extension modules)
 
 
 what is currently working: basic
@@ -14,6 +14,8 @@ what is currently working: basic
 - preview geom displayed in svg viewer
 - toolpaths displayed in svg viewer
 - gcode produced
+- gcode viewer (as in Candle)
+- gcode simulator (as in jsCut)
 
 TODO/BUGS:
 - all the rest!
