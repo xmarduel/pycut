@@ -495,6 +495,9 @@
        </size>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QSplitter" name="splitter">
          <property name="orientation">
@@ -505,7 +508,7 @@
          </property>
          <widget class="QTabWidget" name="tabWidget">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="svg">
            <attribute name="title">

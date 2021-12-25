@@ -32,7 +32,7 @@ class SvgPath:
     - the discretization of a svg_path results in a numpy array, noted: np_svg_path
     - a clipper path is noted: clipper_path  (a 'ClipperLib.IntPointVector')
     '''
-    PYCUT_SAMPLE_LEN_COEFF = 2
+    PYCUT_SAMPLE_LEN_COEFF = 100 # is in jsCut if 0.01
 
     def __init__(self, p_id: str, p_attrs: Dict):
         '''
@@ -223,6 +223,10 @@ class SvgTransformer:
 
     def augment_with_lines(self, svg_paths: List[SvgPath]) -> str:
         '''
+        TODO: eval the best stroke-width in function of the item size
+
+        40x40 mm -> stroke-width = 0.2 ok
+        1x1 mm   -> stroke-width = 0.01 ok
         '''
         all_paths = ""
 

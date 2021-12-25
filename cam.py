@@ -138,6 +138,10 @@ class cam:
         cls.to_gnuplot_dat(allPaths)
         # debug
 
+        if len(allPaths) == 0: 
+            # no possible paths! TODO . inform user
+            return []
+
         return cls.mergePaths(bounds, allPaths)
         
     @classmethod

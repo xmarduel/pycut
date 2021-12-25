@@ -1,69 +1,69 @@
 {
-  "svg_file": "svg/three_rects_with_circle.svg",
+  "svg_file": "C:/Users/xavie/Documents/GITHUB/pycut/svg/three_rects_with_circle.svg",
   "operations": [
     {
       "Name": "op1 - Union",
       "paths": ["r1", "r2", "r3"],
       "type": "Pocket",
-      "Deep": 0.2,       
+      "Deep": 10.0,       
       "RampPlunge": true,
       "Combine": "Union",
       "Direction": "Conventional",
       "Units": "mm",
-      "Margin": 0.1
+      "Margin": 0.0
     },
     {
       "Name": "op2 - Intersection",
       "paths": ["r1", "c1"],
       "type": "Pocket",
-      "Deep": 0.2,
+      "Deep": 10.0,
       "RampPlunge": true,
       "Combine": "Intersection",
       "Direction": "Conventional",
       "Units": "mm",
       "Margin": 0.0,
-      "Width": 1.1
+      "Width": 5.0
     },
     {
       "Name": "op3 - Diff",
       "paths": ["r1", "c1"],
       "type": "Pocket",
-      "Deep": 0.2,
+      "Deep": 10.0,
       "RampPlunge": true,
       "Combine": "Difference",
       "Direction": "Conventional",
       "Units": "mm",
       "Margin": 0.0,
-      "Width": 1.1
+      "Width": 5.0
     },
     {
       "Name": "op4 - Xor",
       "paths": ["r1", "c1"],
       "type": "Pocket",
-      "Deep": 0.2,
+      "Deep": 10.0,
       "RampPlunge": true,
       "Combine": "Xor",
       "Direction": "Conventional",
       "Units": "mm",
       "Margin": 0.0,
-      "Width": 1.1
+      "Width": 5.0
     },
     {
       "Name": "op5 - only 1 pat",
       "paths": ["r1"],
       "type": "Pocket",
-      "Deep": 0.45,
+      "Deep": 10.0,
       "RampPlunge": true,
       "Combine": "Intersection",
       "Direction": "Conventional",
       "Units": "mm",
-      "Margin": 0.0,
-      "Width": 1.1
+      "Margin": 2.0,
+      "Width": 5.0
     }
   ],
   "settings" : {
     "svg": {
-        "x_per_inch": 96
+        "px_per_inch": 96
     },
     "Tabs": {
        "Units": "mm",
@@ -71,9 +71,9 @@
      },
      "Tool": {
        "Units": "mm",
-       "Diameter": 1.0,
+       "Diameter": 3.0,
        "Angle": 180,
-       "PassDepth": 0.25,
+       "PassDepth": 5.0,
        "StepOver": 0.4,
        "Rapid": 500,
        "Plunge": 100,

@@ -133,9 +133,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.init_gui()
 
-        self.open_job("./jobs/cnc_three_rects.json")
-        #self.open_job("./jobs/cnc_three_rects_with_circle.json")
-        #self.open_job("./jobs/cnc_one_rect.json")
+        job_no = 2
+        
+        if job_no == 1:
+            self.open_job("./jobs/cnc_three_rects.json")
+        elif job_no == 2:
+            self.open_job("./jobs/cnc_three_rects_with_circle.json")
+        elif job_no == 3:
+            self.open_job("./jobs/cnc_one_rect.json")
+        elif job_no == 4:
+            self.open_job("./jobs/cnc_test_svgpathtools.json")
 
     def cb_save_gcode(self):
         '''
@@ -515,7 +522,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         svg_viewer = svgviewer.SvgViewer(svg)
         
         layout.addWidget(svg_viewer)
-        layout.addStretch(0)
+        layout.setStretch(0, 1)
         
         return svg_viewer
 
@@ -528,7 +535,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         candle_viewer = glwidget_container.GLWidgetContainer(viewer)
 
         layout.addWidget(candle_viewer)
-        layout.stretch(1)
+        layout.setStretch(0, 1)
         
         return candle_viewer
 

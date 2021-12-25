@@ -72,9 +72,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
     def __init__(self, parent):
         super(SvgViewer, self).__init__(parent)
-        self.scene = QtWidgets.QGraphicsScene(self,0,0,100,100)
+        self.scene = QtWidgets.QGraphicsScene(self)
         self.renderer = QtSvg.QSvgRenderer()
-        self.renderer.setViewBox(QtCore.QRect(0,0,100,100))
+        
         self.setScene(self.scene)
 
         # the content of the svf file as string
@@ -107,6 +107,18 @@ class SvgViewer(QtWidgets.QGraphicsView):
         '''
         This sets the 'real' svg file data, not the later 'augmented' svg
         '''
+        root = ET.fromstring(svg)
+
+        viewBox = root.attrib["viewBox"].split()
+
+        x = int(viewBox[0])
+        y = int(viewBox[1])
+        w = int(viewBox[2])
+        h = int(viewBox[3])
+
+        self.scene.setSceneRect(x,y,w,h)
+        self.renderer.setViewBox(QtCore.QRect(x,y,w,h))
+        
         self.svg = svg
         self.fill_svg_viewer(self.svg)
 
@@ -130,10 +142,11 @@ class SvgViewer(QtWidgets.QGraphicsView):
             item = SvgItem(id, self.renderer)
             self.scene.addItem(item)
 
+            self.fitInView(item, QtCore.Qt.KeepAspectRatio)
+
             self.items.append(item)
 
         # bad zoom
-        self.zoomIn()
         self.zoomIn()
 
     def get_svg_path_d(self, p_id):
@@ -215,8 +228,10 @@ class SvgViewer(QtWidgets.QGraphicsView):
             self.zoomChanged.emit()
 
     def zoomBy(self, factor):
+        ''' allow very strong zoom (100) 
+        useful when the svg viewBox is very small '''
         currentZoom = self.zoomFactor()
-        if (factor < 1 and currentZoom < 0.1) or (factor > 1 and currentZoom > 10) :
+        if (factor < 1 and currentZoom < 0.1) or (factor > 1 and currentZoom > 100) :
             return
         self.scale(factor, factor)
         self.zoomChanged.emit()
