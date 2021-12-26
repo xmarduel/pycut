@@ -94,7 +94,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
     def get_svg_size_x(self) -> ValWithUnit:
         '''
-        get the width of the svg given in units "mm" or "inch" (see Inkscape) 
+        get the width of the svg given in units "mm", "cm" or "in" (see Inkscape) 
         '''
         root = ET.fromstring(self.svg)
 
@@ -103,15 +103,18 @@ class SvgViewer(QtWidgets.QGraphicsView):
         if "mm" in width:
             w, units = width.split("mm")
             return ValWithUnit(int(w), "mm")
-        if "inch"  in width:
-            w, units = width.split("inch")
+        elif "in"  in width:
+            w, units = width.split("in")
             return ValWithUnit(int(w), "inch")
+        elif "cm"  in width:
+            w, units = width.split("cm")
+            return ValWithUnit(int(w*10), "mm")
         
         return None
 
     def get_svg_size_y(self) -> ValWithUnit:
         '''
-        get the height of the svg given in units "mm" or "inch" (see Inkscape) 
+        get the height of the svg given in units "mm", "cm" or "in" (see Inkscape) 
         '''
         root = ET.fromstring(self.svg)
 
@@ -120,9 +123,12 @@ class SvgViewer(QtWidgets.QGraphicsView):
         if "mm" in height:
             h, units = height.split("mm")
             return ValWithUnit(int(h), "mm")
-        if "inch"  in height:
-            h, units = height.split("inch")
+        elif "in"  in height:
+            h, units = height.split("in")
             return ValWithUnit(int(h), "inch")
+        elif "cm"  in height:
+            h, units = height.split("cm")
+            return ValWithUnit(int(h*10), "mm")
         
         return None
     

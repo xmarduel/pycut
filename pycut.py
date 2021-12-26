@@ -107,7 +107,7 @@ class MaterialModel:
         self.matZOrigin = "Top"
         self.matClearance = ValWithUnit(0.1, self.matUnits)
 
-        # from the svg size, the dimension of the material
+        # from the svg size, the dimension of the material in inches
         self.sizeX = ValWithUnit(100/25.4, "inch") # default
         self.sizeY = ValWithUnit(100/25.4, "inch") # default
 
