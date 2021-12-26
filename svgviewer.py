@@ -142,7 +142,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
             item = SvgItem(id, self.renderer)
             self.scene.addItem(item)
 
-            self.fitInView(item, QtCore.Qt.KeepAspectRatio)
+            #self.fitInView(item, QtCore.Qt.KeepAspectRatio)
 
             self.items.append(item)
 
