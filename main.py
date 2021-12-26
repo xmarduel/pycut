@@ -149,6 +149,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.open_job("./jobs/cnc_one_rect.json")
         elif job_no == 4:
             self.open_job("./jobs/cnc_test_svgpathtools.json")
+        elif job_no == 5:
+            self.open_job("./jobs/cnc_letters.json")
 
     def cb_save_gcode(self):
         '''
