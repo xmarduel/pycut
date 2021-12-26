@@ -79,10 +79,8 @@ class SvgPath:
                 nb_samples = int(seg_length * self.PYCUT_SAMPLE_LEN_COEFF)
                 
                 _pts = []
-                for k in range(nb_samples):
+                for k in range(nb_samples+1):
                     _pts.append(segment.point(float(k)/float(nb_samples)))
-                # and the last
-                _pts.append(segment.point(1))
 
                 pts = np.array(_pts, dtype=np.complex128)
 
@@ -92,10 +90,8 @@ class SvgPath:
                 nb_samples = int(seg_length * self.PYCUT_SAMPLE_LEN_COEFF)
                 incr = 1.0 / nb_samples
 
-                samples = [x* incr for x in range(0, nb_samples)]
+                samples = [x* incr for x in range(0, nb_samples+1)]
                 pts = segment.points(samples)
-                # and the last
-                pts.append(segment.point(1))
 
             points = np.concatenate((points, pts))
 

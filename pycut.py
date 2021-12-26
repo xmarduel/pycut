@@ -371,9 +371,8 @@ class CncOp:
 
             self.preview_geometry = ClipperUtils.offset(self.geometry, offset)
 
-            for clipper_path in self.preview_geometry:
-                svg_path = SvgPath.fromClipperPath("geometry_pocket", clipper_path)
-                self.geometry_svg_paths.append(svg_path)
+            # always as if there were "rings"
+            self.geometry_svg_paths = [SvgPath.fromClipperPaths("geometry_pocket", self.preview_geometry)]
 
     def calculate_preview_geometry_inside(self, toolModel: ToolModel):
         '''
@@ -399,8 +398,7 @@ class CncOp:
             #ClipperLib.dumpPaths("geometry", self.preview_geometry)
 
         # should have 2 paths, one inner, one outer -> show the "ring"
-        if len(self.preview_geometry) > 1:
-            self.geometry_svg_paths = [SvgPath.fromClipperPaths("geometry_inside", self.preview_geometry)]
+        self.geometry_svg_paths = [SvgPath.fromClipperPaths("geometry_inside", self.preview_geometry)]
 
     def calculate_preview_geometry_outside(self, toolModel: ToolModel):
         '''
@@ -424,8 +422,7 @@ class CncOp:
             #ClipperLib.dumpPaths("preview geometry", self.preview_geometry)
 
         # should have 2 paths, one inner, one outer -> show the "ring"
-        if len(self.preview_geometry) > 1:
-            self.geometry_svg_paths = [SvgPath.fromClipperPaths("geometry_outside", self.preview_geometry)]
+        self.geometry_svg_paths = [SvgPath.fromClipperPaths("geometry_outside", self.preview_geometry)]
 
     def calculate_preview_geometry_engrave(self):
         '''
