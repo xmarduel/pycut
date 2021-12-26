@@ -16,6 +16,8 @@ import xml.etree.ElementTree as ET
 from svgpathutils import SvgPath
 from svgpathutils import SvgTransformer
 
+from val_with_unit import ValWithUnit
+
 
 # https://stackoverflow.com/questions/53288926/qgraphicssvgitem-event-propagation-interactive-svg-viewer
 
@@ -90,6 +92,40 @@ class SvgViewer(QtWidgets.QGraphicsView):
         #self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         self.setViewportUpdateMode(QtWidgets.QGraphicsView.FullViewportUpdate)
 
+    def get_svg_size_x(self) -> ValWithUnit:
+        '''
+        get the width of the svg given in units "mm" or "inch" (see Inkscape) 
+        '''
+        root = ET.fromstring(self.svg)
+
+        width = root.attrib["width"]
+
+        if "mm" in width:
+            w, units = width.split("mm")
+            return ValWithUnit(int(w), "mm")
+        if "inch"  in width:
+            w, units = width.split("inch")
+            return ValWithUnit(int(w), "inch")
+        
+        return None
+
+    def get_svg_size_y(self) -> ValWithUnit:
+        '''
+        get the height of the svg given in units "mm" or "inch" (see Inkscape) 
+        '''
+        root = ET.fromstring(self.svg)
+
+        height = root.attrib["height"]
+
+        if "mm" in height:
+            h, units = height.split("mm")
+            return ValWithUnit(int(h), "mm")
+        if "inch"  in height:
+            h, units = height.split("inch")
+            return ValWithUnit(int(h), "inch")
+        
+        return None
+    
     def get_selected_items_ids(self) -> List[str]:
         '''
         return list of selected svg paths

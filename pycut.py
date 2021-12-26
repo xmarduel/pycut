@@ -107,6 +107,16 @@ class MaterialModel:
         self.matZOrigin = "Top"
         self.matClearance = ValWithUnit(0.1, self.matUnits)
 
+        # from the svg size, the dimension of the material
+        self.sizeX = ValWithUnit(100/25.4, "inch") # default
+        self.sizeY = ValWithUnit(100/25.4, "inch") # default
+
+    def setMaterialSizeX(self, x: ValWithUnit):
+        self.sizeX = x.toInch()
+
+    def setMaterialSizeY(self, y: ValWithUnit):
+        self.sizeY = y.toInch()
+
     @property
     def matBotZ(self):
         if self.matZOrigin == "Bottom":
@@ -577,6 +587,11 @@ class GcodeGenerator:
     def maxY(self):
         return  -self.unitConverter.fromInch(self.job.minY / ClipperUtils.inchToClipperScale) + self.offsetY
 
+    def generateGcode_zeroLowerLeftOfMaterial(self):
+        self.offsetX = - self.unitConverter.fromInch(0)
+        self.offsetY = - self.unitConverter.fromInch(-self.materialModel.sizeY)
+        self.generateGcode()
+    
     def generateGcode_zeroLowerLeft(self):
         self.offsetX = - self.unitConverter.fromInch(self.job.minX / ClipperUtils.inchToClipperScale)
         self.offsetY = - self.unitConverter.fromInch(-self.job.maxY / ClipperUtils.inchToClipperScale)

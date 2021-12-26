@@ -125,6 +125,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.ui.checkBox_GCodeGeneration_SpindleAutomatic.clicked.connect(self.cb_spindle_automatic)
 
+        self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.clicked.connect(self.cb_generate_g_code_zerolowerleft_of_material)
         self.ui.pushButton_GCodeConversion_ZeroLowerLeft.clicked.connect(self.cb_generate_g_code_zerolowerleft)
         self.ui.pushButton_GCodeConversion_ZeroCenter.clicked.connect(self.cb_generate_g_code_zerocenter)
 
@@ -668,6 +669,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         materialModel.matThickness = ValWithUnit(settings["Material"]["Thickness"], materialModel.matUnits)
         materialModel.matZOrigin = settings["Material"]["ZOrigin"]
         materialModel.matClearance = ValWithUnit(settings["Material"]["Clearance"], materialModel.matUnits)
+        # the SVG dimensions
+        materialModel.setMaterialSizeX(self.svg_viewer.get_svg_size_x())
+        materialModel.setMaterialSizeY(self.svg_viewer.get_svg_size_y())
         toolModel = ToolModel()
         toolModel.units = settings["Tool"]["Units"]
         toolModel.diameter = ValWithUnit(settings["Tool"]["Diameter"], toolModel.units)
@@ -692,6 +696,20 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         return job  
         
+    def cb_generate_g_code_zerolowerleft_of_material(self):
+        '''
+        '''
+        self.job = job = self.get_jobmodel()
+
+        for cnc_op in job.operations:
+            cnc_op.setup(self.svg_viewer)
+            cnc_op.calculate_geometry(job.toolModel)
+
+        generator = GcodeGenerator(job)
+        generator.generateGcode_zeroLowerLeftOfMaterial()
+
+        self.after_gcode_generation(generator)
+
     def cb_generate_g_code_zerolowerleft(self):
         '''
         '''
@@ -723,6 +741,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def cb_generate_g_code(self):
         '''
         '''
+        if self.ui.checkBox_GCodeConversion_ZeroLowerLeftOfMaterial_AsDefault.isChecked():
+            self.cb_generate_g_code_zerolowerleft_of_material()
+            return
+
         if self.ui.checkBox_GCodeConversion_ZeroLowerLeft_AsDefault.isChecked():
             self.cb_generate_g_code_zerolowerleft()
             return
