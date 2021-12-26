@@ -92,6 +92,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
         #self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         self.setViewportUpdateMode(QtWidgets.QGraphicsView.FullViewportUpdate)
 
+        # keep zoom factor (used when reloading augmented svg: zoom should be kept)
+        self.currentZoom = self.zoomFactor()
+
     def get_svg_size_x(self) -> ValWithUnit:
         '''
         get the width of the svg given in units "mm", "cm" or "in" (see Inkscape) 
@@ -161,6 +164,10 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.scene.setSceneRect(x,y,w,h)
         self.renderer.setViewBox(QtCore.QRect(x,y,w,h))
         
+        viewbox_size = max(w, h)
+        # eval initial zoom factor
+        self.currentZoom = 250.0 / viewbox_size 
+
         self.svg = svg
         self.fill_svg_viewer(self.svg)
 
@@ -188,8 +195,8 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
             self.items.append(item)
 
-        # bad zoom
-        self.zoomIn()
+        # zoom with the initial zoom factor
+        self.scale(self.currentZoom, self.currentZoom)
 
     def get_svg_path_d(self, p_id):
         return self.svg_path_d[p_id]
@@ -255,6 +262,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
     def wheelEvent(self, event):
         self.zoomBy(math.pow(1.2, event.angleDelta().y() / 240.0))
 
+    def storeZoomFactor(self):
+        self.currentZoom = self.zoomFactor()
+    
     def zoomFactor(self):
         return self.transform().m11()
 
@@ -276,6 +286,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         if (factor < 1 and currentZoom < 0.1) or (factor > 1 and currentZoom > 100) :
             return
         self.scale(factor, factor)
+        self.storeZoomFactor()
         self.zoomChanged.emit()
 
     def reinit(self):
