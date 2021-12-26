@@ -17,8 +17,6 @@ from PySide6.QtCore import qIsNaN
 
 from gcodeviewer.drawers.shaderdrawable import ShaderDrawable
 
-import resources_rc
-
 
 M_PI = math.acos(-1)
 ZOOMSTEP = 1.1
@@ -99,7 +97,84 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.m_vsync = False
         self.m_targetFps = 60
 
+        self.cmdFit = QtWidgets.QToolButton(self)
+        self.cmdIsometric = QtWidgets.QToolButton(self)
+        self.cmdTop = QtWidgets.QToolButton(self)
+        self.cmdFront = QtWidgets.QToolButton(self)
+        self.cmdLeft = QtWidgets.QToolButton(self)
+
+        self.cmdFit.setMinimumSize(QtCore.QSize(20,20))
+        self.cmdIsometric.setMinimumSize(QtCore.QSize(20,20))
+        self.cmdTop.setMinimumSize(QtCore.QSize(20,20))
+        self.cmdFront.setMinimumSize(QtCore.QSize(20,20))
+        self.cmdLeft.setMinimumSize(QtCore.QSize(20,20))
+
+        self.cmdFit.setMaximumSize(QtCore.QSize(20,20))
+        self.cmdIsometric.setMaximumSize(QtCore.QSize(20,20))
+        self.cmdTop.setMaximumSize(QtCore.QSize(20,20))
+        self.cmdFront.setMaximumSize(QtCore.QSize(20,20))
+        self.cmdLeft.setMaximumSize(QtCore.QSize(20,20))
+
+        self.cmdFit.setToolTip("Fit")
+        self.cmdIsometric.setToolTip("Isometric view")
+        self.cmdTop.setToolTip("Top view")
+        self.cmdFront.setToolTip("Front view")
+        self.cmdLeft.setToolTip("Left view")
+
+        self.cmdFit.setIcon(QtGui.QIcon(":/images/candle/fit_1.png"))
+        self.cmdIsometric.setIcon(QtGui.QIcon(":/images/candle/cube.png"))
+        self.cmdTop.setIcon(QtGui.QIcon(":/images/candle/cubeTop.png"))
+        self.cmdFront.setIcon(QtGui.QIcon(":/images/candle/cubeFront.png"))
+        self.cmdLeft.setIcon(QtGui.QIcon(":/images/candle/cubeLeft.png"))
+
+        self.cmdFit.clicked.connect(self.on_cmdFit_clicked)
+        self.cmdIsometric.clicked.connect(self.on_cmdIsometric_clicked)
+        self.cmdTop.clicked.connect(self.on_cmdTop_clicked)
+        self.cmdFront.clicked.connect(self.on_cmdFront_clicked)
+        self.cmdLeft.clicked.connect(self.on_cmdLeft_clicked)
+
         QtCore.QTimer.singleShot(1000, self.onFramesTimer)
+
+    def placeVisualizerButtons(self):
+        w = self.width()
+        cmdIsometric_w =  self.cmdIsometric.width() 
+
+        self.cmdIsometric.move(self.width() - self.cmdIsometric.width() - 8, 8)
+        self.cmdTop.move(self.cmdIsometric.geometry().left() - self.cmdTop.width() - 8, 8)
+        self.cmdLeft.move(self.width() - self.cmdLeft.width() - 8, self.cmdIsometric.geometry().bottom() + 8)
+        self.cmdFront.move(self.cmdLeft.geometry().left() - self.cmdFront.width() - 8, self.cmdIsometric.geometry().bottom() + 8)
+        self.cmdFit.move(self.width() - self.cmdFit.width() - 8, self.cmdLeft.geometry().bottom() + 8)
+
+    def on_cmdTop_clicked(self):
+        self.setTopView()
+        self.updateView()
+
+        self.onVisualizatorRotationChanged()
+
+    def on_cmdFront_clicked(self):
+        self.setFrontView()
+        self.updateView()
+
+        self.onVisualizatorRotationChanged()
+
+    def on_cmdLeft_clicked(self):
+        self.setLeftView()
+        self.updateView()
+
+        self.onVisualizatorRotationChanged()
+
+    def on_cmdIsometric_clicked(self):
+        self.setIsometricView()
+        self.updateView()
+
+        self.onVisualizatorRotationChanged()
+
+    def on_cmdFit_clicked(self):
+        splitter = self.parent()
+        gl_widget_container = splitter.parent()
+
+        if hasattr(gl_widget_container, "m_currentDrawer") and gl_widget_container.m_currentDrawer is not None:
+            self.fitDrawable(gl_widget_container.m_currentDrawer)
 
     def calculateVolume(self, size: QtGui.QVector3D) -> float:
         return size.x() * size.y() * size.z()
@@ -226,24 +301,44 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.m_lineWidth = lineWidth
 
     def setIsometricView(self):
+        ''' no animation yet '''
         self.m_xRotTarget = 45
         self.m_yRotTarget = 405 if self.m_yRot > 180 else 45
-        self.beginViewAnimation()
+
+        self.m_xRot = 45
+        self.m_yRot = 405 if self.m_yRot > 180 else 45
+
+        #self.beginViewAnimation()
 
     def setTopView(self):
+        ''' no animation yet '''
         self.m_xRotTarget = 90
         self.m_yRotTarget = 360 if self.m_yRot > 180 else 0
-        self.beginViewAnimation()
+
+        self.m_xRot = 90
+        self.m_yRot = 360 if self.m_yRot > 180 else 0
+
+        #self.beginViewAnimation()
 
     def setFrontView(self):
+        ''' no animation yet '''
         self.m_xRotTarget = 0
         self.m_yRotTarget = 360 if self.m_yRot > 180 else 0
-        self.beginViewAnimation()
+
+        self.m_xRot = 90
+        self.m_yRot = 360 if self.m_yRot > 180 else 0
+
+        #self.beginViewAnimation()
 
     def setLeftView(self):
+        ''' no animation yet '''
         self.m_xRotTarget = 0
         self.m_yRotTarget = 450 if self.m_yRot > 270 else 90
-        self.beginViewAnimation()
+
+        self.m_xRot= 0
+        self.m_yRot = 450 if self.m_yRot > 270 else 90
+
+        #self.beginViewAnimation()
 
     def fps(self) -> int:
         return self.m_targetFps
@@ -517,7 +612,7 @@ void main()
         self.glDisable(GL.GL_LINE_SMOOTH)
         self.glDisable(GL.GL_BLEND)
 
-        if False: 
+        if False:  # no timer event because commented (actually crash on painter) 
             painter = QtGui.QPainter(self)
 
             painter.beginNativePainting()
@@ -648,7 +743,7 @@ void main()
         self.updateView()
 
     def timerEvent(self, te: QtCore.QTimerEvent):
-        return
+        #return
         if te.timerId() == self.m_timerPaint.timerId():
             if self.m_animateView:
                 self.viewAnimation()
@@ -656,4 +751,8 @@ void main()
                 self.update()
         else:
             self.timerEvent(te)
+
+    def onVisualizatorRotationChanged(self):
+        self.update()
+        self.cmdIsometric.setChecked(False)
 

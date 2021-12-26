@@ -49,11 +49,6 @@ class VertexData:
     def VertexDataListToNumPy(cls, alist: List['VertexData']):
         '''
         https://nrotella.github.io/journal/first-steps-python-qt-opengl.html
-
-        data = numpy.array([2., 2., 2., 0.5, 0.4, 0.4, 1.], dtype = numpy.float32).toString()
-
-        buffer.allocate(120) # How many bytes to allocate
-        buffer.write(0, data, len(data))
         '''
         def NaN_to_Val(val):
             #if qIsNaN(val):

@@ -126,8 +126,8 @@ class GLWidgetContainer(QtWidgets.QWidget):
         
         self.glwVisualizer.fitDrawable()
 
-        self.glwVisualizer.rotationChanged.connect(self.onVisualizatorRotationChanged)
-        #self.glwVisualizer.resized.connect(self.placeVisualizerButtons)
+        self.glwVisualizer.rotationChanged.connect(self.glwVisualizer.onVisualizatorRotationChanged)
+        self.glwVisualizer.resized.connect(self.glwVisualizer.placeVisualizerButtons)
         self.m_programModel.dataChanged.connect(self.onTableCellChanged)
 
         self.tblProgram.setModel(self.m_programModel)
@@ -509,9 +509,3 @@ class GLWidgetContainer(QtWidgets.QWidget):
             self.m_fileChanged = True
 
         print("Update parser time: %s" % time.elapsed())
-
-    def onVisualizatorRotationChanged(self):
-        self.glwVisualizer.update()
-        #self.cmdIsometric.setChecked(False)
-
-

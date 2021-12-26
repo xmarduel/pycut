@@ -5,13 +5,16 @@
         <file>images/tango/22x22/actions/view-refresh.png</file>
         <file>images/tango/22x22/actions/go-up.png</file>
         <file>images/tango/22x22/actions/go-down.png</file>
+        <file>images/candle/cube.png</file>
+        <file>images/candle/cubeFront.png</file>
+        <file>images/candle/cubeTop.png</file>
+        <file>images/candle/cubeLeft.png</file>
+        <file>images/candle/fit_1.png</file>
         <file>javascript/api/js/parseGcode.js</file>
         <file>javascript/js/RenderPath.js</file>
         <file>javascript/lib/gl-matrix-2.2.0-min.js</file>
         <file>javascript/lib/jquery-2.1.1.min.js</file>
         <file>javascript/lib/webgl-utils.js</file>
         <file>qtwebchannel/qwebchannel.js</file>
-        <file>shaders/vshader.glsl</file>
-        <file>shaders/fshader.glsl</file>
     </qresource>
 </RCC>

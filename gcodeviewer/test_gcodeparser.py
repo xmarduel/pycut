@@ -96,7 +96,7 @@ class TestGlWindow(QtWidgets.QMainWindow):
         self.ui.glwVisualizer.fitDrawable()
 
         self.ui.glwVisualizer.rotationChanged.connect(self.onVisualizatorRotationChanged)
-        #self.ui.glwVisualizer.resized.connect(self.placeVisualizerButtons)
+        self.ui.glwVisualizer.resized.connect(self.ui.glwVisualizer.placeVisualizerButtons)
         self.m_programModel.dataChanged.connect(self.onTableCellChanged)
 
         self.ui.tblProgram.setModel(self.m_programModel)
