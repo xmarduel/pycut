@@ -11,6 +11,8 @@ from PySide6 import QtGui
 from PySide6 import QtWidgets
 
 from PySide6.QtUiTools import QUiLoader
+import svgpathtools
+import svgpathutils
 
 from val_with_unit import ValWithUnit
 
@@ -116,6 +118,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         default_clearance = self.ui.doubleSpinBox_Material_Clearance.value()
         self.svg_material_viewer.display_material(thickness=default_thickness, clearance=default_clearance)
         
+        self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegments.valueChanged.connect(self.cb_curve_min_segments)
+        self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.valueChanged.connect(self.cb_curve_min_segments_length)
+
         self.display_svg(None)
         
         self.ui.comboBox_Tabs_Units.currentTextChanged.connect(self.cb_update_tabs_display)
@@ -385,6 +390,20 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.jobfilename = jobfilename
     
+    def cb_curve_min_segments(self):
+        '''
+        what is it good for ?
+        seems to be redundant with cb_curve_min_segments_length
+        '''
+        _ = self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegments.value()
+        pass
+
+    def cb_curve_min_segments_length(self):
+        '''
+        '''
+        value = self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.value()
+        svgpathutils.SvgPath.set_arc_precision(value)
+
     def cb_update_tabs_display(self):
         '''
         This updates the legends of the tsbs model widget **and** the values
@@ -443,9 +462,15 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.doubleSpinBox_Material_Thickness.setValue( self.ui.doubleSpinBox_Material_Thickness.value() / 25.4 )
             self.ui.doubleSpinBox_Material_Clearance.setValue( self.ui.doubleSpinBox_Material_Clearance.value() / 25.4 )
 
+            self.ui.doubleSpinBox_Material_Thickness.setSingleStep(0.04)
+            self.ui.doubleSpinBox_Material_Clearance.setSingleStep(0.04)
+
         if material_units == "mm":
             self.ui.doubleSpinBox_Material_Thickness.setValue( self.ui.doubleSpinBox_Material_Thickness.value() * 25.4 )
             self.ui.doubleSpinBox_Material_Clearance.setValue( self.ui.doubleSpinBox_Material_Clearance.value() * 25.4 )
+
+            self.ui.doubleSpinBox_Material_Thickness.setSingleStep(1.0)
+            self.ui.doubleSpinBox_Material_Clearance.setSingleStep(1.0)
 
     def cb_update_gcodeconversion_display(self):
         '''
@@ -492,6 +517,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         thickness = ValWithUnit(self.ui.doubleSpinBox_Material_Thickness.value(), material_units).toMm()
         clearance = ValWithUnit(self.ui.doubleSpinBox_Material_Clearance.value(), material_units).toMm()
 
+        self.svg_material_viewer.display_unit(material_units)
         self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
 
     def cb_display_material_clearance(self):
@@ -672,6 +698,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # the SVG dimensions
         materialModel.setMaterialSizeX(self.svg_viewer.get_svg_size_x())
         materialModel.setMaterialSizeY(self.svg_viewer.get_svg_size_y())
+
         toolModel = ToolModel()
         toolModel.units = settings["Tool"]["Units"]
         toolModel.diameter = ValWithUnit(settings["Tool"]["Diameter"], toolModel.units)
@@ -681,7 +708,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         toolModel.rapidRate = ValWithUnit(settings["Tool"]["Rapid"], toolModel.units)
         toolModel.plungeRate = ValWithUnit(settings["Tool"]["Plunge"], toolModel.units)
         toolModel.cutRate = ValWithUnit(settings["Tool"]["Cut"], toolModel.units)
+        
         tabsmodel = TabsModel(svgModel, materialModel, None, None)
+        # still not used
+
         gcodeModel = GcodeModel()
         gcodeModel.units = settings["GCodeConversion"]["Units"]
         gcodeModel.XOffset = settings["GCodeConversion"]["XOffset"]

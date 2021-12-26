@@ -382,7 +382,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
         hbox = QtWidgets.QHBoxLayout()
 
         # create the button, and hook it up to the slot below.
-        self._button_add = QtWidgets.QPushButton("Add Operation")
+        self._button_add = QtWidgets.QPushButton("Create Operation")
         self._button_add.clicked.connect(self.add_item)
         self._button_add.setIcon(QtGui.QIcon(":/images/tango/32x32/actions/list-add"))
 

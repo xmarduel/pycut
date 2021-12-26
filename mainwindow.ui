@@ -375,6 +375,9 @@
         </property>
         <item>
          <widget class="QLabel" name="label_Tabs">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="font">
            <font>
             <pointsize>14</pointsize>
@@ -420,6 +423,9 @@
              </item>
              <item row="0" column="1">
               <widget class="QComboBox" name="comboBox_Tabs_Units">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <item>
                 <property name="text">
                  <string>inch</string>
@@ -446,6 +452,9 @@
              </item>
              <item row="1" column="1">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_Tabs_MaxCutDepth">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="decimals">
                 <number>3</number>
                </property>
@@ -455,6 +464,9 @@
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_Tabs_CreateTabs">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>Create Tabs</string>
              </property>
@@ -802,7 +814,11 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_CurveToLineConversion_MinimumSegments"/>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_CurveToLineConversion_MinimumSegments">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_CurveToLineConversion_MinimumSegmentsLength">

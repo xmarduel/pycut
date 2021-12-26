@@ -268,6 +268,7 @@ class Ui_mainwindow(object):
         self.verticalLayoutTabsContent.setContentsMargins(-1, -1, -1, 20)
         self.label_Tabs = QLabel(self.centralwidget)
         self.label_Tabs.setObjectName(u"label_Tabs")
+        self.label_Tabs.setEnabled(False)
         self.label_Tabs.setFont(font)
         self.label_Tabs.setStyleSheet(u"background-color: rgb(198, 198, 198);")
 
@@ -292,6 +293,7 @@ class Ui_mainwindow(object):
         self.comboBox_Tabs_Units.addItem("")
         self.comboBox_Tabs_Units.addItem("")
         self.comboBox_Tabs_Units.setObjectName(u"comboBox_Tabs_Units")
+        self.comboBox_Tabs_Units.setEnabled(False)
 
         self.formLayout_Tabs.setWidget(0, QFormLayout.FieldRole, self.comboBox_Tabs_Units)
 
@@ -303,6 +305,7 @@ class Ui_mainwindow(object):
 
         self.doubleSpinBox_Tabs_MaxCutDepth = QDoubleSpinBox(self.grid_Tabs)
         self.doubleSpinBox_Tabs_MaxCutDepth.setObjectName(u"doubleSpinBox_Tabs_MaxCutDepth")
+        self.doubleSpinBox_Tabs_MaxCutDepth.setEnabled(False)
         self.doubleSpinBox_Tabs_MaxCutDepth.setDecimals(3)
 
         self.formLayout_Tabs.setWidget(1, QFormLayout.FieldRole, self.doubleSpinBox_Tabs_MaxCutDepth)
@@ -312,6 +315,7 @@ class Ui_mainwindow(object):
 
         self.pushButton_Tabs_CreateTabs = QPushButton(self.grid_Tabs)
         self.pushButton_Tabs_CreateTabs.setObjectName(u"pushButton_Tabs_CreateTabs")
+        self.pushButton_Tabs_CreateTabs.setEnabled(False)
 
         self.verticalLayout_4.addWidget(self.pushButton_Tabs_CreateTabs)
 
@@ -498,6 +502,7 @@ class Ui_mainwindow(object):
 
         self.doubleSpinBox_CurveToLineConversion_MinimumSegments = QDoubleSpinBox(self.centralwidget)
         self.doubleSpinBox_CurveToLineConversion_MinimumSegments.setObjectName(u"doubleSpinBox_CurveToLineConversion_MinimumSegments")
+        self.doubleSpinBox_CurveToLineConversion_MinimumSegments.setEnabled(False)
 
         self.formLayoutCurveToLineConversion.setWidget(0, QFormLayout.FieldRole, self.doubleSpinBox_CurveToLineConversion_MinimumSegments)
 

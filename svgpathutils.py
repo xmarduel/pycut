@@ -20,7 +20,7 @@ class SvgPath:
     Transform svgpathtools 'Path' to 'ClipperLib' path
 
     - svgpathtools 'Path' are list of 'Segment(s)' and
-    each segment has a list of points, giveninto the 'complex' type (a+bj)
+    each segment has a list of points, given in format 'complex type' (a+bj)
 
     - ClipperLib 'Path' are list of IntPoint (X,Y)
 
@@ -33,6 +33,10 @@ class SvgPath:
     - a clipper path is noted: clipper_path  (a 'ClipperLib.IntPointVector')
     '''
     PYCUT_SAMPLE_LEN_COEFF = 100 # is in jsCut if 0.01
+
+    @classmethod
+    def set_arc_precision(cls, arc_min_segments_length):
+        cls.PYCUT_SAMPLE_LEN_COEFF = 1.0 / arc_min_segments_length
 
     def __init__(self, p_id: str, p_attrs: Dict):
         '''
