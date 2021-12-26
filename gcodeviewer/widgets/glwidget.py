@@ -325,7 +325,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.m_xRotTarget = 0
         self.m_yRotTarget = 360 if self.m_yRot > 180 else 0
 
-        self.m_xRot = 90
+        self.m_xRot = 0
         self.m_yRot = 360 if self.m_yRot > 180 else 0
 
         #self.beginViewAnimation()
