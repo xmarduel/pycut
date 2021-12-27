@@ -1,7 +1,7 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>PYCUT</title>
+  <title>PYCUT TUTORIAL</title>
   <link href="css/prism.css" rel="stylesheet">
   <link href="css/pycut.css" rel="stylesheet">
   <link href="css/simpletree.css" rel="stylesheet">
@@ -18,9 +18,30 @@
 <div class="sidenav">
 <h3 class="title_sidenav">Contents</h3>
 <ul class="tree">
-  <li><a href="#P-01">Introduction</a></li>
-  <li><a href="#P-02">The GUI</a></li>
-  <li><a href="#P-03">...</a> </li>
+  <li><a href="#P-01">Introduction</a>
+    <ul>
+      <li><a href="#P-01-01">Inkscape SVG files</a></li>
+    </ul>
+  </li>
+  <li><a href="#P-02">Basic example</a>
+    <ul>
+      <li><a href="#P-02-01">Importing a SVG file</a></li>
+      <li><a href="#P-02-02">Creating a PyCut Job</a></li>
+      <li><a href="#P-02-03">Creating CAM operations</a></li>
+      <li><a href="#P-02-04">Create the GCode</a></li>
+    </ul>
+  </li>
+  <li><a href="#P-03">GUI Components</a>
+    <ul>
+      <li><a href="#P-03-01">Svg Settings</a></li>
+      <li><a href="#P-03-02">Tool (shared by all Operations)</a></li>
+      <li><a href="#P-03-03">Tabs</a></li>
+      <li><a href="#P-03-04">Material</a></li>
+      <li><a href="#P-03-05">Curve to Line Conversion</a></li>
+      <li><a href="#P-03-06">GCode Conversion</a></li>
+      <li><a href="#P-03-07">GCode Generation</a></li>
+    </ul>
+  </li>
 </ul>
 <script type="text/javascript">
 var tree = document.querySelectorAll('ul.tree a:not(:last-child)');
@@ -57,95 +78,128 @@ for (var i = 0; i < tree.length; i++){
 
 <h2 id="P-01">Introduction</h2>
 
-<p><strong>PyCut</strong> is a clone of <strong>jsCut</strong>, the excellent (at least for beginners) 
+<p>Welcome to <strong>PyCut</strong>, a clone of <strong>jsCut</strong>, the excellent (at least for beginners) 
 CAM, web-based programm, that takes as input svg files and generates G-Code. 
 So why this rewrite ?</p>
 
-<p>One reason is: I wanted the spindle control (M3/M5) codes inside 
-the generated g-code. It is worth a rewrite!</p>
+<p>PyCut aims to offer all the (minimalistics) features found in jsCut, with some small improvements. 
+Hopefully you will find PyCut usefull when learning CNC and producing your first GCode files.</p>
 
-<p>So it begins as a "fun" project, in order to understand how a G-code generator
-works, and how easy (or hard) it is to achieve. Well, it is not so easy 
-(but stealing jsCut code helps). And I learned about jsCut through the 
-<a href="https://cncphilosophy.com/svg-to-G-Code">CnC Philosophy</a> pages.</p>
+<p>Starting point of PyCut are SVG files, your designs. In the following, we will use Inkscape to produce SVG files,
+and will shortly point out what has to be taken into consideration when creating an "usable" SVG file.</p>
 
-<p>By the way,I began to use <strong>jsCut</strong> because <strong>Easel</strong> (for beginners too),
-although free, makes limitations (among others) on the choices of the fonts
-- which is quite a shame...</p>
+<h3>Inkscape</h3>
 
-<p>An other point is (to me) the "major" shortcoming of <strong>jsCut</strong>: the fact that it is a web
-application: sure for developpers who know javascript technology it is very
-productive, but how many users are able to improve <strong>jsCut</strong> on their own? only a
-few I guess: it is not as easy as one may think. This is due to my opinion to
-the fact javascript/html frameworks are just a pain to understand for people not
-used to the web technologies (which by the way change lets say every 3 years...). 
-Traditional desktop applications are a lot easier to hack (yes!)</p>
+<p>With Inkscape, the first step is to specify the "Document size". Please choose as units "mm", "cm" or "in". 
+This will be use later when creating GCode with the option "Zero Lower Left of Material" as reference. 
+This option needs the Y size of the material.</p>
 
-<p>Web technologies change every 3 years? Consider <strong>jsCut</strong> GUI itself, which is
-based on the "polymer" HTML framework, which is (used to be) an excellent framework. 
-Who which is new to javascript has ever heard of this lib before?! It is even not that old! 
-And "polymer" is also based on so-called "html
-imports", which are in 2022 theoretically no more allowed (as far as know)... 
-How many html files/lines of code are neccessary 
-to achieve the task, compared to, when written in python, only a few Qt Ui files 
-for the design and the python main program having max 1000 lines of code? 
-(Ok,there are other files around).
-I believe as well that the python code is also much easier to understand
-than the <strong>jsCut</strong> code. Nothing at all against <strong>jsCut</strong>, it is just the web stuff.</p>
+<p>Then, after having creating your design (rectangles, circles, text etc), convert all the items to "paths".</p>
 
-<p>So PyCut is written in python, with the GUI with PySide6. I actually use Python-3.9. 
-It can be of importance for the Clipper SWIG wrapper. It seems different versions of python
-load DLL differently. In all cases, for Python-3.9 it seems that, for windows, some mingw64 libs are required alongside the 
-generated .pyd wrapper. These few libs have been pushed in the repository. I did not try wrappers for linux/macos.</p>
+<p>It has unfortunately to be said that it is a bit annoying to have to keep 2 versions of your design, the first one
+as standard svg, the second one as a transformed, "paths" version. This is because PyCut can only work with "paths".</p>
 
-<p>Hopefully there will be users that will be able to contribute. There is a developper doc for 
-this purpose (<span style="color:#ff0080">TODO</span>)</p>
+<p>Could PyCut work with the original, non-"paths" version of the SVG ? Well it theorically could, if PyCut was able
+internally to perform this transformation. There is indeed an external Inkscape script "to paths" that could be used.
+But this will be for version 2 of PyCut.</p>
 
-<p>The excellent things from <strong>jsCut</strong> are (among others):</p>
-<ul>
-  <li>a great svg viewer, with an API to add svg path(s) to the viewer content:
-	  <ul>
-	    <li>in black the regions of the geometry that will be affected</li>
-	    <li>in green the calculated toolpaths</li>
-	  </ul>
-  </li>
-  <li>a great gcode simulator -in webgl-</li>
-  <li>the CAM stuff, based on the Clipper library as well as some c++ code with js wrapper:
-     hopefully a swig wrapper or something equivalent is feasible</li>
-</ul>
-
-<p>So the idea is the following:</p>
-<ul>
-  <li>MainWindow in PySide <span style="color:#00a000"> DONE</span></li>
-  <li>in PySide, display the SVG viewer stuff (QGraphicsView with SvgItem) <span style="color:#00a000"> DONE (geometry previews, toolpaths)</span></li>
-  <li>in PySide, display the WebGL stuff (QEngineView)<span style="color:#00a000"> DONE</span></li>
-  <li>G-Code Generation (lot of js code to understand) <span style="color:#00a000"> DONE</span></li>
-  <li>G-Code generation with spindle control (actually absent in <strong>jsCut</strong> -wow! what a feature!-) <span style="color:#00a000">DONE</span></li>
-  <li>G-Code viewer (as in Candle) <span style="color:#00a000"> DONE</span></li>
-</ul>
-
-<p>After that</p>
-<ul>
-  <li>Tabs handling ? (cam c++ wrapper + js code, nothing done at this point) <span style="color:#ff0080">TODO</span></li>
-  <li>Migrating WebGL stuff to "native" python ? (QtOpenGL) <span style="color:#ff0080">TODO</span></li>
-  <li>Toolpaths for vPocket operations ? (cam c++ wrapper, nothing done at this point) <span style="color:#ff0080">TODO</span></li>
-</ul>
-
-<p>Infact, as far as I have understood, the tabs have to be created in the original svg,
-and this is not very practical. It would be nicer to make as in <strong>GrblGru</strong> 
-where the tabs are simply set "on the fly" on the svg view by indicating how many tabs one wishes
-(with their "types": ROUND etc. plus height/length). They then appear on the viewer and can
-be interactively dragged (Correction: they are not draggable) on the toolpath.</p>
-<p>This is how the tabs should be implemented I think. So the svg viewer has to be 
-more widget-like and interactiv.</p>
-<p>But of course, when done, the gcode generation will be -again- stolen from jsCut...</p>
+<p>Infact, actually the user can edit per hand the "paths" version, clean the svg of all Inkscape stuff and give
+meaningfull ids to the paths: these "ids" allow the user to recognize the paths that will be selected for the CAM
+operations later on. </p>
 
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
-<h2 id="P-02">The GUI</h2>
+<h2 id="P-02">Basic example</h2>
 
-<p>It it nearly completely modelled after <strong>jsCut</strong>.</p>
+<h3>Importing a SVG file</h3>
+
+<p>So import the "paths" version of your svg: The SVG content should be displayed in the central area.
+
+<h3>Creating a PyCut Job</h3>
+
+<p>Then create a new "job" : this is a kind of container that stores the svg file name, the CAM operations 
+that will be created for this specific svg file, and all the settings relavant when generating g-Code.</p>
+
+<p>Later, after having saved the job, it will be possble to reload it, with all its stored CAM operations and others settings.</p>
+
+<h3>Creating CAM operations</h3>
+
+<p>Once an empty job is created, it is time to create some CAM operations: select 1 or more items in SVG window (they should turn beige)
+and click the button "Create Operation": a new operation in the operation table should appear.</p>
+
+<p>Define the properties of the operation: the main one is the CAM operation type: "Pocket", "Engrave", "Inside" or "Outside". 
+The others options wil be discussed later. Default values at this point should be Ok.</p>
+
+<h3>Create the GCode</h3>
+
+<p>Select one or more CAM operations in the operations table: the "geometry" of the operation(s) should turn black in the SVG viewer:
+this is (are) the region(s) of the material that wil be affected when cutting the material.</p>
+
+<p>Then finish creating the G-Code by pressing one button "g code" in the operation table: the tool path(s) should appears in green in the black regions.</p>
+
+<p>The produced G-Code can be inspected in the "G code viewer" and the "G code Simulator" display areas.</p>
+
+<p>You just have to save the G-Code and you're done.</p>
+
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+
+<h2>GUI Components</h2>
+
+<h3>Svg Settings</h3>
+
+<p>Actually not used</p>
+
+<h3>Tool (shared by all Operations)</h3>
+
+<p>The tool properties have a great influence on the resulting C-Code</p>
+<p>...</p>
+
+<h3>Tabs</h3>
+
+<p>Not implemented</p>
+
+<h3>Material</h3>
+
+<p>Actually not used</p>
+
+<h3>Curve to Line Conversion</h3>
+
+<p>If your design contain curves (svg "arcs" or "bezier" curves), they have to be discretized in small segments.</p>
+
+<p>The 2 following parameters allow to specified how fine the curve discretization will be</p>
+
+<ul>
+  <li>Minimun number of segments</li>
+  <li>Segment lenght</li>
+</ul>
+
+<h3>GCode Conversion</h3>
+
+<p>The starting location of a milling operation is given by the initial location in the GCode. Per default, PyCut
+  gives as starting point the (0,0) coordinates of the SVG file, which is located at the top-left of the material. This is SVG convention.</p>
+
+<p>It is possible to chnage the starting location of the job</p>
+
+<ul>
+  <li>Lower Left location of the Material</li>
+  <li>Lower Left location of the Job</li>
+  <li>Center of the Job</li>
+</ul>
+
+<h3>GCode Generation</h3>
+
+<p>Some useful options can be set up:</p>
+
+<ul>
+  <li>Return at initial location at end of the Job</li>
+  <li>Spindle Start/Stop (M3/M5 codes)</li>
+  <li>M2 code</li>
+</ul>
+
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
 
 </div>
 </body>
