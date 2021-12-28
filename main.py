@@ -87,6 +87,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.setWindowTitle("PyCut")
         self.setWindowIcon(QtGui.QIcon(":/images/tango/32x32/categories/applications-system.png"))
 
+        self.operations = []
+        self.tabs = []
+
         # a job to keep the generated gcode in memory (and save it)
         self.job = None
 
@@ -139,7 +142,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.init_gui()
 
-        job_no = 2
+        job_no = 1
         
         if job_no == 1:
             self.open_job("./jobs/cnc_three_rects.json")
@@ -238,7 +241,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             }, 
             "Tabs": {
                 "Units"      : self.ui.comboBox_Tabs_Units.currentText(),
-                "MaxCutDepth": self.ui.doubleSpinBox_Tabs_MaxCutDepth.value()
+                "MaxCutDepth": self.ui.doubleSpinBox_Tabs_MaxCutDepth.value(),
+                "tabs"       : []  # TODO
             },
             "Tool" : {
                 "Units"      : self.ui.comboBox_Tool_Units.currentText(),
@@ -324,6 +328,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             # clean current job (table)
             self.operations = []
             self.ui.operationsview_manager.set_operations(self.operations)
+
+            # clean current tabs (table)
+            self.tabs = []
+            #self.ui.tabsview_manager.set_tabs(self.tabs) TODO
             
             self.display_svg(self.svg_file)
  
@@ -333,8 +341,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_file = None
         self.display_svg(self.svg_file)
 
-        # clean current job (table)
-        self.ui.operationsview_manager.set_operations([])
+        # clean current job (operations table)
+        self.operations = []
+        self.ui.operationsview_manager.set_operations(self.operations )
+
+        # clean current job (tabs table)
+        self.tabs = []
+        #self.ui.tabsview_manager.set_tabs(self.tabs)  # TODO
 
     def cb_open_job(self):
         '''
@@ -353,6 +366,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         
             self.svg_file = job["svg_file"]
             self.operations = job["operations"]
+            self.tabs = job["settings"]["Tabs"].get("tabs", [])
         
             # display
             self.display_svg(self.svg_file)
@@ -362,6 +376,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             # fill operations table
             self.ui.operationsview_manager.set_operations(self.operations)
+
+            # fill tabs table
+            #self.ui.tabsview_manager.set_tabs(self.tabs)  # TODO
         
     def cb_save_job(self):
         '''
@@ -681,6 +698,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             fp.close()
 
             self.svg_viewer.set_svg(svg)
+            self.svg_viewer.set_tabs(self.tabs)
 
     def display_cnc_ops_geometry(self, operations: List[operations_tableview.OpItem]):
         '''
@@ -784,7 +802,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         toolModel.plungeRate = ValWithUnit(settings["Tool"]["Plunge"], toolModel.units)
         toolModel.cutRate = ValWithUnit(settings["Tool"]["Cut"], toolModel.units)
         
-        tabsmodel = TabsModel(svgModel, materialModel, None, None)
+        tabsmodel = TabsModel(svgModel, materialModel, self.tabs, 0.0)
         # still not used
 
         gcodeModel = GcodeModel()

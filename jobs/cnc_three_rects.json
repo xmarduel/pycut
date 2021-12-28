@@ -110,7 +110,24 @@
     },
     "Tabs": {
       "Units": "mm",
-      "MaxCutDepth": 1.0
+      "MaxCutDepth": 1.0,
+      "tabs": [
+        {
+          "center": [10, 10],
+          "radius": 4,
+          "height": 2
+        },
+        {
+          "center": [10, 20],
+          "radius": 4,
+          "height": 3
+        },
+        {
+          "center": [10, 30],
+          "radius": 4,
+          "height": 4
+        }
+      ]
     },
     "Tool": {
       "Units": "inch",

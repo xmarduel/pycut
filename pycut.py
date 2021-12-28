@@ -140,128 +140,70 @@ class MaterialModel:
 
 class Tab:
     '''
-    '''
-    def __init__(self,
-            svgViewModel: SvgModel, 
-            tabsModel: 'TabsModel', 
-            tabsGroup, 
-            rawPaths, 
-            toolPathsChanged, 
-            loading) :
-        '''
-        '''
-        self.svgViewModel = svgViewModel
-        self.tabsModel = tabsModel
-        self.tabsGroup = tabsGroup
-        self.rawPaths = rawPaths
-        self.toolPathsChanged = toolPathsChanged
-        self.loading = loading
-
-        self.enabled = True
-        self.margin = 0.0
-        
-        self.combinedGeometry = []
-        self.combinedGeometrySvg = None
-
-        tabsModel.unitConverter.addComputed(self.margin)
-
-        def xxxx(newValue):
-            if newValue:
-                v = "visible"
-            else:
-                v = "hidden"
-            if self.combinedGeometrySvg:
-                self.combinedGeometrySvg.attr("visibility", v)
+    Not yet used
     
+    a Tab is defined by a circle with position (x,y) 
+    and height from the buttom of the material 
+    '''
+    def __init__(self, tab: Dict[str, Any]) :
+        '''
+        '''
+        self.center = tab["center"]
+        self.radius = tab["radius"]
+        self.height = tab["height"]
 
-        #self.enabled.subscribe(xxxx)
-        #self.margin.subscribe(self.recombine)
-        self.recombine()
+    def make_svg_path(self):
+        '''
+        '''
+        path = SvgPath.fromCircleDef(self.center, self.radius)
+        path.p_attrs["fill"] = "#ff0000"
 
-    def removeCombinedGeometrySvg(self):
-        if self.combinedGeometrySvg:
-            self.combinedGeometrySvg.remove()
-            self.combinedGeometrySvg = None
+        return path
 
+    def posInsideTab(self, x: float, y: float, z: float, cut_depth: float):
+        '''
+        ---------------------- 0
 
-    def recombine(self):
-        if self.loading:
-            return
+                          ---- z is negativ
+         material
+        ---------------------- height = 2
+        ---------------------- cut_depth = 10
+        
+        '''
+        if cut_depth + z > self.height:
+            # still above the tab
+            return False
 
-        self.removeCombinedGeometrySvg()
+        dx = self.center.x - x
+        dy = self.center.y - y
 
-        def alert(msg):
-            showAlert(msg, "alert-warning")
+        return (dx*dx + dy*dy <= self.radius*self.radius)
 
-        all = []
-        for rawPath in self.rawPaths:
-            geometry = ClipperUtils.getClipperPathsFromSnapPath(rawPath.path, self.svgViewModel.pxPerInch, alert)
-            if geometry != None:
-                if rawPath.nonzero:
-                    fillRule = ClipperLib.PolyFillType.pftNonZero
-                else:
-                    fillRule = ClipperLib.PolyFillType.pftEvenOdd
-                all.append(ClipperUtils.simplifyAndClean(geometry, fillRule))
-
-        if len(all) == 0:
-            self.combinedGeometry = []
-        else :
-            self.combinedGeometry = all[0]
-            for o in all:
-                self.combinedGeometry = ClipperUtils.clip(self.combinedGeometry, o, ClipperLib.ClipType.ctUnion)
-
-        offset = self.margin.toInch() * ClipperUtils.inchToClipperScale
-        if offset != 0:
-            self.combinedGeometry = ClipperUtils.offset(self.combinedGeometry, offset)
-
-        if len(self.combinedGeometry) != 0:
-            path = ClipperUtils.getSnapPathFromClipperPaths(self.combinedGeometry, self.svgViewModel.pxPerInch())
-            if path != None:
-                self.combinedGeometrySvg = self.tabsGroup.path(path).attr("class", "tabsGeometry")
-
-        self.enabled(True)
-        self.toolPathsChanged()
-
+   
+    
 class TabsModel:
     '''
+    Not yet used
     '''
-    def __init__(self, 
-            svgViewModel: SvgModel, 
-            materialModel: MaterialModel, 
-            tabsGroup, 
-            toolPathsChanged):
+    def __init__(self,
+            svgModel: SvgModel, 
+            materialModel: MaterialModel,
+            tabs: List[Tab],
+            cut_depth: float):
     
-        self.svgViewModel = svgViewModel
-        self.materialModel = materialModel
-        self.tabsGroup = tabsGroup 
-        self.toolPathsChanged = toolPathsChanged
+        self.tabs: List[Tab] = tabs
+        self.cut_depth = cut_depth
+    
+    def hasTabs(self):
+        return len(self.tabs) > 0
 
-        self.tabs: List[Tab] = []
-        self.units = self.materialModel.matUnits
-        self.maxCutDepth = ValWithUnit(0, self.units)
+    def posInTab(self, x: float, y: float, z: float):
+        rc = False
 
-    def addTab(self):
-        rawPaths = []
-
-        for element in self.selectionViewModel.getSelection():
-            rawPaths.append({
-                'path': Snap.parsePathString(element.attr('d')),
-                'nonzero': element.attr("fill-rule") != "evenodd",
-            })
-
-        self.selectionViewModel.clearSelection()
-        tab = Tab(self.svgViewModel, self, self.tabsGroup, rawPaths, self.toolPathsChanged, False)
-        self.tabs.append(tab)
-        self.toolPathsChanged()
-
-    def removeTab(self, tab):
-        tab.removeCombinedGeometrySvg()
-        self.tabs.remove(tab)
-        self.toolPathsChanged()
-
-    def clickOnSvg(self, elem) :
-        if elem.attr("class") == "tabsGeometry":
-            return True
+        for tab in self.tabs:
+            if tab.posInsideTab(x, y, z, self.cut_depth):
+                return True
+        
         return False
 
 class CncOp:
@@ -372,7 +314,7 @@ class CncOp:
             self.preview_geometry = ClipperUtils.offset(self.geometry, offset)
 
             # always as if there were "rings"
-            self.geometry_svg_paths = [SvgPath.fromClipperPaths("geometry_pocket", self.preview_geometry)]
+            self.geometry_svg_paths = [SvgPath.fromClipperPaths("pycut_geometry_pocket", self.preview_geometry)]
 
     def calculate_preview_geometry_inside(self, toolModel: ToolModel):
         '''
@@ -398,7 +340,7 @@ class CncOp:
             #ClipperLib.dumpPaths("geometry", self.preview_geometry)
 
         # should have 2 paths, one inner, one outer -> show the "ring"
-        self.geometry_svg_paths = [SvgPath.fromClipperPaths("geometry_inside", self.preview_geometry)]
+        self.geometry_svg_paths = [SvgPath.fromClipperPaths("pycut_geometry_inside", self.preview_geometry)]
 
     def calculate_preview_geometry_outside(self, toolModel: ToolModel):
         '''
@@ -422,13 +364,13 @@ class CncOp:
             #ClipperLib.dumpPaths("preview geometry", self.preview_geometry)
 
         # should have 2 paths, one inner, one outer -> show the "ring"
-        self.geometry_svg_paths = [SvgPath.fromClipperPaths("geometry_outside", self.preview_geometry)]
+        self.geometry_svg_paths = [SvgPath.fromClipperPaths("pycut_geometry_outside", self.preview_geometry)]
 
     def calculate_preview_geometry_engrave(self):
         '''
         '''
         for clipper_path in self.geometry:
-            svg_path = SvgPath.fromClipperPath("geometry_engrave", clipper_path)
+            svg_path = SvgPath.fromClipperPath("pycut_geometry_engrave", clipper_path)
             self.geometry_svg_paths.append(svg_path)
 
     def calculate_preview_geometry_vpocket(self):

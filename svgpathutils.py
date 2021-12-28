@@ -1,5 +1,6 @@
 
 import os
+import math
 
 from typing import List
 from typing import Dict
@@ -13,6 +14,8 @@ import numpy as np
 import clipper.clipper as ClipperLib
 
 from clipper_utils import ClipperUtils
+
+M_PI = math.acos(-1)
 
 
 class SvgPath:
@@ -113,6 +116,30 @@ class SvgPath:
         return clipper_path
 
     @classmethod
+    def fromCircleDef(cls, center, radius) -> 'SvgPath':
+        '''
+        Note:
+            the path 'id' are quite important for the svg viewer
+            Here we give the id 'prefix'
+        '''
+        NB_SEGMENTS = 12
+        angles = [ float(k * M_PI )/ (NB_SEGMENTS) for k in range(NB_SEGMENTS*2 +1)]
+
+        discretized_svg_path : List[complex] = [ complex( \
+                    center[0] + radius*math.cos(angle), 
+                    center[1] + radius*math.sin(angle) ) for angle in angles]
+
+        svg_path = svgpathtools.Path()
+
+        for i in range(len(discretized_svg_path)-1):
+            start = discretized_svg_path[i]
+            end   = discretized_svg_path[i+1]
+
+            svg_path.append(svgpathtools.Line(start, end))
+
+        return SvgPath("pycut_tab", {'d': svg_path.d()})
+
+    @classmethod
     def fromClipperPath(cls, prefix: str, clipper_path: ClipperLib.IntPointVector) -> 'SvgPath':
         '''
         Note:
@@ -194,11 +221,13 @@ class SvgTransformer:
         for k, svg_path in enumerate(svg_paths):
             id = svg_path.p_id
             dd = svg_path.p_attrs['d']
+
+            fill = svg_path.p_attrs.get("fill", "#111111")
             
             if 'fill-rule' in svg_path.p_attrs:
-                path = '<path id="%s_%d" style="fill:#111111;stroke-width:0;stroke:#00ff00;fill-rule:%s;"  d="%s" />' % (id, k, svg_path.p_attrs['fill-rule'], dd)
+                path = '<path id="%s_%d" style="fill:%s;stroke-width:0;stroke:#00ff00;fill-rule:%s;"  d="%s" />' % (id, k, fill, svg_path.p_attrs['fill-rule'], dd)
             else:
-                path = '<path id="%s_%d" style="fill:#111111;stroke-width:0;stroke:#00ff00"  d="%s" />' % (id, k, dd)
+                path = '<path id="%s_%d" style="fill:%s;stroke-width:0;stroke:#00ff00;"  d="%s" />' % (id, k, fill, dd)
 
 
             all_paths += path + '\r\n'
@@ -211,7 +240,6 @@ class SvgTransformer:
                 height="%s"
                 viewBox="%s"
                 version="1.1">
-                <style>svg { background-color: green; }</style>
                 <g>
                  %s
                 </g> 

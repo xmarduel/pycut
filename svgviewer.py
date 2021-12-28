@@ -42,11 +42,11 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
             self.selected_effect.setStrength(1)
     
     def mousePressEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
-        print('svg item: ' + self.elementId() + ' - mousePressEvent()' + str(self.isSelected()))
+        print('svg item: ' + self.elementId() + ' - mousePressEvent()  isSelected=' + str(self.isSelected()))
         super().mousePressEvent(event)
 
     def mouseReleaseEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
-        print('svg item: ' + self.elementId() + ' - mouseReleaseEvent()' + str(self.isSelected()))
+        print('svg item: ' + self.elementId() + ' - mouseReleaseEvent() isSelected=' + str(self.isSelected()))
         super().mouseReleaseEvent(event)
 
     def colorizeWhenSelected(self):
@@ -81,6 +81,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         # the content of the svf file as string
         self.svg = None
+        # and the extra tabs contained in the job description
+        self.tabs = []
+
         # dictionnay path id -> path d def for all path definition in the svg
         self.svg_path_d = {}
 
@@ -191,12 +194,24 @@ class SvgViewer(QtWidgets.QGraphicsView):
             item = SvgItem(id, self.renderer)
             self.scene.addItem(item)
 
-            #self.fitInView(item, QtCore.Qt.KeepAspectRatio)
+            # tabs can be dragged
+            if id.startswith("pycut_tab"):
+                item.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsMovable, True)
+
+            # pycut generated paths cannot be selected
+            if id.startswith("pycut"):
+                item.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, False)
 
             self.items.append(item)
 
         # zoom with the initial zoom factor
         self.scale(self.currentZoom, self.currentZoom)
+
+    def set_tabs(self, tabs: List['Tab']):
+        '''
+        '''
+        self.tabs = tabs
+        self.display_tabs(self.tabs)
 
     def get_svg_path_d(self, p_id):
         return self.svg_path_d[p_id]
@@ -294,34 +309,25 @@ class SvgViewer(QtWidgets.QGraphicsView):
         '''
         self.clean()
         self.fill_svg_viewer(self.svg)
-    
-    def display_geometry_op(self, svg_paths: List[SvgPath]):
-        '''
-        The list of svg_paths results of the operation 'combinaison' of the 
-        svg selected path 'items' in the graphics view
+        self.display_tabs(self.tabs)
 
-        The resulting svg_paths will the displayed in black together with the original svg
+    def display_tabs(self, tabs):
         '''
+        '''
+        from pycut import Tab
+
         transformer = SvgTransformer(self.svg)
-        augmented_svg = transformer.augment(svg_paths)
 
-        self.fill_svg_viewer(augmented_svg)
+        tabs_paths = []
+        for tab in tabs:
+            tabs_paths.append(Tab(tab).make_svg_path())
 
-    def display_toolpaths_op(self, svg_paths: List[SvgPath]):
-        '''
-        The list of svg_paths results of the toolpath calculation
-
-        The resulting svg_paths will the displayed in yellow together with the original svg
-        '''
-        transformer = SvgTransformer(self.svg)
-        augmented_svg = transformer.augment_with_lines(svg_paths)
+        augmented_svg = transformer.augment(tabs_paths)
 
         self.fill_svg_viewer(augmented_svg)
 
     def display_job(self, cnc_ops: List['CncOp']):
         '''
-        Display more than 1 cnc_op
-
         The list of svg_paths results of the toolpath calculation for given ops
         The resulting svg_paths will the displayed in yellow together with the original svg
         '''
@@ -346,8 +352,6 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
     def display_job_geometry(self, cnc_ops: List['CncOp']):
         '''
-        Display more than 1 cnc_op
-
         The list of svg_paths results of the toolpath calculation for given ops
         The resulting svg_paths will the displayed in yellow together with the original svg
         '''
