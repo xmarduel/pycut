@@ -20,6 +20,7 @@ import svgviewer
 import gcodeviewer.widgets.glwidget_container as glwidget_container
 import webglviewer
 import operations_tableview
+import tabs_tableview
 
 import material_widget
 
@@ -44,7 +45,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         },
         "Tabs": {
             "Units"       : "mm",
-            "MaxCutDepth" : 1.0
+            "MaxCutDepth" : 1.0,
+            "tabs"        : []
         },
         "Tool" : {
             "Units"       : "mm",
@@ -101,6 +103,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.webgl_viewer = self.setup_webgl_viewer()
         self.candle_viewer = self.setup_candle_viewer()
 
+        self.ui.tabsview_manager.set_svg_viewer(self.svg_viewer)
         self.ui.operationsview_manager.set_svg_viewer(self.svg_viewer)
 
         # callbacks
@@ -331,7 +334,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             # clean current tabs (table)
             self.tabs = []
-            #self.ui.tabsview_manager.set_tabs(self.tabs) TODO
+            self.ui.tabsview_manager.set_tabs(self.tabs)
             
             self.display_svg(self.svg_file)
  
@@ -347,7 +350,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         # clean current job (tabs table)
         self.tabs = []
-        #self.ui.tabsview_manager.set_tabs(self.tabs)  # TODO
+        self.ui.tabsview_manager.set_tabs(self.tabs)
 
     def cb_open_job(self):
         '''
@@ -378,7 +381,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.operationsview_manager.set_operations(self.operations)
 
             # fill tabs table
-            #self.ui.tabsview_manager.set_tabs(self.tabs)  # TODO
+            self.ui.tabsview_manager.set_tabs(self.tabs)
         
     def cb_save_job(self):
         '''
@@ -572,6 +575,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         layout = svg.layout()
         
         svg_viewer = svgviewer.SvgViewer(svg)
+        svg_viewer.set_mainwindow(self)
         
         layout.addWidget(svg_viewer)
         layout.setStretch(0, 1)
@@ -698,7 +702,20 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             fp.close()
 
             self.svg_viewer.set_svg(svg)
+            # and the tabs if any
             self.svg_viewer.set_tabs(self.tabs)
+
+    def assign_tabs(self, tabs):
+        '''
+        '''
+        self.tabs = tabs
+        self.ui.tabsview_manager.set_tabs(self.tabs)
+    
+    def display_cnc_tabs(self, tabs: List[tabs_tableview.TabItem]):
+        '''
+        '''
+        self.tabs = [ tab.to_dict() for tab in tabs ]
+        self.svg_viewer.set_tabs(self.tabs)
 
     def display_cnc_ops_geometry(self, operations: List[operations_tableview.OpItem]):
         '''

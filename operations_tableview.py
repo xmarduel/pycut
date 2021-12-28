@@ -49,7 +49,7 @@ class OpItem:
             "Width": self.width 
         }
 
-class PMFDoubleSpinBox(QtWidgets.QDoubleSpinBox):
+class PyCutDoubleSpinBox(QtWidgets.QDoubleSpinBox):
     '''
     '''
 
@@ -108,7 +108,7 @@ class PMFDoubleSpinBox(QtWidgets.QDoubleSpinBox):
         val = self.value()
         self.o.put_value(self.attribute, val)
 
-class PMFCheckBox(QtWidgets.QCheckBox):
+class PyCutCheckBox(QtWidgets.QCheckBox):
     '''
     '''
     def __init__(self, parent):
@@ -158,7 +158,7 @@ class PMFCheckBox(QtWidgets.QCheckBox):
         val = {QtCore.Qt.Checked: True, QtCore.Qt.Unchecked: False}[self.checkState()]
         self.o.put_value(self.attribute, val)
 
-class PMFComboBox(QtWidgets.QComboBox):
+class PyCutComboBox(QtWidgets.QComboBox):
     '''
     '''
 
@@ -227,9 +227,9 @@ class PMFComboBox(QtWidgets.QComboBox):
 
         self.o.put_value(self.attribute, val)
 
-class PMFCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
+class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
     def createEditor(self, parent, option, index: QtCore.QModelIndex):
-        editor = PMFCheckBox(parent)
+        editor = PyCutCheckBox(parent)
 
         op = index.model().get_operation(index)
         attr = index.model().get_operation_attr(index)
@@ -254,20 +254,20 @@ class PMFCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
     def onEditorStateChanged(self):
         editor = self.sender()
         if editor:
-            print("onEditorStateChanged - PMFCheckBoxDelegate - editor", editor)
+            print("onEditorStateChanged - PyCutCheckBoxDelegate - editor", editor)
             checkWidget = editor.parent()
             self.commitData.emit(checkWidget)
 
     def setEditorData(self, checkWidget: QtWidgets.QWidget, index: QtCore.QModelIndex):
         checkBoxItem = checkWidget.layout().itemAt(0)
-        checkBox : PMFCheckBox = checkBoxItem.widget()
+        checkBox : PyCutCheckBox = checkBoxItem.widget()
         checkBox.set_value()
 
     def setModelData(self, checkWidget: QtWidgets.QWidget, model, index: QtCore.QModelIndex):
-        print("PMFCheckBoxDelegate::setModelData - editor", checkWidget)
+        print("PyCutCheckBoxDelegate::setModelData - editor", checkWidget)
 
         checkBoxItem = checkWidget.layout().itemAt(0)
-        checkBox : PMFCheckBox = checkBoxItem.widget()
+        checkBox : PyCutCheckBox = checkBoxItem.widget()
 
         model.handleNewvalue(index, checkBox.isChecked())
         return
@@ -275,7 +275,7 @@ class PMFCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
     def updateEditorGeometry(self, editor, option, index: QtCore.QModelIndex):
         editor.setGeometry(option.rect)
 
-class PMFComboBoxDelegate(QtWidgets.QItemDelegate):
+class PyCutComboBoxDelegate(QtWidgets.QItemDelegate):
     def createEditor(self, parent, option, index: QtCore.QModelIndex):
         col = index.column()
 
@@ -290,7 +290,7 @@ class PMFComboBoxDelegate(QtWidgets.QItemDelegate):
             self.items = ["Conventional", "Climb"]
        
 
-        editor = PMFComboBox(parent, self.items)
+        editor = PyCutComboBox(parent, self.items)
 
         op = index.model().get_operation(index)
         attr = index.model().get_operation_attr(index)
@@ -307,25 +307,25 @@ class PMFComboBoxDelegate(QtWidgets.QItemDelegate):
     def onEditorCurrentIndexChanged(self, idx):
         editor = self.sender()
         if editor:
-            print("onEditorCurrentIndexChanged - PMFComboBoxDelegate")
+            print("onEditorCurrentIndexChanged - PyCutComboBoxDelegate")
             self.commitData.emit(editor)
 
-    def setEditorData(self, comboBox: PMFComboBox, index: QtCore.QModelIndex):
+    def setEditorData(self, comboBox: PyCutComboBox, index: QtCore.QModelIndex):
         comboBox.set_value()
 
-    def setModelData(self, comboBox: PMFComboBox, model, index: QtCore.QModelIndex):
+    def setModelData(self, comboBox: PyCutComboBox, model, index: QtCore.QModelIndex):
         model.handleNewvalue(index, comboBox.currentText())
         return
 
-    def updateEditorGeometry(self, comboBox: PMFComboBox, option, index: QtCore.QModelIndex):
+    def updateEditorGeometry(self, comboBox: PyCutComboBox, option, index: QtCore.QModelIndex):
         comboBox.setGeometry(option.rect)
 
-class PMFDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
+class PyCutDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
     def __init__(self, parent):
         QtWidgets.QItemDelegate.__init__(self, parent)
 
     def createEditor(self, parent, option, index: QtCore.QModelIndex):
-        editor = PMFDoubleSpinBox(parent)
+        editor = PyCutDoubleSpinBox(parent)
 
         op = index.model().get_operation(index)
         attr = index.model().get_operation_attr(index)
@@ -341,21 +341,21 @@ class PMFDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
     def onEditorValueChanged(self):
         editor = self.sender()
         if editor:
-            print("onEditorValueChanged - PMFDoubleSpinBoxDelegate")
+            print("onEditorValueChanged - PyCutDoubleSpinBoxDelegate")
             self.commitData.emit(editor)
 
-    def setEditorData(self, spinBox: PMFDoubleSpinBox, index: QtCore.QModelIndex):
+    def setEditorData(self, spinBox: PyCutDoubleSpinBox, index: QtCore.QModelIndex):
         spinBox.set_value()
 
-    def setModelData(self, spinBox: PMFDoubleSpinBox, model, index: QtCore.QModelIndex):
+    def setModelData(self, spinBox: PyCutDoubleSpinBox, model, index: QtCore.QModelIndex):
         model.handleNewvalue(index, spinBox.value())
         return
 
-    def updateEditorGeometry(self, editor: PMFDoubleSpinBox, option, index: QtCore.QModelIndex):
+    def updateEditorGeometry(self, editor: PyCutDoubleSpinBox, option, index: QtCore.QModelIndex):
         editor.setGeometry(option.rect)
 
 
-class PMFTableViewManager(QtWidgets.QWidget):
+class PyCutOperationsTableViewManager(QtWidgets.QWidget):
 
     def __init__(self, parent):
         '''
@@ -373,7 +373,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
         vbox.setContentsMargins(0, 0, 0, 0)
 
         # let's add two views of the same data source we just created:
-        self.table = PMFSimpleTableView(self)
+        self.table = PyCutSimpleTableView(self)
         self.table.resizeColumnsToContents()
         self.table.setMinimumWidth(800)
 
@@ -408,7 +408,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
             cnc_ops.append(cnc_op)
             
             
-        self.model = PMFSimpleTableModel(cnc_ops, self.main_window)
+        self.model = PyCutSimpleTableModel(cnc_ops, self.main_window)
         self.table.setModel(self.model)
         self.table.setup()
 
@@ -431,7 +431,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
         '''
         self.table.setModel(model)
 
-    def get_model(self) -> 'PMFSimpleTableModel' :
+    def get_model(self) -> 'PyCutSimpleTableModel' :
         '''
         '''
         return self.table.model()
@@ -455,7 +455,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
         for op in self.get_model_operations():
             print(op)
 
-class PMFSimpleTableView(QtWidgets.QTableView):
+class PyCutSimpleTableView(QtWidgets.QTableView):
     '''
     '''
     def __init__(self, parent=None):
@@ -496,34 +496,34 @@ class PMFSimpleTableView(QtWidgets.QTableView):
             "down",                     # [14] button
         ]
         '''
-        delegate = PMFComboBoxDelegate(self)
+        delegate = PyCutComboBoxDelegate(self)
         self.setItemDelegateForColumn(2, delegate)
 
-        delegate = PMFCheckBoxDelegate(self)
+        delegate = PyCutCheckBoxDelegate(self)
         self.setItemDelegateForColumn(3, delegate)
         
-        delegate = PMFComboBoxDelegate(self)
+        delegate = PyCutComboBoxDelegate(self)
         self.setItemDelegateForColumn(5, delegate)
 
-        delegate = PMFDoubleSpinBoxDelegate(self)
+        delegate = PyCutDoubleSpinBoxDelegate(self)
         self.setItemDelegateForColumn(6, delegate)
         
-        delegate = PMFCheckBoxDelegate(self)
+        delegate = PyCutCheckBoxDelegate(self)
         self.setItemDelegateForColumn(7, delegate)
     
-        delegate = PMFComboBoxDelegate(self)
+        delegate = PyCutComboBoxDelegate(self)
         self.setItemDelegateForColumn(8, delegate)
         
-        delegate = PMFComboBoxDelegate(self)
+        delegate = PyCutComboBoxDelegate(self)
         self.setItemDelegateForColumn(9, delegate)
 
-        delegate = PMFDoubleSpinBoxDelegate(self)
+        delegate = PyCutDoubleSpinBoxDelegate(self)
         self.setItemDelegateForColumn(10, delegate)
 
-        delegate = PMFDoubleSpinBoxDelegate(self)
+        delegate = PyCutDoubleSpinBoxDelegate(self)
         self.setItemDelegateForColumn(11, delegate)
 
-        # Make the combo boxes / check boxes / others spacials always displayed.
+        # Make the combo boxes / check boxes / others specials always displayed.
         for k in range(self.model().rowCount(None)):
             self.openPersistentEditor(self.model().index(k, 2)) # cam_op
             self.openPersistentEditor(self.model().index(k, 3)) #   enabled
@@ -624,12 +624,12 @@ class PMFSimpleTableView(QtWidgets.QTableView):
         # instruct the model to generate the g-code for all selected items
         self.model().generate_gcode()
 
-class PMFSimpleTableModel(QtCore.QAbstractTableModel):
+class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
     '''
     model for the table view
     '''
-    def __init__(self, operations, main_window):
-        super(PMFSimpleTableModel, self).__init__()
+    def __init__(self, operations: List[Any], main_window):
+        super(PyCutSimpleTableModel, self).__init__()
         
         self.operations = operations
         self.main_window = main_window
@@ -755,7 +755,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
         return None
 
     def flags(self, index: QtCore.QModelIndex) -> QtCore.Qt.ItemFlags :
-        flags = super(PMFSimpleTableModel, self).flags(index)
+        flags = super(PyCutSimpleTableModel, self).flags(index)
 
         flags |= QtCore.Qt.ItemIsEditable
         flags |= QtCore.Qt.ItemIsSelectable

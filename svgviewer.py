@@ -22,8 +22,9 @@ from val_with_unit import ValWithUnit
 # https://stackoverflow.com/questions/53288926/qgraphicssvgitem-event-propagation-interactive-svg-viewer
 
 class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
-    def __init__(self, id, renderer, parent=None):
+    def __init__(self, id, view, renderer, parent=None):
         super(SvgItem, self).__init__(parent)
+        self.view = view
         self.setSharedRenderer(renderer)
         self.setElementId(id)
         bounds = renderer.boundsOnElement(id)
@@ -43,10 +44,27 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
     
     def mousePressEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
         print('svg item: ' + self.elementId() + ' - mousePressEvent()  isSelected=' + str(self.isSelected()))
+        print('svg item: ' + str(self.pos()))
         super().mousePressEvent(event)
 
     def mouseReleaseEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
         print('svg item: ' + self.elementId() + ' - mouseReleaseEvent() isSelected=' + str(self.isSelected()))
+        print('svg item: ' + str(self.pos()))
+        if self.elementId().startswith("pycut_tab"):
+            # actualize tab object and the mainwindow tabs table
+            str_idx = self.elementId().split("pycut_tab_")[1]
+            idx = int(str_idx)
+            tabs = self.view.tabs
+            tab = tabs[idx]
+            radius = tab["radius"]
+            center = [int(self.pos().x()), int(self.pos().y())]
+            center[0] = center[0] + radius
+            center[1] = center[1] + radius
+            tab["center"] = center 
+            # redraw tabs list
+            mainwindow = self.view.mainwindow
+            mainwindow.assign_tabs(tabs)
+
         super().mouseReleaseEvent(event)
 
     def colorizeWhenSelected(self):
@@ -74,6 +92,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
     def __init__(self, parent):
         super(SvgViewer, self).__init__(parent)
+        self.mainwindow = None
         self.scene = QtWidgets.QGraphicsScene(self)
         self.renderer = QtSvg.QSvgRenderer()
         
@@ -98,6 +117,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # keep zoom factor (used when reloading augmented svg: zoom should be kept)
         self.currentZoom = self.zoomFactor()
 
+    def set_mainwindow(self, mainwindow):
+        self.mainwindow = mainwindow 
+    
     def get_svg_size_x(self) -> ValWithUnit:
         '''
         get the width of the svg given in units "mm", "cm" or "in" (see Inkscape) 
@@ -191,7 +213,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
             self.svg_path_d[id] = dd
 
-            item = SvgItem(id, self.renderer)
+            item = SvgItem(id, self, self.renderer)
             self.scene.addItem(item)
 
             # tabs can be dragged

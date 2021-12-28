@@ -22,7 +22,8 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBo
     QSizePolicy, QSpacerItem, QSpinBox, QSplitter,
     QStatusBar, QTabWidget, QVBoxLayout, QWidget)
 
-from operations_tableview import PMFTableViewManager
+from operations_tableview import PyCutOperationsTableViewManager
+from tabs_tableview import PyCutTabsTableViewManager
 
 class Ui_mainwindow(object):
     def setupUi(self, mainwindow):
@@ -268,7 +269,7 @@ class Ui_mainwindow(object):
         self.verticalLayoutTabsContent.setContentsMargins(-1, -1, -1, 20)
         self.label_Tabs = QLabel(self.centralwidget)
         self.label_Tabs.setObjectName(u"label_Tabs")
-        self.label_Tabs.setEnabled(False)
+        self.label_Tabs.setEnabled(True)
         self.label_Tabs.setFont(font)
         self.label_Tabs.setStyleSheet(u"background-color: rgb(198, 198, 198);")
 
@@ -293,7 +294,7 @@ class Ui_mainwindow(object):
         self.comboBox_Tabs_Units.addItem("")
         self.comboBox_Tabs_Units.addItem("")
         self.comboBox_Tabs_Units.setObjectName(u"comboBox_Tabs_Units")
-        self.comboBox_Tabs_Units.setEnabled(False)
+        self.comboBox_Tabs_Units.setEnabled(True)
 
         self.formLayout_Tabs.setWidget(0, QFormLayout.FieldRole, self.comboBox_Tabs_Units)
 
@@ -305,7 +306,7 @@ class Ui_mainwindow(object):
 
         self.doubleSpinBox_Tabs_MaxCutDepth = QDoubleSpinBox(self.grid_Tabs)
         self.doubleSpinBox_Tabs_MaxCutDepth.setObjectName(u"doubleSpinBox_Tabs_MaxCutDepth")
-        self.doubleSpinBox_Tabs_MaxCutDepth.setEnabled(False)
+        self.doubleSpinBox_Tabs_MaxCutDepth.setEnabled(True)
         self.doubleSpinBox_Tabs_MaxCutDepth.setDecimals(3)
 
         self.formLayout_Tabs.setWidget(1, QFormLayout.FieldRole, self.doubleSpinBox_Tabs_MaxCutDepth)
@@ -313,22 +314,23 @@ class Ui_mainwindow(object):
 
         self.verticalLayout_4.addLayout(self.formLayout_Tabs)
 
-        self.pushButton_Tabs_CreateTabs = QPushButton(self.grid_Tabs)
-        self.pushButton_Tabs_CreateTabs.setObjectName(u"pushButton_Tabs_CreateTabs")
-        self.pushButton_Tabs_CreateTabs.setEnabled(False)
-
-        self.verticalLayout_4.addWidget(self.pushButton_Tabs_CreateTabs)
-
 
         self.verticalLayoutTabsContent.addWidget(self.grid_Tabs)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.tabsview_manager = PyCutTabsTableViewManager(self.centralwidget)
+        self.tabsview_manager.setObjectName(u"tabsview_manager")
+        self.tabsview_manager.setMinimumSize(QSize(0, 100))
 
-        self.verticalLayoutTabsContent.addItem(self.verticalSpacer)
+        self.verticalLayoutTabsContent.addWidget(self.tabsview_manager)
 
 
         self.verticalLayoutLeft.addLayout(self.verticalLayoutTabsContent)
 
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayoutLeft.addItem(self.verticalSpacer)
+
+        self.verticalLayoutLeft.setStretch(3, 1)
 
         self.horizontalLayout_2.addLayout(self.verticalLayoutLeft)
 
@@ -363,7 +365,7 @@ class Ui_mainwindow(object):
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.tabWidget.addTab(self.simulator, "")
         self.splitter.addWidget(self.tabWidget)
-        self.operationsview_manager = PMFTableViewManager(self.splitter)
+        self.operationsview_manager = PyCutOperationsTableViewManager(self.splitter)
         self.operationsview_manager.setObjectName(u"operationsview_manager")
         self.operationsview_manager.setMinimumSize(QSize(0, 200))
         self.operationsview_manager.setMaximumSize(QSize(16777215, 400))
@@ -838,7 +840,6 @@ class Ui_mainwindow(object):
         self.comboBox_Tabs_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
 
         self.label_Tabs_MaxCutDepth.setText(QCoreApplication.translate("mainwindow", u"Max Cut Depth", None))
-        self.pushButton_Tabs_CreateTabs.setText(QCoreApplication.translate("mainwindow", u"Create Tabs", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.svg), QCoreApplication.translate("mainwindow", u"SVG", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.viewer), QCoreApplication.translate("mainwindow", u"GCode Viewer", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.simulator), QCoreApplication.translate("mainwindow", u"GCode Simulator", None))

@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,1,0">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayoutLeft" stretch="0,0,0">
+     <layout class="QVBoxLayout" name="verticalLayoutLeft" stretch="0,0,0,1">
       <item>
        <layout class="QVBoxLayout" name="verticalLayoutSettingsContent">
         <property name="bottomMargin">
@@ -376,7 +376,7 @@
         <item>
          <widget class="QLabel" name="label_Tabs">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="font">
            <font>
@@ -424,7 +424,7 @@
              <item row="0" column="1">
               <widget class="QComboBox" name="comboBox_Tabs_Units">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <item>
                 <property name="text">
@@ -453,7 +453,7 @@
              <item row="1" column="1">
               <widget class="QDoubleSpinBox" name="doubleSpinBox_Tabs_MaxCutDepth">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <property name="decimals">
                 <number>3</number>
@@ -462,33 +462,33 @@
              </item>
             </layout>
            </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_Tabs_CreateTabs">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string>Create Tabs</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </widget>
         </item>
         <item>
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
+         <widget class="PyCutTabsTableViewManager" name="tabsview_manager" native="true">
+          <property name="minimumSize">
            <size>
-            <width>20</width>
-            <height>40</height>
+            <width>0</width>
+            <height>100</height>
            </size>
           </property>
-         </spacer>
+         </widget>
         </item>
        </layout>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </item>
@@ -557,7 +557,7 @@
            <layout class="QVBoxLayout" name="verticalLayout_5"/>
           </widget>
          </widget>
-         <widget class="PMFTableViewManager" name="operationsview_manager" native="true">
+         <widget class="PyCutOperationsTableViewManager" name="operationsview_manager" native="true">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -952,7 +952,7 @@
             </property>
            </widget>
           </item>
-		  <item row="4" column="0">
+          <item row="4" column="0">
            <widget class="QLabel" name="label_GCodeConversion_XOffset">
             <property name="font">
              <font>
@@ -1141,7 +1141,7 @@
             </property>
            </widget>
           </item>
-          </layout>
+         </layout>
         </item>
        </layout>
       </item>
@@ -1311,9 +1311,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PMFTableViewManager</class>
+   <class>PyCutOperationsTableViewManager</class>
    <extends>QWidget</extends>
    <header location="global">operations_tableview.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PyCutTabsTableViewManager</class>
+   <extends>QWidget</extends>
+   <header location="global">tabs_tableview.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -25,7 +25,21 @@
     },
     "Tabs": {
       "Units": "mm",
-      "MaxCutDepth": 1.0
+      "MaxCutDepth": 1.0,
+      "tabs": [
+        {
+          "center": [10, 10],
+          "radius": 4
+        },
+        {
+          "center": [10, 20],
+          "radius": 4
+        },
+        {
+          "center": [10, 30],
+          "radius": 4
+        }
+      ]
     },
     "Tool": {
       "Units": "mm",

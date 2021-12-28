@@ -150,7 +150,7 @@ class Tab:
         '''
         self.center = tab["center"]
         self.radius = tab["radius"]
-        self.height = tab["height"]
+        self.height = 2.0  # FIXME - from the TabsModel
 
     def make_svg_path(self):
         '''
