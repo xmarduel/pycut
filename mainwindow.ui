@@ -908,6 +908,9 @@
             <property name="text">
              <string>Zero lower left (Material)</string>
             </property>
+            <property name="icon">
+             <iconset theme=":/images/tango/22x22/actions/view-refresh.png"/>
+            </property>
            </widget>
           </item>
           <item row="1" column="2">
@@ -927,6 +930,9 @@
             <property name="text">
              <string>Zero lower left (Op)</string>
             </property>
+            <property name="icon">
+             <iconset theme=":/images/tango/22x22/actions/view-refresh.png"/>
+            </property>
            </widget>
           </item>
           <item row="2" column="2">
@@ -945,6 +951,9 @@
             </property>
             <property name="text">
              <string>Zero center (Op)</string>
+            </property>
+            <property name="icon">
+             <iconset theme=":/images/tango/22x22/actions/view-refresh.png"/>
             </property>
            </widget>
           </item>

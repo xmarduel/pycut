@@ -556,6 +556,8 @@ class Ui_mainwindow(object):
         self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial = QPushButton(self.centralwidget)
         self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setObjectName(u"pushButton_GCodeConversion_ZeroLowerLeftOfMaterial")
         self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setFont(font1)
+        icon = QIcon(QIcon.fromTheme(u":/images/tango/22x22/actions/view-refresh.png"))
+        self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setIcon(icon)
 
         self.gridLayout_GCodeConversion.addWidget(self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial, 1, 0, 1, 2)
 
@@ -567,6 +569,7 @@ class Ui_mainwindow(object):
         self.pushButton_GCodeConversion_ZeroLowerLeft = QPushButton(self.centralwidget)
         self.pushButton_GCodeConversion_ZeroLowerLeft.setObjectName(u"pushButton_GCodeConversion_ZeroLowerLeft")
         self.pushButton_GCodeConversion_ZeroLowerLeft.setFont(font1)
+        self.pushButton_GCodeConversion_ZeroLowerLeft.setIcon(icon)
 
         self.gridLayout_GCodeConversion.addWidget(self.pushButton_GCodeConversion_ZeroLowerLeft, 2, 0, 1, 2)
 
@@ -578,6 +581,7 @@ class Ui_mainwindow(object):
         self.pushButton_GCodeConversion_ZeroCenter = QPushButton(self.centralwidget)
         self.pushButton_GCodeConversion_ZeroCenter.setObjectName(u"pushButton_GCodeConversion_ZeroCenter")
         self.pushButton_GCodeConversion_ZeroCenter.setFont(font1)
+        self.pushButton_GCodeConversion_ZeroCenter.setIcon(icon)
 
         self.gridLayout_GCodeConversion.addWidget(self.pushButton_GCodeConversion_ZeroCenter, 3, 0, 1, 2)
 

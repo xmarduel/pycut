@@ -1667,9 +1667,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PMFTableViewManager</class>
+   <class>PyCutOperationsTableViewManager</class>
    <extends>QWidget</extends>
    <header location="global">operations_tableview.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PyCutTabsTableViewManager</class>
+   <extends>QWidget</extends>
+   <header location="global">tabs_tableview.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

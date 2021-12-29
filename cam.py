@@ -133,10 +133,6 @@ class cam:
             
             currentWidth = nextWidth
             current = clipper_utils.ClipperUtils.offset(current, eachOffset)
-        
-        # debug
-        cls.to_gnuplot_dat(allPaths)
-        # debug
 
         if len(allPaths) == 0: 
             # no possible paths! TODO . inform user
@@ -375,7 +371,6 @@ class cam:
           paths:          Array of CamPath
           ramp:           Ramp these paths?
           scale:          Factor to convert Clipper units to gcode units
-          useZ:           Use Z coordinates in paths? (optional, defaults to False)
           offsetX:        Offset X (gcode units)
           offsetY:        Offset Y (gcode units)
           decimal:        Number of decimal places to keep in gcode
@@ -387,13 +382,12 @@ class cam:
           retractFeed:    Feedrate to retract cutter (gcode units)
           cutFeed:        Feedrate for horizontal cuts (gcode units)
           rapidFeed:      Feedrate for rapid moves (gcode units)
-          tabGeometry:    Tab geometry (optional)
-          tabZ:           Z position over tabs (required if tabGeometry is not empty) (gcode units)
+          tabs:           List of tabs
+          tabZ:           Level below which tabs are to be processed
         '''
         paths : List[CamPath] = args["paths"]
         ramp = args["ramp"]
         scale = args["scale"]
-        useZ = args["useZ"]
         offsetX = args["offsetX"]
         offsetY = args["offsetY"]
         decimal = args["decimal"]
@@ -412,15 +406,8 @@ class cam:
         cutFeed = args["cutFeed"]
         rapidFeed = args["rapidFeed"]
 
-        tabGeometry = args["tabGeometry"]
+        tabs = args["tabs"]
         tabZ = args["tabZ"]
-
-        if useZ == None:
-            useZ = False
-
-        if tabGeometry == None or tabZ <= botZ:
-            tabGeometry = []
-            tabZ = botZ
 
         gcode = ""
 
@@ -439,15 +426,13 @@ class cam:
         def convertPoint(p: ClipperLib.IntPoint):
             result = ' X' + ValWithUnit(p.X * scale + offsetX, "-").toFixed(decimal) +  \
                      ' Y' + ValWithUnit(-p.Y * scale + offsetY, "-").toFixed(decimal)
-            if useZ:
-                result += ' Z' + ValWithUnit(p.Z * scale + topZ, "-").toFixed(decimal)
             return result
 
         for pathIndex, path in enumerate(paths):
             origPath = path.path
             if len(origPath) == 0:
                 continue
-            separatedPaths = cls.separateTabs(origPath, tabGeometry)
+            separatedPaths = cls.separateTabs(origPath, tabs)
 
             gcode += \
                 f'\r\n' + \
@@ -457,11 +442,11 @@ class cam:
             finishedZ = topZ
             while finishedZ > botZ:
                 nextZ = max(finishedZ - passDepth, botZ)
-                if (currentZ < safeZ and ((not path.safeToClose) or len(tabGeometry) > 0)) :
+                if (currentZ < safeZ and ((not path.safeToClose) or len(tabs) > 0)) :
                     gcode += retractGcode
                     currentZ = safeZ
 
-                if len(tabGeometry)== 0:
+                if len(tabs)== 0:
                     currentZ = finishedZ
                 else:
                     currentZ = max(finishedZ, tabZ)
@@ -470,7 +455,7 @@ class cam:
                     'G1' + convertPoint(origPath[0]) + rapidFeedGcode + '\r\n' + \
                     'G1 Z' + ValWithUnit(currentZ, "-").toFixed(decimal) + '\r\n'
 
-                if nextZ >= tabZ or useZ:
+                if nextZ >= tabZ:
                     selectedPaths = [origPath]
                 else:
                     selectedPaths = separatedPaths
@@ -479,57 +464,56 @@ class cam:
                     if len(selectedPath) == 0:
                         continue
 
-                    if not useZ:
-                        if selectedIndex & 1:
-                            selectedZ = tabZ
-                        else:
-                            selectedZ = nextZ
+                    if selectedIndex & 1:
+                        selectedZ = tabZ
+                    else:
+                        selectedZ = nextZ
 
-                        if selectedZ < currentZ:
-                            executedRamp = False
-                            if ramp:
-                                minPlungeTime = (currentZ - selectedZ) / plungeFeed
-                                idealDist = cutFeed * minPlungeTime
-                                totalDist = 0
-                                for end in range(1, len(selectedPath)):
-                                    if totalDist > idealDist:
-                                        break
+                    if selectedZ < currentZ:
+                        executedRamp = False
+                        if ramp:
+                            minPlungeTime = (currentZ - selectedZ) / plungeFeed
+                            idealDist = cutFeed * minPlungeTime
+                            totalDist = 0
+                            for end in range(1, len(selectedPath)):
+                                if totalDist > idealDist:
+                                    break
 
-                                    pt1 = selectedPath[end - 1]
-                                    pt2 = selectedPath[end]
-                                    totalDist += 2 * cam.dist(getX(pt1), getY(pt1), getX(pt2), getY(pt2))
+                                pt1 = selectedPath[end - 1]
+                                pt2 = selectedPath[end]
+                                totalDist += 2 * cam.dist(getX(pt1), getY(pt1), getX(pt2), getY(pt2))
                                 
-                                if totalDist > 0:
-                                    gcode += '; ramp\r\n'
-                                    executedRamp = True
+                            if totalDist > 0:
+                                gcode += '; ramp\r\n'
+                                executedRamp = True
                                     
-                                    #rampPath = selectedPath.slice(0, end)
-                                    rampPath = [ selectedPath[k] for k in range(0,end) ] 
+                                #rampPath = selectedPath.slice(0, end)
+                                rampPath = [ selectedPath[k] for k in range(0,end) ] 
 
-                                    #rampPathEnd = selectedPath.slice(0, end - 1).reverse()
-                                    rampPathEnd = [ selectedPath[k] for k in range(0,end-1) ]
-                                    rampPathEnd.reverse()
+                                #rampPathEnd = selectedPath.slice(0, end - 1).reverse()
+                                rampPathEnd = [ selectedPath[k] for k in range(0,end-1) ]
+                                rampPathEnd.reverse()
 
-                                    rampPath = rampPath + rampPathEnd
+                                rampPath = rampPath + rampPathEnd
                                 
-                                    distTravelled = 0
-                                    for i in range(1,len(rampPath)):
-                                        distTravelled += cam.dist(getX(rampPath[i - 1]), getY(rampPath[i - 1]), getX(rampPath[i]), getY(rampPath[i]))
-                                        newZ = currentZ + distTravelled / totalDist * (selectedZ - currentZ)
-                                        gcode += 'G1' + convertPoint(rampPath[i]) + ' Z' + ValWithUnit(newZ, "-").toFixed(decimal)
-                                        if i == 1:
-                                            gcode += ' F' + ValWithUnit(min(totalDist / minPlungeTime, cutFeed), "-").toFixed(decimal) + '\r\n'
-                                        else:
-                                            gcode += '\r\n' 
+                                distTravelled = 0
+                                for i in range(1,len(rampPath)):
+                                    distTravelled += cam.dist(getX(rampPath[i - 1]), getY(rampPath[i - 1]), getX(rampPath[i]), getY(rampPath[i]))
+                                    newZ = currentZ + distTravelled / totalDist * (selectedZ - currentZ)
+                                    gcode += 'G1' + convertPoint(rampPath[i]) + ' Z' + ValWithUnit(newZ, "-").toFixed(decimal)
+                                    if i == 1:
+                                        gcode += ' F' + ValWithUnit(min(totalDist / minPlungeTime, cutFeed), "-").toFixed(decimal) + '\r\n'
+                                    else:
+                                        gcode += '\r\n' 
 
-                            if not executedRamp:
-                                gcode += \
-                                    '; plunge\r\n' + \
-                                    'G1 Z' + ValWithUnit(selectedZ, "-").toFixed(decimal) + plungeFeedGcode + '\r\n'
-                        elif selectedZ > currentZ:
-                            gcode += retractForTabGcode
+                        if not executedRamp:
+                            gcode += \
+                                '; plunge\r\n' + \
+                                'G1 Z' + ValWithUnit(selectedZ, "-").toFixed(decimal) + plungeFeedGcode + '\r\n'
+                    elif selectedZ > currentZ:
+                        gcode += retractForTabGcode
                         
-                        currentZ = selectedZ
+                    currentZ = selectedZ
 
                     gcode += '; cut\r\n'
 
@@ -548,16 +532,3 @@ class cam:
             gcode += retractGcode
 
         return gcode
-
-    @classmethod
-    def to_gnuplot_dat(cls, paths: List[ClipperLib.IntPointVector]):
-        '''
-        '''
-        return
-        fp = open("C:\\Users\\xavie\\Desktop\\pycut_toolpaths.dat", "w")
-        for path in paths:
-            for pt in path:
-                fp.write("%d %d\n" % (pt.X, pt.Y))
-            fp.write("\n")
-            fp.write("\n")
-        fp.close()

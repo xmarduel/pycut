@@ -145,13 +145,21 @@ class Tab:
     a Tab is defined by a circle with position (x,y) 
     and height from the buttom of the material 
     '''
+    height = ValWithUnit(2.0, "mm")
+
     def __init__(self, tab: Dict[str, Any]) :
         '''
         '''
         self.center = tab["center"]
         self.radius = tab["radius"]
-        self.height = 2.0  # FIXME - from the TabsModel
 
+    @classmethod
+    def set_height(cls, heigth: float, units: str):
+        '''
+        from the TabsModel, common for all the tabs
+        '''
+        cls.height = ValWithUnit(heigth, units) 
+    
     def make_svg_path(self):
         '''
         '''
@@ -160,17 +168,17 @@ class Tab:
 
         return path
 
-    def posInsideTab(self, x: float, y: float, z: float, cut_depth: float):
+    def posInsideTab(self, x: float, y: float, z: float, op_cut_depth: float):
         '''
         ---------------------- 0
 
                           ---- z is negativ
          material
         ---------------------- height = 2
-        ---------------------- cut_depth = 10
+        ---------------------- op_cut_depth = 10
         
         '''
-        if cut_depth + z > self.height:
+        if op_cut_depth + z > self.height:
             # still above the tab
             return False
 
@@ -179,8 +187,6 @@ class Tab:
 
         return (dx*dx + dy*dy <= self.radius*self.radius)
 
-   
-    
 class TabsModel:
     '''
     Not yet used
@@ -191,15 +197,21 @@ class TabsModel:
 
         self.units = "mm"  # default
         self.height = ValWithUnit(2.0, self.units) # default
+
+        Tab.set_height(self.height, self.units)
+    
+    def set_height(self, height: float, units: str):
+        self.units = units
+        self.height = ValWithUnit(height, units)
+
+        Tab.set_height(self.height)
     
     def hasTabs(self):
         return len(self.tabs) > 0
 
-    def posInTab(self, x: float, y: float, z: float):
-        rc = False
-
+    def posInTab(self, x: float, y: float, z: float, op_cut_depth: float):
         for tab in self.tabs:
-            if tab.posInsideTab(x, y, z, self.height):
+            if tab.posInsideTab(x, y, z, op_cut_depth):
                 return True
         
         return False
@@ -564,7 +576,6 @@ class GcodeGenerator:
         passDepth = self.unitConverter.fromInch(self.toolModel.passDepth.toInch())
         topZ = self.unitConverter.fromInch(self.materialModel.matTopZ.toInch())
         tabHeight = self.unitConverter.fromInch(self.tabsModel.height.toInch())
-        tabZ = ValWithUnit(topZ - tabHeight, self.gcodeModel.units) # FIXME
 
         if self.units == "inch":
             scale = 1.0 / ClipperUtils.inchToClipperScale
@@ -585,6 +596,8 @@ class GcodeGenerator:
 
         for idx, cnc_op in enumerate(cnc_ops):
             cutDepth = self.unitConverter.fromInch(cnc_op.cutDepth.toInch())
+            botZ = ValWithUnit(topZ - cutDepth, self.units)
+            tabZ = self.unitConverter.fromInch(topZ.toInch() - cutDepth.toInch() + tabHeight.toInch())
 
             nb_paths = len(cnc_op.cam_paths)  # in use!
 
@@ -604,20 +617,19 @@ class GcodeGenerator:
                 "paths":          cnc_op.cam_paths,
                 "ramp":           cnc_op.ramp,
                 "scale":          scale,
-                "useZ":           cnc_op.cam_op == "V Pocket",
                 "offsetX":        self.offsetX,
                 "offsetY":        self.offsetY,
                 "decimal":        4,
                 "topZ":           topZ,
-                "botZ":           ValWithUnit(topZ - cutDepth, self.units),
+                "botZ":           botZ,
                 "safeZ":          safeZ,
                 "passDepth":      passDepth,
                 "plungeFeed":     plungeRate,
                 "retractFeed":    rapidRate,
                 "cutFeed":        cutRate,
                 "rapidFeed":      rapidRate,
-                "tabGeometry":    [],  # FIXME
-                "tabZ":           tabZ,
+                "tabs":           [], # self.tabsModel.tabs,
+                "tabZ":           tabZ
             })
 
         if self.gcodeModel.spindleControl:
