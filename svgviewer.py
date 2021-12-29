@@ -340,12 +340,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         transformer = SvgTransformer(self.svg)
 
+        # then the tabs
         tabs_paths = []
         for tab in tabs:
             tabs_paths.append(Tab(tab).make_svg_path())
 
         augmented_svg = transformer.augment(tabs_paths)
 
+        # done
         self.fill_svg_viewer(augmented_svg)
 
     def display_job(self, cnc_ops: List['CncOp']):
@@ -353,6 +355,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
         The list of svg_paths results of the toolpath calculation for given ops
         The resulting svg_paths will the displayed in yellow together with the original svg
         '''
+        from pycut import Tab
+
+        # display preview geometries 
         transformer = SvgTransformer(self.svg)
 
         geometry_svg_paths = []
@@ -361,7 +366,16 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         augmented_svg = transformer.augment(geometry_svg_paths)
 
+        # then the tabs
+        transformer = SvgTransformer(augmented_svg)
 
+        tabs_paths = []
+        for tab in self.tabs:
+            tabs_paths.append(Tab(tab).make_svg_path())
+
+        augmented_svg = transformer.augment(tabs_paths)
+
+        # then the toolpaths
         transformer = SvgTransformer(augmented_svg)
 
         cam_paths_svg_paths = []
@@ -370,6 +384,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         augmented_svg = transformer.augment_with_lines(cam_paths_svg_paths)
 
+        # done
         self.fill_svg_viewer(augmented_svg)
 
     def display_job_geometry(self, cnc_ops: List['CncOp']):
@@ -377,6 +392,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
         The list of svg_paths results of the toolpath calculation for given ops
         The resulting svg_paths will the displayed in yellow together with the original svg
         '''
+        from pycut import Tab
+
+        # display preview geometries 
         transformer = SvgTransformer(self.svg)
 
         geometry_svg_paths = []
@@ -385,4 +403,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         augmented_svg = transformer.augment(geometry_svg_paths)
 
+        # then the tabs
+        transformer = SvgTransformer(augmented_svg)
+
+        tabs_paths = []
+        for tab in self.tabs:
+            tabs_paths.append(Tab(tab).make_svg_path())
+
+        augmented_svg = transformer.augment(tabs_paths)
+
+        # done
         self.fill_svg_viewer(augmented_svg)
