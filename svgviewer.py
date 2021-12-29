@@ -349,10 +349,38 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # done
         self.fill_svg_viewer(augmented_svg)
 
+    def display_job_geometry(self, cnc_ops: List['CncOp']):
+        '''
+        The list of "preview geometries" results of the geometries calculation for given ops
+        The resulting geometries will the displayed in black together with the original svg and tabs
+        '''
+        from pycut import Tab
+
+        # display preview geometries 
+        transformer = SvgTransformer(self.svg)
+
+        geometry_svg_paths = []
+        for cnc_op in cnc_ops:
+                geometry_svg_paths += cnc_op.geometry_svg_paths
+
+        augmented_svg = transformer.augment(geometry_svg_paths)
+
+        # then the tabs
+        transformer = SvgTransformer(augmented_svg)
+
+        tabs_paths = []
+        for tab in self.tabs:
+            tabs_paths.append(Tab(tab).make_svg_path())
+
+        augmented_svg = transformer.augment(tabs_paths)
+
+        # done
+        self.fill_svg_viewer(augmented_svg)
+
     def display_job(self, cnc_ops: List['CncOp']):
         '''
         The list of svg_paths results of the toolpath calculation for given ops
-        The resulting svg_paths will the displayed in yellow together with the original svg
+        The resulting svg_paths will the displayed in green together with the original svg, tabs and preview geometries
         '''
         from pycut import Tab
 
@@ -386,30 +414,3 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # done
         self.fill_svg_viewer(augmented_svg)
 
-    def display_job_geometry(self, cnc_ops: List['CncOp']):
-        '''
-        The list of svg_paths results of the toolpath calculation for given ops
-        The resulting svg_paths will the displayed in yellow together with the original svg
-        '''
-        from pycut import Tab
-
-        # display preview geometries 
-        transformer = SvgTransformer(self.svg)
-
-        geometry_svg_paths = []
-        for cnc_op in cnc_ops:
-                geometry_svg_paths += cnc_op.geometry_svg_paths
-
-        augmented_svg = transformer.augment(geometry_svg_paths)
-
-        # then the tabs
-        transformer = SvgTransformer(augmented_svg)
-
-        tabs_paths = []
-        for tab in self.tabs:
-            tabs_paths.append(Tab(tab).make_svg_path())
-
-        augmented_svg = transformer.augment(tabs_paths)
-
-        # done
-        self.fill_svg_viewer(augmented_svg)
