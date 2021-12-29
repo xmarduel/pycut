@@ -851,6 +851,9 @@
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayoutGCodeConversion" stretch="0,0">
+        <property name="bottomMargin">
+         <number>20</number>
+        </property>
         <item>
          <widget class="QLabel" name="label_GCcodeConversion">
           <property name="font">

@@ -530,6 +530,7 @@ class Ui_mainwindow(object):
 
         self.verticalLayoutGCodeConversion = QVBoxLayout()
         self.verticalLayoutGCodeConversion.setObjectName(u"verticalLayoutGCodeConversion")
+        self.verticalLayoutGCodeConversion.setContentsMargins(-1, -1, -1, 20)
         self.label_GCcodeConversion = QLabel(self.centralwidget)
         self.label_GCcodeConversion.setObjectName(u"label_GCcodeConversion")
         self.label_GCcodeConversion.setFont(font)
