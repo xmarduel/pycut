@@ -409,7 +409,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         for cnc_op in cnc_ops:
                 cam_paths_svg_paths += cnc_op.cam_paths_svg_paths
 
-        augmented_svg = transformer.augment_with_lines(cam_paths_svg_paths)
+        augmented_svg = transformer.augment_with_toolpaths(cam_paths_svg_paths)
 
         # done
         self.fill_svg_viewer(augmented_svg)

@@ -249,7 +249,7 @@ class SvgTransformer:
         
         return svg
 
-    def augment_with_lines(self, svg_paths: List[SvgPath]) -> str:
+    def augment_with_toolpaths(self, svg_paths: List[SvgPath]) -> str:
         '''
         TODO: eval the best stroke-width in function of the item size
 

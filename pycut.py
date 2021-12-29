@@ -416,7 +416,7 @@ class CncOp:
         #    self.toolPathSvg = self.cam_pathsGroup.path(path).attr("class", "toolPath")
 
         for cam_path in self.cam_paths:
-            svg_path = SvgPath.fromClipperPath("campath", cam_path.path)
+            svg_path = SvgPath.fromClipperPath("pycut_toolpath", cam_path.path)
             self.cam_paths_svg_paths.append(svg_path)
 
 class JobModel:
