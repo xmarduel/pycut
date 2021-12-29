@@ -61,8 +61,16 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
             center[0] = center[0] + radius
             center[1] = center[1] + radius
             tab["center"] = center 
-            # redraw tabs list
-            self.view.mainwindow.assign_tabs(tabs)
+            # brutal force - redraw tabs list with new model
+            #self.view.mainwindow.assign_tabs(tabs)
+            # -> strange behaviour, all spinboxes cells are selected
+
+            # so update the model
+            model = self.view.mainwindow.ui.tabsview_manager.get_model()
+            model.tabs[idx].x = center[0]
+            model.tabs[idx].y = center[1]
+            model.dataChanged.emit(model.index(idx, 0), model.index(idx,1))
+            # ok, but to avoid event chaining, I 've got this flag "in_dnd"
 
         super().mouseReleaseEvent(event)
 
@@ -96,6 +104,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.renderer = QtSvg.QSvgRenderer()
         
         self.setScene(self.scene)
+
+        # a "state" I would like to avoid, between mouse "down" and mouse "up"
+        self.in_dnd = False
 
         # the content of the svf file as string
         self.svg = None
@@ -231,13 +242,16 @@ class SvgViewer(QtWidgets.QGraphicsView):
     def set_tabs(self, tabs: List['Tab']):
         '''
         '''
-        self.tabs = tabs
-        self.display_tabs(self.tabs)
+        if not self.in_dnd:
+            self.tabs = tabs
+            self.display_tabs(self.tabs)
 
     def get_svg_path_d(self, p_id):
         return self.svg_path_d[p_id]
 
     def mousePressEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
+        self.in_dnd = True
+
         print('SvgViewer - mousePressEvent()')
         super().mousePressEvent(event)
         print("    --> List of selected items")
@@ -256,6 +270,8 @@ class SvgViewer(QtWidgets.QGraphicsView):
             item.colorizeWhenSelected()
 
         self.update_selected_items_list()
+
+        self.in_dnd = False
 
     def update_selected_items_list(self):
         '''

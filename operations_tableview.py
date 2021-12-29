@@ -764,9 +764,11 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
     def addItem(self, op_data):
         op = OpItem(op_data)
 
-        self.beginResetModel()
+        idx = len(self.operations)
+
+        self.beginInsertRows(QtCore.QModelIndex(), idx, idx)
         self.operations.append(op)
-        self.endResetModel()
+        self.endInsertRows()
 
     def delItem(self, idx):
         op = self.operations[idx]
