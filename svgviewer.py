@@ -377,7 +377,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # done
         self.fill_svg_viewer(augmented_svg)
 
-    def display_job(self, cnc_ops: List['CncOp']):
+    def display_job_toolpaths(self, cnc_ops: List['CncOp']):
         '''
         The list of svg_paths results of the toolpath calculation for given ops
         The resulting svg_paths will the displayed in green together with the original svg, tabs and preview geometries

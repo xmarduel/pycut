@@ -916,10 +916,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.doubleSpinBox_GCodeConversion_MaxX.setValue(generator.maxX)
         self.ui.doubleSpinBox_GCodeConversion_MaxY.setValue(generator.maxY)
 
+        self.svg_viewer.display_job_toolpaths(generator.job.operations)
+        
+        # gcode viewer/simulator
         gcode = generator.gcode
         self.display_gcode(gcode)
 
-        self.svg_viewer.display_job(generator.job.operations)
+    
 
 
 if __name__ == "__main__":
