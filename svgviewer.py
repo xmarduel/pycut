@@ -62,8 +62,7 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
             center[1] = center[1] + radius
             tab["center"] = center 
             # redraw tabs list
-            mainwindow = self.view.mainwindow
-            mainwindow.assign_tabs(tabs)
+            self.view.mainwindow.assign_tabs(tabs)
 
         super().mouseReleaseEvent(event)
 

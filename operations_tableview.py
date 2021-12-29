@@ -227,6 +227,40 @@ class PyCutComboBox(QtWidgets.QComboBox):
 
         self.o.put_value(self.attribute, val)
 
+class PyCutDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
+    def __init__(self, parent):
+        QtWidgets.QItemDelegate.__init__(self, parent)
+
+    def createEditor(self, parent, option, index: QtCore.QModelIndex):
+        editor = PyCutDoubleSpinBox(parent)
+
+        op = index.model().get_operation(index)
+        attr = index.model().get_operation_attr(index)
+
+        editor.assign_object(op)
+        editor.assign_object_attribute(attr)
+
+        # to flush an "setModelData" in place - it works!
+        editor.valueChanged.connect(self.onEditorValueChanged)
+
+        return editor
+
+    def onEditorValueChanged(self):
+        editor = self.sender()
+        if editor:
+            print("onEditorValueChanged - PyCutDoubleSpinBoxDelegate")
+            self.commitData.emit(editor)
+
+    def setEditorData(self, spinBox: PyCutDoubleSpinBox, index: QtCore.QModelIndex):
+        spinBox.set_value()
+
+    def setModelData(self, spinBox: PyCutDoubleSpinBox, model, index: QtCore.QModelIndex):
+        model.handleNewvalue(index, spinBox.value())
+        return
+
+    def updateEditorGeometry(self, editor: PyCutDoubleSpinBox, option, index: QtCore.QModelIndex):
+        editor.setGeometry(option.rect)
+
 class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
     def createEditor(self, parent, option, index: QtCore.QModelIndex):
         editor = PyCutCheckBox(parent)
@@ -320,40 +354,6 @@ class PyCutComboBoxDelegate(QtWidgets.QItemDelegate):
     def updateEditorGeometry(self, comboBox: PyCutComboBox, option, index: QtCore.QModelIndex):
         comboBox.setGeometry(option.rect)
 
-class PyCutDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
-    def __init__(self, parent):
-        QtWidgets.QItemDelegate.__init__(self, parent)
-
-    def createEditor(self, parent, option, index: QtCore.QModelIndex):
-        editor = PyCutDoubleSpinBox(parent)
-
-        op = index.model().get_operation(index)
-        attr = index.model().get_operation_attr(index)
-
-        editor.assign_object(op)
-        editor.assign_object_attribute(attr)
-
-        # to flush an "setModelData" in place - it works!
-        editor.valueChanged.connect(self.onEditorValueChanged)
-
-        return editor
-
-    def onEditorValueChanged(self):
-        editor = self.sender()
-        if editor:
-            print("onEditorValueChanged - PyCutDoubleSpinBoxDelegate")
-            self.commitData.emit(editor)
-
-    def setEditorData(self, spinBox: PyCutDoubleSpinBox, index: QtCore.QModelIndex):
-        spinBox.set_value()
-
-    def setModelData(self, spinBox: PyCutDoubleSpinBox, model, index: QtCore.QModelIndex):
-        model.handleNewvalue(index, spinBox.value())
-        return
-
-    def updateEditorGeometry(self, editor: PyCutDoubleSpinBox, option, index: QtCore.QModelIndex):
-        editor.setGeometry(option.rect)
-
 
 class PyCutOperationsTableViewManager(QtWidgets.QWidget):
 
@@ -362,11 +362,10 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
         '''
         QtWidgets.QWidget.__init__(self, parent)
 
-        # this changes when the layout (uifile) changes
-        self.main_window = parent.parent().parent().parent()
+        self.mainwindow = None
+        self.svg_viewer = None
 
         self.model = None
-        self.svg_viewer = None
 
         # main section of the window
         vbox = self.vbox = QtWidgets.QVBoxLayout()
@@ -398,6 +397,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
         '''
         '''
         self.svg_viewer = svg_viewer
+        self.mainwindow = svg_viewer.mainwindow
 
     def set_operations(self, operations):
         '''
@@ -408,7 +408,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
             cnc_ops.append(cnc_op)
             
             
-        self.model = PyCutSimpleTableModel(cnc_ops, self.main_window)
+        self.model = PyCutSimpleTableModel(cnc_ops, self.mainwindow)
         self.table.setModel(self.model)
         self.table.setup()
 
@@ -454,6 +454,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
         print("ADD")
         for op in self.get_model_operations():
             print(op)
+
 
 class PyCutSimpleTableView(QtWidgets.QTableView):
     '''
@@ -628,11 +629,11 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
     '''
     model for the table view
     '''
-    def __init__(self, operations: List[Any], main_window):
+    def __init__(self, operations: List[Any], mainwindow):
         super(PyCutSimpleTableModel, self).__init__()
         
         self.operations = operations
-        self.main_window = main_window
+        self.mainwindow = mainwindow
 
         self.header =  [
             "name",                     # [0] str
@@ -659,25 +660,20 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
     def generate_gcode(self):
         '''
         '''    
-        self.main_window.cb_generate_g_code()
+        self.mainwindow.cb_generate_g_code()
         
     def handleNewvalue(self, index: QtCore.QModelIndex, value: Any):
-        print("--------------------------------", "handleNewvalue")
-
         row = index.row()
         col = index.column()
 
         attrib = self.header[col]
-
-        print("handleNewvalue OLD -> %s" % (str(self.operations[row])))
-        print("handleNewvalue NEW -> %s %s" % (attrib, value))
 
         # update pycut GUI
         if attrib in ["cam_op", "enabled", "paths", "units", "cutDepth", "ramp", "combinaison", "margin", "width"]:
             cnc_op = self.operations[row]
             setattr(cnc_op, attrib, value)
 
-            self.main_window.display_cnc_ops_geometry(self.operations)
+            self.mainwindow.display_cnc_ops_geometry(self.operations)
 
     def __str__(self):
         self.cnt += 1

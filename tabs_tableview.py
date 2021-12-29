@@ -35,21 +35,21 @@ class TabItem:
             "radius": self.radius
         }
 
-class PyCutSpinBox(QtWidgets.QSpinBox):
+class PyCutDoubleSpinBox(QtWidgets.QDoubleSpinBox):
     '''
     '''
 
     def __init__(self, parent):
         '''
         '''
-        QtWidgets.QSpinBox.__init__(self, parent)
+        QtWidgets.QDoubleSpinBox.__init__(self, parent)
 
         self.o = None
         self.attribute = ""
 
         self.setMinimum(0)
         self.setMaximum(1000)
-        self.setSingleStep(1)
+        self.setSingleStep(1.0)
 
         self.valueChanged.connect(self.cb_spinbox)
 
@@ -92,6 +92,41 @@ class PyCutSpinBox(QtWidgets.QSpinBox):
         '''
         val = self.value()
         self.o.put_value(self.attribute, val)
+
+class PyCutDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
+    def __init__(self, parent):
+        QtWidgets.QItemDelegate.__init__(self, parent)
+
+    def createEditor(self, parent, option, index: QtCore.QModelIndex):
+        editor = PyCutDoubleSpinBox(parent)
+
+        tab = index.model().get_tab(index)
+        attr = index.model().get_tab_attr(index)
+
+        editor.assign_object(tab)
+        editor.assign_object_attribute(attr)
+
+        # to flush an "setModelData" in place - it works!
+        editor.valueChanged.connect(self.onEditorValueChanged)
+
+        return editor
+
+    def onEditorValueChanged(self):
+        editor = self.sender()
+        if editor:
+            print("onEditorValueChanged - PyCutDoubleSpinBox")
+            self.commitData.emit(editor)
+
+    def setEditorData(self, spinBox: PyCutDoubleSpinBox, index: QtCore.QModelIndex):
+        spinBox.set_value()
+
+    def setModelData(self, spinBox: PyCutDoubleSpinBox, model, index: QtCore.QModelIndex):
+        model.handleNewvalue(index, spinBox.value())
+        return
+
+    def updateEditorGeometry(self, editor: PyCutDoubleSpinBox, option, index: QtCore.QModelIndex):
+        editor.setGeometry(option.rect)
+
 
 class PyCutCheckBox(QtWidgets.QCheckBox):
     '''
@@ -191,40 +226,6 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
     def updateEditorGeometry(self, editor, option, index: QtCore.QModelIndex):
         editor.setGeometry(option.rect)
 
-class PyCutSpinBoxDelegate(QtWidgets.QItemDelegate):
-    def __init__(self, parent):
-        QtWidgets.QItemDelegate.__init__(self, parent)
-
-    def createEditor(self, parent, option, index: QtCore.QModelIndex):
-        editor = PyCutSpinBox(parent)
-
-        tab = index.model().get_tab(index)
-        attr = index.model().get_tab_attr(index)
-
-        editor.assign_object(tab)
-        editor.assign_object_attribute(attr)
-
-        # to flush an "setModelData" in place - it works!
-        editor.valueChanged.connect(self.onEditorValueChanged)
-
-        return editor
-
-    def onEditorValueChanged(self):
-        editor = self.sender()
-        if editor:
-            print("onEditorValueChanged - PyCutSpinBoxDelegate")
-            self.commitData.emit(editor)
-
-    def setEditorData(self, spinBox: PyCutSpinBox, index: QtCore.QModelIndex):
-        spinBox.set_value()
-
-    def setModelData(self, spinBox: PyCutSpinBox, model, index: QtCore.QModelIndex):
-        model.handleNewvalue(index, spinBox.value())
-        return
-
-    def updateEditorGeometry(self, editor: PyCutSpinBox, option, index: QtCore.QModelIndex):
-        editor.setGeometry(option.rect)
-
 
 class PyCutTabsTableViewManager(QtWidgets.QWidget):
 
@@ -233,11 +234,10 @@ class PyCutTabsTableViewManager(QtWidgets.QWidget):
         '''
         QtWidgets.QWidget.__init__(self, parent)
 
-        # this changes when the layout (uifile) changes
-        self.main_window = parent.parent()
+        self.mainwindow = None
+        self.svg_viewer = None
 
         self.model = None
-        self.svg_viewer = None
 
         # main section of the window
         vbox = self.vbox = QtWidgets.QVBoxLayout()
@@ -269,6 +269,7 @@ class PyCutTabsTableViewManager(QtWidgets.QWidget):
         '''
         '''
         self.svg_viewer = svg_viewer
+        self.mainwindow = svg_viewer.mainwindow
 
     def set_tabs(self, tabs):
         '''
@@ -279,7 +280,7 @@ class PyCutTabsTableViewManager(QtWidgets.QWidget):
             cnc_tabs.append(cnc_tab)
             
             
-        self.model = PyCutSimpleTableModel(cnc_tabs, self.main_window)
+        self.model = PyCutSimpleTableModel(cnc_tabs, self.mainwindow)
         self.table.setModel(self.model)
         self.table.setup()
 
@@ -328,7 +329,7 @@ class PyCutTabsTableViewManager(QtWidgets.QWidget):
 
         # inform main window (draw tab in svg)
         tabs = self.get_model_tabs()
-        self.svg_viewer.mainwindow.display_cnc_tabs(tabs)
+        self.mainwindow.display_cnc_tabs(tabs)
 
 
 class PyCutSimpleTableView(QtWidgets.QTableView):
@@ -353,22 +354,22 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
     def setup(self):
         '''
         self.header =  [
-            "x",                        # [0] int
-            "y",                        # [1] int
-            "radius",                   # [2] int
+            "x",                        # [0] float
+            "y",                        # [1] float
+            "radius",                   # [2] float
             "enabled",                  # [3] checkbox
             "del",                      # [4] button
             "up",                       # [5] button
             "down",                     # [6] button
         ]
         '''
-        delegate = PyCutSpinBoxDelegate(self)
+        delegate = PyCutDoubleSpinBoxDelegate(self)
         self.setItemDelegateForColumn(0, delegate)
 
-        delegate = PyCutSpinBoxDelegate(self)
+        delegate = PyCutDoubleSpinBoxDelegate(self)
         self.setItemDelegateForColumn(1, delegate)
 
-        delegate = PyCutSpinBoxDelegate(self)
+        delegate = PyCutDoubleSpinBoxDelegate(self)
         self.setItemDelegateForColumn(2, delegate)
 
         delegate = PyCutCheckBoxDelegate(self)
@@ -431,7 +432,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
 
         # inform main window (draw tab in svg)
         tabs = self.model().tabs
-        self.parent().svg_viewer.mainwindow.display_cnc_tabs(tabs)
+        self.parent().mainwindow.display_cnc_tabs(tabs)
 
     def cb_move_down_tab(self):
         index = self.currentIndex()
@@ -468,11 +469,11 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
     '''
     model for the table view
     '''
-    def __init__(self, tabs: List[Any], main_window):
+    def __init__(self, tabs: List[Any], mainwindow):
         super(PyCutSimpleTableModel, self).__init__()
         
         self.tabs = tabs
-        self.main_window = main_window
+        self.mainwindow = mainwindow
 
         self.header =  [
             "x",                       # [0] int
@@ -487,22 +488,17 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
         self.cnt = 0
         
     def handleNewvalue(self, index: QtCore.QModelIndex, value: Any):
-        print("--------------------------------", "handleNewvalue")
-
         row = index.row()
         col = index.column()
 
         attrib = self.header[col]
 
-        print("handleNewvalue OLD -> %s" % (str(self.tabs[row])))
-        print("handleNewvalue NEW -> %s %s" % (attrib, value))
-
         # update pycut GUI
-        if attrib in ["x", "y", "radius", "height", "enabled"]:
+        if attrib in ["x", "y", "radius", "enabled"]:
             cnc_tab = self.tabs[row]
             setattr(cnc_tab, attrib, value)
 
-            self.main_window.display_cnc_tabs(self.tabs)
+            self.mainwindow.display_cnc_tabs(self.tabs)
 
     def __str__(self):
         self.cnt += 1
