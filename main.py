@@ -244,7 +244,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "Tabs": {
                 "units"      : self.ui.comboBox_Tabs_Units.currentText(),
                 "height"     : self.ui.doubleSpinBox_Tabs_Height.value(),
-                "tabs"       : []  # TODO
+                "tabs"       : self.tabs
             },
             "Tool" : {
                 "Units"      : self.ui.comboBox_Tool_Units.currentText(),
