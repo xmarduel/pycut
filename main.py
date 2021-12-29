@@ -24,7 +24,6 @@ import tabs_tableview
 
 import material_widget
 
-
 from pycut import GcodeModel
 from pycut import ToolModel
 from pycut import SvgModel
