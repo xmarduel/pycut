@@ -185,7 +185,7 @@
                 </widget>
                </item>
                <item row="1" column="0">
-                <widget class="QLabel" name="label_Tabs_MaxCutDepth">
+                <widget class="QLabel" name="label_Tabs_Height">
                  <property name="font">
                   <font>
                    <pointsize>9</pointsize>
@@ -193,12 +193,12 @@
                   </font>
                  </property>
                  <property name="text">
-                  <string>Max Cut Depth  </string>
+                  <string>height     </string>
                  </property>
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QDoubleSpinBox" name="doubleSpinBox_Tabs_MaxCutDepth">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_Tabs_Height">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>

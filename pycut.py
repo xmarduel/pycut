@@ -185,14 +185,12 @@ class TabsModel:
     '''
     Not yet used
     '''
-    def __init__(self,
-            svgModel: SvgModel, 
-            materialModel: MaterialModel,
-            tabs: List[Tab],
-            cut_depth: float):
+    def __init__(self, tabs: List[Tab]):
     
         self.tabs: List[Tab] = tabs
-        self.cut_depth = cut_depth
+
+        self.units = "mm"  # default
+        self.height = ValWithUnit(2.0, self.units) # default
     
     def hasTabs(self):
         return len(self.tabs) > 0
@@ -201,7 +199,7 @@ class TabsModel:
         rc = False
 
         for tab in self.tabs:
-            if tab.posInsideTab(x, y, z, self.cut_depth):
+            if tab.posInsideTab(x, y, z, self.height):
                 return True
         
         return False
@@ -565,20 +563,13 @@ class GcodeGenerator:
         cutRate = int(self.unitConverter.fromInch(self.toolModel.cutRate.toInch()))
         passDepth = self.unitConverter.fromInch(self.toolModel.passDepth.toInch())
         topZ = self.unitConverter.fromInch(self.materialModel.matTopZ.toInch())
-        tabCutDepth = self.unitConverter.fromInch(self.tabsModel.maxCutDepth.toInch())
-        tabZ = ValWithUnit(topZ - tabCutDepth, self.gcodeModel.units) # CHEKME
+        tabHeight = self.unitConverter.fromInch(self.tabsModel.height.toInch())
+        tabZ = ValWithUnit(topZ - tabHeight, self.gcodeModel.units) # FIXME
 
         if self.units == "inch":
             scale = 1.0 / ClipperUtils.inchToClipperScale
         else:
             scale = 25.4 / ClipperUtils.inchToClipperScale
-
-        tabGeometry = []
-        for tab in self.tabsModel.tabs:
-            if tab.enabled:
-                offset = self.toolModel.diameter.toInch() / 2 * ClipperUtils.inchToClipperScale
-                geometry = ClipperUtils.offset(tab.combinedGeometry, offset)
-                tabGeometry = ClipperUtils.clip(tabGeometry, geometry, ClipperLib.ClipType.ctUnion)
 
         gcode = ""
         if self.units == "inch":
@@ -618,14 +609,14 @@ class GcodeGenerator:
                 "offsetY":        self.offsetY,
                 "decimal":        4,
                 "topZ":           topZ,
-                "botZ":           topZ - cutDepth,
+                "botZ":           ValWithUnit(topZ - cutDepth, self.units),
                 "safeZ":          safeZ,
                 "passDepth":      passDepth,
                 "plungeFeed":     plungeRate,
                 "retractFeed":    rapidRate,
                 "cutFeed":        cutRate,
                 "rapidFeed":      rapidRate,
-                "tabGeometry":    tabGeometry,
+                "tabGeometry":    [],  # FIXME
                 "tabZ":           tabZ,
             })
 

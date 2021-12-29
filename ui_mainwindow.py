@@ -298,18 +298,18 @@ class Ui_mainwindow(object):
 
         self.formLayout_Tabs.setWidget(0, QFormLayout.FieldRole, self.comboBox_Tabs_Units)
 
-        self.label_Tabs_MaxCutDepth = QLabel(self.grid_Tabs)
-        self.label_Tabs_MaxCutDepth.setObjectName(u"label_Tabs_MaxCutDepth")
-        self.label_Tabs_MaxCutDepth.setFont(font1)
+        self.label_Tabs_Height = QLabel(self.grid_Tabs)
+        self.label_Tabs_Height.setObjectName(u"label_Tabs_Height")
+        self.label_Tabs_Height.setFont(font1)
 
-        self.formLayout_Tabs.setWidget(1, QFormLayout.LabelRole, self.label_Tabs_MaxCutDepth)
+        self.formLayout_Tabs.setWidget(1, QFormLayout.LabelRole, self.label_Tabs_Height)
 
-        self.doubleSpinBox_Tabs_MaxCutDepth = QDoubleSpinBox(self.grid_Tabs)
-        self.doubleSpinBox_Tabs_MaxCutDepth.setObjectName(u"doubleSpinBox_Tabs_MaxCutDepth")
-        self.doubleSpinBox_Tabs_MaxCutDepth.setEnabled(True)
-        self.doubleSpinBox_Tabs_MaxCutDepth.setDecimals(3)
+        self.doubleSpinBox_Tabs_Height = QDoubleSpinBox(self.grid_Tabs)
+        self.doubleSpinBox_Tabs_Height.setObjectName(u"doubleSpinBox_Tabs_Height")
+        self.doubleSpinBox_Tabs_Height.setEnabled(True)
+        self.doubleSpinBox_Tabs_Height.setDecimals(3)
 
-        self.formLayout_Tabs.setWidget(1, QFormLayout.FieldRole, self.doubleSpinBox_Tabs_MaxCutDepth)
+        self.formLayout_Tabs.setWidget(1, QFormLayout.FieldRole, self.doubleSpinBox_Tabs_Height)
 
 
         self.verticalLayout_4.addLayout(self.formLayout_Tabs)
@@ -839,7 +839,7 @@ class Ui_mainwindow(object):
         self.comboBox_Tabs_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
         self.comboBox_Tabs_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
 
-        self.label_Tabs_MaxCutDepth.setText(QCoreApplication.translate("mainwindow", u"Max Cut Depth", None))
+        self.label_Tabs_Height.setText(QCoreApplication.translate("mainwindow", u"Height", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.svg), QCoreApplication.translate("mainwindow", u"SVG", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.viewer), QCoreApplication.translate("mainwindow", u"GCode Viewer", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.simulator), QCoreApplication.translate("mainwindow", u"GCode Simulator", None))

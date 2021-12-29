@@ -52,8 +52,8 @@
         "x_per_inch": 96
     },
     "Tabs": {
-       "Units": "mm",
-       "MaxCutDepth": 1.0,
+       "units": "mm",
+       "height": 1.0,
        "tabs": [
         {
           "center": [10, 10],

@@ -44,8 +44,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "px_per_inch" : 96,
         },
         "Tabs": {
-            "Units"       : "mm",
-            "MaxCutDepth" : 1.0,
+            "units"       : "mm",
+            "height"      : 2.0,
             "tabs"        : []
         },
         "Tool" : {
@@ -243,8 +243,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "px_per_inch" : 96,
             }, 
             "Tabs": {
-                "Units"      : self.ui.comboBox_Tabs_Units.currentText(),
-                "MaxCutDepth": self.ui.doubleSpinBox_Tabs_MaxCutDepth.value(),
+                "units"      : self.ui.comboBox_Tabs_Units.currentText(),
+                "height"     : self.ui.doubleSpinBox_Tabs_Height.value(),
                 "tabs"       : []  # TODO
             },
             "Tool" : {
@@ -285,8 +285,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         '''
         # Tabs
-        self.ui.comboBox_Tabs_Units.setCurrentText(settings["Tabs"]["Units"])
-        self.ui.doubleSpinBox_Tabs_MaxCutDepth.setValue(settings["Tabs"]["MaxCutDepth"])
+        self.ui.comboBox_Tabs_Units.setCurrentText(settings["Tabs"]["units"])
+        self.ui.doubleSpinBox_Tabs_Height.setValue(settings["Tabs"]["height"])
             
         # Tool
         self.ui.comboBox_Tool_Units.setCurrentText(settings["Tool"]["Units"])
@@ -439,11 +439,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         tabs_units = self.ui.comboBox_Tabs_Units.currentText()
         
         if tabs_units == "inch":
-            self.ui.doubleSpinBox_Tabs_MaxCutDepth.setValue( self.ui.doubleSpinBox_Tabs_MaxCutDepth.value() / 25.4 )
+            self.ui.doubleSpinBox_Tabs_Height.setValue( self.ui.doubleSpinBox_Tabs_Height.value() / 25.4 )
+            self.ui.doubleSpinBox_Tabs_Height.setSingleStep(0.04)
 
         if tabs_units == "mm":
-            self.ui.doubleSpinBox_Tabs_MaxCutDepth.setValue( self.ui.doubleSpinBox_Tabs_MaxCutDepth.value() * 25.4 )
-    
+            self.ui.doubleSpinBox_Tabs_Height.setValue( self.ui.doubleSpinBox_Tabs_Height.value() * 25.4 )
+            self.ui.doubleSpinBox_Tabs_Height.setSingleStep(1.0)
+
     def cb_update_tool_display(self):
         '''
         This updates the legends of the tool model widget **and** the values
@@ -819,8 +821,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         toolModel.plungeRate = ValWithUnit(settings["Tool"]["Plunge"], toolModel.units)
         toolModel.cutRate = ValWithUnit(settings["Tool"]["Cut"], toolModel.units)
         
-        tabsmodel = TabsModel(svgModel, materialModel, self.tabs, 0.0)
-        # still not used
+        tabsmodel = TabsModel(self.tabs)
+        tabsmodel.units = settings["Tabs"]["units"]
+        tabsmodel.height = ValWithUnit(settings["Tabs"]["height"], tabsmodel.units)
 
         gcodeModel = GcodeModel()
         gcodeModel.units = settings["GCodeConversion"]["Units"]
