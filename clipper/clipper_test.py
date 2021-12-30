@@ -99,6 +99,39 @@ def test_offset():
     #clipper.CleanPolygons(offsetted, 1)
     return offsetted
 
+def test_openline_diff():
+    '''
+    TODO
+       - subject is an open line
+       - clippers are the (closed) tabs
+    
+       - result is a list of open lines, where none of their parts
+       are in the tab
+    '''
+    line = clipper.IntPointVector()
+    line.append(clipper.IntPoint(100,100))
+    line.append(clipper.IntPoint(300,100))
+
+    child = clipper.PolyNode()
+    child.IsOpen = True
+
+    subj = clipper.PolyNode()
+    subj.IsOpen = True
+    subj.AddChild(child)
+
+    c = clipper.Clipper()
+    #c.AddPolyNode(subj, clipper.PolyType.ptSubject, True)
+
+
+    polytree = clipper.PolyTree()
+
+    c.Execute(clipper.ClipType.ctIntersection, 
+            polytree,
+            clipper.PolyFillType.pftNonZero, 
+            clipper.PolyFillType.pftNonZero)
+
+    print(polytree)
+
 if __name__ == '__main__':
     #test1()
     #test(clipper.ClipType.ctUnion)
@@ -106,4 +139,6 @@ if __name__ == '__main__':
     #test(clipper.ClipType.ctXor)
     #test(clipper.ClipType.ctDifferences)
 
-    test_offset()
+    test_openline_diff()
+
+    #test_offset()

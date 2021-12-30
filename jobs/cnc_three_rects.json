@@ -63,7 +63,7 @@
     },
     {
       "Name": "opx_p1",
-      "type": "Outside",
+      "type": "Inside",
       "Deep": 3.175,
       "paths": [
         "p1"
@@ -72,7 +72,7 @@
       "Combine": "Union",
       "Direction": "Conventional",
       "Units": "mm",
-      "Margin": 2.0,
+      "Margin": 0.0,
       "Width": 5.0
     },
     {
@@ -92,11 +92,11 @@
     {
       "Name": "opx_p3",
       "type": "Inside",
-      "Deep": 0.125,
+      "Deep": 5.0,
       "paths": [
         "p3"
       ],
-      "RampPlunge": true,
+      "RampPlunge": false,
       "Combine": "Union",
       "Direction": "Conventional",
       "Units": "mm",
@@ -114,43 +114,29 @@
       "tabs": [
         {
           "center": [
-            91.0,
-            26.0
+            49.0,
+            22.0
           ],
           "radius": 4
         },
         {
           "center": [
-            10,
-            20
+            22.0,
+            41.0
           ],
           "radius": 4
-        },
-        {
-          "center": [
-            10,
-            30
-          ],
-          "radius": 4
-        },
-        {
-          "center": [
-            37.0,
-            90.0
-          ],
-          "radius": 8.0
         }
       ]
     },
     "Tool": {
-      "Units": "inch",
-      "Diameter": 0.125,
+      "Units": "mm",
+      "Diameter": 3.175,
       "Angle": 180,
-      "PassDepth": 0.125,
+      "PassDepth": 2.0,
       "StepOver": 0.4,
-      "Rapid": 100,
-      "Plunge": 5,
-      "Cut": 40
+      "Rapid": 1000,
+      "Plunge": 127,
+      "Cut": 1000
     },
     "Material": {
       "Units": "mm",

@@ -141,13 +141,15 @@ public:
     bool IsHole() const;
     bool IsOpen() const;
     int ChildCount() const;
+public: // XAM
+    void AddChild(PolyNode& child);
 private:
     unsigned Index; //node index in Parent.Childs
     bool m_IsOpen;
     JoinType m_jointype;
     EndType m_endtype;
     PolyNode* GetNextSiblingUp() const;
-    void AddChild(PolyNode& child);
+    //void AddChild(PolyNode& child);
     friend class Clipper; //to access Index
     friend class ClipperOffset; 
 };

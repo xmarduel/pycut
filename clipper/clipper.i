@@ -15,6 +15,7 @@ namespace std
 {
   %template(IntPointVector) vector<ClipperLib::IntPoint>;
   %template(PathVector) vector<ClipperLib::Path>;
+  %template(PolyNodes) vector<ClipperLib::PolyNode>;
 }
 
 

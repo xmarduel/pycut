@@ -153,6 +153,8 @@ class Tab:
         self.center = tab["center"]
         self.radius = tab["radius"]
 
+        self.svg_path = self.make_svg_path()
+
     @classmethod
     def set_height(cls, heigth: float, units: str):
         '''

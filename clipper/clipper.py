@@ -194,6 +194,9 @@ class PolyNode(object):
 
     def ChildCount(self):
         return _clipper.PolyNode_ChildCount(self)
+
+    def AddChild(self, child):
+        return _clipper.PolyNode_AddChild(self, child)
     __swig_destroy__ = _clipper.delete_PolyNode
 
 # Register PolyNode in _clipper:
@@ -577,6 +580,112 @@ class PathVector(object):
 
 # Register PathVector in _clipper:
 _clipper.PathVector_swigregister(PathVector)
+
+class PolyNodes(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def iterator(self):
+        return _clipper.PolyNodes_iterator(self)
+    def __iter__(self):
+        return self.iterator()
+
+    def __nonzero__(self):
+        return _clipper.PolyNodes___nonzero__(self)
+
+    def __bool__(self):
+        return _clipper.PolyNodes___bool__(self)
+
+    def __len__(self):
+        return _clipper.PolyNodes___len__(self)
+
+    def __getslice__(self, i, j):
+        return _clipper.PolyNodes___getslice__(self, i, j)
+
+    def __setslice__(self, *args):
+        return _clipper.PolyNodes___setslice__(self, *args)
+
+    def __delslice__(self, i, j):
+        return _clipper.PolyNodes___delslice__(self, i, j)
+
+    def __delitem__(self, *args):
+        return _clipper.PolyNodes___delitem__(self, *args)
+
+    def __getitem__(self, *args):
+        return _clipper.PolyNodes___getitem__(self, *args)
+
+    def __setitem__(self, *args):
+        return _clipper.PolyNodes___setitem__(self, *args)
+
+    def pop(self):
+        return _clipper.PolyNodes_pop(self)
+
+    def append(self, x):
+        return _clipper.PolyNodes_append(self, x)
+
+    def empty(self):
+        return _clipper.PolyNodes_empty(self)
+
+    def size(self):
+        return _clipper.PolyNodes_size(self)
+
+    def swap(self, v):
+        return _clipper.PolyNodes_swap(self, v)
+
+    def begin(self):
+        return _clipper.PolyNodes_begin(self)
+
+    def end(self):
+        return _clipper.PolyNodes_end(self)
+
+    def rbegin(self):
+        return _clipper.PolyNodes_rbegin(self)
+
+    def rend(self):
+        return _clipper.PolyNodes_rend(self)
+
+    def clear(self):
+        return _clipper.PolyNodes_clear(self)
+
+    def get_allocator(self):
+        return _clipper.PolyNodes_get_allocator(self)
+
+    def pop_back(self):
+        return _clipper.PolyNodes_pop_back(self)
+
+    def erase(self, *args):
+        return _clipper.PolyNodes_erase(self, *args)
+
+    def __init__(self, *args):
+        _clipper.PolyNodes_swiginit(self, _clipper.new_PolyNodes(*args))
+
+    def push_back(self, x):
+        return _clipper.PolyNodes_push_back(self, x)
+
+    def front(self):
+        return _clipper.PolyNodes_front(self)
+
+    def back(self):
+        return _clipper.PolyNodes_back(self)
+
+    def assign(self, n, x):
+        return _clipper.PolyNodes_assign(self, n, x)
+
+    def resize(self, *args):
+        return _clipper.PolyNodes_resize(self, *args)
+
+    def insert(self, *args):
+        return _clipper.PolyNodes_insert(self, *args)
+
+    def reserve(self, n):
+        return _clipper.PolyNodes_reserve(self, n)
+
+    def capacity(self):
+        return _clipper.PolyNodes_capacity(self)
+    __swig_destroy__ = _clipper.delete_PolyNodes
+
+# Register PolyNodes in _clipper:
+_clipper.PolyNodes_swigregister(PolyNodes)
 
 
 
