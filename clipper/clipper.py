@@ -194,9 +194,6 @@ class PolyNode(object):
 
     def ChildCount(self):
         return _clipper.PolyNode_ChildCount(self)
-
-    def AddChild(self, child):
-        return _clipper.PolyNode_AddChild(self, child)
     __swig_destroy__ = _clipper.delete_PolyNode
 
 # Register PolyNode in _clipper:
