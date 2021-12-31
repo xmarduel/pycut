@@ -31,38 +31,27 @@ WILL NEVER BE IMPLEMENTED
 
 
 ==============================================================================
-Tab Algorithm:  Infact not that wild (I think)
 
-tabs are defined with: 
+Tabs are defined with: 
   - center (x,y)
   - radius r
   - global height (from bottom ie op cut depth)
+  
+Clipper also handles the case of "opened" lines with diff with closed polygons.
+This is what is needed for the tabs handling.
+Unfortunately clipper-6.1.3 gives wrong results (missing parts of the line), 
+whereas clipper-6.4.2 gives good (better) results.
 
-When generating GCode (segment per segment, building G1 commands):
+Still, the calculated "separated paths" are not optimal, there is from my side
+a post-process step consisting of merging the "separated paths" when possible.
 
-- current pos (xo,yo,zo)
-- check next pos (x,y,zo)
-    - if not in TAB  -> generate normat G1 x,y
-    - if in TAB      -> current zo stored as "z_ref"
+All in all, I've just tested tabs in a few cases, but the gcode simulation/viewer
+can help checking the results.
 
-        0. get pos at tab border (xt,yt)
-        1. normal G1 to TAB border xt,yt,z_ref
-        2. G1 z_ok (defined by tab height above bottom)
+This forces me to have 2 versions of the clipperlib python wrapper, 
+because the 6.1.3 seems better when combining paths (not so much interpolated points)...
 
-        current is (xt,yt,z_ok)
+Note: jsCut does not utilize clipper for the tabs handling, 
+but an other c++ wrapper. 
 
-    |-> check next pos (x,y,z_ok)  (probably in TAB if small segment)
-    |
-    |
-    |      if in TAB  
-    |      1. G1 x,y,z_ok   // attention it could in 1 move leave the tab and enter another one... FIXME
-    ----------                         // check step length vs tab size
-                                       if in_same_tab : Ok... no problem
-                                       if not in same tab: ZUT : TODO
-
-           if not in TAB (is TAB "end")
-           0. get pos at tab border (xt,yt)
-           1. normal G1 to TAB border xt,yt,z_ok
-           2. G1 z_ref
-           3. G1 x,y
-
+==============================================================================
