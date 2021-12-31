@@ -19,7 +19,7 @@ from typing import List
 from typing import Dict
 from typing import Any
 
-import clipper.clipper as ClipperLib
+import clipper_613 as Clipper613Lib
 from clipper_utils import ClipperUtils
 
 from svgpathutils import SvgPath
@@ -246,10 +246,10 @@ class CncOp:
         # the input
         self.svg_paths : List[SvgPath] = [] # to fill at "setup"
         # the input "transformed"
-        self.clipper_paths : List[List[ClipperLib.IntPoint]] = []
+        self.clipper_paths : List[List[Clipper613Lib.IntPoint]] = []
         
         # the resulting paths from the op combinaison setting + enabled svg paths
-        self.geometry = ClipperLib.PathVector()
+        self.geometry = Clipper613Lib.PathVector()
         # and the resulting svg paths from the combinaison, to be displayed
         # in the svg viewer
         self.geometry_svg_paths : List[SvgPath] = []
@@ -287,18 +287,18 @@ class CncOp:
             self.clipper_paths.append(clipper_path)
 
         clipType = {
-            "Union": ClipperLib.ClipType.ctUnion,
-            "Intersection": ClipperLib.ClipType.ctIntersection,
-            "Difference": ClipperLib.ClipType.ctDifference,
-            "Xor": ClipperLib.ClipType.ctXor,
+            "Union": Clipper613Lib.ClipType.ctUnion,
+            "Intersection": Clipper613Lib.ClipType.ctIntersection,
+            "Difference": Clipper613Lib.ClipType.ctDifference,
+            "Xor": Clipper613Lib.ClipType.ctXor,
         } [self.combinaison] 
         
         geometry = ClipperUtils.combine(self.clipper_paths, clipType)
 
-        self.geometry = ClipperUtils.simplifyAndClean(geometry, ClipperLib.PolyFillType.pftNonZero)
+        self.geometry = ClipperUtils.simplifyAndClean(geometry, Clipper613Lib.PolyFillType.pftNonZero)
         #self.geometry = geometry
 
-        #ClipperLib.dumpPaths("geometry", self.geometry)
+        #Clipper613Lib.dumpPaths("geometry", self.geometry)
         
     def calculate_geometry(self, toolModel: ToolModel):
         '''
@@ -349,7 +349,7 @@ class CncOp:
         
             self.preview_geometry = ClipperUtils.diff(geometry, ClipperUtils.offset(geometry, -width))
 
-            #ClipperLib.dumpPaths("geometry", self.preview_geometry)
+            #Clipper613Lib.dumpPaths("geometry", self.preview_geometry)
 
         # should have 2 paths, one inner, one outer -> show the "ring"
         self.geometry_svg_paths = [SvgPath.fromClipperPaths("pycut_geometry_inside", self.preview_geometry)]
@@ -373,7 +373,7 @@ class CncOp:
                   
             self.preview_geometry = ClipperUtils.diff(ClipperUtils.offset(geometry, width), geometry)
 
-            #ClipperLib.dumpPaths("preview geometry", self.preview_geometry)
+            #Clipper613Lib.dumpPaths("preview geometry", self.preview_geometry)
 
         # should have 2 paths, one inner, one outer -> show the "ring"
         self.geometry_svg_paths = [SvgPath.fromClipperPaths("pycut_geometry_outside", self.preview_geometry)]

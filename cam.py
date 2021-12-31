@@ -24,8 +24,8 @@ from typing import Dict
 from val_with_unit import ValWithUnit
 
 import clipper_utils
-from clipper import clipper as ClipperLib
-from clipper_642 import clipper_642 as Clipper642Lib
+import clipper_613 as Clipper613Lib
+import clipper_642 as Clipper642Lib
 
 class CamPath:
     '''
@@ -34,7 +34,7 @@ class CamPath:
       safeToClose:        Is it safe to close the path without retracting?
     }
     '''
-    def __init__(self, path: ClipperLib.IntPointVector, safeToClose: bool = True):
+    def __init__(self, path: Clipper613Lib.IntPointVector, safeToClose: bool = True):
         # clipper path
         self.path = path
         # is it safe to close the path without retracting?
@@ -51,11 +51,11 @@ class cam:
         return dx * dx + dy * dy
     
     @staticmethod
-    def distP(p1:ClipperLib.IntPoint, p2:ClipperLib.IntPoint) -> float :
+    def distP(p1:Clipper613Lib.IntPoint, p2:Clipper613Lib.IntPoint) -> float :
         return cam.dist(p1.X, p1.Y, p2.X, p2.Y)
 
     @classmethod
-    def pocket(cls, geometry: ClipperLib.PathVector, cutterDia: float, overlap: float, climb: bool) -> List[CamPath] :
+    def pocket(cls, geometry: Clipper613Lib.PathVector, cutterDia: float, overlap: float, climb: bool) -> List[CamPath] :
         '''
         Compute paths for pocket operation on Clipper geometry. 
         
@@ -64,11 +64,11 @@ class cam:
         cutterDia is in Clipper units. 
         overlap is in the range [0, 1).
         '''
-        #ClipperLib.dumpPaths("geometry", geometry)
+        #Clipper613Lib.dumpPaths("geometry", geometry)
 
         current = clipper_utils.ClipperUtils.offset(geometry, -cutterDia / 2)
         bounds = clipper_utils.ClipperUtils.clone_pathvector(current)  # JSCUT: current.slice(0)
-        allPaths : List[ClipperLib.IntPointVector] = []
+        allPaths : List[Clipper613Lib.IntPointVector] = []
         while len(current) != 0:
             if climb:
                 for iv in current:
@@ -79,7 +79,7 @@ class cam:
         return cls.mergePaths(bounds, allPaths)
 
     @classmethod
-    def outline(cls, geometry: ClipperLib.PathVector, cutterDia: float, isInside: bool, width: float, overlap: float, climb: bool) -> List[CamPath] :
+    def outline(cls, geometry: Clipper613Lib.PathVector, cutterDia: float, isInside: bool, width: float, overlap: float, climb: bool) -> List[CamPath] :
         '''
         Compute paths for outline operation on Clipper geometry. 
         
@@ -89,7 +89,7 @@ class cam:
         overlap is in the  range [0, 1).
         '''
         currentWidth = cutterDia
-        allPaths  : List[ClipperLib.IntPointVector] = []
+        allPaths  : List[Clipper613Lib.IntPointVector] = []
         eachWidth = cutterDia * (1 - overlap)
 
         if isInside :
@@ -143,7 +143,7 @@ class cam:
         return cls.mergePaths(bounds, allPaths)
         
     @classmethod
-    def engrave(cls, geometry: ClipperLib.PathVector, climb: bool) -> List[CamPath] :
+    def engrave(cls, geometry: Clipper613Lib.PathVector, climb: bool) -> List[CamPath] :
         '''
         Compute paths for engrave operation on Clipper geometry. 
         
@@ -163,7 +163,7 @@ class cam:
         return campaths
 
     @classmethod
-    def hspocket(cls, geometry: ClipperLib.PathVector, cutterDia: float, overlap: float, climb: bool) -> List[CamPath] :
+    def hspocket(cls, geometry: Clipper613Lib.PathVector, cutterDia: float, overlap: float, climb: bool) -> List[CamPath] :
         '''
         Compute paths for pocket operation on Clipper geometry. 
         
@@ -203,7 +203,7 @@ class cam:
         '''
         
     @classmethod
-    def vPocket(cls, geometry: ClipperLib.PathVector, cutterAngle:float, passDepth:float, maxDepth: float) -> List[CamPath] :
+    def vPocket(cls, geometry: Clipper613Lib.PathVector, cutterAngle:float, passDepth:float, maxDepth: float) -> List[CamPath] :
         if cutterAngle <= 0 or cutterAngle >= 180:
             return []
 
@@ -239,14 +239,14 @@ class cam:
         '''
 
     @classmethod
-    def mergePaths(cls, _bounds: ClipperLib.PathVector, paths: List[ClipperLib.IntPointVector]) -> List[CamPath] :
+    def mergePaths(cls, _bounds: Clipper613Lib.PathVector, paths: List[Clipper613Lib.IntPointVector]) -> List[CamPath] :
         '''
         Try to merge paths. A merged path doesn't cross outside of bounds. 
         '''
         if _bounds and len(_bounds) > 0:
             bounds = _bounds
         else: 
-            bounds = ClipperLib.PathVector()
+            bounds = Clipper613Lib.PathVector()
  
 
         currentPath = list(paths[0]) # not as tuple, but as list
@@ -261,7 +261,7 @@ class cam:
         currentPoint = currentPath[-1]
         paths[0] = []
 
-        mergedPaths : List[ClipperLib.IntPointVector] = [] 
+        mergedPaths : List[Clipper613Lib.IntPointVector] = [] 
         numLeft = len(paths) - 1
 
         while numLeft > 0 :
@@ -294,7 +294,7 @@ class cam:
                 currentPath = currentPath + path
                 currentPoint = currentPath[-1]
 
-        #ClipperLib.dumpPath("currentPath", currentPath)
+        #Clipper613Lib.dumpPath("currentPath", currentPath)
 
         mergedPaths.append(currentPath)
 
@@ -316,7 +316,7 @@ class cam:
         return result
     
     @classmethod
-    def separateTabs(cls, origPath: ClipperLib.IntPointVector, tabs: List['Tab']) -> List[ClipperLib.IntPointVector]:
+    def separateTabs(cls, origPath: Clipper613Lib.IntPointVector, tabs: List['Tab']) -> List[Clipper613Lib.IntPointVector]:
         '''
         from a "normal" tool path, split this path into a list of "partial" paths
         avoiding the tabs areas
@@ -476,13 +476,13 @@ class cam:
         retractForTabGcode = '; Retract for tab\r\n' + \
             f'G1 Z' + tabZ.toFixed(decimal) + f'{rapidFeedGcode}\r\n'
 
-        def getX(p: ClipperLib.IntPoint) :
+        def getX(p: Clipper613Lib.IntPoint) :
             return p.X * scale + offsetX
 
-        def getY(p : ClipperLib.IntPoint):
+        def getY(p : Clipper613Lib.IntPoint):
             return -p.Y * scale + offsetY
 
-        def convertPoint(p: ClipperLib.IntPoint):
+        def convertPoint(p: Clipper613Lib.IntPoint):
             result = ' X' + ValWithUnit(p.X * scale + offsetX, "-").toFixed(decimal) +  \
                      ' Y' + ValWithUnit(-p.Y * scale + offsetY, "-").toFixed(decimal)
             return result

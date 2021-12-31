@@ -1,14 +1,14 @@
 
 from typing import List
 
-from clipper import clipper as ClipperLib
-from clipper_642 import clipper_642 as Clipper642Lib
+import clipper_613 as Clipper613Lib
+import clipper_642 as Clipper642Lib
 
 class ClipperUtils:
     '''
-    Wrapper functions on ClipperLib
+    Wrapper functions on Clipper613Lib
     '''
-    print("Using ClipperLib version %s" % ClipperLib.CLIPPER_VERSION)
+    print("Using Clipper613Lib version %s" % Clipper613Lib.CLIPPER_VERSION)
 
     inchToClipperScale = 100000  # Scale inch to Clipper
     cleanPolyDist = inchToClipperScale / 100000
@@ -16,97 +16,97 @@ class ClipperUtils:
     arcTolerance = 2.5 # -> ok, like jscut
     
     # clipper-6.4.2 ?? strange I don't known the rght settigns
-    if ClipperLib.CLIPPER_VERSION == '6.4.2':
+    if Clipper613Lib.CLIPPER_VERSION == '6.4.2':
         # -> much too fine, but increasing produces loss bad of precision
         arcTolerance = 2.5
     
 
     @classmethod
-    def simplifyAndClean(cls, geometry: ClipperLib.PathVector, fillRule: ClipperLib.PolyFillType) -> ClipperLib.PathVector :
+    def simplifyAndClean(cls, geometry: Clipper613Lib.PathVector, fillRule: Clipper613Lib.PolyFillType) -> Clipper613Lib.PathVector :
         '''
         Simplify and clean up Clipper geometry
         '''
-        ClipperLib.CleanPolygons(geometry, cls.cleanPolyDist)
-        ClipperLib.SimplifyPolygons(geometry, fillRule)
+        Clipper613Lib.CleanPolygons(geometry, cls.cleanPolyDist)
+        Clipper613Lib.SimplifyPolygons(geometry, fillRule)
 
         return geometry
 
     @classmethod
-    def clip (cls, paths1: ClipperLib.PathVector, paths2: ClipperLib.PathVector, clipType: ClipperLib.ClipType) -> ClipperLib.PathVector:
+    def clip (cls, paths1: Clipper613Lib.PathVector, paths2: Clipper613Lib.PathVector, clipType: Clipper613Lib.ClipType) -> Clipper613Lib.PathVector:
         '''
-        Clip Clipper geometry. clipType is a ClipperLib.ClipType constant. Returns new geometry.
+        Clip Clipper geometry. clipType is a Clipper613Lib.ClipType constant. Returns new geometry.
         '''
-        clipper = ClipperLib.Clipper()
-        clipper.AddPaths(paths1, ClipperLib.PolyType.ptSubject, True)
-        clipper.AddPaths(paths2, ClipperLib.PolyType.ptClip, True)
+        clipper = Clipper613Lib.Clipper()
+        clipper.AddPaths(paths1, Clipper613Lib.PolyType.ptSubject, True)
+        clipper.AddPaths(paths2, Clipper613Lib.PolyType.ptClip, True)
         
-        result = ClipperLib.PathVector()
-        clipper.Execute(clipType, result, ClipperLib.PolyFillType.pftEvenOdd, ClipperLib.PolyFillType.pftEvenOdd)
+        result = Clipper613Lib.PathVector()
+        clipper.Execute(clipType, result, Clipper613Lib.PolyFillType.pftEvenOdd, Clipper613Lib.PolyFillType.pftEvenOdd)
         
         return result
 
     @classmethod
-    def diff(cls, paths1: ClipperLib.PathVector, paths2: ClipperLib.PathVector) -> ClipperLib.PathVector:
+    def diff(cls, paths1: Clipper613Lib.PathVector, paths2: Clipper613Lib.PathVector) -> Clipper613Lib.PathVector:
         '''
         Return difference between to Clipper geometries. Returns new geometry.
         '''
-        return cls.clip(paths1, paths2, ClipperLib.ClipType.ctDifference)
+        return cls.clip(paths1, paths2, Clipper613Lib.ClipType.ctDifference)
 
     @classmethod
-    def offset(cls, geometry: ClipperLib.PathVector, amount: float, joinType=None, endType=None):
+    def offset(cls, geometry: Clipper613Lib.PathVector, amount: float, joinType=None, endType=None):
         '''
         '''
         if joinType is None:
-            joinType = ClipperLib.JoinType.jtRound
+            joinType = Clipper613Lib.JoinType.jtRound
         if endType is None:
-            endType = ClipperLib.EndType.etClosedPolygon
+            endType = Clipper613Lib.EndType.etClosedPolygon
 
-        # bug workaround: join types are swapped in ClipperLib 6.1.3.2
-        if joinType == ClipperLib.JoinType.jtSquare:
-            joinType = ClipperLib.JoinType.jtMiter
-        elif joinType == ClipperLib.JoinType.jtMiter:
-            joinType = ClipperLib.JoinType.jtSquare
+        # bug workaround: join types are swapped in Clipper613Lib 6.1.3.2
+        if joinType == Clipper613Lib.JoinType.jtSquare:
+            joinType = Clipper613Lib.JoinType.jtMiter
+        elif joinType == Clipper613Lib.JoinType.jtMiter:
+            joinType = Clipper613Lib.JoinType.jtSquare
 
-        co = ClipperLib.ClipperOffset(2, cls.arcTolerance)
+        co = Clipper613Lib.ClipperOffset(2, cls.arcTolerance)
         co.AddPaths(geometry, joinType, endType)
         
-        offsetted = ClipperLib.PathVector()
+        offsetted = Clipper613Lib.PathVector()
         co.Execute(offsetted, amount)
 
-        #ClipperLib.CleanPolygons(offsetted, ClipperUtils.cleanPolyDist)
+        #Clipper613Lib.CleanPolygons(offsetted, ClipperUtils.cleanPolyDist)
         return offsetted
 
     @classmethod
-    def combine(cls, clipper_paths: List[ClipperLib.IntPointVector], clipType: ClipperLib.ClipType) -> ClipperLib.PathVector:
+    def combine(cls, clipper_paths: List[Clipper613Lib.IntPointVector], clipType: Clipper613Lib.ClipType) -> Clipper613Lib.PathVector:
         '''
         '''
-        subj = ClipperLib.PathVector()
+        subj = Clipper613Lib.PathVector()
         subj.append(clipper_paths[0])
 
         # special case : only 1 path selected 
         if len(clipper_paths) == 1:
             return subj
 
-        clip = ClipperLib.PathVector()
+        clip = Clipper613Lib.PathVector()
         for path in clipper_paths[1:]:
             clip.append(path)
 
-        c = ClipperLib.Clipper()
+        c = Clipper613Lib.Clipper()
 
-        c.AddPaths(subj, ClipperLib.PolyType.ptSubject, True)
-        c.AddPaths(clip, ClipperLib.PolyType.ptClip, True)
+        c.AddPaths(subj, Clipper613Lib.PolyType.ptSubject, True)
+        c.AddPaths(clip, Clipper613Lib.PolyType.ptClip, True)
     
-        combined_clipper_paths = ClipperLib.PathVector()
+        combined_clipper_paths = Clipper613Lib.PathVector()
 
         c.Execute(clipType, 
                 combined_clipper_paths,
-                ClipperLib.PolyFillType.pftNonZero, 
-                ClipperLib.PolyFillType.pftNonZero)
+                Clipper613Lib.PolyFillType.pftNonZero, 
+                Clipper613Lib.PolyFillType.pftNonZero)
 
         return combined_clipper_paths
 
     @classmethod
-    def crosses(cls, bounds, p1: ClipperLib.IntPoint, p2: ClipperLib.IntPoint):
+    def crosses(cls, bounds, p1: Clipper613Lib.IntPoint, p2: Clipper613Lib.IntPoint):
         '''
         Does the line from p1 to p2 cross outside of bounds?
         '''
@@ -115,23 +115,23 @@ class ClipperUtils:
         if p1.X == p2.X and p1.Y == p2.Y :
             return False
 
-        clipper = ClipperLib.Clipper()
-        # JSCUT clipper.AddPath([p1, p2], ClipperLib.PolyType.ptSubject, False)
-        # JSCUT clipper.AddPaths(bounds, ClipperLib.PolyType.ptClip, True)
+        clipper = Clipper613Lib.Clipper()
+        # JSCUT clipper.AddPath([p1, p2], Clipper613Lib.PolyType.ptSubject, False)
+        # JSCUT clipper.AddPaths(bounds, Clipper613Lib.PolyType.ptClip, True)
 
-        p1_p2 = ClipperLib.IntPointVector()
+        p1_p2 = Clipper613Lib.IntPointVector()
         p1_p2.append(p1)
         p1_p2.append(p2)
 
-        clipper.AddPath(p1_p2, ClipperLib.PolyType.ptSubject, False)
-        clipper.AddPaths(bounds, ClipperLib.PolyType.ptClip, True)
+        clipper.AddPath(p1_p2, Clipper613Lib.PolyType.ptSubject, False)
+        clipper.AddPaths(bounds, Clipper613Lib.PolyType.ptClip, True)
 
-        result = ClipperLib.PolyTree()
-        clipper.Execute(ClipperLib.ClipType.ctIntersection, result, ClipperLib.PolyFillType.pftEvenOdd, ClipperLib.PolyFillType.pftEvenOdd)
+        result = Clipper613Lib.PolyTree()
+        clipper.Execute(Clipper613Lib.ClipType.ctIntersection, result, Clipper613Lib.PolyFillType.pftEvenOdd, Clipper613Lib.PolyFillType.pftEvenOdd)
     
         if result.ChildCount() == 1:
-            # JSCUT child : ClipperLib.PolyNode = result.Childs[0] 
-            child : ClipperLib.PolyNode = result.GetNext() 
+            # JSCUT child : Clipper613Lib.PolyNode = result.Childs[0] 
+            child : Clipper613Lib.PolyNode = result.GetNext() 
             points = child.Contour
             if len(points) == 2:
                 if points[0].X == p1.X and points[1].X == p2.X and points[0].Y == p1.Y and points[1].Y == p2.Y :
@@ -142,7 +142,7 @@ class ClipperUtils:
         return True
 
     @classmethod
-    def openpath_remove_tabs(cls, clipper_path: ClipperLib.IntPointVector, clipper_polygons_path: List[ClipperLib.IntPointVector]) -> ClipperLib.PathVector:
+    def openpath_remove_tabs(cls, clipper_path: Clipper613Lib.IntPointVector, clipper_polygons_path: List[Clipper613Lib.IntPointVector]) -> Clipper613Lib.PathVector:
         '''
         the resulting paths canbe "unordered", this is a bit ennoying
 
@@ -166,10 +166,10 @@ class ClipperUtils:
         return paths
 
     @classmethod
-    def clone_pathvector(cls, path: ClipperLib.PathVector) -> ClipperLib.PathVector:
+    def clone_pathvector(cls, path: Clipper613Lib.PathVector) -> Clipper613Lib.PathVector:
         '''
         '''
-        clone = ClipperLib.PathVector()
+        clone = Clipper613Lib.PathVector()
 
         for intvector in path:
             iv_clone = ClipperUtils.clone_intpointvector(intvector)
@@ -178,13 +178,13 @@ class ClipperUtils:
         return clone
 
     @classmethod
-    def clone_intpointvector(cls, vector: ClipperLib.IntPointVector) -> ClipperLib.IntPointVector:
+    def clone_intpointvector(cls, vector: Clipper613Lib.IntPointVector) -> Clipper613Lib.IntPointVector:
         '''
         '''
-        clone = ClipperLib.IntPointVector()
+        clone = Clipper613Lib.IntPointVector()
 
         for intpt in vector:
-            pt_clone = ClipperLib.IntPoint(intpt.X, intpt.Y)
+            pt_clone = Clipper613Lib.IntPoint(intpt.X, intpt.Y)
             clone.append(pt_clone)
 
         return clone
