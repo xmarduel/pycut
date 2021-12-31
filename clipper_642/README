@@ -6,8 +6,8 @@ Basic python wrapper of clipper 6.4.2
 C:\Users\xavie\Downloads\swigwin-4.0.2\swig.exe -c++ -python clipper_642.i
 
 g++ -O2 -fPIC -c clipper.cpp
-g++ -O2 -fPIC -c clipper_wrap.cxx -IC:\\Users\\xavie\\AppData\\Local\\Programs\\Python\\Python39\\include
-g++ -shared -fPIC clipper.o clipper_wrap.o -LC:\Users\xavie\AppData\Local\Programs\Python\Python39 -lpython39 -o _clipper.pyd
+g++ -O2 -fPIC -c clipper_642_wrap.cxx -IC:\\Users\\xavie\\AppData\\Local\\Programs\\Python\\Python39\\include
+g++ -shared -fPIC clipper.o clipper_642_wrap.o -LC:\Users\xavie\AppData\Local\Programs\Python\Python39 -lpython39 -o _clipper_642.pyd
 
 Copying mingw64 libs was necessary to load the python module successfully!
 - libgcc_s_seh-1.dll

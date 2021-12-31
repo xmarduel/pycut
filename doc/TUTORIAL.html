@@ -18,12 +18,12 @@
 <div class="sidenav">
 <h3 class="title_sidenav">Contents</h3>
 <ul class="tree">
-  <li><a href="#P-01">Introduction</a>
+  <li><a href="#P-01">Introduction</a> 
     <ul>
       <li><a href="#P-01-01">Inkscape SVG files</a></li>
     </ul>
   </li>
-  <li><a href="#P-02">Basic example</a>
+  <li><a href="#P-02">Basic example</a> 
     <ul>
       <li><a href="#P-02-01">Importing a SVG file</a></li>
       <li><a href="#P-02-02">Creating a PyCut Job</a></li>
@@ -31,7 +31,7 @@
       <li><a href="#P-02-04">Create the GCode</a></li>
     </ul>
   </li>
-  <li><a href="#P-03">GUI Components</a>
+  <li><a href="#P-03">GUI Components</a> 
     <ul>
       <li><a href="#P-03-01">Svg Settings</a></li>
       <li><a href="#P-03-02">Tool (shared by all Operations)</a></li>
@@ -67,7 +67,6 @@ for (var i = 0; i < tree.length; i++){
     });
 }</script>
 </div>
-
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
@@ -78,35 +77,42 @@ for (var i = 0; i < tree.length; i++){
 
 <h2 id="P-01">Introduction</h2>
 
-<p>Welcome to <strong>PyCut</strong>, a clone of <strong>jsCut</strong>, the excellent (at least for beginners) 
-CAM, web-based programm, that takes as input svg files and generates G-Code. 
-So why this rewrite ?</p>
+<p>Welcome to <strong>PyCut</strong>, a clone of <strong>jsCut</strong>, the
+excellent (at least for beginners) CAM, web-based programm, that takes as input
+svg files and generates G-Code. So why this rewrite ?</p>
 
-<p>PyCut aims to offer all the (minimalistics) features found in jsCut, with some small improvements. 
-Hopefully you will find PyCut usefull when learning CNC and producing your first GCode files.</p>
+<p>PyCut aims to offer all the (minimalistics) features found in jsCut, with
+some small improvements. Hopefully you will find PyCut usefull when learning
+CNC and producing your first GCode files.</p>
 
-<p>Starting point of PyCut are SVG files, your designs. In the following, we will use Inkscape to produce SVG files,
-and will shortly point out what has to be taken into consideration when creating an "usable" SVG file.</p>
+<p>Starting point of PyCut are SVG files, your designs. In the following, we
+will use Inkscape to produce SVG files, and will shortly point out what has to
+be taken into consideration when creating an "usable" SVG file.</p>
 
 <h3>Inkscape</h3>
 
-<p>With Inkscape, the first step is to specify the "Document size". Please choose as units "mm", "cm" or "in". 
-This will be use later when creating GCode with the option "Zero Lower Left of Material" as reference. 
-This option needs the Y size of the material.</p>
+<p>With Inkscape, the first step is to specify the "Document size". Please
+choose as units "mm", "cm" or "in". This will be use later when creating GCode
+with the option "Zero Lower Left of Material" as reference. This option needs
+the Y size of the material.</p>
 
-<p>Then, after having creating your design (rectangles, circles, text etc), convert all the items to "paths".</p>
+<p>Then, after having creating your design (rectangles, circles, text etc),
+convert all the items to "paths".</p>
 
-<p>It has unfortunately to be said that it is a bit annoying to have to keep 2 versions of your design, the first one
-as standard svg, the second one as a transformed, "paths" version. This is because PyCut can only work with "paths".</p>
+<p>It has unfortunately to be said that it is a bit annoying to have to keep 2
+versions of your design, the first one as standard svg, the second one as a
+transformed, "paths" version. This is because PyCut can only work with
+"paths".</p>
 
-<p>Could PyCut work with the original, non-"paths" version of the SVG ? Well it theorically could, if PyCut was able
-internally to perform this transformation. There is indeed an external Inkscape script "to paths" that could be used.
-But this will be for version 2 of PyCut.</p>
+<p>Could PyCut work with the original, non-"paths" version of the SVG ? Well it
+theorically could, if PyCut was able internally to perform this transformation.
+There is indeed an external Inkscape script "to paths" that could be used. But
+this will be for version 2 of PyCut.</p>
 
-<p>Infact, actually the user can edit per hand the "paths" version, clean the svg of all Inkscape stuff and give
-meaningfull ids to the paths: these "ids" allow the user to recognize the paths that will be selected for the CAM
+<p>Infact, actually the user can edit per hand the "paths" version, clean the
+svg of all Inkscape stuff and give meaningfull ids to the paths: these "ids"
+allow the user to recognize the paths that will be selected for the CAM
 operations later on. </p>
-
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
@@ -114,34 +120,43 @@ operations later on. </p>
 
 <h3>Importing a SVG file</h3>
 
-<p>So import the "paths" version of your svg: The SVG content should be displayed in the central area.
+<p>So import the "paths" version of your svg: The SVG content should be
+displayed in the central area. </p>
 
 <h3>Creating a PyCut Job</h3>
 
-<p>Then create a new "job" : this is a kind of container that stores the svg file name, the CAM operations 
-that will be created for this specific svg file, and all the settings relavant when generating g-Code.</p>
+<p>Then create a new "job" : this is a kind of container that stores the svg
+file name, the CAM operations that will be created for this specific svg file,
+and all the settings relavant when generating g-Code.</p>
 
-<p>Later, after having saved the job, it will be possble to reload it, with all its stored CAM operations and others settings.</p>
+<p>Later, after having saved the job, it will be possble to reload it, with all
+its stored CAM operations and others settings.</p>
 
 <h3>Creating CAM operations</h3>
 
-<p>Once an empty job is created, it is time to create some CAM operations: select 1 or more items in SVG window (they should turn beige)
-and click the button "Create Operation": a new operation in the operation table should appear.</p>
+<p>Once an empty job is created, it is time to create some CAM operations:
+select 1 or more items in SVG window (they should turn beige) and click the
+button "Create Operation": a new operation in the operation table should
+appear.</p>
 
-<p>Define the properties of the operation: the main one is the CAM operation type: "Pocket", "Engrave", "Inside" or "Outside". 
-The others options wil be discussed later. Default values at this point should be Ok.</p>
+<p>Define the properties of the operation: the main one is the CAM operation
+type: "Pocket", "Engrave", "Inside" or "Outside". The others options wil be
+discussed later. Default values at this point should be Ok.</p>
 
 <h3>Create the GCode</h3>
 
-<p>Select one or more CAM operations in the operations table: the "geometry" of the operation(s) should turn black in the SVG viewer:
-this is (are) the region(s) of the material that wil be affected when cutting the material.</p>
+<p>Select one or more CAM operations in the operations table: the "geometry" of
+the operation(s) should turn black in the SVG viewer: this is (are) the
+region(s) of the material that wil be affected when cutting the material.</p>
 
-<p>Then finish creating the G-Code by pressing one button "g code" in the operation table: the tool path(s) should appears in green in the black regions.</p>
+<p>Then finish creating the G-Code by pressing one button "g code" in the
+operation table: the tool path(s) should appears in green in the black
+regions.</p>
 
-<p>The produced G-Code can be inspected in the "G code viewer" and the "G code Simulator" display areas.</p>
+<p>The produced G-Code can be inspected in the "G code viewer" and the "G code
+Simulator" display areas.</p>
 
 <p>You just have to save the G-Code and you're done.</p>
-
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
@@ -154,22 +169,33 @@ this is (are) the region(s) of the material that wil be affected when cutting th
 <h3>Tool (shared by all Operations)</h3>
 
 <p>The tool properties have a great influence on the resulting C-Code</p>
+
 <p>...</p>
 
 <h3>Tabs</h3>
 
-<p>Not implemented</p>
+<p>It's easy to define tabs with <strong>PyCut</strong>: just click the
+pushbutton "Create Tab" and a red circle is created in the svg, of radius 5 and
+position (10,10). The user can drag 'n drop it fron the svg viewer, or set its
+size/postion in the tab table. Yes tabs, for simplicity, are circle. To be
+effective, the tab has to be enabled and of course placed somewhere on the
+generated toolpaths. The height of the tab is shared by all tabs.</p>
+
+<p>You can check the Gcode generation in the viewer/simulator if everythings is
+Ok.  </p>
 
 <h3>Material</h3>
 
-<p>Actually not used</p>
+<p>The Operations "Cut Depth" should be be larger than the material thickness.
+<span style="color:#ff0080">Actually no check is performed.</span></p>
 
 <h3>Curve to Line Conversion</h3>
 
-<p>If your design contain curves (svg "arcs" or "bezier" curves), they have to be discretized in small segments.</p>
+<p>If your design contain curves (svg "arcs" or "bezier" curves), they have to
+be discretized in small segments.</p>
 
-<p>The 2 following parameters allow to specified how fine the curve discretization will be</p>
-
+<p>The 2 following parameters allow to specified how fine the curve
+discretization will be</p>
 <ul>
   <li>Minimun number of segments</li>
   <li>Segment lenght</li>
@@ -177,30 +203,34 @@ this is (are) the region(s) of the material that wil be affected when cutting th
 
 <h3>GCode Conversion</h3>
 
-<p>The starting location of a milling operation is given by the initial location in the GCode. Per default, PyCut
-  gives as starting point the (0,0) coordinates of the SVG file, which is located at the top-left of the material. This is SVG convention.</p>
+<p>The starting location of a milling operation is given by the initial
+location in the GCode. Per default, PyCut gives as starting point the (0,0)
+coordinates of the SVG file, which is located at the top-left of the material.
+This is SVG convention.</p>
 
-<p>It is possible to chnage the starting location of the job</p>
+<p>But the GCode generation will of course invert the direction of the Y axis
+coordinates. But still the reference is the top-left postion.</p>
 
+<p>It is possible to change the reference location of the generated GCode</p>
 <ul>
-  <li>Lower Left location of the Material</li>
-  <li>Lower Left location of the Job</li>
-  <li>Center of the Job</li>
+  <li>Bottom-Left location of the material</li>
+  <li>Bottom-Left location of the Gcode area</li>
+  <li>Center of the Gcode area</li>
 </ul>
+
+<p>In case of Bottom-Left location of the material, the Y size of the material
+is extracted form the svg file: the svg "height" attribute (with units)  </p>
 
 <h3>GCode Generation</h3>
 
 <p>Some useful options can be set up:</p>
-
 <ul>
   <li>Return at initial location at end of the Job</li>
   <li>Spindle Start/Stop (M3/M5 codes)</li>
   <li>M2 code</li>
 </ul>
-
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
-
 </div>
 </body>
 </html>

@@ -1,0 +1,15 @@
+Basic python wrapper of clipper 6.1.3
+
+- clipper-613.i
+
+
+C:\Users\xavie\Downloads\swigwin-4.0.2\swig.exe -c++ -python clipper_613.i
+
+g++ -O2 -fPIC -c clipper.cpp
+g++ -O2 -fPIC -c cli613_wrap.cxx -IC:\\Users\\xavie\\AppData\\Local\\Programs\\Python\\Python39\\include
+g++ -shared -fPIC clipper.o clipper_wrap.o -LC:\Users\xavie\AppData\Local\Programs\Python\Python39 -lpython39 -o _clipper_613.pyd
+
+Copying mingw64 libs was necessary to load the python module successfully!
+- libgcc_s_seh-1.dll
+- libstdc++-6.dll
+- libwinpthread-1.dll

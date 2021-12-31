@@ -1,4 +1,4 @@
-%module clipper
+%module clipper_613
 %{
 /* Includes the header in the wrapper code */
 #include "clipper.hpp"
