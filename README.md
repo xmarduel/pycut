@@ -1,5 +1,5 @@
 # pycut
-clone of jscut  in python - only the very beginning - work in progress - windows only (because of extension modules)
+clone of jscut  in python - only the very beginning - work in progress - windows only (because of clipper c++ extension modules)
 
 
 DONE: what is currently working: basic
@@ -30,7 +30,7 @@ WILL NEVER BE IMPLEMENTED
 - vPocket (I do not need them)
 
 
-==============================================================================
+=========================================================================
 
 Tabs are defined with: 
   - center (x,y)
@@ -54,4 +54,4 @@ because the 6.1.3 seems better when combining paths (not so much interpolated po
 Note: jsCut does not utilize clipper for the tabs handling, 
 but an other c++ wrapper. 
 
-==============================================================================
+=========================================================================
