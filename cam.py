@@ -535,12 +535,16 @@ class cam:
 
                 inTabsHeight = False
                 
-                if nextZ >= tabZ:
+                if not hasTabs:
                     inTabsHeight = False
                     selectedPaths = [origPath]
                     gcode += 'G1 Z' + ValWithUnit(currentZ, "-").toFixed(decimal) + '\r\n'
                 else:
-                    if hasTabs:
+                    if nextZ >= tabZ:
+                        inTabsHeight = False
+                        selectedPaths = [origPath]
+                        gcode += 'G1 Z' + ValWithUnit(currentZ, "-").toFixed(decimal) + '\r\n'
+                    else:
                         inTabsHeight = True
                         selectedPaths = separatedPaths
 
@@ -593,7 +597,7 @@ class cam:
                     if inTabsHeight:
                         # move to initial point of partial path
                         gcode += '; with Tabs: move to first point of partial path at safe height \r\n'
-                        gcode += 'G1' + convertPoint(selectedPath[0])
+                        gcode += 'G1' + convertPoint(selectedPath[0]) + '\r\n'
                         gcode += \
                             '; plunge\r\n' + \
                             'G1 Z' + ValWithUnit(nextZ, "-").toFixed(decimal) + plungeFeedGcode + '\r\n'
