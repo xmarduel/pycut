@@ -1,4 +1,4 @@
-import clipper
+from clipper import clipper
 
 def test1():
     outer = clipper.IntPointVector()
@@ -106,6 +106,8 @@ def test_openline_diff():
     
        - result is a list of open lines, where none of their parts
        are in the tab
+
+    -> wring result!
     '''
     print("test_openline_diff")
 
@@ -114,30 +116,26 @@ def test_openline_diff():
     line.append(clipper.IntPoint(600,100))
     line.append(clipper.IntPoint(600,600))
     line.append(clipper.IntPoint(100,600))
-    # nearly closed...
-    line.append(clipper.IntPoint(99,99))
+    line.append(clipper.IntPoint(100,100)) # close the path! but give it as "opened"
 
     tab1 = clipper.IntPointVector()
     tab1.append(clipper.IntPoint(200,80))
-    tab1.append(clipper.IntPoint(250,80))
-    tab1.append(clipper.IntPoint(250,120))
+    tab1.append(clipper.IntPoint(300,80))
+    tab1.append(clipper.IntPoint(300,120))
     tab1.append(clipper.IntPoint(200,120))
-    #tab1.append(clipper.IntPoint(200,80))
 
     tab2 = clipper.IntPointVector()
-    tab2.append(clipper.IntPoint(400,80))
-    tab2.append(clipper.IntPoint(450,80))
-    tab2.append(clipper.IntPoint(450,120))
-    tab2.append(clipper.IntPoint(400,120))
-    #tab2.append(vIntPoint(400,80))
+    tab2.append(clipper.IntPoint( 80,200))
+    tab2.append(clipper.IntPoint(120,200))
+    tab2.append(clipper.IntPoint(120,300))
+    tab2.append(clipper.IntPoint( 80,300))
 
-    # tab3 is oberlappi g tab2...
+    # tab3
     tab3 = clipper.IntPointVector()
-    tab3.append(clipper.IntPoint(420,80))
-    tab3.append(clipper.IntPoint(470,80))
-    tab3.append(clipper.IntPoint(470,120))
-    tab3.append(clipper.IntPoint(420,120))
-    #tab3.append(vIntPoint(400,80))
+    tab3.append(clipper.IntPoint(580,200))
+    tab3.append(clipper.IntPoint(620,200))
+    tab3.append(clipper.IntPoint(620,300))
+    tab3.append(clipper.IntPoint(580,300))
     
     tabs = clipper.PathVector()
     tabs.append(tab1)
@@ -164,21 +162,16 @@ def test_openline_diff():
 
     print(paths)
 
-    rpaths = clipper.PathVector()
-    for path in paths:
-        lp = list(path)
-        lp.reverse()
-        rpaths.append(lp)
-
-    print(rpaths)
-
 if __name__ == '__main__':
+    print("CLIPPER VERSION", clipper.CLIPPER_VERSION)
+    
     #test1()
     #test(clipper.ClipType.ctUnion)
     #test(clipper.ClipType.ctIntersection)
     #test(clipper.ClipType.ctXor)
     #test(clipper.ClipType.ctDifferences)
 
-    test_openline_diff()
-
     #test_offset()
+
+    # version 6.4.2 is better - here bad results
+    test_openline_diff()
