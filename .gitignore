@@ -128,15 +128,20 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-clipper/clipper_ver6.4.2
 clipper/clipper_ver6.1.3
-clipper/clipper_ver6.2.1_crash
 clipper/clipper_wrap.cxx
 clipper/clipper_wrap.o
 clipper/clipper.o
 clipper/clipper_test.exe
 clipper/clipper_test.o
-clipper/clipper_ver6.4.2.zip
+
+clipper_642/clipper_ver6.4.2
+clipper_642/clipper_642_wrap.cxx
+clipper_642/clipper_642_wrap.o
+clipper_642/clipper.o
+clipper_642/clipper642_test.exe
+clipper_642/clipper642_test.o
+
 pyside_ex/images
 
 gcodeviewer/drawers/*h

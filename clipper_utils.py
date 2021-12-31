@@ -1,8 +1,8 @@
 
 from typing import List
 
-import clipper.clipper as ClipperLib
-
+from clipper import clipper as ClipperLib
+from clipper_642 import clipper_642 as Clipper642Lib
 
 class ClipperUtils:
     '''
@@ -140,6 +140,30 @@ class ClipperUtils:
                     return False
 
         return True
+
+    @classmethod
+    def openpath_remove_tabs(cls, clipper_path: ClipperLib.IntPointVector, clipper_polygons_path: List[ClipperLib.IntPointVector]) -> ClipperLib.PathVector:
+        '''
+        the resulting paths canbe "unordered", this is a bit ennoying
+
+        -> we re-order them, so that the first path of the output paths
+        contains the first point of the input path TODO
+        '''
+        c = Clipper642Lib.Clipper()
+        c.AddPath(clipper_path, Clipper642Lib.PolyType.ptSubject, False)  # open path
+        c.AddPaths(clipper_polygons_path, Clipper642Lib.PolyType.ptClip, True)
+
+        polytree = Clipper642Lib.PolyTree()
+
+        c.Execute(Clipper642Lib.ClipType.ctDifference, 
+            polytree,
+            Clipper642Lib.PolyFillType.pftNonZero, 
+            Clipper642Lib.PolyFillType.pftNonZero)
+
+        paths = Clipper642Lib.PathVector()
+        Clipper642Lib.OpenPathsFromPolyTree(polytree, paths)
+
+        return paths
 
     @classmethod
     def clone_pathvector(cls, path: ClipperLib.PathVector) -> ClipperLib.PathVector:

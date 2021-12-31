@@ -11,7 +11,8 @@ import xml.etree.ElementTree as ET
 
 import svgpathtools
 import numpy as np
-import clipper.clipper as ClipperLib
+from clipper import clipper as ClipperLib
+from clipper_642 import clipper_642 as Clipper642Lib
 
 from clipper_utils import ClipperUtils
 
@@ -115,6 +116,21 @@ class SvgPath:
 
         return clipper_path
 
+    def toClipper642Path(self) -> Clipper642Lib.IntPointVector:
+        '''
+        '''
+        np_svg_path = self.discretize()
+
+        clipper_path = Clipper642Lib.IntPointVector()
+
+        for complex_pt in np_svg_path:
+            pt = Clipper642Lib.IntPoint( \
+                int(complex_pt.real * (ClipperUtils.inchToClipperScale / 25.4)),
+                int(complex_pt.imag * (ClipperUtils.inchToClipperScale / 25.4)))
+            clipper_path.append(pt)
+
+        return clipper_path
+
     @classmethod
     def fromCircleDef(cls, center, radius) -> 'SvgPath':
         '''
@@ -157,6 +173,12 @@ class SvgPath:
             end   = discretized_svg_path[i+1]
 
             svg_path.append(svgpathtools.Line(start, end))
+
+        # last one : from end point to start point
+        start = discretized_svg_path[-1]
+        end   = discretized_svg_path[0]
+
+        svg_path.append(svgpathtools.Line(start, end))
 
         return SvgPath(prefix, {'d': svg_path.d()})
 

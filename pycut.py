@@ -630,7 +630,8 @@ class GcodeGenerator:
                 "retractFeed":    rapidRate,
                 "cutFeed":        cutRate,
                 "rapidFeed":      rapidRate,
-                "tabs":           [], # self.tabsModel.tabs,
+                #"tabs":           [], # self.tabsModel.tabs,
+                "tabs":           self.tabsModel.tabs,
                 "tabZ":           tabZ
             })
 

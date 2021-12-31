@@ -19,11 +19,13 @@ import math
 import sys
 
 from typing import List
+from typing import Dict
+
 from val_with_unit import ValWithUnit
 
 import clipper_utils
-import clipper.clipper as ClipperLib
-
+from clipper import clipper as ClipperLib
+from clipper_642 import clipper_642 as Clipper642Lib
 
 class CamPath:
     '''
@@ -32,7 +34,7 @@ class CamPath:
       safeToClose:        Is it safe to close the path without retracting?
     }
     '''
-    def __init__(self, path: ClipperLib.PathVector, safeToClose: bool = True):
+    def __init__(self, path: ClipperLib.IntPointVector, safeToClose: bool = True):
         # clipper path
         self.path = path
         # is it safe to close the path without retracting?
@@ -248,7 +250,14 @@ class cam:
  
 
         currentPath = list(paths[0]) # not as tuple, but as list
-        currentPath.append(currentPath[0])
+        
+        pathEndPoint = currentPath[-1]
+        pathStartPoint = currentPath[0]
+
+        # close if start/end poitn not equal
+        if pathEndPoint.X != pathStartPoint.X or pathEndPoint.Y != pathStartPoint.Y:
+            currentPath.append(pathStartPoint)
+        
         currentPoint = currentPath[-1]
         paths[0] = []
 
@@ -306,60 +315,110 @@ class cam:
             result.append(cam_path.path)
         return result
     
+    @classmethod
+    def separateTabs(cls, origPath: ClipperLib.IntPointVector, tabs: List['Tab']) -> List[ClipperLib.IntPointVector]:
+        '''
+        from a "normal" tool path, split this path into a list of "partial" paths
+        avoiding the tabs areas
+        '''
+        from pycut import Tab
 
-    displayedCppTabError1 = False
-    displayedCppTabError2 = False
+        if len(tabs) == 0:
+            return [origPath]
+
+        clipper_path = Clipper642Lib.IntPointVector()
+        for k, pt in enumerate(origPath):
+            clipper_path.append(pt)
+
+        print("origPath", origPath)
+        print("origPath", clipper_path)
+         
+        clipper_paths = Clipper642Lib.PathVector()
+        # 1. from the tabs, build clipper (closed) paths
+        for tab_data in tabs:
+            tab = Tab(tab_data)
+            clipper_paths.append(tab.svg_path.toClipperPath())
+
+        # 2. then "diff" the origin path with the tabs paths
+        splitted_paths = clipper_utils.ClipperUtils.openpath_remove_tabs(clipper_path, clipper_paths)
+        
+        # 3. that's it
+        print("splitted_paths", splitted_paths)
+
+        paths = [list(path) for path in splitted_paths ]
+        
+        # >>> XAM merge some paths when possible (verflixt!)
+        paths = cls.mergeCompatiblePaths(paths)
+        # <<< XAM
+
+        return paths
 
     @classmethod
-    def separateTabs(cls, cutterPath, tabGeometry):
+    def mergeCompatiblePaths(cls, paths: List[Clipper642Lib.IntPointVector]):
         '''
+        This is a post-processing step to clipper-6.4.2 where found seperated paths can be merged together,
+        leading to less sepated paths
         '''
-        if len(tabGeometry) == 0:
-            return [cutterPath]
-        '''
-        if typeof Module == 'undefined':
-            if not displayedCppTabError1:
-                showAlert("Failed to load cam-cpp.js; tabs will be missing. This message will not repeat.", "alert-danger", False)
-                displayedCppTabError1 = True
-            
-            return cutterPath
+        # ------------------------------------------------------------------------------------------------
+        def pathsAreCompatible(path1: Clipper642Lib.IntPointVector, path2: Clipper642Lib.IntPointVector) -> bool:
+            '''
+            test if the 2 paths have their end point/start point compatible (is the same)
+            '''
+            endPoint = path1[-1]
+            startPoint = path2[0]
 
-        memoryBlocks = []
+            if endPoint.X == startPoint.X and endPoint.Y == startPoint.Y:
+                # can merge
+                return True
 
-        cCutterPath = jscut.priv.path.convertPathsToCpp(memoryBlocks, [cutterPath]);
-        cTabGeometry = jscut.priv.path.convertPathsToCpp(memoryBlocks, tabGeometry);
+            return False
 
-        errorRef = Module._malloc(4);
-        resultPathsRef = Module._malloc(4);
-        resultNumPathsRef = Module._malloc(4);
-        resultPathSizesRef = Module._malloc(4);
-        memoryBlocks.append(errorRef);
-        memoryBlocks.append(resultPathsRef);
-        memoryBlocks.append(resultNumPathsRef);
-        memoryBlocks.append(resultPathSizesRef);
+        def mergePathIntoPath(path1: Clipper642Lib.IntPointVector, path2: Clipper642Lib.IntPointVector) -> bool:
+            '''
+            merge the 2 paths if their end point/start point are compatible (ie the same)
+            '''
+            endPoint = path1[-1]
+            startPoint = path2[0]
 
-        #extern "C" void separateTabs(
-        #    double** pathPolygons, int numPaths, int* pathSizes,
-        #    double** tabPolygons, int numTabPolygons, int* tabPolygonSizes,
-        #    bool& error,
-        #    double**& resultPaths, int& resultNumPaths, int*& resultPathSizes)
-        Module.ccall(
-            'separateTabs',
-            'void', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
-            [cCutterPath[0], cCutterPath[1], cCutterPath[2], cTabGeometry[0], cTabGeometry[1], cTabGeometry[2], errorRef, resultPathsRef, resultNumPathsRef, resultPathSizesRef]);
+            if endPoint.X == startPoint.X and endPoint.Y == startPoint.Y:
+                # can merge
+                path1 += path2[1:]
+                return True
 
-        if Module.HEAPU32[errorRef >> 2] and  not displayedCppTabError2:
-            showAlert("Internal error processing tabs; tabs will be missing. This message will not repeat.", "alert-danger", False)
-            displayedCppTabError2 = True
+        def buildPathsCompatibilityTable(paths: List[Clipper642Lib.IntPointVector]) -> Dict[List,int]:
+            '''
+            for all paths in the list of paths, check first which ones can be merged
+            '''
+            compatibility_table = {}
 
-        result = jscut.priv.path.convertPathsFromCpp(memoryBlocks, resultPathsRef, resultNumPathsRef, resultPathSizesRef)
+            for i, path in enumerate(paths):
+                for j, other_path in enumerate(paths):
+                    if i == j:
+                       continue
+                    rc = pathsAreCompatible(path, other_path)
+                    if rc:
+                        if i in compatibility_table:
+                            compatibility_table[i].append(j)
+                        else: 
+                            compatibility_table[i] = [j]
+        
+            return compatibility_table
+        # ------------------------------------------------------------------------------------------------
 
-        for memoryBlock in memoryBlocks:
-            Module._free(memoryBlock)
+        if len(paths) <= 1:
+            return paths
 
-        return result
-        '''
+        compatibility_table = buildPathsCompatibilityTable(paths)
 
+        while len(compatibility_table) > 0:
+            i = list(compatibility_table.keys())[0]
+            path = paths[i]
+            j = compatibility_table[i][0]
+            path_to_be_merged = paths.pop(j)
+            mergePathIntoPath(path, path_to_be_merged)
+            compatibility_table = buildPathsCompatibilityTable(paths)
+
+        return paths
 
 
     @classmethod
@@ -428,10 +487,14 @@ class cam:
                      ' Y' + ValWithUnit(-p.Y * scale + offsetY, "-").toFixed(decimal)
             return result
 
+        hasTabs = len(tabs) > 0
+
         for pathIndex, path in enumerate(paths):
             origPath = path.path
             if len(origPath) == 0:
                 continue
+
+            # split the path to cut into many partials paths to avoid tabs eraas
             separatedPaths = cls.separateTabs(origPath, tabs)
 
             gcode += \
@@ -440,83 +503,106 @@ class cam:
 
             currentZ = safeZ
             finishedZ = topZ
+
+            # need to cut at tabZ if tabs there
+            exactTabZLevelDone = False
+
             while finishedZ > botZ:
                 nextZ = max(finishedZ - passDepth, botZ)
+
+                if hasTabs:
+                    if nextZ == tabZ:
+                        exactTabZLevelDone = True
+                    elif nextZ < tabZ:
+                        # a last cut at the exact tab height withput tabs 
+                        if exactTabZLevelDone == False:
+                            nextZ = tabZ
+                            exactTabZLevelDone = True
+
+
                 if (currentZ < safeZ and ((not path.safeToClose) or len(tabs) > 0)) :
                     gcode += retractGcode
                     currentZ = safeZ
 
-                if len(tabs)== 0:
+                # check this - what does it mean ???
+                if not hasTabs:
                     currentZ = finishedZ
                 else:
                     currentZ = max(finishedZ, tabZ)
                 
                 gcode += '; Rapid to initial position\r\n' + \
-                    'G1' + convertPoint(origPath[0]) + rapidFeedGcode + '\r\n' + \
-                    'G1 Z' + ValWithUnit(currentZ, "-").toFixed(decimal) + '\r\n'
+                    'G1' + convertPoint(origPath[0]) + rapidFeedGcode + '\r\n'
 
+                inTabsHeight = False
+                
                 if nextZ >= tabZ:
+                    inTabsHeight = False
                     selectedPaths = [origPath]
+                    gcode += 'G1 Z' + ValWithUnit(currentZ, "-").toFixed(decimal) + '\r\n'
                 else:
-                    selectedPaths = separatedPaths
+                    if hasTabs:
+                        inTabsHeight = True
+                        selectedPaths = separatedPaths
 
-                for selectedIndex, selectedPath in enumerate(selectedPaths):
+                for selectedPath in selectedPaths:
                     if len(selectedPath) == 0:
                         continue
 
-                    if selectedIndex & 1:
-                        selectedZ = tabZ
-                    else:
-                        selectedZ = nextZ
+                    executedRamp = False
+                    if ramp:
+                        minPlungeTime = (currentZ - nextZ) / plungeFeed
+                        idealDist = cutFeed * minPlungeTime
+                        totalDist = 0
+                        for end in range(1, len(selectedPath)):
+                            if totalDist > idealDist:
+                                break
 
-                    if selectedZ < currentZ:
-                        executedRamp = False
-                        if ramp:
-                            minPlungeTime = (currentZ - selectedZ) / plungeFeed
-                            idealDist = cutFeed * minPlungeTime
-                            totalDist = 0
-                            for end in range(1, len(selectedPath)):
-                                if totalDist > idealDist:
-                                    break
-
-                                pt1 = selectedPath[end - 1]
-                                pt2 = selectedPath[end]
-                                totalDist += 2 * cam.dist(getX(pt1), getY(pt1), getX(pt2), getY(pt2))
+                            pt1 = selectedPath[end - 1]
+                            pt2 = selectedPath[end]
+                            totalDist += 2 * cam.dist(getX(pt1), getY(pt1), getX(pt2), getY(pt2))
                                 
-                            if totalDist > 0:
-                                gcode += '; ramp\r\n'
-                                executedRamp = True
+                        if totalDist > 0:
+                            gcode += '; ramp\r\n'
+                            executedRamp = True
                                     
-                                #rampPath = selectedPath.slice(0, end)
-                                rampPath = [ selectedPath[k] for k in range(0,end) ] 
+                            #rampPath = selectedPath.slice(0, end)
+                            rampPath = [ selectedPath[k] for k in range(0,end) ] 
 
-                                #rampPathEnd = selectedPath.slice(0, end - 1).reverse()
-                                rampPathEnd = [ selectedPath[k] for k in range(0,end-1) ]
-                                rampPathEnd.reverse()
+                            #rampPathEnd = selectedPath.slice(0, end - 1).reverse()
+                            rampPathEnd = [ selectedPath[k] for k in range(0,end-1) ]
+                            rampPathEnd.reverse()
 
-                                rampPath = rampPath + rampPathEnd
+                            rampPath = rampPath + rampPathEnd
                                 
-                                distTravelled = 0
-                                for i in range(1,len(rampPath)):
-                                    distTravelled += cam.dist(getX(rampPath[i - 1]), getY(rampPath[i - 1]), getX(rampPath[i]), getY(rampPath[i]))
-                                    newZ = currentZ + distTravelled / totalDist * (selectedZ - currentZ)
-                                    gcode += 'G1' + convertPoint(rampPath[i]) + ' Z' + ValWithUnit(newZ, "-").toFixed(decimal)
-                                    if i == 1:
-                                        gcode += ' F' + ValWithUnit(min(totalDist / minPlungeTime, cutFeed), "-").toFixed(decimal) + '\r\n'
-                                    else:
-                                        gcode += '\r\n' 
+                            distTravelled = 0
+                            for i in range(1,len(rampPath)):
+                                distTravelled += cam.dist(getX(rampPath[i - 1]), getY(rampPath[i - 1]), getX(rampPath[i]), getY(rampPath[i]))
+                                newZ = currentZ + distTravelled / totalDist * (nextZ - currentZ)
+                                gcode += 'G1' + convertPoint(rampPath[i]) + ' Z' + ValWithUnit(newZ, "-").toFixed(decimal)
+                                if i == 1:
+                                    gcode += ' F' + ValWithUnit(min(totalDist / minPlungeTime, cutFeed), "-").toFixed(decimal) + '\r\n'
+                                else:
+                                    gcode += '\r\n' 
 
+                    if not inTabsHeight:
                         if not executedRamp:
                             gcode += \
                                 '; plunge\r\n' + \
-                                'G1 Z' + ValWithUnit(selectedZ, "-").toFixed(decimal) + plungeFeedGcode + '\r\n'
-                    elif selectedZ > currentZ:
-                        gcode += retractForTabGcode
-                        
-                    currentZ = selectedZ
+                                'G1 Z' + ValWithUnit(nextZ, "-").toFixed(decimal) + plungeFeedGcode + '\r\n'
+
+                    if inTabsHeight:
+                        # move to initial point of partial path
+                        gcode += '; with Tabs: move to first point of partial path at safe height \r\n'
+                        gcode += 'G1' + convertPoint(selectedPath[0])
+                        gcode += \
+                            '; plunge\r\n' + \
+                            'G1 Z' + ValWithUnit(nextZ, "-").toFixed(decimal) + plungeFeedGcode + '\r\n'
+
+                    currentZ = nextZ
 
                     gcode += '; cut\r\n'
 
+                    # on a given height, generate series of G1
                     for i in range(1, len(selectedPath)):
                         point = selectedPath[i]
                         gcode += 'G1' + convertPoint(point)
@@ -524,10 +610,12 @@ class cam:
                             gcode += cutFeedGcode + '\r\n'
                         else:
                             gcode += '\r\n'
+                    
+                    if inTabsHeight:
+                        # retract to safeZ before processing next separatedPath
+                        gcode += retractGcode
 
                 finishedZ = nextZ
-                if useZ:
-                    break
             
             gcode += retractGcode
 
