@@ -1,4 +1,4 @@
-from clipper import clipper
+import clipper_613 as clipper
 
 def test1():
     outer = clipper.IntPointVector()
