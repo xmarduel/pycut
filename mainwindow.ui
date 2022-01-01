@@ -516,7 +516,7 @@
           <enum>Qt::Vertical</enum>
          </property>
          <property name="handleWidth">
-          <number>2</number>
+          <number>6</number>
          </property>
          <widget class="QTabWidget" name="tabWidget">
           <property name="currentIndex">
@@ -928,7 +928,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Zero lower left (Op)</string>
+             <string>Zero lower left (Op)         </string>
             </property>
             <property name="icon">
              <iconset theme=":/images/tango/22x22/actions/view-refresh.png"/>
@@ -950,7 +950,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Zero center (Op)</string>
+             <string>Zero center (Op)               </string>
             </property>
             <property name="icon">
              <iconset theme=":/images/tango/22x22/actions/view-refresh.png"/>
