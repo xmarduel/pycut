@@ -12,10 +12,9 @@ class TabItem:
         self.x = data.get("center", [10,10])[0]
         self.y = data.get("center", [10,10])[1]
         self.radius = data.get("radius", 5)
-        self.enabled = False
        
         # not in the data
-        self.enabled = False
+        self.enabled = data.get("enabled", False)
 
     def put_value(self, attr, value):
         '''
@@ -32,7 +31,8 @@ class TabItem:
         '''
         return {
             "center": [self.x, self.y],
-            "radius": self.radius
+            "radius": self.radius,
+            "enabled": self.enabled
         }
 
 class PyCutDoubleSpinBox(QtWidgets.QDoubleSpinBox):

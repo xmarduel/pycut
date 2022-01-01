@@ -660,7 +660,7 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
     def generate_gcode(self):
         '''
         '''    
-        self.mainwindow.cb_generate_g_code()
+        self.mainwindow.cb_generate_gcode()
         
     def handleNewvalue(self, index: QtCore.QModelIndex, value: Any):
         row = index.row()

@@ -135,12 +135,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.ui.checkBox_GCodeGeneration_SpindleAutomatic.clicked.connect(self.cb_spindle_automatic)
 
-        self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.clicked.connect(self.cb_generate_g_code_zerolowerleft_of_material)
-        self.ui.pushButton_GCodeConversion_ZeroLowerLeft.clicked.connect(self.cb_generate_g_code_zerolowerleft)
-        self.ui.pushButton_GCodeConversion_ZeroCenter.clicked.connect(self.cb_generate_g_code_zerocenter)
+        self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.clicked.connect(self.cb_generate_gcode_zerolowerleft_of_material)
+        self.ui.pushButton_GCodeConversion_ZeroLowerLeft.clicked.connect(self.cb_generate_gcode_zerolowerleft)
+        self.ui.pushButton_GCodeConversion_ZeroCenter.clicked.connect(self.cb_generate_gcode_zerocenter)
 
-        self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_g_code)
-        self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_g_code)
+        self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode)
+        self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode)
 
         self.init_gui()
 
@@ -820,7 +820,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         toolModel.plungeRate = ValWithUnit(settings["Tool"]["Plunge"], toolModel.units)
         toolModel.cutRate = ValWithUnit(settings["Tool"]["Cut"], toolModel.units)
         
-        tabsmodel = TabsModel(self.tabs)
+        tabsmodel = TabsModel([tab for tab in self.tabs if tab["enabled"] == True])
         tabsmodel.units = settings["Tabs"]["units"]
         tabsmodel.height = ValWithUnit(settings["Tabs"]["height"], tabsmodel.units)
 
@@ -838,7 +838,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         return job  
         
-    def cb_generate_g_code_zerolowerleft_of_material(self):
+    def cb_generate_gcode_zerolowerleft_of_material(self):
         '''
         '''
         self.job = job = self.get_jobmodel()
@@ -852,7 +852,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.after_gcode_generation(generator)
 
-    def cb_generate_g_code_zerolowerleft(self):
+    def cb_generate_gcode_zerolowerleft(self):
         '''
         '''
         self.job = job = self.get_jobmodel()
@@ -866,7 +866,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.after_gcode_generation(generator)
 
-    def cb_generate_g_code_zerocenter(self):
+    def cb_generate_gcode_zerocenter(self):
         '''
         '''
         self.job = job = self.get_jobmodel()
@@ -880,19 +880,19 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.after_gcode_generation(generator)
 
-    def cb_generate_g_code(self):
+    def cb_generate_gcode(self):
         '''
         '''
         if self.ui.checkBox_GCodeConversion_ZeroLowerLeftOfMaterial_AsDefault.isChecked():
-            self.cb_generate_g_code_zerolowerleft_of_material()
+            self.cb_generate_gcode_zerolowerleft_of_material()
             return
 
         if self.ui.checkBox_GCodeConversion_ZeroLowerLeft_AsDefault.isChecked():
-            self.cb_generate_g_code_zerolowerleft()
+            self.cb_generate_gcode_zerolowerleft()
             return
 
         if self.ui.checkBox_GCodeConversion_ZeroCenter_AsDefault.isChecked():
-            self.cb_generate_g_code_zerocenter()
+            self.cb_generate_gcode_zerocenter()
             return
 
         self.job = job = self.get_jobmodel()

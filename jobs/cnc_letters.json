@@ -29,15 +29,18 @@
       "tabs": [
         {
           "center": [10, 10],
-          "radius": 4
+          "radius": 4,
+          "enabled": false
         },
         {
           "center": [10, 20],
-          "radius": 4
+          "radius": 4,
+          "enabled": false
         },
         {
           "center": [10, 30],
-          "radius": 4
+          "radius": 4,
+          "enabled": false
         }
       ]
     },
