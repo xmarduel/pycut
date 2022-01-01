@@ -51,6 +51,9 @@ can help checking the results.
 This forces me to have 2 versions of the clipperlib python wrapper, 
 because the 6.1.3 seems better when combining paths (not so much interpolated points)...
 
+HINT: actually buggy, cannot mix the two clipper versions, so using 6.4.2 with too many
+clipper points generated at offset execution, but tabs separation OK
+
 Note: jsCut does not utilize clipper for the tabs handling, 
 but an other c++ wrapper. 
 
