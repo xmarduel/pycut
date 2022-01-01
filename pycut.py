@@ -284,8 +284,37 @@ class CncOp:
         '''
         for svg_path in self.svg_paths:
             clipper_path = svg_path.toClipperPath()
-            self.clipper_paths.append(clipper_path)
+ 
+            # JSCUT
+            # if (self.rawPaths[i].nonzero)
+            #    fillRule = ClipperLib.PolyFillType.pftNonZero;
+            #  else
+            #    fillRule = ClipperLib.PolyFillType.pftEvenOdd;
 
+            #  the nonzero flag comes from the svg path property 'fill-rule' != "evenodd"
+            
+            # FIXME see operationViewModel.js  self.recombine = function () {
+            # how it is simplifyAndClean'ed !
+              
+            # PYCUT
+            # -> TODO / TO UNDERSTAND
+
+            # actually not implemented
+            if True:
+                self.clipper_paths.append(clipper_path)
+            else:
+                fillRule = Clipper613Lib.PolyFillType.pftNonZero  # FIXME
+ 
+                wrapper = Clipper613Lib.PathVector()
+                wrapper.append(clipper_path)
+
+                geom = ClipperUtils.simplifyAndClean(wrapper, fillRule)
+
+                self.clipper_paths +=[path for path in geom]
+
+            
+
+            
         clipType = {
             "Union": Clipper613Lib.ClipType.ctUnion,
             "Intersection": Clipper613Lib.ClipType.ctIntersection,
@@ -295,8 +324,8 @@ class CncOp:
         
         geometry = ClipperUtils.combine(self.clipper_paths, clipType)
 
+        # FIXME: do I need this then ?
         self.geometry = ClipperUtils.simplifyAndClean(geometry, Clipper613Lib.PolyFillType.pftNonZero)
-        #self.geometry = geometry
 
         #Clipper613Lib.dumpPaths("geometry", self.geometry)
         

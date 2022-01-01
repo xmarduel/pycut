@@ -73,7 +73,8 @@ class ClipperUtils:
         offsetted = Clipper613Lib.PathVector()
         co.Execute(offsetted, amount)
 
-        #Clipper613Lib.CleanPolygons(offsetted, ClipperUtils.cleanPolyDist)
+        # 6.4.2 -> need clean !
+        Clipper613Lib.CleanPolygons(offsetted, ClipperUtils.cleanPolyDist)
         return offsetted
 
     @classmethod
@@ -130,8 +131,7 @@ class ClipperUtils:
         clipper.Execute(Clipper613Lib.ClipType.ctIntersection, result, Clipper613Lib.PolyFillType.pftEvenOdd, Clipper613Lib.PolyFillType.pftEvenOdd)
     
         if result.ChildCount() == 1:
-            # JSCUT child : Clipper613Lib.PolyNode = result.Childs[0] 
-            child : Clipper613Lib.PolyNode = result.GetNext() 
+            child : Clipper613Lib.PolyNode = result.GetFirst() 
             points = child.Contour
             if len(points) == 2:
                 if points[0].X == p1.X and points[1].X == p2.X and points[0].Y == p1.Y and points[1].Y == p2.Y :
