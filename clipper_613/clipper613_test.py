@@ -165,13 +165,13 @@ def test_openline_diff():
 if __name__ == '__main__':
     print("CLIPPER VERSION", clipper.CLIPPER_VERSION)
     
-    #test1()
+    test1()
     #test(clipper.ClipType.ctUnion)
     #test(clipper.ClipType.ctIntersection)
     #test(clipper.ClipType.ctXor)
     #test(clipper.ClipType.ctDifferences)
 
-    #test_offset()
+    test_offset()
 
     # version 6.4.2 is better - here bad results
     test_openline_diff()
