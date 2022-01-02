@@ -1,7 +1,10 @@
 # pycut
-clone of jscut  in python - only the very beginning - work in progress - windows only (because of clipper c++ extension modules)
+clone of jscut  in python - work in progress -
 
-USAGE: start the program from the installation folder
+Note: the project has advanced nicely dureing the last holidays, but there is certainly many many bugs
+
+USAGE: start the program from the installation folder (because of clipper c++ extension modules only for windows)
+
 > python main.py
 
 Installation: env variables required:
@@ -9,7 +12,7 @@ Installation: env variables required:
  + %PYTHONPATH% : with %PYCUT%\clipper_642 and %PYCUT%\clipper_613  
 
 
-DONE: what is currently working: basic
+DONE: basic
 - read "config" files : so-called job file with all settings and ops
 - select 1 or more ops in the list and "generate" Gcode -> toolpaths OK for
    + pocket   YES
@@ -23,9 +26,7 @@ DONE: what is currently working: basic
 - gcode produced
 - gcode viewer (as in Candle)
 - gcode simulator (as in jsCut)
-
-IN PROGRESS:
-- tabs (actually only GUI: display & edit them)
+- tabs
 
 TODO/BUGS:
 - all the rest!
@@ -37,12 +38,8 @@ WILL NEVER BE IMPLEMENTED
 - vPocket (I do not need them)
 
 
-=========================================================================
-
-Tabs are defined with: 
-  - center (x,y)
-  - radius r
-  - global height (from bottom iof the op cut depth)
+Note on the Clipper Library: version used is 6.4.2. 
+===================================================
   
 Clipper also handles the case of "opened" lines with diff with closed polygons.
 This is what is needed for the tabs handling.
@@ -55,9 +52,9 @@ a post-process step consisting of merging the "separated paths" when possible.
 All in all, I've just tested tabs in a few cases, but the gcode simulation/viewer
 can help checking the results.
 
-HINT: the version 6.4.2 is used, but produces more points when offseting than 6.1.3
+So the version 6.4.2 is used, but produces more points when offseting than the 6.1.3
+version
 
-Note: jsCut does not utilize clipper for the tabs handling, 
+PS: jsCut does not utilize clipper for the tabs handling, 
 but an other c++ wrapper. 
 
-=========================================================================
