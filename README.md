@@ -1,7 +1,7 @@
 # pycut
 clone of jscut  in python - work in progress -
 
-Note: the project has advanced nicely dureing the last holidays, but there is certainly many many bugs
+Note: the project has advanced nicely dureing the last holidays, but there are certainly many many bugs
 
 USAGE: start the program from the installation folder (because of clipper c++ extension modules only for windows)
 
@@ -40,7 +40,7 @@ WILL NEVER BE IMPLEMENTED
 
 Note on the Clipper Library: version used is 6.4.2. 
 ===================================================
-  
+
 Clipper also handles the case of "opened" lines with diff with closed polygons.
 This is what is needed for the tabs handling.
 Unfortunately clipper-6.1.3 gives wrong results (missing parts of the line), 
