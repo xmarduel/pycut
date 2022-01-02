@@ -40,6 +40,12 @@ class Ui_mainwindow(object):
         self.actionSaveJobAs.setObjectName(u"actionSaveJobAs")
         self.actionSaveJob = QAction(mainwindow)
         self.actionSaveJob.setObjectName(u"actionSaveJob")
+        self.actionTutorial = QAction(mainwindow)
+        self.actionTutorial.setObjectName(u"actionTutorial")
+        self.actionAboutQt = QAction(mainwindow)
+        self.actionAboutQt.setObjectName(u"actionAboutQt")
+        self.actionAboutPyCut = QAction(mainwindow)
+        self.actionAboutPyCut.setObjectName(u"actionAboutPyCut")
         self.centralwidget = QWidget(mainwindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout_2 = QHBoxLayout(self.centralwidget)
@@ -556,7 +562,13 @@ class Ui_mainwindow(object):
         self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial = QPushButton(self.centralwidget)
         self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setObjectName(u"pushButton_GCodeConversion_ZeroLowerLeftOfMaterial")
         self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setFont(font1)
-        icon = QIcon(QIcon.fromTheme(u":/images/tango/22x22/actions/view-refresh.png"))
+        icon = QIcon()
+        iconThemeName = u":/images/tango/22x22/actions/view-refresh.png"
+        if QIcon.hasThemeIcon(iconThemeName):
+            icon = QIcon.fromTheme(iconThemeName)
+        else:
+            icon.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+        
         self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setIcon(icon)
 
         self.gridLayout_GCodeConversion.addWidget(self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial, 1, 0, 1, 2)
@@ -783,16 +795,22 @@ class Ui_mainwindow(object):
         self.menuFile.setObjectName(u"menuFile")
         self.menuJobs = QMenu(self.menubar)
         self.menuJobs.setObjectName(u"menuJobs")
+        self.menuHelp = QMenu(self.menubar)
+        self.menuHelp.setObjectName(u"menuHelp")
         mainwindow.setMenuBar(self.menubar)
 
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuJobs.menuAction())
+        self.menubar.addAction(self.menuHelp.menuAction())
         self.menuFile.addAction(self.actionOpenSvg)
         self.menuFile.addSeparator()
         self.menuJobs.addAction(self.actionNewJob)
         self.menuJobs.addAction(self.actionOpenJob)
         self.menuJobs.addAction(self.actionSaveJobAs)
         self.menuJobs.addAction(self.actionSaveJob)
+        self.menuHelp.addAction(self.actionTutorial)
+        self.menuHelp.addAction(self.actionAboutQt)
+        self.menuHelp.addAction(self.actionAboutPyCut)
 
         self.retranslateUi(mainwindow)
 
@@ -809,6 +827,9 @@ class Ui_mainwindow(object):
         self.actionOpenJob.setText(QCoreApplication.translate("mainwindow", u"Open Job...", None))
         self.actionSaveJobAs.setText(QCoreApplication.translate("mainwindow", u"Save Job As...", None))
         self.actionSaveJob.setText(QCoreApplication.translate("mainwindow", u"Save Job", None))
+        self.actionTutorial.setText(QCoreApplication.translate("mainwindow", u"Tutorial", None))
+        self.actionAboutQt.setText(QCoreApplication.translate("mainwindow", u"About &Qt", None))
+        self.actionAboutPyCut.setText(QCoreApplication.translate("mainwindow", u"About PyCut", None))
         self.label_SvgSettings.setText(QCoreApplication.translate("mainwindow", u"  Svg Settings", None))
         self.label_PxPerInch.setText(QCoreApplication.translate("mainwindow", u"px per inch", None))
         self.label_Tool.setText(QCoreApplication.translate("mainwindow", u" Tool (shared for all operations)", None))
@@ -894,5 +915,6 @@ class Ui_mainwindow(object):
         self.label_GCodeGenerationSpindleSpeed.setText(QCoreApplication.translate("mainwindow", u"Spindle speed", None))
         self.menuFile.setTitle(QCoreApplication.translate("mainwindow", u"File", None))
         self.menuJobs.setTitle(QCoreApplication.translate("mainwindow", u"Jobs", None))
+        self.menuHelp.setTitle(QCoreApplication.translate("mainwindow", u"Help", None))
     # retranslateUi
 

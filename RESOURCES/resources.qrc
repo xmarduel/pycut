@@ -16,5 +16,13 @@
         <file>javascript/lib/jquery-2.1.1.min.js</file>
         <file>javascript/lib/webgl-utils.js</file>
         <file>qtwebchannel/qwebchannel.js</file>
+        <file>doc/tutorial.html</file>
+        <file>doc/js/prism.js</file>
+        <file>doc/css/prism.css</file>
+        <file>doc/css/pycut.css</file>
+        <file>doc/css/simpletree.css</file>
+        <file>doc/css/folder-new.png</file>
+        <file>doc/css/document-open.png</file>
+        <file>doc/css/bookmark-new.png</file>
     </qresource>
 </RCC>

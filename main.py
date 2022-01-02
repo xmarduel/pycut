@@ -114,6 +114,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.actionSaveJobAs.triggered.connect(self.cb_save_job_as)
         self.ui.actionSaveJob.triggered.connect(self.cb_save_job)
 
+        self.ui.actionTutorial.triggered.connect(self.cb_show_tutorial)
+        self.ui.actionAboutQt.triggered.connect(self.cb_show_about_qt)
+        self.ui.actionAboutPyCut.triggered.connect(self.cb_show_about_pycut)
+
+        self.aboutQtAct = QtGui.QAction("About &Qt", self,
+                statusTip="Show the Qt library's About box",
+                triggered=QtWidgets.QApplication.instance().aboutQt)
+
         # display material thickness/clearance
         self.ui.doubleSpinBox_Material_Thickness.valueChanged.connect(self.cb_display_material_thickness)
         self.ui.doubleSpinBox_Material_Clearance.valueChanged.connect(self.cb_display_material_clearance)
@@ -156,6 +164,34 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.open_job("./jobs/cnc_test_svgpathtools.json")
         elif job_no == 5:
             self.open_job("./jobs/cnc_letters.json")
+
+    def cb_show_tutorial(self):
+        dlg = QtWidgets.QDialog(self)
+
+        view = QtWidgets.QTextBrowser(dlg)
+        view.setReadOnly(True)
+        view.setMinimumSize(800,500)
+
+        mainLayout = QtWidgets.QVBoxLayout()
+        mainLayout.addWidget(view)
+
+        dlg.setLayout(mainLayout)
+        dlg.setWindowTitle("PyCut Tutorial")
+        dlg.setModal(True)
+
+        try:
+            view.setSource(QtCore.QUrl.fromLocalFile(":/doc/tutorial.html"))
+        except Exception as msg:
+            view.setHtml(self.notfound % {'message':str(msg)})
+
+        dlg.show()
+
+    def cb_show_about_qt(self):
+        QtWidgets.QApplication.instance().aboutQt()
+
+    def cb_show_about_pycut(self):
+        pass
+
 
     def cb_save_gcode(self):
         '''
