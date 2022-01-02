@@ -147,6 +147,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_GCodeConversion_ZeroLowerLeft.clicked.connect(self.cb_generate_gcode_zerolowerleft)
         self.ui.pushButton_GCodeConversion_ZeroCenter.clicked.connect(self.cb_generate_gcode_zerocenter)
 
+        self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/view-refresh.png'))
+        self.ui.pushButton_GCodeConversion_ZeroLowerLeft.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/view-refresh.png'))
+        self.ui.pushButton_GCodeConversion_ZeroCenter.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/view-refresh.png'))
+
         self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode)
         self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode)
 
