@@ -1,7 +1,7 @@
 # pycut
 clone of jscut  in python - work in progress -
 
-Note: the project has advanced nicely dureing the last holidays, but there are certainly many many bugs
+Note: the project has advanced nicely during the last holidays, but there are certainly many many bugs
 
 USAGE: start the program from the installation folder (because of clipper c++ extension modules only for windows)
 
@@ -11,6 +11,10 @@ Installation: env variables required:
  + %PYCUT%  : the installation folder
  + %PYTHONPATH% : with %PYCUT%\clipper_642 and %PYCUT%\clipper_613  
 
+Python Dependencies:
+- PySide6
+- svgpathtools
+- numpy
 
 DONE: basic
 - read "config" files : so-called job file with all settings and ops
