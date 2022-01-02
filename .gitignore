@@ -129,8 +129,8 @@ dmypy.json
 .pyre/
 
 clipper_613/clipper_ver6.1.3
-clipper_613/clipper_613wrap.cxx
-clipper_613/clipper_w613rap.o
+clipper_613/clipper_613_wrap.cxx
+clipper_613/clipper_613_wrap.o
 clipper_613/clipper.o
 clipper_613/clipper613_test.exe
 clipper_613/clipper613_test.o
