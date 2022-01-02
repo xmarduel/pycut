@@ -1,6 +1,13 @@
 # pycut
 clone of jscut  in python - only the very beginning - work in progress - windows only (because of clipper c++ extension modules)
 
+USAGE: start the program from the installation folder
+> python main.py
+
+Installation: env variables required:
+ + %PYCUT%  : the installation folder
+ + %PYTHONPATH% : with %PYCUT%\clipper_642 and %PYCUT%\clipper_613  
+
 
 DONE: what is currently working: basic
 - read "config" files : so-called job file with all settings and ops
