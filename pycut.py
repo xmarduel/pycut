@@ -312,9 +312,6 @@ class CncOp:
 
                 self.clipper_paths +=[path for path in geom]
 
-            
-
-            
         clipType = {
             "Union": Clipper613Lib.ClipType.ctUnion,
             "Intersection": Clipper613Lib.ClipType.ctIntersection,
@@ -322,7 +319,7 @@ class CncOp:
             "Xor": Clipper613Lib.ClipType.ctXor,
         } [self.combinaison] 
         
-        geometry = ClipperUtils.combine(self.clipper_paths, clipType)
+        geometry = ClipperUtils.combine(self.clipper_paths[0], self.clipper_paths[1:], clipType)
 
         # FIXME: do I need this then ?
         self.geometry = ClipperUtils.simplifyAndClean(geometry, Clipper613Lib.PolyFillType.pftNonZero)

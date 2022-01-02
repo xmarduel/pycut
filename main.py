@@ -897,6 +897,21 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.job = job = self.get_jobmodel()
 
+        has_toolpaths = False
+        for op in self.job.operations:
+            if len(op.cam_paths) > 0:
+                has_toolpaths = True
+
+        if not has_toolpaths:
+            # alert
+            msgBox = QtWidgets.QMessageBox()
+            msgBox.setWindowTitle("PyCut")
+            msgBox.setText("The Job has no toolpaths!")
+            msgBox.setInformativeText("Maybe is the geometry too narrow for the cutter?")
+            msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
+            msgBox.exec()
+            return
+
         for cnc_op in job.operations:
             cnc_op.setup(self.svg_viewer)
 

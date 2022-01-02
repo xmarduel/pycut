@@ -67,6 +67,11 @@ class cam:
         #Clipper613Lib.dumpPaths("geometry", geometry)
 
         current = clipper_utils.ClipperUtils.offset(geometry, -cutterDia / 2)
+
+        if len(current) == 0:
+            # cannot offset ! maybe geometry too narrow for the cutter
+            return []
+
         bounds = clipper_utils.ClipperUtils.clone_pathvector(current)  # JSCUT: current.slice(0)
         allPaths : List[Clipper613Lib.IntPointVector] = []
         while len(current) != 0:

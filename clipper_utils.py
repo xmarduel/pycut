@@ -78,18 +78,18 @@ class ClipperUtils:
         return offsetted
 
     @classmethod
-    def combine(cls, clipper_paths: List[Clipper613Lib.IntPointVector], clipType: Clipper613Lib.ClipType) -> Clipper613Lib.PathVector:
+    def combine(cls, clipper_path: Clipper613Lib.IntPointVector, clipper_paths: List[Clipper613Lib.IntPointVector], clipType: Clipper613Lib.ClipType) -> Clipper613Lib.PathVector:
         '''
         '''
         subj = Clipper613Lib.PathVector()
-        subj.append(clipper_paths[0])
+        subj.append(clipper_path)
 
-        # special case : only 1 path selected 
-        if len(clipper_paths) == 1:
+        # special case : nothing to combine 
+        if len(clipper_paths) == 0:
             return subj
 
         clip = Clipper613Lib.PathVector()
-        for path in clipper_paths[1:]:
+        for path in clipper_paths:
             clip.append(path)
 
         c = Clipper613Lib.Clipper()
@@ -183,8 +183,8 @@ class ClipperUtils:
         '''
         clone = Clipper613Lib.IntPointVector()
 
-        for intpt in vector:
-            pt_clone = Clipper613Lib.IntPoint(intpt.X, intpt.Y)
+        for pt in vector:
+            pt_clone = Clipper613Lib.IntPoint(pt.X, pt.Y)
             clone.append(pt_clone)
 
         return clone
