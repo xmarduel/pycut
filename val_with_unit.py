@@ -6,7 +6,7 @@ class ValWithUnit(float):
     >>> x = ValWithUnit(22, "mm")
     >>> x
     >>> x.toInch()
-     >>> x.toMm()
+    >>> x.toMm()
     >>> x.toInch().toFixed(5)
 
     Unfortunately, cannot say

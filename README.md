@@ -1,7 +1,7 @@
 # pycut
 clone of jscut  in python - work in progress -
 
-Note: the project has advanced nicely during the last holidays, but there are certainly many many bugs
+Note: the project has advanced nicely during the last holidays, but there are certainly many many bugs.
 
 USAGE: start the program from the installation folder (because of clipper c++ extension modules only for windows)
 
