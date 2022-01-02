@@ -190,7 +190,25 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         QtWidgets.QApplication.instance().aboutQt()
 
     def cb_show_about_pycut(self):
-        pass
+        dlg = QtWidgets.QDialog(self)
+
+        view = QtWidgets.QTextBrowser(dlg)
+        view.setReadOnly(True)
+        view.setMinimumSize(800,500)
+
+        mainLayout = QtWidgets.QVBoxLayout()
+        mainLayout.addWidget(view)
+
+        dlg.setLayout(mainLayout)
+        dlg.setWindowTitle("PyCut Tutorial")
+        dlg.setModal(True)
+
+        try:
+            view.setSource(QtCore.QUrl.fromLocalFile(":/doc/about.html"))
+        except Exception as msg:
+            view.setHtml(self.notfound % {'message':str(msg)})
+
+        dlg.show()
 
 
     def cb_save_gcode(self):

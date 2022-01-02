@@ -24,5 +24,6 @@
         <file>doc/css/folder-new.png</file>
         <file>doc/css/document-open.png</file>
         <file>doc/css/bookmark-new.png</file>
+        <file>doc/about.html</file>
     </qresource>
 </RCC>
