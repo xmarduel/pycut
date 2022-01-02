@@ -42,7 +42,7 @@ WILL NEVER BE IMPLEMENTED
 Tabs are defined with: 
   - center (x,y)
   - radius r
-  - global height (from bottom ie op cut depth)
+  - global height (from bottom iof the op cut depth)
   
 Clipper also handles the case of "opened" lines with diff with closed polygons.
 This is what is needed for the tabs handling.
@@ -55,11 +55,7 @@ a post-process step consisting of merging the "separated paths" when possible.
 All in all, I've just tested tabs in a few cases, but the gcode simulation/viewer
 can help checking the results.
 
-This forces me to have 2 versions of the clipperlib python wrapper, 
-because the 6.1.3 seems better when combining paths (not so much interpolated points)...
-
-HINT: actually buggy, cannot mix the two clipper versions, so using 6.4.2 with too many
-clipper points generated at offset execution, but tabs separation OK
+HINT: the version 6.4.2 is used, but produces more points when offseting than 6.1.3
 
 Note: jsCut does not utilize clipper for the tabs handling, 
 but an other c++ wrapper. 
