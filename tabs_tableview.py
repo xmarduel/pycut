@@ -319,7 +319,8 @@ class PyCutTabsTableViewManager(QtWidgets.QWidget):
         '''
         self.table.addItem({
             "center": [10,10],
-            "radius": 5
+            "radius": 5,
+            "enabled": True
             }
         )
         
@@ -359,8 +360,6 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
             "radius",                   # [2] float
             "enabled",                  # [3] checkbox
             "del",                      # [4] button
-            "up",                       # [5] button
-            "down",                     # [6] button
         ]
         '''
         delegate = PyCutDoubleSpinBoxDelegate(self)
@@ -391,20 +390,6 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
             btn_del_tab.clicked.connect(self.cb_delete_tab)
             self.setIndexWidget(self.model().index(row, 4), btn_del_tab)
 
-            btn_up_tab = QtWidgets.QPushButton()
-            btn_up_tab.setText("")
-            btn_up_tab.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/go-up.png'))
-            btn_up_tab.setToolTip("Up")
-            btn_up_tab.clicked.connect(self.cb_move_up_tab)
-            self.setIndexWidget(self.model().index(row, 5), btn_up_tab)
-
-            btn_dw_tab = QtWidgets.QPushButton()
-            btn_dw_tab.setText("")
-            btn_dw_tab.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/go-down.png'))
-            btn_dw_tab.setToolTip("Down")
-            btn_dw_tab.clicked.connect(self.cb_move_down_tab)
-            self.setIndexWidget(self.model().index(row, 6), btn_dw_tab)
-
         # setup a right grid size
         vwidth = self.verticalHeader().width()
         hwidth = self.horizontalHeader().length()
@@ -416,9 +401,9 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
 
         self.resizeColumnsToContents() # now!
 
-        self.setColumnWidth(0, 50)  # x
-        self.setColumnWidth(1, 50)  # y
-        self.setColumnWidth(2, 40)  # radius quite small
+        self.setColumnWidth(0, 70)  # x
+        self.setColumnWidth(1, 70)  # y
+        self.setColumnWidth(2, 60)  # radius quite small
 
     def cb_delete_tab(self):
         index = self.currentIndex()
@@ -433,33 +418,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         # inform main window (draw tab in svg)
         tabs = self.model().tabs
         self.parent().mainwindow.display_cnc_tabs(tabs)
-
-    def cb_move_down_tab(self):
-        index = self.currentIndex()
-        idx = index.row()
-        if idx < self.model().rowCount(None) - 1:
-            self.model().swapItems(idx, idx + 1)
-
-        # to be sure to update the table... and all its delegates
-        self.setup()
         
-        print("DOWN")
-        for tab in self.model().tabs:
-            print(tab)
-        
-    def cb_move_up_tab(self):
-        index = self.currentIndex()
-        idx = index.row()
-        if idx > 0:
-            self.model().swapItems(idx, idx - 1)
-
-        # to be sure to update the table... and all its delegates
-        self.setup()
-        
-        print("UP")
-        for tab in self.model().tabs:
-            print(tab)
-
     def addItem(self, tab_data):
         self.model().addItem(tab_data)
         self.setup()  # to show the editors on a new item
@@ -481,8 +440,6 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
             "radius",                  # [2] int
             "enabled",                 # [3] checkbox
             "del",                     # [4] button
-            "up",                      # [5] button
-            "down",                    # [6] button
         ]
 
         self.cnt = 0
@@ -543,10 +500,7 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
 
         if col == 4:  # button
             return None
-        if col == 5:  # button
-            return None
-        if col == 6:  # button
-            return None
+
 
         # for checkboxes only
         if col == 3:   # checkbox

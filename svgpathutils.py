@@ -245,11 +245,12 @@ class SvgTransformer:
             dd = svg_path.p_attrs['d']
 
             fill = svg_path.p_attrs.get("fill", "#111111")
+            fill_opacity = svg_path.p_attrs.get("fill-opacity", "1.0")
             
             if 'fill-rule' in svg_path.p_attrs:
-                path = '<path id="%s_%d" style="fill:%s;stroke-width:0;stroke:#00ff00;fill-rule:%s;"  d="%s" />' % (id, k, fill, svg_path.p_attrs['fill-rule'], dd)
+                path = '<path id="%s_%d" style="fill:%s;fill-opacity:%s;stroke-width:0;stroke:#00ff00;fill-rule:%s;"  d="%s" />' % (id, k, fill, fill_opacity, svg_path.p_attrs['fill-rule'], dd)
             else:
-                path = '<path id="%s_%d" style="fill:%s;stroke-width:0;stroke:#00ff00;"  d="%s" />' % (id, k, fill, dd)
+                path = '<path id="%s_%d" style="fill:%s;fill-opacity:%s;stroke-width:0;stroke:#00ff00;"  d="%s" />' % (id, k, fill, fill_opacity, dd)
 
 
             all_paths += path + '\r\n'

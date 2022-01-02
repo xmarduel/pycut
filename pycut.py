@@ -140,8 +140,6 @@ class MaterialModel:
 
 class Tab:
     '''
-    Not yet used
-    
     a Tab is defined by a circle with position (x,y) 
     and height from the buttom of the material 
     '''
@@ -152,6 +150,8 @@ class Tab:
         '''
         self.center = tab["center"]
         self.radius = tab["radius"]
+
+        self.enabled = tab["enabled"]
 
         self.svg_path = self.make_svg_path()
 
@@ -166,7 +166,13 @@ class Tab:
         '''
         '''
         path = SvgPath.fromCircleDef(self.center, self.radius)
+        
         path.p_attrs["fill"] = "#ff0000"
+
+        if self.enabled:
+            path.p_attrs["fill-opacity"] = "1.0"
+        else:
+            path.p_attrs["fill-opacity"] = "0.3"
 
         return path
 
