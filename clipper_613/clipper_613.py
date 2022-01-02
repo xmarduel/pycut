@@ -145,9 +145,6 @@ class IntPoint(object):
 
 # Register IntPoint in _clipper_613:
 _clipper_613.IntPoint_swigregister(IntPoint)
-cvar = _clipper_613.cvar
-loRange = cvar.loRange
-hiRange = cvar.hiRange
 
 
 def __lshift__(*args):
@@ -182,7 +179,6 @@ class PolyNode(object):
 
     def __init__(self):
         _clipper_613.PolyNode_swiginit(self, _clipper_613.new_PolyNode())
-    __swig_destroy__ = _clipper_613.delete_PolyNode
     Contour = property(_clipper_613.PolyNode_Contour_get, _clipper_613.PolyNode_Contour_set)
     Childs = property(_clipper_613.PolyNode_Childs_get, _clipper_613.PolyNode_Childs_set)
     Parent = property(_clipper_613.PolyNode_Parent_get, _clipper_613.PolyNode_Parent_set)
@@ -198,6 +194,7 @@ class PolyNode(object):
 
     def ChildCount(self):
         return _clipper_613.PolyNode_ChildCount(self)
+    __swig_destroy__ = _clipper_613.delete_PolyNode
 
 # Register PolyNode in _clipper_613:
 _clipper_613.PolyNode_swigregister(PolyNode)
@@ -313,6 +310,7 @@ class Clipper(ClipperBase):
 
     def __init__(self, initOptions=0):
         _clipper_613.Clipper_swiginit(self, _clipper_613.new_Clipper(initOptions))
+    __swig_destroy__ = _clipper_613.delete_Clipper
 
     def Execute(self, *args):
         return _clipper_613.Clipper_Execute(self, *args)
@@ -322,7 +320,6 @@ class Clipper(ClipperBase):
 
     def StrictlySimple(self, *args):
         return _clipper_613.Clipper_StrictlySimple(self, *args)
-    __swig_destroy__ = _clipper_613.delete_Clipper
 
 # Register Clipper in _clipper_613:
 _clipper_613.Clipper_swigregister(Clipper)

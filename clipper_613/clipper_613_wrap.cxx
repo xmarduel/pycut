@@ -5926,34 +5926,6 @@ SWIGINTERN PyObject *SwigPyIterator_swigregister(PyObject *SWIGUNUSEDPARM(self),
   return SWIG_Py_Void();
 }
 
-SWIGINTERN int Swig_var_loRange_set(PyObject *) {
-  SWIG_Error(SWIG_AttributeError,"Variable loRange is read-only.");
-  return 1;
-}
-
-
-SWIGINTERN PyObject *Swig_var_loRange_get(void) {
-  PyObject *pyobj = 0;
-  
-  pyobj = SWIG_From_long_SS_long(static_cast< long long >(ClipperLib::loRange));
-  return pyobj;
-}
-
-
-SWIGINTERN int Swig_var_hiRange_set(PyObject *) {
-  SWIG_Error(SWIG_AttributeError,"Variable hiRange is read-only.");
-  return 1;
-}
-
-
-SWIGINTERN PyObject *Swig_var_hiRange_get(void) {
-  PyObject *pyobj = 0;
-  
-  pyobj = SWIG_From_long_SS_long(static_cast< long long >(ClipperLib::hiRange));
-  return pyobj;
-}
-
-
 SWIGINTERN PyObject *_wrap_IntPoint_X_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClipperLib::IntPoint *arg1 = (ClipperLib::IntPoint *) 0 ;
@@ -6766,28 +6738,6 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_PolyNode(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  ClipperLib::PolyNode *arg1 = (ClipperLib::PolyNode *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject *swig_obj[1] ;
-  
-  if (!args) SWIG_fail;
-  swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_ClipperLib__PolyNode, SWIG_POINTER_DISOWN |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_PolyNode" "', argument " "1"" of type '" "ClipperLib::PolyNode *""'"); 
-  }
-  arg1 = reinterpret_cast< ClipperLib::PolyNode * >(argp1);
-  delete arg1;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
 SWIGINTERN PyObject *_wrap_PolyNode_Contour_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ClipperLib::PolyNode *arg1 = (ClipperLib::PolyNode *) 0 ;
@@ -7030,6 +6980,28 @@ SWIGINTERN PyObject *_wrap_PolyNode_ChildCount(PyObject *SWIGUNUSEDPARM(self), P
   arg1 = reinterpret_cast< ClipperLib::PolyNode * >(argp1);
   result = (int)((ClipperLib::PolyNode const *)arg1)->ChildCount();
   resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_PolyNode(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ClipperLib::PolyNode *arg1 = (ClipperLib::PolyNode *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[1] ;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_ClipperLib__PolyNode, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_PolyNode" "', argument " "1"" of type '" "ClipperLib::PolyNode *""'"); 
+  }
+  arg1 = reinterpret_cast< ClipperLib::PolyNode * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
   return NULL;
@@ -8051,17 +8023,20 @@ SWIGINTERN PyObject *_wrap_MinkowskiSum__SWIG_1(PyObject *SWIGUNUSEDPARM(self), 
   ClipperLib::Path *arg1 = 0 ;
   ClipperLib::Paths *arg2 = 0 ;
   ClipperLib::Paths *arg3 = 0 ;
-  bool arg4 ;
+  ClipperLib::PolyFillType arg4 ;
+  bool arg5 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
   void *argp3 = 0 ;
   int res3 = 0 ;
-  bool val4 ;
+  int val4 ;
   int ecode4 = 0 ;
+  bool val5 ;
+  int ecode5 = 0 ;
   
-  if ((nobjs < 4) || (nobjs > 4)) SWIG_fail;
+  if ((nobjs < 5) || (nobjs > 5)) SWIG_fail;
   res1 = SWIG_ConvertPtr(swig_obj[0], &argp1, SWIGTYPE_p_std__vectorT_ClipperLib__IntPoint_std__allocatorT_ClipperLib__IntPoint_t_t,  0  | 0);
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "MinkowskiSum" "', argument " "1"" of type '" "ClipperLib::Path const &""'"); 
@@ -8086,12 +8061,17 @@ SWIGINTERN PyObject *_wrap_MinkowskiSum__SWIG_1(PyObject *SWIGUNUSEDPARM(self), 
     SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "MinkowskiSum" "', argument " "3"" of type '" "ClipperLib::Paths &""'"); 
   }
   arg3 = reinterpret_cast< ClipperLib::Paths * >(argp3);
-  ecode4 = SWIG_AsVal_bool(swig_obj[3], &val4);
+  ecode4 = SWIG_AsVal_int(swig_obj[3], &val4);
   if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "MinkowskiSum" "', argument " "4"" of type '" "bool""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "MinkowskiSum" "', argument " "4"" of type '" "ClipperLib::PolyFillType""'");
   } 
-  arg4 = static_cast< bool >(val4);
-  ClipperLib::MinkowskiSum((std::vector< ClipperLib::IntPoint,std::allocator< ClipperLib::IntPoint > > const &)*arg1,(std::vector< std::vector< ClipperLib::IntPoint,std::allocator< ClipperLib::IntPoint > >,std::allocator< std::vector< ClipperLib::IntPoint,std::allocator< ClipperLib::IntPoint > > > > const &)*arg2,*arg3,arg4);
+  arg4 = static_cast< ClipperLib::PolyFillType >(val4);
+  ecode5 = SWIG_AsVal_bool(swig_obj[4], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "MinkowskiSum" "', argument " "5"" of type '" "bool""'");
+  } 
+  arg5 = static_cast< bool >(val5);
+  ClipperLib::MinkowskiSum((std::vector< ClipperLib::IntPoint,std::allocator< ClipperLib::IntPoint > > const &)*arg1,(std::vector< std::vector< ClipperLib::IntPoint,std::allocator< ClipperLib::IntPoint > >,std::allocator< std::vector< ClipperLib::IntPoint,std::allocator< ClipperLib::IntPoint > > > > const &)*arg2,*arg3,arg4,arg5);
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -8101,11 +8081,11 @@ fail:
 
 SWIGINTERN PyObject *_wrap_MinkowskiSum(PyObject *self, PyObject *args) {
   Py_ssize_t argc;
-  PyObject *argv[5] = {
+  PyObject *argv[6] = {
     0
   };
   
-  if (!(argc = SWIG_Python_UnpackTuple(args, "MinkowskiSum", 0, 4, argv))) SWIG_fail;
+  if (!(argc = SWIG_Python_UnpackTuple(args, "MinkowskiSum", 0, 5, argv))) SWIG_fail;
   --argc;
   if (argc == 4) {
     int _v;
@@ -8130,7 +8110,7 @@ SWIGINTERN PyObject *_wrap_MinkowskiSum(PyObject *self, PyObject *args) {
       }
     }
   }
-  if (argc == 4) {
+  if (argc == 5) {
     int _v;
     int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_std__vectorT_ClipperLib__IntPoint_std__allocatorT_ClipperLib__IntPoint_t_t, SWIG_POINTER_NO_NULL | 0);
     _v = SWIG_CheckState(res);
@@ -8143,11 +8123,17 @@ SWIGINTERN PyObject *_wrap_MinkowskiSum(PyObject *self, PyObject *args) {
         _v = SWIG_CheckState(res);
         if (_v) {
           {
-            int res = SWIG_AsVal_bool(argv[3], NULL);
+            int res = SWIG_AsVal_int(argv[3], NULL);
             _v = SWIG_CheckState(res);
           }
           if (_v) {
-            return _wrap_MinkowskiSum__SWIG_1(self, argc, argv);
+            {
+              int res = SWIG_AsVal_bool(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              return _wrap_MinkowskiSum__SWIG_1(self, argc, argv);
+            }
           }
         }
       }
@@ -8158,7 +8144,7 @@ fail:
   SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'MinkowskiSum'.\n"
     "  Possible C/C++ prototypes are:\n"
     "    ClipperLib::MinkowskiSum(ClipperLib::Path const &,ClipperLib::Path const &,ClipperLib::Paths &,bool)\n"
-    "    ClipperLib::MinkowskiSum(ClipperLib::Path const &,ClipperLib::Paths const &,ClipperLib::Paths &,bool)\n");
+    "    ClipperLib::MinkowskiSum(ClipperLib::Path const &,ClipperLib::Paths const &,ClipperLib::Paths &,ClipperLib::PolyFillType,bool)\n");
   return 0;
 }
 
@@ -8963,95 +8949,29 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_delete_Clipper(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ClipperLib::Clipper *arg1 = (ClipperLib::Clipper *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[1] ;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_ClipperLib__Clipper, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Clipper" "', argument " "1"" of type '" "ClipperLib::Clipper *""'"); 
+  }
+  arg1 = reinterpret_cast< ClipperLib::Clipper * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_Clipper_Execute__SWIG_0(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
-  PyObject *resultobj = 0;
-  ClipperLib::Clipper *arg1 = (ClipperLib::Clipper *) 0 ;
-  ClipperLib::ClipType arg2 ;
-  ClipperLib::Paths *arg3 = 0 ;
-  ClipperLib::PolyFillType arg4 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  void *argp3 = 0 ;
-  int res3 = 0 ;
-  int val4 ;
-  int ecode4 = 0 ;
-  bool result;
-  
-  if ((nobjs < 4) || (nobjs > 4)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_ClipperLib__Clipper, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Clipper_Execute" "', argument " "1"" of type '" "ClipperLib::Clipper *""'"); 
-  }
-  arg1 = reinterpret_cast< ClipperLib::Clipper * >(argp1);
-  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Clipper_Execute" "', argument " "2"" of type '" "ClipperLib::ClipType""'");
-  } 
-  arg2 = static_cast< ClipperLib::ClipType >(val2);
-  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3, SWIGTYPE_p_std__vectorT_std__vectorT_ClipperLib__IntPoint_std__allocatorT_ClipperLib__IntPoint_t_t_std__allocatorT_std__vectorT_ClipperLib__IntPoint_std__allocatorT_ClipperLib__IntPoint_t_t_t_t,  0 );
-  if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Clipper_Execute" "', argument " "3"" of type '" "ClipperLib::Paths &""'"); 
-  }
-  if (!argp3) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Clipper_Execute" "', argument " "3"" of type '" "ClipperLib::Paths &""'"); 
-  }
-  arg3 = reinterpret_cast< ClipperLib::Paths * >(argp3);
-  ecode4 = SWIG_AsVal_int(swig_obj[3], &val4);
-  if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Clipper_Execute" "', argument " "4"" of type '" "ClipperLib::PolyFillType""'");
-  } 
-  arg4 = static_cast< ClipperLib::PolyFillType >(val4);
-  result = (bool)(arg1)->Execute(arg2,*arg3,arg4);
-  resultobj = SWIG_From_bool(static_cast< bool >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Clipper_Execute__SWIG_1(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
-  PyObject *resultobj = 0;
-  ClipperLib::Clipper *arg1 = (ClipperLib::Clipper *) 0 ;
-  ClipperLib::ClipType arg2 ;
-  ClipperLib::Paths *arg3 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  void *argp3 = 0 ;
-  int res3 = 0 ;
-  bool result;
-  
-  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_ClipperLib__Clipper, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Clipper_Execute" "', argument " "1"" of type '" "ClipperLib::Clipper *""'"); 
-  }
-  arg1 = reinterpret_cast< ClipperLib::Clipper * >(argp1);
-  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Clipper_Execute" "', argument " "2"" of type '" "ClipperLib::ClipType""'");
-  } 
-  arg2 = static_cast< ClipperLib::ClipType >(val2);
-  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3, SWIGTYPE_p_std__vectorT_std__vectorT_ClipperLib__IntPoint_std__allocatorT_ClipperLib__IntPoint_t_t_std__allocatorT_std__vectorT_ClipperLib__IntPoint_std__allocatorT_ClipperLib__IntPoint_t_t_t_t,  0 );
-  if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Clipper_Execute" "', argument " "3"" of type '" "ClipperLib::Paths &""'"); 
-  }
-  if (!argp3) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Clipper_Execute" "', argument " "3"" of type '" "ClipperLib::Paths &""'"); 
-  }
-  arg3 = reinterpret_cast< ClipperLib::Paths * >(argp3);
-  result = (bool)(arg1)->Execute(arg2,*arg3);
-  resultobj = SWIG_From_bool(static_cast< bool >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Clipper_Execute__SWIG_2(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
   PyObject *resultobj = 0;
   ClipperLib::Clipper *arg1 = (ClipperLib::Clipper *) 0 ;
   ClipperLib::ClipType arg2 ;
@@ -9100,6 +9020,94 @@ SWIGINTERN PyObject *_wrap_Clipper_Execute__SWIG_2(PyObject *SWIGUNUSEDPARM(self
   } 
   arg5 = static_cast< ClipperLib::PolyFillType >(val5);
   result = (bool)(arg1)->Execute(arg2,*arg3,arg4,arg5);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Clipper_Execute__SWIG_1(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  ClipperLib::Clipper *arg1 = (ClipperLib::Clipper *) 0 ;
+  ClipperLib::ClipType arg2 ;
+  ClipperLib::Paths *arg3 = 0 ;
+  ClipperLib::PolyFillType arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  bool result;
+  
+  if ((nobjs < 4) || (nobjs > 4)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_ClipperLib__Clipper, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Clipper_Execute" "', argument " "1"" of type '" "ClipperLib::Clipper *""'"); 
+  }
+  arg1 = reinterpret_cast< ClipperLib::Clipper * >(argp1);
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Clipper_Execute" "', argument " "2"" of type '" "ClipperLib::ClipType""'");
+  } 
+  arg2 = static_cast< ClipperLib::ClipType >(val2);
+  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3, SWIGTYPE_p_std__vectorT_std__vectorT_ClipperLib__IntPoint_std__allocatorT_ClipperLib__IntPoint_t_t_std__allocatorT_std__vectorT_ClipperLib__IntPoint_std__allocatorT_ClipperLib__IntPoint_t_t_t_t,  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Clipper_Execute" "', argument " "3"" of type '" "ClipperLib::Paths &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Clipper_Execute" "', argument " "3"" of type '" "ClipperLib::Paths &""'"); 
+  }
+  arg3 = reinterpret_cast< ClipperLib::Paths * >(argp3);
+  ecode4 = SWIG_AsVal_int(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Clipper_Execute" "', argument " "4"" of type '" "ClipperLib::PolyFillType""'");
+  } 
+  arg4 = static_cast< ClipperLib::PolyFillType >(val4);
+  result = (bool)(arg1)->Execute(arg2,*arg3,arg4);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Clipper_Execute__SWIG_2(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  ClipperLib::Clipper *arg1 = (ClipperLib::Clipper *) 0 ;
+  ClipperLib::ClipType arg2 ;
+  ClipperLib::Paths *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  bool result;
+  
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_ClipperLib__Clipper, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Clipper_Execute" "', argument " "1"" of type '" "ClipperLib::Clipper *""'"); 
+  }
+  arg1 = reinterpret_cast< ClipperLib::Clipper * >(argp1);
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Clipper_Execute" "', argument " "2"" of type '" "ClipperLib::ClipType""'");
+  } 
+  arg2 = static_cast< ClipperLib::ClipType >(val2);
+  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3, SWIGTYPE_p_std__vectorT_std__vectorT_ClipperLib__IntPoint_std__allocatorT_ClipperLib__IntPoint_t_t_std__allocatorT_std__vectorT_ClipperLib__IntPoint_std__allocatorT_ClipperLib__IntPoint_t_t_t_t,  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Clipper_Execute" "', argument " "3"" of type '" "ClipperLib::Paths &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Clipper_Execute" "', argument " "3"" of type '" "ClipperLib::Paths &""'"); 
+  }
+  arg3 = reinterpret_cast< ClipperLib::Paths * >(argp3);
+  result = (bool)(arg1)->Execute(arg2,*arg3);
   resultobj = SWIG_From_bool(static_cast< bool >(result));
   return resultobj;
 fail:
@@ -9113,94 +9121,6 @@ SWIGINTERN PyObject *_wrap_Clipper_Execute__SWIG_3(PyObject *SWIGUNUSEDPARM(self
   ClipperLib::ClipType arg2 ;
   ClipperLib::PolyTree *arg3 = 0 ;
   ClipperLib::PolyFillType arg4 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  void *argp3 = 0 ;
-  int res3 = 0 ;
-  int val4 ;
-  int ecode4 = 0 ;
-  bool result;
-  
-  if ((nobjs < 4) || (nobjs > 4)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_ClipperLib__Clipper, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Clipper_Execute" "', argument " "1"" of type '" "ClipperLib::Clipper *""'"); 
-  }
-  arg1 = reinterpret_cast< ClipperLib::Clipper * >(argp1);
-  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Clipper_Execute" "', argument " "2"" of type '" "ClipperLib::ClipType""'");
-  } 
-  arg2 = static_cast< ClipperLib::ClipType >(val2);
-  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3, SWIGTYPE_p_ClipperLib__PolyTree,  0 );
-  if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Clipper_Execute" "', argument " "3"" of type '" "ClipperLib::PolyTree &""'"); 
-  }
-  if (!argp3) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Clipper_Execute" "', argument " "3"" of type '" "ClipperLib::PolyTree &""'"); 
-  }
-  arg3 = reinterpret_cast< ClipperLib::PolyTree * >(argp3);
-  ecode4 = SWIG_AsVal_int(swig_obj[3], &val4);
-  if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Clipper_Execute" "', argument " "4"" of type '" "ClipperLib::PolyFillType""'");
-  } 
-  arg4 = static_cast< ClipperLib::PolyFillType >(val4);
-  result = (bool)(arg1)->Execute(arg2,*arg3,arg4);
-  resultobj = SWIG_From_bool(static_cast< bool >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Clipper_Execute__SWIG_4(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
-  PyObject *resultobj = 0;
-  ClipperLib::Clipper *arg1 = (ClipperLib::Clipper *) 0 ;
-  ClipperLib::ClipType arg2 ;
-  ClipperLib::PolyTree *arg3 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  void *argp3 = 0 ;
-  int res3 = 0 ;
-  bool result;
-  
-  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_ClipperLib__Clipper, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Clipper_Execute" "', argument " "1"" of type '" "ClipperLib::Clipper *""'"); 
-  }
-  arg1 = reinterpret_cast< ClipperLib::Clipper * >(argp1);
-  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Clipper_Execute" "', argument " "2"" of type '" "ClipperLib::ClipType""'");
-  } 
-  arg2 = static_cast< ClipperLib::ClipType >(val2);
-  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3, SWIGTYPE_p_ClipperLib__PolyTree,  0 );
-  if (!SWIG_IsOK(res3)) {
-    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Clipper_Execute" "', argument " "3"" of type '" "ClipperLib::PolyTree &""'"); 
-  }
-  if (!argp3) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Clipper_Execute" "', argument " "3"" of type '" "ClipperLib::PolyTree &""'"); 
-  }
-  arg3 = reinterpret_cast< ClipperLib::PolyTree * >(argp3);
-  result = (bool)(arg1)->Execute(arg2,*arg3);
-  resultobj = SWIG_From_bool(static_cast< bool >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Clipper_Execute__SWIG_5(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
-  PyObject *resultobj = 0;
-  ClipperLib::Clipper *arg1 = (ClipperLib::Clipper *) 0 ;
-  ClipperLib::ClipType arg2 ;
-  ClipperLib::PolyTree *arg3 = 0 ;
-  ClipperLib::PolyFillType arg4 ;
   ClipperLib::PolyFillType arg5 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -9244,6 +9164,94 @@ SWIGINTERN PyObject *_wrap_Clipper_Execute__SWIG_5(PyObject *SWIGUNUSEDPARM(self
   } 
   arg5 = static_cast< ClipperLib::PolyFillType >(val5);
   result = (bool)(arg1)->Execute(arg2,*arg3,arg4,arg5);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Clipper_Execute__SWIG_4(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  ClipperLib::Clipper *arg1 = (ClipperLib::Clipper *) 0 ;
+  ClipperLib::ClipType arg2 ;
+  ClipperLib::PolyTree *arg3 = 0 ;
+  ClipperLib::PolyFillType arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  bool result;
+  
+  if ((nobjs < 4) || (nobjs > 4)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_ClipperLib__Clipper, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Clipper_Execute" "', argument " "1"" of type '" "ClipperLib::Clipper *""'"); 
+  }
+  arg1 = reinterpret_cast< ClipperLib::Clipper * >(argp1);
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Clipper_Execute" "', argument " "2"" of type '" "ClipperLib::ClipType""'");
+  } 
+  arg2 = static_cast< ClipperLib::ClipType >(val2);
+  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3, SWIGTYPE_p_ClipperLib__PolyTree,  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Clipper_Execute" "', argument " "3"" of type '" "ClipperLib::PolyTree &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Clipper_Execute" "', argument " "3"" of type '" "ClipperLib::PolyTree &""'"); 
+  }
+  arg3 = reinterpret_cast< ClipperLib::PolyTree * >(argp3);
+  ecode4 = SWIG_AsVal_int(swig_obj[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Clipper_Execute" "', argument " "4"" of type '" "ClipperLib::PolyFillType""'");
+  } 
+  arg4 = static_cast< ClipperLib::PolyFillType >(val4);
+  result = (bool)(arg1)->Execute(arg2,*arg3,arg4);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Clipper_Execute__SWIG_5(PyObject *SWIGUNUSEDPARM(self), Py_ssize_t nobjs, PyObject **swig_obj) {
+  PyObject *resultobj = 0;
+  ClipperLib::Clipper *arg1 = (ClipperLib::Clipper *) 0 ;
+  ClipperLib::ClipType arg2 ;
+  ClipperLib::PolyTree *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  bool result;
+  
+  if ((nobjs < 3) || (nobjs > 3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_ClipperLib__Clipper, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Clipper_Execute" "', argument " "1"" of type '" "ClipperLib::Clipper *""'"); 
+  }
+  arg1 = reinterpret_cast< ClipperLib::Clipper * >(argp1);
+  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Clipper_Execute" "', argument " "2"" of type '" "ClipperLib::ClipType""'");
+  } 
+  arg2 = static_cast< ClipperLib::ClipType >(val2);
+  res3 = SWIG_ConvertPtr(swig_obj[2], &argp3, SWIGTYPE_p_ClipperLib__PolyTree,  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Clipper_Execute" "', argument " "3"" of type '" "ClipperLib::PolyTree &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Clipper_Execute" "', argument " "3"" of type '" "ClipperLib::PolyTree &""'"); 
+  }
+  arg3 = reinterpret_cast< ClipperLib::PolyTree * >(argp3);
+  result = (bool)(arg1)->Execute(arg2,*arg3);
   resultobj = SWIG_From_bool(static_cast< bool >(result));
   return resultobj;
 fail:
@@ -9274,7 +9282,7 @@ SWIGINTERN PyObject *_wrap_Clipper_Execute(PyObject *self, PyObject *args) {
         int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_std__vectorT_std__vectorT_ClipperLib__IntPoint_std__allocatorT_ClipperLib__IntPoint_t_t_std__allocatorT_std__vectorT_ClipperLib__IntPoint_std__allocatorT_ClipperLib__IntPoint_t_t_t_t, SWIG_POINTER_NO_NULL);
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_Clipper_Execute__SWIG_1(self, argc, argv);
+          return _wrap_Clipper_Execute__SWIG_2(self, argc, argv);
         }
       }
     }
@@ -9294,7 +9302,7 @@ SWIGINTERN PyObject *_wrap_Clipper_Execute(PyObject *self, PyObject *args) {
         int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_ClipperLib__PolyTree, SWIG_POINTER_NO_NULL);
         _v = SWIG_CheckState(res);
         if (_v) {
-          return _wrap_Clipper_Execute__SWIG_4(self, argc, argv);
+          return _wrap_Clipper_Execute__SWIG_5(self, argc, argv);
         }
       }
     }
@@ -9319,7 +9327,7 @@ SWIGINTERN PyObject *_wrap_Clipper_Execute(PyObject *self, PyObject *args) {
             _v = SWIG_CheckState(res);
           }
           if (_v) {
-            return _wrap_Clipper_Execute__SWIG_3(self, argc, argv);
+            return _wrap_Clipper_Execute__SWIG_4(self, argc, argv);
           }
         }
       }
@@ -9345,7 +9353,7 @@ SWIGINTERN PyObject *_wrap_Clipper_Execute(PyObject *self, PyObject *args) {
             _v = SWIG_CheckState(res);
           }
           if (_v) {
-            return _wrap_Clipper_Execute__SWIG_0(self, argc, argv);
+            return _wrap_Clipper_Execute__SWIG_1(self, argc, argv);
           }
         }
       }
@@ -9376,7 +9384,7 @@ SWIGINTERN PyObject *_wrap_Clipper_Execute(PyObject *self, PyObject *args) {
               _v = SWIG_CheckState(res);
             }
             if (_v) {
-              return _wrap_Clipper_Execute__SWIG_2(self, argc, argv);
+              return _wrap_Clipper_Execute__SWIG_0(self, argc, argv);
             }
           }
         }
@@ -9408,7 +9416,7 @@ SWIGINTERN PyObject *_wrap_Clipper_Execute(PyObject *self, PyObject *args) {
               _v = SWIG_CheckState(res);
             }
             if (_v) {
-              return _wrap_Clipper_Execute__SWIG_5(self, argc, argv);
+              return _wrap_Clipper_Execute__SWIG_3(self, argc, argv);
             }
           }
         }
@@ -9419,12 +9427,12 @@ SWIGINTERN PyObject *_wrap_Clipper_Execute(PyObject *self, PyObject *args) {
 fail:
   SWIG_Python_RaiseOrModifyTypeError("Wrong number or type of arguments for overloaded function 'Clipper_Execute'.\n"
     "  Possible C/C++ prototypes are:\n"
+    "    ClipperLib::Clipper::Execute(ClipperLib::ClipType,ClipperLib::Paths &,ClipperLib::PolyFillType,ClipperLib::PolyFillType)\n"
     "    ClipperLib::Clipper::Execute(ClipperLib::ClipType,ClipperLib::Paths &,ClipperLib::PolyFillType)\n"
     "    ClipperLib::Clipper::Execute(ClipperLib::ClipType,ClipperLib::Paths &)\n"
-    "    ClipperLib::Clipper::Execute(ClipperLib::ClipType,ClipperLib::Paths &,ClipperLib::PolyFillType,ClipperLib::PolyFillType)\n"
+    "    ClipperLib::Clipper::Execute(ClipperLib::ClipType,ClipperLib::PolyTree &,ClipperLib::PolyFillType,ClipperLib::PolyFillType)\n"
     "    ClipperLib::Clipper::Execute(ClipperLib::ClipType,ClipperLib::PolyTree &,ClipperLib::PolyFillType)\n"
-    "    ClipperLib::Clipper::Execute(ClipperLib::ClipType,ClipperLib::PolyTree &)\n"
-    "    ClipperLib::Clipper::Execute(ClipperLib::ClipType,ClipperLib::PolyTree &,ClipperLib::PolyFillType,ClipperLib::PolyFillType)\n");
+    "    ClipperLib::Clipper::Execute(ClipperLib::ClipType,ClipperLib::PolyTree &)\n");
   return 0;
 }
 
@@ -9608,28 +9616,6 @@ fail:
     "    ClipperLib::Clipper::StrictlySimple()\n"
     "    ClipperLib::Clipper::StrictlySimple(bool)\n");
   return 0;
-}
-
-
-SWIGINTERN PyObject *_wrap_delete_Clipper(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  ClipperLib::Clipper *arg1 = (ClipperLib::Clipper *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject *swig_obj[1] ;
-  
-  if (!args) SWIG_fail;
-  swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_ClipperLib__Clipper, SWIG_POINTER_DISOWN |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Clipper" "', argument " "1"" of type '" "ClipperLib::Clipper *""'"); 
-  }
-  arg1 = reinterpret_cast< ClipperLib::Clipper * >(argp1);
-  delete arg1;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
 }
 
 
@@ -15786,7 +15772,6 @@ static PyMethodDef SwigMethods[] = {
 	 { "DoublePoint_swigregister", DoublePoint_swigregister, METH_O, NULL},
 	 { "DoublePoint_swiginit", DoublePoint_swiginit, METH_VARARGS, NULL},
 	 { "new_PolyNode", _wrap_new_PolyNode, METH_NOARGS, NULL},
-	 { "delete_PolyNode", _wrap_delete_PolyNode, METH_O, NULL},
 	 { "PolyNode_Contour_set", _wrap_PolyNode_Contour_set, METH_VARARGS, NULL},
 	 { "PolyNode_Contour_get", _wrap_PolyNode_Contour_get, METH_O, NULL},
 	 { "PolyNode_Childs_set", _wrap_PolyNode_Childs_set, METH_VARARGS, NULL},
@@ -15797,6 +15782,7 @@ static PyMethodDef SwigMethods[] = {
 	 { "PolyNode_IsHole", _wrap_PolyNode_IsHole, METH_O, NULL},
 	 { "PolyNode_IsOpen", _wrap_PolyNode_IsOpen, METH_O, NULL},
 	 { "PolyNode_ChildCount", _wrap_PolyNode_ChildCount, METH_O, NULL},
+	 { "delete_PolyNode", _wrap_delete_PolyNode, METH_O, NULL},
 	 { "PolyNode_swigregister", PolyNode_swigregister, METH_O, NULL},
 	 { "PolyNode_swiginit", PolyNode_swiginit, METH_VARARGS, NULL},
 	 { "delete_PolyTree", _wrap_delete_PolyTree, METH_O, NULL},
@@ -15842,10 +15828,10 @@ static PyMethodDef SwigMethods[] = {
 	 { "ClipperBase_swigregister", ClipperBase_swigregister, METH_O, NULL},
 	 { "ClipperBase_swiginit", ClipperBase_swiginit, METH_VARARGS, NULL},
 	 { "new_Clipper", _wrap_new_Clipper, METH_VARARGS, NULL},
+	 { "delete_Clipper", _wrap_delete_Clipper, METH_O, NULL},
 	 { "Clipper_Execute", _wrap_Clipper_Execute, METH_VARARGS, NULL},
 	 { "Clipper_ReverseSolution", _wrap_Clipper_ReverseSolution, METH_VARARGS, NULL},
 	 { "Clipper_StrictlySimple", _wrap_Clipper_StrictlySimple, METH_VARARGS, NULL},
-	 { "delete_Clipper", _wrap_delete_Clipper, METH_O, NULL},
 	 { "Clipper_swigregister", Clipper_swigregister, METH_O, NULL},
 	 { "Clipper_swiginit", Clipper_swiginit, METH_VARARGS, NULL},
 	 { "new_ClipperOffset", _wrap_new_ClipperOffset, METH_VARARGS, NULL},
@@ -16002,7 +15988,7 @@ static swig_type_info _swigt__p_ClipperLib__clipperException = {"_p_ClipperLib__
 static swig_type_info _swigt__p_allocator_type = {"_p_allocator_type", "allocator_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_difference_type = {"_p_difference_type", "difference_type *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_long_long = {"_p_long_long", "long long *|ClipperLib::long64 *|ClipperLib::cInt *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_long_long = {"_p_long_long", "long long *|ClipperLib::cInt *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_p_PyObject = {"_p_p_PyObject", "PyObject **", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_size_type = {"_p_size_type", "size_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__allocatorT_ClipperLib__IntPoint_t = {"_p_std__allocatorT_ClipperLib__IntPoint_t", "std::vector< ClipperLib::IntPoint >::allocator_type *|std::allocator< ClipperLib::IntPoint > *", 0, 0, (void*)0, 0};
@@ -16020,7 +16006,7 @@ static swig_type_info _swigt__p_std__vectorT_ClipperLib__PolyNode_std__allocator
 static swig_type_info _swigt__p_std__vectorT_ClipperLib__TEdge_p_std__allocatorT_ClipperLib__TEdge_p_t_t = {"_p_std__vectorT_ClipperLib__TEdge_p_std__allocatorT_ClipperLib__TEdge_p_t_t", "std::vector< ClipperLib::TEdge *,std::allocator< ClipperLib::TEdge * > > *|ClipperLib::EdgeList *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_std__vectorT_ClipperLib__IntPoint_std__allocatorT_ClipperLib__IntPoint_t_t_std__allocatorT_std__vectorT_ClipperLib__IntPoint_std__allocatorT_ClipperLib__IntPoint_t_t_t_t = {"_p_std__vectorT_std__vectorT_ClipperLib__IntPoint_std__allocatorT_ClipperLib__IntPoint_t_t_std__allocatorT_std__vectorT_ClipperLib__IntPoint_std__allocatorT_ClipperLib__IntPoint_t_t_t_t", "std::vector< std::vector< ClipperLib::IntPoint,std::allocator< ClipperLib::IntPoint > >,std::allocator< std::vector< ClipperLib::IntPoint,std::allocator< ClipperLib::IntPoint > > > > *|std::vector< std::vector< ClipperLib::IntPoint,std::allocator< ClipperLib::IntPoint > > > *|ClipperLib::Paths *|std::vector< ClipperLib::Path > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_swig__SwigPyIterator = {"_p_swig__SwigPyIterator", "swig::SwigPyIterator *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_unsigned_long_long = {"_p_unsigned_long_long", "unsigned long long *|ClipperLib::ulong64 *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_unsigned_long_long = {"_p_unsigned_long_long", "ClipperLib::cUInt *|unsigned long long *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_value_type = {"_p_value_type", "value_type *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
@@ -16859,7 +16845,7 @@ SWIG_init(void) {
   
   SWIG_InstallConstants(d,swig_const_table);
   
-  SWIG_Python_SetConstant(d, "CLIPPER_VERSION",SWIG_FromCharPtr("6.4.2"));
+  SWIG_Python_SetConstant(d, "CLIPPER_VERSION",SWIG_FromCharPtr("6.1.3"));
   SWIG_Python_SetConstant(d, "ctIntersection",SWIG_From_int(static_cast< int >(ClipperLib::ctIntersection)));
   SWIG_Python_SetConstant(d, "ctUnion",SWIG_From_int(static_cast< int >(ClipperLib::ctUnion)));
   SWIG_Python_SetConstant(d, "ctDifference",SWIG_From_int(static_cast< int >(ClipperLib::ctDifference)));
@@ -16870,19 +16856,6 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "pftNonZero",SWIG_From_int(static_cast< int >(ClipperLib::pftNonZero)));
   SWIG_Python_SetConstant(d, "pftPositive",SWIG_From_int(static_cast< int >(ClipperLib::pftPositive)));
   SWIG_Python_SetConstant(d, "pftNegative",SWIG_From_int(static_cast< int >(ClipperLib::pftNegative)));
-  globals = SWIG_globals();
-  if (!globals) {
-    PyErr_SetString(PyExc_TypeError, "Failure to create SWIG globals.");
-#if PY_VERSION_HEX >= 0x03000000
-    return NULL;
-#else
-    return;
-#endif
-  }
-  PyDict_SetItemString(md, "cvar", globals);
-  Py_DECREF(globals);
-  SWIG_addvarlink(globals, "loRange", Swig_var_loRange_get, Swig_var_loRange_set);
-  SWIG_addvarlink(globals, "hiRange", Swig_var_hiRange_get, Swig_var_hiRange_set);
   SWIG_Python_SetConstant(d, "ioReverseSolution",SWIG_From_int(static_cast< int >(ClipperLib::ioReverseSolution)));
   SWIG_Python_SetConstant(d, "ioStrictlySimple",SWIG_From_int(static_cast< int >(ClipperLib::ioStrictlySimple)));
   SWIG_Python_SetConstant(d, "ioPreserveCollinear",SWIG_From_int(static_cast< int >(ClipperLib::ioPreserveCollinear)));

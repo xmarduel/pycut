@@ -11,8 +11,9 @@ import xml.etree.ElementTree as ET
 
 import svgpathtools
 import numpy as np
-import clipper_613 as Clipper613Lib
-import clipper_642 as Clipper642Lib
+
+#import clipper_613 as ClipperLib
+import clipper_642 as ClipperLib
 
 from clipper_utils import ClipperUtils
 
@@ -21,12 +22,12 @@ M_PI = math.acos(-1)
 
 class SvgPath:
     '''
-    Transform svgpathtools 'Path' to 'Clipper613Lib' path
+    Transform svgpathtools 'Path' to 'ClipperLib' path
 
     - svgpathtools 'Path' are list of 'Segment(s)' and
     each segment has a list of points, given in format 'complex type' (a+bj)
 
-    - Clipper613Lib 'Path' are list of IntPoint (X,Y)
+    - ClipperLib 'Path' are list of IntPoint (X,Y)
 
     so the transformation is straightforward
 
@@ -34,7 +35,7 @@ class SvgPath:
     - a svg <path> definition is noted: svg_path_d
     - a path from svgpathtools is noted: svg_path
     - the discretization of a svg_path results in a numpy array, noted: np_svg_path
-    - a clipper path is noted: clipper_path  (a 'Clipper613Lib.IntPointVector')
+    - a clipper path is noted: clipper_path  (a 'ClipperLib.IntPointVector')
     '''
     PYCUT_SAMPLE_LEN_COEFF = 100 # is in jsCut if 0.01
 
@@ -101,30 +102,30 @@ class SvgPath:
 
         return points
 
-    def toClipperPath(self) -> Clipper613Lib.IntPointVector:
+    def toClipperPath(self) -> ClipperLib.IntPointVector:
         '''
         '''
         np_svg_path = self.discretize()
 
-        clipper_path = Clipper613Lib.IntPointVector()
+        clipper_path = ClipperLib.IntPointVector()
 
         for complex_pt in np_svg_path:
-            pt = Clipper613Lib.IntPoint( \
+            pt = ClipperLib.IntPoint( \
                 int(complex_pt.real * (ClipperUtils.inchToClipperScale / 25.4)),
                 int(complex_pt.imag * (ClipperUtils.inchToClipperScale / 25.4)))
             clipper_path.append(pt)
 
         return clipper_path
 
-    def toClipper642Path(self) -> Clipper642Lib.IntPointVector:
+    def toClipper642Path(self) -> ClipperLib.IntPointVector:
         '''
         '''
         np_svg_path = self.discretize()
 
-        clipper_path = Clipper642Lib.IntPointVector()
+        clipper_path = ClipperLib.IntPointVector()
 
         for complex_pt in np_svg_path:
-            pt = Clipper642Lib.IntPoint( \
+            pt = ClipperLib.IntPoint( \
                 int(complex_pt.real * (ClipperUtils.inchToClipperScale / 25.4)),
                 int(complex_pt.imag * (ClipperUtils.inchToClipperScale / 25.4)))
             clipper_path.append(pt)
@@ -156,7 +157,7 @@ class SvgPath:
         return SvgPath("pycut_tab", {'d': svg_path.d()})
 
     @classmethod
-    def fromClipperPath(cls, prefix: str, clipper_path: Clipper613Lib.IntPointVector) -> 'SvgPath':
+    def fromClipperPath(cls, prefix: str, clipper_path: ClipperLib.IntPointVector) -> 'SvgPath':
         '''
         Note:
             the path 'id' are quite important for the svg viewer
@@ -183,7 +184,7 @@ class SvgPath:
         return SvgPath(prefix, {'d': svg_path.d()})
 
     @classmethod
-    def fromClipperPaths(cls, prefix: str, clipper_paths: Clipper613Lib.PathVector) -> 'SvgPath':
+    def fromClipperPaths(cls, prefix: str, clipper_paths: ClipperLib.PathVector) -> 'SvgPath':
         '''
         Note:
             only 1 path "def" consisting of 2 or more lines
