@@ -117,27 +117,9 @@ class SvgPath:
 
         return clipper_path
 
-    def toClipper642Path(self) -> ClipperLib.IntPointVector:
-        '''
-        '''
-        np_svg_path = self.discretize()
-
-        clipper_path = ClipperLib.IntPointVector()
-
-        for complex_pt in np_svg_path:
-            pt = ClipperLib.IntPoint( \
-                int(complex_pt.real * (ClipperUtils.inchToClipperScale / 25.4)),
-                int(complex_pt.imag * (ClipperUtils.inchToClipperScale / 25.4)))
-            clipper_path.append(pt)
-
-        return clipper_path
-
     @classmethod
     def fromCircleDef(cls, center, radius) -> 'SvgPath':
         '''
-        Note:
-            the path 'id' are quite important for the svg viewer
-            Here we give the id 'prefix'
         '''
         NB_SEGMENTS = 12
         angles = [ float(k * M_PI )/ (NB_SEGMENTS) for k in range(NB_SEGMENTS*2 +1)]
@@ -159,8 +141,6 @@ class SvgPath:
     @classmethod
     def fromClipperPath(cls, prefix: str, clipper_path: ClipperLib.IntPointVector) -> 'SvgPath':
         '''
-        Note:
-            the path 'id' are quite important for the svg viewer
         '''
         discretized_svg_path : List[complex] = [ complex( \
                     pt.X / (ClipperUtils.inchToClipperScale / 25.4), 
@@ -181,14 +161,14 @@ class SvgPath:
 
         svg_path.append(svgpathtools.Line(start, end))
 
-        return SvgPath(prefix, {'d': svg_path.d()})
+        return SvgPath(prefix, {'d': svg_path.d(), 'fill-rule': 'nonzero'})
 
     @classmethod
     def fromClipperPaths(cls, prefix: str, clipper_paths: ClipperLib.PathVector) -> 'SvgPath':
         '''
         Note:
-            only 1 path "def" consisting of 2 or more lines
-            the interior can be be filled in color
+            only 1 path "def" consisting of 2 or more lines : 
+            for the path interior be filled in color -> fill-rule is 'evenodd'
         '''
         discretized_svg_paths = []
         for clipper_path in clipper_paths:
@@ -225,7 +205,6 @@ class SvgTransformer:
             fp.close()
 
             self.ini_svg_paths, self.ini_attribs = svgpathtools.svg2paths(path)
-            # then dir temp dir will be deleted
 
     def augment(self, svg_paths: List[SvgPath]) -> str:
         '''
@@ -243,16 +222,26 @@ class SvgTransformer:
 
         for k, svg_path in enumerate(svg_paths):
             id = svg_path.p_id
-            dd = svg_path.p_attrs['d']
+            d_def = svg_path.p_attrs['d']
 
+            stroke = '#00ff00'
+            stroke_width = '0'
+            
             fill = svg_path.p_attrs.get("fill", "#111111")
             fill_opacity = svg_path.p_attrs.get("fill-opacity", "1.0")
-            
-            if 'fill-rule' in svg_path.p_attrs:
-                path = '<path id="%s_%d" style="fill:%s;fill-opacity:%s;stroke-width:0;stroke:#00ff00;fill-rule:%s;"  d="%s" />' % (id, k, fill, fill_opacity, svg_path.p_attrs['fill-rule'], dd)
-            else:
-                path = '<path id="%s_%d" style="fill:%s;fill-opacity:%s;stroke-width:0;stroke:#00ff00;"  d="%s" />' % (id, k, fill, fill_opacity, dd)
+            fill_rule = svg_path.p_attrs.get("fill-rule", "nonzero")
 
+            path = '<path id="%(id)s_%(counter)d" style="stroke:%(stroke)s;stroke-width:%(stroke_width)s;fill:%(fill)s;fill-opacity:%(fill_opacity)s;fill-rule:%(fill_rule)s;" \
+              d="%(d_def)s" />' % {
+                'id': id, 
+                'counter': k, 
+                'fill': fill,
+                'stroke_width': stroke_width,
+                'stroke': stroke,
+                'fill_opacity': fill_opacity, 
+                'fill_rule': fill_rule, 
+                'd_def': d_def
+            }
 
             all_paths += path + '\r\n'
         
@@ -265,7 +254,7 @@ class SvgTransformer:
                 viewBox="%s"
                 version="1.1">
                 <g>
-                 %s
+                  %s
                 </g> 
              </svg>''' % (root_attrib["width"], root_attrib["height"], root_attrib["viewBox"], all_paths)
 
@@ -293,9 +282,21 @@ class SvgTransformer:
 
         for k, svg_path in enumerate(svg_paths):
             id = svg_path.p_id
-            dd = svg_path.p_attrs['d']
+            d_def = svg_path.p_attrs['d']
 
-            all_paths += '<path id="%s_%d" style="fill:none;stroke-width:0.2;stroke:#00ff00"  d="%s" />' % (id, k, dd)
+            stroke = '#00ff00'
+            stroke_width = '0.2'
+            
+            fill = 'none'
+
+            all_paths += '<path id="%(id)s_%(counter)d" style="stroke:%(stroke)s;stroke-width:%(stroke_width)s;fill:%(fill)s" d="%(d_def)s" />' % {
+                'id': id, 
+                'counter': k,
+                'stroke_width': stroke_width,
+                'stroke': stroke,
+                'fill': fill,
+                'd_def': d_def
+            }
         
         root = ET.fromstring(self.svg)
         root_attrib = root.attrib
