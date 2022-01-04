@@ -227,9 +227,10 @@ class PyCutComboBox(QtWidgets.QComboBox):
 
         self.o.put_value(self.attribute, val)
 
-class PyCutDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
+class PyCutDoubleSpinBoxDelegate(QtWidgets.QStyledItemDelegate):
     def __init__(self, parent):
-        QtWidgets.QItemDelegate.__init__(self, parent)
+        super().__init__(parent)
+        self.editor = {}
 
     def createEditor(self, parent, option, index: QtCore.QModelIndex):
         editor = PyCutDoubleSpinBox(parent)
@@ -242,6 +243,8 @@ class PyCutDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
 
         # to flush an "setModelData" in place - it works!
         editor.valueChanged.connect(self.onEditorValueChanged)
+
+        self.editor[(index.row(), index.column())] = editor
 
         return editor
 
@@ -309,7 +312,7 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
     def updateEditorGeometry(self, editor, option, index: QtCore.QModelIndex):
         editor.setGeometry(option.rect)
 
-class PyCutComboBoxDelegate(QtWidgets.QItemDelegate):
+class PyCutComboBoxDelegate(QtWidgets.QStyledItemDelegate):
     def createEditor(self, parent, option, index: QtCore.QModelIndex):
         col = index.column()
 
@@ -360,7 +363,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
     def __init__(self, parent):
         '''
         '''
-        QtWidgets.QWidget.__init__(self, parent)
+        super().__init__(parent)
 
         self.mainwindow = None
         self.svg_viewer = None
@@ -409,6 +412,9 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
             
             
         self.model = PyCutSimpleTableModel(cnc_ops, self.mainwindow)
+        # so that the model known the view
+        self.model.set_view(self.table)
+        
         self.table.setModel(self.model)
         self.table.setup()
 
@@ -462,7 +468,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
     def __init__(self, parent=None):
         '''
         '''
-        QtWidgets.QTableView.__init__(self, parent)
+        super().__init__(parent)
 
         self.parent = parent
 
@@ -518,10 +524,10 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         delegate = PyCutComboBoxDelegate(self)
         self.setItemDelegateForColumn(9, delegate)
 
-        delegate = PyCutDoubleSpinBoxDelegate(self)
+        self.delegate_col_margin = delegate = PyCutDoubleSpinBoxDelegate(self)
         self.setItemDelegateForColumn(10, delegate)
 
-        delegate = PyCutDoubleSpinBoxDelegate(self)
+        self.delegate_col_width = delegate = PyCutDoubleSpinBoxDelegate(self)
         self.setItemDelegateForColumn(11, delegate)
 
         # Make the combo boxes / check boxes / others specials always displayed.
@@ -529,12 +535,12 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
             self.openPersistentEditor(self.model().index(k, 2)) # cam_op
             self.openPersistentEditor(self.model().index(k, 3)) #   enabled
             self.openPersistentEditor(self.model().index(k, 5)) # units
-            self.openPersistentEditor(self.model().index(k, 6)) #          cutDepth
+            self.openPersistentEditor(self.model().index(k, 6)) #       cutDepth
             self.openPersistentEditor(self.model().index(k, 7)) #   ramp
             self.openPersistentEditor(self.model().index(k, 8)) # combinaison
             self.openPersistentEditor(self.model().index(k, 9)) # direction
-            self.openPersistentEditor(self.model().index(k, 10)) #          margin
-            self.openPersistentEditor(self.model().index(k, 11)) #          width
+            self.openPersistentEditor(self.model().index(k, 10)) #      margin
+            self.openPersistentEditor(self.model().index(k, 11)) #      dwidth
 
         for row in range(self.model().rowCount(None)):
             btn_gcode_op = QtWidgets.QPushButton()
@@ -578,6 +584,8 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
 
         self.setColumnWidth(0, 100)  # name
         self.setColumnWidth(4, 100)  # paths
+
+        self.enable_disable_cells()
 
     def cb_delete_op(self):
         index = self.currentIndex()
@@ -625,15 +633,27 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         # instruct the model to generate the g-code for all selected items
         self.model().generate_gcode()
 
+    def enable_disable_cells(self):
+        margin = {'Pocket': True, 'Inside': True, 'Outside': True, 'Engrave': False} 
+        width = {'Pocket': False, 'Inside': True, 'Outside': True, 'Engrave': False} 
+
+        for row in range(self.model().rowCount(None)):
+            cam_op = self.model().operations[row].cam_op
+            
+            self.delegate_col_margin.editor[(row, 10)].setEnabled(margin[cam_op]) 
+            self.delegate_col_width.editor[(row, 11)].setEnabled(width[cam_op]) 
+
+
 class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
     '''
     model for the table view
     '''
     def __init__(self, operations: List[Any], mainwindow):
-        super(PyCutSimpleTableModel, self).__init__()
+        super().__init__()
         
         self.operations = operations
         self.mainwindow = mainwindow
+        self.view = None
 
         self.header =  [
             "name",                     # [0] str
@@ -655,7 +675,10 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
 
         self.cnt = 0
 
-
+    def set_view(self, view: PyCutSimpleTableView):
+        '''
+        '''
+        self.view = view
 
     def generate_gcode(self):
         '''
@@ -674,6 +697,9 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
             setattr(cnc_op, attrib, value)
 
             self.mainwindow.display_cnc_ops_geometry(self.operations)
+
+        if self.view is not None:
+            self.view.enable_disable_cells()
 
     def __str__(self):
         self.cnt += 1
@@ -751,7 +777,7 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
         return None
 
     def flags(self, index: QtCore.QModelIndex) -> QtCore.Qt.ItemFlags :
-        flags = super(PyCutSimpleTableModel, self).flags(index)
+        flags = super().flags(index)
 
         flags |= QtCore.Qt.ItemIsEditable
         flags |= QtCore.Qt.ItemIsSelectable
