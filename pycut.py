@@ -72,6 +72,8 @@ class GcodeModel:
         self.spindleControl = True
         self.spindleSpeed = 1000
 
+        self.programEnd = False
+
 class SvgModel:
     '''
     '''

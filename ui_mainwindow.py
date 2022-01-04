@@ -751,11 +751,11 @@ class Ui_mainwindow(object):
 
         self.formLayout_GCodeGeneration.setWidget(1, QFormLayout.LabelRole, self.label_GCodeGenerationSpindleAutomatic)
 
-        self.checkBox_GCodeGeneration_SpindleAutomatic = QCheckBox(self.centralwidget)
-        self.checkBox_GCodeGeneration_SpindleAutomatic.setObjectName(u"checkBox_GCodeGeneration_SpindleAutomatic")
-        self.checkBox_GCodeGeneration_SpindleAutomatic.setFont(font1)
+        self.checkBox_GCodeGeneration_SpindleControl = QCheckBox(self.centralwidget)
+        self.checkBox_GCodeGeneration_SpindleControl.setObjectName(u"checkBox_GCodeGeneration_SpindleControl")
+        self.checkBox_GCodeGeneration_SpindleControl.setFont(font1)
 
-        self.formLayout_GCodeGeneration.setWidget(1, QFormLayout.FieldRole, self.checkBox_GCodeGeneration_SpindleAutomatic)
+        self.formLayout_GCodeGeneration.setWidget(1, QFormLayout.FieldRole, self.checkBox_GCodeGeneration_SpindleControl)
 
         self.label_GCodeGenerationSpindleSpeed = QLabel(self.centralwidget)
         self.label_GCodeGenerationSpindleSpeed.setObjectName(u"label_GCodeGenerationSpindleSpeed")
@@ -768,6 +768,18 @@ class Ui_mainwindow(object):
         self.spinBox_GCodeGeneration_SpindleSpeed.setMaximum(50000)
 
         self.formLayout_GCodeGeneration.setWidget(2, QFormLayout.FieldRole, self.spinBox_GCodeGeneration_SpindleSpeed)
+
+        self.label_GCodeGenerationProgramEnd = QLabel(self.centralwidget)
+        self.label_GCodeGenerationProgramEnd.setObjectName(u"label_GCodeGenerationProgramEnd")
+        self.label_GCodeGenerationProgramEnd.setFont(font1)
+
+        self.formLayout_GCodeGeneration.setWidget(3, QFormLayout.LabelRole, self.label_GCodeGenerationProgramEnd)
+
+        self.checkBox_GCodeGenerationProgramEnd = QCheckBox(self.centralwidget)
+        self.checkBox_GCodeGenerationProgramEnd.setObjectName(u"checkBox_GCodeGenerationProgramEnd")
+        self.checkBox_GCodeGenerationProgramEnd.setFont(font1)
+
+        self.formLayout_GCodeGeneration.setWidget(3, QFormLayout.FieldRole, self.checkBox_GCodeGenerationProgramEnd)
 
 
         self.verticalLayoutGCodeGeneration.addLayout(self.formLayout_GCodeGeneration)
@@ -911,8 +923,10 @@ class Ui_mainwindow(object):
         self.label_GCodeGeneration_ReturnToZeroAtEnd.setText(QCoreApplication.translate("mainwindow", u"Return to 0,0 at end", None))
         self.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setText("")
         self.label_GCodeGenerationSpindleAutomatic.setText(QCoreApplication.translate("mainwindow", u"Spindle automatic", None))
-        self.checkBox_GCodeGeneration_SpindleAutomatic.setText("")
+        self.checkBox_GCodeGeneration_SpindleControl.setText(QCoreApplication.translate("mainwindow", u"[M3/M5]", None))
         self.label_GCodeGenerationSpindleSpeed.setText(QCoreApplication.translate("mainwindow", u"Spindle speed", None))
+        self.label_GCodeGenerationProgramEnd.setText(QCoreApplication.translate("mainwindow", u"Program End", None))
+        self.checkBox_GCodeGenerationProgramEnd.setText(QCoreApplication.translate("mainwindow", u"[M2]", None))
         self.menuFile.setTitle(QCoreApplication.translate("mainwindow", u"File", None))
         self.menuJobs.setTitle(QCoreApplication.translate("mainwindow", u"Jobs", None))
         self.menuHelp.setTitle(QCoreApplication.translate("mainwindow", u"Help", None))

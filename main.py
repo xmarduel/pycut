@@ -74,8 +74,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         },
         "GCodeGeneration" : {
             "ReturnToZeroAtEnd" : True,
-            "SpindleAutomatic"  : True,
-            "SpindleSpeed"      : 1000
+            "SpindleControl"    : True,
+            "SpindleSpeed"      : 1000,
+            "ProgramEnd"        : True 
         }
     }
     
@@ -141,7 +142,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.comboBox_Material_Units.currentTextChanged.connect(self.cb_update_material_display)
         self.ui.comboBox_GCodeConversion_Units.currentTextChanged.connect(self.cb_update_gcodeconversion_display)
 
-        self.ui.checkBox_GCodeGeneration_SpindleAutomatic.clicked.connect(self.cb_spindle_automatic)
+        self.ui.checkBox_GCodeGeneration_SpindleControl.clicked.connect(self.cb_spindle_control)
 
         self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.clicked.connect(self.cb_generate_gcode_zerolowerleft_of_material)
         self.ui.pushButton_GCodeConversion_ZeroLowerLeft.clicked.connect(self.cb_generate_gcode_zerolowerleft)
@@ -331,8 +332,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             },
             "GCodeGeneration" : {
                 "ReturnToZeroAtEnd" : self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.isChecked(),
-                "SpindleAutomatic"  : self.ui.checkBox_GCodeGeneration_SpindleAutomatic.isChecked(),
+                "SpindleControl"    : self.ui.checkBox_GCodeGeneration_SpindleControl.isChecked(),
                 "SpindleSpeed"      : self.ui.spinBox_GCodeGeneration_SpindleSpeed.value(),
+                "ProgramEnd"        : self.ui.spinBox_GCodeGeneration_ProgramEnd.value(),
             }
         }
         
@@ -372,8 +374,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             
         # GCodeGeneration 
         self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setChecked(settings["GCodeGeneration"]["ReturnToZeroAtEnd"]),
-        self.ui.checkBox_GCodeGeneration_SpindleAutomatic.setChecked(settings["GCodeGeneration"]["SpindleAutomatic"]),
+        self.ui.checkBox_GCodeGeneration_SpindleControl.setChecked(settings["GCodeGeneration"]["SpindleControl"]),
         self.ui.spinBox_GCodeGeneration_SpindleSpeed.setValue(settings["GCodeGeneration"]["SpindleSpeed"]),
+        self.ui.spinBox_GCodeGeneration_ProgramEnd.setChecked(settings["GCodeGeneration"]["ProgramEnd"]),
 
     def cb_open_svg(self):
         '''
@@ -618,8 +621,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
 
-    def cb_spindle_automatic(self):
-        val = self.ui.checkBox_GCodeGeneration_SpindleAutomatic.isChecked()
+    def cb_spindle_control(self):
+        val = self.ui.checkBox_GCodeGeneration_SpindleControl.isChecked()
         self.ui.spinBox_GCodeGeneration_SpindleSpeed.setEnabled(val)
 
     def setup_material_viewer(self):
@@ -887,8 +890,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         gcodeModel.XOffset = settings["GCodeConversion"]["XOffset"]
         gcodeModel.YOffset = settings["GCodeConversion"]["YOffset"]
         gcodeModel.returnTo00 = settings["GCodeGeneration"]["ReturnToZeroAtEnd"]
-        gcodeModel.spindleControl = settings["GCodeGeneration"]["SpindleAutomatic"]
+        gcodeModel.spindleControl = settings["GCodeGeneration"]["SpindleControl"]
         gcodeModel.spindleSpeed = settings["GCodeGeneration"]["SpindleSpeed"]
+        gcodeModel.programEnd = settings["GCodeGeneration"]["ProgramEnd"]
 
         cnc_ops = self.get_jobmodel_operations()
 
