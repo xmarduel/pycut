@@ -678,6 +678,10 @@ class GcodeGenerator:
             gcode += f"\r\n; Return to 0,0\r\n"
             gcode += f"G0 X0 Y0 F {rapidRate}\r\n"
 
+        if self.gcodeModel.programEnd:
+            gcode += f"\r\n; Program End\r\n"
+            gcode += f"M2 \r\n"
+
         self.gcode = gcode
         self.job.gcode = gcode
 
