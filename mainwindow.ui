@@ -1206,7 +1206,7 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QLabel" name="label_GCodeGenerationSpindleAutomatic">
+           <widget class="QLabel" name="label_GCodeGeneration_SpindleControl">
             <property name="font">
              <font>
               <bold>true</bold>
@@ -1230,7 +1230,7 @@
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QLabel" name="label_GCodeGenerationSpindleSpeed">
+           <widget class="QLabel" name="label_GCodeGeneration_SpindleSpeed">
             <property name="font">
              <font>
               <bold>true</bold>
@@ -1249,7 +1249,7 @@
            </widget>
           </item>
           <item row="3" column="0">
-           <widget class="QLabel" name="label_GCodeGenerationProgramEnd">
+           <widget class="QLabel" name="label_GCodeGeneration_ProgramEnd">
             <property name="font">
              <font>
               <bold>true</bold>
@@ -1261,7 +1261,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QCheckBox" name="checkBox_GCodeGenerationProgramEnd">
+           <widget class="QCheckBox" name="checkBox_GCodeGeneration_ProgramEnd">
             <property name="font">
              <font>
               <bold>true</bold>

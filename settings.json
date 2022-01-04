@@ -26,8 +26,8 @@
          "Clearance": 10.0
        },
        "CurveToLineConversion": {
-         "MinimumSegments": 1.0,
-         "MinimumSegmentsLength": 0.0
+         "MinimumSegments": 1,
+         "MinimumSegmentsLength": 0.01
        },
        "GCodeConversion": {
          "Units": "mm",
@@ -38,7 +38,9 @@
       },
       "GCodeGeneration": {
         "ReturnToZeroAtEnd": true,
-        "SpindleAutomatic": true
+        "SpindleControl": true,
+        "SpindleSpeed": 1000,
+        "ProgramEnd": false
       }
     },
     {
@@ -66,8 +68,8 @@
          "Clearance": 10.0
        },
        "CurveToLineConversion": {
-         "MinimumSegments": 1.0,
-         "MinimumSegmentsLength": 0.0
+         "MinimumSegments": 1,
+         "MinimumSegmentsLength": 0.01
        },
        "GCodeConversion": {
          "Units": "mm",
@@ -82,7 +84,9 @@
       },
       "GCodeGeneration": {
         "ReturnToZeroAtEnd": true,
-        "SpindleAutomatic": true
+        "SpindleControl": true,
+        "SpindleSpeed": 1000,
+        "ProgramEnd": false
       }
     }
   ]

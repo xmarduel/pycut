@@ -376,7 +376,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setChecked(settings["GCodeGeneration"]["ReturnToZeroAtEnd"]),
         self.ui.checkBox_GCodeGeneration_SpindleControl.setChecked(settings["GCodeGeneration"]["SpindleControl"]),
         self.ui.spinBox_GCodeGeneration_SpindleSpeed.setValue(settings["GCodeGeneration"]["SpindleSpeed"]),
-        self.ui.spinBox_GCodeGeneration_ProgramEnd.setChecked(settings["GCodeGeneration"]["ProgramEnd"]),
+        self.ui.checkBox_GCodeGeneration_ProgramEnd.setChecked(settings["GCodeGeneration"]["ProgramEnd"]),
 
     def cb_open_svg(self):
         '''
