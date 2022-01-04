@@ -99,8 +99,9 @@
     },
     "GCodeGeneration": {
       "ReturnToZeroAtEnd": true,
-      "SpindleAutomatic": true,
-      "SpindleSpeed": 1000
+      "SpindleControl": true,
+      "SpindleSpeed": 1000,
+      "ProgramEnd": false
     }
   }
 }
