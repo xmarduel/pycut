@@ -12,7 +12,7 @@
             "name": "PYCUT",
             "type": "python",
             "request": "launch",
-            "program": "main.py",
+            "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut"
         },

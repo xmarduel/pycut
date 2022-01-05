@@ -147,6 +147,9 @@ jscut_webgl = """
 <script type="text/javascript" src="qrc:/javascript/api/js/parseGcode.js"></script>
 <script type="text/javascript" src="qrc:/javascript/js/RenderPath.js"></script>
 
+<!-- could not make prism work -->
+<link href="qrc:/javascript/css/prism.css" rel="stylesheet" />
+<script type="text/javascript" src="qrc:/javascript/js/prism.js"></script>
 </head>
 <body>
 
@@ -176,6 +179,12 @@ function sliderChangeVal(newVal) {
     <!-- not too much rows to avoid a scrollbar -->
     <textarea id="textarea_gcode" value="TO-BE-SET" rows="33" style="font-size: 8pt; font-family: monospace; height: 100%; width: calc(100% - 480px); min-width: 300px"></textarea>
   </div>
+
+  <!--
+  <div class="item2">
+   <pre style="font-size:9px"><code class="language-gcode"></code></pre>
+  </div>
+  -->
 
 </div>
 
@@ -293,8 +302,24 @@ document.addEventListener("DOMContentLoaded", function () {
             const textarea_gcode = document.getElementById('textarea_gcode');
             const input_slider = document.getElementById('input_slider');
 
+            var data = json_data["gcode"];
+
             // fill widgets
-            textarea_gcode.value = json_data["gcode"]; 
+            textarea_gcode.value = data;
+
+            // prism stuff
+            /*
+            const textarea_gcode = document.getElementsByClassName('language-gcode');
+
+            // fill widgets
+            if (textarea_gcode.length > 0) {
+              console.log("XXXXXX");
+              textarea_gcode[0].innerHTML = json_data["gcode"]; 
+              Prism.highlightAll();
+            } else {
+              console.log("YYYYYY");
+            }
+            */
 
             gcode_simulator = new GCodeSimulator(
                 json_data["height"], 
