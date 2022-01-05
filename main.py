@@ -24,15 +24,15 @@ import tabs_tableview
 
 import material_widget
 
-from pycut import GcodeModel
-from pycut import ToolModel
-from pycut import SvgModel
-from pycut import MaterialModel
-from pycut import TabsModel
-from pycut import CncOp
-from pycut import JobModel
+from gcode_generator import GcodeModel
+from gcode_generator import ToolModel
+from gcode_generator import SvgModel
+from gcode_generator import MaterialModel
+from gcode_generator import TabsModel
+from gcode_generator import CncOp
+from gcode_generator import JobModel
 
-from pycut import GcodeGenerator
+from gcode_generator import GcodeGenerator
 
 import resources_rc
 from ui_mainwindow import Ui_mainwindow
