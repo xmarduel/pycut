@@ -351,7 +351,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
     def display_tabs(self, tabs):
         '''
         '''
-        from pycut import Tab
+        from gcode_generator import Tab
 
         transformer = SvgTransformer(self.svg)
 
@@ -370,7 +370,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         The list of "preview geometries" results of the geometries calculation for given ops
         The resulting geometries will the displayed in black together with the original svg and tabs
         '''
-        from pycut import Tab
+        from gcode_generator import Tab
 
         # display preview geometries 
         transformer = SvgTransformer(self.svg)
@@ -398,7 +398,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         The list of svg_paths results of the toolpath calculation for given ops
         The resulting svg_paths will the displayed in green together with the original svg, tabs and preview geometries
         '''
-        from pycut import Tab
+        from gcode_generator import Tab
 
         # display preview geometries 
         transformer = SvgTransformer(self.svg)

@@ -328,7 +328,7 @@ class cam:
         from a "normal" tool path, split this path into a list of "partial" paths
         avoiding the tabs areas
         '''
-        from pycut import Tab
+        from gcode_generator import Tab
 
         if len(tabs) == 0:
             return [origPath]
