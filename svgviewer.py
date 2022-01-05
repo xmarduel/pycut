@@ -97,6 +97,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
     '''
     zoomChanged = QtCore.Signal()
 
+    SVGVIEWER_HIDE_TABS_DISABLED = False
+    SVGVIEWER_HIDE_TABS_ALL = False
+
     def __init__(self, parent):
         super(SvgViewer, self).__init__(parent)
         self.mainwindow = None
@@ -358,6 +361,15 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # then the tabs
         tabs_paths = []
         for tab in tabs:
+            show = True
+            if self.SVGVIEWER_HIDE_TABS_ALL:
+                show = False
+            if self.SVGVIEWER_HIDE_TABS_DISABLED and tab["enabled"] == False:
+                show = False
+
+            if show == False:
+                continue
+
             tabs_paths.append(Tab(tab).make_svg_path())
 
         augmented_svg = transformer.augment(tabs_paths)

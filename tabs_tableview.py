@@ -325,7 +325,8 @@ class PyCutTabsTableViewManager(QtWidgets.QWidget):
             print(tab)
 
         # inform main window (draw tab in svg)
-        tabs = self.get_model_tabs()
+        model_tabs = self.get_model_tabs()
+        tabs = [tab.to_dict() for tab in model_tabs]
         self.mainwindow.display_cnc_tabs(tabs)
 
 
@@ -412,7 +413,8 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
             print(tab)
 
         # inform main window (draw tab in svg)
-        tabs = self.model().tabs
+        model_tabs = self.model().tabs
+        tabs = [tab.to_dict() for tab in model_tabs]
         self.parent().mainwindow.display_cnc_tabs(tabs)
         
     def addItem(self, tab_data):
@@ -451,7 +453,8 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
             cnc_tab = self.tabs[row]
             setattr(cnc_tab, attrib, value)
 
-            self.mainwindow.display_cnc_tabs(self.tabs)
+            tabs = [tab.to_dict() for tab in self.tabs]
+            self.mainwindow.display_cnc_tabs(tabs)
 
     def __str__(self):
         self.cnt += 1

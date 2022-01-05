@@ -281,22 +281,22 @@ class Ui_mainwindow(object):
 
         self.verticalLayoutTabsContent.addWidget(self.label_Tabs)
 
-        self.grid_Tabs = QWidget(self.centralwidget)
-        self.grid_Tabs.setObjectName(u"grid_Tabs")
-        self.grid_Tabs.setMinimumSize(QSize(0, 44))
-        self.verticalLayout_4 = QVBoxLayout(self.grid_Tabs)
+        self.tabsGlobals = QWidget(self.centralwidget)
+        self.tabsGlobals.setObjectName(u"tabsGlobals")
+        self.tabsGlobals.setMinimumSize(QSize(0, 44))
+        self.verticalLayout_4 = QVBoxLayout(self.tabsGlobals)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.formLayout_Tabs = QFormLayout()
         self.formLayout_Tabs.setObjectName(u"formLayout_Tabs")
         self.formLayout_Tabs.setLabelAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.formLayout_Tabs.setFormAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
-        self.label_TabsUnits = QLabel(self.grid_Tabs)
+        self.label_TabsUnits = QLabel(self.tabsGlobals)
         self.label_TabsUnits.setObjectName(u"label_TabsUnits")
         self.label_TabsUnits.setFont(font1)
 
         self.formLayout_Tabs.setWidget(0, QFormLayout.LabelRole, self.label_TabsUnits)
 
-        self.comboBox_Tabs_Units = QComboBox(self.grid_Tabs)
+        self.comboBox_Tabs_Units = QComboBox(self.tabsGlobals)
         self.comboBox_Tabs_Units.addItem("")
         self.comboBox_Tabs_Units.addItem("")
         self.comboBox_Tabs_Units.setObjectName(u"comboBox_Tabs_Units")
@@ -304,24 +304,41 @@ class Ui_mainwindow(object):
 
         self.formLayout_Tabs.setWidget(0, QFormLayout.FieldRole, self.comboBox_Tabs_Units)
 
-        self.label_Tabs_Height = QLabel(self.grid_Tabs)
+        self.label_Tabs_Height = QLabel(self.tabsGlobals)
         self.label_Tabs_Height.setObjectName(u"label_Tabs_Height")
         self.label_Tabs_Height.setFont(font1)
 
         self.formLayout_Tabs.setWidget(1, QFormLayout.LabelRole, self.label_Tabs_Height)
 
-        self.doubleSpinBox_Tabs_Height = QDoubleSpinBox(self.grid_Tabs)
+        self.doubleSpinBox_Tabs_Height = QDoubleSpinBox(self.tabsGlobals)
         self.doubleSpinBox_Tabs_Height.setObjectName(u"doubleSpinBox_Tabs_Height")
         self.doubleSpinBox_Tabs_Height.setEnabled(True)
         self.doubleSpinBox_Tabs_Height.setDecimals(3)
 
         self.formLayout_Tabs.setWidget(1, QFormLayout.FieldRole, self.doubleSpinBox_Tabs_Height)
 
+        self.label = QLabel(self.tabsGlobals)
+        self.label.setObjectName(u"label")
+
+        self.formLayout_Tabs.setWidget(2, QFormLayout.LabelRole, self.label)
+
+        self.checkBox_Tabs_hideAllTabs = QCheckBox(self.tabsGlobals)
+        self.checkBox_Tabs_hideAllTabs.setObjectName(u"checkBox_Tabs_hideAllTabs")
+        self.checkBox_Tabs_hideAllTabs.setFont(font1)
+
+        self.formLayout_Tabs.setWidget(2, QFormLayout.FieldRole, self.checkBox_Tabs_hideAllTabs)
+
+        self.checkBox_Tabs_hideDisabledTabs = QCheckBox(self.tabsGlobals)
+        self.checkBox_Tabs_hideDisabledTabs.setObjectName(u"checkBox_Tabs_hideDisabledTabs")
+        self.checkBox_Tabs_hideDisabledTabs.setFont(font1)
+
+        self.formLayout_Tabs.setWidget(3, QFormLayout.FieldRole, self.checkBox_Tabs_hideDisabledTabs)
+
 
         self.verticalLayout_4.addLayout(self.formLayout_Tabs)
 
 
-        self.verticalLayoutTabsContent.addWidget(self.grid_Tabs)
+        self.verticalLayoutTabsContent.addWidget(self.tabsGlobals)
 
         self.tabsview_manager = PyCutTabsTableViewManager(self.centralwidget)
         self.tabsview_manager.setObjectName(u"tabsview_manager")
@@ -880,6 +897,9 @@ class Ui_mainwindow(object):
         self.comboBox_Tabs_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
 
         self.label_Tabs_Height.setText(QCoreApplication.translate("mainwindow", u"Height", None))
+        self.label.setText("")
+        self.checkBox_Tabs_hideAllTabs.setText(QCoreApplication.translate("mainwindow", u"Hide all Tabs", None))
+        self.checkBox_Tabs_hideDisabledTabs.setText(QCoreApplication.translate("mainwindow", u"Hide disabled Tabs", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.svg), QCoreApplication.translate("mainwindow", u"SVG", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.viewer), QCoreApplication.translate("mainwindow", u"GCode Viewer", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.simulator), QCoreApplication.translate("mainwindow", u"GCode Simulator", None))

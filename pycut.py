@@ -5,6 +5,8 @@ import os
 import json
 
 from typing import List
+from typing import Dict
+from typing import Any
 
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -155,6 +157,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode)
         self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode)
 
+        self.ui.checkBox_Tabs_hideAllTabs.clicked.connect(self.cb_tabs_hide_all)
+        self.ui.checkBox_Tabs_hideDisabledTabs.clicked.connect(self.cb_tabs_hide_disabled)
+
         self.init_gui()
 
         job_no = 1
@@ -214,7 +219,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             view.setHtml(self.notfound % {'message':str(msg)})
 
         dlg.show()
-
 
     def cb_save_gcode(self):
         '''
@@ -773,11 +777,21 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.tabs = tabs
         self.ui.tabsview_manager.set_tabs(self.tabs)
     
-    def display_cnc_tabs(self, tabs: List[tabs_tableview.TabItem]):
+    def display_cnc_tabs(self, tabs: Dict[str, Any]):
         '''
         '''
-        self.tabs = [ tab.to_dict() for tab in tabs ]
+        self.tabs = tabs
         self.svg_viewer.set_tabs(self.tabs)
+
+    def cb_tabs_hide_disabled(self):
+        val = self.ui.checkBox_Tabs_hideDisabledTabs.isChecked()
+        self.svg_viewer.SVGVIEWER_HIDE_TABS_DISABLED = val
+        self.svg_viewer.reinit()
+
+    def cb_tabs_hide_all(self):
+        val = self.ui.checkBox_Tabs_hideAllTabs.isChecked()
+        self.svg_viewer.SVGVIEWER_HIDE_TABS_ALL = val
+        self.svg_viewer.reinit()
 
     def display_cnc_ops_geometry(self, operations: List[operations_tableview.OpItem]):
         '''

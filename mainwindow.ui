@@ -393,7 +393,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="grid_Tabs" native="true">
+         <widget class="QWidget" name="tabsGlobals" native="true">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -457,6 +457,37 @@
                </property>
                <property name="decimals">
                 <number>3</number>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QCheckBox" name="checkBox_Tabs_hideAllTabs">
+               <property name="font">
+                <font>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Hide all Tabs</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QCheckBox" name="checkBox_Tabs_hideDisabledTabs">
+               <property name="font">
+                <font>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Hide disabled Tabs</string>
                </property>
               </widget>
              </item>
