@@ -64,7 +64,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "Clearance"   : 10.0,
         },
         "CurveToLineConversion" : {
-            "MinimumSegments"       : 1,
+            "MinimumSegments"       : 5,
             "MinimumSegmentsLength" : 0.01,
         },
         "GCodeConversion" : {
@@ -132,7 +132,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         default_clearance = self.ui.doubleSpinBox_Material_Clearance.value()
         self.svg_material_viewer.display_material(thickness=default_thickness, clearance=default_clearance)
         
-        self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegments.valueChanged.connect(self.cb_curve_min_segments)
+        self.ui.spinBox_CurveToLineConversion_MinimumNbSegments.valueChanged.connect(self.cb_curve_min_segments)
         self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.valueChanged.connect(self.cb_curve_min_segments_length)
 
         self.display_svg(None)
@@ -322,7 +322,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "Clearance"  : self.ui.doubleSpinBox_Material_Clearance.value(),
             },
             "CurveToLineConversion" : {
-                "MinimumSegments"       : self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegments.value(),
+                "MinimumSegments"       : self.ui.spinBox_CurveToLineConversion_MinimumNbSegments.value(),
                 "MinimumSegmentsLength" : self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.value(),
             },
             "GCodeConversion" : {
@@ -364,7 +364,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.doubleSpinBox_Material_Clearance.setValue(settings["Material"]["Clearance"])
             
         # CurveToLineConversion 
-        self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegments.setValue(settings["CurveToLineConversion"]["MinimumSegments"]),
+        self.ui.spinBox_CurveToLineConversion_MinimumNbSegments.setValue(settings["CurveToLineConversion"]["MinimumSegments"]),
         self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.setValue(settings["CurveToLineConversion"]["MinimumSegmentsLength"]),
             
         # GCodeConversion
@@ -483,8 +483,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         what is it good for ?
         seems to be redundant with cb_curve_min_segments_length
         '''
-        _ = self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegments.value()
-        pass
+        value = self.ui.spinBox_CurveToLineConversion_MinimumNbSegments.value()
+        svgpathutils.SvgPath.set_arc_min_nb_segments(value)
 
     def cb_curve_min_segments_length(self):
         '''

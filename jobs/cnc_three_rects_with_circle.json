@@ -103,7 +103,7 @@
        "Clearance": 10.0
      },
      "CurveToLineConversion": {
-       "MinimumSegments": 1.0,
+       "MinimumSegments": 5,
        "MinimumSegmentsLength": 0.01
      },
      "GCodeConversion": {

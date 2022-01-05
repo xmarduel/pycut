@@ -29,7 +29,7 @@ class Ui_mainwindow(object):
     def setupUi(self, mainwindow):
         if not mainwindow.objectName():
             mainwindow.setObjectName(u"mainwindow")
-        mainwindow.resize(1226, 1006)
+        mainwindow.resize(1226, 1021)
         self.actionOpenSvg = QAction(mainwindow)
         self.actionOpenSvg.setObjectName(u"actionOpenSvg")
         self.actionNewJob = QAction(mainwindow)
@@ -502,17 +502,19 @@ class Ui_mainwindow(object):
         self.formLayoutCurveToLineConversion.setLabelAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.formLayoutCurveToLineConversion.setFormAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
         self.formLayoutCurveToLineConversion.setVerticalSpacing(6)
-        self.label_CurveToLineConversion_MinimumSegments = QLabel(self.centralwidget)
-        self.label_CurveToLineConversion_MinimumSegments.setObjectName(u"label_CurveToLineConversion_MinimumSegments")
-        self.label_CurveToLineConversion_MinimumSegments.setFont(font1)
+        self.label_CurveToLineConversion_MinimumNbSegments = QLabel(self.centralwidget)
+        self.label_CurveToLineConversion_MinimumNbSegments.setObjectName(u"label_CurveToLineConversion_MinimumNbSegments")
+        self.label_CurveToLineConversion_MinimumNbSegments.setFont(font1)
 
-        self.formLayoutCurveToLineConversion.setWidget(0, QFormLayout.LabelRole, self.label_CurveToLineConversion_MinimumSegments)
+        self.formLayoutCurveToLineConversion.setWidget(0, QFormLayout.LabelRole, self.label_CurveToLineConversion_MinimumNbSegments)
 
-        self.doubleSpinBox_CurveToLineConversion_MinimumSegments = QDoubleSpinBox(self.centralwidget)
-        self.doubleSpinBox_CurveToLineConversion_MinimumSegments.setObjectName(u"doubleSpinBox_CurveToLineConversion_MinimumSegments")
-        self.doubleSpinBox_CurveToLineConversion_MinimumSegments.setEnabled(False)
+        self.spinBox_CurveToLineConversion_MinimumNbSegments = QSpinBox(self.centralwidget)
+        self.spinBox_CurveToLineConversion_MinimumNbSegments.setObjectName(u"spinBox_CurveToLineConversion_MinimumNbSegments")
+        self.spinBox_CurveToLineConversion_MinimumNbSegments.setEnabled(True)
+        self.spinBox_CurveToLineConversion_MinimumNbSegments.setMinimum(1)
+        self.spinBox_CurveToLineConversion_MinimumNbSegments.setValue(5)
 
-        self.formLayoutCurveToLineConversion.setWidget(0, QFormLayout.FieldRole, self.doubleSpinBox_CurveToLineConversion_MinimumSegments)
+        self.formLayoutCurveToLineConversion.setWidget(0, QFormLayout.FieldRole, self.spinBox_CurveToLineConversion_MinimumNbSegments)
 
         self.label_CurveToLineConversion_MinimumSegmentsLength = QLabel(self.centralwidget)
         self.label_CurveToLineConversion_MinimumSegmentsLength.setObjectName(u"label_CurveToLineConversion_MinimumSegmentsLength")
@@ -894,7 +896,7 @@ class Ui_mainwindow(object):
 
         self.label_Material_Clearance.setText(QCoreApplication.translate("mainwindow", u"Cleareance                                     ", None))
         self.labelCurveToLineConversion.setText(QCoreApplication.translate("mainwindow", u" Curve To Line Conversion", None))
-        self.label_CurveToLineConversion_MinimumSegments.setText(QCoreApplication.translate("mainwindow", u"Minimum Segments", None))
+        self.label_CurveToLineConversion_MinimumNbSegments.setText(QCoreApplication.translate("mainwindow", u"Minimum Segments", None))
         self.label_CurveToLineConversion_MinimumSegmentsLength.setText(QCoreApplication.translate("mainwindow", u"Minimum Segments Length                ", None))
         self.label_GCcodeConversion.setText(QCoreApplication.translate("mainwindow", u" GCode Conversion", None))
         self.label_GCodeConversion_GCodeUnits.setText(QCoreApplication.translate("mainwindow", u"Gcode Units", None))

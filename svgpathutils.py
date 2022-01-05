@@ -37,11 +37,19 @@ class SvgPath:
     - the discretization of a svg_path results in a numpy array, noted: np_svg_path
     - a clipper path is noted: clipper_path  (a 'ClipperLib.IntPointVector')
     '''
-    PYCUT_SAMPLE_LEN_COEFF = 100 # is in jsCut if 0.01
+    PYCUT_SAMPLE_LEN_COEFF = 100 # is in jsCut 1.0/0.01 ie the same
+    PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5 # is in jsCut 1
 
     @classmethod
     def set_arc_precision(cls, arc_min_segments_length):
+        '''
+        '''
         cls.PYCUT_SAMPLE_LEN_COEFF = 1.0 / arc_min_segments_length
+
+    def set_arc_min_nb_segments(cls, arc_min_nb_segments):
+        '''
+        '''
+        cls.PYCUT_SAMPLE_MIN_NB_SEGMENTS = arc_min_nb_segments
 
     def __init__(self, p_id: str, p_attrs: Dict):
         '''
@@ -82,6 +90,7 @@ class SvgPath:
                 seg_length = segment.length()
 
                 nb_samples = int(seg_length * self.PYCUT_SAMPLE_LEN_COEFF)
+                nb_samples = max(nb_samples, self.PYCUT_SAMPLE_MIN_NB_SEGMENTS)
                 
                 _pts = []
                 for k in range(nb_samples+1):
@@ -93,6 +102,8 @@ class SvgPath:
                 seg_length = segment.length()
 
                 nb_samples = int(seg_length * self.PYCUT_SAMPLE_LEN_COEFF)
+                nb_samples = max(nb_samples, self.PYCUT_SAMPLE_MIN_NB_SEGMENTS)
+                
                 incr = 1.0 / nb_samples
 
                 samples = [x* incr for x in range(0, nb_samples+1)]
