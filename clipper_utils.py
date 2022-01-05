@@ -1,8 +1,8 @@
 
 from typing import List
 
-#import clipper_613 as ClipperLib
-import clipper_642 as ClipperLib
+#from clipper_613 import clipper_613 as ClipperLib
+from clipper_642 import clipper_642 as ClipperLib
 
 class ClipperUtils:
     '''

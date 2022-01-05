@@ -7,9 +7,6 @@ USAGE: start the program from the installation folder (because of clipper c++ ex
 
 > python pycut.py
 
-Installation: env variables required:
- + %PYCUT%  : the installation folder
- + %PYTHONPATH% : with %PYCUT%\clipper_642 and %PYCUT%\clipper_613  
 
 Dependencies: Python
 - PySide6-6.2.1
