@@ -280,7 +280,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         no need to generate an Ui_XXXX.py file)
         '''
         loader = QUiLoader(self)
-        loader.registerCustomWidget(operations_tableview.PMFTableViewManager)
+        loader.registerCustomWidget(operations_tableview.PyCutOperationsTableViewManager)
+        loader.registerCustomWidget(tabs_tableview.PyCutTabsTableViewManager)
         
         widget = loader.load(uifile)
 
