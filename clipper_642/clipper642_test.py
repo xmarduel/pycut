@@ -1,4 +1,4 @@
-from clipper_642 import clipper_642 as clipper
+import clipper_642 as clipper
 
 '''
 This version handle better the diff of open lines vs closed polygons,
