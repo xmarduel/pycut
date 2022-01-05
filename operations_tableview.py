@@ -251,7 +251,6 @@ class PyCutDoubleSpinBoxDelegate(QtWidgets.QStyledItemDelegate):
     def onEditorValueChanged(self):
         editor = self.sender()
         if editor:
-            print("onEditorValueChanged - PyCutDoubleSpinBoxDelegate")
             self.commitData.emit(editor)
 
     def setEditorData(self, spinBox: PyCutDoubleSpinBox, index: QtCore.QModelIndex):
@@ -291,7 +290,6 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
     def onEditorStateChanged(self):
         editor = self.sender()
         if editor:
-            print("onEditorStateChanged - PyCutCheckBoxDelegate - editor", editor)
             checkWidget = editor.parent()
             self.commitData.emit(checkWidget)
 
@@ -301,8 +299,6 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
         checkBox.set_value()
 
     def setModelData(self, checkWidget: QtWidgets.QWidget, model, index: QtCore.QModelIndex):
-        print("PyCutCheckBoxDelegate::setModelData - editor", checkWidget)
-
         checkBoxItem = checkWidget.layout().itemAt(0)
         checkBox : PyCutCheckBox = checkBoxItem.widget()
 
@@ -344,7 +340,6 @@ class PyCutComboBoxDelegate(QtWidgets.QStyledItemDelegate):
     def onEditorCurrentIndexChanged(self, idx):
         editor = self.sender()
         if editor:
-            print("onEditorCurrentIndexChanged - PyCutComboBoxDelegate")
             self.commitData.emit(editor)
 
     def setEditorData(self, comboBox: PyCutComboBox, index: QtCore.QModelIndex):

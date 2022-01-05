@@ -44,7 +44,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         },
         "Tabs": {
             "units"       : "mm",
-            "height"      : 2.0,
+            "height"      : 1.0,
             "tabs"        : []
         },
         "Tool" : {

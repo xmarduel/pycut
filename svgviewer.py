@@ -28,8 +28,8 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
         self.setSharedRenderer(renderer)
         self.setElementId(id)
         bounds = renderer.boundsOnElement(id)
-        print("bounds on id=", bounds)
-        print("bounds  rect=", self.boundingRect())
+        #print("bounds on id=", bounds)
+        #print("bounds  rect=", self.boundingRect())
         self.setPos(bounds.topLeft())
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
 
