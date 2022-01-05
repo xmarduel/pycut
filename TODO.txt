@@ -1,0 +1,30 @@
+- no "paths version" export of svg needed : use original svg
+
+  + with svgpathtools: can read 
+      <polygon>    YES
+      <circle>     YES
+      <rect>       YES [missing rounded corner]
+      <ellipse>    YES
+      <line>       YES
+      <polyline>   YES
+      <path>       YES 
+    as "path object" (to check)
+
+      <text> https://catherineh.github.io/programming/2018/02/01/text-to-svg-paths ?
+
+  + with inkscape:
+      would be nice just to perform "objects to path" on the fly.
+      can inkscape python module do that ? or do I need a subprocess command ?
+
+      command line:
+      > "C:\Program Files\Inkscape\bin\inkscape.com" in.svg  --export-text-to-path -o out.svg
+
+      -> all svg elements are converted! (not only text)
+      -> warning: transformations are kept, this is bad for pycut!
+      
+      Inside python:
+      --------------
+
+      import subprocess
+      subprocess.call("inkscape.com in.svg --export-text-to-path -o out.svg", shell = True)
+

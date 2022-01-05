@@ -5,7 +5,7 @@ Note: the project has advanced nicely during the last holidays (24.12.2022), but
 
 USAGE: start the program from the installation folder (because of clipper c++ extension modules only for windows)
 
-> python main.py
+> python pycut.py
 
 Installation: env variables required:
  + %PYCUT%  : the installation folder
