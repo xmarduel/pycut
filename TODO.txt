@@ -12,6 +12,8 @@
 
       <text> https://catherineh.github.io/programming/2018/02/01/text-to-svg-paths ?
 
+    can it read elelemt with transforms ? [to check]
+
   + with inkscape:
       would be nice just to perform "objects to path" on the fly.
       can inkscape python module do that ? or do I need a subprocess command ?
