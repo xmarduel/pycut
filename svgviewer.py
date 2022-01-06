@@ -122,7 +122,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.svg_path_d = {}
 
         # when loading a svg with shapes that are not <path>
-        self.svg_shapes = {} # path id -> circle, ellipse, rect etc
+        self.svg_shapes = {} # path id -> circle, ellipse, rect, polygon, etc
 
         # the graphical items in the view
         self.items : List[SvgItem] = []
@@ -229,7 +229,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         tree = etree.parse(StringIO(svg))
 
-        shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse"]')
+        shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon"]')
 
         for shape in shapes:
             print("svg : found shape %s : %s" % (shape.tag, shape.attrib['id']))

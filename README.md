@@ -10,7 +10,7 @@ USAGE: start the program from the installation folder (because of clipper c++ ex
 
 Dependencies: Python
 - PySide6-6.2.1
-- svgpathtools (latest) - pip installation bundled with numpy
+- svgpathtools (latest) - pip installation bundled with numpy/scipy
 
 Dependencies: C++
 - clipper-6.4.2 (sources in PyCut, SWIG wrapper built in PyCut)
