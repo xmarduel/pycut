@@ -119,6 +119,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # dictionnay path id -> path d def for all path definition in the svg
         self.svg_path_d = {}
 
+        # when loading a svg with shapes that are not <path>
+        self.svg_shapes = {} # path id -> circle, ellipse, rect etc
+
         # the graphical items in the view
         self.items : List[SvgItem] = []
         # ordered list of selected items
@@ -183,6 +186,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.scene.clear()
         self.resetTransform()
 
+        self.svg_path_d = {}
+        self.svg_shapes = {}
+
         self.items : List[SvgItem] = []
         self.selected_items : List[SvgItem] = []
 
@@ -214,6 +220,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
         '''
         self.clean()
 
+        # read all shapes with svgpathtools : when not only <path>(s)
+        self.svg_shapes = SvgPath.read_svg_shapes(svg)
+
         self.renderer.load(bytes(svg, 'utf-8'))
 
         root = ET.fromstring(svg)
@@ -236,6 +245,54 @@ class SvgViewer(QtWidgets.QGraphicsView):
             # pycut generated paths cannot be selected
             if id.startswith("pycut"):
                 item.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, False)
+
+            self.items.append(item)
+
+        circles = root.findall(".//{http://www.w3.org/2000/svg}circle")
+        for circle in circles:
+            print("svg : found circle %s" % circle.attrib['id'])
+
+            attribs, path = self.svg_shapes[circle.attrib['id']]
+
+            id = attribs['id']
+            dd = path.d()
+
+            self.svg_path_d[id] = dd
+
+            item = SvgItem(id, self, self.renderer)
+            self.scene.addItem(item)
+
+            self.items.append(item)
+
+        ellipses = root.findall(".//{http://www.w3.org/2000/svg}ellipse")
+        for ellipse in ellipses:
+            print("svg : found ellipse %s" % ellipse.attrib['id'])
+
+            attribs, path = self.svg_shapes[ellipse.attrib['id']]
+
+            id = attribs['id']
+            dd = path.d()
+
+            self.svg_path_d[id] = dd
+
+            item = SvgItem(id, self, self.renderer)
+            self.scene.addItem(item)
+
+            self.items.append(item)
+
+        rects = root.findall(".//{http://www.w3.org/2000/svg}rect")
+        for rect in rects:
+            print("svg : found rect %s" % rect.attrib['id'])
+
+            attribs, path = self.svg_shapes[rect.attrib['id']]
+
+            id = attribs['id']
+            dd = path.d()
+
+            self.svg_path_d[id] = dd
+
+            item = SvgItem(id, self, self.renderer)
+            self.scene.addItem(item)
 
             self.items.append(item)
 

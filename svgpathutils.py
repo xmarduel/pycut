@@ -46,10 +46,41 @@ class SvgPath:
         '''
         cls.PYCUT_SAMPLE_LEN_COEFF = 1.0 / arc_min_segments_length
 
+    @classmethod
     def set_arc_min_nb_segments(cls, arc_min_nb_segments):
         '''
         '''
         cls.PYCUT_SAMPLE_MIN_NB_SEGMENTS = arc_min_nb_segments
+
+    @classmethod
+    def read_svg_shapes(cls, svg: str) :
+        '''
+        '''
+        svg_shapes = {}
+
+        # a tmp file
+        with tempfile.TemporaryDirectory() as tmpdir:
+            filename = os.path.join(tmpdir, 'temp_svg.svg')
+            
+            fp = open(filename, "w")
+            fp.write(svg)
+            fp.close()
+
+            paths, attributes, svg_attributes = svgpathtools.svg2paths(filename, return_svg_attributes=True)
+            print("svg2paths ->", svg_attributes)
+
+            # Let's print out the first path object and the color it was in the SVG
+            # We'll see it is composed of two CubicBezier objects and, in the SVG file it 
+            # came from, it was red
+            for k, path in enumerate(paths):
+                attribs = attributes[k]
+                print("============= path %s =================" % attribs['id'])
+                print(path)
+                print(attribs)
+
+                svg_shapes[attribs['id']] = (attribs, path)
+
+        return svg_shapes
 
     def __init__(self, p_id: str, p_attrs: Dict):
         '''
@@ -219,6 +250,8 @@ class SvgTransformer:
 
     def augment(self, svg_paths: List[SvgPath]) -> str:
         '''
+        FIXME: do not use  self.ini_svg_paths, self.ini_attribs 
+        but rather the intial svg with initial shapes.
         '''
         all_paths = ""
 
@@ -228,6 +261,10 @@ class SvgTransformer:
             svg_attrs = ''
             for key, value in init_attrib.items():
                 svg_attrs += ' %s="%s"' % (key, value)
+
+            # a hack: for circle, ellipse, rect, etc, add the 'd' attribute
+            if 'd' not in init_attrib:
+                svg_attrs += ' %s="%s"' % ('d', svg_path.d())
 
             all_paths += '<path %s />' % svg_attrs
 
