@@ -229,7 +229,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         tree = etree.parse(StringIO(svg))
 
-        shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon" or local-name()="line"]')
+        shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon" or local-name()="line" or local-name()="polyline"]')
 
         for shape in shapes:
             print("svg : found shape %s : %s" % (shape.tag, shape.attrib['id']))

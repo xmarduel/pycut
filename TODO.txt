@@ -8,7 +8,7 @@
       <rect>       YES DONE [missing rounded corners]
       <ellipse>    YES DONE
       <line>       YES DONE [but no cnc op possible - todo:engrave]
-      <polyline>   YES
+      <polyline>   YES DONE [but no cnc op possible if fill="none" - todo:engrave]
       <path>       YES DONE
       <text>       NO  https://catherineh.github.io/programming/2018/02/01/text-to-svg-paths ?
 
