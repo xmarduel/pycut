@@ -222,14 +222,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
         '''
         self.clean()
 
-        # read all shapes with svgpathtools : when not only <path>(s)
-        self.svg_shapes = SvgPath.read_svg_shapes(svg)
+        # read all shapes with svgpathtools : when not only <path>(s) in the svg
+        self.svg_shapes = SvgPath.read_svg_shapes_as_paths(svg)
 
         self.renderer.load(bytes(svg, 'utf-8'))
 
         tree = etree.parse(StringIO(svg))
 
-        shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon"]')
+        shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon" or local-name()="line"]')
 
         for shape in shapes:
             print("svg : found shape %s : %s" % (shape.tag, shape.attrib['id']))
@@ -237,9 +237,8 @@ class SvgViewer(QtWidgets.QGraphicsView):
             attribs, path = self.svg_shapes[shape.attrib['id']]
 
             id = attribs['id']
-            dd = path.d()
 
-            self.svg_path_d[id] = dd
+            self.svg_path_d[id] = path.d()
 
             item = SvgItem(id, self, self.renderer)
             self.scene.addItem(item)

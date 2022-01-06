@@ -4,7 +4,9 @@ import os
 import math
 
 from typing import List
+from typing import Tuple
 from typing import Dict
+from typing import Any
 
 import tempfile
 
@@ -55,7 +57,7 @@ class SvgPath:
         cls.PYCUT_SAMPLE_MIN_NB_SEGMENTS = arc_min_nb_segments
 
     @classmethod
-    def read_svg_shapes(cls, svg: str) :
+    def read_svg_shapes_as_paths(cls, svg: str) -> Dict[str,Tuple[Dict[str,str],svgpathtools.Path]] :
         '''
         '''
         svg_shapes = {}
@@ -69,16 +71,13 @@ class SvgPath:
             fp.close()
 
             paths, attributes, svg_attributes = svgpathtools.svg2paths(filename, return_svg_attributes=True)
-            print("svg2paths ->", svg_attributes)
+            #print("svg2paths ->", svg_attributes)
 
-            # Let's print out the first path object and the color it was in the SVG
-            # We'll see it is composed of two CubicBezier objects and, in the SVG file it 
-            # came from, it was red
             for k, path in enumerate(paths):
                 attribs = attributes[k]
                 print("============= path %s =================" % attribs['id'])
-                print(path)
-                print(attribs)
+                #print(path)
+                #print(attribs)
 
                 svg_shapes[attribs['id']] = (attribs, path)
 
@@ -247,7 +246,7 @@ class SvgTransformer:
 
         tree = etree.parse(StringIO(self.svg))
 
-        shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon"]')
+        shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon" or local-name()="line"]')
 
         for shape in shapes:
             print("svg : found shape %s : %s" % (shape.tag, shape.attrib['id']))
@@ -312,7 +311,7 @@ class SvgTransformer:
 
         tree = etree.parse(StringIO(self.svg))
 
-        shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon"]')
+        shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon" or local-name()="line"]')
 
         for shape in shapes:
             print("svg : found shape %s : %s" % (shape.tag, shape.attrib['id']))
