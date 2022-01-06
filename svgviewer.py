@@ -246,7 +246,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
             self.items.append(item)
 
-             # tabs can be dragged
+            # tabs can be dragged
             if id.startswith("pycut_tab"):
                 item.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsMovable, True)
 
