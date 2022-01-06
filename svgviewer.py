@@ -246,6 +246,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
             self.items.append(item)
 
+             # tabs can be dragged
+            if id.startswith("pycut_tab"):
+                item.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsMovable, True)
+
+            # pycut generated paths cannot be selected
+            if id.startswith("pycut"):
+                item.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, False)
+
         # zoom with the initial zoom factor
         self.scale(self.currentZoom, self.currentZoom)
 
