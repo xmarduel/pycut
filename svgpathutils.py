@@ -1,4 +1,5 @@
 
+from io import StringIO
 import os
 import math
 
@@ -8,6 +9,7 @@ from typing import Dict
 import tempfile
 
 import xml.etree.ElementTree as ET
+from lxml import etree
 
 import svgpathtools
 import numpy as np
@@ -238,35 +240,24 @@ class SvgTransformer:
     def __init__(self, svg):
         self.svg = svg
 
-        # a tmp file
-        with tempfile.TemporaryDirectory() as tmpdir:
-            path = os.path.join(tmpdir, 'pycut_svg.svg')
-            # use path
-            fp = open(path, 'w')
-            fp.write(svg)
-            fp.close()
-
-            self.ini_svg_paths, self.ini_attribs = svgpathtools.svg2paths(path)
-
     def augment(self, svg_paths: List[SvgPath]) -> str:
         '''
-        FIXME: do not use  self.ini_svg_paths, self.ini_attribs 
-        but rather the intial svg with initial shapes.
         '''
         all_paths = ""
 
-        for k, svg_path in enumerate(self.ini_svg_paths):
-            init_attrib = self.ini_attribs[k]
+        tree = etree.parse(StringIO(self.svg))
 
+        shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse"]')
+
+        for shape in shapes:
+            print("svg : found shape %s : %s" % (shape.tag, shape.attrib['id']))
+
+            tag = shape.tag.split("}")[1]
             svg_attrs = ''
-            for key, value in init_attrib.items():
+            for key, value in shape.attrib.items():
                 svg_attrs += ' %s="%s"' % (key, value)
 
-            # a hack: for circle, ellipse, rect, etc, add the 'd' attribute
-            if 'd' not in init_attrib:
-                svg_attrs += ' %s="%s"' % ('d', svg_path.d())
-
-            all_paths += '<path %s />' % svg_attrs
+            all_paths += '<%s %s/>\r\n' % (tag, svg_attrs)
 
         for k, svg_path in enumerate(svg_paths):
             id = svg_path.p_id
@@ -319,14 +310,19 @@ class SvgTransformer:
         '''
         all_paths = ""
 
-        for k, svg_path in enumerate(self.ini_svg_paths):
-            init_attrib = self.ini_attribs[k]
+        tree = etree.parse(StringIO(self.svg))
 
+        shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse"]')
+
+        for shape in shapes:
+            print("svg : found shape %s : %s" % (shape.tag, shape.attrib['id']))
+
+            tag = shape.tag.split("}")[1]
             svg_attrs = ''
-            for key, value in init_attrib.items():
+            for key, value in shape.attrib.items():
                 svg_attrs += ' %s="%s"' % (key, value)
 
-            all_paths += '<path %s />' % svg_attrs
+            all_paths += '<%s %s/>\r\n' % (tag, svg_attrs)
 
         for k, svg_path in enumerate(svg_paths):
             id = svg_path.p_id
@@ -354,7 +350,6 @@ class SvgTransformer:
                 height="%s"
                 viewBox="%s"
                 version="1.1">
-                <style>svg { background-color: green; }</style>
                 <g>
                  %s
                 </g> 

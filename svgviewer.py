@@ -1,5 +1,6 @@
 # This Python file uses the following encoding: utf-8
 
+from io import StringIO
 from typing import List
 
 import math
@@ -12,6 +13,7 @@ from PySide6 import QtSvg
 from PySide6 import QtSvgWidgets
 
 import xml.etree.ElementTree as ET
+from lxml import etree
 
 from svgpathutils import SvgPath
 from svgpathutils import SvgTransformer
@@ -225,66 +227,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         self.renderer.load(bytes(svg, 'utf-8'))
 
-        root = ET.fromstring(svg)
+        tree = etree.parse(StringIO(svg))
 
-        paths = root.findall(".//{http://www.w3.org/2000/svg}path")
-        for path in paths:
-            print("svg : found path %s" % path.attrib['id'])
-            id = path.attrib['id']
-            dd = path.attrib['d']
+        shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse"]')
 
-            self.svg_path_d[id] = dd
+        for shape in shapes:
+            print("svg : found shape %s : %s" % (shape.tag, shape.attrib['id']))
 
-            item = SvgItem(id, self, self.renderer)
-            self.scene.addItem(item)
-
-            # tabs can be dragged
-            if id.startswith("pycut_tab"):
-                item.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsMovable, True)
-
-            # pycut generated paths cannot be selected
-            if id.startswith("pycut"):
-                item.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, False)
-
-            self.items.append(item)
-
-        circles = root.findall(".//{http://www.w3.org/2000/svg}circle")
-        for circle in circles:
-            print("svg : found circle %s" % circle.attrib['id'])
-
-            attribs, path = self.svg_shapes[circle.attrib['id']]
-
-            id = attribs['id']
-            dd = path.d()
-
-            self.svg_path_d[id] = dd
-
-            item = SvgItem(id, self, self.renderer)
-            self.scene.addItem(item)
-
-            self.items.append(item)
-
-        ellipses = root.findall(".//{http://www.w3.org/2000/svg}ellipse")
-        for ellipse in ellipses:
-            print("svg : found ellipse %s" % ellipse.attrib['id'])
-
-            attribs, path = self.svg_shapes[ellipse.attrib['id']]
-
-            id = attribs['id']
-            dd = path.d()
-
-            self.svg_path_d[id] = dd
-
-            item = SvgItem(id, self, self.renderer)
-            self.scene.addItem(item)
-
-            self.items.append(item)
-
-        rects = root.findall(".//{http://www.w3.org/2000/svg}rect")
-        for rect in rects:
-            print("svg : found rect %s" % rect.attrib['id'])
-
-            attribs, path = self.svg_shapes[rect.attrib['id']]
+            attribs, path = self.svg_shapes[shape.attrib['id']]
 
             id = attribs['id']
             dd = path.d()
