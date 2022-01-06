@@ -230,7 +230,7 @@ class PyCutComboBox(QtWidgets.QComboBox):
 class PyCutDoubleSpinBoxDelegate(QtWidgets.QStyledItemDelegate):
     def __init__(self, parent):
         super().__init__(parent)
-        self.editor = {}
+        self.xeditors = {}
 
     def createEditor(self, parent, option, index: QtCore.QModelIndex):
         editor = PyCutDoubleSpinBox(parent)
@@ -244,7 +244,7 @@ class PyCutDoubleSpinBoxDelegate(QtWidgets.QStyledItemDelegate):
         # to flush an "setModelData" in place - it works!
         editor.valueChanged.connect(self.onEditorValueChanged)
 
-        self.editor[(index.row(), index.column())] = editor
+        self.xeditors[(index.row(), index.column())] = editor
 
         return editor
 
@@ -525,6 +525,11 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         self.delegate_col_width = delegate = PyCutDoubleSpinBoxDelegate(self)
         self.setItemDelegateForColumn(11, delegate)
 
+        self.setup_persistent_editors()
+
+    def setup_persistent_editors(self):
+        '''
+        '''
         # Make the combo boxes / check boxes / others specials always displayed.
         for k in range(self.model().rowCount(None)):
             self.openPersistentEditor(self.model().index(k, 2)) # cam_op
@@ -599,7 +604,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
             self.model().swapItems(idx, idx + 1)
 
         # to be sure to update the table... and all its delegates
-        self.setup()
+        self.setup_persistent_editors()
         
         print("DOWN")
         for op in self.model().operations:
@@ -612,7 +617,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
             self.model().swapItems(idx, idx - 1)
 
         # to be sure to update the table... and all its delegates
-        self.setup()
+        self.setup_persistent_editors()
         
         print("UP")
         for op in self.model().operations:
@@ -620,7 +625,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
 
     def addItem(self, op_data):
         self.model().addItem(op_data)
-        self.setup()  # to show the editors on a new item
+        self.setup_persistent_editors()  # to show the editors on a new item
 
     def cb_gen_gcode_op(self):
         index = self.currentIndex()
@@ -635,8 +640,8 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         for row in range(self.model().rowCount(None)):
             cam_op = self.model().operations[row].cam_op
             
-            self.delegate_col_margin.editor[(row, 10)].setEnabled(margin[cam_op]) 
-            self.delegate_col_width.editor[(row, 11)].setEnabled(width[cam_op]) 
+            self.delegate_col_margin.xeditors[(row, 10)].setEnabled(margin[cam_op]) 
+            self.delegate_col_width.xeditors[(row, 11)].setEnabled(width[cam_op]) 
 
 
 class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
