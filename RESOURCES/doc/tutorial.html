@@ -79,15 +79,72 @@ for (var i = 0; i < tree.length; i++){
 
 <p>Welcome to <strong>PyCut</strong>, a clone of <strong>jsCut</strong>, the
 excellent (at least for beginners) CAM, web-based programm, that takes as input
-svg files and generates G-Code. So why this rewrite ?</p>
+<strong>SVG</strong> files and generates G-Code. So why this rewrite ?</p>
 
-<p>PyCut aims to offer all the (minimalistics) features found in jsCut, with
-some small improvements. Hopefully you will find PyCut usefull when learning
-CNC and producing your first GCode files.</p>
+<p><strong>PyCut</strong> aims to offer all the (minimalistics) features found
+in jsCut, with some small improvements. Hopefully you will find
+<strong>PyCut</strong> usefull when learning CNC and producing your first GCode
+files.</p>
 
-<p>Starting point of PyCut are SVG files, your designs. In the following, we
-will use Inkscape to produce SVG files, and will shortly point out what has to
-be taken into consideration when creating an "usable" SVG file.</p>
+<p>Starting point of <strong>PyCut</strong> are <strong>SVG</strong> files,
+your designs. In the following, we will use <strong>Inkscape</strong> to
+produce <strong>SVG</strong> files, and will shortly point out what has to be
+taken into consideration when creating "usable" <strong>SVG</strong> files.</p>
+
+<h3>SVG</h3>
+
+<h4>Shapes</h4>
+
+<p>The SVG standard is large, and <strong>PyCut</strong> cannot simply read a
+svg file, display it, and allow the user to define cnc operations on the
+"shapes" defined inside the svg file. Of course, the goal of
+<strong>PyCut</strong> is to process as many svg data as possible.</p>
+
+<p>The shapes inside a svg file are the following:</p>
+<ul>
+  <li>&lt;path&gt;</li>
+  <li>&lt;rect&gt;</li>
+  <li>&lt;circle&gt;</li>
+  <li>&lt;ellipse&gt;</li>
+  <li>&lt;polygon&gt;</li>
+  <li>&lt;line&gt;</li>
+  <li>&lt;polyline&gt;</li>
+</ul>
+
+<p>Moreover, the user will also want to process the strings written in the svg
+file:</p>
+<ul>
+  <li>&lt;text&gt;</li>
+</ul>
+
+<p>Because <strong>PyCut</strong> finally processes "paths" in order to
+calculate cnc paths, these shapes have to be interpreted first as svg
+&lt;path&gt;.</p>
+
+<p>The first possibility is to convert all the shapes and text (strings) found
+in your data into &lt;path&gt; shapes only, and then import this &lt;path&gt;
+only svg file into <strong>PyCut</strong>.</p>
+
+<p>The second possibility is to convert the &lt;text&gt; strings in
+&lt;path&gt; shapes, because <strong>PyCut</strong> actually can internally
+convert the other shapes into &lt;path&gt; shapes.</p>
+
+<h4>Shapes "id"</h4>
+
+<p>In order to reference the shapes, these shapes must have an "id", hopefully
+unique inside the svg document. If the user has produced the svg "per hand",
+then he should not forget to give all shapes an unique id. If the user has
+produced the svg with <strong>Inkscape</strong>, then "id" are already given,
+but maybe the user will want to edit the ids and give then meaningfull
+content.</p>
+
+<h4>Transformations</h4>
+
+<p>It is usual to rotate, scale, skew the shapes. Unfortunately,
+<strong>PyCut</strong> cannot handle these transformations. If the user has
+used such transformations, then it is possible inside Inkscape to "resolve" the
+transformation: just "ungroup" and then "group" again the desired shape. During
+this process, the shape will be convert into a &lt;path&gt; shape.</p>
 
 <h3>Inkscape</h3>
 
@@ -97,22 +154,7 @@ with the option "Zero Lower Left of Material" as reference. This option needs
 the Y size of the material.</p>
 
 <p>Then, after having creating your design (rectangles, circles, text etc),
-convert all the items to "paths".</p>
-
-<p>It has unfortunately to be said that it is a bit annoying to have to keep 2
-versions of your design, the first one as standard svg, the second one as a
-transformed, "paths" version. This is because PyCut can only work with
-"paths".</p>
-
-<p>Could PyCut work with the original, non-"paths" version of the SVG ? Well it
-theorically could, if PyCut was able internally to perform this transformation.
-There is indeed an external Inkscape script "to paths" that could be used. But
-this will be for version 2 of PyCut.</p>
-
-<p>Infact, actually the user can edit per hand the "paths" version, clean the
-svg of all Inkscape stuff and give meaningfull ids to the paths: these "ids"
-allow the user to recognize the paths that will be selected for the CAM
-operations later on. </p>
+convert all the &lt;text&gt; items to "paths".</p>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
@@ -120,18 +162,19 @@ operations later on. </p>
 
 <h3>Importing a SVG file</h3>
 
-<p>So import the "paths" version of your svg: The SVG content should be
+<p>So import your svg into <strong>PyCut</strong>: The SVG content should be
 displayed in the central area. </p>
 
 <div class="info">
-<p><strong>Note:</strong> only the paths are displayed. If you load a file without paths, nothing will be displayed.</p>
+<p><strong>Note:</strong> text is not displayed. It has to be converted as
+&lt;path&gt; in order to be procesed by <strong>PyCut</strong>.</p>
 </div>
 
 <h3>Creating a PyCut Job</h3>
 
 <p>Then create a new "job" : this is a kind of container that stores the svg
 file name, the CAM operations that will be created for this specific svg file,
-and all the settings relavant when generating g-Code.</p>
+and all the settings relevant when generating g-code.</p>
 
 <p>Later, after having saved the job, it will be possble to reload it, with all
 its stored CAM operations and others settings.</p>
@@ -178,19 +221,20 @@ Simulator" display areas.</p>
 
 <h3>Tabs</h3>
 
-<p>It's easy to define tabs with <strong>PyCut</strong>: just click the
-pushbutton "Create Tab" and a red circle is created in the svg, of radius 5 and
-position (10,10). The user can drag 'n drop it fron the svg viewer, or set its
+<p>It's easy to define tabs with <strong>PyCut</strong>: just click the button
+"Create Tab" and a red circle is created in the svg, of radius 5 and position
+(10,10). The user can drag 'n drop it fron the svg viewer, or set its
 size/postion in the tab table. Yes tabs, for simplicity, are circle. To be
-effective, the tab has to be enabled and of course placed somewhere on the
+effective, the tabs have to be enabled and of course placed somewhere on the
 generated toolpaths. The height of the tab is shared by all tabs.</p>
 
 <p>You can check the Gcode generation in the viewer/simulator if everythings is
-Ok.  </p>
+Ok. </p>
 
 <h3>Material</h3>
 
 <p>The Operations "Cut Depth" should be be larger than the material thickness.
+</p>
 
 <div class="warning">
 <p><strong>Warning</strong>: Actually no check is performed.</p>
@@ -226,7 +270,7 @@ coordinates. But still the reference is the top-left postion.</p>
 </ul>
 
 <p>In case of Bottom-Left location of the material, the Y size of the material
-is extracted form the svg file: the svg "height" attribute (with units)  </p>
+is extracted form the svg file: the svg "height" attribute (with units) </p>
 
 <h3>GCode Generation</h3>
 
