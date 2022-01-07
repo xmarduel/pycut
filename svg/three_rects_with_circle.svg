@@ -5,23 +5,22 @@
    height="100mm"
    viewBox="0 0 100 100"
    version="1.1">
-
-  <g>
-    <path
-       id="r1"
-       style="opacity:1;fill:#ffff00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none"
-       d="M 20,20 H 60 V 60 H 20 Z" />
-    <path
-       id="r2"
-       style="opacity:1;fill:#00ff00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none"
-       d="M 40,40 H 80 V 80 H 40 Z" />
-    <path
-       id="r3"
-       style="opacity:1;fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none"
-       d="m 60,60 h 40 v 40 H 60 Z" />
-    <path
-       id="c1"
-       style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.381893;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
-       d="M 70,75 A 25,25 0 0 1 45,100 25,25 0 0 1 20,75 25,25 0 0 1 45,50 25,25 0 0 1 70,75 Z" />
+   <g>
+      <path
+         id="r1"
+         style="opacity:1;fill:#ffff00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none"
+         d="M 20,20 H 60 V 60 H 20 Z" />
+      <path
+         id="r2"
+         style="opacity:1;fill:#00ff00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none"
+         d="M 40,40 H 80 V 80 H 40 Z" />
+      <path
+         id="r3"
+         style="opacity:1;fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none"
+         d="m 60,60 h 40 v 40 H 60 Z" />
+      <path
+         id="c1"
+         style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.381893;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
+         d="M 70,75 A 25,25 0 0 1 45,100 25,25 0 0 1 20,75 25,25 0 0 1 45,50 25,25 0 0 1 70,75 Z" />
   </g>
 </svg>
