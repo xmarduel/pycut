@@ -460,11 +460,6 @@ class CncOp:
         elif cam_op == "Engrave":
             self.cam_paths = cam.engrave(geometry, direction == "Climb")
 
-        #path = ClipperUtils.getSnapPathFromClipperPaths(cam.getClipperPathsFromCamPaths(self.cam_paths), svgModel.pxPerInch)
-        
-        #if path != None and len(path):
-        #    self.toolPathSvg = self.cam_pathsGroup.path(path).attr("class", "toolPath")
-
         for cam_path in self.cam_paths:
             svg_path = SvgPath.fromClipperPath("pycut_toolpath", cam_path.path)
             self.cam_paths_svg_paths.append(svg_path)

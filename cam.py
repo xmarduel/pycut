@@ -313,16 +313,6 @@ class cam:
         return camPaths
 
     @classmethod
-    def getClipperPathsFromCamPaths(cls, cam_paths) :
-        '''
-        Convert array of CamPath to array of Clipper path
-        '''
-        result = []
-        for cam_path in cam_paths:
-            result.append(cam_path.path)
-        return result
-    
-    @classmethod
     def separateTabs(cls, origPath: ClipperLib.IntPointVector, tabs: List['Tab']) -> List[ClipperLib.IntPointVector]:
         '''
         from a "normal" tool path, split this path into a list of "partial" paths
@@ -354,7 +344,7 @@ class cam:
 
         paths = [list(path) for path in splitted_paths ]
         
-        # >>> XAM merge some paths when possible (verflixt!)
+        # >>> XAM merge some paths when possible (because clipper does not do this!)
         paths = cls.mergeCompatiblePaths(paths)
         # <<< XAM
 
@@ -426,7 +416,6 @@ class cam:
             compatibility_table = buildPathsCompatibilityTable(paths)
 
         return paths
-
 
     @classmethod
     def getGcode(cls, args):
