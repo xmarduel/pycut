@@ -19,7 +19,7 @@ svgpathtools ver\
 sion: 1.4.2</str\
 ong></li> \x0d\x0a</ul\
 >\x0d\x0a\
-\x00\x00%\xfb\
+\x00\x00+\xcc\
 <\
 html>\x0a<head>\x0a  <\
 meta http-equiv=\
@@ -226,145 +226,238 @@ cellent (at leas\
 t for beginners)\
  CAM, web-based \
 programm, that t\
-akes as input\x0asv\
-g files and gene\
-rates G-Code. So\
- why this rewrit\
-e ?</p>\x0a\x0a<p>PyCu\
-t aims to offer \
-all the (minimal\
-istics) features\
- found in jsCut,\
- with\x0asome small\
- improvements. H\
-opefully you wil\
-l find PyCut use\
-full when learni\
-ng\x0aCNC and produ\
-cing your first \
-GCode files.</p>\
-\x0a\x0a<p>Starting po\
-int of PyCut are\
- SVG files, your\
- designs. In the\
- following, we\x0aw\
-ill use Inkscape\
- to produce SVG \
-files, and will \
-shortly point ou\
-t what has to\x0abe\
- taken into cons\
-ideration when c\
-reating an \x22usab\
-le\x22 SVG file.</p\
->\x0a\x0a<h3>Inkscape<\
-/h3>\x0a\x0a<p>With In\
-kscape, the firs\
-t step is to spe\
-cify the \x22Docume\
-nt size\x22. Please\
-\x0achoose as units\
- \x22mm\x22, \x22cm\x22 or \x22\
-in\x22. This will b\
-e use later when\
- creating GCode\x0a\
-with the option \
-\x22Zero Lower Left\
- of Material\x22 as\
- reference. This\
- option needs\x0ath\
-e Y size of the \
-material.</p>\x0a\x0a<\
-p>Then, after ha\
-ving creating yo\
-ur design (recta\
-ngles, circles, \
-text etc),\x0aconve\
-rt all the items\
- to \x22paths\x22.</p>\
-\x0a\x0a<p>It has unfo\
-rtunately to be \
-said that it is \
-a bit annoying t\
-o have to keep 2\
-\x0aversions of you\
-r design, the fi\
-rst one as stand\
-ard svg, the sec\
-ond one as a\x0atra\
-nsformed, \x22paths\
-\x22 version. This \
-is because PyCut\
- can only work w\
-ith\x0a\x22paths\x22.</p>\
-\x0a\x0a<p>Could PyCut\
- work with the o\
-riginal, non-\x22pa\
-ths\x22 version of \
-the SVG ? Well i\
-t\x0atheorically co\
-uld, if PyCut wa\
-s able internall\
-y to perform thi\
-s transformation\
-.\x0aThere is indee\
-d an external In\
-kscape script \x22t\
-o paths\x22 that co\
-uld be used. But\
-\x0athis will be fo\
-r version 2 of P\
-yCut.</p>\x0a\x0a<p>In\
-fact, actually t\
-he user can edit\
- per hand the \x22p\
-aths\x22 version, c\
-lean the\x0asvg of \
-all Inkscape stu\
-ff and give mean\
-ingfull ids to t\
-he paths: these \
-\x22ids\x22\x0aallow the \
-user to recogniz\
-e the paths that\
- will be selecte\
-d for the CAM\x0aop\
-erations later o\
-n. </p>\x0a<!-- ---\
+akes as input\x0a<s\
+trong>SVG</stron\
+g> files and gen\
+erates G-Code. S\
+o why this rewri\
+te ?</p>\x0a\x0a<p><st\
+rong>PyCut</stro\
+ng> aims to offe\
+r all the (minim\
+alistics) featur\
+es found\x0ain jsCu\
+t, with some sma\
+ll improvements.\
+ Hopefully you w\
+ill find\x0a<strong\
+>PyCut</strong> \
+usefull when lea\
+rning CNC and pr\
+oducing your fir\
+st GCode\x0afiles.<\
+/p>\x0a\x0a<p>Starting\
+ point of <stron\
+g>PyCut</strong>\
+ are <strong>SVG\
+</strong> files,\
+\x0ayour designs. I\
+n the following,\
+ we will use <st\
+rong>Inkscape</s\
+trong> to\x0aproduc\
+e <strong>SVG</s\
+trong> files, an\
+d will shortly p\
+oint out what ha\
+s to be\x0ataken in\
+to consideration\
+ when creating \x22\
+usable\x22 <strong>\
+SVG</strong> fil\
+es.</p>\x0a\x0a<h3>SVG\
+</h3>\x0a\x0a<h4>Shape\
+s</h4>\x0a\x0a<p>The S\
+VG standard is l\
+arge, and <stron\
+g>PyCut</strong>\
+ cannot simply r\
+ead a\x0asvg file, \
+display it, and \
+allow the user t\
+o define cnc ope\
+rations on the\x0a\x22\
+shapes\x22 defined \
+inside the svg f\
+ile. Of course, \
+the goal of\x0a<str\
+ong>PyCut</stron\
+g> is to process\
+ as many svg dat\
+a as possible.</\
+p>\x0a\x0a<p>The shape\
+s inside a svg f\
+ile are the foll\
+owing:</p>\x0a<ul>\x0a\
+  <li>&lt;path&g\
+t;</li>\x0a  <li>&l\
+t;rect&gt;</li>\x0a\
+  <li>&lt;circle\
+&gt;</li>\x0a  <li>\
+&lt;ellipse&gt;<\
+/li>\x0a  <li>&lt;p\
+olygon&gt;</li>\x0a\
+  <li>&lt;line&g\
+t;</li>\x0a  <li>&l\
+t;polyline&gt;</\
+li>\x0a</ul>\x0a\x0a<p>Mo\
+reover, the user\
+ will also want \
+to process the s\
+trings written i\
+n the svg\x0afile:<\
+/p>\x0a<ul>\x0a  <li>&\
+lt;text&gt;</li>\
+\x0a</ul>\x0a\x0a<p>Becau\
+se <strong>PyCut\
+</strong> finall\
+y processes \x22pat\
+hs\x22 in order to\x0a\
+calculate cnc pa\
+ths, these shape\
+s have to be int\
+erpreted first a\
+s svg\x0a&lt;path&g\
+t;.</p>\x0a\x0a<p>The \
+first possibilit\
+y is to convert \
+all the shapes a\
+nd text (strings\
+) found\x0ain your \
+data into &lt;pa\
+th&gt; shapes on\
+ly, and then imp\
+ort this &lt;pat\
+h&gt;\x0aonly svg f\
+ile into <strong\
+>PyCut</strong>.\
+</p>\x0a\x0a<p>The sec\
+ond possibility \
+is to convert th\
+e &lt;text&gt; s\
+trings in\x0a&lt;pa\
+th&gt; shapes, b\
+ecause <strong>P\
+yCut</strong> ac\
+tually can inter\
+nally\x0aconvert th\
+e other shapes i\
+nto &lt;path&gt;\
+ shapes.</p>\x0a\x0a<h\
+4>Shapes \x22id\x22</h\
+4>\x0a\x0a<p>In order \
+to reference the\
+ shapes, these s\
+hapes must have \
+an \x22id\x22, hopeful\
+ly\x0aunique inside\
+ the svg documen\
+t. If the user h\
+as produced the \
+svg \x22per hand\x22,\x0a\
+then he should n\
+ot forget to giv\
+e all shapes an \
+unique id. If th\
+e user has\x0aprodu\
+ced the svg with\
+ <strong>Inkscap\
+e</strong>, then\
+ \x22ids\x22 are autom\
+atically given,\x0a\
+but maybe the us\
+er will want to \
+edit them and gi\
+ve them meaningf\
+ull\x0acontent.</p>\
+\x0a\x0a<h4>Transforma\
+tions</h4>\x0a\x0a<p>I\
+t is usual to tr\
+anslate, rotate,\
+ scale and skew \
+the shapes. Unfo\
+rtunately,\x0a<stro\
+ng>PyCut</strong\
+> cannot handle \
+these transforma\
+tions. If the us\
+er has\x0aused such\
+ transformations\
+, then it is pos\
+sible inside Ink\
+scape to \x22resolv\
+e\x22 the\x0atransform\
+ation: just \x22ung\
+roup\x22 and then \x22\
+group\x22 again the\
+ desired shapes.\
+ During\x0athis pro\
+cess, the shapes\
+ will be convert\
+ into a &lt;path\
+&gt; shapes.</p>\
+\x0a\x0a<h3>Inkscape</\
+h3>\x0a\x0a<p>With Ink\
+scape, the first\
+ step is to spec\
+ify the \x22Documen\
+t size\x22. Please\x0a\
+choose as units \
+\x22mm\x22, \x22cm\x22 or \x22i\
+n\x22. This will be\
+ use later when \
+creating GCode\x0aw\
+ith the option \x22\
+Zero Lower Left \
+of Material\x22 as \
+reference. This \
+option needs\x0athe\
+ Y size of the m\
+aterial.</p>\x0a\x0a<p\
+>Then, after hav\
+ing creating you\
+r design (rectan\
+gles, circles, t\
+ext etc),\x0aconver\
+t all the &lt;te\
+xt&gt; items to \
+\x22paths\x22.</p>\x0a<!-\
+- --------------\
 ----------------\
 ----------------\
 ----------------\
 ----------------\
 ----------------\
-----------------\
--------->\x0a<!-- -\
-----------------\
-----------------\
+------------->\x0a<\
+!-- ------------\
 ----------------\
 ----------------\
 ----------------\
 ----------------\
----------->\x0a\x0a<h2\
- id=\x22P-02\x22>Basic\
- example</h2>\x0a\x0a<\
-h3>Importing a S\
-VG file</h3>\x0a\x0a<p\
->So import the \x22\
-paths\x22 version o\
-f your svg: The \
-SVG content shou\
-ld be\x0adisplayed \
-in the central a\
-rea. </p>\x0a\x0a<div \
-class=\x22info\x22>\x0a<p\
-><strong>Note:</\
-strong> only the\
- paths are displ\
-ayed. If you loa\
-d a file without\
- paths, nothing \
-will be displaye\
-d.</p>\x0a</div>\x0a\x0a<\
+----------------\
+--------------->\
+\x0a\x0a<h2 id=\x22P-02\x22>\
+Basic example</h\
+2>\x0a\x0a<h3>Importin\
+g a SVG file</h3\
+>\x0a\x0a<p>So import \
+your svg into <s\
+trong>PyCut</str\
+ong>: The SVG co\
+ntent should be\x0a\
+displayed in the\
+ central area. <\
+/p>\x0a\x0a<div class=\
+\x22info\x22>\x0a<p><stro\
+ng>Note:</strong\
+> text is not di\
+splayed. It has \
+to be converted \
+as\x0a&lt;path&gt; \
+in order to be p\
+rocesed by <stro\
+ng>PyCut</strong\
+>.</p>\x0a</div>\x0a\x0a<\
 h3>Creating a Py\
 Cut Job</h3>\x0a\x0a<p\
 >Then create a n\
@@ -378,8 +471,8 @@ ll be created fo\
 r this specific \
 svg file,\x0aand al\
 l the settings r\
-elavant when gen\
-erating g-Code.<\
+elevant when gen\
+erating g-code.<\
 /p>\x0a\x0a<p>Later, a\
 fter having save\
 d the job, it wi\
@@ -488,147 +581,147 @@ bs</h3>\x0a\x0a<p>It's\
 tabs with <stron\
 g>PyCut</strong>\
 : just click the\
-\x0apushbutton \x22Cre\
-ate Tab\x22 and a r\
-ed circle is cre\
-ated in the svg,\
- of radius 5 and\
-\x0aposition (10,10\
-). The user can \
-drag 'n drop it \
-fron the svg vie\
-wer, or set its\x0a\
-size/postion in \
-the tab table. Y\
-es tabs, for sim\
-plicity, are cir\
-cle. To be\x0aeffec\
-tive, the tab ha\
-s to be enabled \
-and of course pl\
-aced somewhere o\
-n the\x0agenerated \
-toolpaths. The h\
-eight of the tab\
- is shared by al\
-l tabs.</p>\x0a\x0a<p>\
-You can check th\
-e Gcode generati\
-on in the viewer\
-/simulator if ev\
-erythings is\x0aOk.\
-  </p>\x0a\x0a<h3>Mate\
-rial</h3>\x0a\x0a<p>Th\
-e Operations \x22Cu\
-t Depth\x22 should \
-be be larger tha\
-n the material t\
-hickness.\x0a\x0a<div \
-class=\x22warning\x22>\
-\x0a<p><strong>Warn\
-ing</strong>: Ac\
-tually no check \
-is performed.</p\
->\x0a</div>\x0a\x0a<h3>Cu\
-rve to Line Conv\
-ersion</h3>\x0a\x0a<p>\
-If your design c\
-ontain curves (s\
-vg \x22arcs\x22 or \x22be\
-zier\x22 curves), t\
-hey have to\x0abe d\
-iscretized in sm\
-all segments.</p\
->\x0a\x0a<p>The 2 foll\
-owing parameters\
- allow to specif\
-ied how fine the\
- curve\x0adiscretiz\
-ation will be</p\
->\x0a<ul>\x0a  <li>Min\
-imun number of s\
-egments</li>\x0a  <\
-li>Segment lengh\
-t</li>\x0a</ul>\x0a\x0a<h\
-3>GCode Conversi\
-on</h3>\x0a\x0a<p>The \
-starting locatio\
-n of a milling o\
-peration is give\
-n by the initial\
-\x0alocation in the\
- GCode. Per defa\
-ult, PyCut gives\
- as starting poi\
-nt the (0,0)\x0acoo\
-rdinates of the \
-SVG file, which \
-is located at th\
-e top-left of th\
-e material.\x0aThis\
- is SVG conventi\
-on.</p>\x0a\x0a<p>But \
-the GCode genera\
-tion will of cou\
-rse invert the d\
-irection of the \
-Y axis\x0acoordinat\
-es. But still th\
-e reference is t\
-he top-left post\
-ion.</p>\x0a\x0a<p>It \
-is possible to c\
-hange the refere\
-nce location of \
-the generated GC\
-ode</p>\x0a<ul>\x0a  <\
-li>Bottom-Left l\
-ocation of the m\
-aterial</li>\x0a  <\
-li>Bottom-Left l\
-ocation of the G\
-code area</li>\x0a \
- <li>Center of t\
-he Gcode area</l\
-i>\x0a</ul>\x0a\x0a<p>In \
-case of Bottom-L\
-eft location of \
-the material, th\
-e Y size of the \
-material\x0ais extr\
-acted form the s\
-vg file: the svg\
- \x22height\x22 attrib\
-ute (with units)\
-  </p>\x0a\x0a<h3>GCod\
-e Generation</h3\
->\x0a\x0a<p>Some usefu\
-l options can be\
- set up:</p>\x0a<ul\
->\x0a  <li>Return a\
-t initial locati\
-on at end of the\
- Job</li>\x0a  <li>\
-Spindle Start/St\
-op (M3/M5 codes)\
-</li>\x0a  <li>M2 c\
-ode</li>\x0a</ul>\x0a<\
-!-- ------------\
-----------------\
-----------------\
-----------------\
-----------------\
-----------------\
---------------->\
-\x0a<!-- ----------\
+ button\x0a\x22Create \
+Tab\x22 and a red c\
+ircle is created\
+ in the svg, of \
+radius 5 and pos\
+ition\x0a(10,10). T\
+he user can drag\
+ 'n drop it fron\
+ the svg viewer,\
+ or set its\x0asize\
+/postion in the \
+tab table. Yes t\
+abs, for simplic\
+ity, are circle.\
+ To be\x0aeffective\
+, the tabs have \
+to be enabled an\
+d of course plac\
+ed somewhere on \
+the\x0agenerated to\
+olpaths. The hei\
+ght of the tab i\
+s shared by all \
+tabs.</p>\x0a\x0a<p>Yo\
+u can check the \
+Gcode generation\
+ in the viewer/s\
+imulator if ever\
+ythings is\x0aOk. <\
+/p>\x0a\x0a<h3>Materia\
+l</h3>\x0a\x0a<p>The O\
+perations \x22Cut D\
+epth\x22 should be \
+be larger than t\
+he material thic\
+kness.\x0a</p>\x0a\x0a<di\
+v class=\x22warning\
+\x22>\x0a<p><strong>Wa\
+rning</strong>: \
+Actually no chec\
+k is performed.<\
+/p>\x0a</div>\x0a\x0a<h3>\
+Curve to Line Co\
+nversion</h3>\x0a\x0a<\
+p>If your design\
+ contain curves \
+(svg \x22arcs\x22 or \x22\
+bezier\x22 curves),\
+ they have to\x0abe\
+ discretized in \
+small segments.<\
+/p>\x0a\x0a<p>The 2 fo\
+llowing paramete\
+rs allow to spec\
+ified how fine t\
+he curve\x0adiscret\
+ization will be<\
+/p>\x0a<ul>\x0a  <li>M\
+inimun number of\
+ segments</li>\x0a \
+ <li>Segment len\
+ght</li>\x0a</ul>\x0a\x0a\
+<h3>GCode Conver\
+sion</h3>\x0a\x0a<p>Th\
+e starting locat\
+ion of a milling\
+ operation is gi\
+ven by the initi\
+al\x0alocation in t\
+he GCode. Per de\
+fault, PyCut giv\
+es as starting p\
+oint the (0,0)\x0ac\
+oordinates of th\
+e SVG file, whic\
+h is located at \
+the top-left of \
+the material.\x0aTh\
+is is SVG conven\
+tion.</p>\x0a\x0a<p>Bu\
+t the GCode gene\
+ration will of c\
+ourse invert the\
+ direction of th\
+e Y axis\x0acoordin\
+ates. But still \
+the reference is\
+ the top-left po\
+stion.</p>\x0a\x0a<p>I\
+t is possible to\
+ change the refe\
+rence location o\
+f the generated \
+GCode</p>\x0a<ul>\x0a \
+ <li>Bottom-Left\
+ location of the\
+ material</li>\x0a \
+ <li>Bottom-Left\
+ location of the\
+ Gcode area</li>\
+\x0a  <li>Center of\
+ the Gcode area<\
+/li>\x0a</ul>\x0a\x0a<p>I\
+n case of Bottom\
+-Left location o\
+f the material, \
+the Y size of th\
+e material\x0ais ex\
+tracted form the\
+ svg file: the s\
+vg \x22height\x22 attr\
+ibute (with unit\
+s) </p>\x0a\x0a<h3>GCo\
+de Generation</h\
+3>\x0a\x0a<p>Some usef\
+ul options can b\
+e set up:</p>\x0a<u\
+l>\x0a  <li>Return \
+at initial locat\
+ion at end of th\
+e Job</li>\x0a  <li\
+>Spindle Start/S\
+top (M3/M5 codes\
+)</li>\x0a  <li>M2 \
+code</li>\x0a</ul>\x0a\
+<!-- -----------\
 ----------------\
 ----------------\
 ----------------\
 ----------------\
 ----------------\
 ----------------\
-->\x0a</div>\x0a</body\
->\x0a</html>\x0a\
+>\x0a<!-- ---------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+-->\x0a</div>\x0a</bod\
+y>\x0a</html>\x0a\
 \x00\x00\x06\xb2\
 \x0d\
 \x0a\x0d\x0a\x0d\x0apre[class*=\
@@ -69228,35 +69321,35 @@ qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x01\x8a\x00\x02\x00\x00\x00\x03\x00\x00\x00\x09\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x01\x96\x00\x00\x00\x00\x00\x01\x00\x07\xa8\x12\
+\x00\x00\x01\x96\x00\x00\x00\x00\x00\x01\x00\x07\xad\xe3\
 \x00\x00\x01K3`o\x88\
-\x00\x00\x01\xc2\x00\x00\x00\x00\x00\x01\x00\x08\xf1+\
+\x00\x00\x01\xc2\x00\x00\x00\x00\x00\x01\x00\x08\xf6\xfc\
 \x00\x00\x01K3`o\x88\
-\x00\x00\x01\xe4\x00\x01\x00\x00\x00\x01\x00\x09\x07H\
+\x00\x00\x01\xe4\x00\x01\x00\x00\x00\x01\x00\x09\x0d\x19\
 \x00\x00\x01K3`o\x88\
-\x00\x00\x00\xe0\x00\x00\x00\x00\x00\x01\x00\x07\x97\x97\
+\x00\x00\x00\xe0\x00\x00\x00\x00\x00\x01\x00\x07\x9dh\
 \x00\x00\x01x\x9b\xca\x84\xa3\
 \x00\x00\x00V\x00\x02\x00\x00\x00\x01\x00\x00\x00\x0e\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x026\x00\x00\x00\x00\x00\x01\x00\x10\x8d-\
+\x00\x00\x026\x00\x00\x00\x00\x00\x01\x00\x10\x92\xfe\
 \x00\x00\x01}Bq\x994\
-\x00\x00\x02\x16\x00\x01\x00\x00\x00\x01\x00\x09%7\
+\x00\x00\x02\x16\x00\x01\x00\x00\x00\x01\x00\x09+\x08\
 \x00\x00\x01K3`o\x88\
-\x00\x00\x01h\x00\x00\x00\x00\x00\x01\x00\x09=\xb0\
+\x00\x00\x01h\x00\x00\x00\x00\x00\x01\x00\x09C\x81\
 \x00\x00\x01x\x9b\xca\x84\xa3\
 \x00\x00\x02x\x00\x02\x00\x00\x00\x02\x00\x00\x00\x18\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x02\x88\x00\x02\x00\x00\x00\x05\x00\x00\x00\x13\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x02\xea\x00\x00\x00\x00\x00\x01\x00\x10\xb1\xc4\
+\x00\x00\x02\xea\x00\x00\x00\x00\x00\x01\x00\x10\xb7\x95\
 \x00\x00\x01}\xf6k\xf2U\
-\x00\x00\x02\xb6\x00\x00\x00\x00\x00\x01\x00\x10\xadJ\
+\x00\x00\x02\xb6\x00\x00\x00\x00\x00\x01\x00\x10\xb3\x1b\
 \x00\x00\x01}\xf6k\xf2\x80\
-\x00\x00\x03\x0a\x00\x00\x00\x00\x00\x01\x00\x10\xb4.\
+\x00\x00\x03\x0a\x00\x00\x00\x00\x00\x01\x00\x10\xb9\xff\
 \x00\x00\x01}\xf6k\xf2\xcc\
-\x00\x00\x02\xd4\x00\x00\x00\x00\x00\x01\x00\x10\xaf\xc2\
+\x00\x00\x02\xd4\x00\x00\x00\x00\x00\x01\x00\x10\xb5\x93\
 \x00\x00\x01}\xf6k\xf2(\
-\x00\x00\x02\x9a\x00\x00\x00\x00\x00\x01\x00\x10\xaa\xdc\
+\x00\x00\x02\x9a\x00\x00\x00\x00\x00\x01\x00\x10\xb0\xad\
 \x00\x00\x01}\xf6k\xf2\xab\
 \x00\x00\x032\x00\x02\x00\x00\x00\x01\x00\x00\x00\x1c\
 \x00\x00\x00\x00\x00\x00\x00\x00\
@@ -69264,41 +69357,41 @@ qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x03\xd2\x00\x02\x00\x00\x00\x01\x00\x00\x00\x1b\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x03\xec\x00\x00\x00\x00\x00\x01\x00\x10\xcd5\
+\x00\x00\x03\xec\x00\x00\x00\x00\x00\x01\x00\x10\xd3\x06\
 \x00\x00\x01}\x1b=\x82\xad\
 \x00\x00\x03B\x00\x02\x00\x00\x00\x04\x00\x00\x00\x1d\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x03\xba\x00\x00\x00\x00\x00\x01\x00\x10\xc9\xc4\
+\x00\x00\x03\xba\x00\x00\x00\x00\x00\x01\x00\x10\xcf\x95\
 \x00\x00\x01}\x1b=\x82[\
-\x00\x00\x03V\x00\x00\x00\x00\x00\x01\x00\x10\xbc%\
+\x00\x00\x03V\x00\x00\x00\x00\x00\x01\x00\x10\xc1\xf6\
 \x00\x00\x01}\x1b=\x82K\
-\x00\x00\x03\x94\x00\x00\x00\x00\x00\x01\x00\x10\xc4l\
+\x00\x00\x03\x94\x00\x00\x00\x00\x00\x01\x00\x10\xca=\
 \x00\x00\x01}\x1b=\x82[\
-\x00\x00\x03r\x00\x00\x00\x00\x00\x01\x00\x10\xbf\x93\
+\x00\x00\x03r\x00\x00\x00\x00\x00\x01\x00\x10\xc5d\
 \x00\x00\x01}\x1b=\x82K\
-\x00\x00\x02V\x00\x01\x00\x00\x00\x01\x00\x10\x9a\x10\
+\x00\x00\x02V\x00\x01\x00\x00\x00\x01\x00\x10\x9f\xe1\
 \x00\x00\x01n\xe0\x1e\xf6\xe0\
 \x00\x00\x00V\x00\x02\x00\x00\x00\x01\x00\x00\x00,\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00\x9a\x00\x02\x00\x00\x00\x06\x00\x00\x00&\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00z\x00\x00\x00\x00\x00\x01\x00\x00\x00\xa8\
-\x00\x00\x01~ \xc7B9\
+\x00\x00\x01~4Q\xea{\
 \x00\x00\x00`\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
 \x00\x00\x01~\x1axN\xa4\
-\x00\x00\x00\xe0\x00\x00\x00\x00\x00\x01\x00\x00/\xdc\
+\x00\x00\x00\xe0\x00\x00\x00\x00\x00\x01\x00\x005\xad\
 \x00\x00\x01x\x92\x0f\xed\x09\
-\x00\x00\x01B\x00\x00\x00\x00\x00\x01\x00\x00Eh\
+\x00\x00\x01B\x00\x00\x00\x00\x00\x01\x00\x00K9\
 \x00\x00\x01{\xd9\xc1Q(\
-\x00\x00\x00\xf8\x00\x00\x00\x00\x00\x01\x00\x00@W\
+\x00\x00\x00\xf8\x00\x00\x00\x00\x00\x01\x00\x00F(\
 \x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x01 \x00\x00\x00\x00\x00\x01\x00\x00B\xfb\
+\x00\x00\x01 \x00\x00\x00\x00\x00\x01\x00\x00H\xcc\
 \x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x00\xbe\x00\x00\x00\x00\x00\x01\x00\x00-]\
+\x00\x00\x00\xbe\x00\x00\x00\x00\x00\x01\x00\x003.\
 \x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x00\xa6\x00\x00\x00\x00\x00\x01\x00\x00&\xa7\
+\x00\x00\x00\xa6\x00\x00\x00\x00\x00\x01\x00\x00,x\
 \x00\x00\x01~ \xc4\x8a\x80\
-\x00\x00\x01h\x00\x00\x00\x00\x00\x01\x00\x00H\x1a\
+\x00\x00\x01h\x00\x00\x00\x00\x00\x01\x00\x00M\xeb\
 \x00\x00\x01x\x92\x0f\xed\x12\
 "
 
