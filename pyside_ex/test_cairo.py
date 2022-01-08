@@ -26,3 +26,4 @@ ctx.set_line_width(1.5)
 ctx.stroke()
 
 surface.write_to_png("/tmp/out.png")
+
