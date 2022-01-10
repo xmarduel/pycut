@@ -8,7 +8,6 @@ import freetype
 from svgpathtools import wsvg, Line, QuadraticBezier, Path
 
 
-
    
 class Char2SvgPath:
     '''
@@ -33,12 +32,12 @@ class Char2SvgPath:
         self.face = freetype.Face(self.font)
 
         # values for y-flip
-        self.char_top = 0
-        self.top = 0
+        self.char_top = float(99999)
+        self.top = float(99999)
 
         # values for x-translation
-        self.char_leftmargin = 0
-        self.leftmargin = 0
+        self.char_leftmargin = float(99999)
+        self.leftmargin = float(99999)
 
         '''
         The character widths and heights are specified in 1/64th of points. 
@@ -75,7 +74,7 @@ class Char2SvgPath:
     def set_top(self, top):
         self.top  = top
 
-    def eval_top(self):
+    def eval_top(self) -> float:
         '''
         '''
         outline : freetype.Outline = self.face.glyph.outline
@@ -85,7 +84,12 @@ class Char2SvgPath:
         self.char_top = max(y)
         self.top = max(y)
 
-    def eval_leftmargin(self):
+        return self.char_top
+
+    def set_leftmargin(self, leftmargin):
+        self.leftmargin  = leftmargin
+
+    def eval_leftmargin(self) -> float:
         '''
         '''
         outline : freetype.Outline = self.face.glyph.outline
@@ -94,6 +98,8 @@ class Char2SvgPath:
 
         self.char_leftmargin = min(x)
         self.leftmargin = min(x)
+
+        return self.char_leftmargin
 
     def get_kerning(self, prev):
         '''
@@ -118,10 +124,10 @@ class Char2SvgPath:
             return t[0] + t[1] * 1j
 
         
-        if self.top == 0:
+        if self.top == float(99999):
             self.eval_top()
 
-        if self.leftmargin == 0:
+        if self.leftmargin == float(99999):
             self.eval_leftmargin()
 
         top = self.top
@@ -323,10 +329,77 @@ class String2SvgPaths:
         self.text = text
         self.font = font
 
+        self.top = 0
+        self.leftmargin = 0
+
+        self.paths : List[Path] = []
+
+    def calc_top(self):
+        top = 0
+        for ch in self.text:
+            o = Char2SvgPath(ch, self.font)
+            o_top = o.eval_top()
+
+            top = max(top, o_top)
+        
+        self.top = top
+
+    def calc_leftmargin(self):
+        o = Char2SvgPath(self.text[0], self.font)
+
+        self.leftmargin = o.eval_leftmargin()
+    
     def calc_paths(self, fontsize: float) -> List[Path]:
         '''
         '''
-        return []
+        self.calc_leftmargin()
+        self.calc_top()
+
+        paths = []
+
+        for ch in self.text:
+            o = Char2SvgPath(ch, self.font)
+            o.set_top(self.top)
+            o.set_leftmargin(self.leftmargin)
+           
+            paths.append(o.calc_path(fontsize))
+
+        # now, all paths have to be shifted on the right with cumulativ values
+        # the first one is Ok
+        self.paths .append(paths[0])
+
+        # TODO: find the right shift
+        shift = 2048 * fontsize / Char2SvgPath.CHAR_SIZE
+        for path in paths[1:]:
+            path = path.translated(shift)
+            self.paths.append(path)
+            shift += 2048 * fontsize / Char2SvgPath.CHAR_SIZE
+
+        return self.paths
+
+    def write_paths(self):
+        paths = ""
+        for path in self.paths:
+            paths += '        <path d="%s" />\n' % path.d()
+
+        fp = open("text2paths_%s_convert.svg" % self.text, "w")
+
+        fp.write("""<?xml version="1.0" ?>
+<svg xmlns="http://www.w3.org/2000/svg" 
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink" 
+    height="600mm" 
+    width="600mm"
+    version="1.1" 
+    viewBox="0 0 600 600">
+    <g
+        id="text1437"
+        style="fill:#ff2222:fill-opacity:0.5;font-size:10.5833px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial, Normal';stroke-width:0.264583">
+%s
+    </g>
+</svg>  """ % paths)
+
+        fp.close()
 
     
 
@@ -339,8 +412,14 @@ if __name__ == '__main__':
     o = Char2SvgPath(char, font)
 
     # per freetype decompose -----------------------------------
-    svg = o.freetype_decompose()
+    #svg = o.freetype_decompose()
 
     # convert per hand, shifting x and flipping y --------------
     o.calc_path(fontsize)
     o.write_path()
+
+
+    oo = String2SvgPaths("Bac", font)
+    # convert per hand, shifting x and flipping y --------------
+    oo.calc_paths(fontsize)
+    oo.write_paths()
