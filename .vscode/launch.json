@@ -41,6 +41,15 @@
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodeviewer",
             "args": []
+        },
+        {
+            "name": "FREETYPE",
+            "type": "python",
+            "request": "launch",
+            "program": "text_to_path.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\pyside_ex",
+            "args": []
         }
     ]
 }
