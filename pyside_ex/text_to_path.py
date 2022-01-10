@@ -1,9 +1,9 @@
 '''
+This is a attempt to convert svt text to svg path...
 '''
 from typing import List
 
 import freetype
-from freetype.ft_structs import FT_BBox
 
 from svgpathtools import wsvg, Line, QuadraticBezier, Path
 
@@ -15,6 +15,9 @@ class Char2SvgPath:
     # https://github.com/rougier/freetype-py/releases
     # https://github.com/rougier/freetype-py/blob/master/examples/glyph-vector-decompose.py
     '''
+
+    CHAR_SIZE = 2048
+
     def __init__(self, char: str, font: str):
         '''
         fonts
@@ -28,10 +31,35 @@ class Char2SvgPath:
 
         # load font
         self.face = freetype.Face(self.font)
-        self.face.set_char_size(48 * 64)
 
-        # initialize a chareacter
-        self.face.load_char(self.char, freetype.FT_LOAD_DEFAULT | freetype.FT_LOAD_NO_BITMAP)
+        # values for y-flip
+        self.char_top = 0
+        self.top = 0
+
+        # values for x-translation
+        self.char_leftmargin = 0
+        self.leftmargin = 0
+
+        '''
+        The character widths and heights are specified in 1/64th of points. 
+        A point is a physical distance, equaling 1/72th of an inch. Normally, it is not equivalent to a pixel.
+        Value of 0 for the character width means ‘same as character height’, 
+        value of 0 for the character height means ‘same as character width’. 
+        
+        Otherwise, it is possible to specify different character widths and heights.
+        The horizontal and vertical device resolutions are expressed in dots-per-inch, or dpi. 
+        Standard values are 72 or 96 dpi for display devices like the screen. 
+        The resolution is used to compute the character pixel size from the character point size.
+        Value of 0 for the horizontal resolution means ‘same as vertical resolution’, 
+        value of 0 for the vertical resolution means ‘same as horizontal resolution’. 
+        
+        If both values are zero, 72 dpi is used for both dimensions.
+        '''
+
+        self.face.set_char_size(self.CHAR_SIZE, self.CHAR_SIZE) # -> x_ppem = y_ppem = 32
+
+        # initialize a character - option FT_LOAD_NO_SCALE mandatory
+        self.face.load_char(self.char, freetype.FT_LOAD_NO_SCALE | freetype.FT_LOAD_NO_BITMAP)
 
         # to eval
         self.path = None
@@ -44,28 +72,64 @@ class Char2SvgPath:
 
         return outline.get_bbox()
 
-    def offset_from(self, prev):
+    def set_top(self, top):
+        self.top  = top
+
+    def eval_top(self):
+        '''
+        '''
+        outline : freetype.Outline = self.face.glyph.outline
+
+        y = [t[1] for t in outline.points]
+
+        self.char_top = max(y)
+        self.top = max(y)
+
+    def eval_leftmargin(self):
+        '''
+        '''
+        outline : freetype.Outline = self.face.glyph.outline
+
+        x = [t[0] for t in outline.points]
+
+        self.char_leftmargin = min(x)
+        self.leftmargin = min(x)
+
+    def get_kerning(self, prev):
         '''
         We’ll be converting a string character by character. 
         After converting this character to a path, you use the same method to convert the next character to a path,
         offset by the kerning:
         '''
-        o = Char2SvgPath(prev, self.font)
-        o_bbox = o.get_bbox()
+        #o = Char2SvgPath(prev, self.font)
+        #o_bbox = o.get_bbox()
 
         vector =  self.face.get_kerning(prev, self.char)
     
         print(dir(vector))
     
-        print("distance between %s and %s: x=%f  y=%f" % (prev, self.char, o_bbox.xMax + vector.x, o_bbox.yMin + vector.y))
+        print("kerning between %s and %s: x=%f  y=%f" % (prev, self.char, vector.x,  vector.y))
         
-        
-    def convert(self) -> Path:
+    def calc_path(self, fontsize: float) -> Path:
         '''
+        fontsize: svg font-size in px
         '''
         def tuple2imag(t):
             return t[0] + t[1] * 1j
 
+        
+        if self.top == 0:
+            self.eval_top()
+
+        if self.leftmargin == 0:
+            self.eval_leftmargin()
+
+        top = self.top
+        leftmargin = self.leftmargin
+
+        # extra scaling
+        scaling = fontsize / self.CHAR_SIZE
+        
         '''
         You’ll need to flip the y values of the points in order to render
         the characters right-side-up:
@@ -73,9 +137,8 @@ class Char2SvgPath:
         outline : freetype.Outline = self.face.glyph.outline
 
 
-        y = [t[1] for t in outline.points]
-        # flip the points
-        outline_points = [(p[0], max(y) - p[1]) for p in outline.points]
+        # shift and flip the points
+        outline_points = [ ((pt[0] - leftmargin) * scaling, (top - pt[1]) * scaling) for pt in outline.points ]
 
         '''
         The face has three lists of interest: the points, the tags, and the contours. 
@@ -169,7 +232,30 @@ class Char2SvgPath:
                     paths.append(QuadraticBezier(start=tuple2imag(P4), control=tuple2imag(C45), end=tuple2imag(P5)))
 
                 else:
-                    pass
+                    # with algo
+
+                    # first
+                    Ps = segment[0]
+                    Ctrl = segment[1]
+                    Pe = ((segment[1][0] + segment[2][0]) / 2.0, (segment[1][1] + segment[2][1]) / 2.0)
+
+                    paths.append(QuadraticBezier(start=tuple2imag(Ps), control=tuple2imag(Ctrl), end=tuple2imag(Pe)))
+
+                    # second - ...
+                    for k in range(2,len(segment)-2):
+                        Ps = ((segment[k-1][0] + segment[k  ][0]) / 2.0, (segment[k-1][1] + segment[k  ][1]) / 2.0)
+                        Ctrl = segment[k]
+                        Pe = ((segment[k  ][0] + segment[k+1][0]) / 2.0, (segment[k  ][1] + segment[k+1][1]) / 2.0)
+                        
+                        paths.append(QuadraticBezier(start=tuple2imag(Ps), control=tuple2imag(Ctrl), end=tuple2imag(Pe)))
+
+                    # last
+                    N = len(segments) - 1
+                    Ps = ((segment[N-2][0] + segment[N-1][0]) / 2.0, (segment[N-2][1] + segment[N-1][1]) / 2.0)
+                    Ctrl = segment[N-1]
+                    Pe = segment[N]
+
+                    paths.append(QuadraticBezier(start=tuple2imag(Ps), control=tuple2imag(Ctrl), end=tuple2imag(Pe)))
 
             '''
             Set the start location to the end location and continue. 
@@ -177,12 +263,13 @@ class Char2SvgPath:
             '''
             start = end + 1
 
-        self.path = path = Path(*paths)
-        print("hand made path: %s" % path.d())
-        wsvg(path, filename="char2path_convert.svg")
+        self.path = Path(*paths)
 
         return self.path
 
+    def write_path(self):
+        print("hand made path: %s" % self.path.d())
+        wsvg(self.path, filename="char2path_%s_convert.svg" % self.char)
 
     def freetype_decompose(self) -> str:
         '''
@@ -213,7 +300,7 @@ class Char2SvgPath:
                 viewBox="0 0 100 100"
                 version="1.1">
                 <path
-                    transform="scale(0.00338) scale(10)"
+                    transform="translate(-0.82 0) matrix(1,0, 0,-1, 0,7.5857) scale(0.0051677)"
                     style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
                     d="{}"
                 />
@@ -221,7 +308,7 @@ class Char2SvgPath:
 
         print(svg)
 
-        fp = open("char2path_decompose.svg", "w")
+        fp = open("char2path_%s_decompose.svg" % self.char, "w")
         fp.write(svg)
         fp.close()
 
@@ -232,10 +319,11 @@ class Char2SvgPath:
 class String2SvgPaths:
     '''
     '''
-    def __init__(self, the_string: str):
-        self.string = the_string
+    def __init__(self, text: str, font: str):
+        self.text = text
+        self.font = font
 
-    def convert(self) -> List[Path]:
+    def calc_paths(self, fontsize: float) -> List[Path]:
         '''
         '''
         return []
@@ -246,10 +334,13 @@ if __name__ == '__main__':
     char = 'B'
     font = 'C:\\Windows\\Fonts\\arial.ttf'
 
+    fontsize = 10.5833 # px
+
     o = Char2SvgPath(char, font)
 
     # per freetype decompose -----------------------------------
     svg = o.freetype_decompose()
 
-    # convert per hand, flipping y -----------------------------
-    path = o.convert()
+    # convert per hand, shifting x and flipping y --------------
+    o.calc_path(fontsize)
+    o.write_path()
