@@ -1,20 +1,53 @@
 '''
-This is a attempt to convert svt text to svg path...
+This is a attempt to convert svt text to svg path(s)...
 '''
+import glob
+
 from typing import List
+from typing import Tuple
 
 import freetype
 
 from svgpathtools import wsvg, Line, QuadraticBezier, Path
 
 
+class FontFiles:
+    '''
+    Create a dictionary of the type (font-family, font-style) -> font file
+    
+    in order to, from the svg text style font-family/font-style, to
+    retrieve the right font file
+    
+    ex: font-family : Broadway
+        font-style  : normal            -> 'C:\\Windows\\Fonts\\BROADW.TTF'
+
+    PS: from Inkscape, there is also the following:
+    
+    -inkscape-font-specification:'Broadway, Normal'  --- can I use it ?
+
+    
+    '''
+    lookup = {}
+
+    @classmethod
+    def setupFonts(cls):
+        '''
+        look into the C:\\Windows\\Fonts folder and fill the lookup
+        '''
+        ttfs = glob.glob("C:\\Windows\\Fonts\\*.ttf")
+
+        for ttf in ttfs:
+            face = freetype.Face(ttf)
+            style = face.style_name
+            family = face.postscript_name
+
+            cls.lookup[(family, style)] = ttf
+
+    
    
 class Char2SvgPath:
     '''
-    # https://github.com/rougier/freetype-py/releases
-    # https://github.com/rougier/freetype-py/blob/master/examples/glyph-vector-decompose.py
     '''
-
     CHAR_SIZE = 2048
 
     def __init__(self, char: str, font: str):
@@ -24,6 +57,7 @@ class Char2SvgPath:
          - './fonts/ziggy/ZIGGS___.TTF'
          - './fonts/slaine/SLAINE.TTF'
          - 'C:\\Windows\\Fonts\\arial.ttf'
+         - 'C:\\Windows\\Fonts\\BROADW.ttf'
         '''
         self.char = char
         self.font = font
@@ -31,14 +65,8 @@ class Char2SvgPath:
         # load font
         self.face = freetype.Face(self.font)
 
-        # values for y-flip
-        self.char_top = float(99999)
-        self.top = float(99999)
-
-        # values for x-translation
-        self.char_leftmargin = float(99999)
-        self.leftmargin = float(99999)
-
+        self.face.set_char_size(self.CHAR_SIZE, self.CHAR_SIZE) # -> x_ppem = y_ppem = 32
+        
         '''
         The character widths and heights are specified in 1/64th of points. 
         A point is a physical distance, equaling 1/72th of an inch. Normally, it is not equivalent to a pixel.
@@ -54,84 +82,78 @@ class Char2SvgPath:
         
         If both values are zero, 72 dpi is used for both dimensions.
         '''
-
-        self.face.set_char_size(self.CHAR_SIZE, self.CHAR_SIZE) # -> x_ppem = y_ppem = 32
-
         # initialize a character - option FT_LOAD_NO_SCALE mandatory
         self.face.load_char(self.char, freetype.FT_LOAD_NO_SCALE | freetype.FT_LOAD_NO_BITMAP)
+
+        # glyph info
+        self.glyph_index = self.face.get_char_index(self.char)
+        self.glyph_adv = self.face.get_advance(self.glyph_index, freetype.FT_LOAD_NO_SCALE | freetype.FT_LOAD_NO_BITMAP)
+
+        self.bbox = self.face.glyph.outline.get_bbox()
+
+        # evaluating the path:
+        # --------------------
+
+        # values for y-flip - if not set, use bbox
+        self.yflip_value = None
+        # values for x-translation - if not set, use bbox
+        self.xshift_value = None
 
         # to eval
         self.path = None
 
-    def get_bbox(self) -> freetype.FT_BBox:
-        '''
-        print("BBOX = %d %d %d %d" % (bbox.xMin, bbox.xMax, bbox.yMin, bbox.yMax))
-        '''
-        outline : freetype.Outline = self.face.glyph.outline
-
-        return outline.get_bbox()
-
-    def set_top(self, top):
-        self.top  = top
-
-    def eval_top(self) -> float:
+    def set_yflip_value(self, val):
         '''
         '''
-        outline : freetype.Outline = self.face.glyph.outline
+        self.yflip_value  = val
 
-        y = [t[1] for t in outline.points]
-
-        self.char_top = max(y)
-        self.top = max(y)
-
-        return self.char_top
-
-    def set_leftmargin(self, leftmargin):
-        self.leftmargin  = leftmargin
-
-    def eval_leftmargin(self) -> float:
+    def set_xshift_value(self, val):
         '''
         '''
-        outline : freetype.Outline = self.face.glyph.outline
-
-        x = [t[0] for t in outline.points]
-
-        self.char_leftmargin = min(x)
-        self.leftmargin = min(x)
-
-        return self.char_leftmargin
+        self.xshift_value  = val
 
     def get_kerning(self, prev):
         '''
         We’ll be converting a string character by character. 
         After converting this character to a path, you use the same method to convert the next character to a path,
-        offset by the kerning:
-        '''
-        #o = Char2SvgPath(prev, self.font)
-        #o_bbox = o.get_bbox()
+        offset by the kerning
 
-        vector =  self.face.get_kerning(prev, self.char)
+        Humm...
+        '''
+        o = Char2SvgPath(prev, self.font)
+        
+
+        vector =  self.face.get_kerning(o.glyph_index, self.glyph_index)
     
         print(dir(vector))
     
         print("kerning between %s and %s: x=%f  y=%f" % (prev, self.char, vector.x,  vector.y))
         
+    def calc_shift(self, next_ch: str):
+        '''
+        '''
+        # actually without kerning! still Ok!
+        # oo = Char2SvgPath(next_ch, self.font)
+
+        shift = self.glyph_adv 
+
+        return shift
+
     def calc_path(self, fontsize: float) -> Path:
         '''
         fontsize: svg font-size in px
         '''
-        def tuple2imag(t):
+        def tuple2complex(t):
             return t[0] + t[1] * 1j
 
         
-        if self.top == float(99999):
-            self.eval_top()
+        yflip = self.yflip_value
+        if yflip == None:
+            yflip = self.bbox.yMax
 
-        if self.leftmargin == float(99999):
-            self.eval_leftmargin()
-
-        top = self.top
-        leftmargin = self.leftmargin
+        xshift = self.xshift_value
+        if  xshift == None:
+            xshift = self.bbox.xMin
 
         # extra scaling
         scaling = fontsize / self.CHAR_SIZE
@@ -144,7 +166,7 @@ class Char2SvgPath:
 
 
         # shift and flip the points
-        outline_points = [ ((pt[0] - leftmargin) * scaling, (top - pt[1]) * scaling) for pt in outline.points ]
+        outline_points = [ ((pt[0] - xshift) * scaling, (yflip - pt[1]) * scaling) for pt in outline.points ]
 
         '''
         The face has three lists of interest: the points, the tags, and the contours. 
@@ -177,15 +199,12 @@ class Char2SvgPath:
 
             '''
             Then convert the segments to lines. 
-            For lines with two control points (segment length 4), I could use the CubicBezier, 
-            but I find that breaking it into two Quadratic Beziers where the end point for the first and 
-            the start point of the second curve is the average of the control points, is more attractive:
             '''
             for segment in segments:
                 #print("segment (len=%d)" % len(segment))
 
                 if len(segment) == 2:
-                    paths.append(Line(start=tuple2imag(segment[0]), end=tuple2imag(segment[1])))
+                    paths.append(Line(start=tuple2complex(segment[0]), end=tuple2complex(segment[1])))
 
                 elif len(segment) == 3:
                     C12 = segment[1]
@@ -193,7 +212,7 @@ class Char2SvgPath:
                     P1 = segment[0]
                     P2 = segment[2]
                 
-                    paths.append(QuadraticBezier(start=tuple2imag(P1), control=tuple2imag(C12), end=tuple2imag(P2)))
+                    paths.append(QuadraticBezier(start=tuple2complex(P1), control=tuple2complex(C12), end=tuple2complex(P2)))
                                          
                 elif len(segment) == 4:
                     C12 = segment[1]
@@ -203,8 +222,8 @@ class Char2SvgPath:
                     P2 = ((segment[1][0] + segment[2][0]) / 2.0, (segment[1][1] + segment[2][1]) / 2.0)
                     P3 = segment[3]
 
-                    paths.append(QuadraticBezier(start=tuple2imag(P1), control=tuple2imag(C12), end=tuple2imag(P2)))
-                    paths.append(QuadraticBezier(start=tuple2imag(P2), control=tuple2imag(C23), end=tuple2imag(P3)))
+                    paths.append(QuadraticBezier(start=tuple2complex(P1), control=tuple2complex(C12), end=tuple2complex(P2)))
+                    paths.append(QuadraticBezier(start=tuple2complex(P2), control=tuple2complex(C23), end=tuple2complex(P3)))
 
                 elif len(segment) == 5:
                     C12 = segment[1]
@@ -216,36 +235,20 @@ class Char2SvgPath:
                     P3 = ((segment[2][0] + segment[3][0]) / 2.0, (segment[2][1] + segment[3][1]) / 2.0)
                     P4 = segment[4]
 
-                    paths.append(QuadraticBezier(start=tuple2imag(P1), control=tuple2imag(C12), end=tuple2imag(P2)))
-                    paths.append(QuadraticBezier(start=tuple2imag(P2), control=tuple2imag(C23), end=tuple2imag(P3)))
-                    paths.append(QuadraticBezier(start=tuple2imag(P3), control=tuple2imag(C34), end=tuple2imag(P4)))
-
-                elif len(segment) == 6:
-                    C12 = segment[1]
-                    C23 = segment[2]
-                    C34 = segment[3]
-                    C45 = segment[4]
-
-                    P1 = segment[0]
-                    P2 = ((segment[1][0] + segment[2][0]) / 2.0, (segment[1][1] + segment[2][1]) / 2.0)
-                    P3 = ((segment[2][0] + segment[3][0]) / 2.0, (segment[2][1] + segment[3][1]) / 2.0)
-                    P4 = ((segment[3][0] + segment[4][0]) / 2.0, (segment[3][1] + segment[4][1]) / 2.0)
-                    P5 = segment[5]
-
-                    paths.append(QuadraticBezier(start=tuple2imag(P1), control=tuple2imag(C12), end=tuple2imag(P2)))
-                    paths.append(QuadraticBezier(start=tuple2imag(P2), control=tuple2imag(C23), end=tuple2imag(P3)))
-                    paths.append(QuadraticBezier(start=tuple2imag(P3), control=tuple2imag(C34), end=tuple2imag(P4)))
-                    paths.append(QuadraticBezier(start=tuple2imag(P4), control=tuple2imag(C45), end=tuple2imag(P5)))
+                    paths.append(QuadraticBezier(start=tuple2complex(P1), control=tuple2complex(C12), end=tuple2complex(P2)))
+                    paths.append(QuadraticBezier(start=tuple2complex(P2), control=tuple2complex(C23), end=tuple2complex(P3)))
+                    paths.append(QuadraticBezier(start=tuple2complex(P3), control=tuple2complex(C34), end=tuple2complex(P4)))
 
                 else:
                     # with algo
+                    N = len(segment) - 1
 
                     # first
                     Ps = segment[0]
                     Ctrl = segment[1]
                     Pe = ((segment[1][0] + segment[2][0]) / 2.0, (segment[1][1] + segment[2][1]) / 2.0)
 
-                    paths.append(QuadraticBezier(start=tuple2imag(Ps), control=tuple2imag(Ctrl), end=tuple2imag(Pe)))
+                    paths.append(QuadraticBezier(start=tuple2complex(Ps), control=tuple2complex(Ctrl), end=tuple2complex(Pe)))
 
                     # second - ...
                     for k in range(2,len(segment)-2):
@@ -253,15 +256,14 @@ class Char2SvgPath:
                         Ctrl = segment[k]
                         Pe = ((segment[k  ][0] + segment[k+1][0]) / 2.0, (segment[k  ][1] + segment[k+1][1]) / 2.0)
                         
-                        paths.append(QuadraticBezier(start=tuple2imag(Ps), control=tuple2imag(Ctrl), end=tuple2imag(Pe)))
+                        paths.append(QuadraticBezier(start=tuple2complex(Ps), control=tuple2complex(Ctrl), end=tuple2complex(Pe)))
 
                     # last
-                    N = len(segments) - 1
                     Ps = ((segment[N-2][0] + segment[N-1][0]) / 2.0, (segment[N-2][1] + segment[N-1][1]) / 2.0)
                     Ctrl = segment[N-1]
                     Pe = segment[N]
 
-                    paths.append(QuadraticBezier(start=tuple2imag(Ps), control=tuple2imag(Ctrl), end=tuple2imag(Pe)))
+                    paths.append(QuadraticBezier(start=tuple2complex(Ps), control=tuple2complex(Ctrl), end=tuple2complex(Pe)))
 
             '''
             Set the start location to the end location and continue. 
@@ -329,51 +331,84 @@ class String2SvgPaths:
         self.text = text
         self.font = font
 
-        self.top = 0
-        self.leftmargin = 0
+        self.test_position = [0,0]
+        # but has to be re-evaluated for right positionning
+        self.pos = [0,0]
+
+        self.string_top = 0
+        self.string_leftmargin = 0
 
         self.paths : List[Path] = []
 
-    def calc_top(self):
+    def calc_string_position(self, fontsize, text_pos):
+        self.text_position = list(text_pos)
+
+        self.calc_string_top()
+        self.calc_string_leftmargin()
+
+        self.pos = list(text_pos)
+
+        self.pos[0] += self.string_leftmargin * fontsize / Char2SvgPath.CHAR_SIZE 
+        self.pos[1] -= self.string_top * fontsize / Char2SvgPath.CHAR_SIZE 
+    
+
+    def calc_string_top(self):
         top = 0
         for ch in self.text:
             o = Char2SvgPath(ch, self.font)
-            o_top = o.eval_top()
+            o_top = o.bbox.yMax
 
             top = max(top, o_top)
         
-        self.top = top
+        self.string_top = top
 
-    def calc_leftmargin(self):
+    def calc_string_leftmargin(self):
         o = Char2SvgPath(self.text[0], self.font)
 
-        self.leftmargin = o.eval_leftmargin()
+        self.string_leftmargin = o.bbox.xMin
     
-    def calc_paths(self, fontsize: float) -> List[Path]:
+    def calc_paths(self, fontsize: float, position=(0,0)) -> List[Path]:
         '''
         '''
-        self.calc_leftmargin()
-        self.calc_top()
+        self.calc_string_leftmargin()
+        self.calc_string_top()
 
-        paths = []
+        paths : List[Path] = []
 
-        for ch in self.text:
+        shifts = []
+        shift = 0
+
+        for k, ch in enumerate(self.text):
             o = Char2SvgPath(ch, self.font)
-            o.set_top(self.top)
-            o.set_leftmargin(self.leftmargin)
+            o.set_yflip_value(self.string_top)
+            o.set_xshift_value(self.string_leftmargin)
            
             paths.append(o.calc_path(fontsize))
 
-        # now, all paths have to be shifted on the right with cumulativ values
-        # the first one is Ok
-        self.paths .append(paths[0])
+            if k != len(self.text) -1:
+                # accumulate the shifts
+                shift += o.calc_shift(self.text[k+1])
+                shifts.append(shift)
 
-        # TODO: find the right shift
-        shift = 2048 * fontsize / Char2SvgPath.CHAR_SIZE
-        for path in paths[1:]:
-            path = path.translated(shift)
+        # now, all paths have to be shifted on the right with the cumulativ values
+        # the first char is Ok, has been already shifted from its bbox.xMin
+        self.paths.append(paths[0])
+
+        for k, path in enumerate(paths[1:]):
+            path = path.translated(shifts[k]  * fontsize / Char2SvgPath.CHAR_SIZE )
             self.paths.append(path)
-            shift += 2048 * fontsize / Char2SvgPath.CHAR_SIZE
+
+        # svg positioning
+        self.calc_string_position(fontsize, position)
+
+        pos_paths = []
+        translate_pos = self.pos[0] + self.pos[1] * 1j
+        
+        for k, path in enumerate(self.paths):
+            path = path.translated(translate_pos)
+            pos_paths.append(path)
+
+        self.paths = pos_paths
 
         return self.paths
 
@@ -393,33 +428,47 @@ class String2SvgPaths:
     version="1.1" 
     viewBox="0 0 600 600">
     <g
-        id="text1437"
-        style="fill:#ff2222:fill-opacity:0.5;font-size:10.5833px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial, Normal';stroke-width:0.264583">
+        id="%s"
+        style="fill:#ff2222;fill-opacity:0.5;line-height:1.25;stroke-width:0.264583">
 %s
     </g>
-</svg>  """ % paths)
+</svg>  """ % (self.text, paths))
 
         fp.close()
 
     
+'''
+Inkscape font 30 pt leads to a font-size of 10.5833 "px"
+
+-> resolution 96px per inch
+
+30 pt = 40 px   (yes!)
+    -> 40.0/96 inches
+    -> 40.0/96* 25.4 mm
+    -> 10.5833 mm
+    -> font-size = 10.5833 px!
+
+'''
 
 if __name__ == '__main__':
+
+    FontFiles.setupFonts()
+
     char = 'B'
     font = 'C:\\Windows\\Fonts\\arial.ttf'
+    #font = 'C:\\Windows\\Fonts\\BROADW.TTF'
 
     fontsize = 10.5833 # px
 
     o = Char2SvgPath(char, font)
 
-    # per freetype decompose -----------------------------------
-    #svg = o.freetype_decompose()
-
-    # convert per hand, shifting x and flipping y --------------
+    # convert single char shifting x and flipping y --------------
     o.calc_path(fontsize)
     o.write_path()
 
+    pos = (9.2248564, 17.575741)
 
+    # convert whole string
     oo = String2SvgPaths("Bac", font)
-    # convert per hand, shifting x and flipping y --------------
-    oo.calc_paths(fontsize)
+    oo.calc_paths(fontsize, pos)
     oo.write_paths()
