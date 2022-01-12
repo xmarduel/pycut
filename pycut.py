@@ -175,6 +175,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         elif job_no == 5:
             self.open_job("./jobs/cnc_letters.json")
 
+        self.setWindowState(QtCore.Qt.WindowMaximized)
+
     def cb_show_tutorial(self):
         dlg = QtWidgets.QDialog(self)
 

@@ -125,17 +125,29 @@ calculate cnc paths, these shapes have to be interpreted first as svg
 in your data into &lt;path&gt; shapes only, and then import this &lt;path&gt;
 only svg file into <strong>PyCut</strong>.</p>
 
-<p>The second possibility is to convert the &lt;text&gt; strings in
+<p>The second possibility is to only convert the &lt;text&gt; items in
 &lt;path&gt; shapes, because <strong>PyCut</strong> actually can internally
 convert the other shapes into &lt;path&gt; shapes.</p>
+
+<p><strong><span style="color:#8000ff">IN PROGRESS</span>:</strong> The second
+possibility in to not convert the svg file at all, because
+<strong>PyCut</strong> can actually convert all these shapes/text internally.
+Nevertheless, special attention should be given to the &lt;text&gt; item. A
+successfull conversion will only occurs if the &lt;text&gt; item is simple
+enough: the text "value" should not be splitted into several &lt;tspan&gt;
+item, and of course only 1 font style should be used for the whole string. No
+&lt;tspan&gt; tag at all shall be also possible. </p>
+
+<p>All in all, if PyCut was to display text at the wrong position, the user can
+always export the text from Inkscape (and write a ticket)</p>
 
 <h4>Shapes "id"</h4>
 
 <p>In order to reference the shapes, these shapes must have an "id", hopefully
 unique inside the svg document. If the user has produced the svg "per hand",
 then he should not forget to give all shapes an unique id. If the user has
-produced the svg with <strong>Inkscape</strong>, then "ids" are automatically given,
-but maybe the user will want to edit them and give them meaningfull
+produced the svg with <strong>Inkscape</strong>, then "ids" are automatically
+given, but maybe the user will want to edit them and give them meaningfull
 content.</p>
 
 <h4>Transformations</h4>
@@ -143,8 +155,8 @@ content.</p>
 <p>It is usual to translate, rotate, scale and skew the shapes. Unfortunately,
 <strong>PyCut</strong> cannot handle these transformations. If the user has
 used such transformations, then it is possible inside Inkscape to "resolve" the
-transformation: just "ungroup" and then "group" again the desired shapes. During
-this process, the shapes will be convert into a &lt;path&gt; shapes.</p>
+transformation: just "ungroup" and then "group" again the desired shapes.
+During this process, the shapes will be convert into a &lt;path&gt; shapes.</p>
 
 <h3>Inkscape</h3>
 
@@ -269,6 +281,17 @@ coordinates. But still the reference is the top-left postion.</p>
   <li>Center of the Gcode area</li>
 </ul>
 
+<p>And further</p>
+<ul>
+  <li>flip X and Y <span style="color:#ff0000"><strong>TODO</strong></span></li>
+</ul>
+
+<p>This can be helpfull, for example in the case your CNC is the (not so
+common, but excellent) 1419 which is not as large as deep. So this option
+allows to carve something like 16x10 cm without to rotate the svg.</p>
+
+<p></p>
+
 <p>In case of Bottom-Left location of the material, the Y size of the material
 is extracted form the svg file: the svg "height" attribute (with units) </p>
 
@@ -277,8 +300,8 @@ is extracted form the svg file: the svg "height" attribute (with units) </p>
 <p>Some useful options can be set up:</p>
 <ul>
   <li>Return at initial location at end of the Job</li>
-  <li>Spindle Start/Stop (M3/M5 codes)</li>
-  <li>M2 code</li>
+  <li>Spindle Start/Stop (<strong>M3</strong>/<strong>M5</strong> codes)</li>
+  <li><strong>M2</strong> code</li>
 </ul>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->

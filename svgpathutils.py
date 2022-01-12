@@ -10,8 +10,7 @@ from typing import Any
 
 import tempfile
 
-import xml.etree.ElementTree as ET
-from lxml import etree
+import xml.etree.ElementTree as etree
 
 import svgpathtools
 import numpy as np
@@ -239,14 +238,44 @@ class SvgTransformer:
     def __init__(self, svg):
         self.svg = svg
 
+    def collect_shapes(self) -> List[etree.ElementTree]:
+        '''
+        '''
+        # python xml module can load with svg xml header with encoding utf-8
+        tree = etree.fromstring(self.svg)
+        elements = tree.findall('.//*')
+
+        shapes_types = [
+        	"path",
+            "rect",
+            "circle",
+            "ellipse",
+            "polygon",
+            "line",
+            "polyline"
+        ]
+
+        shapes : List[etree.ElementTree] = []
+        
+        for element in elements:
+            tag = element.tag.split("{http://www.w3.org/2000/svg}")[1]
+            
+            if tag in shapes_types:
+                shapes.append(element)
+
+        # lxml - exception with svg xml header with encoding utf-8
+        #
+        #tree = etree.parse(StringIO(self.svg))
+        #shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon" or local-name()="line" or local-name()="polyline"]')
+
+        return shapes
+        
     def augment(self, svg_paths: List[SvgPath]) -> str:
         '''
         '''
         all_paths = ""
 
-        tree = etree.parse(StringIO(self.svg))
-
-        shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon" or local-name()="line" or local-name()="polyline"]')
+        shapes = self.collect_shapes()
 
         for shape in shapes:
             print("svg : found shape %s : %s" % (shape.tag, shape.attrib['id']))
@@ -283,7 +312,7 @@ class SvgTransformer:
 
             all_paths += path + '\r\n'
         
-        root = ET.fromstring(self.svg)
+        root = etree.fromstring(self.svg)
         root_attrib = root.attrib
         
         svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
@@ -309,9 +338,7 @@ class SvgTransformer:
         '''
         all_paths = ""
 
-        tree = etree.parse(StringIO(self.svg))
-
-        shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon" or local-name()="line" or local-name()="polyline"]')
+        shapes = self.collect_shapes()
 
         for shape in shapes:
             print("svg : found shape %s : %s" % (shape.tag, shape.attrib['id']))
@@ -341,7 +368,7 @@ class SvgTransformer:
                 'd_def': d_def
             }
         
-        root = ET.fromstring(self.svg)
+        root = etree.fromstring(self.svg)
         root_attrib = root.attrib
 
         svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"

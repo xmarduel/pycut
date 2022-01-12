@@ -12,8 +12,7 @@ from PySide6 import QtWidgets
 from PySide6 import QtSvg
 from PySide6 import QtSvgWidgets
 
-import xml.etree.ElementTree as ET
-from lxml import etree
+import xml.etree.ElementTree as etree
 
 from svgpathutils import SvgPath
 from svgpathutils import SvgTransformer
@@ -40,10 +39,10 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
 
     def makeGraphicsEffect(self):
         if self.selected_effect is None:
-            self.selected_effect = QtWidgets.QGraphicsColorizeEffect()    
+            self.selected_effect = QtWidgets.QGraphicsColorizeEffect()
             self.selected_effect.setColor(QtCore.Qt.darkYellow)
             self.selected_effect.setStrength(1)
-    
+
     def mousePressEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
         print('svg item: ' + self.elementId() + ' - mousePressEvent()  isSelected=' + str(self.isSelected()))
         print('svg item: ' + str(self.pos()))
@@ -62,7 +61,7 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
             center = [int(self.pos().x()), int(self.pos().y())]
             center[0] = center[0] + radius
             center[1] = center[1] + radius
-            tab["center"] = center 
+            tab["center"] = center
             # brutal force - redraw tabs list with new model
             #self.view.mainwindow.assign_tabs(tabs)
             # -> strange behaviour, all spinboxes cells are selected
@@ -79,17 +78,17 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
     def colorizeWhenSelected(self):
         if self.isSelected():
             self.makeGraphicsEffect()
-            self.setGraphicsEffect(self.selected_effect) 
+            self.setGraphicsEffect(self.selected_effect)
         else:
-            self.setGraphicsEffect(None) 
+            self.setGraphicsEffect(None)
             self.selected_effect = None
 
 
 class SvgViewer(QtWidgets.QGraphicsView):
     '''
-    The SvgViewer can 'only' load full svg files. 
+    The SvgViewer can 'only' load full svg files.
     It cannot increment the view with single "Paths"
-    
+
     So when augmenting the view, we have to pass all cnc operations
     and build a custom svg file on its own with all these new paths.
 
@@ -107,7 +106,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.mainwindow = None
         self.scene = QtWidgets.QGraphicsScene(self)
         self.renderer = QtSvg.QSvgRenderer()
-        
+
         self.setScene(self.scene)
 
         # a "state" I would like to avoid, between mouse "down" and mouse "up"
@@ -136,13 +135,13 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.currentZoom = self.zoomFactor()
 
     def set_mainwindow(self, mainwindow):
-        self.mainwindow = mainwindow 
-    
+        self.mainwindow = mainwindow
+
     def get_svg_size_x(self) -> ValWithUnit:
         '''
-        get the width of the svg given in units "mm", "cm" or "in" (see Inkscape) 
+        get the width of the svg given in units "mm", "cm" or "in" (see Inkscape)
         '''
-        root = ET.fromstring(self.svg)
+        root = etree.fromstring(self.svg)
 
         width = root.attrib["width"]
 
@@ -155,14 +154,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
         elif "cm"  in width:
             w, units = width.split("cm")
             return ValWithUnit(int(w*10), "mm")
-        
+
         return None
 
     def get_svg_size_y(self) -> ValWithUnit:
         '''
-        get the height of the svg given in units "mm", "cm" or "in" (see Inkscape) 
+        get the height of the svg given in units "mm", "cm" or "in" (see Inkscape)
         '''
-        root = ET.fromstring(self.svg)
+        root = etree.fromstring(self.svg)
 
         height = root.attrib["height"]
 
@@ -175,9 +174,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
         elif "cm"  in height:
             h, units = height.split("cm")
             return ValWithUnit(int(h*10), "mm")
-        
+
         return None
-    
+
     def get_selected_items_ids(self) -> List[str]:
         '''
         return list of selected svg paths
@@ -198,7 +197,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         '''
         This sets the 'real' svg file data, not the later 'augmented' svg
         '''
-        root = ET.fromstring(svg)
+        root = etree.fromstring(svg)
 
         viewBox = root.attrib["viewBox"].split()
 
@@ -209,10 +208,10 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         self.scene.setSceneRect(x,y,w,h)
         self.renderer.setViewBox(QtCore.QRect(x,y,w,h))
-        
+
         viewbox_size = max(w, h)
         # eval initial zoom factor
-        self.currentZoom = 250.0 / viewbox_size 
+        self.currentZoom = 250.0 / viewbox_size
 
         self.svg = svg
         self.fill_svg_viewer(self.svg)
@@ -227,9 +226,32 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         self.renderer.load(bytes(svg, 'utf-8'))
 
-        tree = etree.parse(StringIO(svg))
+        # python xml module can load with svg xml header with encoding utf-8
+        tree = etree.fromstring(svg)
+        elements = tree.findall('.//*')
 
-        shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon" or local-name()="line" or local-name()="polyline"]')
+        shapes_types = [
+        	"path",
+            "rect",
+            "circle",
+            "ellipse",
+            "polygon",
+            "line",
+            "polyline"
+        ]
+
+        shapes : List[etree.ElementTree] = []
+        
+        for element in elements:
+            tag = element.tag.split("{http://www.w3.org/2000/svg}")[1]
+            
+            if tag in shapes_types:
+                shapes.append(element)
+
+        # lxml - exception with svg xml header with encoding utf-8
+        #
+        #tree = etree.parse(StringIO(svg))
+        #shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon" or local-name()="line" or local-name()="polyline"]')
 
         for shape in shapes:
             print("svg : found shape %s : %s" % (shape.tag, shape.attrib['id']))
@@ -292,14 +314,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
     def update_selected_items_list(self):
         '''
-        by comparing the current one with the new evaluation of 
+        by comparing the current one with the new evaluation of
         the selected items
         '''
         selected_items = []
         for item in self.items:
             if item.isSelected():
                 selected_items.append(item)
-        
+
         if len(selected_items) == 0:
             self.selected_items = []
         else:
@@ -333,7 +355,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
     def storeZoomFactor(self):
         self.currentZoom = self.zoomFactor()
-    
+
     def zoomFactor(self):
         return self.transform().m11()
 
@@ -349,7 +371,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
             self.zoomChanged.emit()
 
     def zoomBy(self, factor):
-        ''' allow very strong zoom (100) 
+        ''' allow very strong zoom (100)
         useful when the svg viewBox is very small '''
         currentZoom = self.zoomFactor()
         if (factor < 1 and currentZoom < 0.1) or (factor > 1 and currentZoom > 100) :
@@ -398,12 +420,12 @@ class SvgViewer(QtWidgets.QGraphicsView):
         '''
         from gcode_generator import Tab
 
-        # display preview geometries 
+        # display preview geometries
         transformer = SvgTransformer(self.svg)
 
         geometry_svg_paths = []
         for cnc_op in cnc_ops:
-                geometry_svg_paths += cnc_op.geometry_svg_paths
+            geometry_svg_paths += cnc_op.geometry_svg_paths
 
         augmented_svg = transformer.augment(geometry_svg_paths)
 
@@ -426,7 +448,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         '''
         from gcode_generator import Tab
 
-        # display preview geometries 
+        # display preview geometries
         transformer = SvgTransformer(self.svg)
 
         geometry_svg_paths = []

@@ -1,14 +1,142 @@
 '''
-This is a attempt to convert svt text to svg path(s)...
+Convert svg text to svg path(s)
 '''
+
+'''
+with inkscape: can inkscape python module do that ? or do I need a subprocess command ?
+
+command line:
+> "C:\Program Files\Inkscape\bin\inkscape.com" in.svg  --export-text-to-path -o out.svg
+
+-> all svg elements are converted! (not only text)
+-> warning: transformations are kept, this is bad for pycut!
+
+transformations have to be resolved in Inkscape, with ungroup/group operations
+      
+Inside python:
+--------------
+
+import subprocess
+subprocess.call("inkscape.com in.svg --export-text-to-path -o out.svg", shell = True)
+'''
+
 import glob
 
 from typing import List
 from typing import Tuple
 
 import freetype
-
+from lxml import etree
 from svgpathtools import wsvg, Line, QuadraticBezier, Path
+
+
+
+class SvgTextObject:
+    '''
+    '''
+    def __init__(self, elt: etree.Element):
+        '''
+        '''
+        # the xml element as etree element object
+        self.elt = elt
+        self.elt_style = self.extract_style()
+
+        self.font_family = self.elt_style.get("font-family", "arial")
+        self.font_style = self.elt_style.get("font-style", "regular")
+        self.font_size = self.elt_style.get("font-size", "10.5833px")
+
+        self.text = self.extract_text()
+        self.position = self.extract_position()
+        self.id = self.extract_id()
+
+    def extract_style(self):
+        '''
+        '''
+        style : str = self.elt.attrib["style"]
+
+        style_items = style.split(";")
+
+        elt_style = {}
+
+        for item in  style_items:
+            key, value = item.split(":")
+
+            elt_style[key] = value
+
+        return elt_style
+
+    def extract_text(self):
+        '''
+        The text value
+        - as text data of the <text> etree element
+        - as text data of the <tspan> etree children
+        '''
+        text = ""
+
+        if len(self.elt):
+            # has children
+            for child in self.elt:
+                if child.tag == "{http://www.w3.org/2000/svg}tspan":
+                    text += child.text
+        else:
+            text = self.elt.text
+
+        return text
+
+    def extract_position(self):
+        '''
+        '''
+        x = self.elt.attrib["x"]
+        y = self.elt.attrib["y"]
+
+        return (float(x), float(y))
+
+    def extract_id(self):
+        '''
+        '''
+        id = self.elt.attrib["id"]
+
+        return id
+
+    def to_path(self):
+        '''
+        '''
+        fontfile = FontFiles.get_fontfile(self.font_family, self.font_style)
+
+        if fontfile:
+            converter = String2SvgPaths(self.text, fontfile)
+            converter.calc_paths(self.font_size, self.position)
+
+            # paths are stored in converter.paths
+            pass
+
+
+
+class SvgTextManager:
+    '''
+    collect <text> elements and make of them SvgTextObject objects
+    '''
+    def __init__(self, svgfile):
+        '''
+        '''
+        self.svgfile = svgfile
+
+        self.tree = etree.parse(svgfile)
+        self.svgtextobjects = self.collect_svgtext_objects()
+
+    def collect_svgtext_objects(self) -> List[SvgTextObject]:
+        '''
+        '''
+        svgtextobjects = []
+
+        elements = self.tree.findall(".//{http://www.w3.org/2000/svg}text")
+
+        for elt in elements:
+            o = SvgTextObject(elt)
+            svgtextobjects.append(o)
+
+        return svgtextobjects
+
 
 
 class FontFiles:
@@ -27,7 +155,7 @@ class FontFiles:
 
     
     '''
-    lookup = {}
+    lookup = None
 
     @classmethod
     def setupFonts(cls):
@@ -38,10 +166,20 @@ class FontFiles:
 
         for ttf in ttfs:
             face = freetype.Face(ttf)
-            style = face.style_name
             family = face.postscript_name
-
+            style = face.style_name
+            
             cls.lookup[(family, style)] = ttf
+
+    @classmethod
+    def get_fontfile(cls, family: str, style: str):
+        '''
+        to improve
+        '''
+        if cls.lookup is None:
+            cls.setupFonts()
+
+        return cls.lookup[(family, style)]
 
     
    
@@ -452,8 +590,6 @@ Inkscape font 30 pt leads to a font-size of 10.5833 "px"
 
 if __name__ == '__main__':
 
-    FontFiles.setupFonts()
-
     char = 'B'
     font = 'C:\\Windows\\Fonts\\arial.ttf'
     #font = 'C:\\Windows\\Fonts\\BROADW.TTF'
@@ -472,3 +608,5 @@ if __name__ == '__main__':
     oo = String2SvgPaths("Bac", font)
     oo.calc_paths(fontsize, pos)
     oo.write_paths()
+
+    manager = SvgTextManager("C:\\Users\\marduel\\PRIVATE\\pycut\\svg\\B.svg")
