@@ -330,14 +330,15 @@ class cam:
         print("origPath", origPath)
         print("origPath", clipper_path)
          
-        clipper_paths = ClipperLib.PathVector()
-        # 1. from the tabs, build clipper (closed) paths
+        clipper_tab_paths = ClipperLib.PathVector()
+        # 1. from the tabs, build clipper (closed) tab paths
         for tab_data in tabs:
             tab = Tab(tab_data)
-            clipper_paths.append(tab.svg_path.toClipperPath())
+            clipper_tab_paths.append(tab.svg_path.toClipperPath())
 
+        #print("TAB", clipper_tab_paths)
         # 2. then "diff" the origin path with the tabs paths
-        splitted_paths = clipper_utils.ClipperUtils.openpath_remove_tabs(clipper_path, clipper_paths)
+        splitted_paths = clipper_utils.ClipperUtils.openpath_remove_tabs(clipper_path, clipper_tab_paths)
         
         # 3. that's it
         print("splitted_paths", splitted_paths)
@@ -353,13 +354,13 @@ class cam:
     @classmethod
     def mergeCompatiblePaths(cls, paths: List[ClipperLib.IntPointVector]):
         '''
-        This is a post-processing step to clipper-6.4.2 where found seperated paths can be merged together,
-        leading to less sepated paths
+        This is a post-processing step to clipper-6.4.2 where found separated paths can be merged together,
+        leading to less separated paths
         '''
         # ------------------------------------------------------------------------------------------------
         def pathsAreCompatible(path1: ClipperLib.IntPointVector, path2: ClipperLib.IntPointVector) -> bool:
             '''
-            test if the 2 paths have their end point/start point compatible (is the same)
+            test if the 2 paths have their end point/start point compatible (the same)
             '''
             endPoint = path1[-1]
             startPoint = path2[0]
@@ -549,7 +550,8 @@ class cam:
                         continue
 
                     executedRamp = False
-                    if ramp:
+                    minPlungeTime = (currentZ - nextZ) / plungeFeed
+                    if ramp and minPlungeTime > 0:
                         minPlungeTime = (currentZ - nextZ) / plungeFeed
                         idealDist = cutFeed * minPlungeTime
                         totalDist = 0

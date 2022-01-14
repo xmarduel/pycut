@@ -142,6 +142,17 @@ class ClipperUtils:
 
         -> we re-order them, so that the first path of the output paths
         contains the first point of the input path TODO
+
+        -> unfortunately buggy in some cases. For example for an "inside op" in a square
+        where the width is large enought in order to have 2 or more concentric paths in
+        the region of interest, merged by PyCut.
+        
+        Depending on the position of the tab, the resultings paths may have 1 path buggy
+
+        Solution: do not perform the tabs separation on the fully merged path 
+        (which is "too" complicated), but on the single paths alone, 
+        and then merge the resulting stuff...
+        When merging, take care top that the merging segments do not hit the tabs!  TODO
         '''
         c = ClipperLib.Clipper()
         c.AddPath(clipper_path, ClipperLib.PolyType.ptSubject, False)  # open path

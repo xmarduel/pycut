@@ -69,16 +69,20 @@ class SvgPath:
             fp.write(svg)
             fp.close()
 
-            paths, attributes, svg_attributes = svgpathtools.svg2paths(filename, return_svg_attributes=True)
-            #print("svg2paths ->", svg_attributes)
+            paths, attributes = svgpathtools.svg2paths(filename)
 
             for k, path in enumerate(paths):
                 attribs = attributes[k]
-                print("============= path %s =================" % attribs['id'])
+
+                path_id = attribs.get('id', None)
+                print("============= path %s =================" % path_id)
                 #print(path)
                 #print(attribs)
 
-                svg_shapes[attribs['id']] = (attribs, path)
+                if path_id is None:
+                    continue
+
+                svg_shapes[path_id] = (attribs, path)
 
         return svg_shapes
 
@@ -278,7 +282,13 @@ class SvgTransformer:
         shapes = self.collect_shapes()
 
         for shape in shapes:
-            print("svg : found shape %s : %s" % (shape.tag, shape.attrib['id']))
+            shape_id = shape.attrib.get('id', None)
+
+            print("svg : found shape %s : %s" % (shape.tag, shape_id))
+
+            if shape_id is None:
+                print("      -> ignoring")
+                continue
 
             tag = shape.tag.split("}")[1]
             svg_attrs = ''
@@ -288,7 +298,7 @@ class SvgTransformer:
             all_paths += '<%s %s/>\r\n' % (tag, svg_attrs)
 
         for k, svg_path in enumerate(svg_paths):
-            id = svg_path.p_id
+            p_id = svg_path.p_id
             d_def = svg_path.p_attrs['d']
 
             stroke = '#00ff00'
@@ -300,7 +310,7 @@ class SvgTransformer:
 
             path = '<path id="%(id)s_%(counter)d" style="stroke:%(stroke)s;stroke-width:%(stroke_width)s;fill:%(fill)s;fill-opacity:%(fill_opacity)s;fill-rule:%(fill_rule)s;" \
               d="%(d_def)s" />' % {
-                'id': id, 
+                'id': p_id, 
                 'counter': k, 
                 'fill': fill,
                 'stroke_width': stroke_width,
@@ -341,7 +351,12 @@ class SvgTransformer:
         shapes = self.collect_shapes()
 
         for shape in shapes:
-            print("svg : found shape %s : %s" % (shape.tag, shape.attrib['id']))
+            shape_id = shape.attrib.get('id', None)
+
+            print("svg : found shape %s : %s" % (shape.tag, shape_id))
+
+            if shape_id is None:
+                print("     -> ignoring")
 
             tag = shape.tag.split("}")[1]
             svg_attrs = ''
@@ -351,7 +366,7 @@ class SvgTransformer:
             all_paths += '<%s %s/>\r\n' % (tag, svg_attrs)
 
         for k, svg_path in enumerate(svg_paths):
-            id = svg_path.p_id
+            p_id = svg_path.p_id
             d_def = svg_path.p_attrs['d']
 
             stroke = '#00ff00'
@@ -360,7 +375,7 @@ class SvgTransformer:
             fill = 'none'
 
             all_paths += '<path id="%(id)s_%(counter)d" style="stroke:%(stroke)s;stroke-width:%(stroke_width)s;fill:%(fill)s" d="%(d_def)s" />' % {
-                'id': id, 
+                'id': p_id, 
                 'counter': k,
                 'stroke_width': stroke_width,
                 'stroke': stroke,

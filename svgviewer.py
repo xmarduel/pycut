@@ -254,25 +254,29 @@ class SvgViewer(QtWidgets.QGraphicsView):
         #shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon" or local-name()="line" or local-name()="polyline"]')
 
         for shape in shapes:
-            print("svg : found shape %s : %s" % (shape.tag, shape.attrib['id']))
+            shape_id = shape.attrib.get('id', None)
 
-            attribs, path = self.svg_shapes[shape.attrib['id']]
+            print("svg : found shape %s : id='%s'" % (shape.tag, shape_id))
 
-            id = attribs['id']
+            if shape_id is None:
+                print("    -> ignoring")
+                continue
 
-            self.svg_path_d[id] = path.d()
+            attribs, path = self.svg_shapes[shape_id]
 
-            item = SvgItem(id, self, self.renderer)
+            self.svg_path_d[shape_id] = path.d()
+
+            item = SvgItem(shape_id, self, self.renderer)
             self.scene.addItem(item)
 
             self.items.append(item)
 
             # tabs can be dragged
-            if id.startswith("pycut_tab"):
+            if shape_id.startswith("pycut_tab"):
                 item.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsMovable, True)
 
             # pycut generated paths cannot be selected
-            if id.startswith("pycut"):
+            if shape_id.startswith("pycut"):
                 item.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, False)
 
         # zoom with the initial zoom factor
