@@ -1,5 +1,7 @@
 '''
 Convert svg text to svg path(s)
+
+NOT YET FINISHED, but in a very good way
 '''
 
 '''
@@ -20,15 +22,15 @@ import subprocess
 subprocess.call("inkscape.com in.svg --export-text-to-path -o out.svg", shell = True)
 '''
 
-import glob
-
 from typing import List
-from typing import Tuple
+
+import glob
+import xml.etree.ElementTree as etree
+import numpy as np
 
 import freetype
-from lxml import etree
-from svgpathtools import wsvg, Line, QuadraticBezier, Path
-
+from svgpathtools import wsvg, Line, QuadraticBezier, Path, parse_path
+from svgpathtools import path as xxpath
 
 
 class SvgTextObject:
@@ -42,8 +44,13 @@ class SvgTextObject:
         self.elt_style = self.extract_style()
 
         self.font_family = self.elt_style.get("font-family", "arial")
-        self.font_style = self.elt_style.get("font-style", "regular")
+        self.font_style = self.elt_style.get("font-style", "normal")
+        self.font_weight = self.elt_style.get("font-weight", "") # no weight
+        self.font_stretch = self.elt_style.get("font-stretch", "") # not narrow
+
         self.font_size = self.elt_style.get("font-size", "10.5833px")
+
+        self.font_size_float = float(self.font_size[:-2])
 
         self.text = self.extract_text()
         self.position = self.extract_position()
@@ -98,17 +105,19 @@ class SvgTextObject:
 
         return id
 
-    def to_path(self):
+    def to_paths(self) -> List[Path]:
         '''
         '''
-        fontfile = FontFiles.get_fontfile(self.font_family, self.font_style)
+        fontfile = FontFiles.get_fontfile(self.font_family, 
+                self.font_style, 
+                self.font_weight, 
+                self.font_stretch)
 
         if fontfile:
             converter = String2SvgPaths(self.text, fontfile)
-            converter.calc_paths(self.font_size, self.position)
+            return converter.calc_paths(self.font_size_float, self.position)
 
-            # paths are stored in converter.paths
-            pass
+        return []
 
 
 
@@ -137,23 +146,371 @@ class SvgTextManager:
 
         return svgtextobjects
 
+    def convert_texts(self) -> List[List[Path]]:
+        '''
+        '''
+        return [ o.to_paths() for o in self.svgtextobjects ]
+
+
+
+
+class FontDb:
+    '''
+('72', 'black')
+('72', 'bold')
+('72', 'bold italic')
+('72', 'condensed')
+('72', 'condensed bold')
+('72', 'italic')
+('72', 'light')
+('72 monospace', 'bold')
+('72 monospace', 'regular')
+('72', 'regular')
+('agency fb', 'bold')
+('agency fb', 'regular')
+('algerian', 'regular')
+('book antiqua', 'bold')
+('book antiqua', 'bold italic')
+('book antiqua', 'italic')
+('arial', 'regular')
+('arial', 'bold')
+('arial', 'bold italic')
+('arial', 'italic')
+('arial', 'narrow')
+('arial', 'narrow bold')
+('arial', 'narrow bold italic')
+('arial', 'narrow italic')
+('arial', 'black')
+('arial monospaced for sap', 'bold')
+('arial monospaced for sap', 'regular')
+('arial rounded mt bold', 'regular')
+('bahnschrift', 'regular')
+('baskerville old face', 'regular')
+('bauhaus 93', 'regular')
+('bell mt', 'regular')
+('bell mt', 'bold')
+('bell mt', 'italic')
+('bernard mt condensed', 'regular')
+('book antiqua', 'regular')
+('bodoni mt', 'bold')
+('bodoni mt', 'bold italic')
+('bodoni mt', 'black italic')
+('bodoni mt', 'black')
+('bodoni mt', 'condensed bold')
+('bodoni mt', 'condensed bold italic')
+('bodoni mt', 'condensed italic')
+('bodoni mt', 'condensed')
+('bodoni mt', 'italic')
+('bodoni mt', 'poster compressed')
+('bodoni mt', 'regular')
+('bookman old style', 'regular')
+('bookman old style', 'bold')
+('bookman old style', 'bold italic')
+('bookman old style', 'italic')
+('bradley hand itc', 'regular')
+('britannic bold', 'regular')
+('berlin sans fb', 'bold')
+('berlin sans fb demi', 'bold')
+('berlin sans fb', 'regular')
+('broadway', 'regular')
+('brush script mt', 'italic')
+('bookshelf symbol 7', 'regular')
+('calibri', 'regular')
+('calibri', 'bold')
+('calibri', 'italic')
+('calibri', 'light')
+('calibri', 'light italic')
+('calibri', 'bold italic')
+('californian fb', 'bold')
+('californian fb', 'italic')
+('californian fb', 'regular')
+('calisto mt', 'regular')
+('calisto mt', 'bold')
+('calisto mt', 'bold italic')
+('calisto mt', 'italic')
+('cambria', 'bold')
+('cambria', 'italic')
+('cambria', 'bold italic')
+('candara', 'regular')
+('candara', 'bold')
+('candara', 'italic')
+('candara', 'light')
+('candara', 'light italic')
+('candara', 'bold italic')
+('castellar', 'regular')
+('century schoolbook', 'regular')
+('centaur', 'regular')
+('century', 'regular')
+('chiller', 'regular')
+('colonna mt', 'regular')
+('comic sans ms', 'regular')
+('comic sans ms', 'bold')
+('comic sans ms', 'italic')
+('comic sans ms', 'bold italic')
+('consolas', 'regular')
+('consolas', 'bold')
+('consolas', 'italic')
+('consolas', 'bold italic')
+('constantia', 'regular')
+('constantia', 'bold')
+('constantia', 'italic')
+('constantia', 'bold italic')
+('cooper black', 'regular')
+('copperplate gothic bold', 'regular')
+('copperplate gothic light', 'regular')
+('corbel', 'regular')
+('corbel', 'bold')
+('corbel', 'italic')
+('corbel', 'light')
+('corbel', 'light italic')
+('corbel', 'bold italic')
+('courier new', 'regular')
+('courier new', 'bold')
+('courier new', 'bold italic')
+('courier new', 'italic')
+('curlz mt', 'regular')
+('dubai', 'bold')
+('dubai', 'light')
+('dubai', 'medium')
+('dubai', 'regular')
+('ebrima', 'regular')
+('ebrima', 'bold')
+('elephant', 'regular')
+('elephant', 'italic')
+('engravers mt', 'regular')
+('eras bold itc', 'regular')
+('eras demi itc', 'regular')
+('eras light itc', 'regular')
+('eras medium itc', 'regular')
+('felix titling', 'regular')
+('forte', 'regular')
+('franklin gothic book', 'regular')
+('franklin gothic book', 'italic')
+('franklin gothic demi', 'regular')
+('franklin gothic demi cond', 'regular')
+('franklin gothic demi', 'italic')
+('franklin gothic heavy', 'regular')
+('franklin gothic heavy', 'italic')
+('franklin gothic medium', 'regular')
+('franklin gothic medium cond', 'regular')
+('franklin gothic medium', 'italic')
+('freestyle script', 'regular')
+('french script mt', 'regular')
+('footlight mt light', 'regular')
+('gabriola', 'regular')
+('gadugi', 'regular')
+('gadugi', 'bold')
+('garamond', 'regular')
+('garamond', 'bold')
+('garamond', 'italic')
+('georgia', 'regular')
+('georgia', 'bold')
+('georgia', 'italic')
+('georgia', 'bold italic')
+('gigi', 'regular')
+('gill sans mt', 'bold italic')
+('gill sans mt', 'bold')
+('gill sans mt condensed', 'regular')
+('gill sans mt', 'italic')
+('gill sans ultra bold condensed', 'regular')
+('gill sans ultra bold', 'regular')
+('gill sans mt', 'regular')
+('gloucester mt extra condensed', 'regular')
+('gill sans mt ext condensed bold', 'regular')
+('century gothic', 'regular')
+('century gothic', 'bold')
+('century gothic', 'bold italic')
+('century gothic', 'italic')
+('goudy old style', 'regular')
+('goudy old style', 'bold')
+('goudy old style', 'italic')
+('goudy stout', 'regular')
+('harlow solid italic', 'italic')
+('harrington', 'regular')
+('haettenschweiler', 'regular')
+('microsoft himalaya', 'regular')
+('hololens mdl2 assets', 'regular')
+('high tower text', 'regular')
+('high tower text', 'italic')
+('iabg logo', 'normal')
+('impact', 'regular')
+('imprint mt shadow', 'regular')
+('informal roman', 'regular')
+('ink free', 'regular')
+('blackadder itc', 'regular')
+('edwardian script itc', 'regular')
+('kristen itc', 'regular')
+('javanese text', 'regular')
+('jokerman', 'regular')
+('juice itc', 'regular')
+('kunstler script', 'regular')
+('wide latin', 'regular')
+('lucida bright', 'regular')
+('lucida bright', 'demibold')
+('lucida bright', 'demibold italic')
+('lucida bright', 'italic')
+('lucida calligraphy', 'italic')
+('leelawadee ui', 'bold')
+('leelawadee', 'regular')
+('leelawadee', 'bold')
+('leelawadee ui', 'regular')
+('leelawadee ui', 'semilight')
+('lucida fax', 'regular')
+('lucida fax', 'demibold')
+('lucida fax', 'demibold italic')
+('lucida fax', 'italic')
+('lucida handwriting', 'italic')
+('lucida sans', 'regular')
+('lucida sans', 'demibold roman')
+('lucida sans', 'demibold italic')
+('lucida sans', 'italic')
+('lucida sans typewriter', 'regular')
+('lucida sans typewriter', 'bold')
+('lucida sans typewriter', 'bold oblique')
+('lucida sans typewriter', 'oblique')
+('lucida console', 'regular')
+('lucida sans unicode', 'regular')
+('magneto', 'bold')
+('maiandra gd', 'regular')
+('malgun gothic', 'regular')
+('malgun gothic', 'bold')
+('malgun gothic', 'semilight')
+('marlett', 'regular')
+('matura mt script capitals', 'regular')
+('microsoft sans serif', 'regular')
+('mistral', 'regular')
+('myanmar text', 'regular')
+('myanmar text', 'bold')
+('modern no. 20', 'regular')
+('mongolian baiti', 'regular')
+('microsoft uighur', 'bold')
+('microsoft uighur', 'regular')
+('microsoft yi baiti', 'regular')
+('monotype corsiva', 'regular')
+('mt extra', 'regular')
+('mv boli', 'regular')
+('niagara engraved', 'regular')
+('niagara solid', 'regular')
+('nirmala ui', 'regular')
+('nirmala ui', 'bold')
+('nirmala ui', 'semilight')
+('microsoft new tai lue', 'regular')
+('microsoft new tai lue', 'bold')
+('ocr a extended', 'regular')
+('old english text mt', 'regular')
+('onyx', 'regular')
+('ms outlook', 'regular')
+('palatino linotype', 'regular')
+('palatino linotype', 'bold')
+('palatino linotype', 'bold italic')
+('palatino linotype', 'italic')
+('palace script mt', 'regular')
+('papyrus', 'regular')
+('parchment', 'regular')
+('perpetua', 'bold italic')
+('perpetua', 'bold')
+('perpetua', 'italic')
+('perpetua titling mt', 'bold')
+('perpetua titling mt', 'light')
+('perpetua', 'regular')
+('microsoft phagspa', 'regular')
+('microsoft phagspa', 'bold')
+('playbill', 'regular')
+('poor richard', 'regular')
+('pristina', 'regular')
+('rage italic', 'regular')
+('ravie', 'regular')
+('ms reference sans serif', 'regular')
+('ms reference specialty', 'regular')
+('rockwell condensed', 'bold')
+('rockwell condensed', 'regular')
+('rockwell', 'regular')
+('rockwell', 'bold')
+('rockwell', 'bold italic')
+('rockwell extra bold', 'regular')
+('rockwell', 'italic')
+('sapdings', 'normal')
+('sapgui-belize-icons', 'regular')
+('sapgui-icons', 'regular')
+('sapicons', 'normal')
+('century schoolbook', 'bold')
+('century schoolbook', 'bold italic')
+('century schoolbook', 'italic')
+('script mt bold', 'regular')
+('segoe mdl2 assets', 'regular')
+('segoe print', 'regular')
+('segoe print', 'bold')
+('segoe script', 'regular')
+('segoe script', 'bold')
+('segoe ui', 'regular')
+('segoe ui', 'bold')
+('segoe ui', 'italic')
+('segoe ui', 'light')
+('segoe ui', 'semilight')
+('segoe ui', 'bold italic')
+('segoe ui', 'black')
+('segoe ui', 'black italic')
+('segoe ui emoji', 'regular')
+('segoe ui historic', 'regular')
+('segoe ui', 'light italic')
+('segoe ui', 'semibold')
+('segoe ui', 'semibold italic')
+('segoe ui', 'semilight italic')
+('segoe ui symbol', 'regular')
+('showcard gothic', 'regular')
+('simsun-extb', 'regular')
+('snap itc', 'regular')
+('stencil', 'regular')
+('sylfaen', 'regular')
+('symbol', 'regular')
+('tahoma', 'regular')
+('tahoma', 'bold')
+('microsoft tai le', 'regular')
+('microsoft tai le', 'bold')
+('tw cen mt', 'bold italic')
+('tw cen mt', 'bold')
+('tw cen mt condensed', 'bold')
+('tw cen mt condensed extra bold', 'regular')
+('tw cen mt condensed', 'regular')
+('tw cen mt', 'italic')
+('tw cen mt', 'regular')
+('tempus sans itc', 'regular')
+('times new roman', 'regular')
+('times new roman', 'bold')
+('times new roman', 'bold italic')
+('times new roman', 'italic')
+('trebuchet ms', 'regular')
+('trebuchet ms', 'bold')
+('trebuchet ms', 'bold italic')
+('trebuchet ms', 'italic')
+('verdana', 'regular')
+('verdana', 'bold')
+('verdana', 'italic')
+('verdana', 'bold italic')
+('viner hand itc', 'regular')
+('vivaldi', 'italic')
+('vladimir script', 'regular')
+('webdings', 'regular')
+('wingdings', 'regular')
+('wingdings 2', 'regular')
+('wingdings 3', 'regular')
+    '''
+    pass
 
 
 class FontFiles:
     '''
-    Create a dictionary of the type (font-family, font-style) -> font file
+    Create a dictionary of the type [font-family] -> [font-style] -> font file
     
-    in order to, from the svg text style font-family/font-style, to
+    in order to, from the svg text style font-family/font-style/font-weight/font-stretch, to
     retrieve the right font file
     
-    ex: font-family : Broadway
-        font-style  : normal            -> 'C:\\Windows\\Fonts\\BROADW.TTF'
+    ex: font-family:broadway  font-style:normal   font-weight:normal  font-strech:normal  -> 'C:\\Windows\\Fonts\\BROADW.TTF'
 
-    PS: from Inkscape, there is also the following:
-    
-    -inkscape-font-specification:'Broadway, Normal'  --- can I use it ?
-
-    
+        font-family:arial     font-style:normal   font-weight:normal  -> "regular"
+        font-family:arial     font-style:normal   font-weight:bold    -> "bold"
+        font-family:arial     font-style:italic   font-weight:bold    -> "bold italic"
+        font-family:arial     font-style:italic   font-weight:normal  -> "italic"
     '''
     lookup = None
 
@@ -162,24 +519,82 @@ class FontFiles:
         '''
         look into the C:\\Windows\\Fonts folder and fill the lookup
         '''
+        cls.lookup = {}
+
         ttfs = glob.glob("C:\\Windows\\Fonts\\*.ttf")
 
         for ttf in ttfs:
             face = freetype.Face(ttf)
-            family = face.postscript_name
-            style = face.style_name
+            family = face.family_name.decode().lower()
+            style = face.style_name.decode().lower()
             
-            cls.lookup[(family, style)] = ttf
+            if family not in cls.lookup:
+                cls.lookup[family] = {}
+
+            cls.lookup[family][style] = ttf
+
+        for family in cls.lookup:
+            print("----------------", family)
+            for style in cls.lookup[family]:
+                print("    %-20s  -> %s" % (style, cls.lookup[family][style]))
 
     @classmethod
-    def get_fontfile(cls, family: str, style: str):
+    def build_font_styles(cls, style: str, weight: str, stretch: str) -> List[str] :
         '''
         to improve
+        '''
+        # there can be many font styles probes!
+        font_styles = []
+
+        def build_font_style(style: str, weight: str, stretch: str) -> str:
+            # resulting font style
+            font_style = []
+            if stretch not in ["", "normal"]:
+                font_style.append(stretch)
+            if weight not in ["", "normal"]:
+                font_style.append(weight)
+            if style not in ["", "normal"]:
+                font_style.append(style)
+
+            font_style = " ".join(font_style)
+
+            return font_style
+
+
+        font_styles.append(build_font_style(style, weight, stretch))
+
+        # next case: "normal" can be "regular" / "condensed" can be "narrow"
+        if style in ["", "normal"]:
+            if stretch == "condensed":
+                font_styles.append(build_font_style("regular", weight, "narrow"))
+                font_styles.append(build_font_style("regular", weight, "condensed"))
+            else:
+                font_styles.append(build_font_style("regular", weight, stretch)) 
+
+        return font_styles
+
+
+    @classmethod
+    def get_fontfile(cls, family: str, style: str, weight: str, stretch: str):
+        '''
         '''
         if cls.lookup is None:
             cls.setupFonts()
 
-        return cls.lookup[(family, style)]
+        family = family.lower()
+        weight = weight.lower()
+        style = style.lower()
+        stretch = stretch.lower()
+        
+        if family in cls.lookup:
+            font_styles = cls.build_font_styles(style, weight, stretch)
+            
+            for font_style in font_styles:
+                if font_style in cls.lookup[family]:
+                    return cls.lookup[family][font_style]
+            return None
+       
+        return None
 
     
    
@@ -190,12 +605,6 @@ class Char2SvgPath:
 
     def __init__(self, char: str, font: str):
         '''
-        fonts
-         - './fonts/bitstream_vera_mono/VeraMono.ttf'
-         - './fonts/ziggy/ZIGGS___.TTF'
-         - './fonts/slaine/SLAINE.TTF'
-         - 'C:\\Windows\\Fonts\\arial.ttf'
-         - 'C:\\Windows\\Fonts\\BROADW.ttf'
         '''
         self.char = char
         self.font = font
@@ -256,7 +665,7 @@ class Char2SvgPath:
         After converting this character to a path, you use the same method to convert the next character to a path,
         offset by the kerning
 
-        Humm...
+        NOT YET USED
         '''
         o = Char2SvgPath(prev, self.font)
         
@@ -413,11 +822,7 @@ class Char2SvgPath:
 
         return self.path
 
-    def write_path(self):
-        print("hand made path: %s" % self.path.d())
-        wsvg(self.path, filename="char2path_%s_convert.svg" % self.char)
-
-    def freetype_decompose(self) -> str:
+    def calc_path_freetype_decompose(self, fontsize: float) -> Path:
         '''
         '''
         outline : freetype.Outline = self.face.glyph.outline
@@ -435,32 +840,52 @@ class Char2SvgPath:
             ctx.append("C {},{} {},{} {},{}".format(a.x, a.y, b.x, b.y, c.x, c.y))
 
 
-        ctx= []
+        ctx : List[str] = []
        
         outline.decompose(ctx, move_to=move_to, line_to=line_to, conic_to=conic_to, cubic_to=cubic_to)
 
-        svg = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-            <svg xmlns="http://www.w3.org/2000/svg"
-                width="100mm"
-                height="100mm"
-                viewBox="0 0 100 100"
-                version="1.1">
-                <path
-                    transform="translate(-0.82 0) matrix(1,0, 0,-1, 0,7.5857) scale(0.0051677)"
-                    style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
-                    d="{}"
-                />
-            </svg>""".format(" ".join(ctx))
+        path_str = " ".join(ctx)
 
-        print(svg)
+        # build a Path instance
+        path = parse_path(path_str)
 
-        fp = open("char2path_%s_decompose.svg" % self.char, "w")
-        fp.write(svg)
-        fp.close()
+        # this path is not at the right position - it has to be scaled, shifted and flipped
+        yflip = self.yflip_value
+        if yflip == None:
+            yflip = self.bbox.yMax
 
-        return svg
+        xshift = self.xshift_value
+        if  xshift == None:
+            xshift = self.bbox.xMin
 
+        # extra scaling
+        scaling = fontsize / self.CHAR_SIZE
 
+        # let's go
+        path = path.translated(-xshift)
+        
+        # flipping means a special transformation ... matrix(1,0,  0,-1,  0,7.5857)
+        apath = Path()
+        
+        tf = np.identity(3)
+        tf[1][1] = -1
+        for seg in path:
+            aseg = xxpath.transform(seg, tf)
+            apath.append(aseg)
+        
+        # and the companion translation
+        path = apath.translated(yflip * 1j)
+
+        # finally
+        path = path.scaled(scaling, scaling)
+
+        self.path = path
+
+        return self.path
+
+    def write_path(self, prefix=""):
+        print("path %s: %s" % (prefix, self.path.d()))
+        wsvg(self.path, filename="char2path_%s_%s_convert.svg" % (self.char, prefix))
 
 class String2SvgPaths:
     '''
@@ -469,7 +894,7 @@ class String2SvgPaths:
         self.text = text
         self.font = font
 
-        self.test_position = [0,0]
+        self.text_position = [0,0]
         # but has to be re-evaluated for right positionning
         self.pos = [0,0]
 
@@ -599,14 +1024,26 @@ if __name__ == '__main__':
     o = Char2SvgPath(char, font)
 
     # convert single char shifting x and flipping y --------------
-    o.calc_path(fontsize)
-    o.write_path()
+    #o.calc_path(fontsize)
+    #o.write_path("A")
 
-    pos = (9.2248564, 17.575741)
+    #o.calc_path_freetype_decompose(fontsize)
+    #o.write_path("B")
+
+    #pos = (9.2248564, 17.575741)
 
     # convert whole string
-    oo = String2SvgPaths("Bac", font)
-    oo.calc_paths(fontsize, pos)
-    oo.write_paths()
+    #oo = String2SvgPaths("Bac", font)
+    #oo.calc_paths(fontsize, pos)
+    #oo.write_paths()
 
-    manager = SvgTextManager("C:\\Users\\marduel\\PRIVATE\\pycut\\svg\\B.svg")
+    # -- and from a real svg data
+    manager = SvgTextManager("C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\svg\\test_string.svg")
+    paths = manager.convert_texts()
+    first_text_paths = paths[0]
+    print("-------------------------------------------------------------------------------")
+    print("-------------------------------------------------------------------------------")
+    for k, path in enumerate(first_text_paths):
+        print('<path id="%d" style="fill:#ff0000;fill-opacity:0.5;" d="%s" />' % (k, path.d()))
+    print("-------------------------------------------------------------------------------")
+    print("-------------------------------------------------------------------------------")

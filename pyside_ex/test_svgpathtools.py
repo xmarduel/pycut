@@ -32,7 +32,10 @@ def main(filename: str):
     # came from, it was red
     for k, path in enumerate(paths):
         attribs = attributes[k]
-        print("============= path %s =================" % attribs['id'])
+
+        path_id = attribs.get('id', None)
+
+        print("============= path %s =================" % path_id)
         print(path)
         print(attribs)
 

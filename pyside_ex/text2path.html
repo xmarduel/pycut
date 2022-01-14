@@ -11,68 +11,61 @@
 
 <h4>Introduction</h4>
 
-<p>The conversion of text given in svg files to paths seems to be a common
-concern. There are in Internet plenty of projects/discussions on the topic.</p>
+<p>The conversion of text given in svg files (element <code>&lt;text&gt;</code>) to paths (element
+<code>&lt;path&gt;</code>) seems to be a common concern. There are in Internet plenty of projects/discussions on the
+topic.</p>
 
-<p>For every language it seems that many solutions are given. Unfortunately, as
-far as I could observe, there is plenty of crap. This is especially the case
-when searching for solutions for the python language (which is quite a
-shame)!</p>
+<p>For every language it seems that many solutions are given. Unfortunately, as far as I could observe, there is plenty
+of crap. This is especially the case when searching for solutions for the python language (which is quite a shame)!</p>
 
 <p></p>
 
-<p>I finally found only <strong>1 (!)</strong> python package that seems to
-make the conversion in a reasonable way:</p>
+<p>I finally found only <strong>1 (!)</strong> python package that seems to make the conversion in a reasonable way:</p>
 <ul>
-  <li><strong>ziafont</strong></li>
+  <li><strong>ziafont (version 0.2)</strong> (as 15.01.2022)</li>
 </ul>
 
-<p>This package reads the true type font binary files (which is a whole task in
-its own) and thus has access to every bit of the files. Paths can then be
-calculated and can be exported. A quick try shown me how good this package is.
-Diving into the code show how deep the author of the package known true type
-stuff. I only found one drawback: the output is full of "viewbox" fitting
-exactly the size of the output paths, and these viewboxes are often with
-negative values. Because of this, it is not so straightforward to use the
-output and plug it into the user own svg file as one would wish. This is
-because I personnaly prefer in svg file only 1 viewbox definition (at the top)
-, and not everywhere... I tried verison 0.2 of the ziafont package (as
-15.01.2022).</p>
+<p>This package reads the true type font binary files (which is a whole task in its own) and thus has access to every
+bit of the files. Paths can then be calculated and exported. A quick try shown me how good this package is. Diving into
+the code shows how deep the author of the package knows true type stuff. I only found one drawback: the output is full
+of "viewbox" fitting exactly the size of the output paths, and these viewboxes are often with negative values. Because
+of this, it is not so straightforward (for me) to use the output and to plug it into the user own svg file as one would
+wish. This is because I personnaly prefer in svg file only 1 viewbox definition (at the top) starting at (0, 0) with
+<strong>w</strong> and <strong>h</strong> equals to the svg "<strong>width</strong>" and "<strong>height</strong>".
+Negative <strong>x</strong> or <strong>y</strong> viewboxes are simply a pain.</p>
 
 <p></p>
 
-<p>An other method would be to use the python package
-"<strong>freetype-py</strong>". This package performs the task of reading the
-binary files, and it is possible to generate the paths from the
-structures/objects that freetype-py offers. These are infact ctypes wrappers,
-and as a good (excellent) wrapper, many functions of the freetype c library are
-accessible as methods of these objects. Hopefully all informations of the fonts
-are accessible!</p>
+<p>An other method would be to use the python package "<strong>freetype-py</strong>". This package performs the task of
+reading the binary files, and it is possible to generate the paths from the structures/objects that freetype-py offers.
+These are infact ctypes wrappers, and as a good (excellent) wrapper, many functions of the freetype c library are
+accessible as methods of these objects. Hopefully all informations of the fonts are accessible!</p>
 
-<p>This is the approach that I follow in my package, and because of this, my
-code is much smaller than <strong>ziafont</strong>. But I am quite sure that
-<strong>ziafont</strong> is much more bug free as my
-<strong>svgtext2svgpaths</strong> package.</p>
+<p>This is the approach that I follow in my package, and because of this, my code is much smaller than the
+<strong>ziafont</strong> one. But I am quite sure that <strong>ziafont</strong> is much more robust/bug free as my
+<strong>svgtext2svgpaths</strong> package. Naming <strong>svgtext2svgpaths</strong> a package is anyway not quite
+right, it is simply one single file.</p>
 
 <p></p>
 
 <h4>The svgtext2svgpaths package</h4>
 
-<p>The features of my package are directly dictated from the need to convert
-svg &lt;text&gt; to svg &lt;path&gt; elements. How does the result of the
-conversion has to look like?</p>
+<p>The features of my package are directly dictated from the need to convert svg &lt;text&gt; to svg &lt;path&gt;
+elements. How does the result of the conversion has to look like?</p>
 <ul>
-  <li>It must be <strong>without</strong> any "<strong>transforms</strong>"
-    attribute</li>
-  <li>the <strong>location</strong> of the text described by the path(s) must
-    be exactly the same as the location of the &lt;text&gt; which is given in
-    svg by "x" and "y".</li>
-  <li>the <strong>size</strong> of the letters described by the paths must be
-    exactly the same as the one given in the &lt;text&gt; data: the style
-    "<strong>font-size</strong>" expressed in user units
-  "<strong>px</strong>".</li>
-  <li>and of course, font <strong>family</strong> and <strong>type</strong>
-    must be respected</li>
+  <li>It must be <strong>without</strong> any "<strong>transforms</strong>" attributes.</li>
+  <li>the <strong>location</strong> of the text described by the path(s) must match exactly the same input &lt;text&gt;
+    which is given in svg by the "<strong>x</strong>" and "<strong>y</strong>" attributes.</li>
+  <li>the <strong>size</strong> of the letters described by the paths must be exactly the same as the one given in the
+    &lt;text&gt; data: the style "<strong>font-size</strong>" expressed in user units "<strong>px</strong>".</li>
+  <li>and of course, font <strong>family</strong> and <strong>type</strong> must be respected, as far as possible (font
+    files must be found on the computer).</li>
+</ul>
+
+<p>It cannot handle the following strings:</p>
+<ul>
+  <li><strong>strings splitted on many lines</strong></li>
+  <li><strong>empty space in strings (?)</strong></li>
 </ul>
 
 <p></p>
@@ -81,10 +74,9 @@ conversion has to look like?</p>
 
 <h4>Font properties</h4>
 
-<p>From Inkscape, inside the GUI, a text element is entered. for example
-"Xavier". The font family / type can be chosen as well as the font-size, given
-in "<strong>pt</strong>". Saving this file, we can observe in the svg file that
-the svg font size is different than the one in the GUI.</p>
+<p>From Inkscape, inside the GUI, a text element is entered. for example "Xavier". The font family / type can be chosen
+as well as the font-size, given in "<strong>pt</strong>". Saving this file, we can observe in the svg file that the svg
+font size is different than the one in the GUI.</p>
 
 <p></p>
 
@@ -95,45 +87,67 @@ the svg font size is different than the one in the GUI.</p>
 <p>Units conversion are as following:</p>
 
 <p>https://oreillymedia.github.io/Using_SVG/guide/units.html</p>
-
 <ul>
   <li>1 px = 3/4 pt</li>
   <li>1 inch = 25.4 mm</li>
   <li>Inkscape resolution: 96 px per inch</li>
 </ul>
 
-<p>From these values : 30 pt are 40 px are (40/96) * 25.4 mm = <strong>10.5833</strong>. This
-is the value found in the svg file, with units "px".</p>
+<p>From these values : 30 pt are 40 px are (40/96) * 25.4 mm = <strong>10.5833</strong>. This is the value found in the
+svg file, with units "<strong>px</strong>".</p>
 
 <p></p>
 
-<p>Whatever the conversion is, we have anyway the font-size in the svg file and
-we will use it for the conversion to <code>&lt;paths&gt;</code>.</p>
+<p>Whatever the conversion is, we have anyway the font-size in the svg file and we will use it for the conversion to
+<code>&lt;paths&gt;</code>.</p>
 
-<p>As input we also have the font family and style (in the "style" attribute),
-as well as the string, the value of the text. It can be set as value of the XML
-<code>&lt;text&gt;</code> element, or as value of the XML
-<code>&lt;tspan&gt;</code> element found inside the <code>&lt;text&gt;</code>
-element.</p>
+<p>As input we also have the font family and style (in the "style" attribute), as well as the string, the value of the
+text. It can be set as value of the XML <code>&lt;text&gt;</code> element, or as value(s) of the XML
+<code>&lt;tspan&gt;</code> element(s) found inside the <code>&lt;text&gt;</code> element.</p>
 
-<p>So a converter has to correctly parse the XML &lt;text&gt; element.</p>
+<p>So a converter has to correctly parse the XML <code>&lt;text&gt;</code> element.</p>
 
 <h4>Font Files</h4>
 
-<p>Next, we need something like a "lookup" to find the <strong>ttf</strong>
-files from the given font family and style. Font files are located per default
-in windows in:</p>
+<p>Next, we need something like a "lookup" to find the <strong>ttf</strong> files from the given font family and style.
+Font files are located per default in windows in:</p>
 <ul>
-  <li>C:\\Windows\\Font</li>
+  <li><code>C:\\Windows\\Fonts</code></li>
 </ul>
 
-<p>The font files are read to extract the family and style, as these two
-informations does not neccessarely appear the the font file name.It should be
-also possible to specify other folders were other font files are stored. </p>
+<p>All the font files found there are read to extract the family and style, as these two informations does not
+neccessarely appear the the font files name.It should be also possible to specify other folders where other font files
+are stored. </p>
 
-<p>In case of the svg font family and style are not found in the lookup data,
-then a default font should be loaded</p>
+<p>In case of the svg font family and style are not found in the lookup data, a default font should be loaded.</p>
 
 <p></p>
+
+<h4>Example</h4>
+<pre><code>
+# -- from a real svg data
+# ---- there can be many &lt;text&gt; tags in the svg file
+
+manager = SvgTextManager("C:\\.....\\svg\\B.svg")
+paths = manager.convert_strings()
+
+for string_paths in paths:
+    print("&lt;!-- ------------------------------------------------------------------ --&gt;")
+    print("&lt;!-- ----------- STRING CONVERSION ------------------------------------ --&gt;")
+    print("&lt;"-- ------------------------------------------------------------------- -&gt;")
+
+    for k, path in enumerate(string_paths):
+
+        print('&lt;path id="%d" style="fill:#ff0000;fill-opacity:0.5;" d="%s" /&gt;' % (k, path.d()))
+        print("&lt;!-- ----------------------------------------------------------------------- --&gt;")
+        
+# end</code></pre>
+
+<p></p>
+
+<p>As you can see, conversion is straightforward. Especially, there are no spurious viewboxes around. You can copy from
+the console the output and paste it in the original svg.</p>
+
+<p>All strings should overlap!</p>
 </body>
 </html>
