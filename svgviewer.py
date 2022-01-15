@@ -243,6 +243,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
         shapes : List[etree.ElementTree] = []
         
         for element in elements:
+            if not element.tag.startswith("{http://www.w3.org/2000/svg}"):
+                continue
+            
             tag = element.tag.split("{http://www.w3.org/2000/svg}")[1]
             
             if tag in shapes_types:
