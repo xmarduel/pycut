@@ -28,6 +28,9 @@ from clipper_642 import clipper_642 as ClipperLib
 
 import clipper_utils
 
+from shapely.geometry import LineString, MultiPolygon
+
+
 
 class CamPath:
     '''
@@ -352,7 +355,59 @@ class cam:
         return paths
 
     @classmethod
-    def mergeCompatiblePaths(cls, paths: List[ClipperLib.IntPointVector]):
+    def separateTabs_Shapely(cls, origPath: ClipperLib.IntPointVector, tabs: List['Tab']) -> List[ClipperLib.IntPointVector]:
+        '''
+        from a "normal" tool path, split this path into a list of "partial" paths
+        avoiding the tabs areas
+
+        Note: shapely can only make the difference of a line with 1 polygon (tab).
+        In case of many tabs, we perform the difference incrementally.
+        '''
+        from gcode_generator import Tab
+
+        if len(tabs) == 0:
+            return [origPath]
+
+        pts = [ (pt.X, pt.Y) for pt in origPath ]
+
+        shapely_openpath = LineString(pts)
+
+        print("origPath", origPath)
+        print("origPath", shapely_openpath)
+         
+        shapely_tabs_ = []
+        # 1. from the tabs, build shapely (closed) tab polygons
+        for tab_data in tabs:
+            tab = Tab(tab_data)
+            shapely_tab = tab.svg_path.toShapelyPolygon()
+            shapely_tabs_.append(shapely_tab)
+
+        # hey, multipolygons are good...
+        shapely_tabs = MultiPolygon(shapely_tabs_)
+
+        # 2. then "diff" the origin path with the tabs paths
+        shapely_splitted_paths = shapely_openpath.difference(shapely_tabs)
+
+        # 3. that's it
+        print("splitted_paths", shapely_splitted_paths)
+
+        # back to clipper...
+        paths : List[List[ClipperLib.IntPoint]] = []
+        for shapely_splitted_path in shapely_splitted_paths:
+            intpt_vector = []
+            xy = shapely_splitted_path.xy
+            for ptX, ptY in zip(xy[0], xy[1]):
+                intpt_vector.append(ClipperLib.IntPoint(int(ptX), int(ptY)))
+            paths.append(intpt_vector)
+        
+        # >>> XAM merge some paths when possible
+        paths = cls.mergeCompatiblePaths(paths)
+        # <<< XAM
+
+        return paths
+
+    @classmethod
+    def mergeCompatiblePaths(cls, paths: List[List[ClipperLib.IntPoint]]) -> List[List[ClipperLib.IntPoint]]:
         '''
         This is a post-processing step to clipper-6.4.2 where found separated paths can be merged together,
         leading to less separated paths
@@ -492,7 +547,8 @@ class cam:
                 continue
 
             # split the path to cut into many partials paths to avoid tabs eraas
-            separatedPaths = cls.separateTabs(origPath, tabs)
+            #separatedPaths = cls.separateTabs(origPath, tabs)
+            separatedPaths = cls.separateTabs_Shapely(origPath, tabs)
 
             gcode += \
                 f'\r\n' + \

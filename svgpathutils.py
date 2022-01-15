@@ -15,6 +15,8 @@ import xml.etree.ElementTree as etree
 import svgpathtools
 import numpy as np
 
+import shapely.geometry
+
 #from clipper_613 import clipper_613 as ClipperLib
 from clipper_642 import clipper_642 as ClipperLib
 
@@ -234,6 +236,17 @@ class SvgPath:
                 svg_path.append(svgpathtools.Line(start, end))
 
         return SvgPath(prefix, {'d': svg_path.d(), 'fill-rule': 'evenodd'})
+
+    def toShapelyPolygon(self) -> shapely.geometry.Polygon:
+        '''
+        '''
+        path = self.toClipperPath()
+
+        pts = [ (pt.X, pt.Y) for pt in path ]
+    
+        return shapely.geometry.Polygon(pts)
+
+
 
 
 class SvgTransformer:
