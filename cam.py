@@ -359,9 +359,6 @@ class cam:
         '''
         from a "normal" tool path, split this path into a list of "partial" paths
         avoiding the tabs areas
-
-        Note: shapely can only make the difference of a line with 1 polygon (tab).
-        In case of many tabs, we perform the difference incrementally.
         '''
         from gcode_generator import Tab
 
