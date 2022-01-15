@@ -20,7 +20,7 @@ from val_with_unit import ValWithUnit
 
 import svgviewer
 import gcodeviewer.widgets.glwidget_container as glwidget_container
-import webglviewer
+import gcodesimulator.webglviewer as webglviewer
 import operations_tableview
 import tabs_tableview
 
