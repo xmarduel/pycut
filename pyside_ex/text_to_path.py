@@ -48,6 +48,10 @@ class SvgTextObject:
         self.font_weight = self.elt_style.get("font-weight", "") # no weight
         self.font_stretch = self.elt_style.get("font-stretch", "") # not narrow
 
+        # some fonts can be given in '<name>'
+        if self.font_family.startswith("'") and self.font_family.endswith("'"):
+            self.font_family = self.font_family[1:-1]
+
         self.font_size = self.elt_style.get("font-size", "10.5833px")
 
         self.font_size_float = float(self.font_size[:-2])
@@ -592,8 +596,13 @@ class FontFiles:
             for font_style in font_styles:
                 if font_style in cls.lookup[family]:
                     return cls.lookup[family][font_style]
+
+            print("font '%s' style '%s' not found - ignore" % (family, font_styles))    
             return None
        
+        else:
+            print("font '%s' not found - ignore" % family)    
+            
         return None
 
     
@@ -1038,12 +1047,11 @@ if __name__ == '__main__':
     #oo.write_paths()
 
     # -- and from a real svg data
-    manager = SvgTextManager("C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\svg\\test_string.svg")
+    manager = SvgTextManager("C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\svg\\inki.svg")
     paths = manager.convert_texts()
-    first_text_paths = paths[0]
-    print("-------------------------------------------------------------------------------")
-    print("-------------------------------------------------------------------------------")
-    for k, path in enumerate(first_text_paths):
-        print('<path id="%d" style="fill:#ff0000;fill-opacity:0.5;" d="%s" />' % (k, path.d()))
-    print("-------------------------------------------------------------------------------")
-    print("-------------------------------------------------------------------------------")
+    
+    for k, string_paths in enumerate(paths):
+        print("-------------------------------------------------------------------------------")
+        print("-------------------------------------------------------------------------------")
+        for p, path in enumerate(string_paths):
+            print('<path id="%d_%d" style="fill:#ff0000;fill-opacity:0.5;" d="%s" />' % (k, p, path.d()))
