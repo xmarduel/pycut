@@ -1204,7 +1204,7 @@
           <item row="4" column="0" colspan="2">
            <widget class="QCheckBox" name="checkBox_GCodeConversion_FlipXY">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="font">
              <font>

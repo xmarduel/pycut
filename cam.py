@@ -518,7 +518,7 @@ class cam:
         tabs = args["tabs"]
         tabZ = args["tabZ"]
 
-        flipXY = args["flipXY"] ## TODO
+        flipXY = args["flipXY"]
 
         gcode = ""
 
@@ -535,8 +535,16 @@ class cam:
             return -p.Y * scale + offsetY
 
         def convertPoint(p: ClipperLib.IntPoint):
-            result = ' X' + ValWithUnit(p.X * scale + offsetX, "-").toFixed(decimal) +  \
-                     ' Y' + ValWithUnit(-p.Y * scale + offsetY, "-").toFixed(decimal)
+            x = p.X * scale + offsetX
+            y = -p.Y * scale + offsetY
+
+            if flipXY is False:
+                result = ' X' + ValWithUnit(x, "-").toFixed(decimal) +  \
+                         ' Y' + ValWithUnit(y, "-").toFixed(decimal)
+            else:
+                result = ' X' + ValWithUnit(-y, "-").toFixed(decimal) +  \
+                         ' Y' + ValWithUnit(x, "-").toFixed(decimal)
+
             return result
 
         hasTabs = len(tabs) > 0

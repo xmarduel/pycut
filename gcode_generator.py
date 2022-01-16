@@ -559,23 +559,56 @@ class GcodeGenerator:
 
     @property
     def minX(self):
-        return self.unitConverter.fromInch(self.job.minX / ClipperUtils.inchToClipperScale) + self.offsetX
+        '''
+        only display value after gcode generation
+        '''
+        if self.flipXY == False:
+            # normal case
+            return self.unitConverter.fromInch(self.job.minX / ClipperUtils.inchToClipperScale) + self.offsetX
+        else:
+            # as flipped: is -maxY when "no flip" 
+            return self.unitConverter.fromInch(self.job.minY / ClipperUtils.inchToClipperScale) - self.offsetY
+
 
     @property
     def maxX(self):
-        return self.unitConverter.fromInch(self.job.maxX / ClipperUtils.inchToClipperScale) + self.offsetX
+        '''
+        only display value after gcode generation
+        '''
+        if self.flipXY == False:
+            # normal case
+            return self.unitConverter.fromInch(self.job.maxX / ClipperUtils.inchToClipperScale) + self.offsetX
+        else:
+            # as flipped: is -minY when "no flip" 
+            return self.unitConverter.fromInch(self.job.maxY / ClipperUtils.inchToClipperScale) - self.offsetY
     
     @property
     def minY(self):
-        return  -self.unitConverter.fromInch(self.job.maxY / ClipperUtils.inchToClipperScale) + self.offsetY
-   
+        '''
+        only display value after gcode generation
+        '''
+        if self.flipXY == False:
+            # normal case
+            return  -self.unitConverter.fromInch(self.job.maxY / ClipperUtils.inchToClipperScale) + self.offsetY
+        else:
+            # as flipped: is minX when "no flip" 
+            return self.unitConverter.fromInch(self.job.minX / ClipperUtils.inchToClipperScale) + self.offsetX
+
     @property
     def maxY(self):
-        return  -self.unitConverter.fromInch(self.job.minY / ClipperUtils.inchToClipperScale) + self.offsetY
+        '''
+        only display value after gcode generation
+        '''
+        if self.flipXY == False:
+            # normal case
+            return  -self.unitConverter.fromInch(self.job.minY / ClipperUtils.inchToClipperScale) + self.offsetY
+        else:
+            # as flipped: is maxX when "no flip" 
+            return self.unitConverter.fromInch(self.job.maxX / ClipperUtils.inchToClipperScale) + self.offsetX
 
     def generateGcode_zeroLowerLeftOfMaterial(self):
-        self.offsetX = - self.unitConverter.fromInch(0)
-        self.offsetY = - self.unitConverter.fromInch(-self.materialModel.sizeY)
+        self.offsetX = self.unitConverter.fromInch(0)
+        self.offsetY = self.unitConverter.fromInch(self.materialModel.sizeY)
         self.generateGcode()
     
     def generateGcode_zeroLowerLeft(self):

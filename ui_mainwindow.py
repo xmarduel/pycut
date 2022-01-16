@@ -720,7 +720,7 @@ class Ui_mainwindow(object):
 
         self.checkBox_GCodeConversion_FlipXY = QCheckBox(self.centralwidget)
         self.checkBox_GCodeConversion_FlipXY.setObjectName(u"checkBox_GCodeConversion_FlipXY")
-        self.checkBox_GCodeConversion_FlipXY.setEnabled(False)
+        self.checkBox_GCodeConversion_FlipXY.setEnabled(True)
         font2 = QFont()
         font2.setBold(True)
         font2.setKerning(False)

@@ -1010,8 +1010,15 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         '''
         # with the resulting calculation, we can fill the min/max in X/Y as well as the offsets
+        self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.disconnect(self.cb_generate_gcode)
+        self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.disconnect(self.cb_generate_gcode)
+
         self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue(generator.offsetX)
         self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(generator.offsetY)
+        
+        self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode)
+        self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode)
+
         self.ui.doubleSpinBox_GCodeConversion_MinX.setValue(generator.minX)
         self.ui.doubleSpinBox_GCodeConversion_MinY.setValue(generator.minY)
         self.ui.doubleSpinBox_GCodeConversion_MaxX.setValue(generator.maxX)
