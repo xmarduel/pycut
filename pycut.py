@@ -71,6 +71,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         },
         "GCodeConversion" : {
             "Units"         : "mm",
+            "FlipXY"        : False,
             "XOffset"       : 0.0,
             "YOffset"       : 0.0,
         },
@@ -175,6 +176,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # these callbacks only after have loading a job
         self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode)
         self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode)
+        self.ui.checkBox_GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
 
 
         self.setWindowState(QtCore.Qt.WindowMaximized)
@@ -336,6 +338,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             },
             "GCodeConversion" : {
                 "Units"           : self.ui.comboBox_GCodeConversion_Units.currentText(),
+                "FlipXY"          : self.ui.checkBox_GCodeConversion_FlipXY.isChecked(),
                 "XOffset"         : self.ui.doubleSpinBox_GCodeConversion_XOffset.value(),
                 "YOffset"         : self.ui.doubleSpinBox_GCodeConversion_YOffset.value()
             },
@@ -378,6 +381,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             
         # GCodeConversion
         self.ui.comboBox_GCodeConversion_Units.setCurrentText(settings["GCodeConversion"]["Units"])
+        self.ui.checkBox_GCodeConversion_FlipXY.setChecked(settings["GCodeConversion"]["FlipXY"])
         self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue(settings["GCodeConversion"]["XOffset"])
         self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(settings["GCodeConversion"]["YOffset"])
             
@@ -906,6 +910,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         gcodeModel = GcodeModel()
         gcodeModel.units = settings["GCodeConversion"]["Units"]
+        gcodeModel.flipXY = settings["GCodeConversion"]["FlipXY"]
         gcodeModel.XOffset = settings["GCodeConversion"]["XOffset"]
         gcodeModel.YOffset = settings["GCodeConversion"]["YOffset"]
         gcodeModel.returnTo00 = settings["GCodeGeneration"]["ReturnToZeroAtEnd"]

@@ -492,6 +492,7 @@ class cam:
           rapidFeed:      Feedrate for rapid moves (gcode units)
           tabs:           List of tabs
           tabZ:           Level below which tabs are to be processed
+          flipXY          toggle X with Y
         '''
         paths : List[CamPath] = args["paths"]
         ramp = args["ramp"]
@@ -516,6 +517,8 @@ class cam:
 
         tabs = args["tabs"]
         tabZ = args["tabZ"]
+
+        flipXY = args["flipXY"] ## TODO
 
         gcode = ""
 

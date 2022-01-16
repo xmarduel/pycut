@@ -66,6 +66,8 @@ class GcodeModel:
         self.XOffset = 0.0
         self.YOffset = 0.0
 
+        self.flipXY = False
+
         # ----------------------------
         self.returnTo00 = False
 
@@ -551,6 +553,8 @@ class GcodeGenerator:
         self.offsetX = self.gcodeModel.XOffset
         self.offsetY = self.gcodeModel.YOffset
 
+        self.flipXY = self.gcodeModel.flipXY
+
         self.gcode = ""
 
     @property
@@ -590,6 +594,10 @@ class GcodeGenerator:
 
     def setYOffset(self, value):
         self.offsetY = value
+        self.generateGcode()
+
+    def setFlipXY(self, value):
+        self.flipXY = value
         self.generateGcode()
 
     def generateGcode(self):
@@ -662,7 +670,8 @@ class GcodeGenerator:
                 "cutFeed":        cutRate,
                 "rapidFeed":      rapidRate,
                 "tabs":           self.tabsModel.tabs,
-                "tabZ":           tabZ
+                "tabZ":           tabZ,
+                "flipXY":         self.flipXY      
             })
 
         if self.gcodeModel.spindleControl:
