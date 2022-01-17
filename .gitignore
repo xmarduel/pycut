@@ -142,8 +142,8 @@ clipper_642/clipper.o
 clipper_642/clipper642_test.exe
 clipper_642/clipper642_test.o
 
-pyside_ex/fonts
-pyside_ex/images
+misc_private/fonts
+misc_private/images
 
 gcodeviewer/drawers/*h
 gcodeviewer/drawers/*cpp
