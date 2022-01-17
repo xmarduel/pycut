@@ -17,6 +17,23 @@
       "Units": "mm",
       "Margin": 0.0,
       "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 1.6749999999999985,
+      "paths": [
+        "path37",
+        "path39",
+        "path41",
+        "path43"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
     }
   ],
   "settings": {
@@ -28,17 +45,26 @@
       "height": 2.0,
       "tabs": [
         {
-          "center": [10, 10],
+          "center": [
+            10,
+            10
+          ],
           "radius": 4,
           "enabled": false
         },
         {
-          "center": [10, 20],
+          "center": [
+            10,
+            20
+          ],
           "radius": 4,
           "enabled": false
         },
         {
-          "center": [10, 30],
+          "center": [
+            10,
+            30
+          ],
           "radius": 4,
           "enabled": false
         }
@@ -46,7 +72,7 @@
     },
     "Tool": {
       "Units": "mm",
-      "Diameter": 1.0,
+      "Diameter": 0.4,
       "Angle": 180,
       "PassDepth": 1.0,
       "StepOver": 0.4,
@@ -66,8 +92,9 @@
     },
     "GCodeConversion": {
       "Units": "mm",
+      "FlipXY": false,
       "XOffset": 0.0,
-      "YOffset": 0.0
+      "YOffset": 100.0
     },
     "GCodeGeneration": {
       "ReturnToZeroAtEnd": true,

@@ -3,20 +3,28 @@
   "operations": [
     {
       "Name": "op1 - Union",
-      "paths": ["r1", "r2", "r3"],
       "type": "Pocket",
-      "Deep": 10.0,       
+      "Deep": 10.0,
+      "paths": [
+        "r1",
+        "r2",
+        "r3"
+      ],
       "RampPlunge": true,
       "Combine": "Union",
       "Direction": "Conventional",
       "Units": "mm",
-      "Margin": 0.0
+      "Margin": 0.0,
+      "Width": 7.0
     },
     {
       "Name": "op2 - Intersection",
-      "paths": ["r1", "c1"],
       "type": "Pocket",
       "Deep": 10.0,
+      "paths": [
+        "r1",
+        "c1"
+      ],
       "RampPlunge": true,
       "Combine": "Intersection",
       "Direction": "Conventional",
@@ -26,9 +34,12 @@
     },
     {
       "Name": "op3 - Diff",
-      "paths": ["r1", "c1"],
       "type": "Pocket",
       "Deep": 10.0,
+      "paths": [
+        "r1",
+        "c1"
+      ],
       "RampPlunge": true,
       "Combine": "Difference",
       "Direction": "Conventional",
@@ -38,9 +49,12 @@
     },
     {
       "Name": "op4 - Xor",
-      "paths": ["r1", "c1"],
       "type": "Pocket",
       "Deep": 10.0,
+      "paths": [
+        "r1",
+        "c1"
+      ],
       "RampPlunge": true,
       "Combine": "Xor",
       "Direction": "Conventional",
@@ -50,9 +64,11 @@
     },
     {
       "Name": "op5 - only 1 pat",
-      "paths": ["r1"],
       "type": "Pocket",
       "Deep": 10.0,
+      "paths": [
+        "r1"
+      ],
       "RampPlunge": true,
       "Combine": "Intersection",
       "Direction": "Conventional",
@@ -61,55 +77,65 @@
       "Width": 5.0
     }
   ],
-  "settings" : {
+  "settings": {
     "svg": {
-        "px_per_inch": 96
+      "px_per_inch": 96
     },
     "Tabs": {
-       "units": "mm",
-       "height": 2.0,
-       "tabs": [
+      "units": "mm",
+      "height": 2.0,
+      "tabs": [
         {
-          "center": [10, 10],
+          "center": [
+            39.0,
+            24.0
+          ],
+          "radius": 8.0,
+          "enabled": true
+        },
+        {
+          "center": [
+            10,
+            20
+          ],
           "radius": 4,
           "enabled": false
         },
         {
-          "center": [10, 20],
-          "radius": 4,
-          "enabled": false
-        },
-        {
-          "center": [10, 30],
+          "center": [
+            10,
+            30
+          ],
           "radius": 4,
           "enabled": false
         }
       ]
-     },
-     "Tool": {
-       "Units": "mm",
-       "Diameter": 3.0,
-       "Angle": 180,
-       "PassDepth": 5.0,
-       "StepOver": 0.4,
-       "Rapid": 500,
-       "Plunge": 100,
-       "Cut": 200
-     },
-     "Material": {
-       "Units": "mm",
-       "Thickness": 50.0,
-       "ZOrigin": "Top",
-       "Clearance": 10.0
-     },
-     "CurveToLineConversion": {
-       "MinimumSegments": 5,
-       "MinimumSegmentsLength": 0.01
-     },
-     "GCodeConversion": {
-       "Units": "mm",
-       "XOffset": 0.0,
-       "YOffset": 0.0
+    },
+    "Tool": {
+      "Units": "mm",
+      "Diameter": 3.0,
+      "Angle": 180,
+      "PassDepth": 5.0,
+      "StepOver": 0.4,
+      "Rapid": 500,
+      "Plunge": 100,
+      "Cut": 200
+    },
+    "Material": {
+      "Units": "mm",
+      "Thickness": 50.0,
+      "ZOrigin": "Top",
+      "Clearance": 10.0
+    },
+    "CurveToLineConversion": {
+      "MinimumSegments": 5,
+      "MinimumSegmentsLength": 0.01
+    },
+    "GCodeConversion": {
+      "Units": "mm",
+      "FlipXY": false,
+      "XOffset": 0.0,
+      "YOffset": 0.0
     },
     "GCodeGeneration": {
       "ReturnToZeroAtEnd": true,

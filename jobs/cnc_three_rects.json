@@ -114,27 +114,27 @@
       "tabs": [
         {
           "center": [
-            49.0,
-            22.0
+            39.0,
+            19.0
           ],
-          "radius": 9.0,
+          "radius": 8.0,
           "enabled": false
         },
         {
           "center": [
-            22.0,
-            41.0
+            79.0,
+            93.0
           ],
-          "radius": 4,
-          "enabled": false
+          "radius": 5.0,
+          "enabled": true
         },
         {
           "center": [
-            41,
-            56.0
+            79.0,
+            67.0
           ],
-          "radius": 5,
-          "enabled": false
+          "radius": 5.0,
+          "enabled": true
         }
       ]
     },
@@ -160,6 +160,7 @@
     },
     "GCodeConversion": {
       "Units": "mm",
+      "FlipXY": false,
       "XOffset": 0.0,
       "YOffset": 0.0
     },

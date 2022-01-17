@@ -1,0 +1,144 @@
+{
+  "svg_file": "C:/Users/xavie/Documents/GITHUB/pycut/svg/control.svg",
+  "operations": [
+    {
+      "Name": "onoff",
+      "type": "Inside",
+      "Deep": 3.1,
+      "paths": [
+        "onoff"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 1.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "tacho",
+      "type": "Inside",
+      "Deep": 3.1,
+      "paths": [
+        "tacho"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 1.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "regler",
+      "type": "Inside",
+      "Deep": 3.1,
+      "paths": [
+        "regler"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "panel",
+      "type": "Outside",
+      "Deep": 3.1,
+      "paths": [
+        "panel"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    }
+  ],
+  "settings": {
+    "svg": {
+      "px_per_inch": 96
+    },
+    "Tabs": {
+      "units": "mm",
+      "height": 1.0,
+      "tabs": [
+        {
+          "center": [
+            84.0,
+            17.0
+          ],
+          "radius": 3.0,
+          "enabled": true
+        },
+        {
+          "center": [
+            84.0,
+            43.0
+          ],
+          "radius": 3.0,
+          "enabled": true
+        },
+        {
+          "center": [
+            32.0,
+            26.0
+          ],
+          "radius": 3.0,
+          "enabled": true
+        },
+        {
+          "center": [
+            46.0,
+            9.0
+          ],
+          "radius": 5,
+          "enabled": true
+        },
+        {
+          "center": [
+            129.0,
+            50.0
+          ],
+          "radius": 5.0,
+          "enabled": true
+        }
+      ]
+    },
+    "Tool": {
+      "Units": "mm",
+      "Diameter": 2.0,
+      "Angle": 180,
+      "PassDepth": 1.0,
+      "StepOver": 0.4,
+      "Rapid": 1000,
+      "Plunge": 127,
+      "Cut": 1000
+    },
+    "Material": {
+      "Units": "mm",
+      "Thickness": 3.0,
+      "ZOrigin": "Top",
+      "Clearance": 10.0
+    },
+    "CurveToLineConversion": {
+      "MinimumSegments": 5,
+      "MinimumSegmentsLength": 0.01
+    },
+    "GCodeConversion": {
+      "Units": "mm",
+      "FlipXY": false,
+      "XOffset": 0.0,
+      "YOffset": 60.0
+    },
+    "GCodeGeneration": {
+      "ReturnToZeroAtEnd": true,
+      "SpindleControl": true,
+      "SpindleSpeed": 1000,
+      "ProgramEnd": false
+    }
+  }
+}
