@@ -388,6 +388,9 @@ class cam:
         # 3. that's it
         print("splitted_paths", shapely_splitted_paths)
 
+        if shapely_splitted_paths.__class__.__name__ == 'LineString':
+            shapely_splitted_paths = [shapely_splitted_paths]
+
         # back to clipper...
         paths : List[List[ClipperLib.IntPoint]] = []
         for shapely_splitted_path in shapely_splitted_paths:
