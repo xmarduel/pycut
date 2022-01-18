@@ -133,6 +133,10 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.cmdFront.clicked.connect(self.on_cmdFront_clicked)
         self.cmdLeft.clicked.connect(self.on_cmdLeft_clicked)
 
+        self.rotationChanged.connect(self.onVisualizatorRotationChanged)
+        self.resized.connect(self.placeVisualizerButtons)
+       
+
         QtCore.QTimer.singleShot(1000, self.onFramesTimer)
 
     def placeVisualizerButtons(self):

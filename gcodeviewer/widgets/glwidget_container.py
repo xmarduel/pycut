@@ -126,15 +126,12 @@ class GLWidgetContainer(QtWidgets.QWidget):
         
         self.glwVisualizer.fitDrawable()
 
-        self.glwVisualizer.rotationChanged.connect(self.glwVisualizer.onVisualizatorRotationChanged)
-        self.glwVisualizer.resized.connect(self.glwVisualizer.placeVisualizerButtons)
         self.m_programModel.dataChanged.connect(self.onTableCellChanged)
 
         self.tblProgram.setModel(self.m_programModel)
         self.tblProgram.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-        #self.tblProgram.verticalScrollBar().actionTriggered.connect(self.onScroolBarAction)
-        self.tblProgram.selectionModel().currentChanged.connect(self.onTableCurrentChanged)   
-        # 
+        self.tblProgram.verticalScrollBar().actionTriggered.connect(self.onScroolBarAction)
+        self.tblProgram.selectionModel().currentChanged.connect(self.onTableCurrentChanged)    
 
         self.tblProgram.hideColumn(2)
         self.tblProgram.hideColumn(3)
@@ -324,6 +321,11 @@ class GLWidgetContainer(QtWidgets.QWidget):
 
         return t
 
+    def onScroolBarAction(self):
+        '''
+        '''
+        pass 
+    
     def onTableCurrentChanged(self, idx1: QtCore.QModelIndex, idx2: QtCore.QModelIndex) :
         # Update toolpath hightlighting
         if idx1.row() > self.m_currentModel.rowCount() - 2:
@@ -492,11 +494,10 @@ class GLWidgetContainer(QtWidgets.QWidget):
 
         parser.reset()
 
-        
         arcPrecision = 0.0 # TODO self.m_settings.arcPrecision()
         arcDegreeMode = False # TODO self.m_settings.arcDegreeMode()
         
-        all_lines = parser.getLinesFromParser(gp, arcPrecision(), arcDegreeMode())
+        all_lines = parser.getLinesFromParser(gp, arcPrecision, arcDegreeMode)
         
         self.updateProgramEstimatedTime(all_lines)
 
