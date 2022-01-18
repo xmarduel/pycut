@@ -17,6 +17,7 @@ from PySide6.QtCore import qIsNaN
 from gcodeviewer.parser.pointsegment import PointSegment
 from gcodeviewer.parser.gcodepreprocessorutils import GcodePreprocessorUtils
 
+from gcodeviewer.util.util import qQNaN
 
 class GcodeParser : 
     '''
@@ -91,7 +92,7 @@ class GcodeParser :
         print("reseting gp %s" % initialPoint)
 
         if initialPoint is None:
-            initialPoint = QVector3D(0, 0, 0)
+            initialPoint = QVector3D(qQNaN(), qQNaN(), qQNaN())
             
         self.m_points = []
         

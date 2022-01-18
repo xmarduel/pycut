@@ -1,6 +1,4 @@
 
-import math
-
 from typing import List
 
 from PySide6.QtCore import QElapsedTimer
@@ -40,9 +38,6 @@ from gcodeviewer.util.util import qQNaN
 from gcodeviewer.widgets.glwidget import GLWidget
 
 sNan = float('NaN')
-
-M_PI = math.acos(-1)
-ZOOMSTEP = 1.1
 
 PROGRESSMINLINES = 10000
 PROGRESSSTEP     =  1000
@@ -238,7 +233,6 @@ class GLWidgetContainer(QtWidgets.QWidget):
                 item.args = args
 
                 self.m_programModel.m_data.append(item)
-            
 
             if progress.isVisible() and (len(data) % PROGRESSSTEP == 0) :
                 progress.setValue(progress.maximum() - len(data))
@@ -254,7 +248,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         time.start()
 
         arcPrecision = 0.0 # TODO self.m_settings.arcPrecision()
-        arcDegreeMode = False # TODO self.m_settings.arcDegreeMode()
+        arcDegreeMode = True # TODO self.m_settings.arcDegreeMode()
 
         all_lines = self.m_viewParser.getLinesFromParser(gp, arcPrecision, arcDegreeMode)
 
@@ -440,6 +434,9 @@ class GLWidgetContainer(QtWidgets.QWidget):
                 k += 1
 
     def updateParser(self):
+        '''
+        rapidSpeed set to 100  --- in Candle: set "rapidSpeed" settings
+        '''
 
         time = QElapsedTimer()
 
@@ -495,7 +492,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         parser.reset()
 
         arcPrecision = 0.0 # TODO self.m_settings.arcPrecision()
-        arcDegreeMode = False # TODO self.m_settings.arcDegreeMode()
+        arcDegreeMode = True # TODO self.m_settings.arcDegreeMode()
         
         all_lines = parser.getLinesFromParser(gp, arcPrecision, arcDegreeMode)
         

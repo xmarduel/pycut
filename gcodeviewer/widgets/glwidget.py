@@ -17,7 +17,6 @@ from PySide6.QtCore import qIsNaN
 
 from gcodeviewer.drawers.shaderdrawable import ShaderDrawable
 
-
 M_PI = math.acos(-1)
 ZOOMSTEP = 1.1
 
@@ -616,7 +615,10 @@ void main()
         self.glDisable(GL.GL_LINE_SMOOTH)
         self.glDisable(GL.GL_BLEND)
 
-        if False:  # no timer event because commented (actually crash on painter) 
+        if True:  # no timer event because commented (actually crash on painter) 
+            pass
+
+            '''
             painter = QtGui.QPainter(self)
 
             painter.beginNativePainting()
@@ -651,6 +653,7 @@ void main()
             painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y + 15), xstr)
 
             self.m_frames += 1
+            '''
 
         self.m_frames += 1
         self.update()
