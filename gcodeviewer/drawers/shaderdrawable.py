@@ -75,8 +75,8 @@ class VertexData:
 class ShaderDrawable(QOpenGLFunctions):
     '''
     '''
-    sizeof_vertexdata = 36
-    sizeof_vector3D = 12
+    sizeof_vertexdata = 36  # the "stride" of the vertex array: 3xQVector3D
+    sizeof_vector3D = 12  # size of every attribute in a VertexData item
 
     def __init__(self):
         '''
