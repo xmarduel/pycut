@@ -261,7 +261,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
 
         all_lines = self.m_viewParser.getLinesFromParser(gp, arcPrecision, arcDegreeMode)
 
-        #self.updateProgramEstimatedTime(all_lines)
+        self.updateProgramEstimatedTime(all_lines)
         print("view parser filled: %s ms" % time.elapsed())
 
         self.m_programLoading = False
@@ -292,26 +292,25 @@ class GLWidgetContainer(QtWidgets.QWidget):
     def updateProgramEstimatedTime(self, lines: List[LineSegment]) -> QTime:
         time = 0
 
-        for line in lines:
-            ls = LineSegment(line)
-            #  foreach (LineSegment *ls, lines) {
+        for ls in lines:
             length = (ls.getEnd() - ls.getStart()).length()
 
             if not qIsNaN(length) and not qIsNaN(ls.getSpeed()) and ls.getSpeed() != 0 :
-                cond1 = self.slbFeedOverride.isChecked() and not ls.isFastTraverse()
-                cond2 =  self.slbRapidOverride.isChecked() and ls.isFastTraverse()
-                
                 speed = ls.getSpeed()
-                val1 = (speed * self.slbFeedOverride.value() / 100)
-                val2 = speed
+                
+                '''
+                cond1 = self.slbFeedOverride.isChecked() and not ls.isFastTraverse()
+                cond2 = self.slbRapidOverride.isChecked() and ls.isFastTraverse()
+                
+                val1 = speed * self.slbFeedOverride.value() / 100.0
+                val2 = speed * self.slbRapidOverride.value() / 100.0
                 
                 if cond1:
-                    time += val1
-                else:
-                    if cond2:
-                        time += val1
-                    else:
-                        time += val2   # Update for rapid override
+                    speed = val1
+                elif cond2:
+                    speed = val2
+                '''
+                time += length / speed
 
         time *= 60
 
@@ -499,7 +498,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         
         all_lines = parser.getLinesFromParser(gp, arcPrecision(), arcDegreeMode())
         
-        #self.updateProgramEstimatedTime(all_lines)
+        self.updateProgramEstimatedTime(all_lines)
 
         self.m_currentDrawer.update()
         self.glwVisualizer.updateExtremes(self.m_currentDrawer)
