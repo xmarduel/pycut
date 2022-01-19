@@ -679,7 +679,7 @@
            <attribute name="title">
             <string>GCode Simulator</string>
            </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_5"/>
+           <layout class="QHBoxLayout" name="horizontalLayout_5"/>
           </widget>
          </widget>
          <widget class="PyCutOperationsTableViewManager" name="operationsview_manager" native="true">

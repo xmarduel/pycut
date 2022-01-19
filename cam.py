@@ -661,7 +661,7 @@ class cam:
 
                     if inTabsHeight:
                         # move to initial point of partial path
-                        gcode += '; with Tabs: move to first point of partial path at safe height \r\n'
+                        gcode += '; Tab: move to first point of partial path at safe height \r\n'
                         gcode += 'G1' + convertPoint(selectedPath[0]) + '\r\n'
                         gcode += \
                             '; plunge\r\n' + \

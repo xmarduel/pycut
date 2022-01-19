@@ -36,6 +36,8 @@ from gcode_generator import JobModel
 
 from gcode_generator import GcodeGenerator
 
+#import PySideSyntaxHighlighter
+
 import resources_rc
 from ui_mainwindow import Ui_mainwindow
 
@@ -100,6 +102,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         # open/read/write job settings
         self.jobfilename = None
+
+        self.gcode_textviewer = None
 
         self.svg_viewer = self.setup_svg_viewer()
         self.svg_material_viewer = self.setup_material_viewer()
@@ -275,6 +279,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.webgl_viewer.set_webgl_data(str_simulator_data)
         self.webgl_viewer.show_gcode()
+
+        self.gcode_textviewer.setPlainText(gcode)
+        #PySideSyntaxHighlighter.GCodeHighlighter(self.gcode_textviewer.document())
+        self.gcode_textviewer.setStyleSheet("background-color: rgb(224,224,224);" )
+
+        self.ui.simulator.layout()
 
         self.candle_viewer.loadData(gcode.split("\r\n"))
 
@@ -678,8 +688,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         
         webgl_viewer = webglviewer.WebGlViewer(webgl)
 
+        self.gcode_textviewer = QtWidgets.QPlainTextEdit(webgl)
+        self.gcode_textviewer.setMinimumWidth(100)
+
         layout.addWidget(webgl_viewer)
-        layout.stretch(0)
+        layout.addWidget(self.gcode_textviewer)
+        layout.setStretch(0, 3)
+        layout.setStretch(1, 2)
         
         return webgl_viewer
 
