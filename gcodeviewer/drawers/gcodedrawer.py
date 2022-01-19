@@ -237,12 +237,14 @@ class GcodeDrawer(ShaderDrawable) :
             line = lines[i]
 
             if qIsNaN(line.getEnd().z()):
+                i += 1
                 continue
 
             # Find first point of toolpath
             if drawFirstPoint:
 
                 if qIsNaN(line.getEnd().x()) or qIsNaN(line.getEnd().y()) :
+                    i += 1
                     continue
 
                 # Draw first toolpath point

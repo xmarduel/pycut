@@ -38,36 +38,6 @@ class LineSegment:
 
         self.m_plane = PointSegment.Plane.XY
 
-    @classmethod
-    def LineSegment_FromVector3Ds(cls, a: QVector3D, b: QVector3D, num: int):
-        this = LineSegment()
-
-        this.m_first = a
-        this.m_second = b
-        this.m_lineNumber = num
-
-        return this
-
-    @classmethod
-    def LineSegment_FromLineSegment(cls, initial: 'LineSegment'):
-        this = LineSegment()
-
-        this.m_toolhead = initial.getToolhead()
-        this.m_isZMovement = initial.isZMovement()
-        this.m_isArc = initial.isArc()
-        this.m_isFastTraverse = initial.isFastTraverse()
-        this.m_drawn = initial.drawn()
-        this.m_first = initial.getStart()
-        this.m_second = initial.getEnd()
-        this.m_lineNumber = initial.getLineNumber()
-        this.m_speed = initial.getSpeed()
-        this.m_isMetric = initial.isMetric()
-        this.m_isAbsolute = initial.isAbsolute()
-        this.m_isHightlight = initial.isHightlight()
-        this.m_vertexIndex = initial.vertexIndex()
-    
-        return this
-
     def getLineNumber(self) -> int:
         return self.m_lineNumber
 

@@ -105,13 +105,13 @@ class GcodeViewParse :
                         for nextPoint in points:
                             if nextPoint == startPoint:
                                 continue
-                            ls = LineSegment.LineSegment_FromVector3Ds(startPoint, nextPoint, lineIndex)
+                            ls = LineSegment()
                             #ls.setIsArc(ps.isArc())
                             #ls.setIsClockwise(ps.isClockwise())
                             #ls.setPlane(ps.plane())
                             #ls.setIsFastTraverse(ps.isFastTraverse())
-                            l#s.setIsZMovement(ps.isZMovement())
-                            l#s.setIsMetric(isMetric)
+                            #ls.setIsZMovement(ps.isZMovement())
+                            #ls.setIsMetric(isMetric)
                             #ls.setIsAbsolute(ps.isAbsolute())
                             #ls.setSpeed(ps.getSpeed())
                             #ls.setSpindleSpeed(ps.getSpindleSpeed())
@@ -128,6 +128,11 @@ class GcodeViewParse :
                             ls.m_speed = ps.m_speed
                             ls.m_spindleSpeed = ps.m_spindleSpeed
                             ls.m_dwell = ps.m_dwell
+                            
+                            ls.m_first = startPoint
+                            ls.m_second = nextPoint
+                            ls.m_lineNumber = lineIndex
+
                             self.testExtremes_Vector3D(nextPoint)
                             self.m_lines.append(ls)
                             self.m_lineIndexes[ps.getLineNumber()].append(len(self.m_lines) - 1)
@@ -137,16 +142,30 @@ class GcodeViewParse :
 
                 # Line
                 else:
-                    ls = LineSegment.LineSegment_FromVector3Ds(start, end, lineIndex)
+                    ls = LineSegment()
+                    ls.m_first = start
+                    ls.m_second = end
+                    ls.m_lineNumber = lineIndex
+    
                     lineIndex += 1
-                    ls.setIsArc(ps.isArc())
-                    ls.setIsFastTraverse(ps.isFastTraverse())
-                    ls.setIsZMovement(ps.isZMovement())
-                    ls.setIsMetric(isMetric)
-                    ls.setIsAbsolute(ps.isAbsolute())
-                    ls.setSpeed(ps.getSpeed())
-                    ls.setSpindleSpeed(ps.getSpindleSpeed())
-                    ls.setDwell(ps.getDwell())
+                    #ls.setIsArc(ps.isArc())
+                    #ls.setIsFastTraverse(ps.isFastTraverse())
+                    #ls.setIsZMovement(ps.isZMovement())
+                    #ls.setIsMetric(isMetric)
+                    #ls.setIsAbsolute(ps.isAbsolute())
+                    #ls.setSpeed(ps.getSpeed())
+                    #ls.setSpindleSpeed(ps.getSpindleSpeed())
+                    #ls.setDwell(ps.getDwell())
+
+                    ls.m_isArc = ps.m_isArc
+                    ls.m_isFastTraverse = ps.m_isFastTraverse
+                    ls.m_isZMovement = ps.m_isZMovement
+                    ls.m_isMetric = ps.m_isMetric
+                    ls.m_isAbsolute = ps.m_isAbsolute
+                    ls.m_speed = ps.m_speed
+                    ls.m_spindleSpeed = ps.m_spindleSpeed
+                    ls.m_dwell = ps.m_dwell
+
                     self.testExtremes_Vector3D(end)
                     self.testLength(start, end)
                     self.m_lines.append(ls)

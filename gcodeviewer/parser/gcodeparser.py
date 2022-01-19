@@ -92,7 +92,7 @@ class GcodeParser :
         print("reseting gp %s" % initialPoint)
 
         if initialPoint is None:
-            #initialPoint = QVector3D(qQNaN(), qQNaN(), qQNaN()) # FIXME: should be this line!
+            #initialPoint = QVector3D(qQNaN(), qQNaN(), qQNaN()) # CANDLE: this line!
             initialPoint = QVector3D(0.0, 0.0, 0.0)
             
         self.m_points = []
