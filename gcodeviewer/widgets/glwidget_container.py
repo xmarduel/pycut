@@ -27,13 +27,10 @@ from gcodeviewer.drawers.selectiondrawer import SelectionDrawer
 from gcodeviewer.parser.gcodeviewparse import GcodeViewParse 
 from gcodeviewer.parser.gcodepreprocessorutils import  GcodePreprocessorUtils  
 from gcodeviewer.parser.gcodeparser import  GcodeParser 
+from gcodeviewer.parser.linesegment import LineSegment
 
 from gcodeviewer.tables.gcodetablemodel import GCodeItem
 from gcodeviewer.tables.gcodetablemodel import GCodeTableModel
-
-from gcodeviewer.parser.linesegment import LineSegment
-
-from gcodeviewer.util.util import qQNaN
 
 from gcodeviewer.widgets.glwidget import GLWidget
 
@@ -192,7 +189,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         gp.setTraverseSpeed(100)
 
         if self.m_codeDrawer.getIgnoreZ(): 
-            gp.reset(QVector3D(qQNaN(), qQNaN(), 0))
+            gp.reset(QVector3D(sNan, sNan, 0))
 
         print("Prepared to load: %s" % time.elapsed())
         time.start()
@@ -449,7 +446,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         #gp.setTraverseSpeed(m_settings.rapidSpeed())
         gp.setTraverseSpeed(100)
         if self.m_codeDrawer.getIgnoreZ():
-            gp.reset(QVector3D(qQNaN(), qQNaN(), 0))
+            gp.reset(QVector3D(sNan, sNan, 0))
 
         self.tblProgram.setUpdatesEnabled(False)
 
