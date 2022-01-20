@@ -376,10 +376,10 @@ class GLWidgetContainer(QtWidgets.QWidget):
             else:
                 self.m_selectionDrawer.setEndPosition(pos)
 
-            # >>>> XAM: and position the tool at the current position
+            # >>>> PYCUT: and position the tool at the current position
             self.m_toolDrawer.setToolPosition(pos)
             self.m_toolDrawer.update()
-            # >>>> XAM: and position the tool at the current position
+            # >>>> PYCUT: and position the tool at the current position
 
         else:
             self.m_selectionDrawer.setEndPosition(QVector3D(sNan, sNan, sNan))
