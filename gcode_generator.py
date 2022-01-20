@@ -47,7 +47,7 @@ class UnitConverter:
             return x
         else:
             return x / 25.4
-    
+
     def fromInch(self, x):
         '''
         Convert x from inch to the current unit
@@ -101,9 +101,9 @@ class ToolModel:
             "passDepthClipper": self.passDepth.toInch() * ClipperUtils.inchToClipperScale,
             "stepover": self.stepover
         }
-        
+
         return result
-        
+
 class MaterialModel:
     '''
     '''
@@ -146,8 +146,8 @@ class MaterialModel:
 
 class Tab:
     '''
-    a Tab is defined by a circle with position (x,y) 
-    and height from the buttom of the material 
+    a Tab is defined by a circle with position (x,y)
+    and height from the buttom of the material
     '''
     height = ValWithUnit(2.0, "mm")
 
@@ -166,13 +166,13 @@ class Tab:
         '''
         from the TabsModel, common for all the tabs
         '''
-        cls.height = ValWithUnit(heigth, units) 
-    
+        cls.height = ValWithUnit(heigth, units)
+
     def make_svg_path(self):
         '''
         '''
         path = SvgPath.fromCircleDef(self.center, self.radius)
-        
+
         path.p_attrs["fill"] = "#ff0000"
 
         if self.enabled:
@@ -190,7 +190,7 @@ class Tab:
          material
         ---------------------- height = 2
         ---------------------- op_cut_depth = 10
-        
+
         '''
         if op_cut_depth + z > self.height:
             # still above the tab
@@ -206,20 +206,20 @@ class TabsModel:
     Not yet used
     '''
     def __init__(self, tabs: List[Tab]):
-    
+
         self.tabs: List[Tab] = tabs
 
         self.units = "mm"  # default
         self.height = ValWithUnit(2.0, self.units) # default
 
         Tab.set_height(self.height, self.units)
-    
+
     def set_height(self, height: float, units: str):
         self.units = units
         self.height = ValWithUnit(height, units)
 
         Tab.set_height(self.height)
-    
+
     def hasTabs(self):
         return len(self.tabs) > 0
 
@@ -227,7 +227,7 @@ class TabsModel:
         for tab in self.tabs:
             if tab.posInsideTab(x, y, z, op_cut_depth):
                 return True
-        
+
         return False
 
 class CncOp:
@@ -254,12 +254,12 @@ class CncOp:
             self.width = ValWithUnit(operation["Width"], self.units)
         else:
             self.width = None
-        
+
         # the input
         self.svg_paths : List[SvgPath] = [] # to fill at "setup"
         # the input "transformed"
         self.clipper_paths : List[List[ClipperLib.IntPoint]] = []
-        
+
         # the resulting paths from the op combinaison setting + enabled svg paths
         self.geometry = ClipperLib.PathVector()
         # and the resulting svg paths from the combinaison, to be displayed
@@ -290,13 +290,13 @@ class CncOp:
             svg_path = SvgPath(svg_path_id, {'d': svg_path_d})
 
             self.svg_paths.append(svg_path)
-   
+
     def combine(self):
         '''
         '''
         for svg_path in self.svg_paths:
             clipper_path = svg_path.toClipperPath()
- 
+
             # JSCUT
             # if (self.rawPaths[i].nonzero)
             #    fillRule = ClipperLib.PolyFillType.pftNonZero;
@@ -304,10 +304,10 @@ class CncOp:
             #    fillRule = ClipperLib.PolyFillType.pftEvenOdd;
 
             #  the nonzero flag comes from the svg path property 'fill-rule' != "evenodd"
-            
+
             # FIXME see operationViewModel.js  self.recombine = function () {
             # how it is simplifyAndClean'ed !
-              
+
             # PYCUT
             # -> TODO / TO UNDERSTAND
 
@@ -316,7 +316,7 @@ class CncOp:
                 self.clipper_paths.append(clipper_path)
             else:
                 fillRule = ClipperLib.PolyFillType.pftNonZero  # FIXME
- 
+
                 wrapper = ClipperLib.PathVector()
                 wrapper.append(clipper_path)
 
@@ -329,15 +329,15 @@ class CncOp:
             "Intersection": ClipperLib.ClipType.ctIntersection,
             "Difference": ClipperLib.ClipType.ctDifference,
             "Xor": ClipperLib.ClipType.ctXor,
-        } [self.combinaison] 
-        
+        } [self.combinaison]
+
         geometry = ClipperUtils.combine(self.clipper_paths[0], self.clipper_paths[1:], clipType)
 
         # FIXME: do I need this then ?
         self.geometry = ClipperUtils.simplifyAndClean(geometry, ClipperLib.PolyFillType.pftNonZero)
 
         #ClipperLib.dumpPaths("geometry", self.geometry)
-        
+
     def calculate_geometry(self, toolModel: ToolModel):
         '''
         '''
@@ -379,12 +379,12 @@ class CncOp:
                 geometry = self.geometry
 
             toolData = toolModel.getCamData()
-               
+
             width = self.width.toInch() * ClipperUtils.inchToClipperScale
-        
+
             if width < toolData["diameterClipper"]:
                 width = toolData["diameterClipper"]
-        
+
             self.preview_geometry = ClipperUtils.diff(geometry, ClipperUtils.offset(geometry, -width))
 
             #ClipperLib.dumpPaths("geometry", self.preview_geometry)
@@ -397,18 +397,18 @@ class CncOp:
         '''
         if len(self.geometry) != 0:
             offset = self.margin.toInch() * ClipperUtils.inchToClipperScale
-           
+
             if offset != 0:
                 geometry = ClipperUtils.offset(self.geometry, offset)
             else:
                 geometry = self.geometry
-            
+
             toolData = toolModel.getCamData()
-            
+
             width = self.width.toInch() * ClipperUtils.inchToClipperScale
             if width < toolData["diameterClipper"]:
                 width = toolData["diameterClipper"]
-                  
+
             self.preview_geometry = ClipperUtils.diff(ClipperUtils.offset(geometry, width), geometry)
 
             #ClipperLib.dumpPaths("preview geometry", self.preview_geometry)
@@ -442,7 +442,7 @@ class CncOp:
         width = self.width
 
         geometry = self.geometry
-        
+
         offset = margin.toInch() * ClipperUtils.inchToClipperScale
 
         if cam_op == "Pocket" or cam_op == "V Pocket" or cam_op == "Inside":
@@ -469,19 +469,19 @@ class CncOp:
 class JobModel:
     '''
     '''
-    def __init__(self, 
+    def __init__(self,
             svg_viewer,
-            cnc_ops: List[CncOp], 
-            materialModel: MaterialModel, 
-            svgModel: SvgModel, 
+            cnc_ops: List[CncOp],
+            materialModel: MaterialModel,
+            svgModel: SvgModel,
             toolModel: ToolModel,
             tabsModel: TabsModel,
             gcodeModel: GcodeModel):
 
         self.svg_viewer = svg_viewer
-        
+
         self.operations = cnc_ops
-        
+
         self.svgModel = svgModel
         self.materialModel = materialModel
         self.toolModel = toolModel
@@ -504,7 +504,7 @@ class JobModel:
                 op.setup(self.svg_viewer)
                 op.calculate_geometry(self.toolModel)
                 op.calculate_toolpaths(self.svgModel, self.toolModel, self.materialModel)
-    
+
     def findMinMax(self):
         minX = 0
         maxX = 0
@@ -528,7 +528,7 @@ class JobModel:
                             minY = min(minY, point.Y)
                             maxX = max(maxX, point.X)
                             maxY = max(maxY, point.Y)
-                        
+
         self.minX = minX
         self.maxX = maxX
         self.minY = minY
@@ -566,7 +566,7 @@ class GcodeGenerator:
             # normal case
             return self.unitConverter.fromInch(self.job.minX / ClipperUtils.inchToClipperScale) + self.offsetX
         else:
-            # as flipped: is -maxY when "no flip" 
+            # as flipped: is -maxY when "no flip"
             return self.unitConverter.fromInch(self.job.minY / ClipperUtils.inchToClipperScale) - self.offsetY
 
 
@@ -579,9 +579,9 @@ class GcodeGenerator:
             # normal case
             return self.unitConverter.fromInch(self.job.maxX / ClipperUtils.inchToClipperScale) + self.offsetX
         else:
-            # as flipped: is -minY when "no flip" 
+            # as flipped: is -minY when "no flip"
             return self.unitConverter.fromInch(self.job.maxY / ClipperUtils.inchToClipperScale) - self.offsetY
-    
+
     @property
     def minY(self):
         '''
@@ -591,7 +591,7 @@ class GcodeGenerator:
             # normal case
             return  -self.unitConverter.fromInch(self.job.maxY / ClipperUtils.inchToClipperScale) + self.offsetY
         else:
-            # as flipped: is minX when "no flip" 
+            # as flipped: is minX when "no flip"
             return self.unitConverter.fromInch(self.job.minX / ClipperUtils.inchToClipperScale) + self.offsetX
 
     @property
@@ -603,14 +603,14 @@ class GcodeGenerator:
             # normal case
             return  -self.unitConverter.fromInch(self.job.minY / ClipperUtils.inchToClipperScale) + self.offsetY
         else:
-            # as flipped: is maxX when "no flip" 
+            # as flipped: is maxX when "no flip"
             return self.unitConverter.fromInch(self.job.maxX / ClipperUtils.inchToClipperScale) + self.offsetX
 
     def generateGcode_zeroLowerLeftOfMaterial(self):
         self.offsetX = self.unitConverter.fromInch(0)
         self.offsetY = self.unitConverter.fromInch(self.materialModel.sizeY)
         self.generateGcode()
-    
+
     def generateGcode_zeroLowerLeft(self):
         self.offsetX = - self.unitConverter.fromInch(self.job.minX / ClipperUtils.inchToClipperScale)
         self.offsetY = - self.unitConverter.fromInch(-self.job.maxY / ClipperUtils.inchToClipperScale)
@@ -639,7 +639,7 @@ class GcodeGenerator:
             if cnc_op.enabled:
                 if len(cnc_op.cam_paths) > 0:
                     cnc_ops.append(cnc_op)
-            
+
         if len(cnc_ops) == 0:
             return
 
@@ -704,7 +704,7 @@ class GcodeGenerator:
                 "rapidFeed":      rapidRate,
                 "tabs":           self.tabsModel.tabs,
                 "tabZ":           tabZ,
-                "flipXY":         self.flipXY      
+                "flipXY":         self.flipXY
             })
 
         if self.gcodeModel.spindleControl:
@@ -713,7 +713,7 @@ class GcodeGenerator:
 
         if self.gcodeModel.returnTo00:
             gcode += f"\r\n; Return to 0,0\r\n"
-            gcode += f"G0 X0 Y0 F {rapidRate}\r\n"
+            gcode += f"G0 X0 Y0 F{rapidRate}\r\n"
 
         if self.gcodeModel.programEnd:
             gcode += f"\r\n; Program End\r\n"

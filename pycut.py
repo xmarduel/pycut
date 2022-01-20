@@ -36,7 +36,7 @@ from gcode_generator import JobModel
 
 from gcode_generator import GcodeGenerator
 
-#import PySideSyntaxHighlighter
+import gcode_syntaxhighlighter
 
 import resources_rc
 from ui_mainwindow import Ui_mainwindow
@@ -281,8 +281,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.webgl_viewer.show_gcode()
 
         self.gcode_textviewer.setPlainText(gcode)
-        #PySideSyntaxHighlighter.GCodeHighlighter(self.gcode_textviewer.document())
-        self.gcode_textviewer.setStyleSheet("background-color: rgb(224,224,224);" )
+        gcode_syntaxhighlighter.GCodeSyntaxHighlighter(self.gcode_textviewer.document())
+        #self.gcode_textviewer.setStyleSheet("background-color: rgb(224,224,224);" )
 
         self.ui.simulator.layout()
 
