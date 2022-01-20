@@ -1,15 +1,10 @@
 
-import math
-
-from typing import List
-
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QColor
 
 from gcodeviewer.drawers.shaderdrawable import ShaderDrawable, VertexData
 from gcodeviewer.util.util import Util
 
-sNan = 65536.0
 sNaN = float('NaN')
 
 

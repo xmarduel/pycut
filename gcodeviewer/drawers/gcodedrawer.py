@@ -23,7 +23,6 @@ from gcodeviewer.drawers.shaderdrawable import VertexData
 from gcodeviewer.util.util import Util
 from gcodeviewer.util.util import qBound
 
-sNan = 65536.0  # ???
 sNaN = float('NaN')
 
 

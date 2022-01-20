@@ -4,7 +4,6 @@ from PySide6.QtGui import QVector3D
 from gcodeviewer.drawers.shaderdrawable import ShaderDrawable
 from gcodeviewer.drawers.shaderdrawable import VertexData
 
-sNan = 65536.0
 sNaN = float('NaN')
 
 

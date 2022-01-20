@@ -10,7 +10,6 @@ from gcodeviewer.drawers.shaderdrawable import ShaderDrawable, VertexData
 from gcodeviewer.drawers.shaderdrawable import VertexData
 from gcodeviewer.util.util import Util
 
-sNan = 65536.0  # ???
 sNaN = float('NaN')
 
 M_PI = math.acos(-1)

@@ -19,7 +19,6 @@ from gcodeviewer.util.util import Util
 
 import numpy as np
 
-sNan = 65536.0  # ???
 sNaN = float('NaN')
 
 
