@@ -233,7 +233,7 @@ class GcodeDrawer(ShaderDrawable) :
         i = 0
         # i will be changed in the while-loop!
         while i < len(lines):
-            i_mem = i
+         
             line = lines[i]
 
             if qIsNaN(line.getEnd().z()):
@@ -315,9 +315,8 @@ class GcodeDrawer(ShaderDrawable) :
                 vertex.start = QVector3D(sNaN, sNaN, self.m_pointSize)
                 self.m_points.append(VertexData.clone(vertex))
         
-            # do not forget to increment if i has not been icrementd in the loop
-            if i == i_mem:
-                i += 1
+            # do not forget to increment the variable i
+            i += 1
 
         self.m_geometryUpdated = True
         self.m_indexes = []
