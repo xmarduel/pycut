@@ -131,27 +131,19 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.clearTable()
 
     def loadFile(self, fileName):
-        file = QFile(fileName)
-
-        if not file.open(QIODevice.ReadOnly):
-            QMessageBox.critical(self, self.windowTitle(), "Can't open file:\n" + fileName)
-            return
+        fp = open(fileName, "r")
+        gcode = fp.read()
+        fp.close()
 
         # Set filename
         self.m_programFileName = fileName
 
-        # Prepare text stream
-        textStream = QTextStream(file)
-
-        # Read lines
-        data = []
-        while not textStream.atEnd():
-            data.append(textStream.readLine())
-
         # Load lines
-        self.loadData(data)
+        self.loadData(gcode)
 
-    def loadData(self, data: List[str]):
+    def loadData(self, gcode: str):
+        data = gcode.split("\r\n")
+
         time = QElapsedTimer()
         time.start()
 

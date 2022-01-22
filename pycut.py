@@ -261,21 +261,17 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         simulator_data =  {
             "gcode": gcode,
-            "cutterDiameter" : self.ui.doubleSpinBox_Tool_Diameter.value(),
-            "cutterHeight" : 25.4,
-            "cutterAngle" : self.ui.spinBox_Tool_Angle.value()
+            "cutterDiameter": self.ui.doubleSpinBox_Tool_Diameter.value(),
+            "cutterAngle": self.ui.spinBox_Tool_Angle.value()
         }
         
         self.webgl_viewer.set_data(simulator_data)
         self.webgl_viewer.show_gcode()
 
-        # python simulator
-        # self.webgl_viewer.loadData(simulator_data)
-         
         self.gcode_textviewer.setPlainText(gcode)
         gcode_syntaxhighlighter.GCodeSyntaxHighlighter(self.gcode_textviewer.document())
 
-        self.candle_viewer.loadData(gcode.split("\r\n"))
+        self.candle_viewer.loadData(gcode)
 
     def load_ui(self, uifile):
         '''
