@@ -1,5 +1,8 @@
 import os
 
+from typing import Dict
+from typing import Any
+
 from PySide6 import QtCore
 from PySide6 import QtWidgets
 from PySide6 import QtWebEngineWidgets
@@ -34,12 +37,12 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
         self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
         self.data = {
-            "width": 400,
-            "height" : 400,
+            "width": 460,
+            "height" : 460,
             "gcode": "",
-            "cutterDiameter" : 0, 
-            "cutterHeight" : 10,
-            "cutterAngle" : 30,
+            "cutterDiameter" : 3.175, 
+            "cutterHeight" : 25.4,
+            "cutterAngle" : 180,
             "elementsUrl" : "http://api.jscut.org/elements"
         }
         
@@ -58,10 +61,13 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
             channel.registerObject("talkie", self.talkie)
             self.page.setWebChannel(channel)
 
-    def set_webgl_data(self, data):
+    def set_data(self, data: Dict[str, Any]):
         '''
         '''
-        self.data = data
+        self.data["gcode"] = data["gcode"]
+        self.data["cutterDiameter"] = data["cutterDiameter"]
+        self.data["cutterHeight"] = data["cutterHeight"]
+        self.data["cutterAngle"] = data["cutterAngle"]
 
     def show_gcode(self):
         '''
@@ -141,9 +147,9 @@ function sliderChangeVal(newVal) {
 <!-- Controls with parameters bound to simulator -->
 
 <div>
-    <canvas id="glCanvas" width="400" height="400"></canvas>
+    <canvas id="glCanvas" width="460" height="460"></canvas>
     <div class="slidecontainer">
-      <input id="input_slider" type="range" min="1" max="100" value="50" oninput="sliderChangeVal(this.value)" style="width: 400px">
+      <input id="input_slider" type="range" min="1" max="100" value="50" oninput="sliderChangeVal(this.value)" style="width: 460px">
     </div>
   </div>
 </div>
@@ -299,5 +305,8 @@ class TalkyTalky(QtCore.QObject):
         '''
         '''
         data = self.widget.data
+
+        data = str(data)
+        data = str(data).replace("'", '"')
         
         self.send_data_js_side.emit(data)

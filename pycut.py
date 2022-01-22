@@ -13,6 +13,11 @@ from PySide6 import QtGui
 from PySide6 import QtWidgets
 
 from PySide6.QtUiTools import QUiLoader
+
+# TEST simulator with python
+# from gcodesimulator.python.parser.gcodeminiparser import GcodeMiniParser
+#import gcodesimulator.python.widgets.glwidget_container as glwidget_simulator_container
+
 import svgpathtools
 import svgpathutils
 
@@ -249,42 +254,26 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             fp = open(filename, "w")
             fp.write(gcode)
             fp.close()
-        
-    def display_gcode_file(self, filename):
-        '''
-        display gcode in webgl!
-        '''
-        fp = open(filename, "r")
-        gcode = fp.read()
-        fp.close()
-
-        self.display_gcode(gcode)
 
     def display_gcode(self, gcode: str):
         '''
         display gcode in webgl!
         '''
         simulator_data =  {
-            "width": "400",
-            "height" : "400",
             "gcode": gcode,
-            "cutterDiameter" : "4", 
-            "cutterHeight" : "20",
-            #"cutterAngle" : undefined,
-            "elementsUrl" : "http://api.jscut.org/elements"
+            "cutterDiameter" : self.ui.doubleSpinBox_Tool_Diameter.value(),
+            "cutterHeight" : 25.4,
+            "cutterAngle" : self.ui.spinBox_Tool_Angle.value()
         }
         
-        str_simulator_data = str(simulator_data)
-        str_simulator_data = str(str_simulator_data).replace("'", '"')
-
-        self.webgl_viewer.set_webgl_data(str_simulator_data)
+        self.webgl_viewer.set_data(simulator_data)
         self.webgl_viewer.show_gcode()
 
+        # python simulator
+        # self.webgl_viewer.loadData(simulator_data)
+         
         self.gcode_textviewer.setPlainText(gcode)
         gcode_syntaxhighlighter.GCodeSyntaxHighlighter(self.gcode_textviewer.document())
-        #self.gcode_textviewer.setStyleSheet("background-color: rgb(224,224,224);" )
-
-        self.ui.simulator.layout()
 
         self.candle_viewer.loadData(gcode.split("\r\n"))
 
@@ -683,12 +672,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def setup_webgl_viewer(self):
         '''
         '''
-        webgl = self.ui.simulator
-        layout = webgl.layout()
+        simulator = self.ui.simulator
+        layout = simulator.layout()
         
-        webgl_viewer = webglviewer.WebGlViewer(webgl)
+        webgl_viewer = webglviewer.WebGlViewer(simulator)
 
-        self.gcode_textviewer = QtWidgets.QPlainTextEdit(webgl)
+        self.gcode_textviewer = QtWidgets.QPlainTextEdit(simulator)
         self.gcode_textviewer.setMinimumWidth(100)
 
         layout.addWidget(webgl_viewer)

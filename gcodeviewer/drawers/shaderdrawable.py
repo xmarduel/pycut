@@ -180,12 +180,6 @@ class ShaderDrawable(QOpenGLFunctions):
         Test data
         '''
         self.m_lines = [
-            VertexData.fromVectors(QVector3D(0, 0, 0), QVector3D(1, 0, 0), QVector3D(sNaN, 0, 0)),
-            VertexData.fromVectors(QVector3D(10, 0, 0), QVector3D(1, 0, 0), QVector3D(sNaN, 0, 0)),
-            VertexData.fromVectors(QVector3D(0, 0, 0), QVector3D(0, 1, 0), QVector3D(sNaN, 0, 0)),
-            VertexData.fromVectors(QVector3D(0, 10, 0), QVector3D(0, 1, 0), QVector3D(sNaN, 0, 0)),
-            VertexData.fromVectors(QVector3D(0, 0, 0), QVector3D(0, 0, 1), QVector3D(sNaN, 0, 0)),
-            VertexData.fromVectors(QVector3D(0, 0, 10), QVector3D(0, 0, 1), QVector3D(sNaN, 0, 0))
         ]
 
         return True

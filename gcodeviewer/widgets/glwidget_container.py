@@ -118,11 +118,9 @@ class GLWidgetContainer(QtWidgets.QWidget):
         
         self.glwVisualizer.fitDrawable()
 
-        self.m_programModel.dataChanged.connect(self.onTableCellChanged)
-
         self.tblProgram.setModel(self.m_programModel)
         self.tblProgram.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-        self.tblProgram.verticalScrollBar().actionTriggered.connect(self.onScroolBarAction)
+        self.tblProgram.verticalScrollBar().actionTriggered.connect(self.onScrollBarAction)
         self.tblProgram.selectionModel().currentChanged.connect(self.onTableCurrentChanged)    
 
         self.tblProgram.hideColumn(2)
@@ -312,7 +310,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
 
         return t
 
-    def onScroolBarAction(self):
+    def onScrollBarAction(self):
         '''
         '''
         pass 
@@ -383,123 +381,3 @@ class GLWidgetContainer(QtWidgets.QWidget):
         
         self.m_selectionDrawer.update()
 
-    def onTableCellChanged(self, i1: QtCore.QModelIndex, i2: QtCore.QModelIndex):
-
-        model : GCodeTableModel = self.sender()
-
-        if i1.column() != 1:
-            return
-
-        # Inserting new line at end
-        if i1.row() == (model.rowCount() - 1) and str(model.data(model.index(i1.row(), 1))) != "":
-            model.setData(model.index(model.rowCount() - 1, 2), GCodeItem.States.InQueue)
-            model.insertRow(model.rowCount())
-            
-            if not self.m_programLoading:
-                self.tblProgram.setCurrentIndex(model.index(i1.row() + 1, 1))
-        # Remove last line
-        '''elif (i1.row() != (model.rowCount() - 1) and str(model.data(model.index(i1.row(), 1))) == "": 
-            self.tblProgram.setCurrentIndex(model.index(i1.row() + 1, 1))
-            self.m_tableModel.removeRow(i1.row())
-        '''
-
-        if not self.m_programLoading:
-
-            # Clear cached args
-            model.setData(model.index(i1.row(), 5), None)
-
-            # Drop heightmap cache
-            #if self.m_currentModel == self.m_programModel:
-            #    self.m_programHeightmapModel.clear()
-
-            # Update visualizer
-            self.updateParser()
-
-            # Hightlight w/o current cell changed event (double hightlight on current cell changed)
-            alist = self.m_viewParser.getLineSegmentList()
-            
-            #for (int i = 0 i < list.count() and list[i].getLineNumber() <= m_currentModel.data(m_currentModel.index(i1.row(), 4)).toInt() i++):
-            #    alist[i].setIsHightlight(True)
-
-            k = 0
-            while True:
-                if not (k < len(alist) and alist[k].getLineNumber() <= (int)(self.m_currentModel.data(self.m_currentModel.index(i1.row(), 4)))):
-                    break
-
-                alist[k].setIsHightlight(True)
-
-                k += 1
-
-    def updateParser(self):
-        '''
-        rapidSpeed set to 100  --- in Candle: set "rapidSpeed" settings
-        '''
-
-        time = QElapsedTimer()
-
-        print("updating parser:")
-        time.start()
-
-        parser = self.m_currentDrawer.viewParser()
-
-        gp = GcodeParser()
-        #gp.setTraverseSpeed(m_settings.rapidSpeed())
-        gp.setTraverseSpeed(100)
-        if self.m_codeDrawer.getIgnoreZ():
-            gp.reset(QVector3D(sNan, sNan, 0))
-
-        self.tblProgram.setUpdatesEnabled(False)
-
-        progress = QProgressDialog("Updating...", "Abort", 0, self.m_currentModel.rowCount() - 2, self)
-        progress.setWindowModality(QtCore.Qt.WindowModal)
-        progress.setFixedSize(progress.sizeHint())
-
-        if self.m_currentModel.rowCount() > PROGRESSMINLINES:
-            progress.show()
-            progress.setStyleSheet("QProgressBar {text-align: center qproperty-format: \"\"}")
-
-        for i in range(self.m_currentModel.rowCount()):
-            # Get stored args
-            args = self.m_currentModel.m_data[i].args
-
-            # Store args if none
-            if len(args) == 0: 
-                stripped = GcodePreprocessorUtils.removeComment(self.m_currentModel.m_data[i].command)
-                args = GcodePreprocessorUtils.splitCommand(stripped)
-                self.m_currentModel.m_data[i].args = args
-
-            # Add command to parser
-            gp.addCommand(args)
-
-            # Update table model
-            self.m_currentModel.m_data[i].state = GCodeItem.States.InQueue
-            self.m_currentModel.m_data[i].response = ""
-            self.m_currentModel.m_data[i].line = gp.getCommandNumber()
-
-            if progress.isVisible() and (i % PROGRESSSTEP == 0):
-                progress.setValue(i)
-                QApplication.instance().processEvents()
-                if progress.wasCanceled():
-                    break
-        
-        progress.close()
-
-        self.tblProgram.setUpdatesEnabled(True)
-
-        parser.reset()
-
-        arcPrecision = 0.0 # TODO self.m_settings.arcPrecision()
-        arcDegreeMode = True # TODO self.m_settings.arcDegreeMode()
-        
-        all_lines = parser.getLinesFromParser(gp, arcPrecision, arcDegreeMode)
-        
-        self.updateProgramEstimatedTime(all_lines)
-
-        self.m_currentDrawer.update()
-        self.glwVisualizer.updateExtremes(self.m_currentDrawer)
-        #self.updateControlsState()
-
-        if self.m_currentModel == self.m_programModel:
-            self.m_fileChanged = True
-
-        print("Update parser time: %s" % time.elapsed())

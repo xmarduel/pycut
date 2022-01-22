@@ -547,16 +547,11 @@ void main()
         with_resource = False
 
         if with_resource:
-            # Compile vertex shader
             self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Vertex, ":/shaders/vshader.glsl")
-            # Compile fragment shader
             self.m_shaderProgram.addShaderFromSourceFile(QtOpenGL.QOpenGLShader.Fragment, ":/shaders/fshader.glsl")
         else:
-            _vertex_shader = self.vertex_shader_source()
-            _fragment_shader = self.fragment_shader_source()
-
-            self.m_shaderProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Vertex, _vertex_shader)
-            self.m_shaderProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Fragment, _fragment_shader)
+            self.m_shaderProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Vertex, self.vertex_shader_source())
+            self.m_shaderProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Fragment, self.fragment_shader_source())
             
         # Link shader pipeline
         self.m_shaderProgram.link()
