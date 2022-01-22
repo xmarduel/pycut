@@ -57,16 +57,40 @@ class GLWidgetContainer(QtWidgets.QWidget):
 
         self.m_gcodeMiniParser = GcodeMiniParser()
 
+        self.m_codeDrawer = None
+        self.m_toolDrawer = None
+
+    def loadFile(self, fileName):
         topZ = 0.0
         cutterDiameter = 3.175
         cutterHeight = 25.4
         cutterAngle = 180
+        gcode = ""
 
-        fp = open("gcodesimulator/jscut.gcode", "r")
-        ggcode = fp.read()
+        fp = open(fileName, "r")
+        gcode = fp.read()
         fp.close()
 
-        self.m_codeDrawer = GcodeDrawer(ggcode, topZ, cutterDiameter, cutterHeight,cutterAngle )
+        # Set filename
+        self.m_programFileName = fileName
+
+        # Load gcode
+        self.loadData({
+            "topZ": topZ,
+            "cutterDiameter": cutterDiameter,
+            "cutterHeight": cutterHeight,
+            "cutterAngle": cutterAngle,
+            "gcode": gcode
+        })
+
+    def loadData(self, simulation_data):
+        gcode =  simulation_data["gcode"] 
+
+        self.m_codeDrawer = GcodeDrawer(gcode, 
+                simulation_data["topZ"], 
+                simulation_data["cutterDiameter"],
+                simulation_data["cutterHeight"],
+                simulation_data["cutterAngle"])
         self.m_codeDrawer.setMiniParser(self.m_gcodeMiniParser)
         self.m_codeDrawer.update()
 
@@ -79,28 +103,8 @@ class GLWidgetContainer(QtWidgets.QWidget):
         
         self.glwVisualizer.fitDrawable()
 
-    def loadFile(self, fileName):
-        file = QFile(fileName)
-
-        if not file.open(QIODevice.ReadOnly):
-            QMessageBox.critical(self, self.windowTitle(), "Can't open file:\n" + fileName)
-            return
-
-        # Set filename
-        self.m_programFileName = fileName
-
-        # Read file
-        gcode = file.readAll().decode()
-
-        # Load lines
-        self.loadData(gcode)
-
-    def loadData(self, simulation_data):
-
-        gcode =  simulation_data["gcode"] 
-
         # Reset parsers
-        #self.m_gcodeMiniParser.reset()
+        self.m_gcodeMiniParser.reset()
 
         # Reset code drawer
         self.m_currentDrawer = self.m_codeDrawer

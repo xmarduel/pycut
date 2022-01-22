@@ -2,6 +2,7 @@
 import math
 
 from typing import List
+from typing import Tuple
 
 from enum import Enum
 
@@ -34,7 +35,7 @@ class GcodeDrawer(ShaderDrawable) :
         self.gcode = gcode
 
         self.m_miniParser : GcodeMiniParser = None
-        self.path : List[List[float,float,float,float]] = None
+        self.path : List[Tuple[float,float,float,float]] = None
 
         self.needToCreatePathTexture = False
         self.needToDrawHeightMap = False

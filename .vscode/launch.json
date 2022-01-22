@@ -4,10 +4,33 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
-
-
-
+        {
+            "name": "TEST SIMULATOR",
+            "type": "python",
+            "request": "launch",
+            "program": "testsimulator.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator\\python"
+        },
+        {
+            "name": "clipper",
+            "type": "cppdbg",
+            "request": "launch",
+            "args": [],
+            "stopAtEntry": false,
+            "program": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\clipper_642\\clipper_test_tabs.exe",
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\msys64\\mingw64\\bin\\gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "Automatische Strukturierung und Einrückung für \"gdb\" aktivieren",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "externalConsole": false,
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\clipper_642",
+        },
         {
             "name": "PYCUT",
             "type": "python",
@@ -31,7 +54,9 @@
             "program": "test_gcodeparser.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodeviewer",
-            "args": ["pycut_gcode.gcode"]
+            "args": [
+                "pycut_gcode.gcode"
+            ]
         },
         {
             "name": "OPENGL TEST1",
