@@ -12,11 +12,15 @@
         <file>images/candle/fit_1.png</file>
         <file>javascript/api/js/parseGcode.js</file>
         <file>javascript/js/RenderPath.js</file>
+        <file>javascript/js/shaders/basicFragmentShader.txt</file>
+        <file>javascript/js/shaders/basicVertexShader.txt</file>
+        <file>javascript/js/shaders/rasterizePathFragmentShader.txt</file>
+        <file>javascript/js/shaders/rasterizePathVertexShader.txt</file>
+        <file>javascript/js/shaders/renderHeightMapFragmentShader.txt</file>
+        <file>javascript/js/shaders/renderHeightMapVertexShader.txt</file>
         <file>javascript/lib/gl-matrix-2.2.0-min.js</file>
         <file>javascript/lib/jquery-2.1.1.min.js</file>
         <file>javascript/lib/webgl-utils.js</file>
-        <file>javascript/js/prism.js</file>
-        <file>javascript/css/prism.css</file>
         <file>qtwebchannel/qwebchannel.js</file>
         <file>doc/tutorial.html</file>
         <file>doc/js/prism.js</file>

@@ -46,7 +46,9 @@ function RenderPath(options, canvas, shaderDir, shadersReady) {
 
     function loadShader(filename, type, callback) {
         if (self.gl)
+            //alert("loading shader: " + filename);
             $.get(filename, function (source) {
+                //alert("loading shader OK for:" + filename);
                 var shader = self.gl.createShader(type);
                 self.gl.shaderSource(shader, source);
                 self.gl.compileShader(shader);

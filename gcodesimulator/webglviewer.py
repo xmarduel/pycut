@@ -43,7 +43,8 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
             "cutterDiameter" : 3.175, 
             "cutterHeight" : 25.4,
             "cutterAngle" : 180,
-            "elementsUrl" : "http://api.jscut.org/elements"
+            "elementsUrl" : "http://api.jscut.org/js"
+            #"elementsUrl" : "qrc://javascript/js/shaders" # CORS problem by "get"
         }
         
         # communication between qt and javascript html editor
@@ -203,7 +204,7 @@ class GCodeSimulator {
   ready () {
     self = this;
     window.requestAnimationFrame(function () {
-      self.renderPath = startRenderPath({}, document.getElementById("glCanvas"), null, self.elementsUrl + '/../js', function (renderPath) {
+      self.renderPath = startRenderPath({}, document.getElementById("glCanvas"), null, self.elementsUrl , function (renderPath) {
         renderPath.fillPathBuffer(self.parsedGcode, 0, self.cutterDiameter, self.cutterAngle, self.cutterHeight);
         self.maxTime = renderPath.totalTime;
         self.maxTimeRounded = Math.ceil(renderPath.totalTime * 10) / 10;
