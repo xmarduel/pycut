@@ -1,4 +1,5 @@
 import os
+import json
 
 from typing import Dict
 from typing import Any
@@ -85,9 +86,6 @@ jscut_webgl = """
 <html lang="en">
 <head>
 <style>
-.slidecontainer {
-  width: 100%;
-}
 
 .slider {
   -webkit-appearance: none;
@@ -149,9 +147,7 @@ function sliderChangeVal(newVal) {
 
 <div>
     <canvas id="glCanvas" width="460" height="460"></canvas>
-    <div class="slidecontainer">
-      <input id="input_slider" type="range" min="1" max="100" value="50" oninput="sliderChangeVal(this.value)" style="width: 460px">
-    </div>
+    <input id="input_slider" type="range" min="1" max="100" value="50" oninput="sliderChangeVal(this.value)" style="width: 460px"></input>
   </div>
 </div>
 
@@ -162,17 +158,17 @@ function sliderChangeVal(newVal) {
 <!-- the rendering -->
 <script>
 class GCodeSimulator {
-  constructor(height, width, gcode, cutterDiameter, cutterAngle, cutterHeight, elementsUrl) {
-    this.height = height;
-    this.width = width;
+  constructor(simdata) {
+    this.height = simdata["height"];
+    this.width = simdata["width"];
 
-    this.gcode = gcode;
+    this.gcode = simdata["gcode"];
 
-    this.cutterDiameter = cutterDiameter;
-    this.cutterAngle = cutterAngle;
-    this.cutterHeight = cutterHeight;
+    this.cutterDiameter = simdata["cutterDiameter"];
+    this.cutterAngle = simdata["cutterAngle"];
+    this.cutterHeight = simdata["cutterHeight"];
 
-    this.elementsUrl = elementsUrl;
+    this.elementsUrl = simdata["elementsUrl"];
     
     // this will be calculated
     this.parsedGcode = null;
@@ -185,20 +181,14 @@ class GCodeSimulator {
   }
 
   simulate () {
-    this.gcodeChanged(undefined, this.gcode);
+    this.parsedGcode = jscut.parseGcode({}, this.gcode);
     this.ready();
-    this.fill();
   }
 
   timeChanged(oldValue, newValue) {
     if (this.renderPath) {
       this.renderPath.setStopAtTime(newValue);
     }
-  }
-
-  gcodeChanged(oldValue, newValue) {
-    this.parsedGcode = jscut.parseGcode({}, newValue);
-    this.fill();
   }
 
   ready () {
@@ -220,16 +210,6 @@ class GCodeSimulator {
         }
       });
     });
-  }
-
-  fill() {
-    if (this.filled) {
-      this.renderPath.fillPathBuffer(this.parsedGcode, 0, this.cutterDiameter, this.cutterAngle, this.cutterHeight);
-      this.maxTime = this.renderPath.totalTime;
-      this.maxTimeRounded = Math.ceil(this.renderPath.totalTime * 10) / 10;
-      this.time1 = this.maxTimeRounded;
-      this.time2 = this.maxTimeRounded;
-    }
   }
 }
 </script>
@@ -265,21 +245,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // An example of receiving information pushed from the Python side
         // It's really neat how this looks just like the Python code
         talkie.send_data_js_side.connect(function(data) {
-            var json_data = JSON.parse(data);
+            var simdata = JSON.parse(data);
 
-            // get pointer on html widgets
-            const input_slider = document.getElementById('input_slider');
-
-            var data = json_data["gcode"];
-
-            gcode_simulator = new GCodeSimulator(
-                json_data["height"], 
-                json_data["width"], 
-                json_data["gcode"], 
-                json_data["cutterDiameter"], 
-                json_data["cutterAngle"], 
-                json_data["cutterHeight"],
-                json_data["elementsUrl"]);
+            gcode_simulator = new GCodeSimulator(simdata);
             gcode_simulator.simulate();      
         });
         
@@ -293,21 +261,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 class TalkyTalky(QtCore.QObject):
-
+    '''
+    '''
     send_data_js_side = QtCore.Signal(str)
     send_error_annotation = QtCore.Signal(int, int, str, str)
 
-    def __init__(self, widget):
+    def __init__(self, widget: WebGlViewer):
         super().__init__()
         self.widget = widget
   
     @QtCore.Slot() 
     def fill_webgl(self):
         '''
+        js is waiting for a json structure
         '''
-        data = self.widget.data
-
-        data = str(data)
-        data = str(data).replace("'", '"')
+        jsondata = json.dumps(self.widget.data, indent = 4) 
         
-        self.send_data_js_side.emit(data)
+        self.send_data_js_side.emit(jsondata)
