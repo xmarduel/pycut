@@ -824,7 +824,7 @@ void main(void) {
         pathMinZ = gcodedrawer.pathMinZ
         stopAtTime = gcodedrawer.stopAtTime
 
-        self.glUseProgram(self.m_shaderProgram)
+        #self.glUseProgram(self.m_shaderProgram)
 
         # Clear viewport
         self.glClearColor(self.m_colorBackground.redF(), self.m_colorBackground.greenF(), self.m_colorBackground.blueF(), 1.0)
@@ -885,7 +885,7 @@ void main(void) {
         self.glDisableVertexAttribArray(self.m_shaderProgram_attributesLocation["command"])
         self.glDisableVertexAttribArray(self.m_shaderProgram_attributesLocation["rawPos"])
 
-        self.glUseProgram(None)
+        #self.glUseProgram(None)
 
         self.m_frames += 1
         self.update()

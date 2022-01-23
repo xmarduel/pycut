@@ -44,7 +44,7 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
             "cutterHeight" : 25.4,
             "cutterAngle" : 180,
             "elementsUrl" : "http://api.jscut.org/js"
-            #"elementsUrl" : "qrc://javascript/js/shaders" # CORS problem by "get"
+            #"elementsUrl" : "qrc:/javascript/js/shaders" # CORS problem by "get"
         }
         
         # communication between qt and javascript html editor
@@ -67,7 +67,7 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
         '''
         self.data["gcode"] = data["gcode"]
         self.data["cutterDiameter"] = data["cutterDiameter"]
-        self.data["cutterHeight"] = data["cutterHeight"]
+        #self.data["cutterHeight"] = data["cutterHeight"]
         self.data["cutterAngle"] = data["cutterAngle"]
 
     def show_gcode(self):
