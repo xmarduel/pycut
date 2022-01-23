@@ -4,6 +4,8 @@ import ctypes
 from typing import List
 
 from PySide6.QtGui import QVector3D
+from PySide6.QtGui import QVector2D
+
 from PySide6.QtGui import QOpenGLFunctions
 
 from PySide6.QtCore import qIsNaN
@@ -63,6 +65,74 @@ class VertexData:
             np_array[9*k+8] = NaN_to_Val(vdata.command)
 
         return np_array
+
+class HeightMapVertexData:
+    NB_FLOATS_PER_VERTEX = 9 
+
+    def __init__(self):
+        self.pos0 = QVector2D()
+        self.pos1 = QVector2D()
+        self.pos2 = QVector2D()
+        self.thisPos = QVector2D()
+        self.vertex = sNaN
+
+    @classmethod
+    def VertexDataListToNumPy(cls, vertex_list: List['HeightMapVertexData']):
+        '''
+        '''
+        def NaN_to_Val(val):
+            #if qIsNaN(val):
+            #    return 65536.0
+            return val
+
+        np_array = np.empty(HeightMapVertexData.NB_FLOATS_PER_VERTEX * len(vertex_list), dtype=ctypes.c_float)
+        
+        for k, vdata in enumerate(vertex_list):
+            np_array[9*k+0] = NaN_to_Val(vdata.pos0.x())
+            np_array[9*k+1] = NaN_to_Val(vdata.pos0.y())
+           
+            np_array[9*k+2] = NaN_to_Val(vdata.pos1.x())
+            np_array[9*k+3] = NaN_to_Val(vdata.pos1.y())
+
+            np_array[9*k+4] = NaN_to_Val(vdata.pos2.x())
+            np_array[9*k+5] = NaN_to_Val(vdata.pos2.y())
+            
+            np_array[9*k+6] = NaN_to_Val(vdata.thisPos.x())
+            np_array[9*k+7] = NaN_to_Val(vdata.thisPos.y())
+
+            np_array[9*k+8] = NaN_to_Val(vdata.vertex)
+
+        return np_array
+
+class ToolVertexData:
+    NB_FLOATS_PER_VERTEX = 6
+
+    def __init__(self):
+        self.vPos = QVector3D()
+        self.vColor = QVector3D()
+
+    @classmethod
+    def VertexDataListToNumPy(cls, vertex_list: List['ToolVertexData']):
+        '''
+        '''
+        def NaN_to_Val(val):
+            #if qIsNaN(val):
+            #    return 65536.0
+            return val
+
+        np_array = np.empty(VertexData.NB_FLOATS_PER_VERTEX * len(vertex_list), dtype=ctypes.c_float)
+        
+        for k, vdata in enumerate(vertex_list):
+            np_array[6*k+0] = NaN_to_Val(vdata.vPos.x())
+            np_array[6*k+1] = NaN_to_Val(vdata.vPos.y())
+            np_array[6*k+2] = NaN_to_Val(vdata.vPos.z())
+
+            np_array[6*k+3] = NaN_to_Val(vdata.vColor.x())
+            np_array[6*k+4] = NaN_to_Val(vdata.vColor.y())
+            np_array[6*k+5] = NaN_to_Val(vdata.vColor.z())
+
+        return np_array
+
 
 
 class ShaderDrawable(QOpenGLFunctions):
@@ -201,83 +271,10 @@ class ShaderDrawable(QOpenGLFunctions):
         return True
 
     def draw(self, shaderProgram: QOpenGLShaderProgram):
-        if not self.m_visible:
-            return
-
-        if self.m_vao.isCreated():
-            # Prepare vao
-            self.m_vao.bind()
-        else:
-            # Prepare vbo
-            self.m_vbo.bind()
-
-            # Offset for position1
-            offset = 0
-
-            # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation1 = shaderProgram.attributeLocation("pos1")
-            shaderProgram.enableAttributeArray(vertexLocation1)
-            shaderProgram.setAttributeBuffer(vertexLocation1, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
-
-            # Offset for position2
-            offset += self.sizeof_vector3D
-
-            # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation2 = shaderProgram.attributeLocation("pos2")
-            shaderProgram.enableAttributeArray(vertexLocation2)
-            shaderProgram.setAttributeBuffer(vertexLocation2, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
-
-            # Offset for raw pos
-            #offset += self.sizeof_vector3D
-
-            # Tell OpenGL programmable pipeline how to locate vertex position data
-            #vertexRawPos = shaderProgram.attributeLocation("rawPos")
-            #shaderProgram.enableAttributeArray(vertexRawPos)
-            #shaderProgram.setAttributeBuffer(vertexRawPos, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
-
-            # Offset for start time
-            offset += self.sizeof_float
-
-            # Tell OpenGL programmable pipeline how to locate vertex color data
-            startTime = shaderProgram.attributeLocation("startTime")
-            shaderProgram.enableAttributeArray(startTime)
-            shaderProgram.setAttributeBuffer(startTime, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
-
-            # Offset for end time
-            offset += self.sizeof_float
-
-            # Tell OpenGL programmable pipeline how to locate vertex color data
-            endTime = shaderProgram.attributeLocation("endTime")
-            shaderProgram.enableAttributeArray(endTime)
-            shaderProgram.setAttributeBuffer(endTime, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
-
-            # Offset for command
-            offset += self.sizeof_float
-
-            # Tell OpenGL programmable pipeline how to locate vertex color data
-            command = shaderProgram.attributeLocation("command")
-            shaderProgram.enableAttributeArray(command)
-            shaderProgram.setAttributeBuffer(command, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
-    
-
-        if len(self.m_triangles) != 0:
-            if self.m_texture:
-                self.m_texture.bind()
-                shaderProgram.setUniformValue("texture", 0)
-        
-            self.glDrawArrays(GL.GL_TRIANGLES, 0, len(self.m_triangles))
-
-        if len(self.m_lines) != 0:
-            self.glLineWidth(self.m_lineWidth)
-            self.glDrawArrays(GL.GL_LINES, len(self.m_triangles), len(self.m_lines))
-
-        if len(self.m_points) != 0:
-            self.glDrawArrays(GL.GL_POINTS, len(self.m_triangles) + len(self.m_lines), len(self.m_points))
-
-        if self.m_vao.isCreated():
-            self.m_vao.release()
-        else:
-            self.m_vbo.release()
+        '''
+        overloaded
+        '''
+        pass
 
     def getSizes(self) -> QVector3D:
         return QVector3D(0, 0, 0)

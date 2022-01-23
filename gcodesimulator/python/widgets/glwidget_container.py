@@ -21,6 +21,7 @@ from PySide6.QtWidgets import QApplication
 
 from gcodesimulator.python.drawers.gcodedrawer import GcodeDrawer
 from gcodesimulator.python.drawers.tooldrawer import ToolDrawer
+from gcodesimulator.python.drawers.heightmapdrawer import HeightMapDrawer
 
 from gcodesimulator.python.parser.gcodeminiparser import  GcodeMiniParser 
 
@@ -59,6 +60,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
 
         self.m_codeDrawer = None
         self.m_toolDrawer = None
+        self.m_heightmapDrawer = None
 
     def loadFile(self, fileName):
         topZ = 0.0
@@ -94,12 +96,15 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.m_codeDrawer.setMiniParser(self.m_gcodeMiniParser)
         self.m_codeDrawer.update()
 
-        #self.m_toolDrawer = ToolDrawer()
-        #self.m_toolDrawer.setToolPosition(QVector3D(0, 0, 0))
-        #self.m_toolDrawer.update()
+        self.m_heightmapDrawer = HeightMapDrawer(self.m_codeDrawer)
+        self.m_heightmapDrawer.update()
+        
+        self.m_toolDrawer = ToolDrawer(self.m_codeDrawer)
+        self.m_toolDrawer.update()
 
         self.glwVisualizer.addDrawable(self.m_codeDrawer)
-        #self.glwVisualizer.addDrawable(self.m_toolDrawer)
+        self.glwVisualizer.addDrawable(self.m_heightmapDrawer)
+        self.glwVisualizer.addDrawable(self.m_toolDrawer)
         
         self.glwVisualizer.fitDrawable()
 

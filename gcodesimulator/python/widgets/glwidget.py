@@ -18,6 +18,8 @@ from PySide6.QtCore import qIsNaN
 
 from gcodesimulator.python.drawers.shaderdrawable import ShaderDrawable
 from gcodesimulator.python.drawers.gcodedrawer import GcodeDrawer
+from gcodesimulator.python.drawers.tooldrawer import ToolDrawer
+from gcodesimulator.python.drawers.heightmapdrawer import HeightMapDrawer
 
 M_PI = math.acos(-1)
 ZOOMSTEP = 1.1
@@ -37,19 +39,10 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.m_shaderHeightMapProgram = None
         self.m_shaderBasicProgram = None
 
-        self.m_shaderProgram_uniformsLocation: Dict[str, int] = {}
-        self.m_shaderProgram_attributesLocation: Dict[str, int] = {}  
-
-        self.m_shaderHeightMapProgram_uniformsLocation: Dict[str, int] = {}
-        self.m_shaderHeightMapProgram_attributesLocation: Dict[str, int] = {}
-
-        self.m_shaderBasicProgram_uniformsLocation: Dict[str, int] = {}
-        self.m_shaderBasicProgram_attributesLocation: Dict[str, int] = {}
+        self.pathBuffer = None  # vbo
 
         self.pathFramebuffer = None
         self.pathRgbaTexture = None
-
-        self.pathBuffer = None
 
         self.m_xRot = 90.0 
         self.m_yRot = 0.0 
@@ -665,7 +658,7 @@ void main(void) {
         """
 
     def fragment_shader_heightmap_source(self):
-        return """precision mediump float;
+        return """//precision mediump float;
 
 varying vec4 color;
 
@@ -713,7 +706,7 @@ void main(void) {
 
     def fragment_shader_basic_source(self):
         return """
-precision mediump float;
+//precision mediump float;
 
 varying vec4 color;
 
@@ -727,84 +720,60 @@ void main(void) {
 
         self.m_shaderProgram = QtOpenGL.QOpenGLShaderProgram()
 
-        self.m_shaderProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Vertex, self.vertex_shader_source())
-        self.m_shaderProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Fragment, self.fragment_shader_source())
+        rc1 = self.m_shaderProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Vertex, self.vertex_shader_source())
+        rc2 = self.m_shaderProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Fragment, self.fragment_shader_source())
             
+        if not rc1 or not rc2:
+            print(self.m_shaderProgram.log())
+
         # Link shader pipeline
-        self.m_shaderProgram.link()
+        rc = self.m_shaderProgram.link()
 
-        #if not  self.m_shaderProgram.getProgramParameter(GL.GL_LINK_STATUS):
-        #    print("Could not initialise RenderHeightMap shaders")
-
-        self.m_shaderProgram_uniformsLocation["resolution"] = self.m_shaderProgram.uniformLocation("resolution")
-        self.m_shaderProgram_uniformsLocation["cutterDia"] = self.m_shaderProgram.uniformLocation("cutterDia")
-        self.m_shaderProgram_uniformsLocation["pathXYOffset"] = self.m_shaderProgram.uniformLocation("pathXYOffset")
-        self.m_shaderProgram_uniformsLocation["pathScale"] = self.m_shaderProgram.uniformLocation("pathScale")
-        self.m_shaderProgram_uniformsLocation["pathMinZ"] = self.m_shaderProgram.uniformLocation("pathMinZ")
-        self.m_shaderProgram_uniformsLocation["pathTopZ"] = self.m_shaderProgram.uniformLocation("pathTopZ")
-        self.m_shaderProgram_uniformsLocation["stopAtTime"] = self.m_shaderProgram.uniformLocation("stopAtTime")
-
-        self.m_shaderProgram_attributesLocation["pos1"] = self.m_shaderProgram.attributeLocation("pos1")
-        self.m_shaderProgram_attributesLocation["pos2"] = self.m_shaderProgram.attributeLocation("pos2")
-        self.m_shaderProgram_attributesLocation["rawPos"] = self.m_shaderProgram.attributeLocation("rawPos")
-        self.m_shaderProgram_attributesLocation["startTime"] = self.m_shaderProgram.attributeLocation("startTime")
-        self.m_shaderProgram_attributesLocation["endTime"] = self.m_shaderProgram.attributeLocation("endTime")
-        self.m_shaderProgram_attributesLocation["command"] = self.m_shaderProgram.attributeLocation("command")
+        if not rc:
+            print(self.m_shaderProgram.log())
 
         # ----------------------------------------------------------
 
         self.m_shaderHeightMapProgram = QtOpenGL.QOpenGLShaderProgram()
 
-        self.m_shaderHeightMapProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Vertex, self.vertex_shader_heightmap_source())
-        self.m_shaderHeightMapProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Fragment, self.fragment_shader_heightmap_source())
+        rc1 = self.m_shaderHeightMapProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Vertex, self.vertex_shader_heightmap_source())
+        rc2 = self.m_shaderHeightMapProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Fragment, self.fragment_shader_heightmap_source())
         
-        # Link shader pipeline
-        self.m_shaderHeightMapProgram.link()
+        if not rc1 or not rc2:
+            print(self.m_shaderHeightMapProgram.log())
 
-        #if not  self.m_shaderHeightMapProgram.getProgramParameter(GL.GL_LINK_STATUS):
-        #    print("Could not initialise RenderHeightMap shaders")
+        # Link shader pipeline
+        rc = self.m_shaderHeightMapProgram.link()
+
+        if not rc:
+            print(self.m_shaderHeightMapProgram.log())
         
-        self.m_shaderHeightMapProgram_uniformsLocation["resolution"] = self.m_shaderHeightMapProgram.uniformLocation("resolution")
-        self.m_shaderHeightMapProgram_uniformsLocation["pathScale"] = self.m_shaderHeightMapProgram.uniformLocation("pathScale")
-        self.m_shaderHeightMapProgram_uniformsLocation["pathMinZ"] = self.m_shaderHeightMapProgram.uniformLocation("pathMinZ")
-        self.m_shaderHeightMapProgram_uniformsLocation["pathTopZ"] = self.m_shaderHeightMapProgram.uniformLocation("pathTopZ")
-        self.m_shaderHeightMapProgram_uniformsLocation["rotate"] = self.m_shaderHeightMapProgram.uniformLocation("rotate")
-        self.m_shaderHeightMapProgram_uniformsLocation["heightMap"] = self.m_shaderHeightMapProgram.uniformLocation("heightMap")
-        
-        self.m_shaderHeightMapProgram_attributesLocation["pos0"] = self.m_shaderHeightMapProgram.attributeLocation("pos0")
-        self.m_shaderHeightMapProgram_attributesLocation["pos1"] = self.m_shaderHeightMapProgram.attributeLocation("pos1")
-        self.m_shaderHeightMapProgram_attributesLocation["pos2"] = self.m_shaderHeightMapProgram.attributeLocation("pos2")
-        self.m_shaderHeightMapProgram_attributesLocation["thisPos"] = self.m_shaderHeightMapProgram.attributeLocation("thisPos")
-       
         # ----------------------------------------------------------
 
         self.m_shaderBasicProgram = QtOpenGL.QOpenGLShaderProgram()
 
-        self.m_shaderBasicProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Vertex, self.vertex_shader_basic_source())
-        self.m_shaderBasicProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Fragment, self.fragment_shader_basic_source())
+        rc1 = self.m_shaderBasicProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Vertex, self.vertex_shader_basic_source())
+        rc2 = self.m_shaderBasicProgram.addShaderFromSourceCode(QtOpenGL.QOpenGLShader.Fragment, self.fragment_shader_basic_source())
         
+        if not rc1 or not rc2:
+            print(self.m_shaderBasicProgram.log())
+
         # Link shader pipeline
-        self.m_shaderBasicProgram.link()
+        rc = self.m_shaderBasicProgram.link()
 
-        #if not  self.m_shaderBasicProgram.getProgramParameter(GL.GL_LINK_STATUS):
-        #    print("Could not initialise Bsic shaders")
+        if not rc:
+            print(self.m_shaderBasicProgram.link())
         
-        self.m_shaderBasicProgram_uniformsLocation["scale"] = self.m_shaderBasicProgram.uniformLocation("scale")
-        self.m_shaderBasicProgram_uniformsLocation["translate"] = self.m_shaderBasicProgram.uniformLocation("translate")
-        self.m_shaderBasicProgram_uniformsLocation["rotate"] = self.m_shaderBasicProgram.uniformLocation("rotate")
-        
-        self.m_shaderBasicProgram_attributesLocation["vPos"] = self.m_shaderBasicProgram.attributeLocation("vPos")
-        self.m_shaderBasicProgram_attributesLocation["vColor"] = self.m_shaderBasicProgram.attributeLocation("vColor")
-        
-
     def paintGL(self):
         '''
-        WebGL drawPath
         '''
         if not self.m_shaderProgram or not self.m_shaderHeightMapProgram or not self.m_shaderBasicProgram:
             return
 
         gcodedrawer : GcodeDrawer = self.m_shaderDrawables[0]
+        heightmapdrawer : HeightMapDrawer = self.m_shaderDrawables[1]
+        tooldrawer : ToolDrawer = self.m_shaderDrawables[2]
+       
         
         #if not self.pathBuffer:
         #    self.pathBuffer = QtOpenGL.QOpenGLBuffer()
@@ -813,31 +782,13 @@ void main(void) {
         #    # --> ???
         #    self.pathBuffer.release()
     
-
-        
-
         resolution = gcodedrawer.resolution
-        cutterDia = gcodedrawer.cutterDia 
-        pathXOffset = gcodedrawer.pathXOffset
-        pathYOffset = gcodedrawer.pathYOffset
-        pathScale = gcodedrawer.pathScale
-        pathMinZ = gcodedrawer.pathMinZ
-        stopAtTime = gcodedrawer.stopAtTime
-
-        #self.glUseProgram(self.m_shaderProgram)
 
         # Clear viewport
         self.glClearColor(self.m_colorBackground.redF(), self.m_colorBackground.greenF(), self.m_colorBackground.blueF(), 1.0)
         self.glEnable(GL.GL_DEPTH_TEST)
         self.glViewport(0, 0, resolution, resolution)
         self.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-
-        self.glUniform1f(self.m_shaderProgram_uniformsLocation["resolution"], resolution)
-        self.glUniform1f(self.m_shaderProgram_uniformsLocation["cutterDia"], cutterDia)
-        self.glUniform2f(self.m_shaderProgram_uniformsLocation["pathXYOffset"], pathXOffset, pathYOffset)
-        self.glUniform1f(self.m_shaderProgram_uniformsLocation["pathScale"], pathScale)
-        self.glUniform1f(self.m_shaderProgram_uniformsLocation["pathMinZ"], pathMinZ)
-        self.glUniform1f(self.m_shaderProgram_uniformsLocation["stopAtTime"], stopAtTime)
 
         # Update settings
         if self.m_antialiasing:
@@ -853,39 +804,25 @@ void main(void) {
                 self.glEnable(GL.GL_BLEND)
         
         if self.m_shaderProgram:
-            # Draw 3d
-            self.m_shaderProgram.bind()
+            if gcodedrawer.needsUpdateGeometry():
+                gcodedrawer.updateGeometry(self.m_shaderProgram, self)
+        if self.m_shaderHeightMapProgram:
+            if heightmapdrawer.needsUpdateGeometry():
+                heightmapdrawer.updateGeometry(self.m_shaderHeightMapProgram, self)
+        if self.m_shaderBasicProgram:
+            if tooldrawer.needsUpdateGeometry():
+                tooldrawer.updateGeometry(self.m_shaderBasicProgram, self)
 
-            # Set modelview-projection matrix
-            self.m_shaderProgram.setUniformValue("mvp_matrix", self.m_projectionMatrix * self.m_viewMatrix)
-            self.m_shaderProgram.setUniformValue("mv_matrix", self.m_viewMatrix)
+        if self.m_shaderProgram:
+            gcodedrawer.draw(self.m_shaderProgram)
+        if self.m_shaderHeightMapProgram:
+            gcodedrawer.draw(self.m_shaderHeightMapProgram)
+        if self.m_shaderBasicProgram:
+            tooldrawer.draw(self.m_shaderBasicProgram)
 
-            # Update geometries in current opengl context
-            for drawable in self.m_shaderDrawables:
-                if drawable.needsUpdateGeometry():
-                    drawable.updateGeometry(self.m_shaderProgram)
-
-            # Draw geometries
-            for drawable in self.m_shaderDrawables:
-                drawable.draw(self.m_shaderProgram)
-               
-            self.m_shaderProgram.release()
-
-        #while lastTriangle < numTriangles:
-        #    n = Math.min(numTriangles - lastTriangle, maxTriangles);
-        #    b = new Float32Array(pathBufferContent.buffer, lastTriangle * pathStride * 3 * Float32Array.BYTES_PER_ELEMENT, n * pathStride * 3);
-        #    self.gl.bufferSubData(GL.GL_ARRAY_BUFFER, 0, b)
-        #    self.glDrawArrays(GL.GL_TRIANGLES, 0, n * 3)
-        #    lastTriangle += n
-
-        self.glDisableVertexAttribArray(self.m_shaderProgram_attributesLocation["pos1"])
-        self.glDisableVertexAttribArray(self.m_shaderProgram_attributesLocation["pos2"])
-        self.glDisableVertexAttribArray(self.m_shaderProgram_attributesLocation["startTime"])
-        self.glDisableVertexAttribArray(self.m_shaderProgram_attributesLocation["endTime"])
-        self.glDisableVertexAttribArray(self.m_shaderProgram_attributesLocation["command"])
-        self.glDisableVertexAttribArray(self.m_shaderProgram_attributesLocation["rawPos"])
-
-        #self.glUseProgram(None)
+        self.m_shaderProgram.release()
+        self.m_shaderHeightMapProgram.release()
+        self.m_shaderBasicProgram.release()
 
         self.m_frames += 1
         self.update()
