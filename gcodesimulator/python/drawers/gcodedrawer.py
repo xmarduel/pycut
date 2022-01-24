@@ -95,6 +95,7 @@ class GcodeDrawer(ShaderDrawable) :
         self.needToDrawHeightMap = False
     
         self.resolution = 1024 // 4  #  python not so powerfull as javascript...
+        self.gpuMem = 2 * self.resolution * self.resolution
 
         if cutterAngle < 0 or cutterAngle > 180:
             cutterAngle = 180
@@ -531,15 +532,21 @@ class GcodeDrawer(ShaderDrawable) :
                 self.m_texture.bind()
                 self.m_shader_program.setUniformValue("texture", 0)
         
+            
+            numTriangles = len(self.m_triangles)
+            lastTriangle = 0
+            maxTriangles = math.floor(self.gpuMem / self.pathStride / 3 / (VertexData.NB_FLOATS_PER_VERTEX * 4))
+
             # TODO -------------------------------------------
             '''
-            numTriangles = pathNumVertexes / 3
-            lastTriangle = 0
-            maxTriangles = math.floor(gpuMem / pathStride / 3 / Float32Array.BYTES_PER_ELEMENT)
-
             while lastTriangle < numTriangles:
-                n = math.min(numTriangles - lastTriangle, maxTriangles)
-                b = new Float32Array(pathBufferContent.buffer, lastTriangle * pathStride * 3 * Float32Array.BYTES_PER_ELEMENT, n * pathStride * 3);
+                n = min(numTriangles - lastTriangle, maxTriangles)
+                
+                b = np.empty(0, dtype=ctypes.c_float) # TODO !! ??
+                b = new Float32Array(pathBufferContent.buffer, 
+                        lastTriangle * self.pathStride * 3 * (VertexData.NB_FLOATS_PER_VERTEX * 4), 
+                        n * self.pathStride * 3)
+                
                 context.glBufferSubData(GL.GL_ARRAY_BUFFER, 0, b)
                 context.glDrawArrays(GL.GL_TRIANGLES, 0, n * 3)
                 lastTriangle += n
