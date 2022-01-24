@@ -1,30 +1,74 @@
 
 import math
+from enum import Enum
+import ctypes
 
 from typing import List
 from typing import Tuple
 
-from enum import Enum
-
 import numpy as np
 
-from PySide6.QtGui import QVector3D
-from PySide6.QtCore import Slot
-
-from PySide6.QtCore import qIsNaN
-
 from PySide6 import QtOpenGL
+
+from PySide6.QtGui import QVector3D
+from PySide6.QtGui import QOpenGLFunctions
+
+from PySide6.QtCore import Slot
 
 from OpenGL import GL
 
 from gcodesimulator.python.parser.gcodeminiparser import GcodeMiniParser
 
 from gcodesimulator.python.drawers.shaderdrawable import ShaderDrawable
-from gcodesimulator.python.drawers.shaderdrawable import VertexData
+
 
 sNaN = float('NaN')
 
 M_PI = math.acos(-1)
+
+
+
+class VertexData:
+    #NB_FLOATS_PER_VERTEX = 12
+    NB_FLOATS_PER_VERTEX = 9 
+
+    def __init__(self):
+        self.pos1 = QVector3D()
+        self.pos2 = QVector3D()
+        #self.rawPos = QVector3D()
+        self.startTime = sNaN
+        self.endTime = sNaN
+        self.command = sNaN
+
+    @classmethod
+    def VertexDataListToNumPy(cls, vertex_list: List['VertexData']):
+        '''
+        '''
+        def NaN_to_Val(val):
+            #if qIsNaN(val):
+            #    return 65536.0
+            return val
+
+        np_array = np.empty(cls.NB_FLOATS_PER_VERTEX * len(vertex_list), dtype=ctypes.c_float)
+        
+        for k, vdata in enumerate(vertex_list):
+            np_array[9*k+0] = NaN_to_Val(vdata.pos1.x())
+            np_array[9*k+1] = NaN_to_Val(vdata.pos1.y())
+            np_array[9*k+2] = NaN_to_Val(vdata.pos1.z())
+
+            np_array[9*k+3] = NaN_to_Val(vdata.pos2.x())
+            np_array[9*k+4] = NaN_to_Val(vdata.pos2.y())
+            np_array[9*k+5] = NaN_to_Val(vdata.pos2.z())
+
+            #np_array[12*k+6] = NaN_to_Val(vdata.rawPos.x())
+            #np_array[12*k+7] = NaN_to_Val(vdata.rawPos.y())
+            #np_array[12*k+8] = NaN_to_Val(vdata.rawPos.z())
+
+            np_array[9*k+6] = NaN_to_Val(vdata.startTime)
+            np_array[9*k+7] = NaN_to_Val(vdata.endTime)
+            np_array[9*k+8] = NaN_to_Val(vdata.command)
+
+        return np_array
 
 
 class GcodeDrawer(ShaderDrawable) :
@@ -50,8 +94,7 @@ class GcodeDrawer(ShaderDrawable) :
         self.needToCreatePathTexture = False
         self.needToDrawHeightMap = False
     
-        self.gpuMem = 2 * 1024 * 1024
-        self.resolution = 1024
+        self.resolution = 1024 // 4  #  python not so powerfull as javascript...
 
         if cutterAngle < 0 or cutterAngle > 180:
             cutterAngle = 180
@@ -237,19 +280,13 @@ class GcodeDrawer(ShaderDrawable) :
                         f(command, coneDia / 2 * math.cos(a1), coneDia / 2 * math.sin(a1), coneHeight, 1, 0)
                         index += 1
 
-                    #if (index > pathVertexesPerLine)
-                    #    console.log("oops...")
                     while index < pathVertexesPerLine:
                         f(200, 0, 0, 0, 1, 0)
                         index += 1
         
-                else :
-                    #console.log("cut")
+                else:
                     # cut
                     planeContactAngle = math.asin((prevZ - z) / xyDist * math.sin(self.cutterAngleRad / 2) / math.cos(self.cutterAngleRad / 2))
-                    #console.log("\nxyDist = ", xyDist)
-                    #console.log("delta z = " + (z - prevZ))
-                    #console.log("planeContactAngle = " + (planeContactAngle * 180 / math.PI))
 
                     index = 0
                     if True:
@@ -283,11 +320,6 @@ class GcodeDrawer(ShaderDrawable) :
                         f(101, coneDia / 2 * math.cos(a1 + math.PI), coneDia / 2 * math.sin(a1 + math.PI), coneHeight, 1, 0)
 
                         index += 16
-
-                    #if (index != pathVertexesPerLine)
-                    #    console.log("oops...")
-                    #while (index < pathVertexesPerLine)
-                    #    f(index++, 200, 0, 0, 0, 1, 0)
                 
             else :
                 # recall: pathVertexesPerLine = 18
@@ -316,7 +348,7 @@ class GcodeDrawer(ShaderDrawable) :
     
         return True
 
-    def prepareDraw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context):
+    def prepareDraw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context: QOpenGLFunctions):
         shaderProgram.bind()
 
         context.glUniform1f(shaderProgram.uniformLocation("resolution"), self.resolution)
@@ -334,11 +366,9 @@ class GcodeDrawer(ShaderDrawable) :
         ##self.m_shaderProgram.setUniformValue("pathTopZ", self.pathTopZ)
         #shaderProgram.setUniformValue("stopAtTime", self.stopAtTime)
 
-    def updateGeometry(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram , context):
+    def updateGeometry(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram , context: QOpenGLFunctions):
         '''
         '''
-        self.prepareDraw(shaderProgram, context)
-
         # Init in context
         if not self.m_vbo.isCreated():
             self.init()
@@ -370,6 +400,8 @@ class GcodeDrawer(ShaderDrawable) :
                 self.m_vao.release()
             self.m_needsUpdateGeometry = False
             return
+
+        self.prepareDraw(shaderProgram, context)
 
         if self.m_vao.isCreated():
             # Offset for pos1
@@ -426,13 +458,15 @@ class GcodeDrawer(ShaderDrawable) :
 
         self.m_needsUpdateGeometry = False
 
-    def draw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram):
+    def draw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context: QOpenGLFunctions):
         '''
         '''
         if self.m_vao.isCreated():
             # Prepare vao
             self.m_vao.bind()
         else:
+            self.prepareDraw(shaderProgram, context)
+
             # Prepare vbo
             self.m_vbo.bind()
 
@@ -490,6 +524,20 @@ class GcodeDrawer(ShaderDrawable) :
                 self.m_texture.bind()
                 shaderProgram.setUniformValue("texture", 0)
         
+            # TODO -------------------------------------------
+            '''
+            numTriangles = pathNumVertexes / 3
+            lastTriangle = 0
+            maxTriangles = math.floor(gpuMem / pathStride / 3 / Float32Array.BYTES_PER_ELEMENT)
+
+            while lastTriangle < numTriangles:
+                n = math.min(numTriangles - lastTriangle, maxTriangles)
+                b = new Float32Array(pathBufferContent.buffer, lastTriangle * pathStride * 3 * Float32Array.BYTES_PER_ELEMENT, n * pathStride * 3);
+                context.glBufferSubData(GL.GL_ARRAY_BUFFER, 0, b)
+                context.glDrawArrays(GL.GL_TRIANGLES, 0, n * 3)
+                lastTriangle += n
+            '''
+
             self.glDrawArrays(GL.GL_TRIANGLES, 0, len(self.m_triangles))
 
         if len(self.m_lines) != 0:

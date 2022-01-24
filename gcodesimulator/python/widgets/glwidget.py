@@ -39,10 +39,6 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.m_shaderHeightMapProgram = None
         self.m_shaderBasicProgram = None
 
-        self.pathBuffer = None  # vbo
-
-        self.pathFramebuffer = None
-        self.pathRgbaTexture = None
 
         self.m_xRot = 90.0 
         self.m_yRot = 0.0 
@@ -814,11 +810,11 @@ void main(void) {
                 tooldrawer.updateGeometry(self.m_shaderBasicProgram, self)
 
         if self.m_shaderProgram:
-            gcodedrawer.draw(self.m_shaderProgram)
+            gcodedrawer.draw(self.m_shaderProgram, self)
         if self.m_shaderHeightMapProgram:
-            gcodedrawer.draw(self.m_shaderHeightMapProgram)
+            gcodedrawer.draw(self.m_shaderHeightMapProgram, self)
         if self.m_shaderBasicProgram:
-            tooldrawer.draw(self.m_shaderBasicProgram)
+            tooldrawer.draw(self.m_shaderBasicProgram, self)
 
         self.m_shaderProgram.release()
         self.m_shaderHeightMapProgram.release()
@@ -831,42 +827,6 @@ void main(void) {
         self.glViewport(0, 0, width, height)
         self.updateProjection()
         self.resized.emit()
-
-    def createPathTexture(self):
-        '''
-        '''
-        if not self.m_shaderProgram or not self.m_shaderHeightMapProgram or not self.m_shaderBasicProgram:
-            return
-
-        gcodedrawer : GcodeDrawer = self.m_shaderDrawables[0]
-
-        if not self.pathFramebuffer:
-            self.pathFramebuffer = QtOpenGL.QOpenGLFramebufferObject()
-            self.pathFramebuffer.bind()
-
-            self.pathRgbaTexture = QtOpenGL.QOpenGLTexture()
-            self.glActiveTexture(GL.GL_TEXTURE0)
-            self.pathRgbaTexture.bind(GL.GL_TEXTURE_2D)
-            self.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, gcodedrawer.resolution, gcodedrawer.resolution, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, None)
-            self.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
-            self.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
-            self.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, self.pathRgbaTexture, 0)
-            self.pathRgbaTexture.release()
-
-            renderbuffer = QtOpenGL.QOpenGLBuffer(QtOpenGL.QOpenGLBuffer.PixelUnpackBuffer) # CHECKME
-            renderbuffer.bind(GL.GL_RENDERBUFFER)
-            self.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, gcodedrawer.resolution, gcodedrawer.resolution)
-            self.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, renderbuffer)
-            renderbuffer.release()
-            
-            self.pathFramebuffer.release()
-        
-        self.pathFramebuffer.bind(GL.GL_FRAMEBUFFER)
-        ###self.drawPath()  ## TODO
-        self.pathFramebuffer.release()
-        self.needToCreatePathTexture = False
-        self.needToDrawHeightMap = True
-
 
     def updateProjection(self):
         # Reset projection
@@ -908,6 +868,17 @@ void main(void) {
         self.m_viewMatrix.translate(-self.m_xLookAt, -self.m_yLookAt, -self.m_zLookAt)
 
         self.m_viewMatrix.rotate(-90, 1.0, 0.0, 0.0)
+
+        try:
+            #gcodedrawer : GcodeDrawer = self.m_shaderDrawables[0]
+            heightmapdrawer : HeightMapDrawer = self.m_shaderDrawables[1]
+            tooldrawer : ToolDrawer = self.m_shaderDrawables[2]
+
+            #gcodedrawer.rotate(self.m_viewMatrix)
+            heightmapdrawer.rotate(self.m_viewMatrix)
+            tooldrawer.rotate(self.m_viewMatrix)
+        except Exception:
+            pass
 
     def mousePressEvent(self, event: QtGui.QMouseEvent):
         self.m_lastPos = event.pos()

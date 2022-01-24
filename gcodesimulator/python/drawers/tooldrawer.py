@@ -1,29 +1,57 @@
 
 import math
+from enum import Enum
+import ctypes
 
 from typing import List
-
-from enum import Enum
 
 import numpy as np
 
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QMatrix4x4
+from PySide6.QtGui import QOpenGLFunctions
 
 from PySide6 import QtOpenGL
 
 from gcodesimulator.python.drawers.shaderdrawable import ShaderDrawable
 from gcodesimulator.python.drawers.gcodedrawer import GcodeDrawer
 
-from gcodesimulator.python.drawers.shaderdrawable import VertexData
-from gcodesimulator.python.drawers.shaderdrawable import ToolVertexData
+from gcodesimulator.python.drawers.gcodedrawer import VertexData
 
 from OpenGL import GL
 
-
-sNaN = float('NaN')
-
 M_PI = math.acos(-1)
+
+
+class ToolVertexData:
+    NB_FLOATS_PER_VERTEX = 6
+
+    def __init__(self):
+        self.vPos = QVector3D()
+        self.vColor = QVector3D()
+
+    @classmethod
+    def VertexDataListToNumPy(cls, vertex_list: List['ToolVertexData']):
+        '''
+        '''
+        def NaN_to_Val(val):
+            #if qIsNaN(val):
+            #    return 65536.0
+            return val
+
+        np_array = np.empty(cls.NB_FLOATS_PER_VERTEX * len(vertex_list), dtype=ctypes.c_float)
+        
+        for k, vdata in enumerate(vertex_list):
+            np_array[6*k+0] = NaN_to_Val(vdata.vPos.x())
+            np_array[6*k+1] = NaN_to_Val(vdata.vPos.y())
+            np_array[6*k+2] = NaN_to_Val(vdata.vPos.z())
+
+            np_array[6*k+3] = NaN_to_Val(vdata.vColor.x())
+            np_array[6*k+4] = NaN_to_Val(vdata.vColor.y())
+            np_array[6*k+5] = NaN_to_Val(vdata.vColor.z())
+
+        return np_array
+
 
 
 class ToolDrawer(ShaderDrawable):
@@ -128,7 +156,7 @@ class ToolDrawer(ShaderDrawable):
 
         return True
 
-    def prepareDraw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram):
+    def prepareDraw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context: QOpenGLFunctions):
         '''
         jscut work with the pathBuffer directly
         ... here we work with the vertexData List
@@ -164,10 +192,10 @@ class ToolDrawer(ShaderDrawable):
         shaderProgram.setUniformValue("translate", QVector3D((x + self.m_gcodedrawer.pathXOffset), (y + self.m_gcodedrawer.pathYOffset), (z - self.m_gcodedrawer.pathTopZ)) * self.m_gcodedrawer.pathScale)
         shaderProgram.setUniformValue("rotate", self.rotate)
 
-    def updateGeometry(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context):
+    def updateGeometry(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context: QOpenGLFunctions):
         '''
         '''
-        self.prepareDraw(shaderProgram)
+        self.prepareDraw(shaderProgram, context)
 
         # Init in context
         if not self.m_vbo.isCreated():
@@ -224,13 +252,15 @@ class ToolDrawer(ShaderDrawable):
 
         self.m_needsUpdateGeometry = False
 
-    def draw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram):
+    def draw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context: QOpenGLFunctions):
         '''
         '''
         if self.m_vao.isCreated():
             # Prepare vao
             self.m_vao.bind()
         else:
+            self.prepareDraw(shaderProgram, context)
+            
             # Prepare vbo
             self.m_vbo.bind()
 

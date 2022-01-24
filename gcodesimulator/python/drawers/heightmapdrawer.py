@@ -1,30 +1,63 @@
 
 import math
+from enum import Enum
+import ctypes
 
 from typing import List
 
-from enum import Enum
-
 import numpy as np
-
-from PySide6.QtGui import QVector2D
-from PySide6.QtGui import QMatrix4x4
-from PySide6.QtGui import QColor
-
-from PySide6 import QtOpenGL
-
-from gcodesimulator.python.drawers.shaderdrawable import HeightMapVertexData, ShaderDrawable
-from gcodesimulator.python.drawers.gcodedrawer import GcodeDrawer
-
-from gcodesimulator.python.drawers.shaderdrawable import VertexData
-from gcodesimulator.python.drawers.shaderdrawable import ToolVertexData
 
 from OpenGL import GL
 
+from PySide6.QtGui import QVector2D
+from PySide6.QtGui import QMatrix4x4
+from PySide6.QtGui import QOpenGLFunctions
+
+from PySide6 import QtOpenGL
+
+from gcodesimulator.python.drawers.shaderdrawable import ShaderDrawable
+from gcodesimulator.python.drawers.gcodedrawer import GcodeDrawer
 
 sNaN = float('NaN')
 
-M_PI = math.acos(-1)
+
+class HeightMapVertexData:
+    NB_FLOATS_PER_VERTEX = 9 
+
+    def __init__(self):
+        self.pos0 = QVector2D()
+        self.pos1 = QVector2D()
+        self.pos2 = QVector2D()
+        self.thisPos = QVector2D()
+        self.vertex = sNaN
+
+    @classmethod
+    def VertexDataListToNumPy(cls, vertex_list: List['HeightMapVertexData']):
+        '''
+        '''
+        def NaN_to_Val(val):
+            #if qIsNaN(val):
+            #    return 65536.0
+            return val
+
+        np_array = np.empty(cls.NB_FLOATS_PER_VERTEX * len(vertex_list), dtype=ctypes.c_float)
+        
+        for k, vdata in enumerate(vertex_list):
+            np_array[9*k+0] = NaN_to_Val(vdata.pos0.x())
+            np_array[9*k+1] = NaN_to_Val(vdata.pos0.y())
+           
+            np_array[9*k+2] = NaN_to_Val(vdata.pos1.x())
+            np_array[9*k+3] = NaN_to_Val(vdata.pos1.y())
+
+            np_array[9*k+4] = NaN_to_Val(vdata.pos2.x())
+            np_array[9*k+5] = NaN_to_Val(vdata.pos2.y())
+            
+            np_array[9*k+6] = NaN_to_Val(vdata.thisPos.x())
+            np_array[9*k+7] = NaN_to_Val(vdata.thisPos.y())
+
+            np_array[9*k+8] = NaN_to_Val(vdata.vertex)
+
+        return np_array
 
 
 class HeightMapDrawer(ShaderDrawable):
@@ -48,6 +81,9 @@ class HeightMapDrawer(ShaderDrawable):
 
         self.m_gcodedrawer = gcodedrawer
 
+        self.pathFramebuffer = None
+        self.pathRgbaTexture = self.m_texture  # in base class
+
         self.rotate = QMatrix4x4()
         self.rotate.setToIdentity()
 
@@ -63,7 +99,7 @@ class HeightMapDrawer(ShaderDrawable):
         # Clear all vertex data
         self.m_lines = []
         self.m_points = []
-        self.m_triangles = [] #  resolution * (resolution - 1)
+        self.m_triangles = [] #  resolution * (resolution - 1) * 3
         
         resolution = self.m_gcodedrawer.resolution
         
@@ -124,12 +160,11 @@ class HeightMapDrawer(ShaderDrawable):
 
                         self.m_triangles.append(vertex)
         
-
         self.update()
 
         return True
 
-    def prepareDraw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context):
+    def prepareDraw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context: QOpenGLFunctions):
         '''
         jscut work with the pathBuffer directly
         ... here we work with the vertexData List
@@ -154,11 +189,9 @@ class HeightMapDrawer(ShaderDrawable):
         shaderProgram.setUniformValue("rotate", self.rotate)
         shaderProgram.setUniformValue("heightMap", 0)
 
-    def updateGeometry(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context):
+    def updateGeometry(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context: QOpenGLFunctions):
         '''
         '''
-        self.prepareDraw(shaderProgram, context)
-
         # Init in context
         if not self.m_vbo.isCreated():
             self.init()
@@ -190,6 +223,8 @@ class HeightMapDrawer(ShaderDrawable):
                 self.m_vao.release()
             self.m_needsUpdateGeometry = False
             return
+
+        self.prepareDraw(shaderProgram, context)
 
         if self.m_vao.isCreated():
             # Offset for pos0
@@ -239,20 +274,19 @@ class HeightMapDrawer(ShaderDrawable):
 
         self.m_needsUpdateGeometry = False
 
-    def draw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram):
+    def draw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context: QOpenGLFunctions):
         '''
         '''
         if self.m_vao.isCreated():
             # Prepare vao
             self.m_vao.bind()
         else:
+            self.prepareDraw(shaderProgram, context)
+
             # Prepare vbo
             self.m_vbo.bind()
 
             # Offset for position
-            offset = 0
-
-            # Offset for pos0
             offset = 0
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
@@ -319,3 +353,33 @@ class HeightMapDrawer(ShaderDrawable):
         shaderProgram.disableAttributeArray("vertex")
 
         shaderProgram.release()
+
+    def createPathTexture(self):
+        '''
+        '''
+        if not self.pathFramebuffer:
+            self.pathFramebuffer = QtOpenGL.QOpenGLFramebufferObject()
+            self.pathFramebuffer.bind()
+
+            self.pathRgbaTexture = QtOpenGL.QOpenGLTexture()
+            self.glActiveTexture(GL.GL_TEXTURE0)
+            self.pathRgbaTexture.bind(GL.GL_TEXTURE_2D)
+            self.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, self.m_gcodedrawer.resolution, self.m_gcodedrawer.resolution, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, None)
+            self.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
+            self.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
+            self.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, self.pathRgbaTexture, 0)
+            self.pathRgbaTexture.release()
+
+            renderbuffer = QtOpenGL.QOpenGLBuffer()
+            renderbuffer.bind(GL.GL_RENDERBUFFER)
+            self.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, self.m_gcodedrawer.resolution, self.m_gcodedrawer.resolution)
+            self.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, renderbuffer)
+            renderbuffer.release()
+            
+            self.pathFramebuffer.release()
+        
+        self.pathFramebuffer.bind(GL.GL_FRAMEBUFFER)
+        #self.m_gcodedrawer.draw(shaderProgramXXXX) #  TODO
+        self.pathFramebuffer.release()
+        self.needToCreatePathTexture = False
+        self.needToDrawHeightMap = True
