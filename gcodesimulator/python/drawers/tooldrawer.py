@@ -156,7 +156,7 @@ class ToolDrawer(ShaderDrawable):
 
         return True
 
-    def prepareDraw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context: QOpenGLFunctions):
+    def prepareDraw(self, context: QOpenGLFunctions):
         '''
         jscut work with the pathBuffer directly
         ... here we work with the vertexData List
@@ -164,7 +164,7 @@ class ToolDrawer(ShaderDrawable):
         so we do not use the "self.m_gcodedrawer.pathBufferContent",
         but rather the self.m_gcodedrawer.m_triangles list
         '''
-        shaderProgram.bind()
+        self.m_shader_program.bind()
 
         idx = ToolDrawer.lowerBound(self.m_gcodedrawer.m_triangles, self.m_gcodedrawer.stopAtTime)
         
@@ -188,14 +188,15 @@ class ToolDrawer(ShaderDrawable):
             y = self.m_gcodedrawer.m_triangles[idx-1].pos2.y()
             z = self.m_gcodedrawer.m_triangles[idx-2].pos2.z()
 
-        shaderProgram.setUniformValue("scale", QVector3D(self.m_gcodedrawer.cutterDia, self.m_gcodedrawer.cutterDia, self.m_gcodedrawer.cutterH) * self.m_gcodedrawer.pathScale)
-        shaderProgram.setUniformValue("translate", QVector3D((x + self.m_gcodedrawer.pathXOffset), (y + self.m_gcodedrawer.pathYOffset), (z - self.m_gcodedrawer.pathTopZ)) * self.m_gcodedrawer.pathScale)
-        shaderProgram.setUniformValue("rotate", self.rotate)
+        self.m_shader_program.setUniformValue("scale", QVector3D(self.m_gcodedrawer.cutterDia, self.m_gcodedrawer.cutterDia, self.m_gcodedrawer.cutterH) * self.m_gcodedrawer.pathScale)
+        self.m_shader_program.setUniformValue("translate", QVector3D((x + self.m_gcodedrawer.pathXOffset), (y + self.m_gcodedrawer.pathYOffset), (z - self.m_gcodedrawer.pathTopZ)) * self.m_gcodedrawer.pathScale)
+        self.m_shader_program.setUniformValue("rotate", self.rotate)
 
-    def updateGeometry(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context: QOpenGLFunctions):
+    def updateGeometry(self, context: QOpenGLFunctions):
         '''
         '''
-        self.prepareDraw(shaderProgram, context)
+        if not self.m_shader_program:
+            return
 
         # Init in context
         if not self.m_vbo.isCreated():
@@ -207,6 +208,8 @@ class ToolDrawer(ShaderDrawable):
 
         # Prepare vbo
         self.m_vbo.bind()
+
+        self.prepareDraw(context)
 
         # Update vertex buffer
         if self.updateData():
@@ -234,17 +237,17 @@ class ToolDrawer(ShaderDrawable):
             offset = 0
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation1 = shaderProgram.attributeLocation("vPos")
-            shaderProgram.enableAttributeArray(vertexLocation1)
-            shaderProgram.setAttributeBuffer(vertexLocation1, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
+            vertexLocation1 = self.m_shader_program.attributeLocation("vPos")
+            self.m_shader_program.enableAttributeArray(vertexLocation1)
+            self.m_shader_program.setAttributeBuffer(vertexLocation1, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
 
             # Offset for vColor
             offset += self.sizeof_vector3D
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation2 = shaderProgram.attributeLocation("vColor")
-            shaderProgram.enableAttributeArray(vertexLocation2)
-            shaderProgram.setAttributeBuffer(vertexLocation2, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)    
+            vertexLocation2 = self.m_shader_program.attributeLocation("vColor")
+            self.m_shader_program.enableAttributeArray(vertexLocation2)
+            self.m_shader_program.setAttributeBuffer(vertexLocation2, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)    
 
             self.m_vao.release()
 
@@ -252,15 +255,18 @@ class ToolDrawer(ShaderDrawable):
 
         self.m_needsUpdateGeometry = False
 
-    def draw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context: QOpenGLFunctions):
+    def draw(self, context: QOpenGLFunctions):
         '''
         '''
+        if not self.m_shader_program:
+            return
+
         if self.m_vao.isCreated():
             # Prepare vao
             self.m_vao.bind()
         else:
-            self.prepareDraw(shaderProgram, context)
-            
+            self.prepareDraw(context)
+
             # Prepare vbo
             self.m_vbo.bind()
 
@@ -268,23 +274,23 @@ class ToolDrawer(ShaderDrawable):
             offset = 0
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation1 = shaderProgram.attributeLocation("vPos")
-            shaderProgram.enableAttributeArray(vertexLocation1)
-            shaderProgram.setAttributeBuffer(vertexLocation1, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
+            vertexLocation1 = self.m_shader_program.attributeLocation("vPos")
+            self.m_shader_program.enableAttributeArray(vertexLocation1)
+            self.m_shader_program.setAttributeBuffer(vertexLocation1, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
 
             # Offset for vColor
             offset += self.sizeof_vector3D
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation2 = shaderProgram.attributeLocation("vColor")
-            shaderProgram.enableAttributeArray(vertexLocation2)
-            shaderProgram.setAttributeBuffer(vertexLocation2, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)    
+            vertexLocation2 = self.m_shader_program.attributeLocation("vColor")
+            self.m_shader_program.enableAttributeArray(vertexLocation2)
+            self.m_shader_program.setAttributeBuffer(vertexLocation2, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)    
 
                 
         if len(self.m_triangles) != 0:
             if self.m_texture:
                 self.m_texture.bind()
-                shaderProgram.setUniformValue("texture", 0)
+                self.m_shader_program.setUniformValue("texture", 0)
         
             self.glDrawArrays(GL.GL_TRIANGLES, 0, len(self.m_triangles))
 
@@ -300,7 +306,7 @@ class ToolDrawer(ShaderDrawable):
         else:
             self.m_vbo.release()
         
-        shaderProgram.disableAttributeArray("vPos")
-        shaderProgram.disableAttributeArray("vColor")
+        self.m_shader_program.disableAttributeArray("vPos")
+        self.m_shader_program.disableAttributeArray("vColor")
 
-        shaderProgram.release()
+        self.m_shader_program.release()

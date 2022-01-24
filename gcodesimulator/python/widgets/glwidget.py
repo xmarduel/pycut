@@ -759,6 +759,18 @@ void main(void) {
 
         if not rc:
             print(self.m_shaderBasicProgram.link())
+
+        # ----------------------------------------------------------
+        # ----------------------------------------------------------
+
+        gcodedrawer : GcodeDrawer = self.m_shaderDrawables[0]
+        heightmapdrawer : HeightMapDrawer = self.m_shaderDrawables[1]
+        tooldrawer : ToolDrawer = self.m_shaderDrawables[2]
+
+        gcodedrawer.setShaderProgram(self.m_shaderProgram)
+        heightmapdrawer.setShaderProgram(self.m_shaderHeightMapProgram)
+        tooldrawer.setShaderProgram(self.m_shaderBasicProgram)
+
         
     def paintGL(self):
         '''
@@ -770,6 +782,9 @@ void main(void) {
         heightmapdrawer : HeightMapDrawer = self.m_shaderDrawables[1]
         tooldrawer : ToolDrawer = self.m_shaderDrawables[2]
        
+        if gcodedrawer.needToCreatePathTexture:
+            heightmapdrawer.createPathTexture(self)
+            gcodedrawer.needToCreatePathTexture = False
         
         #if not self.pathBuffer:
         #    self.pathBuffer = QtOpenGL.QOpenGLBuffer()
@@ -799,22 +814,12 @@ void main(void) {
                 self.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
                 self.glEnable(GL.GL_BLEND)
         
-        if self.m_shaderProgram:
-            if gcodedrawer.needsUpdateGeometry():
-                gcodedrawer.updateGeometry(self.m_shaderProgram, self)
-        if self.m_shaderHeightMapProgram:
-            if heightmapdrawer.needsUpdateGeometry():
-                heightmapdrawer.updateGeometry(self.m_shaderHeightMapProgram, self)
-        if self.m_shaderBasicProgram:
-            if tooldrawer.needsUpdateGeometry():
-                tooldrawer.updateGeometry(self.m_shaderBasicProgram, self)
+        for drawer in self.m_shaderDrawables:
+            if drawer.needsUpdateGeometry():
+                drawer.updateGeometry(self)
 
-        if self.m_shaderProgram:
-            gcodedrawer.draw(self.m_shaderProgram, self)
-        if self.m_shaderHeightMapProgram:
-            gcodedrawer.draw(self.m_shaderHeightMapProgram, self)
-        if self.m_shaderBasicProgram:
-            tooldrawer.draw(self.m_shaderBasicProgram, self)
+        for drawer in self.m_shaderDrawables:
+            drawer.draw(self)
 
         self.m_shaderProgram.release()
         self.m_shaderHeightMapProgram.release()

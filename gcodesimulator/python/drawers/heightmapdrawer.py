@@ -12,6 +12,8 @@ from OpenGL import GL
 from PySide6.QtGui import QVector2D
 from PySide6.QtGui import QMatrix4x4
 from PySide6.QtGui import QOpenGLFunctions
+from PySide6.QtCore import QSize
+
 
 from PySide6 import QtOpenGL
 
@@ -164,7 +166,7 @@ class HeightMapDrawer(ShaderDrawable):
 
         return True
 
-    def prepareDraw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context: QOpenGLFunctions):
+    def prepareDraw(self, context: QOpenGLFunctions):
         '''
         jscut work with the pathBuffer directly
         ... here we work with the vertexData List
@@ -172,26 +174,29 @@ class HeightMapDrawer(ShaderDrawable):
         so we do not use the "self.m_gcodedrawer.pathBufferContent",
         but rather the self.m_gcodedrawer.m_triangles list
         '''
-        shaderProgram.bind()
+        self.m_shader_program.bind()
 
 
-        context.glUniform1f(shaderProgram.uniformLocation("resolution"), self.m_gcodedrawer.resolution)
-        context.glUniform1f(shaderProgram.uniformLocation("pathScale"), self.m_gcodedrawer.pathScale)
-        context.glUniform1f(shaderProgram.uniformLocation("pathMinZ"), self.m_gcodedrawer.pathMinZ)
-        context.glUniform1f(shaderProgram.uniformLocation("pathTopZ"), self.m_gcodedrawer.pathTopZ)
-        #context.glUniformMatrix4fv(shaderProgram.uniformLocation("rotate"), False, self.rotate)
-        #context.glUniform1i(shaderProgram.uniformLocation("heightMap", 0)
+        context.glUniform1f(self.m_shader_program.uniformLocation("resolution"), self.m_gcodedrawer.resolution)
+        context.glUniform1f(self.m_shader_program.uniformLocation("pathScale"), self.m_gcodedrawer.pathScale)
+        context.glUniform1f(self.m_shader_program.uniformLocation("pathMinZ"), self.m_gcodedrawer.pathMinZ)
+        context.glUniform1f(self.m_shader_program.uniformLocation("pathTopZ"), self.m_gcodedrawer.pathTopZ)
+        #context.glUniformMatrix4fv(self.m_shader_program.uniformLocation("rotate"), False, self.rotate)
+        #context.glUniform1i(self.m_shader_program.uniformLocation("heightMap", 0)
 
-        #context.glUniform1f(shaderProgram.uniformLocation("resolution"), self.m_gcodedrawer.resolution)
-        #context.glUniform1f(shaderProgram.uniformLocation("pathScale"), self.m_gcodedrawer.pathScale)
-        #context.glUniform1f(shaderProgram.uniformLocation("pathMinZ"), self.m_gcodedrawer.pathMinZ)
-        #context.glUniform1f(shaderProgram.uniformLocation("pathTopZ"), self.m_gcodedrawer.pathTopZ)
-        shaderProgram.setUniformValue("rotate", self.rotate)
-        shaderProgram.setUniformValue("heightMap", 0)
+        #context.glUniform1f(self.m_shader_program.uniformLocation("resolution"), self.m_gcodedrawer.resolution)
+        #context.glUniform1f(self.m_shader_program.uniformLocation("pathScale"), self.m_gcodedrawer.pathScale)
+        #context.glUniform1f(self.m_shader_program.uniformLocation("pathMinZ"), self.m_gcodedrawer.pathMinZ)
+        #context.glUniform1f(self.m_shader_program.uniformLocation("pathTopZ"), self.m_gcodedrawer.pathTopZ)
+        self.m_shader_program.setUniformValue("rotate", self.rotate)
+        self.m_shader_program.setUniformValue("heightMap", 0)
 
-    def updateGeometry(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context: QOpenGLFunctions):
+    def updateGeometry(self, context: QOpenGLFunctions):
         '''
         '''
+        if not self.m_shader_program:
+            return
+
         # Init in context
         if not self.m_vbo.isCreated():
             self.init()
@@ -224,48 +229,48 @@ class HeightMapDrawer(ShaderDrawable):
             self.m_needsUpdateGeometry = False
             return
 
-        self.prepareDraw(shaderProgram, context)
+        self.prepareDraw(context)
 
         if self.m_vao.isCreated():
             # Offset for pos0
             offset = 0
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation0 = shaderProgram.attributeLocation("pos0")
-            shaderProgram.enableAttributeArray(vertexLocation0)
-            shaderProgram.setAttributeBuffer(vertexLocation0, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)
+            vertexLocation0 = self.m_shader_program.attributeLocation("pos0")
+            self.m_shader_program.enableAttributeArray(vertexLocation0)
+            self.m_shader_program.setAttributeBuffer(vertexLocation0, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)
 
             # Offset for pos1
             offset += self.sizeof_vector2D
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation1 = shaderProgram.attributeLocation("pos1")
-            shaderProgram.enableAttributeArray(vertexLocation1)
-            shaderProgram.setAttributeBuffer(vertexLocation1, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)    
+            vertexLocation1 = self.m_shader_program.attributeLocation("pos1")
+            self.m_shader_program.enableAttributeArray(vertexLocation1)
+            self.m_shader_program.setAttributeBuffer(vertexLocation1, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)    
 
             # Offset for pos2
             offset += self.sizeof_vector2D
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation2 = shaderProgram.attributeLocation("pos2")
-            shaderProgram.enableAttributeArray(vertexLocation2)
-            shaderProgram.setAttributeBuffer(vertexLocation2, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)   
+            vertexLocation2 = self.m_shader_program.attributeLocation("pos2")
+            self.m_shader_program.enableAttributeArray(vertexLocation2)
+            self.m_shader_program.setAttributeBuffer(vertexLocation2, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)   
 
             # Offset for thisPos
             offset += self.sizeof_vector2D
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation3 = shaderProgram.attributeLocation("thisPos")
-            shaderProgram.enableAttributeArray(vertexLocation3)
-            shaderProgram.setAttributeBuffer(vertexLocation3, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)  
+            vertexLocation3 = self.m_shader_program.attributeLocation("thisPos")
+            self.m_shader_program.enableAttributeArray(vertexLocation3)
+            self.m_shader_program.setAttributeBuffer(vertexLocation3, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)  
 
             # Offset for vertex
             offset += self.sizeof_float
 
             # Tell OpenGL programmable pipeline how to locate vertex color data
-            vertex = shaderProgram.attributeLocation("vertex")
-            shaderProgram.enableAttributeArray(vertex)
-            shaderProgram.setAttributeBuffer(vertex, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
+            vertex = self.m_shader_program.attributeLocation("vertex")
+            self.m_shader_program.enableAttributeArray(vertex)
+            self.m_shader_program.setAttributeBuffer(vertex, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
     
 
             self.m_vao.release()
@@ -274,14 +279,17 @@ class HeightMapDrawer(ShaderDrawable):
 
         self.m_needsUpdateGeometry = False
 
-    def draw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context: QOpenGLFunctions):
+    def draw(self, context: QOpenGLFunctions):
         '''
         '''
+        if not self.m_shader_program:
+            return
+
         if self.m_vao.isCreated():
             # Prepare vao
             self.m_vao.bind()
         else:
-            self.prepareDraw(shaderProgram, context)
+            self.prepareDraw(context)
 
             # Prepare vbo
             self.m_vbo.bind()
@@ -290,47 +298,47 @@ class HeightMapDrawer(ShaderDrawable):
             offset = 0
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation0 = shaderProgram.attributeLocation("pos0")
-            shaderProgram.enableAttributeArray(vertexLocation0)
-            shaderProgram.setAttributeBuffer(vertexLocation0, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)
+            vertexLocation0 = self.m_shader_program.attributeLocation("pos0")
+            self.m_shader_program.enableAttributeArray(vertexLocation0)
+            self.m_shader_program.setAttributeBuffer(vertexLocation0, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)
 
             # Offset for pos1
             offset += self.sizeof_vector2D
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation1 = shaderProgram.attributeLocation("pos1")
-            shaderProgram.enableAttributeArray(vertexLocation1)
-            shaderProgram.setAttributeBuffer(vertexLocation1, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)    
+            vertexLocation1 = self.m_shader_program.attributeLocation("pos1")
+            self.m_shader_program.enableAttributeArray(vertexLocation1)
+            self.m_shader_program.setAttributeBuffer(vertexLocation1, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)    
 
             # Offset for pos2
             offset += self.sizeof_vector2D
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation2 = shaderProgram.attributeLocation("pos2")
-            shaderProgram.enableAttributeArray(vertexLocation2)
-            shaderProgram.setAttributeBuffer(vertexLocation2, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)   
+            vertexLocation2 = self.m_shader_program.attributeLocation("pos2")
+            self.m_shader_program.enableAttributeArray(vertexLocation2)
+            self.m_shader_program.setAttributeBuffer(vertexLocation2, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)   
 
             # Offset for thisPos
             offset += self.sizeof_vector2D
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation3 = shaderProgram.attributeLocation("thisPos")
-            shaderProgram.enableAttributeArray(vertexLocation3)
-            shaderProgram.setAttributeBuffer(vertexLocation3, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)  
+            vertexLocation3 = self.m_shader_program.attributeLocation("thisPos")
+            self.m_shader_program.enableAttributeArray(vertexLocation3)
+            self.m_shader_program.setAttributeBuffer(vertexLocation3, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)  
 
             # Offset for vertex
             offset += self.sizeof_float
 
             # Tell OpenGL programmable pipeline how to locate vertex color data
-            vertex = shaderProgram.attributeLocation("vertex")
-            shaderProgram.enableAttributeArray(vertex)
-            shaderProgram.setAttributeBuffer(vertex, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
+            vertex = self.m_shader_program.attributeLocation("vertex")
+            self.m_shader_program.enableAttributeArray(vertex)
+            self.m_shader_program.setAttributeBuffer(vertex, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
     
                 
         if len(self.m_triangles) != 0:
             if self.m_texture:
                 self.m_texture.bind()
-                shaderProgram.setUniformValue("texture", 0)
+                self.m_shader_program.setUniformValue("texture", 0)
         
             self.glDrawArrays(GL.GL_TRIANGLES, 0, len(self.m_triangles))
 
@@ -346,40 +354,45 @@ class HeightMapDrawer(ShaderDrawable):
         else:
             self.m_vbo.release()
         
-        shaderProgram.disableAttributeArray("pos0")
-        shaderProgram.disableAttributeArray("pos1")
-        shaderProgram.disableAttributeArray("pos2")
-        shaderProgram.disableAttributeArray("thisPos")
-        shaderProgram.disableAttributeArray("vertex")
+        self.m_shader_program.disableAttributeArray("pos0")
+        self.m_shader_program.disableAttributeArray("pos1")
+        self.m_shader_program.disableAttributeArray("pos2")
+        self.m_shader_program.disableAttributeArray("thisPos")
+        self.m_shader_program.disableAttributeArray("vertex")
 
-        shaderProgram.release()
+        self.m_shader_program.release()
 
-    def createPathTexture(self):
+    def createPathTexture(self, context: QOpenGLFunctions):
         '''
+        https://ghorwin.github.io/OpenGLWithQt-Tutorial/#_tutorial_09_render_in_eine_framebuffer_und_verwendung_von_kernel_effekten
         '''
         if not self.pathFramebuffer:
-            self.pathFramebuffer = QtOpenGL.QOpenGLFramebufferObject()
-            self.pathFramebuffer.bind()
-
-            self.pathRgbaTexture = QtOpenGL.QOpenGLTexture()
-            self.glActiveTexture(GL.GL_TEXTURE0)
-            self.pathRgbaTexture.bind(GL.GL_TEXTURE_2D)
-            self.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, self.m_gcodedrawer.resolution, self.m_gcodedrawer.resolution, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, None)
-            self.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
-            self.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
-            self.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, self.pathRgbaTexture, 0)
-            self.pathRgbaTexture.release()
-
-            renderbuffer = QtOpenGL.QOpenGLBuffer()
-            renderbuffer.bind(GL.GL_RENDERBUFFER)
-            self.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, self.m_gcodedrawer.resolution, self.m_gcodedrawer.resolution)
-            self.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, renderbuffer)
-            renderbuffer.release()
+            self.pathFramebuffer = QtOpenGL.QOpenGLFramebufferObject(
+                    QSize(self.m_gcodedrawer.resolution, self.m_gcodedrawer.resolution),
+                    QtOpenGL.QOpenGLFramebufferObject.CombinedDepthStencil)
             
-            self.pathFramebuffer.release()
+            #self.pathFramebuffer.bind()
+
+            #self.pathRgbaTexture = QtOpenGL.QOpenGLTexture()
+            #self.glActiveTexture(GL.GL_TEXTURE0)
+            #self.pathRgbaTexture.bind(GL.GL_TEXTURE_2D)
+            #self.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, self.m_gcodedrawer.resolution, self.m_gcodedrawer.resolution, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, None)
+            #self.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
+            #self.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
+            #self.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, self.pathRgbaTexture, 0)
+            #self.pathRgbaTexture.release()
+
+            #renderbuffer = QtOpenGL.QOpenGLBuffer()
+            #renderbuffer.bind(GL.GL_RENDERBUFFER)
+            #self.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, self.m_gcodedrawer.resolution, self.m_gcodedrawer.resolution)
+            #self.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, renderbuffer)
+            #renderbuffer.release()
+            
+            #self.pathFramebuffer.release()
+            self.pathRgbaTexture = self.pathFramebuffer.texture()
         
-        self.pathFramebuffer.bind(GL.GL_FRAMEBUFFER)
-        #self.m_gcodedrawer.draw(shaderProgramXXXX) #  TODO
+        self.pathFramebuffer.bind()
+        self.m_gcodedrawer.draw(context)
         self.pathFramebuffer.release()
         self.needToCreatePathTexture = False
         self.needToDrawHeightMap = True

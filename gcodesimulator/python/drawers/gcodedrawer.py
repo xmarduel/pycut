@@ -348,27 +348,31 @@ class GcodeDrawer(ShaderDrawable) :
     
         return True
 
-    def prepareDraw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context: QOpenGLFunctions):
-        shaderProgram.bind()
+    def prepareDraw(self, context: QOpenGLFunctions):
 
-        context.glUniform1f(shaderProgram.uniformLocation("resolution"), self.resolution)
-        context.glUniform1f(shaderProgram.uniformLocation("cutterDia"), self.cutterDia)
-        #context.glUniform2f(shaderProgram.uniformLocation("pathXYOffset"), pathXOffset, pathYOffset)
-        context.glUniform1f(shaderProgram.uniformLocation("pathMinZ"), self.pathMinZ)
-        ##context.glUniform1f(shaderProgram.uniformLocation("pathTopZ"), pathTopZ)
-        context.glUniform1f(shaderProgram.uniformLocation("stopAtTime"), self.stopAtTime)
+        self.m_shader_program.bind()
 
-        #shaderProgram.setUniformValue("resolution", self.resolution)
-        #shaderProgram.setUniformValue("cutterDia", self.cutterDia) # error: float! ???
-        shaderProgram.setUniformValue("pathXYOffset", self.pathXOffset, self.pathYOffset)
-        #shaderProgram.setUniformValue("pathScale", self.pathScale)
-        #shaderProgram.setUniformValue("pathMinZ", self.pathMinZ)
-        ##self.m_shaderProgram.setUniformValue("pathTopZ", self.pathTopZ)
-        #shaderProgram.setUniformValue("stopAtTime", self.stopAtTime)
+        context.glUniform1f(self.m_shader_program.uniformLocation("resolution"), self.resolution)
+        context.glUniform1f(self.m_shader_program.uniformLocation("cutterDia"), self.cutterDia)
+        #context.glUniform2f(self.m_shader_program.uniformLocation("pathXYOffset"), pathXOffset, pathYOffset)
+        context.glUniform1f(self.m_shader_program.uniformLocation("pathMinZ"), self.pathMinZ)
+        ##context.glUniform1f(self.m_shader_program.uniformLocation("pathTopZ"), pathTopZ)
+        context.glUniform1f(self.m_shader_program.uniformLocation("stopAtTime"), self.stopAtTime)
 
-    def updateGeometry(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram , context: QOpenGLFunctions):
+        #self.m_shader_program.setUniformValue("resolution", self.resolution)
+        #self.m_shader_program.setUniformValue("cutterDia", self.cutterDia) # error: float! ???
+        self.m_shader_program.setUniformValue("pathXYOffset", self.pathXOffset, self.pathYOffset)
+        #self.m_shader_program.setUniformValue("pathScale", self.pathScale)
+        #self.m_shader_program.setUniformValue("pathMinZ", self.pathMinZ)
+        ##self.m_self.m_shader_program.setUniformValue("pathTopZ", self.pathTopZ)
+        #self.m_shader_program.setUniformValue("stopAtTime", self.stopAtTime)
+
+    def updateGeometry(self, context: QOpenGLFunctions):
         '''
         '''
+        if not self.m_shader_program:
+            return
+
         # Init in context
         if not self.m_vbo.isCreated():
             self.init()
@@ -401,56 +405,56 @@ class GcodeDrawer(ShaderDrawable) :
             self.m_needsUpdateGeometry = False
             return
 
-        self.prepareDraw(shaderProgram, context)
+        self.prepareDraw(context)
 
         if self.m_vao.isCreated():
             # Offset for pos1
             offset = 0
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation1 = shaderProgram.attributeLocation("pos1")
-            shaderProgram.enableAttributeArray(vertexLocation1)
-            shaderProgram.setAttributeBuffer(vertexLocation1, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
+            vertexLocation1 = self.m_shader_program.attributeLocation("pos1")
+            self.m_shader_program.enableAttributeArray(vertexLocation1)
+            self.m_shader_program.setAttributeBuffer(vertexLocation1, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
 
             # Offset for pos2
             offset += self.sizeof_vector3D
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation2 = shaderProgram.attributeLocation("pos2")
-            shaderProgram.enableAttributeArray(vertexLocation2)
-            shaderProgram.setAttributeBuffer(vertexLocation2, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
+            vertexLocation2 = self.m_shader_program.attributeLocation("pos2")
+            self.m_shader_program.enableAttributeArray(vertexLocation2)
+            self.m_shader_program.setAttributeBuffer(vertexLocation2, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
 
             # Offset for raw pos
             #offset += self.sizeof_vector3D
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            #vertexRawPos = shaderProgram.attributeLocation("rawPos")
-            #shaderProgram.enableAttributeArray(vertexRawPos)
-            #shaderProgram.setAttributeBuffer(vertexRawPos, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
+            #vertexRawPos = self.m_shader_program.attributeLocation("rawPos")
+            #self.m_shader_program.enableAttributeArray(vertexRawPos)
+            #self.m_shader_program.setAttributeBuffer(vertexRawPos, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
 
             # Offset for start time
             offset += self.sizeof_float
 
             # Tell OpenGL programmable pipeline how to locate vertex color data
-            startTime = shaderProgram.attributeLocation("startTime")
-            shaderProgram.enableAttributeArray(startTime)
-            shaderProgram.setAttributeBuffer(startTime, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
+            startTime = self.m_shader_program.attributeLocation("startTime")
+            self.m_shader_program.enableAttributeArray(startTime)
+            self.m_shader_program.setAttributeBuffer(startTime, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
 
             # Offset for end time
             offset += self.sizeof_float
 
             # Tell OpenGL programmable pipeline how to locate vertex color data
-            endTime = shaderProgram.attributeLocation("endTime")
-            shaderProgram.enableAttributeArray(endTime)
-            shaderProgram.setAttributeBuffer(endTime, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
+            endTime = self.m_shader_program.attributeLocation("endTime")
+            self.m_shader_program.enableAttributeArray(endTime)
+            self.m_shader_program.setAttributeBuffer(endTime, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
 
             # Offset for command
             offset += self.sizeof_float
 
             # Tell OpenGL programmable pipeline how to locate vertex color data
-            command = shaderProgram.attributeLocation("command")
-            shaderProgram.enableAttributeArray(command)
-            shaderProgram.setAttributeBuffer(command, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
+            command = self.m_shader_program.attributeLocation("command")
+            self.m_shader_program.enableAttributeArray(command)
+            self.m_shader_program.setAttributeBuffer(command, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
     
             self.m_vao.release()
 
@@ -458,14 +462,17 @@ class GcodeDrawer(ShaderDrawable) :
 
         self.m_needsUpdateGeometry = False
 
-    def draw(self, shaderProgram: QtOpenGL.QOpenGLShaderProgram, context: QOpenGLFunctions):
+    def draw(self, context: QOpenGLFunctions):
         '''
         '''
+        if not self.m_shader_program:
+            return
+
         if self.m_vao.isCreated():
             # Prepare vao
             self.m_vao.bind()
         else:
-            self.prepareDraw(shaderProgram, context)
+            self.prepareDraw(context)
 
             # Prepare vbo
             self.m_vbo.bind()
@@ -474,55 +481,55 @@ class GcodeDrawer(ShaderDrawable) :
             offset = 0
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation1 = shaderProgram.attributeLocation("pos1")
-            shaderProgram.enableAttributeArray(vertexLocation1)
-            shaderProgram.setAttributeBuffer(vertexLocation1, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
+            vertexLocation1 = self.m_shader_program.attributeLocation("pos1")
+            self.m_shader_program.enableAttributeArray(vertexLocation1)
+            self.m_shader_program.setAttributeBuffer(vertexLocation1, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
 
             # Offset for pos2
             offset += self.sizeof_vector3D
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            vertexLocation2 = shaderProgram.attributeLocation("pos2")
-            shaderProgram.enableAttributeArray(vertexLocation2)
-            shaderProgram.setAttributeBuffer(vertexLocation2, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
+            vertexLocation2 = self.m_shader_program.attributeLocation("pos2")
+            self.m_shader_program.enableAttributeArray(vertexLocation2)
+            self.m_shader_program.setAttributeBuffer(vertexLocation2, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
 
             # Offset for raw pos
             #offset += self.sizeof_vector3D
 
             # Tell OpenGL programmable pipeline how to locate vertex position data
-            #vertexRawPos = shaderProgram.attributeLocation("rawPos")
-            #shaderProgram.enableAttributeArray(vertexRawPos)
-            #shaderProgram.setAttributeBuffer(vertexRawPos, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
+            #vertexRawPos = self.m_shader_program.attributeLocation("rawPos")
+            #self.m_shader_program.enableAttributeArray(vertexRawPos)
+            #self.m_shader_program.setAttributeBuffer(vertexRawPos, GL.GL_FLOAT, offset, 3, self.sizeof_vertexdata)
 
             # Offset for start time
             offset += self.sizeof_float
 
             # Tell OpenGL programmable pipeline how to locate vertex color data
-            startTime = shaderProgram.attributeLocation("startTime")
-            shaderProgram.enableAttributeArray(startTime)
-            shaderProgram.setAttributeBuffer(startTime, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
+            startTime = self.m_shader_program.attributeLocation("startTime")
+            self.m_shader_program.enableAttributeArray(startTime)
+            self.m_shader_program.setAttributeBuffer(startTime, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
 
             # Offset for end time
             offset += self.sizeof_float
 
             # Tell OpenGL programmable pipeline how to locate vertex color data
-            endTime = shaderProgram.attributeLocation("endTime")
-            shaderProgram.enableAttributeArray(endTime)
-            shaderProgram.setAttributeBuffer(endTime, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
+            endTime = self.m_shader_program.attributeLocation("endTime")
+            self.m_shader_program.enableAttributeArray(endTime)
+            self.m_shader_program.setAttributeBuffer(endTime, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
 
             # Offset for command
             offset += self.sizeof_float
 
             # Tell OpenGL programmable pipeline how to locate vertex color data
-            command = shaderProgram.attributeLocation("command")
-            shaderProgram.enableAttributeArray(command)
-            shaderProgram.setAttributeBuffer(command, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
+            command = self.m_shader_program.attributeLocation("command")
+            self.m_shader_program.enableAttributeArray(command)
+            self.m_shader_program.setAttributeBuffer(command, GL.GL_FLOAT, offset, 1, self.sizeof_vertexdata)
 
                 
         if len(self.m_triangles) != 0:
             if self.m_texture:
                 self.m_texture.bind()
-                shaderProgram.setUniformValue("texture", 0)
+                self.m_shader_program.setUniformValue("texture", 0)
         
             # TODO -------------------------------------------
             '''
@@ -552,11 +559,11 @@ class GcodeDrawer(ShaderDrawable) :
         else:
             self.m_vbo.release()
         
-        shaderProgram.disableAttributeArray("pos1")
-        shaderProgram.disableAttributeArray("pos2")
-        shaderProgram.disableAttributeArray("startTime")
-        shaderProgram.disableAttributeArray("endTime")
-        shaderProgram.disableAttributeArray("command")
-        shaderProgram.disableAttributeArray("rawPos")
+        self.m_shader_program.disableAttributeArray("pos1")
+        self.m_shader_program.disableAttributeArray("pos2")
+        self.m_shader_program.disableAttributeArray("startTime")
+        self.m_shader_program.disableAttributeArray("endTime")
+        self.m_shader_program.disableAttributeArray("command")
+        self.m_shader_program.disableAttributeArray("rawPos")
 
-        shaderProgram.release()
+        self.m_shader_program.release()

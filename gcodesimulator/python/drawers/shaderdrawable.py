@@ -24,11 +24,14 @@ class ShaderDrawable(QOpenGLFunctions):
         '''
         QOpenGLFunctions.__init__(self)
 
+        self.m_shader_program : QOpenGLShaderProgram = None
+        self.m_texture : QOpenGLTexture = None
+
         self.m_needsUpdateGeometry = True
         self.m_visible = True
         self.m_lineWidth = 1.0
         self.m_pointSize = 1.0
-        self.m_texture : QOpenGLTexture = None
+        
         self.m_lines : List[Any] = []
         self.m_points : List[Any] = []
         self.m_triangles : List[Any] = []
@@ -44,13 +47,16 @@ class ShaderDrawable(QOpenGLFunctions):
         self.m_vao.create()
         self.m_vbo.create()
 
+    def setShaderProgram(self, shaderProgram):
+        self.m_shader_program = shaderProgram
+
     def update(self):
         self.m_needsUpdateGeometry = True
 
     def needsUpdateGeometry(self) -> bool:
         return self.m_needsUpdateGeometry
 
-    def updateGeometry(self, shaderProgram: QOpenGLShaderProgram = None):
+    def updateGeometry(self):
         '''
         overloaded in derived classes
         '''
@@ -66,7 +72,7 @@ class ShaderDrawable(QOpenGLFunctions):
 
         return True
 
-    def draw(self, shaderProgram: QOpenGLShaderProgram):
+    def draw(self):
         '''
         overloaded in derived classes
         '''
