@@ -1,0 +1,111 @@
+
+
+
+pre[class*="language-"] {
+      font-size: 12px;
+      background-color: #ffffff;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  font-size: 15px;
+}
+
+.sidenav {
+  height: 99%;
+  width: 300px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #FFE5CC;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 15px;
+  color: #000000;
+  display: block;
+}
+
+.sidenav a:hover {
+  color: #0000ff;
+}
+
+.title_sidenav {
+  padding: 0px 0px 0px 25px;
+}
+
+.main {
+  margin-left: 300px; /* Same as the width of the sidenav */
+  padding: 0px 10px;
+}
+
+.etitle {
+	text-align:center;
+	margin-left:auto;
+	margin-right:auto;
+	color:black;
+}
+
+.lesson {
+  padding-top: 40px;
+  color: blue;
+}
+
+.component {
+  color: green;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+
+.danger {
+  margin-bottom: 15px;
+  padding: 4px 12px;
+  background-color: #ffdddd;
+  border-left: 6px solid #f44336;
+}
+
+.success {
+  margin-bottom: 15px;
+  padding: 4px 12px;
+  background-color: #ddffdd;
+  border-left: 6px solid #4CAF50;
+}
+
+.info {
+  margin-bottom: 15px;
+  padding: 4px 12px;
+  background-color: #e7f3fe;
+  border-left: 6px solid #2196F3;
+}
+
+.warning {
+  margin-bottom: 15px;
+  padding: 4px 12px;
+  background-color: #ffffcc;
+  border-left: 6px solid #ffeb3b;
+}

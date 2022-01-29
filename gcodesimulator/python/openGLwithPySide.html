@@ -1,0 +1,799 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>OpenGL with PySide6</title>
+  <link href="css/prism.css" rel="stylesheet">
+  <link href="css/pycut.css" rel="stylesheet">
+  <link href="css/simpletree.css" rel="stylesheet">
+  <script type="text/javascript" src="js/prism.js">
+ </script>
+</head>
+
+<body>
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+
+<div class="sidenav">
+<h3 class="title_sidenav">Contents</h3>
+<ul class="tree">
+  <li><a href="#P-01">Introduction</a></li>
+  <li><a href="#P-02">OpenGL Primer</a> 
+    <ul class="tree">
+      <li><a href="#P-02-01">The graphic pipeline</a></li>
+      <li><a href="#P-02-02">Buffers</a></li>
+      <li><a href="#P-02-03">Variables</a></li>
+    </ul>
+  </li>
+  <li><a href="#P-03">Preliminaries</a> 
+    <ul class="tree">
+      <li><a href="#P-03-01">Normalize Device Coords</a></li>
+      <li><a href="#P-03-02">Triangulation</a></li>
+      <li><a href="#P-03-03">GL Primitives</a></li>
+      <li><a href="#P-03-04">Interpolation</a></li>
+    </ul>
+  </li>
+  <li><a href="#P-04">Quick Start</a> 
+    <ul class="tree">
+      <li><a href="#P-04-01">Writing shaders</a></li>
+      <li><a href="#P-04-02">Compiling the program</a></li>
+      <li><a href="#P-04-03">Uploading data to the GPU</a></li>
+      <li><a href="#P-04-04">Rendering</a></li>
+      <li><a href="#P-04-05">Uniform color</a></li>
+      <li><a href="#P-04-06">Varying color</a></li>
+    </ul>
+  </li>
+  <li><a href="#P-05">PySide6 and OpenGL</a></li>
+</ul>
+<script type="text/javascript">
+var tree = document.querySelectorAll('ul.tree a:not(:last-child)');
+for (var i = 0; i < tree.length; i++){
+    tree[i].addEventListener('click', function(e) {
+        var parent = e.target.parentElement;
+        var classList = parent.classList;
+        if (classList.contains("open")) {
+            classList.remove('open');
+            var opensubs = parent.querySelectorAll(':scope .open');
+            for (var i = 0; i < opensubs.length; i++) {
+                opensubs[i].classList.remove('open');
+            }
+        } else {
+            classList.add('open');
+        }
+        if (classList.contains("open")) {
+            //e.preventDefault(); // on open -> jump (default)
+          
+        } else {
+            e.preventDefault(); // on close
+        }
+    });
+}</script>
+</div>
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+
+<div class="main">
+<h1 class="etitle">OpenGL with PySide6</h1>
+
+<h2 id="P-01">Introduction</h2>
+
+<p>This is a small tutorial how to program OpenGL with PySide6. Please note
+that I am an absolute OpenGL beginner. I have simply ported Candle GCode viewer
+from (Qt) c++ to python. This is been a good introduction in OpenGL for me.</p>
+
+<p>But trying to port jsCut gcode simulator (javascript) to python was
+something harder. Infact, I have not yet succeeded, althought the javascript
+code is only 800 lines of code. There are there 3 different shader programs
+with one (or two!) with a texture, that allows to simulate the milling process.
+It's quite impressive and unfortunately from the code I have not yet understood
+how the texture allows to simulate the milling process. Probably this is the
+cause I'm still unsuccessfull...</p>
+
+<p>Moreover I do not believe that the python code will be less that the
+javascript code, although this is oft the case when translating javascript to
+python. Maybe the webgl API is here particularely well designed and compct.</p>
+
+<p>This led me to write this small tutorial. I am picking for it from the
+internet the pages I found interesting and best explained.</p>
+<ul>
+  <li><a href="https://www.labri.fr/perso/nrougier/python-opengl/"><span style="color:#8000ff">Python &amp; OpenGL for Scientific Visualization</span></a></li>
+  <li><a href="https://ghorwin.github.io/OpenGLWithQt-Tutorial/"><span style="color:#8000ff">OpenGL + Qt Tutorial </span></a></li>
+</ul>
+
+<p>The first is an excellent introduction to OpenGL, but unfortunately it
+diverges from its goal after the first chapters. It uses its own magic "glumpy"
+library to encapsulate most of OpenGL, for me too much python magic. But most
+important, it does not explain how to use the glumpy/gloo magic inside an
+PySide (Qt) application.</p>
+
+<p>The latter is a very nice comparaison (in c++) of raw OpenGL versus the Qt
+"port", where Qt encapsulates -partly- OpenGL in its own classes, leading to a
+more compact code. So I will also "steal" from there, but making the
+comparaison in python.</p>
+
+<p><strong><span style="color:#0000ff">In both case I will add my own comments
+to the original text, for what I consider to be important!</span></strong></p>
+
+<h2 id="P-02">OpenGL Primer</h2>
+
+<h3 id="P-02-01">The graphic pipeline</h3>
+
+<p>If you want to understand modern OpenGL, you have to understand the graphic
+pipeline and <strong>shaders</strong>. <strong>Shaders</strong> are pieces of
+program (using a C-like language) that are build onto the GPU and executed
+during the rendering pipeline. Depending on the nature of the shaders (there
+are many types depending on the version of OpenGL you're using), they will act
+at different stage of the rendering pipeline. To simplify this tutorial, we'll
+use only <strong>vertex</strong> and <strong>fragment</strong>
+<strong>shaders</strong> as shown below: </p>
+<img src="doc_images/OpenGL_pipeline.png" width="820px" alt=""> 
+
+<div class="info">
+<strong>Note</strong> The shader language is called glsl. There are many
+versions that goes from 1.0 to 1.5 and subsequent version get the number of
+OpenGL version. Last version is 4.6 (June 2017).</div>
+
+<p>A <strong>vertex shader acts on vertices</strong> and is supposed to output
+the vertex position (<em>gl_Position</em>) on the viewport (i.e. screen). A
+<strong>fragment shader</strong> acts at the fragment level and is supposed to
+output the color (<em>gl_FragColor</em>) of the fragment. Hence, a minimal
+vertex shader is: </p>
+<pre style="background: #f2f2f2;"><code class="language-glsl">void main()
+{
+    gl_Position = vec4(0.0,0.0,0.0,1.0);
+}</code></pre>
+while a minimal fragment shader would be: 
+<pre style="background: #f2f2f2;"><code class="language-glsl">void main()
+{
+    gl_FragColor = vec4(0.0,0.0,0.0,1.0);
+}</code></pre>
+
+<p>These two shaders are not very useful because the first shader will always
+output the null vertex (<em>gl_Position</em> is a special variable) while the
+second will only output the black color for any fragment (<em>gl_FragColor</em>
+is also a special variable). We'll see later how to make them to do more useful
+things.</p>
+
+<p>One question remains: when are those shaders executed exactly ? The
+<strong>vertex shader</strong> is executed for each vertex that is given to the
+rendering pipeline (we'll see what does that mean exactly later) and the
+<strong>fragment shader</strong> is executed on each fragment (= pixel) that is
+generated after the vertex stage. For example, in the simple figure above, the
+vertex would be called 3 times , once for each vertex (1,2 and 3) while the
+fragment shader would be executed 21 times, once for each fragment.</p>
+
+<h3 id="P-02-02">Buffers</h3>
+
+<p>The next question is thus where do those vertices comes from ? The idea of
+modern GL is that vertices are stored on the CPU and need to be uploaded to the
+GPU before rendering. The way to do that is to <strong>build buffers onto the
+CPU</strong> and to <strong>send these buffers onto the GPU</strong>. If your
+data does not change, no need to upload them again. That is the big difference
+with the previous fixed pipeline where data were uploaded at each rendering
+call (only display lists were built into GPU memory). </p>
+
+<p>But what is the structure of a vertex ? OpenGL does not assume anything
+about your vertex structure and you're free to use as many information you may
+need for each vertex. The only condition is that all vertices from a buffer
+have the same structure (possibly with different content). This again is a big
+difference with the fixed pipeline where OpenGL was doing a lot of complex
+rendering stuff for you (projections, lighting, normals, etc.) with an implicit
+fixed vertex structure. The good news is that you're now free to do anything
+you want, but the bad news is that you have to program just everything. </p>
+
+<p>Let's take a simple example of a vertex structure where we want each vertex
+to hold a position and a color. The easiest way to do that in python is to use
+a structured array using numpy: </p>
+<pre style="background: #f2f2f2;"><code class="language-python">data = numpy.zeros(4, dtype = [ ("position", np.float32, 3),
+                                ("color",    np.float32, 4)] )</code></pre>
+
+<p>We just created a CPU buffer with 4 vertices, each of them having a position
+(3 floats for x,y,z coordinates) and a color (4 floats for red, blue, green and
+alpha channels). Note that we explicitly chose to have 3 coordinates for
+position but we may have chosen to have only 2 if were to work in
+two-dimensions. Same holds true for color. We could have used only 3 channels
+(r,g,b) if we did not want to use transparency. This would save some bytes for
+each vertex. Of course, for 4 vertices, this does not really matter but you
+have to realize it will matter if your data size grows up to one or ten million
+vertices. </p>
+
+<h3 id="P-02-03">Variables</h3>
+
+<p>Now, we need to explain our shaders what to do with these buffers and how to
+connect them together. So, let's consider again a CPU buffer of 4 vertices
+using 2 floats for position and 4 floats for color:</p>
+<pre style="background: #f2f2f2;"><code class="language-python">data = numpy.zeros(4, dtype = [ ("position", np.float32, 2),
+                                ("color",    np.float32, 4)] )</code></pre>
+
+<p><strong><span style="color:#0000ff">As we send raw "buffers" to the GPU, the
+shader program has no idea of the structure of the buffer (that the first 2
+floats are for the position and the last 4 floats are for the color, and that
+an element is made of 6 floats.</span></strong></p>
+
+<p>We need to tell the vertex shader that it will have to handle vertices where
+a position is a tuple of 2 floats and color is a tuple of 4 floats. This is
+precisely what <strong>attributes</strong> are meant for. Let us change
+slightly our previous vertex shader:</p>
+
+<p><span style="color:#0000ff"><strong>We have not yet told OpenGL how to
+interpret the buffer, but the attributes will help. Infact we have to tell
+OpenGL from python (from where sonst) these informations</strong>.</span></p>
+<pre style="background: #f2f2f2;"><code class="language-glsl">attribute vec2 position;
+attribute vec4 color;
+void main()
+{
+    gl_Position = vec4(position, 0.0, 1.0);
+}</code></pre>
+
+<p>This vertex shader now expects a vertex to possess 2 <strong><span
+style="color:#ff0080">attributes</span></strong>, one named <em>position</em>
+and one named <em>color</em> with specified types (vec2 means tuple of 2
+floats, vec3 means tuple of 3 floats and vec4 means tuple of 4 floats). It is
+important to note that even if we labeled the first attribute position,
+<strong>this attribute is not yet bound to the actual position in the numpy
+array</strong>. <strong><span style="color:#0000ff">We could have declared
+first the color, then the position.</span></strong> We'll need to do it
+explicitly at some point in our program and there is no magic that will bind
+the numpy array field to the right attribute, you'll have to do it yourself,
+but we'll see that later. <strong>(Yes!)</strong></p>
+
+<p>The second type of information we can feed the vertex shader is the <strong
+style="color:#ff0080">uniform</strong> that may be considered as constant value
+(across all the vertices). Let's say for example we want to scale all the
+vertices by a constant factor scale, we would thus write:</p>
+<pre style="background: #f2f2f2;"><code class="language-glsl">uniform float scale;
+attribute vec2 position;
+attribute vec4 color;
+void main()
+{
+    gl_Position = vec4(position*scale, 0.0, 1.0);
+}</code></pre>
+
+<p>Last type is the <strong style="color:#ff0080">varying</strong> type that is
+used to pass information between the vertex stage and the fragment stage. So
+let us suppose (again) we want to pass the vertex color to the fragment shader,
+we now write: </p>
+<pre style="background: #f2f2f2;"><code class="language-glsl">uniform float scale;
+attribute vec2 position;
+attribute vec4 color;
+varying vec4 v_color;
+
+void main()
+{
+    gl_Position = vec4(position*scale, 0.0, 1.0);
+    v_color = color;
+}</code></pre>
+
+<p>and then in the fragment shader, we write: </p>
+<pre style="background: #f2f2f2;"><code class="language-glsl">varying vec4 v_color;
+
+void main()
+{
+    gl_FragColor = v_color;
+}</code></pre>
+
+<p>The question is what is the value of <em>v_color</em> inside the fragment
+shader ? If you look at the figure that introduced the gl pipeline, we have 3
+vertices and 21 fragments. What is the color of each individual fragment ? </p>
+
+<p>The answer is the interpolation of all 3 vertices color. This interpolation
+is made using the distance of the fragment to each individual vertex. This is a
+very important concept to understand. Any varying value is interpolated between
+the vertices that compose the elementary item (mostly, line or triangle). </p>
+
+<p>Ok, enough for now, we'll see an explicit example in the next chapter. </p>
+
+<h2 id="P-03">Preliminaries</h2>
+
+<p>The main difficulty for newcomers in programming modern OpenGL is that it
+requires to understand a lot of different concepts at once and then, to perform
+a lot of operations before rendering anything on screen. This complexity
+implies that there are many places where your code can be wrong, both at the
+conceptual and code level. To illustrate this difficulty, we'll program our
+first OpenGL program using the raw interface and our goal is to display a
+simple colored quad (i.e. a red square).</p>
+
+<h3 id="P-03-01">Normalize Device Coordinates</h3>
+
+<p>Before even diving into actual code, it is important to understand first how
+OpenGL handles coordinates. More precisely, OpenGL considers only coordinates
+(x,y,z) that fall into the space where -1 ≤ x,y,z ≤ +1. Any coordinates
+that are outside this range will be discarded or clipped (i.e. won't be visible
+on screen). This is called Normalized Device Coordinates, or NDC for short.
+This is something you cannot change because it is part of the OpenGL API and
+implemented in your hardware (GPU). Consequently, even if you intend to render
+the whole universe, you'll have utlimately to fit it into this small volume.</p>
+
+<img src="doc_images/OpenGL_viewport.png" width="282px" alt=""> 
+
+<p>The second important fact to know is that x coordinates increase from left
+to right and y coordinates increase from bottom to top. For this latter one, it
+is noticeably different from the usual convention and this might induce some
+problems, especially when you're dealing with the mouse pointer whose y
+coordinate goes the other way around.</p>
+
+<h3 id="P-03-02">Triangulation</h3>
+
+<p>Triangulation of a surface means to find a set of triangles, which covers a
+given surface. This can be a tedious process but fortunately, there exist many
+different methods and algorithms to perform such triangulation automatically
+for any 2D or 3D surface. The quality of the triangulation is measured in terms
+of the closeness to the approximated surface, the number of triangles necessary
+(the smaller, the better) and the homogeneity of the triangles (we prefer to
+have triangles that have more or less the same size and to not have any
+degenerated triangle).</p>
+
+<img src="doc_images/OpenGL_triangulations.png" width="271px" alt=""> 
+
+<p>In our case, we want to render a square and we need to find the proper
+triangulation (which is not unique as illustrated on the figure). Since we want
+to minimize the number of triangles, we'll use the 2 triangles solution that
+requires only 4 (shared) vertices corresponding to the four corners of the
+quad. However, you can see from the figure that we could have used different
+triangulations using more vertices, and later in this book we will just do that
+(but for a reason).</p>
+
+<p>Considering the NDC, our quad will thus be composed of two triangles:</p>
+<ul>
+  <li>One triangle described by vertices (-1,+1), (+1,+1), (-1,-1)</li>
+  <li>One triangle described by vertices (+1,+1), (-1,-1), (+1,-1)</li>
+</ul>
+
+<p>Here we can see that vertices (-1,-1) and (+1,+1) are common to both
+triangles. So instead of using 6 vertices to describe the two triangles, we can
+re-use the common vertices to describe the whole quad. Let's name them:</p>
+<ul>
+  <li>V₀: (-1,+1)</li>
+  <li>V₁: (+1,+1)</li>
+  <li>V₂: (-1,-1)</li>
+  <li>V₃: (+1,-1)</li>
+</ul>
+
+<p>Our quad can now be using triangle (V₀,V₁,V₂) and triangle
+(V₁,V₂,V₃). This is exactly what we need to tell OpenGL.</p>
+
+<h3 id="P-03-03">GL Primitives</h3>
+
+<p>Ok, now things are getting serious because we need to actually tell OpenGL
+what to do with the vertices, i.e. how to render them? What do they describe in
+terms of geometrical primitives? This is quite an important topic since this
+will determine how fragments will actually be generated as illustrated on the
+image below:</p>
+
+<img src="doc_images/OpenGL_primitives.png" width="315px" alt=""> 
+
+<p>Mostly, OpenGL knows how to draw (ugly) points, (ugly) lines and (ugly)
+triangles. For lines and triangles, there exist some variations depending if
+you want to specify very precisely what to draw or if you can take advantage of
+some implicit assumptions. Let's consider lines first for example. Given a set
+of four vertices (V₀,V₁,V₂,V₃), you migh want to draw segments
+(V₀,V₁)``(V₂,V₃) using GL_LINES or a broken line (V₀,V₁,V₂,V₃)
+using using GL_LINE_STRIP or a closed broken line (V₀,V₁,V₂,V₃,V₀,)
+using GL_LINE_LOOP. For triangles, you have the choices of specifying each
+triangle individually using GL_TRIANGLES or you can tell OpenGL that triangles
+follow an implicit structure using GL_TRIANGLE_STRIP. For example, considering
+a set of vertices (Vᵢ), GL_TRIANGLE_STRIP will produce triangles
+(Vᵢ,Vᵢ₊₁,Vᵢ₊₂). There exist other primitives but we won't used
+them in this book because they're mainly related to geometry shaders that are
+not introduced.</p>
+
+<p>If you remember the previous section where we explained that our quad can be
+described using using triangle (V₀,V₁,V₂) and triangle (V₁,V₂,V₃),
+you can now realize that we can take advantage or the GL_TRIANGLE_STRIP
+primitive because we took care of describing the two triangles following this
+implicit structure.</p>
+
+<h3 id="P-03-04">Interpolation</h3>
+
+<p>The choice of the triangle as the only surface primitive is not an arbitrary
+choice, because a triangle offers the possibility of having a nice and
+intuitive interpolation of any point that is inside the triangle. If you look
+back at the graphic pipeline as it has been introduced in the Modern OpenGL
+section, you can see that the rasterisation requires for OpenGL to generate
+fragments inside the triangle but also to interpolate values (colors on the
+figure). One of the legitimate questions to be solved is then: if I have a
+triangle (V₁,V₂,V₃), each summit vertex having (for example) a different
+color, what is the color of a fragment p inside the triangle? The answer is
+barycentric interpolation as illustrated on the figure on the right.</p>
+
+<img src="doc_images/OpenGL_interpolation.png" width="307px" alt=""> 
+
+<p>More precisely, for any point p inside a triangle A = (V₁,V₂,V₃), we
+consider triangles:</p>
+<ul>
+  <li>A₁ = (P,V₂,V₃)</li>
+  <li>A₂ = (P,V₁,V₃)</li>
+  <li>A₃ = (P,V₁,V₂)</li>
+</ul>
+
+<p>And we can define (using area of triangles):</p>
+<ul>
+  <li>𝛌₁ = A₁/A</li>
+  <li>𝛌₂ = A₂/A</li>
+  <li>𝛌₃ = A₃/A</li>
+</ul>
+
+<p>Now, if we attach a value f₁ to vertex V₁, f₂ to vertex V₂ and f₃
+to vertex V₃, the interpolated value f of p is given by: f = 𝛌₁f₁ +
+𝛌₂f₂ + 𝛌₃f₃ You can check by yourself that if the point p is on a
+border of the triangle, the resulting interpolated value f is the linear
+interpolation of the two vertices defining the segment the point p belongs
+to.</p>
+
+<p>This barycentric interpolation is important to understand even if it is done
+automatically by OpenGL (with some variation to take projection into account).
+We took the example of colors, but the same interpolation scheme holds true for
+any value you pass from the vertex shader to the fragment shader. And this
+property will be used and abused in this book.</p>
+
+<h2 id="P-04">Quick Start</h2>
+
+<p>Having reviewed some important OpenGL concepts, it's time to code our quad
+example. But, before even using OpenGL, we need to open a window with a valid
+GL context. <strong><span style="color:#0000ff">Definition of a GL
+context?</span></strong> This can be done using a toolkit such as Gtk, Qt or Wx
+or any native toolkit (Windows, Linux, OSX). Unfortunately, the Tk Python
+interface does not allow to create a GL context and we cannot use it. Note
+there also exists dedicated toolkits such as GLFW or GLUT and the advantage of
+GLUT is that it's already installed alongside OpenGL. Even if it is now
+deprecated, we'll use GLUT <strong><span style="color:#0000ff">(bad luck for
+python users, the GLUT python module is not easely installed)</span></strong>
+since it's a very lightweight toolkit and does not require any extra package.
+Here is a minimal setup that should open a window with garbage on it (since we
+do not even clear the window): </p>
+<pre style="background: #f2f2f2;"><code class="language-python">import sys
+import OpenGL.GL as gl
+import OpenGL.GLUT as glut
+
+def display():
+    glut.glutSwapBuffers()
+
+def reshape(width,height):
+    gl.glViewport(0, 0, width, height)
+
+def keyboard( key, x, y ):
+    if key == b'\x1b':
+        sys.exit( )
+
+glut.glutInit()
+glut.glutInitDisplayMode(glut.GLUT_DOUBLE | glut.GLUT_RGBA)
+glut.glutCreateWindow('Hello world!')
+glut.glutReshapeWindow(512,512)
+glut.glutReshapeFunc(reshape)
+glut.glutDisplayFunc(display)
+glut.glutKeyboardFunc(keyboard)
+glut.glutMainLoop()</code></pre>
+
+<p>The glutInitDisplayMode tells OpenGL what are the GL context properties. At
+this stage, we only need a swap buffer (we draw on one buffer while the other
+is displayed) and we use a full RGBA 32 bits color buffer (8 bits per channel).
+The reshape callback informs OpenGL of the new window size while the display
+method tells OpenGL what to do when a redraw is needed. In this simple case, we
+just ask OpenGL to swap buffers (this avoids flickering). Finally, the keyboard
+callback allows us to exit by pressing the Escape key.</p>
+
+<h3 id="P-04-01">Writing shaders</h3>
+
+<p>Now that your window has been created, we can start writing our program,
+that is, we need to write a vertex and a fragment shader. For the vertex
+shader, the code is very simple because we took care of using the normalized
+device coordinates to describe our quad in the previous section. This means
+vertices do not need to be transformed. Nonetheless, we have to take care of
+sending 4D coordinates even though we'll transmit only 2D coordinates (x,y) or
+the final result will be undefined. For coordinate z we'll just set it to 0.0
+(but any value would do) and for coordinate w, we set it to 1.0 (see section
+Basic Mathematics for the explanation). Note also the (commented) alternative
+ways of writing the shader.</p>
+<pre style="background: #f2f2f2;"><code class="language-glsl">attribute vec2 position;
+void main()
+{
+  gl_Position = vec4(position, 0.0, 1.0);
+
+  // or gl_Position.xyzw = vec4(position, 0.0, 1.0);
+
+  // or gl_Position.xy = position;
+  //    gl_Position.zw = vec2(0.0, 1.0);
+
+  // or gl_Position.x = position.x;
+  //    gl_Position.y = position.y;
+  //    gl_Position.z = 0.0;
+  //    gl_Position.w = 1.0;
+}</code></pre>
+
+<p>For the fragment shader, it is even simpler. We set the color to red which
+is described by the tuple (1.0, 0.0, 0.0, 1.0) in normalized RGBA notation. 1.0
+for alpha channel means fully opaque. </p>
+<pre style="background: #f2f2f2;"><code class="language-glsl">void main()
+{
+  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+
+  // or gl_FragColor.rgba = vec4(1.0, 0.0, 0.0, 1.0);
+
+  // or gl_FragColor.rgb = vec3(1.0, 0.0, 0.0);
+  //    gl_FragColor.a = 1.0;
+}</code></pre>
+
+<h3 id="P-04-02">Compiling the program</h3>
+
+<p>We wrote our shader and we need now to build a <strong>program</strong> that
+will link the vertex and the fragment shader together. Building such program is
+relatively straightforward (provided we do not check for errors). First we need
+to <strong>request</strong> program and shader slots from the GPU:</p>
+<pre style="background: #f2f2f2;"><code class="language-glsl">program  = gl.glCreateProgram()
+vertex   = gl.glCreateShader(gl.GL_VERTEX_SHADER)
+fragment = gl.glCreateShader(gl.GL_FRAGMENT_SHADER)</code></pre>
+
+<p>We can now ask for the compilation of our shaders into GPU objects and we
+log for any error from the compiler (e.g. syntax error, undefined variables,
+etc):</p>
+<pre style="background: #f2f2f2;"><code class="language-python">vertex_code = """
+  attribute vec2 position;
+  void main() { gl_Position = vec4(position, 0.0, 1.0); } """
+
+fragment_code = """
+  void main() { gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); } """
+
+# Set shaders source
+gl.glShaderSource(vertex, vertex_code)
+gl.glShaderSource(fragment, fragment_code)
+
+# Compile shaders
+gl.glCompileShader(vertex)
+if not gl.glGetShaderiv(vertex, gl.GL_COMPILE_STATUS):
+    error = gl.glGetShaderInfoLog(vertex).decode()
+    print(error)
+    raise RuntimeError("Vertex shader compilation error")
+
+gl.glCompileShader(fragment)
+if not gl.glGetShaderiv(fragment, gl.GL_COMPILE_STATUS):
+    error = gl.glGetShaderInfoLog(fragment).decode()
+    print(error)
+    raise RuntimeError("Fragment shader compilation error")</code></pre>
+
+<p>Then we <strong>link</strong> our two objects in into a program and again,
+we check for errors during the process.</p>
+<pre style="background: #f2f2f2;"><code class="language-python">gl.glAttachShader(program, vertex)
+gl.glAttachShader(program, fragment)
+gl.glLinkProgram(program)
+
+if not gl.glGetProgramiv(program, gl.GL_LINK_STATUS):
+    print(gl.glGetProgramInfoLog(program))
+    raise RuntimeError('Linking error')</code></pre>
+
+<p>and we can get rid of the shaders, they won't be used again (you can think
+of them as .o files in C).</p>
+<pre style="background: #f2f2f2;"><code class="language-python">gl.glDetachShader(program, vertex)
+gl.glDetachShader(program, fragment)</code></pre>
+
+<p>Finally, we make program the default program to be ran. We can do it now
+because we'll use a single program in this example <strong
+style="color:#0000ff">(What if we use many programs?)</strong> :</p>
+<pre style="background: #f2f2f2;"><code class="language-python">gl.glUseProgram(program)</code></pre>
+
+<h3 id="P-04-03">Uploading data to the GPU</h3>
+
+<p>Next, we need to build CPU data and the corresponding GPU buffer that will
+hold a copy of the CPU data (GPU cannot access CPU memory). In Python, things
+are grealty facilitated by NumPy that allows to have a precise control over
+number representations. This is important because GLES 2.0 floats have to be
+exactly 32 bits long and a regular Python float would not work (they are
+actually equivalent to a C double). So let us specify a NumPy array holding
+4×2 32-bits float that will correspond to our 4×(x,y) vertices:</p>
+<pre style="background: #f2f2f2;"><code class="language-python"># Build data
+data = np.zeros((4,2), dtype=np.float32))</code></pre>
+
+<p>We then create a placeholder on the GPU without yet specifying the size:</p>
+<pre style="background: #f2f2f2;"><code class="language-python"># Request a buffer slot from GPU
+buffer = gl.glGenBuffers(1)
+
+# Make this buffer the default one
+gl.glBindBuffer(gl.GL_ARRAY_BUFFER, buffer)</code></pre>
+
+<p>We now need to <strong>bind the buffer to the <span
+style="color:#0000ff">current</span> program</strong>, that is, for each
+attribute present in the vertex shader program, we need to tell OpenGL where to
+find the corresponding data (i.e. GPU buffer) and this requires some
+computations. More precisely, we need to tell the GPU <strong>how to read the
+buffer</strong> in order to bind each value to the relevant attribute. To do
+this, GPU needs to know what is the <strong>stride</strong> between 2
+consecutive elements and what is the <strong>offset</strong> to read one
+attribute:</p>
+<img src="doc_images/OpenGL_stride1.png" width="634px" alt=""> 
+
+<p>In our simple quad scenario, this is relatively easy to write because we
+have a single attribute ("position"). <strong>We first require the attribute
+location inside the program and then we bind the buffer with the relevant
+offset.</strong></p>
+<pre style="background: #f2f2f2;"><code class="language-python">stride = data.strides[0]
+
+offset = ctypes.c_void_p(0)
+loc = gl.glGetAttribLocation(program, "position")
+gl.glEnableVertexAttribArray(loc)
+gl.glBindBuffer(gl.GL_ARRAY_BUFFER, buffer)
+gl.glVertexAttribPointer(loc, 2, gl.GL_FLOAT, False, stride, offset)</code></pre>
+
+<p><strong><span style="color:#0000ff">From the shader program, we inform
+python about the (opaque) location of an attribute in this program. Then we
+"enable" the location, we bind the buffer, and finally give from python to the
+shader program the information about the buffer stride and
+offsets.</span></strong></p>
+
+<p><strong><span style="color:#0000ff">Note that in theses lines, the numpy
+array is not involved (or rather said just its layout). We just set the
+structure of the "default" buffer.</span></strong></p>
+
+<p><strong><span style="color:#0000ff">See how the last line does this, but of
+course knowing that it refers to the given buffer just bound before (even if
+still empty!).</span></strong></p>
+
+<p>We're basically telling the program how to <strong>bind data to the relevant
+attribute</strong>. This is made by providing the stride of the array (how many
+bytes between each record) and the offset of a given attribute. </p>
+
+<p>Let's now fill our CPU data and upload it to the newly created GPU buffer:
+</p>
+<pre style="background: #f2f2f2;"><code class="language-python"># Assign CPU data
+data[...] = (-1,+1), (+1,+1), (-1,-1), (+1,-1)
+
+# Upload CPU data to GPU buffer
+gl.glBufferData(gl.GL_ARRAY_BUFFER, data.nbytes, data, gl.GL_DYNAMIC_DRAW)</code></pre>
+
+<p><strong><span style="color:#0000ff">Here at the last line the shader program
+nor the buffer is not specified. Hopefully we have tell OpenGL which shader
+program is "active" (glUseProgram) and which is the current buffer
+(glBindBuffer).</span></strong></p>
+
+<p><span style="color:#0000ff"><strong>Question</strong></span>: what is
+"GL_DYNAMIC_DRAW"?</p>
+
+<p><span style="color:#0000ff"><strong>Remark</strong></span>: At the time of
+defining the buffer, the buffer had an "unknown" size...</p>
+
+<h3 id="P-04-04">Rendering</h3>
+
+<p>We're done, we can now rewrite the display function:</p>
+<pre style="background: #f2f2f2;"><code class="language-python">def display():
+    gl.glClear(gl.GL_COLOR_BUFFER_BIT)
+    gl.glDrawArrays(gl.GL_TRIANGLE_STRIP, 0, 4)
+    glut.glutSwapBuffers()</code></pre>
+
+<p>The 0,4 arguments in the glDrawArrays tells OpenGL we want to display 4
+vertices from our <strong>current active buffer</strong> and we start at vertex
+0. You should obtain the figure on the right with the same red (boring) color.
+The whole source ia available from code/chapter-03/glut-quad-solid.py. </p>
+
+<p><strong style="color:#0000ff">The <em>glDrawArrays</em> function does not
+specify which buffer(s) is/are meant nor which program(s). Is it only be the
+current buffer, or all of them, and which program (or all of them)?
+</strong></p>
+
+<p><strong style="color:#008080">Answer: <em>glDrawArrays</em> will draw from
+the currently bound vertex attribute arrays, which are "created" and bound
+themselves with glVertexAttribPointer and glEnableVertexAttribArray, which do
+use the currently bound vertex buffer. It doesn't matter if the vertex
+attributes are all from one buffer or multiple buffers, and you don't need any
+particular vertex buffer to be bound when drawing; all the glDraw* functions
+care about is which vertex attribute arrays are enabled.</strong></p>
+
+<p><strong style="color:#0000ff">So see at the 3 consecutive calls
+glEnableVertexAttribArray / glBindBuffer / glVertexAttribPointer above. There
+can be many of then, and for all of them, the "attrib" will be
+drawn.</strong></p>
+
+<p></p>
+
+<p>All these operations are necessary for displaying a single colored quad on
+screen and complexity can escalate pretty badly if you add more objects,
+projections, lighting, texture, etc. This is the reason why we'll stop using
+the raw OpenGL interface in favor of a library. We'll use the glumpy library,
+mostly because I wrote it, but also because it offers a tight integration with
+numpy. Of course, you can design your own library to ease the writing of GL
+Python applications. </p>
+
+<h3 id="P-04-05">Uniform color</h3>
+
+<p>In the previous example, we hard-coded the red color inside the fragment
+shader source code. But what if we want to change the color from within the
+Python program? We could rebuild the program with the new color but that would
+not be very efficient. Fortunately there is a simple solution provided by
+OpenGL: <strong><span style="color:#ff0080">uniform</span></strong>. Uniforms,
+unlike attributes, do not change from one vertex to the other and this is
+precisely what we need in our case. We thus need to slightly modify our
+fragment shader to use this uniform color: </p>
+<pre style="background: #f2f2f2;"><code class="language-glsl">uniform vec4 color;
+void main()
+{
+  gl_FragColor = color;
+}</code></pre>
+
+<p>Of course, we also need to upload a color to this new uniform location and
+this is easier than for attribute because the memory has already been allocated
+on the GPU (since the size is know and does not depend on the number of
+vertices).</p>
+<pre style="background: #f2f2f2;"><code class="language-python">loc = gl.glGetUniformLocation(program, "color")
+gl.glUniform4f(loc, 0.0, 0.0, 1.0, 1.0)</code></pre>
+
+<p>If you run the new code/glut-quad-uniform-color.py example, you should
+obtain the blue quad as shown on the right.</p>
+
+<h3 id="P-04-06">Varying color</h3>
+
+<p>Until now, we have been using a constant color for the four vertices of our
+quad and the result is (unsurprisingly) a uniform red or blue quad. We can make
+it a bit more interesting though by assigning different colors to each vertex
+and see how OpenGL will interpolate colors. Our new vertex shader would need to
+be rewritten as:</p>
+<pre style="background: #f2f2f2;"><code class="language-glsl">attribute vec2 position;
+attribute vec4 color;
+varying vec4 v_color;
+void main()
+{
+  gl_Position = vec4(position, 0.0, 1.0);
+  v_color= color;
+}</code></pre>
+
+<p>We just added our new attribute <em>color</em> but we also added a new
+variable type: <strong style="color:#ff0080">varying</strong>. This type is
+actually used to transmit a value from the vertex shader to the fragment
+shader. As you might have guessed, the varying type means this value won't be
+constant over the different fragments but will be interpolated depending on the
+relative position of the fragment in the triangle, as I explained in the
+Interpolation section. Note that we also have to rewrite our fragment shader
+accordingly, but now the <em>v_color</em> will be an input:</p>
+<pre style="background: #f2f2f2;"><code class="language-glsl">varying vec4 v_color;
+void main()
+{
+  gl_FragColor = color;
+}</code></pre>
+
+<p>We now need to upload vertex color to the GPU. <strong>We could create a new
+vertex dedicated buffer and bind it to the new color attribute</strong>, but
+there is a more interesting solution. We'll use instead a single numpy array
+and a single buffer, taking advantage of the NumPy structured array:</p>
+<pre style="background: #f2f2f2;"><code class="language-python">data = np.zeros(4, [("position", np.float32, 2),
+                    ("color",    np.float32, 4)])
+data['position'] = (-1,+1), (+1,+1), (-1,-1), (+1,-1)
+data['color']    = (0,1,0,1), (1,1,0,1), (1,0,0,1), (0,0,1,1)</code></pre>
+
+<p>Our CPU data structure is thus:</p>
+<img src="doc_images/OpenGL_stride2.png" width="726px" alt=""> 
+
+<p>Binding the buffer is now a bit more complicated but it is made relatively
+easy thanks to NumPy:</p>
+<pre style="background: #f2f2f2;"><code class="language-python">stride = data.strides[0]
+offset = ctypes.c_void_p(0)
+loc = gl.glGetAttribLocation(program, "position")
+gl.glEnableVertexAttribArray(loc)
+gl.glBindBuffer(gl.GL_ARRAY_BUFFER, buffer)
+gl.glVertexAttribPointer(loc, 2, gl.GL_FLOAT, False, stride, offset)
+
+offset = ctypes.c_void_p(data.dtype["position"].itemsize)
+loc = gl.glGetAttribLocation(program, "color")
+gl.glEnableVertexAttribArray(loc)
+gl.glBindBuffer(gl.GL_ARRAY_BUFFER, buffer)
+gl.glVertexAttribPointer(loc, 4, gl.GL_FLOAT, False, stride, offset)</code></pre>
+
+<p><strong style="color:#0000ff">Unfortunately, the case where there are 2
+buffers for one program is not covered (as well as many buffers with many
+programs) as these cases are equally interesting, or even more, as this is the
+case when the application grows in complexity.</strong></p>
+
+<p><strong style="color:#008040">As stated above in the Question/Answer, keys
+are the <em>glEnableVertexAttribArray</em> and <em>glVertexAttribPointer</em>.
+To enable them, a <em>glBindBuffer</em> between the 2 calls is neccessary,
+especially if the arrays are from different buffers. But at the end, not the
+buffers are relevant, but the
+<em>VertexAttribArrays</em>/<em>VertexAttribPointer</em>.</strong></p>
+
+<p>We now quit this "first" tutorial and continue with the PySide6 OpenGL
+wrapper.</p>
+
+<h2>PySide6 and OpenGL</h2>
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+</div>
+</body>
+</html>
