@@ -32,12 +32,15 @@ DONE: basic
 - gcode simulator (as in jsCut)
 - tabs
 
-TODO/BUGS:
-- all the rest!
-- improve clipper swig wrapper (make it more pythonic / better for debugging)
-- in operations table: make list of paths editable (comboboxes with checkboxes, label showing the list of paths selected for the ops)
-- g-code simulator with opencamlib ? seems powerfull and there is a python wrapper (the doc says) 
+BUGS:
+- still cannot completely read Inkscape svg files because of all the Inkscape "garbage" with sodipodi namspaces etc.
+- and all the rest!
 
-WILL NEVER BE IMPLEMENTED
+TODO:
+- drop clipper in favour of pure python shapely - shapely was at least better for calculating paths with tabs!
+- capability to read text without converting them first to paths 
+- svg "structure viewer" with check boxes for item(s) selection as alternative to svg viewer selection(s)
+
+WILL NEVER BE IMPLEMENTED:
 - vPocket (I do not need them)
 
