@@ -122,7 +122,7 @@ class SvgPath:
                     pts = segment.points([0,1])
                 else:
                     if k == 0:
-                        pts = segment.points([0.5, 1]) # shapely fix!
+                        pts = segment.points([0.5]) # shapely fix!
                     elif k < len(self.svg_path)-1:
                         pts = segment.points([0])
                     else:
@@ -180,8 +180,8 @@ class SvgPath:
 
         for complex_pt in np_svg_path:
             pt = ( \
-                int(complex_pt.real * (ShapelyUtils.inchToShapelyScale / 25.4)), \
-                int(complex_pt.imag * (ShapelyUtils.inchToShapelyScale / 25.4))  \
+                complex_pt.real * (ShapelyUtils.inchToShapelyScale / 25.4), \
+                complex_pt.imag * (ShapelyUtils.inchToShapelyScale / 25.4)  \
             )
 
             coordinates.append(pt)

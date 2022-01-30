@@ -8,8 +8,8 @@ class ShapelyUtils:
     '''
     Wrapper functions on Shapely
     '''
-    inchToShapelyScale = 100000  # Scale inch to Shapely
-    cleanPolyDist = inchToShapelyScale / 100000
+    inchToShapelyScale = 1  # Scale inch to Shapely
+    cleanPolyDist = inchToShapelyScale / 1
 
     arcTolerance = 2.5 # like jscut
 
@@ -23,6 +23,23 @@ class ShapelyUtils:
 
         return shapely_geom.MultiLineString(diffs)
     
+
+    @classmethod
+    def simplifyMultiLine(cls, multiline: shapely_geom.LineString, tol: float) -> shapely_geom.MultiLineString:
+        '''
+        '''
+        lines = []
+        for line in multiline.geoms:
+            xline = line.simplify(tol)
+            if xline:
+                lines.append(xline)
+        
+        if lines:
+            res = shapely_geom.MultiLineString(lines)
+        else:
+            res = None
+
+        return res
 
     @classmethod
     def offsetLine(cls, line: shapely_geom.LineString, amount: float, side, resolution=16, join_style=1, mitre_limit=5.0) -> shapely_geom.LineString:
@@ -158,4 +175,12 @@ class ShapelyUtils:
             #    if points[0].X == p2.X and points[1].X == p1.X and points[0].Y == p2.Y and points[1].Y == p1.Y :
             #        return False
 
+       
+        if result.__class__.__name__ == 'Point':
+            if result.x == p1[0] and result.y == p1[1] :
+                return False
+            if result.x == p2[0] and result.y == p2[1] :
+                return False
+            
+            
         return True

@@ -15,9 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with pycut.  If not, see <http:#www.gnu.org/licenses/>.
 
-import math
 import sys
-import copy
 
 from typing import List
 from typing import Dict
@@ -25,14 +23,8 @@ from typing import Tuple
 
 from val_with_unit import ValWithUnit
 
-import shapely.geometry
 import shapely.geometry as shapely_geom
-
 from  shapely_utils import ShapelyUtils
-
-
-from shapely.geometry import LineString, MultiPolygon
-
 
 
 class CamPath:
@@ -87,7 +79,7 @@ class cam:
             # cannot offset ! maybe geometry too narrow for the cutter
             return []
 
-        bounds = copy.deepcopy(current)  # JSCUT: current.slice(0)
+        bounds = shapely_geom.MultiLineString(current)  # JSCUT: current.slice(0)
         allPaths : List[shapely_geom.LineString] = []
         while current:
             #if climb:
@@ -98,15 +90,26 @@ class cam:
             allPaths =  new_lines + allPaths
 
             current = ShapelyUtils.offsetMultiLine(current, cutterDia * (1 - overlap), 'left')
-
-            print(current)
+            if current:
+                current = ShapelyUtils.simplifyMultiLine(current, 0.0001)
             if current:
                 for line in current.geoms:
-                    print("---- #nb pts = ", len(list(line.coords)))
-                    print("---- len = ", line.length)
+                    print("---- SIMPLIFY #nb pts = ", len(list(line.coords)))
+                    print("---- SIMPLIFY len = ", line.length)
             else:
                 a = 1
                 b = 2
+
+            if not current:
+                break
+
+            small_enough = False
+            for line in current.geoms:
+                if len(list(line.coords)) <= 2 and line.length < 0.01:
+                    small_enough = True
+
+            if small_enough:
+                break
 
         #allPaths = current
             
@@ -166,22 +169,34 @@ class cam:
                 # >>> XAM fix
                 last_delta = width - currentWidth
                 # <<< XAM fix
-                current = ShapelyUtils.offsetMultiLine(current, last_delta, 'left' if isInside else 'left')
-                if needReverse:
-                    reversed = []
-                    for path in current.geoms:
-                        coords = list(path.coords)  # is a tuple!  JSCUT current reversed in place
-                        coords.reverse()
-                        reversed.append(shapely_geom.LineString(coords))
-                    allPaths = reversed + allPaths # JSCUT: allPaths = current.concat(allPaths)
-                else:
-                    allPaths = [p for p in current.geoms] + allPaths # JSCUT: allPaths = current.concat(allPaths)
-                break
+                current = ShapelyUtils.offsetMultiLine(current, last_delta, 'left')
+                if current :
+                    current = ShapelyUtils.simplifyMultiLine(current, 0.0001)
+                
+                if current:
+                    if needReverse:
+                        reversed = []
+                        for path in current.geoms:
+                            coords = list(path.coords)  # is a tuple!  JSCUT current reversed in place
+                            coords.reverse()
+                            reversed.append(shapely_geom.LineString(coords))
+                        allPaths = reversed + allPaths # JSCUT: allPaths = current.concat(allPaths)
+                    else:
+                        allPaths = [p for p in current.geoms] + allPaths # JSCUT: allPaths = current.concat(allPaths)
+                    break
             
             currentWidth = nextWidth
-            current = ShapelyUtils.offsetMultiLine(current, eachOffset, 'left' if isInside else 'left')
-            print("--- next toolpath")
-            print(current)
+
+            if not current:
+                break
+
+            current = ShapelyUtils.offsetMultiLine(current, eachOffset, 'left', resolution=16)
+            if current:
+                current = ShapelyUtils.simplifyMultiLine(current, 0.0001)
+                print("--- next toolpath")
+                print(current)
+            else:
+                break
 
         if len(allPaths) == 0: 
             # no possible paths! TODO . inform user
@@ -196,9 +211,14 @@ class cam:
         
         Returns array of CamPath.
         '''
+        # use lines, not polygons
+        multiline = ShapelyUtils.multiPolyToMultiLine(geometry)
+        print("INITIAL multiline")
+        print(multiline)
+
         allPaths = []
-        for xpath in geometry:
-            path = copy.deepcopy(xpath)  # JSCUT: path = paths.slice(0)
+        for xline in geometry.geoms:
+            path = shapely_geom.LineString(xline)  # JSCUT: path = paths.slice(0)
             if not climb:
                 path.reverse()
             path.append(path[0])

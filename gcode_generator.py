@@ -20,6 +20,7 @@ from typing import Dict
 from typing import Any
 
 import shapely.geometry as shapely_geom
+import shapely
 
 from  shapely_utils import ShapelyUtils
 
@@ -347,8 +348,20 @@ class CncOp:
 
         self.geometry = geometry
 
+        # what!! result may be not well orienteted!!
         if self.geometry.__class__.__name__ == 'Polygon':
+            # fix orientation
+            self.geometry = shapely.geometry.polygon.orient(self.geometry)
             self.geometry = shapely_geom.MultiPolygon([self.geometry])
+        else:
+            # fix orientation
+            fixed_polys = []
+            for poly in self.geometry:
+                fixed_poly = shapely.geometry.polygon.orient(poly)
+                fixed_polys.append(fixed_poly)
+            self.geometry = shapely_geom.MultiPolygon(fixed_polys)
+
+
 
         print(self.geometry)
 
@@ -415,7 +428,7 @@ class CncOp:
          
         # should have 2 paths, one inner, one outer -> show the "ring"
         for poly in self.preview_geometry.geoms:
-            geometry_svg_path = SvgPath.fromShapelyPolygon("pycut_geometry_pocket", poly)
+            geometry_svg_path = SvgPath.fromShapelyHolePolygon("pycut_geometry_pocket", poly)
             self.geometry_svg_paths.append(geometry_svg_path)
         
     def calculate_preview_geometry_outside(self, toolModel: ToolModel):
@@ -434,15 +447,14 @@ class CncOp:
             offset = self.margin.toInch() * ShapelyUtils.inchToShapelyScale
 
             offset_plus_width = offset + width
-            #offset_plus_width = 40000
 
             if offset_plus_width != 0:
                 # 'right' in 'inside', and 'left' is 'outside'  hopefully
-                geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset_plus_width, 'right', resolution=16, join_style=1, mitre_limit=5)
+                geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset_plus_width, 'right', resolution=16, join_style=1, mitre_limit=0.5)
             else:
                 geometry = self.geometry
             
-            self.preview_geometry = geometry.difference(ShapelyUtils.offsetMultiPolygon(geometry, width, 'right'))
+            self.preview_geometry = geometry.difference(ShapelyUtils.offsetMultiPolygon(geometry, width, 'right', resolution=16, join_style=1, mitre_limit=0.5))
             
             #self.preview_geometry = geometry
 
@@ -455,7 +467,7 @@ class CncOp:
          
         # should have 2 paths, one inner, one outer -> show the "ring"
         for poly in self.preview_geometry.geoms:
-            geometry_svg_path = SvgPath.fromShapelyPolygon("pycut_geometry_pocket", poly)
+            geometry_svg_path = SvgPath.fromShapelyHolePolygon("pycut_geometry_pocket", poly)
             self.geometry_svg_paths.append(geometry_svg_path)
 
     def calculate_preview_geometry_engrave(self):
@@ -488,8 +500,6 @@ class CncOp:
 
         offset = margin.toInch() * ShapelyUtils.inchToShapelyScale
 
-        #if cam_op == "Pocket" or cam_op == "V Pocket" or cam_op == "Inside":
-        #    offset = -offset
         if cam_op != "Engrave" : # and offset != 9999:
             # 'left' for Inside AND pocket
             geometry = ShapelyUtils.offsetMultiPolygon(geometry, offset, 'right' if cam_op == 'Outside' else 'left')
