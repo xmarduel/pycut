@@ -17,16 +17,19 @@
 
 import math
 import sys
+import copy
 
 from typing import List
 from typing import Dict
+from typing import Tuple
 
 from val_with_unit import ValWithUnit
 
-#from clipper_613 import clipper_613 as ClipperLib
-from clipper_642 import clipper_642 as ClipperLib
+import shapely.geometry
+import shapely.geometry as shapely_geom
 
-import clipper_utils
+from  shapely_utils import ShapelyUtils
+
 
 from shapely.geometry import LineString, MultiPolygon
 
@@ -35,12 +38,12 @@ from shapely.geometry import LineString, MultiPolygon
 class CamPath:
     '''
     CamPath has this format: {
-      path:               Clipper path
+      path:               Shapely path
       safeToClose:        Is it safe to close the path without retracting?
     }
     '''
-    def __init__(self, path: ClipperLib.IntPointVector, safeToClose: bool = True):
-        # clipper path
+    def __init__(self, path: shapely_geom.LineString, safeToClose: bool = True):
+        # shapely path
         self.path = path
         # is it safe to close the path without retracting?
         self.safeToClose = safeToClose
@@ -56,95 +59,129 @@ class cam:
         return dx * dx + dy * dy
     
     @staticmethod
-    def distP(p1:ClipperLib.IntPoint, p2:ClipperLib.IntPoint) -> float :
-        return cam.dist(p1.X, p1.Y, p2.X, p2.Y)
+    def distP(p1:Tuple[int,int], p2:Tuple[int,int]) -> float :
+        return cam.dist(p1[0], p1[1], p2[0], p2[1])
 
     @classmethod
-    def pocket(cls, geometry: ClipperLib.PathVector, cutterDia: float, overlap: float, climb: bool) -> List[CamPath] :
+    def pocket(cls, geometry: shapely_geom.MultiPolygon, cutterDia: float, overlap: float, climb: bool) -> List[CamPath] :
         '''
-        Compute paths for pocket operation on Clipper geometry. 
+        Compute paths for pocket operation on Shapely geometry. 
         
         Returns array of CamPath.
         
-        cutterDia is in Clipper units. 
+        cutterDia is in Shapely units. 
         overlap is in the range [0, 1).
         '''
-        #ClipperLib.dumpPaths("geometry", geometry)
+        print("pocketing ", geometry)
+        
+        # use lines, not polygons
+        multiline = ShapelyUtils.multiPolyToMultiLine(geometry)
 
-        current = clipper_utils.ClipperUtils.offset(geometry, -cutterDia / 2)
+        print("pocketing - multiline from polygon", multiline)
 
-        if len(current) == 0:
+        current = ShapelyUtils.offsetMultiLine(multiline, cutterDia / 2, 'left')
+
+        print("pocketing - initial offset dia/2", current)
+
+        if len(current.geoms) == 0:
             # cannot offset ! maybe geometry too narrow for the cutter
             return []
 
-        bounds = clipper_utils.ClipperUtils.clone_pathvector(current)  # JSCUT: current.slice(0)
-        allPaths : List[ClipperLib.IntPointVector] = []
-        while len(current) != 0:
-            if climb:
-                for iv in current:
-                    iv.reverse()
-            allPaths = [p for p in current] + allPaths # JSCUT: current.concat(allPaths)
-            current = clipper_utils.ClipperUtils.offset(current, -cutterDia * (1 - overlap))
+        bounds = copy.deepcopy(current)  # JSCUT: current.slice(0)
+        allPaths : List[shapely_geom.LineString] = []
+        while current:
+            #if climb:
+            #    for line in current:
+            #        line.reverse()
+            new_lines = [line for line in current.geoms]
+
+            allPaths =  new_lines + allPaths
+
+            current = ShapelyUtils.offsetMultiLine(current, cutterDia * (1 - overlap), 'left')
+
+            print(current)
+            if current:
+                for line in current.geoms:
+                    print("---- #nb pts = ", len(list(line.coords)))
+                    print("---- len = ", line.length)
+            else:
+                a = 1
+                b = 2
+
+        #allPaths = current
             
         return cls.mergePaths(bounds, allPaths)
 
     @classmethod
-    def outline(cls, geometry: ClipperLib.PathVector, cutterDia: float, isInside: bool, width: float, overlap: float, climb: bool) -> List[CamPath] :
+    def outline(cls, geometry: shapely_geom.MultiPolygon, cutterDia: float, isInside: bool, width: float, overlap: float, climb: bool) -> List[CamPath] :
         '''
-        Compute paths for outline operation on Clipper geometry. 
+        Compute paths for outline operation on Shapely geometry. 
         
         Returns array of CamPath.
         
-        cutterDia and width are in Clipper units. 
+        cutterDia and width are in Shapely units. 
         overlap is in the  range [0, 1).
         '''
+        print("INITIAL geometry")
+        print(geometry)
+
+        # use lines, not polygons
+        multiline = ShapelyUtils.multiPolyToMultiLine(geometry)
+        print("INITIAL multiline")
+        print(multiline)
+
         currentWidth = cutterDia
-        allPaths  : List[ClipperLib.IntPointVector] = []
+        allPaths  : List[shapely_geom.LineString] = []
         eachWidth = cutterDia * (1 - overlap)
 
         if isInside :
-            current = clipper_utils.ClipperUtils.offset(geometry, -cutterDia / 2)
-            bounds = clipper_utils.ClipperUtils.diff(current, clipper_utils.ClipperUtils.offset(geometry, -(width - cutterDia / 2)))
-            eachOffset = -eachWidth
+            # because we always start from the outer ring -> we go "inside"
+            current = ShapelyUtils.offsetMultiLine(multiline, cutterDia /2, 'left')
+            bounds = ShapelyUtils.diff(current, ShapelyUtils.offsetMultiLine(multiline, width - cutterDia / 2, 'left'))
+            eachOffset = eachWidth
             needReverse = climb
         else :
-            current = clipper_utils.ClipperUtils.offset(geometry, cutterDia / 2)
-            bounds = clipper_utils.ClipperUtils.diff(clipper_utils.ClipperUtils.offset(geometry, width - cutterDia / 2), current)
+            # because we always start from the outer ring -> we go "inside"
+            current = ShapelyUtils.offsetMultiLine(multiline, cutterDia /2, 'left')
+            bounds = ShapelyUtils.diff(current, ShapelyUtils.offsetMultiLine(multiline, width - cutterDia / 2, 'left'))
             eachOffset = eachWidth
             needReverse = not climb
 
-        while currentWidth <= width :
+            # TEST
+            #allPaths = [p for p in current.geoms] 
+
+        while True and currentWidth <= width :
             if needReverse:
                 reversed = []
-                for path in current:
-                    path_as_list = list(path)  # is a tuple!  JSCUT current reversed in place
-                    path_as_list.reverse()
-                    reversed.append(path_as_list)
+                for path in current.geoms:
+                    coords = list(path.coords)  # is a tuple!  JSCUT current reversed in place
+                    coords.reverse()
+                    reversed.append(shapely_geom.LineString(coords))
                 allPaths = reversed + allPaths  # JSCUT: allPaths = current.concat(allPaths)
             else:
-                allPaths = [p for p in current] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+                allPaths = [p for p in current.geoms] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
 
             nextWidth = currentWidth + eachWidth
             if nextWidth > width and (width - currentWidth) > 0 :
                 # >>> XAM fix
                 last_delta = width - currentWidth
-                if isInside:
-                    last_delta = -last_delta
                 # <<< XAM fix
-                current = clipper_utils.ClipperUtils.offset(current, last_delta)
+                current = ShapelyUtils.offsetMultiLine(current, last_delta, 'left' if isInside else 'left')
                 if needReverse:
                     reversed = []
-                    for path in current:
-                        path_as_list = list(path)  # is a tuple!  JSCUT current reversed in place
-                        path_as_list.reverse()
-                        reversed.append(path_as_list)
+                    for path in current.geoms:
+                        coords = list(path.coords)  # is a tuple!  JSCUT current reversed in place
+                        coords.reverse()
+                        reversed.append(shapely_geom.LineString(coords))
                     allPaths = reversed + allPaths # JSCUT: allPaths = current.concat(allPaths)
                 else:
-                    allPaths = [p for p in current] + allPaths # JSCUT: allPaths = current.concat(allPaths)
+                    allPaths = [p for p in current.geoms] + allPaths # JSCUT: allPaths = current.concat(allPaths)
                 break
             
             currentWidth = nextWidth
-            current = clipper_utils.ClipperUtils.offset(current, eachOffset)
+            current = ShapelyUtils.offsetMultiLine(current, eachOffset, 'left' if isInside else 'left')
+            print("--- next toolpath")
+            print(current)
 
         if len(allPaths) == 0: 
             # no possible paths! TODO . inform user
@@ -153,15 +190,15 @@ class cam:
         return cls.mergePaths(bounds, allPaths)
         
     @classmethod
-    def engrave(cls, geometry: ClipperLib.PathVector, climb: bool) -> List[CamPath] :
+    def engrave(cls, geometry: shapely_geom.MultiPolygon, climb: bool) -> List[CamPath] :
         '''
-        Compute paths for engrave operation on Clipper geometry. 
+        Compute paths for engrave operation on Shapely geometry. 
         
         Returns array of CamPath.
         '''
         allPaths = []
         for xpath in geometry:
-            path = clipper_utils.ClipperUtils.clone_intpointvector(xpath)  # JSCUT: path = paths.slice(0)
+            path = copy.deepcopy(xpath)  # JSCUT: path = paths.slice(0)
             if not climb:
                 path.reverse()
             path.append(path[0])
@@ -173,105 +210,33 @@ class cam:
         return campaths
 
     @classmethod
-    def hspocket(cls, geometry: ClipperLib.PathVector, cutterDia: float, overlap: float, climb: bool) -> List[CamPath] :
-        '''
-        Compute paths for pocket operation on Clipper geometry. 
-        
-        Returns array of CamPath. 
-        
-        cutterDia is in Clipper units. 
-        overlap is in the range [0, 1).
-        '''
-        
-        return []
-        '''
-        memoryBlocks = []
-
-        cGeometry = jscut.priv.path.convertPathsToCpp(memoryBlocks, geometry)
-
-        resultPathsRef = Module._malloc(4)
-        resultNumPathsRef = Module._malloc(4)
-        resultPathSizesRef = Module._malloc(4)
-        memoryBlocks.push(resultPathsRef)
-        memoryBlocks.push(resultNumPathsRef)
-        memoryBlocks.push(resultPathSizesRef)
-
-        #extern "C" void hspocket(
-        #    double** paths, int numPaths, int* pathSizes, double cutterDia,
-        #    double**& resultPaths, int& resultNumPaths, int*& resultPathSizes)
-        Module.ccall(
-            'hspocket',
-            'void', ['number', 'number', 'number', 'number', 'number', 'number', 'number'],
-            [cGeometry[0], cGeometry[1], cGeometry[2], cutterDia, resultPathsRef, resultNumPathsRef, resultPathSizesRef]);self
-
-        result = jscut.priv.path.convertPathsFromCppToCamPath(memoryBlocks, resultPathsRef, resultNumPathsRef, resultPathSizesRef);
-
-        for i in range(len(memoryBlocks)):
-            Module._free(memoryBlocks[i])
-
-        return result
-        '''
-        
-    @classmethod
-    def vPocket(cls, geometry: ClipperLib.PathVector, cutterAngle:float, passDepth:float, maxDepth: float) -> List[CamPath] :
-        if cutterAngle <= 0 or cutterAngle >= 180:
-            return []
-
-        return []
-        '''
-        memoryBlocks = []
-
-        cGeometry = clipper_utils.ClipperUtils.convertPathsToCpp(memoryBlocks, geometry)
-
-        resultPathsRef = Module._malloc(4);
-        resultNumPathsRef = Module._malloc(4);
-        resultPathSizesRef = Module._malloc(4);
-        memoryBlocks.append(resultPathsRef);
-        memoryBlocks.append(resultNumPathsRef);
-        memoryBlocks.append(resultPathSizesRef);
-
-        #extern "C" void vPocket(
-        #    int debugArg0, int debugArg1,
-        #    double** paths, int numPaths, int* pathSizes,
-        #    double cutterAngle, double passDepth, double maxDepth,
-        #    double**& resultPaths, int& resultNumPaths, int*& resultPathSizes)self, self, 
-        Module.ccall(
-            'vPocket',
-            'void', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
-            [miscViewModel.debugArg0(), miscViewModel.debugArg1(), cGeometry[0], cGeometry[1], cGeometry[2], cutterAngle, passDepth, maxDepth, resultPathsRef, resultNumPathsRef, resultPathSizesRef]);
-
-        result = jscut.priv.path.convertPathsFromCppToCamPath(memoryBlocks, resultPathsRef, resultNumPathsRef, resultPathSizesRef)
-
-        for memoryBlock in memoryBlocks:
-            Module._free(memoryBlock)
-
-        return result
-        '''
-
-    @classmethod
-    def mergePaths(cls, _bounds: ClipperLib.PathVector, paths: List[ClipperLib.IntPointVector]) -> List[CamPath] :
+    def mergePaths(cls, _bounds: shapely_geom.MultiLineString, paths: List[shapely_geom.LineString]) -> List[CamPath] :
         '''
         Try to merge paths. A merged path doesn't cross outside of bounds. 
         '''
-        if _bounds and len(_bounds) > 0:
+        if _bounds and len(_bounds.geoms) > 0:
             bounds = _bounds
         else: 
-            bounds = ClipperLib.PathVector()
+            bounds = shapely_geom.MultiLineString()
  
 
-        currentPath = list(paths[0]) # not as tuple, but as list
+        # std list
+        thepaths = [ list(path.coords) for path in paths ]
+        paths = thepaths
+
+        currentPath = paths[0]
         
         pathEndPoint = currentPath[-1]
         pathStartPoint = currentPath[0]
 
         # close if start/end poitn not equal
-        if pathEndPoint.X != pathStartPoint.X or pathEndPoint.Y != pathStartPoint.Y:
-            currentPath.append(pathStartPoint)
+        if pathEndPoint[0] != pathStartPoint[0] or pathEndPoint[1] != pathStartPoint[1]:
+            currentPath = currentPath + [pathStartPoint]
         
         currentPoint = currentPath[-1]
-        paths[0] = []
+        paths[0] = [] # empty
 
-        mergedPaths : List[ClipperLib.IntPointVector] = [] 
+        mergedPaths : List[shapely_geom.LineString] = [] 
         numLeft = len(paths) - 1
 
         while numLeft > 0 :
@@ -286,16 +251,15 @@ class cam:
                         closestPointIndex = pointIndex
                         closestPointDist = dist
 
-            path = list(paths[closestPathIndex])
-            paths[closestPathIndex] = []
+            path = paths[closestPathIndex]
+            paths[closestPathIndex] = [] # empty
             numLeft -= 1
-            needNew = clipper_utils.ClipperUtils.crosses(bounds, currentPoint, path[closestPointIndex])
+            needNew = ShapelyUtils.crosses(bounds, currentPoint, path[closestPointIndex])
 
             # JSCUT path = path.slice(closestPointIndex, len(path)).concat(path.slice(0, closestPointIndex))
             path = path[closestPointIndex:] + path[:closestPointIndex]
-            
             path.append(path[0])
-
+            
             if needNew:
                 mergedPaths.append(currentPath)
                 currentPath = path
@@ -304,19 +268,19 @@ class cam:
                 currentPath = currentPath + path
                 currentPoint = currentPath[-1]
 
-        #ClipperLib.dumpPath("currentPath", currentPath)
+        #print(currentPath)
 
         mergedPaths.append(currentPath)
 
         camPaths : List[CamPath] = []
         for path in mergedPaths:
-            safeToClose = not clipper_utils.ClipperUtils.crosses(bounds, path[0], path[-1])
-            camPaths.append( CamPath(path, safeToClose) )
+            safeToClose = not ShapelyUtils.crosses(bounds, path[0], path[-1])
+            camPaths.append( CamPath( shapely_geom.LineString(path), safeToClose) )
 
         return camPaths
 
     @classmethod
-    def separateTabs(cls, origPath: ClipperLib.IntPointVector, tabs: List['Tab']) -> List[ClipperLib.IntPointVector]:
+    def separateTabs(cls, origPath: shapely_geom.LineString, tabs: List['Tab']) -> List[shapely_geom.LineString]:
         '''
         from a "normal" tool path, split this path into a list of "partial" paths
         avoiding the tabs areas
@@ -326,46 +290,7 @@ class cam:
         if len(tabs) == 0:
             return [origPath]
 
-        clipper_path = ClipperLib.IntPointVector()
-        for k, pt in enumerate(origPath):
-            clipper_path.append(pt)
-
-        print("origPath", origPath)
-        print("origPath", clipper_path)
-         
-        clipper_tab_paths = ClipperLib.PathVector()
-        # 1. from the tabs, build clipper (closed) tab paths
-        for tab_data in tabs:
-            tab = Tab(tab_data)
-            clipper_tab_paths.append(tab.svg_path.toClipperPath())
-
-        #print("TAB", clipper_tab_paths)
-        # 2. then "diff" the origin path with the tabs paths
-        splitted_paths = clipper_utils.ClipperUtils.openpath_remove_tabs(clipper_path, clipper_tab_paths)
-        
-        # 3. that's it
-        print("splitted_paths", splitted_paths)
-
-        paths = [list(path) for path in splitted_paths ]
-        
-        # >>> XAM merge some paths when possible (because clipper does not do this!)
-        paths = cls.mergeCompatiblePaths(paths)
-        # <<< XAM
-
-        return paths
-
-    @classmethod
-    def separateTabs_Shapely(cls, origPath: ClipperLib.IntPointVector, tabs: List['Tab']) -> List[ClipperLib.IntPointVector]:
-        '''
-        from a "normal" tool path, split this path into a list of "partial" paths
-        avoiding the tabs areas
-        '''
-        from gcode_generator import Tab
-
-        if len(tabs) == 0:
-            return [origPath]
-
-        pts = [ (pt.X, pt.Y) for pt in origPath ]
+        pts = list(origPath.coords)
 
         shapely_openpath = LineString(pts)
 
@@ -389,56 +314,57 @@ class cam:
         print("splitted_paths", shapely_splitted_paths)
 
         if shapely_splitted_paths.__class__.__name__ == 'LineString':
-            shapely_splitted_paths = [shapely_splitted_paths]
+            shapely_splitted_paths = shapely_geom.MultiLineString([shapely_splitted_paths])
 
-        # back to clipper...
-        paths : List[List[ClipperLib.IntPoint]] = []
-        for shapely_splitted_path in shapely_splitted_paths:
+        # back to shapely...
+        paths : List[shapely_geom.LineString] = []
+        for shapely_splitted_path in shapely_splitted_paths.geoms:
             intpt_vector = []
             xy = shapely_splitted_path.xy
             for ptX, ptY in zip(xy[0], xy[1]):
-                intpt_vector.append(ClipperLib.IntPoint(int(ptX), int(ptY)))
+                intpt_vector.append((ptX, ptY))
             paths.append(intpt_vector)
         
         # >>> XAM merge some paths when possible
         paths = cls.mergeCompatiblePaths(paths)
         # <<< XAM
 
-        return paths
+        shapely_paths = [shapely_geom.LineString(path) for path in paths]
+        return shapely_paths
 
     @classmethod
-    def mergeCompatiblePaths(cls, paths: List[List[ClipperLib.IntPoint]]) -> List[List[ClipperLib.IntPoint]]:
+    def mergeCompatiblePaths(cls, paths: List[shapely_geom.LineString]) -> List[shapely_geom.LineString]:
         '''
         This is a post-processing step to clipper-6.4.2 where found separated paths can be merged together,
         leading to less separated paths
         '''
         # ------------------------------------------------------------------------------------------------
-        def pathsAreCompatible(path1: ClipperLib.IntPointVector, path2: ClipperLib.IntPointVector) -> bool:
+        def pathsAreCompatible(path1: shapely_geom.LineString, path2: shapely_geom.LineString) -> bool:
             '''
             test if the 2 paths have their end point/start point compatible (the same)
             '''
             endPoint = path1[-1]
             startPoint = path2[0]
 
-            if endPoint.X == startPoint.X and endPoint.Y == startPoint.Y:
+            if endPoint[0] == startPoint[0] and endPoint[1] == startPoint[1]:
                 # can merge
                 return True
 
             return False
 
-        def mergePathIntoPath(path1: ClipperLib.IntPointVector, path2: ClipperLib.IntPointVector) -> bool:
+        def mergePathIntoPath(path1: shapely_geom.LineString, path2: shapely_geom.LineString) -> bool:
             '''
             merge the 2 paths if their end point/start point are compatible (ie the same)
             '''
             endPoint = path1[-1]
             startPoint = path2[0]
 
-            if endPoint.X == startPoint.X and endPoint.Y == startPoint.Y:
+            if endPoint[0] == startPoint[0]and endPoint[1] == startPoint[1]:
                 # can merge
                 path1 += path2[1:]
                 return True
 
-        def buildPathsCompatibilityTable(paths: List[ClipperLib.IntPointVector]) -> Dict[List,int]:
+        def buildPathsCompatibilityTable(paths: List[shapely_geom.LineString]) -> Dict[List,int]:
             '''
             for all paths in the list of paths, check first which ones can be merged
             '''
@@ -531,15 +457,15 @@ class cam:
         retractForTabGcode = '; Retract for tab\r\n' + \
             f'G1 Z' + tabZ.toFixed(decimal) + f'{rapidFeedGcode}\r\n'
 
-        def getX(p: ClipperLib.IntPoint) :
-            return p.X * scale + offsetX
+        def getX(p: Tuple[int,int]) :
+            return p[0] * scale + offsetX
 
-        def getY(p : ClipperLib.IntPoint):
-            return -p.Y * scale + offsetY
+        def getY(p : Tuple[int,int]):
+            return -p[1] * scale + offsetY
 
-        def convertPoint(p: ClipperLib.IntPoint):
-            x = p.X * scale + offsetX
-            y = -p.Y * scale + offsetY
+        def convertPoint(p: Tuple[int,int]):
+            x = p[0] * scale + offsetX
+            y = -p[1] * scale + offsetY
 
             if flipXY is False:
                 result = ' X' + ValWithUnit(x, "-").toFixed(decimal) +  \
@@ -554,12 +480,12 @@ class cam:
 
         for pathIndex, path in enumerate(paths):
             origPath = path.path
-            if len(origPath) == 0:
+            if len(origPath.coords) == 0:
                 continue
 
             # split the path to cut into many partials paths to avoid tabs eraas
             #separatedPaths = cls.separateTabs(origPath, tabs)
-            separatedPaths = cls.separateTabs_Shapely(origPath, tabs)
+            separatedPaths = cls.separateTabs(origPath, tabs)
 
             gcode += \
                 f'\r\n' + \
@@ -595,7 +521,7 @@ class cam:
                     currentZ = max(finishedZ, tabZ)
                 
                 gcode += '; Rapid to initial position\r\n' + \
-                    'G1' + convertPoint(origPath[0]) + rapidFeedGcode + '\r\n'
+                    'G1' + convertPoint(list(origPath.coords)[0]) + rapidFeedGcode + '\r\n'
 
                 inTabsHeight = False
                 
@@ -613,7 +539,7 @@ class cam:
                         selectedPaths = separatedPaths
 
                 for selectedPath in selectedPaths:
-                    if len(selectedPath) == 0:
+                    if selectedPath.is_empty:
                         continue
 
                     executedRamp = False
@@ -662,7 +588,7 @@ class cam:
                     if inTabsHeight:
                         # move to initial point of partial path
                         gcode += '; Tab: move to first point of partial path at safe height \r\n'
-                        gcode += 'G1' + convertPoint(selectedPath[0]) + '\r\n'
+                        gcode += 'G1' + convertPoint(list(selectedPath.coords)[0]) + '\r\n'
                         gcode += \
                             '; plunge\r\n' + \
                             'G1 Z' + ValWithUnit(nextZ, "-").toFixed(decimal) + plungeFeedGcode + '\r\n'
@@ -672,9 +598,11 @@ class cam:
                     gcode += '; cut\r\n'
 
                     # on a given height, generate series of G1
-                    for i in range(1, len(selectedPath)):
-                        point = selectedPath[i]
-                        gcode += 'G1' + convertPoint(point)
+                    for i, pt in enumerate(selectedPath.coords):
+                        if i == 0:
+                            continue
+                        
+                        gcode += 'G1' + convertPoint(pt)
                         if i == 1:
                             gcode += cutFeedGcode + '\r\n'
                         else:

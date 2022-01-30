@@ -169,7 +169,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.init_gui()
 
-        job_no = 1
+        job_no = 2
         
         if job_no == 1:
             self.open_job("./jobs/cnc_three_rects.json")

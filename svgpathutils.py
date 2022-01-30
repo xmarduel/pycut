@@ -1,48 +1,44 @@
 
-from io import StringIO
 import os
 import math
 
 from typing import List
 from typing import Tuple
 from typing import Dict
-from typing import Any
 
 import tempfile
 
 import xml.etree.ElementTree as etree
 
-import svgpathtools
 import numpy as np
+import svgpathtools
 
-import shapely.geometry
+import shapely
+import shapely.geometry as shapely_geom
 
-#from clipper_613 import clipper_613 as ClipperLib
-from clipper_642 import clipper_642 as ClipperLib
-
-from clipper_utils import ClipperUtils
+from  shapely_utils import ShapelyUtils
 
 M_PI = math.acos(-1)
 
 
 class SvgPath:
     '''
-    Transform svgpathtools 'Path' to 'ClipperLib' path
+    Transform svgpathtools 'Path' into a 'Shapely LineString' object
 
     - svgpathtools 'Path' are list of 'Segment(s)' and
     each segment has a list of points, given in format 'complex type' (a+bj)
 
-    - ClipperLib 'Path' are list of IntPoint (X,Y)
+    - Shapely LineString are list of Points[2]
 
     so the transformation is straightforward
 
     Convention:
-    - a svg <path> definition is noted: svg_path_d
     - a path from svgpathtools is noted: svg_path
+    - a svg <path> definition is noted: svg_path_d
     - the discretization of a svg_path results in a numpy array, noted: np_svg_path
-    - a clipper path is noted: clipper_path  (a 'ClipperLib.IntPointVector')
+    - a shapely path (LineString) is noted: shapely_path
     '''
-    PYCUT_SAMPLE_LEN_COEFF = 100 # is in jsCut 1.0/0.01 ie the same
+    PYCUT_SAMPLE_LEN_COEFF = 1 # is in jsCut 1.0/0.01 ie the same
     PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5 # is in jsCut 1
 
     @classmethod
@@ -106,22 +102,32 @@ class SvgPath:
         - Arc: discretize per hand
         - QuadraticBezier, CubicBezier: discretize per hand
 
-        TODO: Take care not to add twice the same points
-        - Arc
-        - Beziers
+        SHAPELY TRICK: shapely does not handle correctly Linestring which start/end point is a corner
+        => add in the first calculated segment a "middle point" and set this middle point as starting
+        point of the path. Finally, at the end of the path, the "old" starting point in then the **last**
+        point of the path 
         '''
         points = np.array([], dtype=np.complex128)
+
+        first_pt = None
         
         for k, segment in enumerate(self.svg_path):
+            if k == 0:
+                # shapely fix : global initial pt
+                first_pt = segment.point(0)
+
             if segment.__class__.__name__ == 'Line':
-                # start and end
+                # start and end points
                 if len(self.svg_path) == 1:
                     pts = segment.points([0,1])
                 else:
-                    if k < len(self.svg_path)-1:
+                    if k == 0:
+                        pts = segment.points([0.5, 1]) # shapely fix!
+                    elif k < len(self.svg_path)-1:
                         pts = segment.points([0])
                     else:
                         pts = segment.points([0, 1])
+                    
             elif segment.__class__.__name__ == 'Arc':
                 # no 'points' method for 'Arc'!
                 seg_length = segment.length()
@@ -130,8 +136,12 @@ class SvgPath:
                 nb_samples = max(nb_samples, self.PYCUT_SAMPLE_MIN_NB_SEGMENTS)
                 
                 _pts = []
-                for k in range(nb_samples+1):
-                    _pts.append(segment.point(float(k)/float(nb_samples)))
+                if k == 0:
+                    for k in range(1, nb_samples+1):
+                        _pts.append(segment.point(float(k)/float(nb_samples)))
+                else:
+                    for k in range(0, nb_samples+1):
+                        _pts.append(segment.point(float(k)/float(nb_samples)))
 
                 pts = np.array(_pts, dtype=np.complex128)
 
@@ -141,59 +151,65 @@ class SvgPath:
                 nb_samples = int(seg_length * self.PYCUT_SAMPLE_LEN_COEFF)
                 nb_samples = max(nb_samples, self.PYCUT_SAMPLE_MIN_NB_SEGMENTS)
                 
-                incr = 1.0 / nb_samples
+                _pts = []
+                if k == 0:
+                    for k in range(1, nb_samples+1):
+                        _pts.append(segment.point(float(k)/float(nb_samples)))
+                else:
+                    for k in range(0, nb_samples+1):
+                        _pts.append(segment.point(float(k)/float(nb_samples)))
 
-                samples = [x* incr for x in range(0, nb_samples+1)]
-                pts = segment.points(samples)
+                pts = np.array(_pts, dtype=np.complex128)
 
             points = np.concatenate((points, pts))
 
+        # shapely fix : add as last point the "virtual" first one, the first "middle one" is already the "new" first
+        #points = np.concatenate((points, [first_pt], [points[0]]))
+        points = np.concatenate((points, [first_pt]))
+        #print(points)
+
         return points
 
-    def toClipperPath(self) -> ClipperLib.IntPointVector:
+    
+    def toShapelyLineString(self) -> shapely_geom.LineString:
         '''
         '''
         np_svg_path = self.discretize()
 
-        clipper_path = ClipperLib.IntPointVector()
+        coordinates = []
 
         for complex_pt in np_svg_path:
-            pt = ClipperLib.IntPoint( \
-                int(complex_pt.real * (ClipperUtils.inchToClipperScale / 25.4)),
-                int(complex_pt.imag * (ClipperUtils.inchToClipperScale / 25.4)))
-            clipper_path.append(pt)
+            pt = ( \
+                int(complex_pt.real * (ShapelyUtils.inchToShapelyScale / 25.4)), \
+                int(complex_pt.imag * (ShapelyUtils.inchToShapelyScale / 25.4))  \
+            )
 
-        return clipper_path
+            coordinates.append(pt)
+
+        line = shapely_geom.LineString(coordinates)
+
+        return line
+
+    def toShapelyPolygon(self) -> shapely_geom.Polygon:
+        '''
+        '''
+        line = self.toShapelyLineString()
+        poly = shapely_geom.Polygon(line)
+
+        # set the right orientation for this polygon
+        poly = shapely_geom.polygon.orient(poly)
+    
+        return poly
 
     @classmethod
-    def fromCircleDef(cls, center, radius) -> 'SvgPath':
+    def fromShapelyLineString(cls, prefix: str, shapely_path: shapely_geom.LineString) -> 'SvgPath':
         '''
         '''
-        NB_SEGMENTS = 12
-        angles = [ float(k * M_PI )/ (NB_SEGMENTS) for k in range(NB_SEGMENTS*2 +1)]
+        pts = list(shapely_path.coords)
 
         discretized_svg_path : List[complex] = [ complex( \
-                    center[0] + radius*math.cos(angle), 
-                    center[1] + radius*math.sin(angle) ) for angle in angles]
-
-        svg_path = svgpathtools.Path()
-
-        for i in range(len(discretized_svg_path)-1):
-            start = discretized_svg_path[i]
-            end   = discretized_svg_path[i+1]
-
-            svg_path.append(svgpathtools.Line(start, end))
-
-        return SvgPath("pycut_tab", {'d': svg_path.d()})
-
-    @classmethod
-    def fromClipperPath(cls, prefix: str, clipper_path: ClipperLib.IntPointVector) -> 'SvgPath':
-        '''
-        '''
-        discretized_svg_path : List[complex] = [ complex( \
-                    pt.X / (ClipperUtils.inchToClipperScale / 25.4), 
-                    pt.Y / (ClipperUtils.inchToClipperScale / 25.4)) for pt in clipper_path]
-
+                    pt[0] / (ShapelyUtils.inchToShapelyScale / 25.4), 
+                    pt[1] / (ShapelyUtils.inchToShapelyScale / 25.4)) for pt in pts]
 
         svg_path = svgpathtools.Path()
 
@@ -212,40 +228,60 @@ class SvgPath:
         return SvgPath(prefix, {'d': svg_path.d(), 'fill-rule': 'nonzero'})
 
     @classmethod
-    def fromClipperPaths(cls, prefix: str, clipper_paths: ClipperLib.PathVector) -> 'SvgPath':
+    def fromShapelyPolygon(cls, prefix: str, polygon: shapely_geom.Polygon) -> 'SvgPath':
         '''
         Note:
-            only 1 path "def" consisting of 2 or more lines : 
-            for the path interior be filled in color -> fill-rule is 'evenodd'
+            only 1 path "def" consisting of 1: 
         '''
-        discretized_svg_paths = []
-        for clipper_path in clipper_paths:
-            discretized_svg_path : List[complex] = [ complex( \
-                    pt.X / (ClipperUtils.inchToClipperScale / 25.4), 
-                    pt.Y / (ClipperUtils.inchToClipperScale / 25.4)) for pt in clipper_path]
+        factor = 1.0 / (ShapelyUtils.inchToShapelyScale / 25.4)
             
-            discretized_svg_paths.append(discretized_svg_path)
+        poly_scaled = shapely.affinity.scale(polygon, xfact=factor, yfact=factor, zfact=factor, origin=(0,0))
+
+        path_str = poly_scaled.svg()
+
+        svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+            version="1.1">
+            <g>
+            %s
+            </g> 
+        </svg>''' % path_str
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            filename = os.path.join(tmpdir, 'temp_svg.svg')
+            
+            fp = open(filename, "w")
+            fp.write(svg)
+            fp.close()
+
+            paths, attributes = svgpathtools.svg2paths(filename)
+
+            attribs = attributes[0]
+            attribs["fill"] = "#000000"
+
+            return SvgPath(prefix, attribs) 
+
+
+    @classmethod
+    def fromCircleDef(cls, center, radius) -> 'SvgPath':
+        '''
+        PyCut Tab import in svg viewer
+        '''
+        NB_SEGMENTS = 12
+        angles = [ float(k * M_PI )/ (NB_SEGMENTS) for k in range(NB_SEGMENTS*2 +1)]
+
+        discretized_svg_path : List[complex] = [ complex( \
+                    center[0] + radius*math.cos(angle), 
+                    center[1] + radius*math.sin(angle) ) for angle in angles]
 
         svg_path = svgpathtools.Path()
 
-        for discretized_svg_path in discretized_svg_paths:
-            for i in range(len(discretized_svg_path)-1):
-                start = discretized_svg_path[i]
-                end   = discretized_svg_path[i+1]
+        for i in range(len(discretized_svg_path)-1):
+            start = discretized_svg_path[i]
+            end   = discretized_svg_path[i+1]
 
-                svg_path.append(svgpathtools.Line(start, end))
+            svg_path.append(svgpathtools.Line(start, end))
 
-        return SvgPath(prefix, {'d': svg_path.d(), 'fill-rule': 'evenodd'})
-
-    def toShapelyPolygon(self) -> shapely.geometry.Polygon:
-        '''
-        '''
-        path = self.toClipperPath()
-
-        pts = [ (pt.X, pt.Y) for pt in path ]
-    
-        return shapely.geometry.Polygon(pts)
-
+        return SvgPath("pycut_tab", {'d': svg_path.d()})
 
 
 
@@ -282,11 +318,6 @@ class SvgTransformer:
             
             if tag in shapes_types:
                 shapes.append(element)
-
-        # lxml - exception with svg xml header with encoding utf-8
-        #
-        #tree = etree.parse(StringIO(self.svg))
-        #shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon" or local-name()="line" or local-name()="polyline"]')
 
         return shapes
         

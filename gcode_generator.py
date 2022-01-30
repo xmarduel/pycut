@@ -19,10 +19,9 @@ from typing import List
 from typing import Dict
 from typing import Any
 
-#from clipper_613 import clipper_613 as ClipperLib
-from clipper_642 import clipper_642 as ClipperLib
+import shapely.geometry as shapely_geom
 
-from clipper_utils import ClipperUtils
+from  shapely_utils import ShapelyUtils
 
 from svgpathutils import SvgPath
 from svgviewer import SvgViewer
@@ -97,8 +96,8 @@ class ToolModel:
 
     def getCamData(self):
         result = {
-            "diameterClipper": self.diameter.toInch() * ClipperUtils.inchToClipperScale,
-            "passDepthClipper": self.passDepth.toInch() * ClipperUtils.inchToClipperScale,
+            "diameterClipper": self.diameter.toInch() * ShapelyUtils.inchToShapelyScale,
+            "passDepthClipper": self.passDepth.toInch() * ShapelyUtils.inchToShapelyScale,
             "stepover": self.stepover
         }
 
@@ -257,18 +256,17 @@ class CncOp:
 
         # the input
         self.svg_paths : List[SvgPath] = [] # to fill at "setup"
-        # the input "transformed"
-        self.clipper_paths : List[List[ClipperLib.IntPoint]] = []
-
-        # the resulting paths from the op combinaison setting + enabled svg paths
-        self.geometry = ClipperLib.PathVector()
-        # and the resulting svg paths from the combinaison, to be displayed
-        # in the svg viewer
+        # and the resulting svg paths from the combinaison, to be displayed in the svg viewer
         self.geometry_svg_paths : List[SvgPath] = []
+        
+        # the input "transformed/scaled"
+        self.shapely_lines : List[shapely_geom.LineString] = []
+        # the resulting paths from the op combinaison setting + enabled svg paths
+        self.geometry : shapely_geom.MultiPolygon = None
+        
 
         self.cam_paths = []
-        # and the resulting svg paths, to be displayed
-        # in the svg viewer
+        # and the resulting tool paths, to be displayed in the svg viewer
         self.cam_paths_svg_paths : List[SvgPath] = []
 
     def put_value(self, attr, value):
@@ -279,7 +277,7 @@ class CncOp:
     def __str__(self):
         '''
         '''
-        return "op: %s %s [%f] %s" % (self.name, self.cam_op, self.Deep, self.enabled)
+        return "op: %s %s [%f] %s" % (self.name, self.cam_op, self.cutDepth, self.enabled)
 
     def setup(self, svg_viewer: SvgViewer):
         '''
@@ -294,8 +292,10 @@ class CncOp:
     def combine(self):
         '''
         '''
+        self.shapely_polygons = []
+
         for svg_path in self.svg_paths:
-            clipper_path = svg_path.toClipperPath()
+            shapely_polygon = svg_path.toShapelyPolygon()
 
             # JSCUT
             # if (self.rawPaths[i].nonzero)
@@ -313,8 +313,10 @@ class CncOp:
 
             # actually not implemented
             if True:
-                self.clipper_paths.append(clipper_path)
+                self.shapely_polygons.append(shapely_polygon)
             else:
+                pass
+                '''
                 fillRule = ClipperLib.PolyFillType.pftNonZero  # FIXME
 
                 wrapper = ClipperLib.PathVector()
@@ -323,20 +325,32 @@ class CncOp:
                 geom = ClipperUtils.simplifyAndClean(wrapper, fillRule)
 
                 self.clipper_paths +=[path for path in geom]
+                '''
 
-        clipType = {
-            "Union": ClipperLib.ClipType.ctUnion,
-            "Intersection": ClipperLib.ClipType.ctIntersection,
-            "Difference": ClipperLib.ClipType.ctDifference,
-            "Xor": ClipperLib.ClipType.ctXor,
-        } [self.combinaison]
+        if len(self.shapely_polygons) < 2:
+            o = self.shapely_polygons[0]
+            self.geometry = shapely_geom.MultiPolygon([o])
+            return
 
-        geometry = ClipperUtils.combine(self.clipper_paths[0], self.clipper_paths[1:], clipType)
 
-        # FIXME: do I need this then ?
-        self.geometry = ClipperUtils.simplifyAndClean(geometry, ClipperLib.PolyFillType.pftNonZero)
+        o = self.shapely_polygons[0]
+        other = shapely_geom.MultiPolygon(self.shapely_polygons[1:])
 
-        #ClipperLib.dumpPaths("geometry", self.geometry)
+        if self.combinaison == "Union":
+            geometry = o.union(other)
+        if self.combinaison == "Intersection":
+            geometry = o.intersection(other)
+        if self.combinaison == "Difference":
+            geometry = o.difference(other)
+        if self.combinaison == "Xor":
+            geometry = o.symmetric_difference(other)
+
+        self.geometry = geometry
+
+        if self.geometry.__class__.__name__ == 'Polygon':
+            self.geometry = shapely_geom.MultiPolygon([self.geometry])
+
+        print(self.geometry)
 
     def calculate_geometry(self, toolModel: ToolModel):
         '''
@@ -357,70 +371,98 @@ class CncOp:
     def calculate_preview_geometry_pocket(self):
         '''
         '''
-        if len(self.geometry) != 0:
-            offset = self.margin.toInch() * ClipperUtils.inchToClipperScale
-            offset = -offset
+        if self.geometry is not None:
+            offset = self.margin.toInch() * ShapelyUtils.inchToShapelyScale
 
-            self.preview_geometry = ClipperUtils.offset(self.geometry, offset)
+            # 'left' in 'inside', and 'right' is 'outside'
+            self.preview_geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset, 'left')
 
             # always as if there were "rings"
-            self.geometry_svg_paths = [SvgPath.fromClipperPaths("pycut_geometry_pocket", self.preview_geometry)]
+            self.geometry_svg_paths = []
 
+            for poly in self.preview_geometry.geoms:
+                geometry_svg_path = SvgPath.fromShapelyPolygon("pycut_geometry_pocket", poly)
+                self.geometry_svg_paths.append(geometry_svg_path)
+        
     def calculate_preview_geometry_inside(self, toolModel: ToolModel):
         '''
         '''
-        if len(self.geometry) != 0:
-            offset = self.margin.toInch() * ClipperUtils.inchToClipperScale
-            offset = -offset
-
+        if self.geometry is not None:
+            offset = self.margin.toInch() * ShapelyUtils.inchToShapelyScale
+            
             if offset != 0:
-                geometry = ClipperUtils.offset(self.geometry, offset)
+                geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset, 'left')
             else:
                 geometry = self.geometry
 
             toolData = toolModel.getCamData()
 
-            width = self.width.toInch() * ClipperUtils.inchToClipperScale
+            width = self.width.toInch() * ShapelyUtils.inchToShapelyScale
 
             if width < toolData["diameterClipper"]:
                 width = toolData["diameterClipper"]
 
-            self.preview_geometry = ClipperUtils.diff(geometry, ClipperUtils.offset(geometry, -width))
+            self.preview_geometry = geometry.difference(ShapelyUtils.offsetMultiPolygon(geometry, width, 'left'))
+            # polygon with hole!
+            print(self.preview_geometry)
 
-            #ClipperLib.dumpPaths("geometry", self.preview_geometry)
+            if self.preview_geometry.__class__.__name__ == 'Polygon':
+                self.preview_geometry = shapely_geom.MultiPolygon([self.preview_geometry])
 
+            #print(self.preview_geometry)
+
+        self.geometry_svg_paths = []
+         
         # should have 2 paths, one inner, one outer -> show the "ring"
-        self.geometry_svg_paths = [SvgPath.fromClipperPaths("pycut_geometry_inside", self.preview_geometry)]
-
+        for poly in self.preview_geometry.geoms:
+            geometry_svg_path = SvgPath.fromShapelyPolygon("pycut_geometry_pocket", poly)
+            self.geometry_svg_paths.append(geometry_svg_path)
+        
     def calculate_preview_geometry_outside(self, toolModel: ToolModel):
         '''
         '''
-        if len(self.geometry) != 0:
-            offset = self.margin.toInch() * ClipperUtils.inchToClipperScale
+        print(self.geometry)
 
-            if offset != 0:
-                geometry = ClipperUtils.offset(self.geometry, offset)
-            else:
-                geometry = self.geometry
+        # shapely: first the outer, then the inner hole
+        toolData = toolModel.getCamData()
 
-            toolData = toolModel.getCamData()
-
-            width = self.width.toInch() * ClipperUtils.inchToClipperScale
+        if self.geometry is not None:
+            width = self.width.toInch() * ShapelyUtils.inchToShapelyScale
             if width < toolData["diameterClipper"]:
                 width = toolData["diameterClipper"]
 
-            self.preview_geometry = ClipperUtils.diff(ClipperUtils.offset(geometry, width), geometry)
+            offset = self.margin.toInch() * ShapelyUtils.inchToShapelyScale
 
-            #ClipperLib.dumpPaths("preview geometry", self.preview_geometry)
+            offset_plus_width = offset + width
+            #offset_plus_width = 40000
 
+            if offset_plus_width != 0:
+                # 'right' in 'inside', and 'left' is 'outside'  hopefully
+                geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset_plus_width, 'right', resolution=16, join_style=1, mitre_limit=5)
+            else:
+                geometry = self.geometry
+            
+            self.preview_geometry = geometry.difference(ShapelyUtils.offsetMultiPolygon(geometry, width, 'right'))
+            
+            #self.preview_geometry = geometry
+
+            if self.preview_geometry.__class__.__name__ == 'Polygon':
+                self.preview_geometry = shapely_geom.MultiPolygon([self.preview_geometry])
+            
+            #print(self.preview_geometry)
+
+        self.geometry_svg_paths = []
+         
         # should have 2 paths, one inner, one outer -> show the "ring"
-        self.geometry_svg_paths = [SvgPath.fromClipperPaths("pycut_geometry_outside", self.preview_geometry)]
+        for poly in self.preview_geometry.geoms:
+            geometry_svg_path = SvgPath.fromShapelyPolygon("pycut_geometry_pocket", poly)
+            self.geometry_svg_paths.append(geometry_svg_path)
 
     def calculate_preview_geometry_engrave(self):
         '''
         '''
-        for clipper_path in self.geometry:
-            svg_path = SvgPath.fromClipperPath("pycut_geometry_engrave", clipper_path)
+        for shapely_line in self.geometry:
+            svg_path = SvgPath.fromShapelyLineString("pycut_geometry_engrave", shapely_line)
             self.geometry_svg_paths.append(svg_path)
 
     def calculate_preview_geometry_vpocket(self):
@@ -442,20 +484,22 @@ class CncOp:
         width = self.width
 
         geometry = self.geometry
+        print(geometry)
 
-        offset = margin.toInch() * ClipperUtils.inchToClipperScale
+        offset = margin.toInch() * ShapelyUtils.inchToShapelyScale
 
-        if cam_op == "Pocket" or cam_op == "V Pocket" or cam_op == "Inside":
-            offset = -offset
-        if cam_op != "Engrave" and offset != 0:
-            geometry = ClipperUtils.offset(geometry, offset)
+        #if cam_op == "Pocket" or cam_op == "V Pocket" or cam_op == "Inside":
+        #    offset = -offset
+        if cam_op != "Engrave" : # and offset != 9999:
+            # 'left' for Inside AND pocket
+            geometry = ShapelyUtils.offsetMultiPolygon(geometry, offset, 'right' if cam_op == 'Outside' else 'left')
+            print("offset geometry")
+            print(geometry)
 
         if cam_op == "Pocket":
             self.cam_paths = cam.pocket(geometry, toolData["diameterClipper"], 1 - toolData["stepover"], direction == "Climb")
-        elif cam_op == "V Pocket":
-            self.cam_paths = cam.vPocket(geometry, toolModel.angle, toolData["passDepthClipper"], cutDepth.toInch() * ClipperUtils.inchToClipperScale, toolData["stepover"], direction == "Climb")
         elif cam_op == "Inside" or cam_op == "Outside":
-            width = width.toInch() * ClipperUtils.inchToClipperScale
+            width = width.toInch() * ShapelyUtils.inchToShapelyScale
             if width < toolData["diameterClipper"]:
                 width = toolData["diameterClipper"]
             self.cam_paths = cam.outline(geometry, toolData["diameterClipper"], cam_op == "Inside", width, 1 - toolData["stepover"], direction == "Climb")
@@ -463,7 +507,7 @@ class CncOp:
             self.cam_paths = cam.engrave(geometry, direction == "Climb")
 
         for cam_path in self.cam_paths:
-            svg_path = SvgPath.fromClipperPath("pycut_toolpath", cam_path.path)
+            svg_path = SvgPath.fromShapelyLineString("pycut_toolpath", cam_path.path)
             self.cam_paths_svg_paths.append(svg_path)
 
 class JobModel:
@@ -516,18 +560,18 @@ class JobModel:
             if op.enabled and op.cam_paths != None :
                 for cam_path in op.cam_paths:
                     toolPath = cam_path.path
-                    for point in toolPath:
+                    for point in toolPath.coords:
                         if not foundFirst:
-                            minX = point.X
-                            maxX = point.X
-                            minY = point.Y
-                            maxY = point.Y
+                            minX = point[0]
+                            maxX = point[0]
+                            minY = point[1]
+                            maxY = point[1]
                             foundFirst = True
                         else:
-                            minX = min(minX, point.X)
-                            minY = min(minY, point.Y)
-                            maxX = max(maxX, point.X)
-                            maxY = max(maxY, point.Y)
+                            minX = min(minX, point[0])
+                            minY = min(minY, point[1])
+                            maxX = max(maxX, point[0])
+                            maxY = max(maxY, point[1])
 
         self.minX = minX
         self.maxX = maxX
@@ -564,10 +608,10 @@ class GcodeGenerator:
         '''
         if self.flipXY == False:
             # normal case
-            return self.unitConverter.fromInch(self.job.minX / ClipperUtils.inchToClipperScale) + self.offsetX
+            return self.unitConverter.fromInch(self.job.minX / ShapelyUtils.inchToShapelyScale) + self.offsetX
         else:
             # as flipped: is -maxY when "no flip"
-            return self.unitConverter.fromInch(self.job.minY / ClipperUtils.inchToClipperScale) - self.offsetY
+            return self.unitConverter.fromInch(self.job.minY / ShapelyUtils.inchToShapelyScale) - self.offsetY
 
 
     @property
@@ -577,10 +621,10 @@ class GcodeGenerator:
         '''
         if self.flipXY == False:
             # normal case
-            return self.unitConverter.fromInch(self.job.maxX / ClipperUtils.inchToClipperScale) + self.offsetX
+            return self.unitConverter.fromInch(self.job.maxX / ShapelyUtils.inchToShapelyScale) + self.offsetX
         else:
             # as flipped: is -minY when "no flip"
-            return self.unitConverter.fromInch(self.job.maxY / ClipperUtils.inchToClipperScale) - self.offsetY
+            return self.unitConverter.fromInch(self.job.maxY / ShapelyUtils.inchToShapelyScale) - self.offsetY
 
     @property
     def minY(self):
@@ -589,10 +633,10 @@ class GcodeGenerator:
         '''
         if self.flipXY == False:
             # normal case
-            return  -self.unitConverter.fromInch(self.job.maxY / ClipperUtils.inchToClipperScale) + self.offsetY
+            return  -self.unitConverter.fromInch(self.job.maxY / ShapelyUtils.inchToShapelyScale) + self.offsetY
         else:
             # as flipped: is minX when "no flip"
-            return self.unitConverter.fromInch(self.job.minX / ClipperUtils.inchToClipperScale) + self.offsetX
+            return self.unitConverter.fromInch(self.job.minX / ShapelyUtils.inchToShapelyScale) + self.offsetX
 
     @property
     def maxY(self):
@@ -601,10 +645,10 @@ class GcodeGenerator:
         '''
         if self.flipXY == False:
             # normal case
-            return  -self.unitConverter.fromInch(self.job.minY / ClipperUtils.inchToClipperScale) + self.offsetY
+            return  -self.unitConverter.fromInch(self.job.minY / ShapelyUtils.inchToShapelyScale) + self.offsetY
         else:
             # as flipped: is maxX when "no flip"
-            return self.unitConverter.fromInch(self.job.maxX / ClipperUtils.inchToClipperScale) + self.offsetX
+            return self.unitConverter.fromInch(self.job.maxX / ShapelyUtils.inchToShapelyScale) + self.offsetX
 
     def generateGcode_zeroLowerLeftOfMaterial(self):
         self.offsetX = self.unitConverter.fromInch(0)
@@ -612,13 +656,13 @@ class GcodeGenerator:
         self.generateGcode()
 
     def generateGcode_zeroLowerLeft(self):
-        self.offsetX = - self.unitConverter.fromInch(self.job.minX / ClipperUtils.inchToClipperScale)
-        self.offsetY = - self.unitConverter.fromInch(-self.job.maxY / ClipperUtils.inchToClipperScale)
+        self.offsetX = - self.unitConverter.fromInch(self.job.minX / ShapelyUtils.inchToShapelyScale)
+        self.offsetY = - self.unitConverter.fromInch(-self.job.maxY / ShapelyUtils.inchToShapelyScale)
         self.generateGcode()
 
     def generateGcode_zeroCenter(self):
-        self.offsetX = - self.unitConverter.fromInch((self.job.minX + self.job.maxX) / 2 / ClipperUtils.inchToClipperScale)
-        self.offsetY = - self.unitConverter.fromInch(-(self.job.minY + self.job.maxY) / 2 / ClipperUtils.inchToClipperScale)
+        self.offsetX = - self.unitConverter.fromInch((self.job.minX + self.job.maxX) / 2 / ShapelyUtils.inchToShapelyScale)
+        self.offsetY = - self.unitConverter.fromInch(-(self.job.minY + self.job.maxY) / 2 / ShapelyUtils.inchToShapelyScale)
         self.generateGcode()
 
     def setXOffset(self, value):
@@ -652,9 +696,9 @@ class GcodeGenerator:
         tabHeight = self.unitConverter.fromInch(self.tabsModel.height.toInch())
 
         if self.units == "inch":
-            scale = 1.0 / ClipperUtils.inchToClipperScale
+            scale = 1.0 / ShapelyUtils.inchToShapelyScale
         else:
-            scale = 25.4 / ClipperUtils.inchToClipperScale
+            scale = 25.4 / ShapelyUtils.inchToShapelyScale
 
         gcode = ""
         if self.units == "inch":

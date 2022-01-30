@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from shapely.geometry import LineString, MultiPolygon, LinearRing, Point
+from shapely.geometry import Point
 
 a = Point(1,1).buffer(1)
 
