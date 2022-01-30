@@ -42,19 +42,20 @@ class ShapelyUtils:
         return res
 
     @classmethod
-    def offsetLine(cls, line: shapely_geom.LineString, amount: float, side, resolution=16, join_style=1, mitre_limit=5.0) -> shapely_geom.LineString:
+    def offsetLine(cls, line: shapely_geom.LineString, amount: float, side: str, resolution=16, join_style=1, mitre_limit=5.0) -> shapely_geom.LineString:
         '''
         '''
         return line.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=mitre_limit)
 
     @classmethod
-    def offsetMultiLine(cls, multiline: shapely_geom.MultiLineString, amount: float, side, resolution=16, join_style=1, mitre_limit=5.0) -> shapely_geom.MultiLineString:
+    def offsetMultiLine(cls, multiline: shapely_geom.MultiLineString, amount: float, side: str, resolution=16, join_style=1, mitre_limit=5.0) -> shapely_geom.MultiLineString:
         '''
         '''
         offseted_lines = [cls.offsetLine(line, amount, side, resolution, join_style, mitre_limit) for line in multiline.geoms ]
         
-        #  resulting linestring can be empty -> end of loop
+        # resulting linestring can be empty
         filtered_lines = []
+        
         for geom in offseted_lines:
             if geom.__class__.__name__ == 'LineString':
                 if geom.is_empty:

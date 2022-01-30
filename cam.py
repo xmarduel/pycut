@@ -325,7 +325,7 @@ class cam:
             shapely_tabs_.append(shapely_tab)
 
         # hey, multipolygons are good...
-        shapely_tabs = MultiPolygon(shapely_tabs_)
+        shapely_tabs = shapely_geom.MultiPolygon(shapely_tabs_)
 
         # 2. then "diff" the origin path with the tabs paths
         shapely_splitted_paths = shapely_openpath.difference(shapely_tabs)

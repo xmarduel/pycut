@@ -473,14 +473,9 @@ class CncOp:
     def calculate_preview_geometry_engrave(self):
         '''
         '''
-        for shapely_line in self.geometry:
-            svg_path = SvgPath.fromShapelyLineString("pycut_geometry_engrave", shapely_line)
+        for poly in self.geometry.geoms:
+            svg_path = SvgPath.fromShapelyPolygon("pycut_geometry_engrave", poly)
             self.geometry_svg_paths.append(svg_path)
-
-    def calculate_preview_geometry_vpocket(self):
-        '''
-        '''
-        pass
 
     def calculate_toolpaths(self, svgModel: SvgModel, toolModel: ToolModel, materialModel: MaterialModel):
         '''

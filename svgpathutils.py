@@ -170,7 +170,6 @@ class SvgPath:
 
         return points
 
-    
     def toShapelyLineString(self) -> shapely_geom.LineString:
         '''
         '''
@@ -230,8 +229,6 @@ class SvgPath:
     @classmethod
     def fromShapelyPolygon(cls, prefix: str, polygon: shapely_geom.Polygon) -> 'SvgPath':
         '''
-        Note:
-            only 1 path "def" consisting of 1: 
         '''
         factor = 1.0 / (ShapelyUtils.inchToShapelyScale / 25.4)
             
