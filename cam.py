@@ -23,8 +23,9 @@ from typing import Tuple
 
 from val_with_unit import ValWithUnit
 
-import shapely.geometry as shapely_geom
-from  shapely_utils import ShapelyUtils
+import shapely.geometry
+import shapely.ops
+from shapely_utils import ShapelyUtils
 
 
 class CamPath:
@@ -34,7 +35,7 @@ class CamPath:
       safeToClose:        Is it safe to close the path without retracting?
     }
     '''
-    def __init__(self, path: shapely_geom.LineString, safeToClose: bool = True):
+    def __init__(self, path: shapely.geometry.LineString, safeToClose: bool = True):
         # shapely path
         self.path = path
         # is it safe to close the path without retracting?
@@ -55,7 +56,7 @@ class cam:
         return cam.dist(p1[0], p1[1], p2[0], p2[1])
 
     @classmethod
-    def pocket(cls, geometry: shapely_geom.MultiPolygon, cutterDia: float, overlap: float, climb: bool) -> List[CamPath] :
+    def pocket(cls, geometry: shapely.geometry.MultiPolygon, cutterDia: float, overlap: float, climb: bool) -> List[CamPath] :
         '''
         Compute paths for pocket operation on Shapely geometry. 
         
@@ -79,44 +80,38 @@ class cam:
             # cannot offset ! maybe geometry too narrow for the cutter
             return []
 
-        bounds = shapely_geom.MultiLineString(current)  # JSCUT: current.slice(0)
-        allPaths : List[shapely_geom.LineString] = []
-        while current:
+        lines_ok = list(current.geoms)
+
+        bounds = shapely.geometry.MultiLineString(current)  # JSCUT: current.slice(0)
+        allPaths : List[shapely.geometry.LineString] = []
+        while lines_ok:
             #if climb:
             #    for line in current:
             #        line.reverse()
-            new_lines = [line for line in current.geoms]
-
-            allPaths =  new_lines + allPaths
+            allPaths =  lines_ok + allPaths
 
             current = ShapelyUtils.offsetMultiLine(current, cutterDia * (1 - overlap), 'left')
             if current:
-                current = ShapelyUtils.simplifyMultiLine(current, 0.0001)
-            if current:
-                for line in current.geoms:
-                    print("---- SIMPLIFY #nb pts = ", len(list(line.coords)))
-                    print("---- SIMPLIFY len = ", line.length)
-            else:
-                a = 1
-                b = 2
-
+                current = ShapelyUtils.simplifyMultiLine(current, 0.001)
             if not current:
                 break
-
-            small_enough = False
+            
+            lines_ok = []
+            
             for line in current.geoms:
-                if len(list(line.coords)) <= 2 and line.length < 0.01:
-                    small_enough = True
+                print("---- SIMPLIFY #nb pts = ", len(list(line.coords)))
+                print("---- SIMPLIFY len = ", line.length)
 
-            if small_enough:
+                if len(list(line.coords)) > 2:
+                    lines_ok.append(line)
+            
+            if not lines_ok:
                 break
-
-        #allPaths = current
             
         return cls.mergePaths(bounds, allPaths)
 
     @classmethod
-    def outline(cls, geometry: shapely_geom.MultiPolygon, cutterDia: float, isInside: bool, width: float, overlap: float, climb: bool) -> List[CamPath] :
+    def outline(cls, geometry: shapely.geometry.MultiPolygon, cutterDia: float, isInside: bool, width: float, overlap: float, climb: bool) -> List[CamPath] :
         '''
         Compute paths for outline operation on Shapely geometry. 
         
@@ -134,7 +129,7 @@ class cam:
         print(multiline)
 
         currentWidth = cutterDia
-        allPaths  : List[shapely_geom.LineString] = []
+        allPaths  : List[shapely.geometry.LineString] = []
         eachWidth = cutterDia * (1 - overlap)
 
         if isInside :
@@ -159,7 +154,7 @@ class cam:
                 for path in current.geoms:
                     coords = list(path.coords)  # is a tuple!  JSCUT current reversed in place
                     coords.reverse()
-                    reversed.append(shapely_geom.LineString(coords))
+                    reversed.append(shapely.geometry.LineString(coords))
                 allPaths = reversed + allPaths  # JSCUT: allPaths = current.concat(allPaths)
             else:
                 allPaths = [p for p in current.geoms] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
@@ -171,7 +166,7 @@ class cam:
                 # <<< XAM fix
                 current = ShapelyUtils.offsetMultiLine(current, last_delta, 'left')
                 if current :
-                    current = ShapelyUtils.simplifyMultiLine(current, 0.0001)
+                    current = ShapelyUtils.simplifyMultiLine(current, 0.001)
                 
                 if current:
                     if needReverse:
@@ -179,7 +174,7 @@ class cam:
                         for path in current.geoms:
                             coords = list(path.coords)  # is a tuple!  JSCUT current reversed in place
                             coords.reverse()
-                            reversed.append(shapely_geom.LineString(coords))
+                            reversed.append(shapely.geometry.LineString(coords))
                         allPaths = reversed + allPaths # JSCUT: allPaths = current.concat(allPaths)
                     else:
                         allPaths = [p for p in current.geoms] + allPaths # JSCUT: allPaths = current.concat(allPaths)
@@ -192,7 +187,7 @@ class cam:
 
             current = ShapelyUtils.offsetMultiLine(current, eachOffset, 'left', resolution=16)
             if current:
-                current = ShapelyUtils.simplifyMultiLine(current, 0.0001)
+                current = ShapelyUtils.simplifyMultiLine(current, 0.01)
                 print("--- next toolpath")
                 print(current)
             else:
@@ -205,7 +200,7 @@ class cam:
         return cls.mergePaths(bounds, allPaths)
         
     @classmethod
-    def engrave(cls, geometry: shapely_geom.MultiPolygon, climb: bool) -> List[CamPath] :
+    def engrave(cls, geometry: shapely.geometry.MultiPolygon, climb: bool) -> List[CamPath] :
         '''
         Compute paths for engrave operation on Shapely geometry. 
         
@@ -216,28 +211,33 @@ class cam:
         print("INITIAL multiline")
         print(multiline)
 
+        full_line = shapely.ops.linemerge(list(multiline.geoms))
+
+        if full_line.__class__.__name__ == 'LineString':
+            camPaths = [ CamPath( full_line, False) ]
+            return camPaths
+
         allPaths = []
-        for xline in geometry.geoms:
-            path = shapely_geom.LineString(xline)  # JSCUT: path = paths.slice(0)
+        for line in full_line:
+            coords = list(line.coords)  # JSCUT: path = paths.slice(0)
             if not climb:
-                path.reverse()
-            path.append(path[0])
-            allPaths.append(path)
+                coords.reverse()
+        
+            coords.append(coords[0])
+            allPaths.append(shapely.geometry.LineString(coords))
             
-        campaths = cls.mergePaths(None, allPaths)
-        for campath in campaths:
-            campath.safeToClose = True
-        return campaths
+        camPaths = [ CamPath(path, False)  for path in allPaths ]
+        return camPaths
 
     @classmethod
-    def mergePaths(cls, _bounds: shapely_geom.MultiLineString, paths: List[shapely_geom.LineString]) -> List[CamPath] :
+    def mergePaths(cls, _bounds: shapely.geometry.MultiLineString, paths: List[shapely.geometry.LineString]) -> List[CamPath] :
         '''
         Try to merge paths. A merged path doesn't cross outside of bounds. 
         '''
         if _bounds and len(_bounds.geoms) > 0:
             bounds = _bounds
         else: 
-            bounds = shapely_geom.MultiLineString()
+            bounds = shapely.geometry.MultiLineString()
  
 
         # std list
@@ -249,14 +249,14 @@ class cam:
         pathEndPoint = currentPath[-1]
         pathStartPoint = currentPath[0]
 
-        # close if start/end poitn not equal
+        # close if start/end point not equal
         if pathEndPoint[0] != pathStartPoint[0] or pathEndPoint[1] != pathStartPoint[1]:
             currentPath = currentPath + [pathStartPoint]
         
         currentPoint = currentPath[-1]
         paths[0] = [] # empty
 
-        mergedPaths : List[shapely_geom.LineString] = [] 
+        mergedPaths : List[shapely.geometry.LineString] = [] 
         numLeft = len(paths) - 1
 
         while numLeft > 0 :
@@ -295,12 +295,12 @@ class cam:
         camPaths : List[CamPath] = []
         for path in mergedPaths:
             safeToClose = not ShapelyUtils.crosses(bounds, path[0], path[-1])
-            camPaths.append( CamPath( shapely_geom.LineString(path), safeToClose) )
+            camPaths.append( CamPath( shapely.geometry.LineString(path), safeToClose) )
 
         return camPaths
 
     @classmethod
-    def separateTabs(cls, origPath: shapely_geom.LineString, tabs: List['Tab']) -> List[shapely_geom.LineString]:
+    def separateTabs(cls, origPath: shapely.geometry.LineString, tabs: List['Tab']) -> List[shapely.geometry.LineString]:
         '''
         from a "normal" tool path, split this path into a list of "partial" paths
         avoiding the tabs areas
@@ -312,7 +312,7 @@ class cam:
 
         pts = list(origPath.coords)
 
-        shapely_openpath = LineString(pts)
+        shapely_openpath = shapely.geometry.LineString(pts)
 
         print("origPath", origPath)
         print("origPath", shapely_openpath)
@@ -325,7 +325,7 @@ class cam:
             shapely_tabs_.append(shapely_tab)
 
         # hey, multipolygons are good...
-        shapely_tabs = shapely_geom.MultiPolygon(shapely_tabs_)
+        shapely_tabs = shapely.geometry.MultiPolygon(shapely_tabs_)
 
         # 2. then "diff" the origin path with the tabs paths
         shapely_splitted_paths = shapely_openpath.difference(shapely_tabs)
@@ -334,10 +334,10 @@ class cam:
         print("splitted_paths", shapely_splitted_paths)
 
         if shapely_splitted_paths.__class__.__name__ == 'LineString':
-            shapely_splitted_paths = shapely_geom.MultiLineString([shapely_splitted_paths])
+            shapely_splitted_paths = shapely.geometry.MultiLineString([shapely_splitted_paths])
 
         # back to shapely...
-        paths : List[shapely_geom.LineString] = []
+        paths : List[shapely.geometry.LineString] = []
         for shapely_splitted_path in shapely_splitted_paths.geoms:
             intpt_vector = []
             xy = shapely_splitted_path.xy
@@ -349,17 +349,17 @@ class cam:
         paths = cls.mergeCompatiblePaths(paths)
         # <<< XAM
 
-        shapely_paths = [shapely_geom.LineString(path) for path in paths]
+        shapely_paths = [shapely.geometry.LineString(path) for path in paths]
         return shapely_paths
 
     @classmethod
-    def mergeCompatiblePaths(cls, paths: List[shapely_geom.LineString]) -> List[shapely_geom.LineString]:
+    def mergeCompatiblePaths(cls, paths: List[shapely.geometry.LineString]) -> List[shapely.geometry.LineString]:
         '''
         This is a post-processing step to clipper-6.4.2 where found separated paths can be merged together,
         leading to less separated paths
         '''
         # ------------------------------------------------------------------------------------------------
-        def pathsAreCompatible(path1: shapely_geom.LineString, path2: shapely_geom.LineString) -> bool:
+        def pathsAreCompatible(path1: shapely.geometry.LineString, path2: shapely.geometry.LineString) -> bool:
             '''
             test if the 2 paths have their end point/start point compatible (the same)
             '''
@@ -372,7 +372,7 @@ class cam:
 
             return False
 
-        def mergePathIntoPath(path1: shapely_geom.LineString, path2: shapely_geom.LineString) -> bool:
+        def mergePathIntoPath(path1: shapely.geometry.LineString, path2: shapely.geometry.LineString) -> bool:
             '''
             merge the 2 paths if their end point/start point are compatible (ie the same)
             '''
@@ -384,7 +384,7 @@ class cam:
                 path1 += path2[1:]
                 return True
 
-        def buildPathsCompatibilityTable(paths: List[shapely_geom.LineString]) -> Dict[List,int]:
+        def buildPathsCompatibilityTable(paths: List[shapely.geometry.LineString]) -> Dict[List,int]:
             '''
             for all paths in the list of paths, check first which ones can be merged
             '''

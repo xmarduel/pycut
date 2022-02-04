@@ -12,11 +12,8 @@ import xml.etree.ElementTree as etree
 
 import numpy as np
 import svgpathtools
+import shapely.geometry
 
-import shapely
-import shapely.geometry as shapely_geom
-
-from  shapely_utils import ShapelyUtils
 
 M_PI = math.acos(-1)
 
@@ -38,14 +35,14 @@ class SvgPath:
     - the discretization of a svg_path results in a numpy array, noted: np_svg_path
     - a shapely path (LineString) is noted: shapely_path
     '''
-    PYCUT_SAMPLE_LEN_COEFF = 1 # is in jsCut 1.0/0.01 ie the same
+    PYCUT_SAMPLE_LEN_COEFF = 10 # 10 points per "svg unit" ie arc of len 10 -> 100 pts discretization
     PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5 # is in jsCut 1
 
     @classmethod
-    def set_arc_precision(cls, arc_min_segments_length):
+    def set_arc_precision(cls, arc_precision):
         '''
         '''
-        cls.PYCUT_SAMPLE_LEN_COEFF = 1.0 / arc_min_segments_length
+        cls.PYCUT_SAMPLE_LEN_COEFF = 1.0 / arc_precision
 
     @classmethod
     def set_arc_min_nb_segments(cls, arc_min_nb_segments):
@@ -54,11 +51,9 @@ class SvgPath:
         cls.PYCUT_SAMPLE_MIN_NB_SEGMENTS = arc_min_nb_segments
 
     @classmethod
-    def read_svg_shapes_as_paths(cls, svg: str) -> Dict[str,Tuple[Dict[str,str],svgpathtools.Path]] :
+    def svg2paths_from_string(cls, svg: str) :
         '''
         '''
-        svg_shapes = {}
-
         # a tmp file
         with tempfile.TemporaryDirectory() as tmpdir:
             filename = os.path.join(tmpdir, 'temp_svg.svg')
@@ -69,18 +64,27 @@ class SvgPath:
 
             paths, attributes = svgpathtools.svg2paths(filename)
 
-            for k, path in enumerate(paths):
-                attribs = attributes[k]
+            return paths, attributes
 
-                path_id = attribs.get('id', None)
-                print("============= path %s =================" % path_id)
-                #print(path)
-                #print(attribs)
+        return None, None
 
-                if path_id is None:
-                    continue
+    @classmethod
+    def read_svg_shapes_as_paths(cls, svg: str) -> Dict[str,Tuple[Dict[str,str],svgpathtools.Path]] :
+        '''
+        '''
+        svg_shapes = {}
 
-                svg_shapes[path_id] = (attribs, path)
+        paths, attributes = cls.svg2paths_from_string(svg)
+
+        for k, path in enumerate(paths):
+            attribs = attributes[k]
+
+            path_id = attribs.get('id', None)
+            print("============= path %s =================" % path_id)
+
+            if path_id is None:
+                continue
+            svg_shapes[path_id] = (attribs, path)
 
         return svg_shapes
 
@@ -170,45 +174,35 @@ class SvgPath:
 
         return points
 
-    def toShapelyLineString(self) -> shapely_geom.LineString:
+    def toShapelyLineString(self) -> shapely.geometry.LineString:
         '''
         '''
         np_svg_path = self.discretize()
 
-        coordinates = []
+        coordinates = [ (complex_pt.real, complex_pt.imag)  for complex_pt in np_svg_path ]
 
-        for complex_pt in np_svg_path:
-            pt = ( \
-                complex_pt.real * (ShapelyUtils.inchToShapelyScale / 25.4), \
-                complex_pt.imag * (ShapelyUtils.inchToShapelyScale / 25.4)  \
-            )
-
-            coordinates.append(pt)
-
-        line = shapely_geom.LineString(coordinates)
+        line = shapely.geometry.LineString(coordinates)
 
         return line
 
-    def toShapelyPolygon(self) -> shapely_geom.Polygon:
+    def toShapelyPolygon(self) -> shapely.geometry.Polygon:
         '''
         '''
         line = self.toShapelyLineString()
-        poly = shapely_geom.Polygon(line)
+        poly = shapely.geometry.Polygon(line)
 
         # set the right orientation for this polygon
-        poly = shapely_geom.polygon.orient(poly)
+        poly = shapely.geometry.polygon.orient(poly)
     
         return poly
 
     @classmethod
-    def fromShapelyLineString(cls, prefix: str, shapely_path: shapely_geom.LineString) -> 'SvgPath':
+    def fromShapelyLineString(cls, prefix: str, shapely_path: shapely.geometry.LineString) -> 'SvgPath':
         '''
         '''
         pts = list(shapely_path.coords)
 
-        discretized_svg_path : List[complex] = [ complex( \
-                    pt[0] / (ShapelyUtils.inchToShapelyScale / 25.4), 
-                    pt[1] / (ShapelyUtils.inchToShapelyScale / 25.4)) for pt in pts]
+        discretized_svg_path : List[complex] = [ complex(pt[0], pt[1]) for pt in pts]
 
         svg_path = svgpathtools.Path()
 
@@ -227,14 +221,10 @@ class SvgPath:
         return SvgPath(prefix, {'d': svg_path.d(), 'fill-rule': 'nonzero'})
 
     @classmethod
-    def fromShapelyPolygon(cls, prefix: str, polygon: shapely_geom.Polygon) -> 'SvgPath':
+    def fromShapelyPolygon(cls, prefix: str, polygon: shapely.geometry.Polygon) -> 'SvgPath':
         '''
         '''
-        factor = 1.0 / (ShapelyUtils.inchToShapelyScale / 25.4)
-            
-        poly_scaled = shapely.affinity.scale(polygon, xfact=factor, yfact=factor, zfact=factor, origin=(0,0))
-
-        path_str = poly_scaled.svg()
+        path_str = polygon.svg()
 
         svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
             version="1.1">
@@ -243,20 +233,12 @@ class SvgPath:
             </g> 
         </svg>''' % path_str
 
-        with tempfile.TemporaryDirectory() as tmpdir:
-            filename = os.path.join(tmpdir, 'temp_svg.svg')
-            
-            fp = open(filename, "w")
-            fp.write(svg)
-            fp.close()
+        paths, attributes = cls.svg2paths_from_string(svg)
 
-            paths, attributes = svgpathtools.svg2paths(filename)
+        attribs = attributes[0]
+        attribs["fill"] = "#000000"
 
-            attribs = attributes[0]
-            attribs["fill"] = "#000000"
-
-            return SvgPath(prefix, attribs) 
-
+        return SvgPath(prefix, attribs) 
 
     @classmethod
     def fromCircleDef(cls, center, radius) -> 'SvgPath':

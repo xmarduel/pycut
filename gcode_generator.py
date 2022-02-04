@@ -20,6 +20,7 @@ from typing import Dict
 from typing import Any
 
 import shapely.geometry as shapely_geom
+import shapely.ops as shapely_ops
 import shapely
 
 from  shapely_utils import ShapelyUtils
@@ -56,6 +57,15 @@ class UnitConverter:
             return ValWithUnit(x, "inch")
         else:
             return ValWithUnit(x * 25.4, "mm")
+
+    def fromMm(self, x):
+        '''
+        Convert x from mm to the current unit
+        '''
+        if self.units == "inch":
+            return ValWithUnit(x / 25.4, "inch")
+        else:
+            return ValWithUnit(x, "mm")
 
 class GcodeModel:
     '''
@@ -96,9 +106,10 @@ class ToolModel:
         self.cutRate = ValWithUnit(40, self.units)
 
     def getCamData(self):
+        ''' convert to the gcode units FIXME actual per default mm '''
         result = {
-            "diameterClipper": self.diameter.toInch() * ShapelyUtils.inchToShapelyScale,
-            "passDepthClipper": self.passDepth.toInch() * ShapelyUtils.inchToShapelyScale,
+            "diameterTool": self.diameter.toMm(),
+            "passDepthTool": self.passDepth.toMm(),
             "stepover": self.stepover
         }
 
@@ -113,15 +124,15 @@ class MaterialModel:
         self.matZOrigin = "Top"
         self.matClearance = ValWithUnit(0.1, self.matUnits)
 
-        # from the svg size, the dimension of the material in inches
-        self.sizeX = ValWithUnit(100/25.4, "inch") # default
-        self.sizeY = ValWithUnit(100/25.4, "inch") # default
+        # from the svg size, the dimension of the material in mm
+        self.sizeX = ValWithUnit(100.0, "mm") # default
+        self.sizeY = ValWithUnit(100.0, "mm") # default
 
     def setMaterialSizeX(self, x: ValWithUnit):
-        self.sizeX = x.toInch()
+        self.sizeX = x.toMm()
 
     def setMaterialSizeY(self, y: ValWithUnit):
-        self.sizeY = y.toInch()
+        self.sizeY = y.toMm()
 
     @property
     def matBotZ(self):
@@ -330,12 +341,25 @@ class CncOp:
 
         if len(self.shapely_polygons) < 2:
             o = self.shapely_polygons[0]
+
+            print("combine (noop):")
+            print(o)
+
             self.geometry = shapely_geom.MultiPolygon([o])
             return
 
 
+        print("as lines")
+        for poly in self.shapely_polygons:
+            line = shapely_geom.LineString(poly.exterior.coords)
+            print(line)
+
         o = self.shapely_polygons[0]
         other = shapely_geom.MultiPolygon(self.shapely_polygons[1:])
+
+        print("combine:")
+        print(o)
+        print(other)
 
         if self.combinaison == "Union":
             geometry = o.union(other)
@@ -346,23 +370,29 @@ class CncOp:
         if self.combinaison == "Xor":
             geometry = o.symmetric_difference(other)
 
+        print("--> result:")
+        print(geometry)
+        
         self.geometry = geometry
 
         # what!! result may be not well orienteted!!
         if self.geometry.__class__.__name__ == 'Polygon':
             # fix orientation
+            self.geometry = ShapelyUtils.reorder_poly_points(self.geometry)
+
             self.geometry = shapely.geometry.polygon.orient(self.geometry)
             self.geometry = shapely_geom.MultiPolygon([self.geometry])
         else:
             # fix orientation
             fixed_polys = []
             for poly in self.geometry:
+                poly = ShapelyUtils.reorder_poly_points(poly)
+
                 fixed_poly = shapely.geometry.polygon.orient(poly)
                 fixed_polys.append(fixed_poly)
             self.geometry = shapely_geom.MultiPolygon(fixed_polys)
 
-
-
+        print("--> result - reoriented:")
         print(self.geometry)
 
     def calculate_geometry(self, toolModel: ToolModel):
@@ -378,17 +408,18 @@ class CncOp:
             self.calculate_preview_geometry_outside(toolModel)
         elif self.cam_op == "Engrave":
             self.calculate_preview_geometry_engrave()
-        elif self.cam_op == "VPocket":
-            self.calculate_preview_geometry_vpocket()
 
     def calculate_preview_geometry_pocket(self):
         '''
         '''
         if self.geometry is not None:
-            offset = self.margin.toInch() * ShapelyUtils.inchToShapelyScale
+            offset = self.margin.toMm()
 
             # 'left' in 'inside', and 'right' is 'outside'
             self.preview_geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset, 'left')
+
+            print("preview geometry (with offset)")
+            print(self.preview_geometry)
 
             # always as if there were "rings"
             self.geometry_svg_paths = []
@@ -401,7 +432,7 @@ class CncOp:
         '''
         '''
         if self.geometry is not None:
-            offset = self.margin.toInch() * ShapelyUtils.inchToShapelyScale
+            offset = self.margin.toMm()
             
             if offset != 0:
                 geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset, 'left')
@@ -410,19 +441,16 @@ class CncOp:
 
             toolData = toolModel.getCamData()
 
-            width = self.width.toInch() * ShapelyUtils.inchToShapelyScale
+            width = self.width.toMm()
 
-            if width < toolData["diameterClipper"]:
-                width = toolData["diameterClipper"]
+            if width < toolData["diameterTool"]:
+                width = toolData["diameterTool"]
 
             self.preview_geometry = geometry.difference(ShapelyUtils.offsetMultiPolygon(geometry, width, 'left'))
             # polygon with hole!
-            print(self.preview_geometry)
 
             if self.preview_geometry.__class__.__name__ == 'Polygon':
                 self.preview_geometry = shapely_geom.MultiPolygon([self.preview_geometry])
-
-            #print(self.preview_geometry)
 
         self.geometry_svg_paths = []
          
@@ -434,17 +462,15 @@ class CncOp:
     def calculate_preview_geometry_outside(self, toolModel: ToolModel):
         '''
         '''
-        print(self.geometry)
-
         # shapely: first the outer, then the inner hole
         toolData = toolModel.getCamData()
 
         if self.geometry is not None:
-            width = self.width.toInch() * ShapelyUtils.inchToShapelyScale
-            if width < toolData["diameterClipper"]:
-                width = toolData["diameterClipper"]
+            width = self.width.toMm()
+            if width < toolData["diameterTool"]:
+                width = toolData["diameterTool"]
 
-            offset = self.margin.toInch() * ShapelyUtils.inchToShapelyScale
+            offset = self.margin.toMm()
 
             offset_plus_width = offset + width
 
@@ -460,8 +486,6 @@ class CncOp:
 
             if self.preview_geometry.__class__.__name__ == 'Polygon':
                 self.preview_geometry = shapely_geom.MultiPolygon([self.preview_geometry])
-            
-            #print(self.preview_geometry)
 
         self.geometry_svg_paths = []
          
@@ -491,23 +515,22 @@ class CncOp:
         width = self.width
 
         geometry = self.geometry
-        print(geometry)
 
-        offset = margin.toInch() * ShapelyUtils.inchToShapelyScale
+        offset = margin.toMm()
 
         if cam_op != "Engrave" : # and offset != 9999:
             # 'left' for Inside AND pocket
             geometry = ShapelyUtils.offsetMultiPolygon(geometry, offset, 'right' if cam_op == 'Outside' else 'left')
-            print("offset geometry")
+            print("toolpath - offset geometry")
             print(geometry)
 
         if cam_op == "Pocket":
-            self.cam_paths = cam.pocket(geometry, toolData["diameterClipper"], 1 - toolData["stepover"], direction == "Climb")
+            self.cam_paths = cam.pocket(geometry, toolData["diameterTool"], 1 - toolData["stepover"], direction == "Climb")
         elif cam_op == "Inside" or cam_op == "Outside":
-            width = width.toInch() * ShapelyUtils.inchToShapelyScale
-            if width < toolData["diameterClipper"]:
-                width = toolData["diameterClipper"]
-            self.cam_paths = cam.outline(geometry, toolData["diameterClipper"], cam_op == "Inside", width, 1 - toolData["stepover"], direction == "Climb")
+            width = width.toMm()
+            if width < toolData["diameterTool"]:
+                width = toolData["diameterTool"]
+            self.cam_paths = cam.outline(geometry, toolData["diameterTool"], cam_op == "Inside", width, 1 - toolData["stepover"], direction == "Climb")
         elif cam_op == "Engrave":
             self.cam_paths = cam.engrave(geometry, direction == "Climb")
 
@@ -613,10 +636,10 @@ class GcodeGenerator:
         '''
         if self.flipXY == False:
             # normal case
-            return self.unitConverter.fromInch(self.job.minX / ShapelyUtils.inchToShapelyScale) + self.offsetX
+            return self.unitConverter.fromMm(self.job.minX) + self.offsetX
         else:
             # as flipped: is -maxY when "no flip"
-            return self.unitConverter.fromInch(self.job.minY / ShapelyUtils.inchToShapelyScale) - self.offsetY
+            return self.unitConverter.fromMm(self.job.minY) - self.offsetY
 
 
     @property
@@ -626,10 +649,10 @@ class GcodeGenerator:
         '''
         if self.flipXY == False:
             # normal case
-            return self.unitConverter.fromInch(self.job.maxX / ShapelyUtils.inchToShapelyScale) + self.offsetX
+            return self.unitConverter.fromMm(self.job.maxX) + self.offsetX
         else:
             # as flipped: is -minY when "no flip"
-            return self.unitConverter.fromInch(self.job.maxY / ShapelyUtils.inchToShapelyScale) - self.offsetY
+            return self.unitConverter.fromMm(self.job.maxY) - self.offsetY
 
     @property
     def minY(self):
@@ -638,10 +661,10 @@ class GcodeGenerator:
         '''
         if self.flipXY == False:
             # normal case
-            return  -self.unitConverter.fromInch(self.job.maxY / ShapelyUtils.inchToShapelyScale) + self.offsetY
+            return  -self.unitConverter.fromMm(self.job.maxY) + self.offsetY
         else:
             # as flipped: is minX when "no flip"
-            return self.unitConverter.fromInch(self.job.minX / ShapelyUtils.inchToShapelyScale) + self.offsetX
+            return self.unitConverter.fromMm(self.job.minX) + self.offsetX
 
     @property
     def maxY(self):
@@ -650,24 +673,24 @@ class GcodeGenerator:
         '''
         if self.flipXY == False:
             # normal case
-            return  -self.unitConverter.fromInch(self.job.minY / ShapelyUtils.inchToShapelyScale) + self.offsetY
+            return  -self.unitConverter.fromMm(self.job.minY) + self.offsetY
         else:
             # as flipped: is maxX when "no flip"
-            return self.unitConverter.fromInch(self.job.maxX / ShapelyUtils.inchToShapelyScale) + self.offsetX
+            return self.unitConverter.fromMm(self.job.maxX) + self.offsetX
 
     def generateGcode_zeroLowerLeftOfMaterial(self):
-        self.offsetX = self.unitConverter.fromInch(0)
-        self.offsetY = self.unitConverter.fromInch(self.materialModel.sizeY)
+        self.offsetX = self.unitConverter.fromMm(0)
+        self.offsetY = self.unitConverter.fromMm(self.materialModel.sizeY)
         self.generateGcode()
 
     def generateGcode_zeroLowerLeft(self):
-        self.offsetX = - self.unitConverter.fromInch(self.job.minX / ShapelyUtils.inchToShapelyScale)
-        self.offsetY = - self.unitConverter.fromInch(-self.job.maxY / ShapelyUtils.inchToShapelyScale)
+        self.offsetX = - self.unitConverter.fromMm(self.job.minX)
+        self.offsetY = - self.unitConverter.fromMm(-self.job.maxY)
         self.generateGcode()
 
     def generateGcode_zeroCenter(self):
-        self.offsetX = - self.unitConverter.fromInch((self.job.minX + self.job.maxX) / 2 / ShapelyUtils.inchToShapelyScale)
-        self.offsetY = - self.unitConverter.fromInch(-(self.job.minY + self.job.maxY) / 2 / ShapelyUtils.inchToShapelyScale)
+        self.offsetX = - self.unitConverter.fromMm((self.job.minX + self.job.maxX) / 2)
+        self.offsetY = - self.unitConverter.fromMm(-(self.job.minY + self.job.maxY) / 2)
         self.generateGcode()
 
     def setXOffset(self, value):
@@ -692,18 +715,19 @@ class GcodeGenerator:
         if len(cnc_ops) == 0:
             return
 
-        safeZ = self.unitConverter.fromInch(self.materialModel.matZSafeMove.toInch())
-        rapidRate = int(self.unitConverter.fromInch(self.toolModel.rapidRate.toInch()))
-        plungeRate = int(self.unitConverter.fromInch(self.toolModel.plungeRate.toInch()))
-        cutRate = int(self.unitConverter.fromInch(self.toolModel.cutRate.toInch()))
-        passDepth = self.unitConverter.fromInch(self.toolModel.passDepth.toInch())
-        topZ = self.unitConverter.fromInch(self.materialModel.matTopZ.toInch())
-        tabHeight = self.unitConverter.fromInch(self.tabsModel.height.toInch())
+        safeZ = self.unitConverter.fromMm(self.materialModel.matZSafeMove.toMm())
+        rapidRate = int(self.unitConverter.fromMm(self.toolModel.rapidRate.toMm()))
+        plungeRate = int(self.unitConverter.fromMm(self.toolModel.plungeRate.toMm()))
+        cutRate = int(self.unitConverter.fromMm(self.toolModel.cutRate.toMm()))
+        passDepth = self.unitConverter.fromMm(self.toolModel.passDepth.toMm())
+        topZ = self.unitConverter.fromMm(self.materialModel.matTopZ.toMm())
+        tabHeight = self.unitConverter.fromMm(self.tabsModel.height.toMm())
 
-        if self.units == "inch":
-            scale = 1.0 / ShapelyUtils.inchToShapelyScale
-        else:
-            scale = 25.4 / ShapelyUtils.inchToShapelyScale
+        #if self.units == "inch":
+        #    scale = 1.0
+        #else:
+        #    scale = 25.4
+        scale = 1
 
         gcode = ""
         if self.units == "inch":
@@ -718,9 +742,9 @@ class GcodeGenerator:
             gcode += f"M3 S{self.gcodeModel.spindleSpeed}\r\n"
 
         for idx, cnc_op in enumerate(cnc_ops):
-            cutDepth = self.unitConverter.fromInch(cnc_op.cutDepth.toInch())
+            cutDepth = self.unitConverter.fromMm(cnc_op.cutDepth.toMm())
             botZ = ValWithUnit(topZ - cutDepth, self.units)
-            tabZ = self.unitConverter.fromInch(topZ.toInch() - cutDepth.toInch() + tabHeight.toInch())
+            tabZ = self.unitConverter.fromMm(topZ.toMm() - cutDepth.toMm() + tabHeight.toMm())
 
             nb_paths = len(cnc_op.cam_paths)  # in use!
 

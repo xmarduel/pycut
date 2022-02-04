@@ -929,10 +929,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         self.job = job = self.get_jobmodel()
 
-        for cnc_op in job.operations:
-            cnc_op.setup(self.svg_viewer)
-            cnc_op.calculate_geometry(job.toolModel)
-
         generator = GcodeGenerator(job)
         generator.generateGcode_zeroLowerLeftOfMaterial()
 
@@ -943,9 +939,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         self.job = job = self.get_jobmodel()
 
-        for cnc_op in job.operations:
-            cnc_op.setup(self.svg_viewer)
-            cnc_op.calculate_geometry(job.toolModel)
+        ok = self.jobmodel_check_toolpaths()
+        if not ok:
+            return
 
         generator = GcodeGenerator(job)
         generator.generateGcode_zeroLowerLeft()
@@ -957,9 +953,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         self.job = job = self.get_jobmodel()
 
-        for cnc_op in job.operations:
-            cnc_op.setup(self.svg_viewer)
-            cnc_op.calculate_geometry(job.toolModel)
+        ok = self.jobmodel_check_toolpaths()
+        if not ok:
+            return
+
+        ok = self.jobmodel_check_toolpaths()
+        if not ok:
+            return
 
         generator = GcodeGenerator(job)
         generator.generateGcode_zeroCenter()
@@ -983,6 +983,18 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.job = job = self.get_jobmodel()
 
+        ok = self.jobmodel_check_toolpaths()
+        if not ok:
+            return
+
+        generator = GcodeGenerator(job)
+        generator.generateGcode()
+
+        self.after_gcode_generation(generator)
+
+    def jobmodel_check_toolpaths(self):
+        '''
+        '''
         has_toolpaths = False
         for op in self.job.operations:
             if len(op.cam_paths) > 0:
@@ -996,15 +1008,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             msgBox.setInformativeText("Maybe is the geometry too narrow for the cutter?")
             msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
             msgBox.exec()
-            return
-
-        for cnc_op in job.operations:
-            cnc_op.setup(self.svg_viewer)
-
-        generator = GcodeGenerator(job)
-        generator.generateGcode()
-
-        self.after_gcode_generation(generator)
+            
+        return has_toolpaths
 
     def after_gcode_generation(self, generator: GcodeGenerator):
         '''

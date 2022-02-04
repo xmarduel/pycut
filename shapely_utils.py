@@ -1,31 +1,26 @@
 
+import math
+
 from typing import Tuple
 
-import shapely.geometry as shapely_geom
+import shapely.geometry
 
 
 class ShapelyUtils:
     '''
-    Wrapper functions on Shapely
+    Helper functions on Shapely
     '''
-    inchToShapelyScale = 1  # Scale inch to Shapely
-    cleanPolyDist = inchToShapelyScale / 1
-
-    arcTolerance = 2.5 # like jscut
-
-    
     @classmethod
-    def diff(cls, paths1: shapely_geom.MultiLineString, paths2: shapely_geom.MultiLineString) ->  shapely_geom.MultiLineString:
+    def diff(cls, paths1: shapely.geometry.MultiLineString, paths2: shapely.geometry.MultiLineString) -> shapely.geometry.MultiLineString:
         '''
         Return difference between to Clipper geometries. Returns new geometry.
         '''
         diffs = [path1.difference(path2) for (path1,path2) in zip(paths1.geoms, paths2.geoms) ]
 
-        return shapely_geom.MultiLineString(diffs)
-    
+        return shapely.geometry.MultiLineString(diffs)
 
     @classmethod
-    def simplifyMultiLine(cls, multiline: shapely_geom.LineString, tol: float) -> shapely_geom.MultiLineString:
+    def simplifyMultiLine(cls, multiline: shapely.geometry.MultiLineString, tol: float) -> shapely.geometry.MultiLineString:
         '''
         '''
         lines = []
@@ -35,20 +30,20 @@ class ShapelyUtils:
                 lines.append(xline)
         
         if lines:
-            res = shapely_geom.MultiLineString(lines)
+            res = shapely.geometry.MultiLineString(lines)
         else:
             res = None
 
         return res
 
     @classmethod
-    def offsetLine(cls, line: shapely_geom.LineString, amount: float, side: str, resolution=16, join_style=1, mitre_limit=5.0) -> shapely_geom.LineString:
+    def offsetLine(cls, line: shapely.geometry.LineString, amount: float, side: str, resolution=16, join_style=1, mitre_limit=5.0) -> shapely.geometry.LineString:
         '''
         '''
         return line.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=mitre_limit)
 
     @classmethod
-    def offsetMultiLine(cls, multiline: shapely_geom.MultiLineString, amount: float, side: str, resolution=16, join_style=1, mitre_limit=5.0) -> shapely_geom.MultiLineString:
+    def offsetMultiLine(cls, multiline: shapely.geometry.MultiLineString, amount: float, side: str, resolution=16, join_style=1, mitre_limit=5.0) -> shapely.geometry.MultiLineString:
         '''
         '''
         offseted_lines = [cls.offsetLine(line, amount, side, resolution, join_style, mitre_limit) for line in multiline.geoms ]
@@ -70,12 +65,12 @@ class ShapelyUtils:
         if len(filtered_lines) == 0:
             return None
 
-        offsetted = shapely_geom.MultiLineString(filtered_lines)
+        offsetted = shapely.geometry.MultiLineString(filtered_lines)
 
         return offsetted
 
     @classmethod
-    def offsetMultiPolygon(cls, geometry: shapely_geom.MultiPolygon, amount: float, side, resolution=16, join_style=1, mitre_limit=5.0):
+    def offsetMultiPolygon(cls, geometry: shapely.geometry.MultiPolygon, amount: float, side, resolution=16, join_style=1, mitre_limit=5.0):
         '''
         '''
         offseted_polys = []
@@ -85,57 +80,42 @@ class ShapelyUtils:
 
             linestring_offset = linestring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=5.0)
 
-            print("-- offset linestring")
-            print(linestring_offset)
-
             if linestring_offset.__class__.__name__ == 'LineString':
-                offseted_polys.append(shapely_geom.Polygon(linestring_offset))
+                offseted_polys.append(shapely.geometry.Polygon(linestring_offset))
             else:
                 for line in linestring_offset.geoms:
                     try:
-                        offseted_polys.append(shapely_geom.Polygon(line))
+                        offseted_polys.append(shapely.geometry.Polygon(line))
                     except Exception:
                         pass
 
             
-        offsetted = shapely_geom.MultiPolygon(offseted_polys)
+        offsetted = shapely.geometry.MultiPolygon(offseted_polys)
 
         return offsetted
 
     @classmethod
-    def polyToLineString(cls, poly: shapely_geom.Polygon):
+    def polyToLineString(cls, poly: shapely.geometry.Polygon):
         '''
         '''
         print(" ------------------------  poly to linestring ---")
-        print(poly)
-        #print(poly.is_ccw)
 
-        linestring = shapely_geom.LineString(poly.exterior)
-        
-        print(linestring)
-        #print(linestring.is_ccw)
-        print(" ------------------------ ")
+        linestring = shapely.geometry.LineString(poly.exterior)
 
         return linestring
 
     @classmethod
-    def polyToLinearRing(cls, poly: shapely_geom.Polygon):
+    def polyToLinearRing(cls, poly: shapely.geometry.Polygon):
         '''
         '''
         print(" ------------------------  poly to linestring ---")
-        print(poly)
-        #print(poly.is_ccw)
 
-        linearring = shapely_geom.LinearRing(list(poly.exterior.coords))
-        
-        print(linearring)
-        #print(linearring.is_ccw)
-        print(" ------------------------ ")
+        linearring = shapely.geometry.LinearRing(list(poly.exterior.coords))
 
         return linearring
 
     @classmethod
-    def multiPolyToMultiLine(cls, multipoly: shapely_geom.MultiPolygon) -> shapely_geom.MultiLineString:
+    def multiPolyToMultiLine(cls, multipoly: shapely.geometry.MultiPolygon) -> shapely.geometry.MultiLineString:
         '''
         '''
         lines = []
@@ -144,7 +124,7 @@ class ShapelyUtils:
             line = cls.polyToLineString(poly)
             lines.append(line)
         
-        multiline = shapely_geom.MultiLineString(lines)
+        multiline = shapely.geometry.MultiLineString(lines)
         
         return multiline
 
@@ -161,7 +141,7 @@ class ShapelyUtils:
         # JSCUT clipper.AddPath([p1, p2], ClipperLib.PolyType.ptSubject, False)
         # JSCUT clipper.AddPaths(bounds, ClipperLib.PolyType.ptClip, True)
 
-        p1_p2 = shapely_geom.LineString([p1,p2])
+        p1_p2 = shapely.geometry.LineString([p1,p2])
 
        
         result = p1_p2.intersection(bounds)
@@ -185,3 +165,73 @@ class ShapelyUtils:
             
             
         return True
+
+    @classmethod
+    def reorder_poly_points(cls, poly: shapely.geometry.Polygon) -> shapely.geometry.Polygon:
+        '''
+        Problem: shapely bug when outsiding a polygon where the stating point
+        in a convex corner: at that point, the offset line 'outside' is uncorrect.
+
+        Solution: start the list of points at a point in the middle of a segment
+        (if there is one)  
+        '''
+        pts = list(poly.exterior.coords)
+
+        # ----------------------------------------------------
+        def is_inside_segment(pt, pt_left, pt_right):
+            ab = (pt[0] - pt_left[0], pt[1], pt_left[1])
+            ac = (pt[0] - pt_right[0], pt[1], pt_right[1])
+
+            if (ab[0]*ab[0] + ab[1]*ab[1]) < 0.00001:
+                return False
+            if (ac[0]*ac[0] + ac[1]*ac[1]) < 0.00001:
+                return False
+
+            s1 = ab[0]
+            s1 = ab[1]
+
+            s2 = ac[0]
+            s2 = ac[1]
+            
+            # a segment ?
+            if math.fabs(s1*s2 - s2*s1) > 0.00001:
+                return False
+
+            # inside the segment ?
+            x = pt[0]
+            x1 = pt_left[0]
+            x2 = pt_right[0]
+
+            #y = pt[1]
+            #y1 = pt_left[1]
+            #y2 = pt_right[1]
+
+            if math.fabs(x2-x1) < 0.00001:
+                return False
+
+            alpha = (x-x1)/(x2-x1)
+
+            return alpha > 0
+        # -----------------------------------------------------
+
+        k_ok = None
+        
+        for k, pt in enumerate(pts):
+            pt_prev = pts[k-1] 
+            if k < len(pts) -1:
+                pt_next = pts[k+1]
+            else: 
+                pt_next = pts[0]
+
+            if is_inside_segment(pt, pt_prev, pt_next):
+                k_ok = k
+                break
+
+        # k_ok is the right start!
+
+        if k is not None:
+            pts = pts[k_ok:] + pts[:k_ok]
+
+            return shapely.geometry.Polygon(pts)
+
+        return poly
