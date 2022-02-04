@@ -52,11 +52,11 @@ class ShapelyUtils:
         filtered_lines = []
         
         for geom in offseted_lines:
-            if geom.__class__.__name__ == 'LineString':
+            if geom.geom_type == 'LineString':
                 if geom.is_empty:
                     continue
                 filtered_lines.append(geom)
-            if geom.__class__.__name__ == 'MultiLineString':
+            if geom.geom_type == 'MultiLineString':
                 for line in geom.geoms:
                     if line.is_empty:
                         continue
@@ -80,7 +80,7 @@ class ShapelyUtils:
 
             linestring_offset = linestring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=5.0)
 
-            if linestring_offset.__class__.__name__ == 'LineString':
+            if linestring_offset.geom_type == 'LineString':
                 offseted_polys.append(shapely.geometry.Polygon(linestring_offset))
             else:
                 for line in linestring_offset.geoms:
@@ -157,7 +157,7 @@ class ShapelyUtils:
             #        return False
 
        
-        if result.__class__.__name__ == 'Point':
+        if result.geom_type == 'Point':
             if result.x == p1[0] and result.y == p1[1] :
                 return False
             if result.x == p2[0] and result.y == p2[1] :

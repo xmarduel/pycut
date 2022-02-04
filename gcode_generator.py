@@ -89,6 +89,10 @@ class GcodeModel:
 class SvgModel:
     '''
     '''
+    # FIXME : read from the size file
+    sizeX = 100.0
+    sizeY = 100.0
+
     def __init__(self):
         self.pxPerInch = 96
 
@@ -125,8 +129,8 @@ class MaterialModel:
         self.matClearance = ValWithUnit(0.1, self.matUnits)
 
         # from the svg size, the dimension of the material in mm
-        self.sizeX = ValWithUnit(100.0, "mm") # default
-        self.sizeY = ValWithUnit(100.0, "mm") # default
+        self.sizeX = ValWithUnit(SvgModel.sizeX, "mm") # default
+        self.sizeY = ValWithUnit(SvgModel.sizeX, "mm") # default
 
     def setMaterialSizeX(self, x: ValWithUnit):
         self.sizeX = x.toMm()
@@ -376,7 +380,7 @@ class CncOp:
         self.geometry = geometry
 
         # what!! result may be not well orienteted!!
-        if self.geometry.__class__.__name__ == 'Polygon':
+        if self.geometry.geom_type == 'Polygon':
             # fix orientation
             self.geometry = ShapelyUtils.reorder_poly_points(self.geometry)
 
@@ -449,7 +453,7 @@ class CncOp:
             self.preview_geometry = geometry.difference(ShapelyUtils.offsetMultiPolygon(geometry, width, 'left'))
             # polygon with hole!
 
-            if self.preview_geometry.__class__.__name__ == 'Polygon':
+            if self.preview_geometry.geom_type == 'Polygon':
                 self.preview_geometry = shapely_geom.MultiPolygon([self.preview_geometry])
 
         self.geometry_svg_paths = []
@@ -484,7 +488,7 @@ class CncOp:
             
             #self.preview_geometry = geometry
 
-            if self.preview_geometry.__class__.__name__ == 'Polygon':
+            if self.preview_geometry.geom_type == 'Polygon':
                 self.preview_geometry = shapely_geom.MultiPolygon([self.preview_geometry])
 
         self.geometry_svg_paths = []

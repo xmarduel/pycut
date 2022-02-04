@@ -691,8 +691,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         if svg is None:
             
             svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
-                width="100"
-                height="100"
+                width="100mm"
+                height="100mm"
                 viewBox="0 0 100 100"
                 version="1.1">
                 <g id="text" style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583">
@@ -775,6 +775,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             fp = open(svg, "r")
             svg = fp.read()
             fp.close()
+
+            # extract dimension of material as global variable
+            sizeX, sizeY = svgpathutils.extract_svg_dimensions(svg)
+            SvgModel.sizeX = sizeX
+            SvgModel.sizeY = sizeY
 
             self.svg_viewer.set_svg(svg)
             # and the tabs if any

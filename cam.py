@@ -76,6 +76,9 @@ class cam:
 
         print("pocketing - initial offset dia/2", current)
 
+        if not current:
+            return []
+            
         if len(current.geoms) == 0:
             # cannot offset ! maybe geometry too narrow for the cutter
             return []
@@ -213,7 +216,7 @@ class cam:
 
         full_line = shapely.ops.linemerge(list(multiline.geoms))
 
-        if full_line.__class__.__name__ == 'LineString':
+        if full_line.geom_type == 'LineString':
             camPaths = [ CamPath( full_line, False) ]
             return camPaths
 
@@ -333,7 +336,7 @@ class cam:
         # 3. that's it
         print("splitted_paths", shapely_splitted_paths)
 
-        if shapely_splitted_paths.__class__.__name__ == 'LineString':
+        if shapely_splitted_paths.geom_type == 'LineString':
             shapely_splitted_paths = shapely.geometry.MultiLineString([shapely_splitted_paths])
 
         # back to shapely...
