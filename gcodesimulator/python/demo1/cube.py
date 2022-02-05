@@ -6,7 +6,7 @@ import sys
 from typing import List
 
 from PySide6.QtCore import Qt, QSize
-from PySide6.QtGui import (QOpenGLFunctions, QVector2D, QVector3D, QVector4D)
+from PySide6.QtGui import (QOpenGLFunctions, QVector2D, QVector3D, QVector4D, QMatrix4x4)
 from PySide6.QtOpenGL import (QOpenGLVertexArrayObject, QOpenGLBuffer, QOpenGLShaderProgram, QOpenGLShader)
 from PySide6.QtWidgets import (QApplication, QWidget, QHBoxLayout)
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
@@ -64,10 +64,10 @@ class Scene():
         for k, vertex in enumerate(vertices):
             self.m_data[7*k + 0] = vertex.position.x()
             self.m_data[7*k + 1] = vertex.position.y()
-            self.m_data[7*k + 1] = vertex.position.z()
-            self.m_data[7*k + 2] = vertex.color.x()
-            self.m_data[7*k + 3] = vertex.color.y()
-            self.m_data[7*k + 4] = vertex.color.z()
+            self.m_data[7*k + 2] = vertex.position.z()
+            self.m_data[7*k + 3] = vertex.color.x()
+            self.m_data[7*k + 4] = vertex.color.y()
+            self.m_data[7*k + 5] = vertex.color.z()
             self.m_data[7*k + 6] = vertex.color.w()
 
         # shared by 12 triangles -> IndexBuffer
@@ -99,14 +99,19 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
     uniform mat4   view;
     uniform mat4   projection;
     attribute vec3 position;
+    attribute vec4 color;
+    varying vec4   v_color;
+
     void main()
     {
         gl_Position = projection * view * model * vec4(position,1.0);
+
+        v_color = color;
     }  """
 
     fragment_code = """
     varying vec4 v_color;
-    void main() { gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); } """
+    void main() { gl_FragColor = v_color; } """
 
     float_size = ctypes.sizeof(ctypes.c_float) # 4 bytes
     int_size = ctypes.sizeof(ctypes.c_uint32) # 4 bytes
@@ -121,10 +126,20 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.ibo = QOpenGLBuffer()
         self.program = QOpenGLShaderProgram()
 
-        self.timer = 0
-        self.scale = 0.5
+        self.proj = QMatrix4x4()
+        self.proj.setToIdentity()
+        self.view = QMatrix4x4()
+        self.view.setToIdentity()
+        self.view.translate(QVector3D(0,0,-5))
+        self.model = QMatrix4x4()
+        self.model.setToIdentity()
 
-        id = self.startTimer(0.5) 
+        self.theta = 0.0 # degrees
+        self.phi = 0.0 # degrees
+
+        self.timer = 0
+
+        id = self.startTimer(1) 
 
     def sizeHint(self):
         return QSize(400, 400)
@@ -152,11 +167,11 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.vao.create()
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao)
 
-        self.vbo.create(QOpenGLBuffer.VertexBuffer)
+        self.vbo.create() # QOpenGLBuffer.VErtexBuffer
         self.vbo.bind()
         self.vbo.allocate(self.scene.const_vertex_data(), self.scene.nb_float * self.float_size)
 
-        self.ibo.create(QOpenGLBuffer.IndexBuffer)
+        self.ibo.create() # QOpenGLBuffer.IndexBuffer
         self.ibo.bind()
         self.ibo.allocate(self.scene.const_index_data(), self.scene.nb_int * self.int_size)
 
@@ -168,25 +183,32 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
     def setup_vertex_attribs(self):
         self.vbo.bind()
 
-        # the uniform scale
-        scaleLocation = self.program.uniformLocation("scale")
-        self.program.setUniformValue(scaleLocation, self.scale, 0.0)
+        modelLocation = self.program.uniformLocation("model")
+        self.program.setUniformValue(modelLocation, self.model)
+
+        projLocation = self.program.uniformLocation("projection")
+        self.program.setUniformValue(projLocation, self.proj)
+
+        viewLocation = self.program.uniformLocation("view")
+        self.program.setUniformValue(viewLocation, self.view)
 
         # Offset for position
         offset = 0
-        stride = 2 # nb float in a position "packet" 
+        size = 3 # nb float in a position "packet" 
+        stride = Vertex.size_in_bytes() # nb bytes in a vertex "packet" 
 
         vertexLocation = self.program.attributeLocation("position")
         self.program.enableAttributeArray(vertexLocation)
-        self.program.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, stride, Vertex.size_in_bytes())
+        self.program.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, size, stride)
 
         # Offset for color
-        offset = 8 # size of preceding data (position = QVector2D)
-        stride = 4 # nb float in a color "packet" 
+        offset = 12 # size in bytes of preceding data (position = QVector2D)
+        size = 4 # nb float in a color "packet" 
+        stride = Vertex.size_in_bytes() # nb bytes in a vertex "packet" 
 
         colorLocation =  self.program.attributeLocation("color")
         self.program.enableAttributeArray(colorLocation)
-        self.program.setAttributeBuffer(colorLocation, GL.GL_FLOAT, offset, stride, Vertex.size_in_bytes())
+        self.program.setAttributeBuffer(colorLocation, GL.GL_FLOAT, offset, size, stride)
 
         self.vbo.release()
 
@@ -197,20 +219,36 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao)
         self.program.bind()
         
-        scaleLocation = self.program.uniformLocation("scale")
-        self.program.setUniformValue(scaleLocation, self.scale, 0.0)
+        modelLocation = self.program.uniformLocation("model")
+        self.program.setUniformValue(modelLocation, self.model)
 
-        self.glDrawArrays(GL.GL_TRIANGLES, 0, self.scene.nb_vertex)
+        projLocation = self.program.uniformLocation("projection")
+        self.program.setUniformValue(projLocation, self.proj)
+
+        viewLocation = self.program.uniformLocation("view")
+        self.program.setUniformValue(viewLocation, self.view)
+
+        self.glDrawElements(GL.GL_TRIANGLES, 12*3, GL.GL_UNSIGNED_INT, self.scene.const_index_data())
+
         self.program.release()
         vao_binder = None
 
     def resizeGL(self, width, height):
-        pass
+        ratio = width / float(height)
+        self.proj.perspective(45.0, ratio, 2.0, 100.0)
 
     def timerEvent(self, event):
         self.timer += 0.25 * math.pi/180.0
-        self.scale = math.cos(self.timer)
-
+        
+        # Make cube rotate
+        self.theta += 1.0 # degrees
+        self.phi += 1.0 # degrees
+        
+        self.model = QMatrix4x4()
+        self.model.setToIdentity()
+        self.model.rotate(self.theta, 0, 0, 1)
+        self.model.rotate(self.phi, 0, 1, 0)
+        
         self.update()
 
 
