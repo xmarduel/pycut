@@ -1,5 +1,6 @@
 
 import ctypes
+import math
 import numpy as np
 import sys
 from typing import List
@@ -67,17 +68,17 @@ class Scene():
 
 class GLWidget(QOpenGLWidget, QOpenGLFunctions):
     vertex_code = """
-    uniform float scale;
+    //uniform float scale;  // sending an uniform float is buggy !!!
+    uniform vec2 scale;
     attribute vec2 position;
     attribute vec4 color;
     varying vec4 v_color;
     
     void main()
     {
-        gl_Position = vec4(0.5*position, 0.0, 1.0);
-        //gl_Position = vec4(scale*position, 0.0, 1.0); // does not work ???
+        gl_Position = vec4(scale[0]*position, 0.0, 1.0);
 
-        v_color= color;
+        v_color = color;
     } """
 
     fragment_code = """
@@ -94,6 +95,11 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.vao = QOpenGLVertexArrayObject()
         self.vbo = QOpenGLBuffer()
         self.program = QOpenGLShaderProgram()
+
+        self.timer = 0
+        self.scale = 0.5
+
+        id = self.startTimer(0.5) 
 
     def sizeHint(self):
         return QSize(400, 400)
@@ -135,7 +141,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         # the uniform scale
         scaleLocation = self.program.uniformLocation("scale")
-        self.program.setUniformValue(scaleLocation, 0.5)
+        self.program.setUniformValue(scaleLocation, self.scale, 0.0)
 
         # Offset for position
         offset = 0
@@ -161,12 +167,22 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
        
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao)
         self.program.bind()
+        
+        scaleLocation = self.program.uniformLocation("scale")
+        self.program.setUniformValue(scaleLocation, self.scale, 0.0)
+
         self.glDrawArrays(GL.GL_TRIANGLES, 0, self.scene.nb_vertex)
         self.program.release()
         vao_binder = None
 
     def resizeGL(self, width, height):
         pass
+
+    def timerEvent(self, event):
+        self.timer += 0.25 * math.pi/180.0
+        self.scale = math.cos(self.timer)
+
+        self.update()
 
 
 if __name__ == '__main__':
