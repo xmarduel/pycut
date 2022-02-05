@@ -76,15 +76,53 @@ class Ui_mainwindow(object):
 
         self.horizontalLayout.addWidget(self.label_PxPerInch)
 
-        self.spinBox_PxPerInch = QSpinBox(self.centralwidget)
-        self.spinBox_PxPerInch.setObjectName(u"spinBox_PxPerInch")
-        self.spinBox_PxPerInch.setMaximum(126)
-        self.spinBox_PxPerInch.setValue(96)
+        self.doubleSpinBox_PxPerInch = QDoubleSpinBox(self.centralwidget)
+        self.doubleSpinBox_PxPerInch.setObjectName(u"doubleSpinBox_PxPerInch")
+        self.doubleSpinBox_PxPerInch.setMaximum(999.990000000000009)
+        self.doubleSpinBox_PxPerInch.setValue(1.000000000000000)
 
-        self.horizontalLayout.addWidget(self.spinBox_PxPerInch)
+        self.horizontalLayout.addWidget(self.doubleSpinBox_PxPerInch)
 
 
         self.verticalLayoutSettingsContent.addLayout(self.horizontalLayout)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.horizontalLayout_4.setContentsMargins(8, -1, -1, -1)
+        self.label_SvgModelWidth = QLabel(self.centralwidget)
+        self.label_SvgModelWidth.setObjectName(u"label_SvgModelWidth")
+        self.label_SvgModelWidth.setFont(font1)
+
+        self.horizontalLayout_4.addWidget(self.label_SvgModelWidth)
+
+        self.doubleSpinBox_SvgModelWidth = QDoubleSpinBox(self.centralwidget)
+        self.doubleSpinBox_SvgModelWidth.setObjectName(u"doubleSpinBox_SvgModelWidth")
+        self.doubleSpinBox_SvgModelWidth.setEnabled(False)
+        self.doubleSpinBox_SvgModelWidth.setMaximum(999.990000000000009)
+
+        self.horizontalLayout_4.addWidget(self.doubleSpinBox_SvgModelWidth)
+
+
+        self.verticalLayoutSettingsContent.addLayout(self.horizontalLayout_4)
+
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.horizontalLayout_3.setContentsMargins(8, -1, -1, -1)
+        self.label_SvgModelHeight = QLabel(self.centralwidget)
+        self.label_SvgModelHeight.setObjectName(u"label_SvgModelHeight")
+        self.label_SvgModelHeight.setFont(font1)
+
+        self.horizontalLayout_3.addWidget(self.label_SvgModelHeight)
+
+        self.doubleSpinBox_SvgModelHeight = QDoubleSpinBox(self.centralwidget)
+        self.doubleSpinBox_SvgModelHeight.setObjectName(u"doubleSpinBox_SvgModelHeight")
+        self.doubleSpinBox_SvgModelHeight.setEnabled(False)
+        self.doubleSpinBox_SvgModelHeight.setMaximum(999.990000000000009)
+
+        self.horizontalLayout_3.addWidget(self.doubleSpinBox_SvgModelHeight)
+
+
+        self.verticalLayoutSettingsContent.addLayout(self.horizontalLayout_3)
 
 
         self.verticalLayoutLeft.addLayout(self.verticalLayoutSettingsContent)
@@ -417,8 +455,8 @@ class Ui_mainwindow(object):
         self.tabWidget.addTab(self.viewer, "")
         self.simulator = QWidget()
         self.simulator.setObjectName(u"simulator")
-        self.hhverticalLayout_5 = QHBoxLayout(self.simulator)
-        self.hhverticalLayout_5.setObjectName(u"hhverticalLayout_5")
+        self.horizontalLayout_5 = QHBoxLayout(self.simulator)
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.tabWidget.addTab(self.simulator, "")
         self.splitter.addWidget(self.tabWidget)
         self.operationsview_manager = PyCutOperationsTableViewManager(self.splitter)
@@ -856,7 +894,11 @@ class Ui_mainwindow(object):
         self.actionAboutQt.setText(QCoreApplication.translate("mainwindow", u"About &Qt", None))
         self.actionAboutPyCut.setText(QCoreApplication.translate("mainwindow", u"About PyCut", None))
         self.label_SvgSettings.setText(QCoreApplication.translate("mainwindow", u" Svg Settings", None))
-        self.label_PxPerInch.setText(QCoreApplication.translate("mainwindow", u"px per inch", None))
+        self.label_PxPerInch.setText(QCoreApplication.translate("mainwindow", u"user units scale factor", None))
+        self.label_SvgModelWidth.setText(QCoreApplication.translate("mainwindow", u"width", None))
+        self.doubleSpinBox_SvgModelWidth.setSuffix(QCoreApplication.translate("mainwindow", u"mm", None))
+        self.label_SvgModelHeight.setText(QCoreApplication.translate("mainwindow", u"height", None))
+        self.doubleSpinBox_SvgModelHeight.setSuffix(QCoreApplication.translate("mainwindow", u"mm", None))
         self.label_Tool.setText(QCoreApplication.translate("mainwindow", u" Tool (shared for all operations)", None))
         self.label_Tool_Plunge_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_Tool_Diameter_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))

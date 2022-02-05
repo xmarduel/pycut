@@ -776,8 +776,26 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             svg = fp.read()
             fp.close()
 
-            # extract dimension of material as global variable
-            sizeX, sizeY = svgpathutils.extract_svg_dimensions(svg)
+            # extract dimension of material as global variables in the SvgModel
+            sizeXstr, sizeYstr = svgviewer.extract_svg_dimensions(svg)
+
+            suffix = ""
+            
+            if "mm" in sizeXstr:
+                suffix = "mm"
+                sizeX, sizeY = float(sizeXstr.split("mm")[0]), float(sizeYstr.split("mm")[0])
+            elif "in" in sizeXstr:
+                suffix = "in"
+                sizeX, sizeY = float(sizeXstr.split("in")[0]), float(sizeYstr.split("in")[0])
+            else:
+                sizeX, sizeY = float(sizeXstr), float(sizeYstr)
+
+            self.ui.doubleSpinBox_SvgModelWidth.setValue(sizeX)
+            self.ui.doubleSpinBox_SvgModelHeight.setValue(sizeY)
+
+            self.ui.doubleSpinBox_SvgModelWidth.setSuffix(suffix)
+            self.ui.doubleSpinBox_SvgModelHeight.setSuffix(suffix)
+
             SvgModel.sizeX = sizeX
             SvgModel.sizeY = sizeY
 

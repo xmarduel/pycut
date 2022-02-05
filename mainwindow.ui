@@ -51,17 +51,81 @@
              </font>
             </property>
             <property name="text">
-             <string>px per inch</string>
+             <string>user units scale factor</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="spinBox_PxPerInch">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_PxPerInch">
             <property name="maximum">
-             <number>126</number>
+             <double>999.990000000000009</double>
             </property>
             <property name="value">
-             <number>96</number>
+             <double>1.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <property name="leftMargin">
+           <number>8</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_SvgModelWidth">
+            <property name="font">
+             <font>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>width</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_SvgModelWidth">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="suffix">
+             <string>mm</string>
+            </property>
+            <property name="maximum">
+             <double>999.990000000000009</double>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <property name="leftMargin">
+           <number>8</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_SvgModelHeight">
+            <property name="font">
+             <font>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>height</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_SvgModelHeight">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="suffix">
+             <string>mm</string>
+            </property>
+            <property name="maximum">
+             <double>999.990000000000009</double>
             </property>
            </widget>
           </item>

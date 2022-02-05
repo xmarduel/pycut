@@ -18,24 +18,6 @@ import shapely.geometry
 M_PI = math.acos(-1)
 
 
-def extract_svg_dimensions(svg: str):
-    '''
-    Dimension of the svg are of important when making gcode from the lower left 
-    side of the material
-    '''
-    tree = etree.fromstring(svg)
-    tree_attrib = tree.attrib
-
-    w = tree_attrib["width"]
-    h = tree_attrib["height"]
-
-    if "mm" in w:
-        return float(w.split("mm")[0]), float(h.split("mm")[0])
-    elif "in" in w:
-        return float(w.split("in")[0]), float(h.split("in")[0])
-    else:
-        return 100.0, 100.0
-
 
 class SvgPath:
     '''

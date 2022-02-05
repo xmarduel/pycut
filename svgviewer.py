@@ -485,3 +485,18 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # done
         self.fill_svg_viewer(augmented_svg)
 
+
+
+def extract_svg_dimensions(svg: str):
+    '''
+    Dimension of the svg are of importance when making gcode from the lower left 
+    side of the material
+    '''
+    tree = etree.fromstring(svg)
+    tree_attrib = tree.attrib
+
+    w = tree_attrib["width"]
+    h = tree_attrib["height"]
+
+    return w, h
+
