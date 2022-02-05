@@ -131,19 +131,22 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         # Offset for position
         offset = 0
-        stride = 2 # nb float in a position "packet" 
+        stride = Vertex.size_in_bytes() # nb bytes in a vertex "packet" 
+        size = 2 # nb float in a position "packet" 
 
         vertexLocation = self.program.attributeLocation("position")
         self.program.enableAttributeArray(vertexLocation)
-        self.program.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, stride, Vertex.size_in_bytes())
+        self.program.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, size, stride)
 
         # Offset for color
         offset = 8 # size of preceding data (position = QVector2D)
-        stride = 4 # nb float in a color "packet" 
+        stride = Vertex.size_in_bytes() # nb bytes in a vertex "packet" 
+        size = 4 # nb float in a color "packet" 
+
 
         colorLocation =  self.program.attributeLocation("color")
         self.program.enableAttributeArray(colorLocation)
-        self.program.setAttributeBuffer(colorLocation, GL.GL_FLOAT, offset, stride, Vertex.size_in_bytes())
+        self.program.setAttributeBuffer(colorLocation, GL.GL_FLOAT, offset, size, stride)
 
         self.vbo.release()
 

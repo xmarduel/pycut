@@ -124,11 +124,12 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         # Offset for position
         offset = 0
-        stride = 2 # nb float in a position "packet" 
+        stride = Vertex.size_in_bytes() # nb bytes in a Vertex 
+        size = 2 # nb float in a position "packet" 
 
         vertexLocation = self.program.attributeLocation("position")
         self.program.enableAttributeArray(vertexLocation)
-        self.program.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, stride, Vertex.size_in_bytes())
+        self.program.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, size, stride)
 
         self.vbo.release()
 

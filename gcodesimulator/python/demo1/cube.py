@@ -6,7 +6,7 @@ import sys
 from typing import List
 
 from PySide6.QtCore import Qt, QSize
-from PySide6.QtGui import (QOpenGLFunctions, QVector2D, QVector4D)
+from PySide6.QtGui import (QOpenGLFunctions, QVector2D, QVector3D, QVector4D)
 from PySide6.QtOpenGL import (QOpenGLVertexArrayObject, QOpenGLBuffer, QOpenGLShaderProgram, QOpenGLShader)
 from PySide6.QtWidgets import (QApplication, QWidget, QHBoxLayout)
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
@@ -27,65 +27,89 @@ class Window(QWidget):
         self.setWindowTitle(self.tr("Hello GL"))
 
 class Vertex:
-    def __init__(self, position: QVector2D, color: QVector4D):
+    def __init__(self, position: QVector3D, color: QVector4D):
         self.position = position
         self.color = color
 
     @staticmethod
     def size_in_bytes():
-        return 6 * 4  # 6 float 
+        return 7 * 4  # 7 float 
 
 class Scene():
+    '''
+    A cube 
+    '''
     def __init__(self):
-        self.nb_vertex = 6
-        self.nb_float = self.nb_vertex * ( 2 + 4 )
+        self.nb_vertex = 8
+        self.nb_float = self.nb_vertex * ( 3 + 4 )
 
+        self.nb_triangles = 12
+        self.nb_int = self.nb_triangles * 3
+                   
+        # 8 vertices -> VertexBuffer
         vertices : List[Vertex] = []
 
-        # collect vertices - first triangle
-        vertices.append( Vertex(QVector2D(-1,-1),  QVector4D(0,0,1,1)) )
-        vertices.append( Vertex(QVector2D(1,1), QVector4D(1,0,0,1)) )
-        vertices.append( Vertex(QVector2D(-1,1), QVector4D(1,1,0,1)) )
-        # collect vertices - second triangle
-        vertices.append( Vertex(QVector2D(1,1), QVector4D(1,0,0,1)) )
-        vertices.append( Vertex(QVector2D(-1,-1), QVector4D(0,0,1,1)) )
-        vertices.append( Vertex(QVector2D(1,-1), QVector4D(0,1,0,1) ) )
+        vertices.append( Vertex(QVector3D( 1, 1, 1), QVector4D(0,0,1,1)) )
+        vertices.append( Vertex(QVector3D(-1, 1, 1), QVector4D(1,0,0,1)) )
+        vertices.append( Vertex(QVector3D(-1,-1, 1), QVector4D(1,1,0,1)) )
+        vertices.append( Vertex(QVector3D( 1,-1, 1), QVector4D(1,0,0,1)) )
+        vertices.append( Vertex(QVector3D( 1,-1,-1), QVector4D(0,0,1,1)) )
+        vertices.append( Vertex(QVector3D( 1, 1,-1), QVector4D(0,1,0,1)) )
+        vertices.append( Vertex(QVector3D(-1, 1,-1), QVector4D(0,0,1,1)) )
+        vertices.append( Vertex(QVector3D(-1,-1,-1), QVector4D(0,1,0,1)) )
 
-        # fill the numpy array - each vertex is composed of 6 float
+        # fill the numpy array - each vertex is composed of 7 float
         self.m_data = np.empty(self.nb_float, dtype=ctypes.c_float)
 
         for k, vertex in enumerate(vertices):
-            self.m_data[6*k + 0] = vertex.position.x()
-            self.m_data[6*k + 1] = vertex.position.y()
-            self.m_data[6*k + 2] = vertex.color.x()
-            self.m_data[6*k + 3] = vertex.color.y()
-            self.m_data[6*k + 4] = vertex.color.z()
-            self.m_data[6*k + 5] = vertex.color.w()
+            self.m_data[7*k + 0] = vertex.position.x()
+            self.m_data[7*k + 1] = vertex.position.y()
+            self.m_data[7*k + 1] = vertex.position.z()
+            self.m_data[7*k + 2] = vertex.color.x()
+            self.m_data[7*k + 3] = vertex.color.y()
+            self.m_data[7*k + 4] = vertex.color.z()
+            self.m_data[7*k + 6] = vertex.color.w()
 
-    def const_data(self):
+        # shared by 12 triangles -> IndexBuffer
+        self.i_data = np.array([
+                0,1,2, 
+                0,2,3,  
+                0,3,4, 
+                0,4,5,  
+                0,5,6, 
+                0,6,1,
+                1,6,7, 
+                1,7,2,  
+                7,4,3, 
+                7,3,2,  
+                4,7,6, 
+                4,6,5], dtype=np.uint32)
+
+
+    def const_vertex_data(self):
         return self.m_data.tobytes()
+
+    def const_index_data(self):
+        return self.i_data.tobytes()
 
 
 class GLWidget(QOpenGLWidget, QOpenGLFunctions):
     vertex_code = """
-    //uniform float scale;  // sending an uniform float is buggy !!!
-    uniform vec2 scale;
-    attribute vec2 position;
-    attribute vec4 color;
-    varying vec4 v_color;
-    
+    uniform mat4   model;
+    uniform mat4   view;
+    uniform mat4   projection;
+    attribute vec3 position;
     void main()
     {
-        gl_Position = vec4(scale[0]*position, 0.0, 1.0);
-
-        v_color = color;
-    } """
+        gl_Position = projection * view * model * vec4(position,1.0);
+    }  """
 
     fragment_code = """
     varying vec4 v_color;
-    void main() { gl_FragColor = v_color; } """
+    void main() { gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); } """
 
     float_size = ctypes.sizeof(ctypes.c_float) # 4 bytes
+    int_size = ctypes.sizeof(ctypes.c_uint32) # 4 bytes
 
     def __init__(self, parent=None):
         QOpenGLWidget.__init__(self, parent)
@@ -94,6 +118,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.scene = Scene()
         self.vao = QOpenGLVertexArrayObject()
         self.vbo = QOpenGLBuffer()
+        self.ibo = QOpenGLBuffer()
         self.program = QOpenGLShaderProgram()
 
         self.timer = 0
@@ -127,9 +152,13 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.vao.create()
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao)
 
-        self.vbo.create()
+        self.vbo.create(QOpenGLBuffer.VertexBuffer)
         self.vbo.bind()
-        self.vbo.allocate(self.scene.const_data(), self.scene.nb_float * self.float_size)
+        self.vbo.allocate(self.scene.const_vertex_data(), self.scene.nb_float * self.float_size)
+
+        self.ibo.create(QOpenGLBuffer.IndexBuffer)
+        self.ibo.bind()
+        self.ibo.allocate(self.scene.const_index_data(), self.scene.nb_int * self.int_size)
 
         self.setup_vertex_attribs()
 
@@ -145,22 +174,19 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         # Offset for position
         offset = 0
-        stride = Vertex.size_in_bytes() # nb bytes in a vertex "packet" 
-        size = 2 # nb float in a position "packet" 
+        stride = 2 # nb float in a position "packet" 
 
         vertexLocation = self.program.attributeLocation("position")
         self.program.enableAttributeArray(vertexLocation)
-        self.program.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, size, stride)
+        self.program.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, stride, Vertex.size_in_bytes())
 
         # Offset for color
         offset = 8 # size of preceding data (position = QVector2D)
-        stride = Vertex.size_in_bytes() # nb bytes in a vertex "packet" 
-        size = 4 # nb float in a color "packet" 
-
+        stride = 4 # nb float in a color "packet" 
 
         colorLocation =  self.program.attributeLocation("color")
         self.program.enableAttributeArray(colorLocation)
-        self.program.setAttributeBuffer(colorLocation, GL.GL_FLOAT, offset, size, stride)
+        self.program.setAttributeBuffer(colorLocation, GL.GL_FLOAT, offset, stride, Vertex.size_in_bytes())
 
         self.vbo.release()
 
