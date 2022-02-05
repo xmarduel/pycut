@@ -2,11 +2,11 @@
 import ctypes
 import numpy as np
 import sys
-from PySide6.QtCore import Signal, SIGNAL, SLOT, Qt, QSize, QPointF
-from PySide6.QtGui import (QOpenGLFunctions,
-    QMatrix4x4)
-from PySide6.QtOpenGL import (QOpenGLVertexArrayObject, QOpenGLBuffer,
-    QOpenGLShaderProgram, QOpenGLShader)
+from typing import List
+
+from PySide6.QtCore import Qt, QSize, QPointF
+from PySide6.QtGui import (QOpenGLFunctions, QVector2D)
+from PySide6.QtOpenGL import (QOpenGLVertexArrayObject, QOpenGLBuffer, QOpenGLShaderProgram, QOpenGLShader)
 from PySide6.QtWidgets import (QApplication, QWidget, QHBoxLayout)
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 
@@ -36,29 +36,24 @@ class Scene():
     def __init__(self):
         self.m_vertex = 6
         self.m_triangles = 2
+        self.nb_float = self.m_vertex * 2
+
+        vertices : List[QVector2D] = []
+        # first triangle
+        vertices.append(QVector2D(-1,-1))
+        vertices.append(QVector2D(1,1))
+        vertices.append(QVector2D(-1,1))
+        # second triangle
+        vertices.append(QVector2D(1,1))
+        vertices.append(QVector2D(-1,-1))
+        vertices.append(QVector2D(1,-1))
 
         # each vertex is composed of 2 float
-        np_array = np.empty(2*6, dtype=ctypes.c_float)
+        np_array = np.empty(self.nb_float, dtype=ctypes.c_float)
 
-        # first triangle
-        np_array[0] = -1
-        np_array[1] = -1
-
-        np_array[2] = 1
-        np_array[3] = 1
-        
-        np_array[4] = -1
-        np_array[5] = 1
-
-        # second triangle
-        np_array[6] = 1
-        np_array[7] = 1
-
-        np_array[8] = -1
-        np_array[9] = -1
-        
-        np_array[10] = 1
-        np_array[11] = -1
+        for k, vertex in enumerate(vertices):
+            np_array[2*k + 0] = vertex.x()
+            np_array[2*k + 1] = vertex.y()
 
         self.m_data = np_array
         
@@ -68,7 +63,7 @@ class Scene():
         return self.m_data.tobytes()
 
     def float_count(self):
-        return self.m_vertex * 2
+        return self.nb_float
           
     def vertex_count(self):
         return self.m_vertex
@@ -83,12 +78,8 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
     void main(){ gl_Position = vec4(position, 0.0, 1.0); } """
 
     fragment_code = """
-    void main() { gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); } """
-
-
-    x_rotation_changed = Signal(int)
-    y_rotation_changed = Signal(int)
-    z_rotation_changed = Signal(int)
+    uniform vec4 color;
+    void main() { gl_FragColor = color; } """
 
     def __init__(self, parent=None):
         QOpenGLWidget.__init__(self, parent)
@@ -102,56 +93,12 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.vao = QOpenGLVertexArrayObject()
         self._scene_vbo = QOpenGLBuffer()
         self.program = QOpenGLShaderProgram()
-        self._proj_matrix_loc = 0
-        self._mv_matrix_loc = 0
-        self._normal_matrix_loc = 0
-        self._light_pos_loc = 0
-        self.proj = QMatrix4x4()
-        self.camera = QMatrix4x4()
-        self.world = QMatrix4x4()
-
-    def x_rotation(self):
-        return self._x_rot
-
-    def y_rotation(self):
-        return self._y_rot
-
-    def z_rotation(self):
-        return self._z_rot
 
     def minimumSizeHint(self):
         return QSize(50, 50)
 
     def sizeHint(self):
         return QSize(400, 400)
-
-    def normalize_angle(self, angle):
-        while angle < 0:
-            angle += 360 * 16
-        while angle > 360 * 16:
-            angle -= 360 * 16
-        return angle
-
-    def set_xrotation(self, angle):
-        angle = self.normalize_angle(angle)
-        if angle != self._x_rot:
-            self._x_rot = angle
-            self.x_rotation_changed.emit(angle)
-            self.update()
-
-    def set_yrotation(self, angle):
-        angle = self.normalize_angle(angle)
-        if angle != self._y_rot:
-            self._y_rot = angle
-            self.y_rotation_changed.emit(angle)
-            self.update()
-
-    def set_zrotation(self, angle):
-        angle = self.normalize_angle(angle)
-        if angle != self._z_rot:
-            self._z_rot = angle
-            self.z_rotation_changed.emit(angle)
-            self.update()
 
     def cleanup(self):
         self.makeCurrent()
@@ -160,14 +107,12 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.program = None
         self.doneCurrent()
 
-
     def initializeGL(self):
         self.context().aboutToBeDestroyed.connect(self.cleanup)
         self.initializeOpenGLFunctions()
         self.glClearColor(0, 0, 0, 0)
 
         self.program = QOpenGLShaderProgram()
-
 
         self.program.addShaderFromSourceCode(QOpenGLShader.Vertex, self.vertex_code)
         self.program.addShaderFromSourceCode(QOpenGLShader.Fragment, self.fragment_code)
@@ -193,12 +138,15 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         # Offset for position
         offset = 0
-        stride = 2
+        stride = 2 # nb float in a "packet" 
         sizeof_vertex = 2 * 4  # 2 * 4 bytes
 
         vertexLocation = self.program.attributeLocation("position")
         self.program.enableAttributeArray(vertexLocation)
         self.program.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, stride, sizeof_vertex)
+
+        colorLocation = self.program.uniformLocation("color")
+        self.program.setUniformValue(colorLocation, 0.0, 0.0, 1.0, 1.0)
 
         self._scene_vbo.release()
 
@@ -214,23 +162,6 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
     def resizeGL(self, width, height):
         pass
-
-    def mousePressEvent(self, event):
-        self._last_pos = event.position()
-
-    def mouseMoveEvent(self, event):
-        pos = event.position()
-        dx = pos.x() - self._last_pos.x()
-        dy = pos.y() - self._last_pos.y()
-
-        if event.buttons() & Qt.LeftButton:
-            self.set_xrotation(self._x_rot + 8 * dy)
-            self.set_yrotation(self._y_rot + 8 * dx)
-        elif event.buttons() & Qt.RightButton:
-            self.set_xrotation(self._x_rot + 8 * dy)
-            self.set_zrotation(self._z_rot + 8 * dx)
-
-        self._last_pos = pos
 
 
 if __name__ == '__main__':

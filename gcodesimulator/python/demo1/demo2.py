@@ -190,15 +190,15 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         # Offset for position
         offset = 0
-        stride = 2
+        stride = 2 # nb float in a "packet" 
         sizeof_vertex = 2 * 4  # 2 * 4 bytes
 
         vertexLocation = self.program.attributeLocation("position")
         self.program.enableAttributeArray(vertexLocation)
         self.program.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, stride, sizeof_vertex)
 
-        #colorLocation = self.program.attributeLocation("color")
-        #self.program.setUniformValue(colorLocation, 0.0, 0.0, 1.0, 1.0)
+        colorLocation = self.program.uniformLocation("color")
+        self.program.setUniformValue(colorLocation, 0.0, 0.0, 1.0, 1.0)
 
         self._scene_vbo.release()
 
