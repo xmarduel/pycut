@@ -46,6 +46,9 @@ class Scene():
         self.nb_triangles = 12
         self.nb_int = self.nb_triangles * 3
 
+        self.nb_edges = 12
+        self.nb_int_edge = self.nb_edges * 2
+                   
         # 8 vertices -> VertexBuffer
         vertices : List[Vertex] = []
 
@@ -85,6 +88,12 @@ class Scene():
                 4,7,6, 
                 4,6,5], dtype=np.uint32)
 
+        # an other index buffer to draw lines on the edges # 24 int
+        self.edge_data = np.array([
+            0,1, 1,2, 2,3, 3,0,
+            4,7, 7,6, 6,5, 5,4,
+            0,5, 1,6, 2,7, 3,4 ])
+
 
     def const_vertex_data(self):
         return self.m_data.tobytes()
@@ -92,22 +101,26 @@ class Scene():
     def const_index_data(self):
         return self.i_data.tobytes()
 
+    def const_edge_data(self):
+        return self.edge_data.tobytes()
+
 
 class GLWidget(QOpenGLWidget, QOpenGLFunctions):
     vertex_code = """
-    uniform mat4   model;
-    uniform mat4   view;
-    uniform mat4   projection;
-    attribute vec3 position;
-    attribute vec4 color;
-    varying vec4   v_color;
+    uniform vec4   g_color;       // Global color
+    uniform mat4   model;         // Model matrix
+    uniform mat4   view;          // View matrix
+    uniform mat4   projection;    // Projection matrix
+    attribute vec3 position;      // Vertex position
+    attribute vec4 color;         // Vertex color
+    varying vec4   v_color;       // Interpolated fragment color (out)
 
     void main()
     {
-        gl_Position = projection * view * model * vec4(position,1.0);
-
-        v_color = color;
-    }  """
+        v_color = g_color * color;
+        gl_Position = projection * view * model * vec4(position, 1.0);
+    }
+    """
 
     fragment_code = """
     varying vec4 v_color;
@@ -124,6 +137,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.vao = QOpenGLVertexArrayObject()
         self.vbo = QOpenGLBuffer()
         self.ibo = QOpenGLBuffer()
+        self.ebo = QOpenGLBuffer()
         self.program = QOpenGLShaderProgram()
 
         self.proj = QMatrix4x4()
@@ -175,6 +189,11 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.ibo.bind()
         self.ibo.allocate(self.scene.const_index_data(), self.scene.nb_int * self.int_size)
 
+        self.ebo.create() # QOpenGLBuffer.IndexBuffer
+        self.ebo.bind()
+        self.ebo.allocate(self.scene.const_edge_data(), self.scene.nb_int_edge * self.int_size)
+
+
         self.setup_vertex_attribs()
 
         self.program.release()
@@ -182,6 +201,9 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
     def setup_vertex_attribs(self):
         self.vbo.bind()
+
+        gcolorLocation = self.program.uniformLocation("g_color")
+        self.program.setUniformValue(gcolorLocation, QVector4D(1,1,1,1))
 
         modelLocation = self.program.uniformLocation("model")
         self.program.setUniformValue(modelLocation, self.model)
@@ -214,11 +236,16 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
     def paintGL(self):
         self.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+        self.glDisable(GL.GL_BLEND)
         self.glEnable(GL.GL_DEPTH_TEST)
+        self.glEnable(GL.GL_POLYGON_OFFSET_FILL)
        
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao)
         self.program.bind()
         
+        gcolorLocation = self.program.uniformLocation("g_color")
+        self.program.setUniformValue(gcolorLocation, QVector4D(1,1,1,1))
+
         modelLocation = self.program.uniformLocation("model")
         self.program.setUniformValue(modelLocation, self.model)
 
@@ -228,7 +255,19 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         viewLocation = self.program.uniformLocation("view")
         self.program.setUniformValue(viewLocation, self.view)
 
+        # Filled cube
         self.glDrawElements(GL.GL_TRIANGLES, 12*3, GL.GL_UNSIGNED_INT, self.scene.const_index_data())
+
+        # Outlined cube
+        self.glDisable(GL.GL_POLYGON_OFFSET_FILL)
+        self.glEnable(GL.GL_BLEND)
+        self.glDepthMask(GL.GL_FALSE)
+
+        gcolorLocation = self.program.uniformLocation("g_color")
+        self.program.setUniformValue(gcolorLocation, QVector4D(0, 0, 0, 1))
+
+        self.glDrawElements(GL.GL_LINES, 12*2, GL.GL_UNSIGNED_INT, self.scene.const_edge_data())
+        self.glDepthMask(GL.GL_TRUE)
 
         self.program.release()
         vao_binder = None
