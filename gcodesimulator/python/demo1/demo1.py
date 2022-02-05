@@ -4,7 +4,7 @@ import numpy as np
 import sys
 from typing import List
 
-from PySide6.QtCore import Qt, QSize, QPointF
+from PySide6.QtCore import Qt, QSize
 from PySide6.QtGui import (QOpenGLFunctions, QVector2D)
 from PySide6.QtOpenGL import (QOpenGLVertexArrayObject, QOpenGLBuffer, QOpenGLShaderProgram, QOpenGLShader)
 from PySide6.QtWidgets import (QApplication, QWidget, QHBoxLayout)
@@ -25,39 +25,42 @@ class Window(QWidget):
 
         self.setWindowTitle(self.tr("Hello GL"))
 
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Escape:
-            self.close()
-        else:
-            super(Window, self).keyPressEvent(event)
-
+class Vertex:
+    def __init__(self,  position: QVector2D):
+        self.position = position
 
 class Scene():
     def __init__(self):
         self.m_vertex = 6
-        self.m_triangles = 2
         self.nb_float = self.m_vertex * 2
 
-        vertices : List[QVector2D] = []
-        # first triangle
-        vertices.append(QVector2D(-1,-1))
-        vertices.append(QVector2D(1,1))
-        vertices.append(QVector2D(-1,1))
-        # second triangle
-        vertices.append(QVector2D(1,1))
-        vertices.append(QVector2D(-1,-1))
-        vertices.append(QVector2D(1,-1))
+        vertices : List[Vertex] = []
 
-        # each vertex is composed of 2 float
+        # first triangle
+        vertex1 = Vertex(QVector2D(-1,-1))
+        vertex2 = Vertex(QVector2D(1,1))
+        vertex3 = Vertex(QVector2D(-1,1))
+        # second triangle
+        vertex4 = Vertex(QVector2D(1,1))
+        vertex5 = Vertex(QVector2D(-1,-1))
+        vertex6 = Vertex(QVector2D(1,-1))
+
+        # collect vertices
+        vertices.append(vertex1)
+        vertices.append(vertex2)
+        vertices.append(vertex3)
+        vertices.append(vertex4)
+        vertices.append(vertex5)
+        vertices.append(vertex6)
+
+        # fill the numpy array - each vertex is composed of 2 float
         np_array = np.empty(self.nb_float, dtype=ctypes.c_float)
 
         for k, vertex in enumerate(vertices):
-            np_array[2*k + 0] = vertex.x()
-            np_array[2*k + 1] = vertex.y()
+            np_array[2*k + 0] = vertex.position.x()
+            np_array[2*k + 1] = vertex.position.y()
 
         self.m_data = np_array
-        
-        print("DATA", self.m_data)
 
     def const_data(self):
         return self.m_data.tobytes()
@@ -67,9 +70,6 @@ class Scene():
           
     def vertex_count(self):
         return self.m_vertex
-
-    def triangles_count(self):
-        return  self.m_triangles
 
 
 class GLWidget(QOpenGLWidget, QOpenGLFunctions):
@@ -85,10 +85,6 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         QOpenGLWidget.__init__(self, parent)
         QOpenGLFunctions.__init__(self)
 
-        self._x_rot = 0
-        self._y_rot = 0
-        self._z_rot = 0
-        self._last_pos = QPointF()
         self.scene = Scene()
         self.vao = QOpenGLVertexArrayObject()
         self._scene_vbo = QOpenGLBuffer()
@@ -138,7 +134,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         # Offset for position
         offset = 0
-        stride = 2 # nb float in a "packet" 
+        stride = 2 # nb float in a position "packet" 
         sizeof_vertex = 2 * 4  # 2 * 4 bytes
 
         vertexLocation = self.program.attributeLocation("position")
