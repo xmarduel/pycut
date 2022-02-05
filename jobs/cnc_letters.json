@@ -4,23 +4,6 @@
     {
       "Name": "op",
       "type": "Pocket",
-      "Deep": 1.0,
-      "paths": [
-        "path16",
-        "path18",
-        "path20",
-        "path22"
-      ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
-    },
-    {
-      "Name": "op",
-      "type": "Pocket",
       "Deep": 1.6749999999999985,
       "paths": [
         "path37",
