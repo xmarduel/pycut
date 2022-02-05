@@ -29,47 +29,35 @@ class Vertex:
     def __init__(self,  position: QVector2D):
         self.position = position
 
+    @staticmethod
+    def size_in_bytes():
+        return 2 * 4  # 2 float 
+
 class Scene():
     def __init__(self):
-        self.m_vertex = 6
-        self.nb_float = self.m_vertex * 2
+        self.nb_vertex = 6
+        self.nb_float = self.nb_vertex * 2
 
         vertices : List[Vertex] = []
 
-        # first triangle
-        vertex1 = Vertex(QVector2D(-1,-1))
-        vertex2 = Vertex(QVector2D(1,1))
-        vertex3 = Vertex(QVector2D(-1,1))
-        # second triangle
-        vertex4 = Vertex(QVector2D(1,1))
-        vertex5 = Vertex(QVector2D(-1,-1))
-        vertex6 = Vertex(QVector2D(1,-1))
-
-        # collect vertices
-        vertices.append(vertex1)
-        vertices.append(vertex2)
-        vertices.append(vertex3)
-        vertices.append(vertex4)
-        vertices.append(vertex5)
-        vertices.append(vertex6)
+        # collect vertices - first triangle
+        vertices.append( Vertex(QVector2D(-1,-1)) )
+        vertices.append( Vertex(QVector2D(1,1)) )
+        vertices.append( Vertex(QVector2D(-1,1)) )
+        # collect vertices - second triangle
+        vertices.append( Vertex(QVector2D(1,1)) )
+        vertices.append( Vertex(QVector2D(-1,-1)) )
+        vertices.append( Vertex(QVector2D(1,-1)) )
 
         # fill the numpy array - each vertex is composed of 2 float
-        np_array = np.empty(self.nb_float, dtype=ctypes.c_float)
+        self.m_data = np.empty(self.nb_float, dtype=ctypes.c_float)
 
         for k, vertex in enumerate(vertices):
-            np_array[2*k + 0] = vertex.position.x()
-            np_array[2*k + 1] = vertex.position.y()
-
-        self.m_data = np_array
+             self.m_data[2*k + 0] = vertex.position.x()
+             self.m_data[2*k + 1] = vertex.position.y()
 
     def const_data(self):
         return self.m_data.tobytes()
-
-    def float_count(self):
-        return self.nb_float
-          
-    def vertex_count(self):
-        return self.m_vertex
 
 
 class GLWidget(QOpenGLWidget, QOpenGLFunctions):
@@ -81,13 +69,15 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
     uniform vec4 color;
     void main() { gl_FragColor = color; } """
 
+    float_size = ctypes.sizeof(ctypes.c_float) # 4 bytes
+
     def __init__(self, parent=None):
         QOpenGLWidget.__init__(self, parent)
         QOpenGLFunctions.__init__(self)
 
         self.scene = Scene()
         self.vao = QOpenGLVertexArrayObject()
-        self._scene_vbo = QOpenGLBuffer()
+        self.vbo = QOpenGLBuffer()
         self.program = QOpenGLShaderProgram()
 
     def minimumSizeHint(self):
@@ -98,7 +88,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
     def cleanup(self):
         self.makeCurrent()
-        self._scene_vbo.destroy()
+        self.vbo.destroy()
         del self.program
         self.program = None
         self.doneCurrent()
@@ -119,10 +109,9 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.vao.create()
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao)
 
-        self._scene_vbo.create()
-        self._scene_vbo.bind()
-        float_size = ctypes.sizeof(ctypes.c_float)
-        self._scene_vbo.allocate(self.scene.const_data(), self.scene.float_count() * float_size)
+        self.vbo.create()
+        self.vbo.bind()
+        self.vbo.allocate(self.scene.const_data(), self.scene.nb_float * self.float_size)
 
         self.setup_vertex_attribs()
 
@@ -130,21 +119,20 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         vao_binder = None
 
     def setup_vertex_attribs(self):
-        self._scene_vbo.bind()
+        self.vbo.bind()
 
         # Offset for position
         offset = 0
         stride = 2 # nb float in a position "packet" 
-        sizeof_vertex = 2 * 4  # 2 * 4 bytes
 
         vertexLocation = self.program.attributeLocation("position")
         self.program.enableAttributeArray(vertexLocation)
-        self.program.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, stride, sizeof_vertex)
+        self.program.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, stride, Vertex.size_in_bytes())
 
         colorLocation = self.program.uniformLocation("color")
         self.program.setUniformValue(colorLocation, 0.0, 0.0, 1.0, 1.0)
 
-        self._scene_vbo.release()
+        self.vbo.release()
 
     def paintGL(self):
         self.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
@@ -152,7 +140,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
        
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao)
         self.program.bind()
-        self.glDrawArrays(GL.GL_TRIANGLES, 0, self.scene.vertex_count())
+        self.glDrawArrays(GL.GL_TRIANGLES, 0, self.scene.nb_vertex)
         self.program.release()
         vao_binder = None
 
