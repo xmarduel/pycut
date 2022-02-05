@@ -80,9 +80,6 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.vbo = QOpenGLBuffer()
         self.program = QOpenGLShaderProgram()
 
-    def minimumSizeHint(self):
-        return QSize(50, 50)
-
     def sizeHint(self):
         return QSize(400, 400)
 
@@ -121,6 +118,10 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
     def setup_vertex_attribs(self):
         self.vbo.bind()
 
+        # the uniform stuff
+        colorLocation = self.program.uniformLocation("color")
+        self.program.setUniformValue(colorLocation, 0.0, 0.0, 1.0, 1.0)
+
         # Offset for position
         offset = 0
         stride = 2 # nb float in a position "packet" 
@@ -128,9 +129,6 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         vertexLocation = self.program.attributeLocation("position")
         self.program.enableAttributeArray(vertexLocation)
         self.program.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, stride, Vertex.size_in_bytes())
-
-        colorLocation = self.program.uniformLocation("color")
-        self.program.setUniformValue(colorLocation, 0.0, 0.0, 1.0, 1.0)
 
         self.vbo.release()
 
@@ -152,7 +150,6 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
 
     main_window = Window()
-    main_window.resize(main_window.sizeHint())
     main_window.show()
 
     res = app.exec()

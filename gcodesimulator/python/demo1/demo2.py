@@ -91,9 +91,6 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.vbo = QOpenGLBuffer()
         self.program = QOpenGLShaderProgram()
 
-    def minimumSizeHint(self):
-        return QSize(50, 50)
-
     def sizeHint(self):
         return QSize(400, 400)
 
@@ -168,7 +165,6 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
 
     main_window = Window()
-    main_window.resize(main_window.sizeHint())
     main_window.show()
 
     res = app.exec()

@@ -67,12 +67,16 @@ class Scene():
 
 class GLWidget(QOpenGLWidget, QOpenGLFunctions):
     vertex_code = """
+    uniform float scale;
     attribute vec2 position;
     attribute vec4 color;
     varying vec4 v_color;
+    
     void main()
     {
-        gl_Position = vec4(position, 0.0, 1.0);
+        gl_Position = vec4(0.5*position, 0.0, 1.0);
+        //gl_Position = vec4(scale*position, 0.0, 1.0); // does not work ???
+
         v_color= color;
     } """
 
@@ -90,9 +94,6 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.vao = QOpenGLVertexArrayObject()
         self.vbo = QOpenGLBuffer()
         self.program = QOpenGLShaderProgram()
-
-    def minimumSizeHint(self):
-        return QSize(50, 50)
 
     def sizeHint(self):
         return QSize(400, 400)
@@ -132,6 +133,10 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
     def setup_vertex_attribs(self):
         self.vbo.bind()
 
+        # the uniform scale
+        scaleLocation = self.program.uniformLocation("scale")
+        self.program.setUniformValue(scaleLocation, 0.5)
+
         # Offset for position
         offset = 0
         stride = 2 # nb float in a position "packet" 
@@ -168,7 +173,6 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
 
     main_window = Window()
-    main_window.resize(main_window.sizeHint())
     main_window.show()
 
     res = app.exec()
