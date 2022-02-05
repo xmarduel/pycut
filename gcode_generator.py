@@ -345,21 +345,14 @@ class CncOp:
 
         if len(self.shapely_polygons) < 2:
             o = self.shapely_polygons[0]
-
-            print("combine (noop):")
-            print(o)
-
             self.geometry = shapely_geom.MultiPolygon([o])
             return
 
 
-        print("as lines")
-        for poly in self.shapely_polygons:
-            line = shapely_geom.LineString(poly.exterior.coords)
-            print(line)
-
         o = self.shapely_polygons[0]
-        other = shapely_geom.MultiPolygon(self.shapely_polygons[1:])
+        #other = shapely_geom.MultiPolygon(self.shapely_polygons[1:])
+        other = ShapelyUtils.union_list_of_polygons(self.shapely_polygons[1:])
+
 
         print("combine:")
         print(o)
@@ -390,6 +383,9 @@ class CncOp:
             # fix orientation
             fixed_polys = []
             for poly in self.geometry:
+                if not poly.geom_type == 'Polygon':
+                    continue
+                # fix - do not start a poly from a convex corner
                 poly = ShapelyUtils.reorder_poly_points(poly)
 
                 fixed_poly = shapely.geometry.polygon.orient(poly)

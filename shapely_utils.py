@@ -1,6 +1,7 @@
 
 import math
 
+from typing import List
 from typing import Tuple
 
 import shapely.geometry
@@ -167,6 +168,19 @@ class ShapelyUtils:
         return True
 
     @classmethod
+    def union_list_of_polygons(cls, poly_list: List[shapely.geometry.Polygon]) -> shapely.geometry.MultiPolygon :
+        '''
+        '''
+        first = poly_list[0]
+
+        geometry = first
+        
+        for poly in poly_list[1:]:
+            geometry = geometry.union(poly)
+
+        return geometry
+
+    @classmethod
     def reorder_poly_points(cls, poly: shapely.geometry.Polygon) -> shapely.geometry.Polygon:
         '''
         Problem: shapely bug when outsiding a polygon where the stating point
@@ -175,6 +189,9 @@ class ShapelyUtils:
         Solution: start the list of points at a point in the middle of a segment
         (if there is one)  
         '''
+        if not poly.geom_type == 'Polygon':
+            return poly
+            
         pts = list(poly.exterior.coords)
 
         # ----------------------------------------------------

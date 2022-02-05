@@ -225,13 +225,13 @@ Simulator" display areas.</p>
 
 <h4>user units scale</h4>
 
-<p>What is this? And who completely understand the units settings in svg? Let's
-take an example: in Inkscape, the user would set the document's size to
-<strong>100x40 mm</strong>, supposedly the size of the material to work on.
-Inkscape automatically sets the <strong>user units scale </strong><strong>to
-1</strong>. Note that the user units are not "px" or whatever. This means,
-<strong>1 "user unit" is equal to 1 mm (and the viewbox is "0 0 100 40" while
-width="100mm" and height="40mm")</strong></p>
+<p>What is this? And why is it disabled and set to 1? Let's take an example: in
+Inkscape, the user would set the document's size to <strong>100x40 mm</strong>,
+supposedly the size of the material to work on. Inkscape automatically sets the
+<strong>user units scale </strong><strong>to 1</strong>. Note that the user
+units are not "px" or whatever. This means, <strong>1 "user unit" is equal to 1
+mm (and the viewbox is "0 0 100 40" while width="100mm" and
+height="40mm")</strong></p>
 <img src="Inkscape_settings_mm.png" width="563px"> 
 
 <p>Of course when editing the svg (in Inkscape or in a text editor),
@@ -250,18 +250,18 @@ that Inkscape automatically change the <strong>user units scale to
 100x40.</p>
 <img src="Inkscape_settings_in.png" width="563px"> 
 
-<p>The user could set the user units scale to 1. The effect of this would be
-that now, in order to fill the whole document with a rectangle, the rectangle
-has to be of the size 3.93701x1.57480. These are the values that will be
-effectively saved in the svg file. </p>
+<p>But why would a user use inches and still want to draw a rectangle half the
+size of its material in user units with scale 25.4 (leading infact to work in
+mm) ? The user can set the user units scale to 1. The effect of this is that
+now, in order to fill the whole document with a rectangle, the rectangle has to
+be of the size 3.93701x1.57480. </p>
 
-<p>It is all Ok, but not very pratical if you wish to draw a rectangle half the
-size of the document: you have to divide 3.93701 by 2, which is harder than
-dividing 100 by 2. </p>
-
-<p>One the other side, if you know that your rectangle is 1.5x1.2 inch wide,
-then it is better to set the user units scale to 1, because you just enter
-these dimensions in the rectangle input boxes.</p>
+<p>Of course the size of the material is certainly not 3.93701x1.57480 inches,
+but 5x3 inches: an human readable size. The user knows that he has to draw a
+rectangle inside the material of size let say 1.5x1.2 inches. And these
+dimensions are the ones that are effectively saved in the svg document. So the
+user units are exactly the same as the "physical units" when choosing a scale
+of 1.</p>
 
 <p>Now how can <strong>PyCut</strong> handles these settings?
 <strong>PyCut</strong> only works with the <strong>user units</strong>.
@@ -273,19 +273,14 @@ of this, the gcode X,Y and Z values are the same as the one of the paths
 values.</p>
 
 <p>If you choose "<strong>in</strong>" for the gcode output, then certainly you
-have set your svg document size in "<strong>in</strong>", and the <strong>user
-unit scale may be 25.4</strong>. This way, the values of the
-calculated tool paths are scaled back to a factor of <strong>1 / 25.4</strong>
-when outputing the gcode. This way, a rectangle of (user unit) 100x40 will
-**not** be 100x40 inches large, but only <strong>1 / 25.4</strong> of this
-size, which is OK. If the user sets the <strong>user units scale to 1</strong>,
-again no conversion from the user units to inches is performed as all values
-are already in inches.</p>
+have set your svg document size in "<strong>in</strong>", and the <strong>with
+user unit scale equals to 1</strong>,no conversion is either needed.</p>
 
 <p>Note that this scale factor is not explicitely given in the svg file. It is
 calculated from the ratio viewbox / width. It is eventually the task of the
-user to know what is the user units scale value, and to set it in
-<strong>PyCut</strong>.</p>
+user to know what is the user units scale value, and, theorically, to set it in
+<strong>PyCut</strong>. But my opinion is, working with a user unit scal of 1
+is preferably.</p>
 
 <p><strong><span style="color:#0000ff">I personnaly stick to svg document units
 in "mm" with user units scale factor of 1, and output my gcode in mm. No
@@ -293,28 +288,30 @@ confusion! </span></strong></p>
 
 <div class="warning">
 <p><strong>Warning</strong>: The user could use "mm", and set a scale factor of
-10 or whatever, but it certainly makes no sense. The setting is for users who
-wish to output gcode in inches and draw svg in inches units too.</p>
+10 or whatever, but it certainly makes no sense.</p>
 </div>
 
-<p>Finally, it has to be said that PyCut is "unit" ignorant. It just reads the values of the paths
-  in the svg and calculates the toolpaths in user units. The output in gcode is simply scaled back 
-  from the user units scale. </p>
-  <p>The <strong>Gcode Units</strong> setting is not only a flag to set inside the 
-gcode file the code <strong>G20</strong> (inches) or  <strong>G21</strong> (mm): it
-also allows the proper conversion of the tool diameter physical size (inch or mm) in user units.</p>
+<p><strong style="color:#0000ff">I apologize for the ones who would like to
+work with user units scale not equals to 1.</strong> </p>
+
+<p>The further <strong>Gcode Units</strong> setting is not only a flag to set
+the code <strong>G20</strong> (inches) or <strong>G21</strong> (mm) inside the
+gcode file: it also allows the proper conversion of the tool diameter physical
+size (inch or mm) in user units.</p>
+
 <p>The rule is:</p>
-  <ul>
-    <li>Gcode Units in "mm": tool diameter is transformed to mm</li>
-    <li>Gcode Units in "in": tool diameter is transformed to inch and scaled with the scale value</li>
-  </ul>
-</p>
-<p>Because of this:</p>
+<ul>
+  <li><strong>Gcode Units</strong> in "mm": tool diameter is transformed to mm
+    - the same as the user units</li>
+  <li><strong>Gcode Units</strong> in "in": tool diameter is transformed to
+    inch - the same as the user units</li>
+</ul>
+
 <div class="warning">
-  <p><strong>Warning</strong>: <strong>PyCut</strong> actually assumes that for
-  "<strong>mm</strong>" gcode output, the <strong>user unit scale factor is
-  1</strong>.</p>
-  </div>
+<p><strong>Warning</strong>: <strong>PyCut</strong> assumes that for
+"<strong>mm</strong>" or "<strong>in</strong>", the <strong>user unit scale
+factor is always 1</strong> .</p>
+</div>
 
 <p></p>
 

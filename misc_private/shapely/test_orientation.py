@@ -4,48 +4,50 @@ import matplotlib.pyplot as plt
 from shapely.geometry import LineString, Polygon, LinearRing
 import shapely
 
-# ------------- SETUP INITIAL LINSTEING AND POLYGONS
+# ------------- SETUP INITIAL LINESTRING AND POLYGONS --------------------
 
-# we give two list of coords wit "oppsite directions
+# we give two list of coords wit "opposite directions"
  
 coords1 = [(10,10), (20,10), (20,20), (10,20)]
 coords2 = [(10,10), (10,20), (20,20), (20,10)]
 
-hole = [(11,11), (19,11), (19,19), (11,19), (11,11)]
-
 l1 = LineString(coords1)
 l2 = LineString(coords2)
 
+print("----- these two linestrings do not have the same orientation")
 print("initial linestring", l1)
 print("initial linestring", l2)
+print("-----------------------------------------------------------")
 
 p1 = Polygon(l1)
 p2 = Polygon(l2)
 
-# TRICK: properly orient the polygons -> the 2 poly have the same orientation 
+
+print("")
+print("----- resulting polygons")
+print("poly p1 : check yourself the orientation", p1)
+print("poly p2 : check yourself the orientation", p2)
+print("-----------------------------------------------------------")
+
+# TRICK: properly orient the polygons -> the 2 poly have the same orientation , but which one ?
 p1 = shapely.geometry.polygon.orient(p1)
 p2 = shapely.geometry.polygon.orient(p2)
 
-svg = p1.svg()
-print(svg)
-
-ph = Polygon(coords1, holes=[hole])
-
-svg = ph.svg()
-print(svg)
-
-sys.exit()
-
-print("oriented (ccw) poly p1", p1)
-print("oriented (ccw) poly p2", p2)
-
+print("")
+print("----- after re-orienting the polygons")
+print("oriented poly p1 : check yourself the orientation", p1)
+print("oriented poly p2 : check yourself the orientation", p2)
+print(".... notice how the polygons have the same orientation... (but which one ?!!!)")
 # --------------------- LINEAR RING
 
 ls1 = LineString(p1.exterior.coords)
 ls2 = LineString(p2.exterior.coords)
 
+print("")
+print("----- resulting linestrings")
 print("linestring ls1", ls1)
 print("linestring ls2", ls2)
+
 
 off1_left = ls1.parallel_offset(1, 'left')
 off2_left = ls2.parallel_offset(1, 'left')
@@ -55,6 +57,7 @@ off2_right = ls2.parallel_offset(1, 'right')
 
 # ------------------------------------------
 
+print("----- we offset on the left the two lines: is'nt it strange ? result is 'left' -> 'inside' as it should be, so infact the DISPLAY of the list of coords is wrong!")
 print("off1_left", off1_left)
 print("off2_left", off2_left)
 
@@ -66,6 +69,7 @@ plt.show()
 
 # ------------------------------------------
 
+print("----- we offset on the right the two lines: is'nt it strange ? result is 'right' -> 'outside' as it should be, so infact the DISPLAY of the list of coords is wrong!")
 print("off1_right", off1_right)
 print("off2_right", off2_right)
 
@@ -79,6 +83,9 @@ plt.show()
 # --------------------- LINEAR RING
 # ------------------------------------------
 
+# LINEAR RING DOES NOT HELP!
+
+'''
 # poly to linear ring
 lr1 = LinearRing(p1.exterior.coords)
 lr2 = LinearRing(p2.exterior.coords)
@@ -114,8 +121,10 @@ plt.plot(x1,y1, 'bo-')
 plt.plot(x2,y2, 'r+--')
 plt.show()
 
+'''
+
 # -------------------------------------------------------
-# TRICK: add a point in thr middle of a segment
+# TRICK: add a point in the middle of a segment
 #  so that the start point is NOT a corner 
 # -------------------------------------------------------
 x0 = coords1[0][0]
