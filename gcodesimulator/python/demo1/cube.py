@@ -173,7 +173,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.vao.create()
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao)
 
-        self.vbo.create() # QOpenGLBuffer.VErtexBuffer
+        self.vbo.create() # QOpenGLBuffer.VertexBuffer
         self.vbo.bind()
         self.vbo.allocate(self.scene.const_vertex_data(), self.scene.nb_float * self.float_size)
 

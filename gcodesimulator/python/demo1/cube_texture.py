@@ -3,13 +3,12 @@ import ctypes
 import math
 import numpy as np
 import sys
-from typing import List
 
 from PySide6.QtCore import QSize
-from PySide6.QtGui import (QOpenGLFunctions, QVector3D, QVector4D, QMatrix4x4)
+from PySide6.QtGui import (QOpenGLFunctions, QVector2D, QVector3D, QVector4D, QMatrix4x4, QImage)
 from PySide6.QtWidgets import (QApplication, QMainWindow)
 
-from PySide6.QtOpenGL import (QOpenGLVertexArrayObject, QOpenGLBuffer, QOpenGLShaderProgram, QOpenGLShader)
+from PySide6.QtOpenGL import (QOpenGLVertexArrayObject, QOpenGLBuffer, QOpenGLShaderProgram, QOpenGLShader, QOpenGLTexture)
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 
 from OpenGL import GL
@@ -25,95 +24,69 @@ class Window(QMainWindow):
         self.setWindowTitle(self.tr("Hello GL"))
 
 class Vertex:
-    nb_float = 7
+    nb_float = 9
     bytes_size = nb_float * 4 #  4 bytes each
-    size = {'position' : 3 , 'color': 4} # size in float of position/color
-    offset = {'position' : 0, 'color': 12 } # offsets in np array in bytes
+    size = {'position' : 3 , 'color': 4, 'texcoord': 2} # size in float of position/texcoord
+    offset = {'position' : 0, 'color': 12, 'texcoord': 28 } # offsets in np array in bytes
 
-    def __init__(self, position: QVector3D, color: QVector4D):
+    def __init__(self, position: QVector3D, color: QVector4D, texcoord: QVector2D):
         self.position = position
         self.color = color
-
-    @classmethod
-    def toNumpyArray(cls, vertices: List['Vertex']) -> np.ndarray:
-        np_array = np.empty(len(vertices) * cls.nb_float, dtype=ctypes.c_float)
-
-        for k, vertex in enumerate(vertices):
-            np_array[7*k + 0] = vertex.position.x()
-            np_array[7*k + 1] = vertex.position.y()
-            np_array[7*k + 2] = vertex.position.z()
-            np_array[7*k + 3] = vertex.color.x()
-            np_array[7*k + 4] = vertex.color.y()
-            np_array[7*k + 5] = vertex.color.z()
-            np_array[7*k + 6] = vertex.color.w()
-
-        return np_array
-
+        self.texcoord = texcoord
 
 class Scene():
     '''
-    A cube 
+    A cube with 24 vertices "not shared"
     '''
     def __init__(self):
-        self.nb_vertex = 8
-        self.nb_float = self.nb_vertex * Vertex.nb_float
+        self.nb_float = 0
+        self.nb_int = 0
 
-        self.nb_triangles = 12
-        self.nb_int = self.nb_triangles * 3
+        vtype = [('position', np.float32, 3),
+                 ('color', np.float32, 4),
+                 ('texcoord', np.float32, 2)]
+        itype = np.uint32
+        
+        # 8 points constituting a cube
+        p = np.array([[1, 1, 1], [-1, 1, 1], [-1, -1, 1], [1, -1, 1],
+                  [1, -1, -1], [1, 1, -1], [-1, 1, -1], [-1, -1, -1]],
+                  dtype=float)
 
-        self.nb_edges = 12
-        self.nb_int_edge = self.nb_edges * 2
-                   
-        # 8 vertices -> VertexBuffer
-        vertices : List[Vertex] = []
+        c = np.array([[0,1,1,1], [0,0,1,1], [0,0,0,1], [0,1,0,1],
+                  [1,1,0,1], [1,1,1,1], [1,0,1,1], [1,0,0,1]],
+                  dtype=float)
 
-        vertices.append( Vertex(QVector3D( 1, 1, 1), QVector4D(0,1,1,1)) )
-        vertices.append( Vertex(QVector3D(-1, 1, 1), QVector4D(0,0,1,1)) )
-        vertices.append( Vertex(QVector3D(-1,-1, 1), QVector4D(0,0,0,1)) )
-        vertices.append( Vertex(QVector3D( 1,-1, 1), QVector4D(0,1,0,1)) )
-        vertices.append( Vertex(QVector3D( 1,-1,-1), QVector4D(1,1,0,1)) )
-        vertices.append( Vertex(QVector3D( 1, 1,-1), QVector4D(1,1,1,1)) )
-        vertices.append( Vertex(QVector3D(-1, 1,-1), QVector4D(1,0,1,1)) )
-        vertices.append( Vertex(QVector3D(-1,-1,-1), QVector4D(1,0,0,1)) )
+        # Texture coords
+        t = np.array([[0, 0], [0, 1], [1, 1], [1, 0]])
 
-        # fill the numpy array
-        self.m_data = Vertex.toNumpyArray(vertices)
+        faces_p = [0, 1, 2, 3,  0, 3, 4, 5,   0, 5, 6, 1,   1, 6, 7, 2,  7, 4, 3, 2,   4, 7, 6, 5]
+        faces_t = [0, 1, 2, 3,  0, 1, 2, 3,   0, 1, 2, 3,   3, 2, 1, 0,  0, 1, 2, 3,   0, 1, 2, 3]
 
-        # shared by 12 triangles -> IndexBuffer
-        self.i_data = np.array([
-                0,1,2, 
-                0,2,3,  
-                0,3,4, 
-                0,4,5,  
-                0,5,6, 
-                0,6,1,
-                1,6,7, 
-                1,7,2,  
-                7,4,3, 
-                7,3,2,  
-                4,7,6, 
-                4,6,5], dtype=np.uint32)
+        # list of vertices : 6 faces with for each 4 vertices : use faces_p indexes 
+        self.vertices = np.zeros(24, vtype)
+        self.vertices['position'] = p[faces_p]
+        self.vertices['color'] = c[faces_p]
+        self.vertices['texcoord'] = t[faces_t]
 
-        # an other index buffer to draw lines on the edges # 24 int
-        self.edge_data = np.array([
-            0,1, 1,2, 2,3, 3,0,
-            4,7, 7,6, 6,5, 5,4,
-            0,5, 1,6, 2,7, 3,4 ])
+        print(self.vertices)
 
+        # index buffer
+        self.filled = np.resize(np.array([0, 1, 2, 0, 2, 3], dtype=itype), 6 * (2 * 3))
+        self.filled += np.repeat(4 * np.arange(6, dtype=itype), 6)
+
+        self.nb_float = 24 * Vertex.nb_float
+        self.nb_int = 36
+
+        self.textureData = QImage("./crate.png")
 
     def const_vertex_data(self):
-        return self.m_data.tobytes()
+        return self.vertices.tobytes()
 
     def const_index_data(self):
-        return self.i_data.tobytes()
-
-    def const_edge_data(self):
-        return self.edge_data.tobytes()
-
+        return self.filled.tobytes()
 
 class GLWidget(QOpenGLWidget, QOpenGLFunctions):
     vertex_code = """
-    uniform vec4   g_color;       // Global color
     uniform mat4   model;
     uniform mat4   view;
     uniform mat4   projection;
@@ -125,12 +98,39 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
     {
         gl_Position = projection * view * model * vec4(position, 1.0);
 
-        v_color = g_color * color;
+        v_color = color;
     }  """
 
     fragment_code = """
     varying vec4 v_color;
     void main() { gl_FragColor = v_color; } """
+
+    vertex_code_tex = """
+    uniform mat4   model;
+    uniform mat4   view;
+    uniform mat4   projection;
+    attribute vec3 position;
+    attribute vec2 texcoord;   // Vertex texture coordinates
+    varying vec2   v_texcoord;   // Interpolated fragment texture coordinates (out)
+
+    void main()
+    {
+        // Assign varying variables
+        v_texcoord  = texcoord;
+
+        // Final position
+        gl_Position = projection * view * model * vec4(position,1.0);
+    } """
+
+
+    fragment_code_tex = """
+    uniform sampler2D texture; // Texture
+    varying vec2 v_texcoord;   // Interpolated fragment texture coordinates (in)
+    void main()
+    {
+        // Get texture color
+        gl_FragColor = texture2D(texture, v_texcoord);
+    } """
 
     float_size = ctypes.sizeof(ctypes.c_float) # 4 bytes
     int_size = ctypes.sizeof(ctypes.c_uint32) # 4 bytes
@@ -143,7 +143,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.vao = QOpenGLVertexArrayObject()
         self.vbo = QOpenGLBuffer()
         self.ibo = QOpenGLBuffer()
-        self.ebo = QOpenGLBuffer()
+        self.texture = QOpenGLTexture(QOpenGLTexture.Target2D)
         self.program = QOpenGLShaderProgram()
 
         self.proj = QMatrix4x4()
@@ -167,6 +167,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
     def cleanup(self):
         self.makeCurrent()
         self.vbo.destroy()
+        #self.ibo.destroy()
         del self.program
         self.program = None
         self.doneCurrent()
@@ -178,8 +179,10 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         self.program = QOpenGLShaderProgram()
 
-        self.program.addShaderFromSourceCode(QOpenGLShader.Vertex, self.vertex_code)
-        self.program.addShaderFromSourceCode(QOpenGLShader.Fragment, self.fragment_code)
+        #self.program.addShaderFromSourceCode(QOpenGLShader.Vertex, self.vertex_code)
+        #self.program.addShaderFromSourceCode(QOpenGLShader.Fragment, self.fragment_code)
+        self.program.addShaderFromSourceCode(QOpenGLShader.Vertex, self.vertex_code_tex)
+        self.program.addShaderFromSourceCode(QOpenGLShader.Fragment, self.fragment_code_tex)
         self.program.link()
 
         self.program.bind()
@@ -187,7 +190,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.vao.create()
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao)
 
-        self.vbo.create() # QOpenGLBuffer.VErtexBuffer
+        self.vbo.create() # QOpenGLBuffer.VertexBuffer
         self.vbo.bind()
         self.vbo.allocate(self.scene.const_vertex_data(), self.scene.nb_float * self.float_size)
 
@@ -195,10 +198,21 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.ibo.bind()
         self.ibo.allocate(self.scene.const_index_data(), self.scene.nb_int * self.int_size)
 
-        self.ebo.create() # QOpenGLBuffer.IndexBuffer
-        self.ebo.bind()
-        self.ebo.allocate(self.scene.const_edge_data(), self.scene.nb_int_edge * self.int_size)
+        # ------------------------- the texture ---------------------------------------------
+        self.texture.create()
+        # Wrap style
+        self.texture.setWrapMode(QOpenGLTexture.ClampToBorder)
+        #self.texture.setBorderColor(Qt.red)
 
+        # Texture Filtering
+        self.texture.setMinificationFilter(QOpenGLTexture.NearestMipMapLinear)
+        self.texture.setMagnificationFilter(QOpenGLTexture.Linear)
+
+        # Kopiere Daten in Texture und Erstelle Mipmap
+        self.texture.setData(self.scene.textureData)
+        # bind texture to index "0"
+        self.texture.bind(0)
+        # -------------------------------------------------------------------------------------
 
         self.setup_vertex_attribs()
 
@@ -207,9 +221,6 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
     def setup_vertex_attribs(self):
         self.vbo.bind()
-
-        gcolorLocation = self.program.uniformLocation("g_color")
-        self.program.setUniformValue(gcolorLocation, QVector4D(1,1,1,1))
 
         modelLocation = self.program.uniformLocation("model")
         self.program.setUniformValue(modelLocation, self.model)
@@ -238,20 +249,30 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.program.enableAttributeArray(colorLocation)
         self.program.setAttributeBuffer(colorLocation, GL.GL_FLOAT, offset, size, stride)
 
+
+        offset = Vertex.offset['texcoord'] # size in bytes of preceding data (position = QVector3D / color = QVector4D)
+        size = Vertex.size['texcoord'] # nb float in a color "texcoord" 
+        stride = Vertex.bytes_size # nb bytes in a vertex "texcoord" 
+
+        texLocation =  self.program.attributeLocation("texcoord")
+        self.program.enableAttributeArray(texLocation)
+        self.program.setAttributeBuffer(texLocation, GL.GL_FLOAT, offset, size, stride)
+
+        # --------------------------------- the texture ------------------------------------------
+        # uniform for fragment texture
+        textureLocationID = self.program.attributeLocation("texture")
+        self.program.setUniformValue(textureLocationID, 0) # the index
+        # --------------------------------- the texture ------------------------------------------
+
         self.vbo.release()
 
     def paintGL(self):
         self.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-        self.glDisable(GL.GL_BLEND)
         self.glEnable(GL.GL_DEPTH_TEST)
-        self.glEnable(GL.GL_POLYGON_OFFSET_FILL)
        
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao)
         self.program.bind()
         
-        gcolorLocation = self.program.uniformLocation("g_color")
-        self.program.setUniformValue(gcolorLocation, QVector4D(1,1,1,1))
-
         modelLocation = self.program.uniformLocation("model")
         self.program.setUniformValue(modelLocation, self.model)
 
@@ -263,17 +284,6 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         # Filled cube
         self.glDrawElements(GL.GL_TRIANGLES, 12*3, GL.GL_UNSIGNED_INT, self.scene.const_index_data())
-
-        # Outlined cube
-        self.glDisable(GL.GL_POLYGON_OFFSET_FILL)
-        self.glEnable(GL.GL_BLEND)
-        self.glDepthMask(GL.GL_FALSE)
-
-        gcolorLocation = self.program.uniformLocation("g_color")
-        self.program.setUniformValue(gcolorLocation, QVector4D(0, 0, 0, 1))
-
-        self.glDrawElements(GL.GL_LINES, 12*2, GL.GL_UNSIGNED_INT, self.scene.const_edge_data())
-        self.glDepthMask(GL.GL_TRUE)
 
         self.program.release()
         vao_binder = None
