@@ -4,25 +4,23 @@ import numpy as np
 import sys
 from typing import List
 
-from PySide6.QtCore import Qt, QSize
+from PySide6.QtCore import QSize
 from PySide6.QtGui import (QOpenGLFunctions, QVector2D)
+from PySide6.QtWidgets import (QApplication, QMainWindow)
+
 from PySide6.QtOpenGL import (QOpenGLVertexArrayObject, QOpenGLBuffer, QOpenGLShaderProgram, QOpenGLShader)
-from PySide6.QtWidgets import (QApplication, QWidget, QHBoxLayout)
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 
 from OpenGL import GL
 
 
-class Window(QWidget):
+class Window(QMainWindow):
     def __init__(self, parent=None):
-        QWidget.__init__(self, parent)
+        QMainWindow.__init__(self, parent)
 
         self.gl_widget = GLWidget()
 
-        main_layout = QHBoxLayout()
-        main_layout.addWidget(self.gl_widget)
-        self.setLayout(main_layout)
-
+        self.setCentralWidget(self.gl_widget)
         self.setWindowTitle(self.tr("Hello GL"))
 
 class Vertex:
