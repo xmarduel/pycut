@@ -59,8 +59,8 @@ class Scene():
         # Texture coords
         t = np.array([[0, 0], [0, 1], [1, 1], [1, 0]])
 
-        faces_p = [0, 1, 2, 3,  0, 3, 4, 5,   0, 5, 6, 1,   1, 6, 7, 2,  7, 4, 3, 2,   4, 7, 6, 5]
-        faces_t = [0, 1, 2, 3,  0, 1, 2, 3,   0, 1, 2, 3,   3, 2, 1, 0,  0, 1, 2, 3,   0, 1, 2, 3]
+        faces_p = [0, 1, 2, 3,   0, 3, 4, 5,   0, 5, 6, 1,   1, 6, 7, 2,   7, 4, 3, 2,    4, 7, 6, 5]
+        faces_t = [0, 1, 2, 3,   0, 1, 2, 3,   0, 1, 2, 3,   3, 2, 1, 0,   0, 1, 2, 3,    0, 1, 2, 3]
 
         # list of vertices : 6 faces with for each 4 vertices : use faces_p indexes 
         self.vertices = np.zeros(24, vtype)
@@ -86,7 +86,7 @@ class Scene():
         return self.filled.tobytes()
 
 class GLWidget(QOpenGLWidget, QOpenGLFunctions):
-    vertex_code = """
+    vertex_code_only_color = """
     uniform mat4   model;
     uniform mat4   view;
     uniform mat4   projection;
@@ -101,7 +101,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         v_color = color;
     }  """
 
-    fragment_code = """
+    fragment_code_only_color = """
     varying vec4 v_color;
     void main() { gl_FragColor = v_color; } """
 
@@ -178,8 +178,8 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         self.program = QOpenGLShaderProgram()
 
-        #self.program.addShaderFromSourceCode(QOpenGLShader.Vertex, self.vertex_code)
-        #self.program.addShaderFromSourceCode(QOpenGLShader.Fragment, self.fragment_code)
+        #self.program.addShaderFromSourceCode(QOpenGLShader.Vertex, self.vertex_code_only_color)
+        #self.program.addShaderFromSourceCode(QOpenGLShader.Fragment, self.fragment_code_only_color)
         self.program.addShaderFromSourceCode(QOpenGLShader.Vertex, self.vertex_code_tex)
         self.program.addShaderFromSourceCode(QOpenGLShader.Fragment, self.fragment_code_tex)
         self.program.link()
@@ -209,7 +209,6 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         # Kopiere Daten in Texture und Erstelle Mipmap
         self.texture.setData(self.scene.textureData)
-        # bind texture to index "0" ? here not neccessary
         # -------------------------------------------------------------------------------------
         # -------------------------------------------------------------------------------------
 
