@@ -122,7 +122,6 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         gl_Position = projection * view * model * vec4(position,1.0);
     } """
 
-
     fragment_code_tex = """
     uniform sampler2D texture; // Texture
     varying vec2 v_texcoord;   // Interpolated fragment texture coordinates (in)
@@ -234,7 +233,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         # Offset for position
         offset = Vertex.offset['position']
         size = Vertex.size['position'] # nb float in a position "packet" 
-        stride = Vertex.bytes_size # nb bytes in a vertex "packet" 
+        stride = Vertex.bytes_size # nb bytes in a vertex 
 
         vertexLocation = self.program.attributeLocation("position")
         self.program.enableAttributeArray(vertexLocation)
@@ -243,25 +242,25 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         # Offset for color
         offset = Vertex.offset['color'] # size in bytes of preceding data (position = QVector3D)
         size = Vertex.size['color'] # nb float in a color "packet" 
-        stride = Vertex.bytes_size # nb bytes in a vertex "packet" 
+        stride = Vertex.bytes_size # nb bytes in a vertex
 
         colorLocation =  self.program.attributeLocation("color")
         self.program.enableAttributeArray(colorLocation)
         self.program.setAttributeBuffer(colorLocation, GL.GL_FLOAT, offset, size, stride)
 
+        # Offset for texcoord
+        offset = Vertex.offset['texcoord'] # size in bytes of preceding data (position = QVector3D + color = QVector4D)
+        size = Vertex.size['texcoord'] # nb float in a texcoord "packet" 
+        stride = Vertex.bytes_size # nb bytes in a vertex 
 
-        offset = Vertex.offset['texcoord'] # size in bytes of preceding data (position = QVector3D / color = QVector4D)
-        size = Vertex.size['texcoord'] # nb float in a color "texcoord" 
-        stride = Vertex.bytes_size # nb bytes in a vertex "texcoord" 
-
-        texLocation =  self.program.attributeLocation("texcoord")
-        self.program.enableAttributeArray(texLocation)
-        self.program.setAttributeBuffer(texLocation, GL.GL_FLOAT, offset, size, stride)
+        texcoordLocation =  self.program.attributeLocation("texcoord")
+        self.program.enableAttributeArray(texcoordLocation)
+        self.program.setAttributeBuffer(texcoordLocation, GL.GL_FLOAT, offset, size, stride)
 
         # --------------------------------- the texture ------------------------------------------
         # uniform for fragment texture
-        textureLocationID = self.program.attributeLocation("texture")
-        self.program.setUniformValue(textureLocationID, 0) # the index
+        textureLocationID = self.program.uniformLocation("texture")
+        self.program.setUniformValue(textureLocationID, 0) # the index of the texture
         # --------------------------------- the texture ------------------------------------------
 
         self.vbo.release()
