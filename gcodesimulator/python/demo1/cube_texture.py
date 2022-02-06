@@ -197,11 +197,11 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.ibo.bind()
         self.ibo.allocate(self.scene.const_index_data(), self.scene.nb_int * self.int_size)
 
-        # ------------------------- the texture ---------------------------------------------
+        # -------------------------------------------------------------------------------------
+        # # ------------------------- the texture ---------------------------------------------
         self.texture.create()
         # Wrap style
         self.texture.setWrapMode(QOpenGLTexture.ClampToBorder)
-        #self.texture.setBorderColor(Qt.red)
 
         # Texture Filtering
         self.texture.setMinificationFilter(QOpenGLTexture.NearestMipMapLinear)
@@ -209,8 +209,8 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         # Kopiere Daten in Texture und Erstelle Mipmap
         self.texture.setData(self.scene.textureData)
-        # bind texture to index "0"
-        self.texture.bind(0)
+        # bind texture to index "0" ? here not neccessary
+        # -------------------------------------------------------------------------------------
         # -------------------------------------------------------------------------------------
 
         self.setup_vertex_attribs()
@@ -280,6 +280,12 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         viewLocation = self.program.uniformLocation("view")
         self.program.setUniformValue(viewLocation, self.view)
+
+        # --------------------------------------------------------------------------------------------------------
+        # --------------------------------------------------------------------------------------------------------
+        self.texture.bind(0) # bind texture to texture index i -> accessible in fragment shader through "texture"
+        # --------------------------------------------------------------------------------------------------------
+        # --------------------------------------------------------------------------------------------------------
 
         # Filled cube
         self.glDrawElements(GL.GL_TRIANGLES, 12*3, GL.GL_UNSIGNED_INT, self.scene.const_index_data())
