@@ -26,6 +26,8 @@ class Window(QMainWindow):
 class Vertex:
     nb_float = 9
     bytes_size = nb_float * 4 #  4 bytes each
+    # the size/offset do not strictly belong to the Vertex class, but are properties
+    # of the generated numpy array. However it is pratical to have them here.
     size = {'position' : 3 , 'color': 4, 'texcoord': 2} # size in float of position/texcoord
     offset = {'position' : 0, 'color': 12, 'texcoord': 28 } # offsets in np array in bytes
 
@@ -282,7 +284,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         # --------------------------------------------------------------------------------------------------------
         # --------------------------------------------------------------------------------------------------------
-        self.texture.bind(0) # bind texture to texture index i -> accessible in fragment shader through "texture"
+        self.texture.bind(0) # bind texture to texture index 0 -> accessible in fragment shader through "texture"
         # --------------------------------------------------------------------------------------------------------
         # --------------------------------------------------------------------------------------------------------
 

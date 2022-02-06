@@ -20,13 +20,15 @@ class Window(QMainWindow):
 
         self.gl_widget = GLWidget()
 
-        self.setCentralWidget(self.gl_widget )
+        self.setCentralWidget(self.gl_widget)
         self.setWindowTitle(self.tr("Hello GL"))
 
 class Vertex:
     nb_float = 6
     bytes_size = nb_float * 4 #  4 bytes each
-    size = {'position' : 2 , 'color': 4} # size in float of position/color
+    # the size/offset do not strictly belong to the Vertex class, but are properties
+    # of the generated numpy array. However it is pratical to have them here.
+    size = {'position' : 2 , 'color': 4 } # size in float of position/color
     offset = {'position' : 0, 'color': 8 } # offsets in np array in bytes
 
     def __init__(self, position: QVector2D, color: QVector4D):
@@ -35,7 +37,7 @@ class Vertex:
 
     @classmethod
     def toNumpyArray(cls, vertices: List['Vertex']) -> np.ndarray:
-        # fill the numpy array - each vertex is composed of 2 float
+        # fill the numpy array - each vertex is composed of 6 float
         np_array = np.empty(len(vertices) * cls.nb_float, dtype=ctypes.c_float)
 
         for k, vertex in enumerate(vertices):
@@ -76,10 +78,11 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
     attribute vec2 position;
     attribute vec4 color;
     varying vec4 v_color;
+
     void main()
     {
         gl_Position = vec4(position, 0.0, 1.0);
-        v_color= color;
+        v_color = color;
     } """
 
     fragment_code = """

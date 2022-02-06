@@ -27,6 +27,8 @@ class Window(QMainWindow):
 class Vertex:
     nb_float = 7
     bytes_size = nb_float * 4 #  4 bytes each
+    # the size/offset do not strictly belong to the Vertex class, but are properties
+    # of the generated numpy array. However it is pratical to have them here.
     size = {'position' : 3 , 'color': 4} # size in float of position/color
     offset = {'position' : 0, 'color': 12 } # offsets in np array in bytes
 

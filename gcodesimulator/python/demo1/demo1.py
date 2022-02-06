@@ -1,8 +1,9 @@
 
 import ctypes
-import numpy as np
 import sys
 from typing import List
+
+import numpy as np
 
 from PySide6.QtCore import QSize
 from PySide6.QtGui import (QOpenGLFunctions, QVector2D)
@@ -26,6 +27,8 @@ class Window(QMainWindow):
 class Vertex:
     nb_float = 2
     bytes_size = nb_float * 4 #  4 bytes each
+    # the size/offset do not strictly belong to the Vertex class, but are properties
+    # of the generated numpy array. However it is pratical to have them here.
     size = {'position' : 2 } # size in float of position
     offset = {'position' : 0 } # offsets in np array
 
@@ -51,11 +54,11 @@ class Scene():
 
         vertices : List[Vertex] = []
 
-        # collect vertices - first triangle
+        # define vertices - first triangle
         vertices.append( Vertex(QVector2D(-1,-1)) )
         vertices.append( Vertex(QVector2D(1,1)) )
         vertices.append( Vertex(QVector2D(-1,1)) )
-        # collect vertices - second triangle
+        # define vertices - second triangle
         vertices.append( Vertex(QVector2D(1,1)) )
         vertices.append( Vertex(QVector2D(-1,-1)) )
         vertices.append( Vertex(QVector2D(1,-1)) )
@@ -131,8 +134,8 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         # Offset for position
         offset = Vertex.offset['position']
-        stride = Vertex.bytes_size # nb bytes in a Vertex 
         size = Vertex.size['position'] # nb float in a position "packet" 
+        stride = Vertex.bytes_size # nb bytes in a Vertex 
 
         vertexLocation = self.program.attributeLocation("position")
         self.program.enableAttributeArray(vertexLocation)

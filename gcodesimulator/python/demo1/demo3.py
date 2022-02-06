@@ -5,7 +5,7 @@ import numpy as np
 import sys
 from typing import List
 
-from PySide6.QtCore import Qt, QSize
+from PySide6.QtCore import QSize
 from PySide6.QtGui import (QOpenGLFunctions, QVector2D, QVector4D)
 from PySide6.QtWidgets import (QApplication, QMainWindow)
 
@@ -27,16 +27,18 @@ class Window(QMainWindow):
 class Vertex:
     nb_float = 6
     bytes_size = nb_float * 4 #  4 bytes each
-    size = {'position' : 2 , 'color': 4} # size in float of position/color
+    # the size/offset do not strictly belong to the Vertex class, but are properties
+    # of the generated numpy array. However it is pratical to have them here.
+    size = {'position' : 2 , 'color': 4 } # size in float of position/color
     offset = {'position' : 0, 'color': 8 } # offsets in np array in bytes
-    
+
     def __init__(self, position: QVector2D, color: QVector4D):
         self.position = position
         self.color = color
 
     @classmethod
     def toNumpyArray(cls, vertices: List['Vertex']) -> np.ndarray:
-        # fill the numpy array - each vertex is composed of 2 float
+        # fill the numpy array - each vertex is composed of 6 float
         np_array = np.empty(len(vertices) * cls.nb_float, dtype=ctypes.c_float)
 
         for k, vertex in enumerate(vertices):
@@ -65,7 +67,7 @@ class Scene():
         vertices.append( Vertex(QVector2D(-1,-1), QVector4D(0,0,1,1)) )
         vertices.append( Vertex(QVector2D(1,-1), QVector4D(0,1,0,1) ) )
 
-        # fill the numpy array - each vertex is composed of 6 float
+        # fill the numpy array
         self.m_data = Vertex.toNumpyArray(vertices)
 
     def const_data(self):
@@ -74,16 +76,15 @@ class Scene():
 
 class GLWidget(QOpenGLWidget, QOpenGLFunctions):
     vertex_code = """
-    //uniform float scale;  // sending an uniform float is buggy !!!
+    //uniform float scale;  // sending an uniform float is buggy in PySide!!!
     uniform vec2 scale;
     attribute vec2 position;
     attribute vec4 color;
     varying vec4 v_color;
-    
+
     void main()
     {
-        gl_Position = vec4(scale[0]*position, 0.0, 1.0);
-
+        gl_Position = vec4(scale[0] * position, 0.0, 1.0);
         v_color = color;
     } """
 
@@ -163,7 +164,6 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         stride = Vertex.bytes_size # nb bytes in a vertex "packet" 
         size = Vertex.size['color'] # nb float in a color "packet" 
 
-
         colorLocation =  self.program.attributeLocation("color")
         self.program.enableAttributeArray(colorLocation)
         self.program.setAttributeBuffer(colorLocation, GL.GL_FLOAT, offset, size, stride)
@@ -177,6 +177,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao)
         self.program.bind()
         
+        # inside the paintGL, we update the scale in the buffer
         scaleLocation = self.program.uniformLocation("scale")
         self.program.setUniformValue(scaleLocation, self.scale, 0.0)
 
