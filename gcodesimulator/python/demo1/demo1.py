@@ -24,17 +24,30 @@ class Window(QMainWindow):
         self.setWindowTitle(self.tr("Hello GL"))
 
 class Vertex:
+    nb_float = 2
+    bytes_size = nb_float * 4 #  4 bytes each
+    size = {'position' : 2 } # size in float of position
+    offset = {'position' : 0 } # offsets in np array
+
     def __init__(self,  position: QVector2D):
         self.position = position
 
-    @staticmethod
-    def size_in_bytes():
-        return 2 * 4  # 2 float 
+    @classmethod
+    def toNumpyArray(cls, vertices: List['Vertex']) -> np.ndarray:
+        # fill the numpy array - each vertex is composed of 2 float
+        np_array = np.empty(len(vertices) * cls.nb_float, dtype=ctypes.c_float)
+
+        for k, vertex in enumerate(vertices):
+            np_array[2*k + 0] = vertex.position.x()
+            np_array[2*k + 1] = vertex.position.y()
+
+        return np_array
+
 
 class Scene():
     def __init__(self):
         self.nb_vertex = 6
-        self.nb_float = self.nb_vertex * 2
+        self.nb_float = self.nb_vertex * Vertex.nb_float
 
         vertices : List[Vertex] = []
 
@@ -47,12 +60,8 @@ class Scene():
         vertices.append( Vertex(QVector2D(-1,-1)) )
         vertices.append( Vertex(QVector2D(1,-1)) )
 
-        # fill the numpy array - each vertex is composed of 2 float
-        self.m_data = np.empty(self.nb_float, dtype=ctypes.c_float)
-
-        for k, vertex in enumerate(vertices):
-             self.m_data[2*k + 0] = vertex.position.x()
-             self.m_data[2*k + 1] = vertex.position.y()
+        # fill the numpy array
+        self.m_data = Vertex.toNumpyArray(vertices)
 
     def const_data(self):
         return self.m_data.tobytes()
@@ -121,9 +130,9 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.program.setUniformValue(colorLocation, 0.0, 0.0, 1.0, 1.0)
 
         # Offset for position
-        offset = 0
-        stride = Vertex.size_in_bytes() # nb bytes in a Vertex 
-        size = 2 # nb float in a position "packet" 
+        offset = Vertex.offset['position']
+        stride = Vertex.bytes_size # nb bytes in a Vertex 
+        size = Vertex.size['position'] # nb float in a position "packet" 
 
         vertexLocation = self.program.attributeLocation("position")
         self.program.enableAttributeArray(vertexLocation)

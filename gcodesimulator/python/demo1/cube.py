@@ -25,13 +25,30 @@ class Window(QMainWindow):
         self.setWindowTitle(self.tr("Hello GL"))
 
 class Vertex:
+    nb_float = 7
+    bytes_size = nb_float * 4 #  4 bytes each
+    size = {'position' : 3 , 'color': 4} # size in float of position/color
+    offset = {'position' : 0, 'color': 12 } # offsets in np array in bytes
+
     def __init__(self, position: QVector3D, color: QVector4D):
         self.position = position
         self.color = color
 
-    @staticmethod
-    def size_in_bytes():
-        return 7 * 4  # 7 float 
+    @classmethod
+    def toNumpyArray(cls, vertices: List['Vertex']) -> np.ndarray:
+        np_array = np.empty(len(vertices) * cls.nb_float, dtype=ctypes.c_float)
+
+        for k, vertex in enumerate(vertices):
+            np_array[7*k + 0] = vertex.position.x()
+            np_array[7*k + 1] = vertex.position.y()
+            np_array[7*k + 2] = vertex.position.z()
+            np_array[7*k + 3] = vertex.color.x()
+            np_array[7*k + 4] = vertex.color.y()
+            np_array[7*k + 5] = vertex.color.z()
+            np_array[7*k + 6] = vertex.color.w()
+
+        return np_array
+
 
 class Scene():
     '''
@@ -39,7 +56,7 @@ class Scene():
     '''
     def __init__(self):
         self.nb_vertex = 8
-        self.nb_float = self.nb_vertex * ( 3 + 4 )
+        self.nb_float = self.nb_vertex * Vertex.nb_float
 
         self.nb_triangles = 12
         self.nb_int = self.nb_triangles * 3
@@ -56,17 +73,8 @@ class Scene():
         vertices.append( Vertex(QVector3D(-1, 1,-1), QVector4D(1,0,1,1)) )
         vertices.append( Vertex(QVector3D(-1,-1,-1), QVector4D(1,0,0,1)) )
 
-        # fill the numpy array - each vertex is composed of 7 float
-        self.m_data = np.empty(self.nb_float, dtype=ctypes.c_float)
-
-        for k, vertex in enumerate(vertices):
-            self.m_data[7*k + 0] = vertex.position.x()
-            self.m_data[7*k + 1] = vertex.position.y()
-            self.m_data[7*k + 2] = vertex.position.z()
-            self.m_data[7*k + 3] = vertex.color.x()
-            self.m_data[7*k + 4] = vertex.color.y()
-            self.m_data[7*k + 5] = vertex.color.z()
-            self.m_data[7*k + 6] = vertex.color.w()
+        # fill the numpy array
+        self.m_data = Vertex.toNumpyArray(vertices)
 
         # shared by 12 triangles -> IndexBuffer
         self.i_data = np.array([
@@ -102,7 +110,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
     void main()
     {
-        gl_Position = projection * view * model * vec4(position,1.0);
+        gl_Position = projection * view * model * vec4(position, 1.0);
 
         v_color = color;
     }  """
@@ -191,18 +199,18 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.program.setUniformValue(viewLocation, self.view)
 
         # Offset for position
-        offset = 0
-        size = 3 # nb float in a position "packet" 
-        stride = Vertex.size_in_bytes() # nb bytes in a vertex "packet" 
+        offset = Vertex.offset['position']
+        size = Vertex.size['position'] # nb float in a position "packet" 
+        stride = Vertex.bytes_size # nb bytes in a vertex "packet" 
 
         vertexLocation = self.program.attributeLocation("position")
         self.program.enableAttributeArray(vertexLocation)
         self.program.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, size, stride)
 
         # Offset for color
-        offset = 12 # size in bytes of preceding data (position = QVector2D)
-        size = 4 # nb float in a color "packet" 
-        stride = Vertex.size_in_bytes() # nb bytes in a vertex "packet" 
+        offset = Vertex.offset['color'] # size in bytes of preceding data (position = QVector3D)
+        size = Vertex.size['color'] # nb float in a color "packet" 
+        stride = Vertex.bytes_size # nb bytes in a vertex "packet" 
 
         colorLocation =  self.program.attributeLocation("color")
         self.program.enableAttributeArray(colorLocation)
@@ -226,6 +234,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         viewLocation = self.program.uniformLocation("view")
         self.program.setUniformValue(viewLocation, self.view)
 
+        # Filled cube
         self.glDrawElements(GL.GL_TRIANGLES, 12*3, GL.GL_UNSIGNED_INT, self.scene.const_index_data())
 
         self.program.release()

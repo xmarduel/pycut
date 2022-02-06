@@ -24,18 +24,34 @@ class Window(QMainWindow):
         self.setWindowTitle(self.tr("Hello GL"))
 
 class Vertex:
+    nb_float = 6
+    bytes_size = nb_float * 4 #  4 bytes each
+    size = {'position' : 2 , 'color': 4} # size in float of position/color
+    offset = {'position' : 0, 'color': 8 } # offsets in np array in bytes
+
     def __init__(self, position: QVector2D, color: QVector4D):
         self.position = position
         self.color = color
 
-    @staticmethod
-    def size_in_bytes():
-        return 6 * 4  # 6 float 
+    @classmethod
+    def toNumpyArray(cls, vertices: List['Vertex']) -> np.ndarray:
+        # fill the numpy array - each vertex is composed of 2 float
+        np_array = np.empty(len(vertices) * cls.nb_float, dtype=ctypes.c_float)
+
+        for k, vertex in enumerate(vertices):
+            np_array[6*k + 0] = vertex.position.x()
+            np_array[6*k + 1] = vertex.position.y()
+            np_array[6*k + 2] = vertex.color.x()
+            np_array[6*k + 3] = vertex.color.y()
+            np_array[6*k + 4] = vertex.color.z()
+            np_array[6*k + 5] = vertex.color.w()
+
+        return np_array
 
 class Scene():
     def __init__(self):
         self.nb_vertex = 6
-        self.nb_float = self.nb_vertex * ( 2 + 4 )
+        self.nb_float = self.nb_vertex * Vertex.nb_float
 
         vertices : List[Vertex] = []
 
@@ -48,16 +64,8 @@ class Scene():
         vertices.append( Vertex(QVector2D(-1,-1), QVector4D(0,0,1,1)) )
         vertices.append( Vertex(QVector2D(1,-1), QVector4D(0,1,0,1) ) )
 
-        # fill the numpy array - each vertex is composed of 6 float
-        self.m_data = np.empty(self.nb_float, dtype=ctypes.c_float)
-
-        for k, vertex in enumerate(vertices):
-            self.m_data[6*k + 0] = vertex.position.x()
-            self.m_data[6*k + 1] = vertex.position.y()
-            self.m_data[6*k + 2] = vertex.color.x()
-            self.m_data[6*k + 3] = vertex.color.y()
-            self.m_data[6*k + 4] = vertex.color.z()
-            self.m_data[6*k + 5] = vertex.color.w()
+        # fill the numpy array
+        self.m_data = Vertex.toNumpyArray(vertices)
 
     def const_data(self):
         return self.m_data.tobytes()
@@ -128,19 +136,18 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.vbo.bind()
 
         # Offset for position
-        offset = 0
-        stride = Vertex.size_in_bytes() # nb bytes in a vertex "packet" 
-        size = 2 # nb float in a position "packet" 
+        offset = Vertex.offset['position']
+        stride = Vertex.bytes_size # nb bytes in a vertex "packet" 
+        size = Vertex.size['position'] # nb float in a position "packet" 
 
         vertexLocation = self.program.attributeLocation("position")
         self.program.enableAttributeArray(vertexLocation)
         self.program.setAttributeBuffer(vertexLocation, GL.GL_FLOAT, offset, size, stride)
 
         # Offset for color
-        offset = 8 # size of preceding data (position = QVector2D)
-        stride = Vertex.size_in_bytes() # nb bytes in a vertex "packet" 
-        size = 4 # nb float in a color "packet" 
-
+        offset = Vertex.offset['color'] # size of preceding data (position = QVector2D)
+        stride = Vertex.bytes_size # nb bytes in a vertex "packet" 
+        size = Vertex.size['color'] # nb float in a color "packet" 
 
         colorLocation =  self.program.attributeLocation("color")
         self.program.enableAttributeArray(colorLocation)
