@@ -318,11 +318,15 @@ factor is always 1</strong> .</p>
 <h3>Tabs</h3>
 
 <p>It's easy to define tabs with <strong>PyCut</strong>: just click the button
-"Create Tab" and a red circle is created in the svg, of radius 5 and position
+"Create Tab" and a red circle is created in the svg viewer, of radius 5 and position
 (10,10). The user can drag 'n drop it fron the svg viewer, or set its
 size/postion in the tab table. Yes tabs, for simplicity, are circle. To be
 effective, the tabs have to be enabled and of course placed somewhere on the
 generated toolpaths. The height of the tab is shared by all tabs.</p>
+
+<img src="./pycut_tabs.png" width="310px"/>
+
+</p>
 
 <div class="warning">
 <p><strong>Warning</strong>: Tabs shall not overlap with other tabs (at least
@@ -335,6 +339,10 @@ Ok. </p>
 <h3>Material</h3>
 
 <p>The Operations "Cut Depth" should be be larger than the material thickness.
+</p>
+
+<img src="./pycut_material.png" width="310px"/>
+
 </p>
 
 <div class="warning">
@@ -370,6 +378,9 @@ coordinates. But still the reference is the top-left postion.</p>
   <li>Center of the Gcode area</li>
 </ul>
 
+<img src="./pycut_gcode_conversion.png" width="310px"/>
+</p>
+
 <p>And further:</p>
 <ul>
   <li>Flip X/Y </li>
@@ -394,6 +405,11 @@ is extracted form the svg file: the svg "height" attribute (with units) </p>
   <li>Spindle Start/Stop (<strong>M3</strong>/<strong>M5</strong> codes)</li>
   <li><strong>M2</strong> code</li>
 </ul>
+
+<img src="./pycut_gcode_generation.png" width="310px"/>
+
+</p>
+
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 </div>
