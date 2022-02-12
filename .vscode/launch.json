@@ -4,6 +4,28 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
+
+
+
+
+        {
+            "name": "OPENGL DEMO1",
+            "type": "python",
+            "request": "launch",
+            "program": "demo1.py",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator\\python\\demo1",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "OPENGL QT - DEMO",
+            "type": "python",
+            "request": "launch",
+            "program": "openGL_demo.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\opengl",
+            "args": []
+        },
         {
             "name": "TEST SIMULATOR",
             "type": "python",
@@ -73,7 +95,7 @@
             "request": "launch",
             "program": "text_to_path.py",
             "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\pyside_ex",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\text2path",
             "args": []
         }
     ]
