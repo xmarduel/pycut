@@ -417,13 +417,12 @@ class CncOp:
 
             # 'left' in 'inside', and 'right' is 'outside'
             self.geometry = ShapelyUtils.orientMultiPolygon(self.geometry)
-            self.preview_geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset, 'left', ginterior=True)
+            self.preview_geometry = ShapelyUtils.offsetMultiPolygonAsMultiPolygon(self.geometry, offset, 'left', ginterior=True)
             self.preview_geometry = ShapelyUtils.orientMultiPolygon(self.preview_geometry)
 
             print("preview geometry (with offset)")
             print(self.preview_geometry)
 
-            # always as if there were "rings"
             self.geometry_svg_paths = []
 
             for poly in self.preview_geometry.geoms:
@@ -437,7 +436,7 @@ class CncOp:
             offset = self.margin.toMm()
             
             if offset != 0:
-                geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset, 'left')
+                geometry = ShapelyUtils.offsetMultiPolygonAsMultiPolygon(self.geometry, offset, 'left')
             else:
                 geometry = self.geometry
 
@@ -448,7 +447,7 @@ class CncOp:
             if width < toolData["diameterTool"]:
                 width = toolData["diameterTool"]
 
-            self.preview_geometry = geometry.difference(ShapelyUtils.offsetMultiPolygon(geometry, width, 'left'))
+            self.preview_geometry = geometry.difference(ShapelyUtils.offsetMultiPolygonAsMultiPolygon(geometry, width, 'left'))
             # polygon with hole!
 
             if self.preview_geometry.geom_type == 'Polygon':
@@ -478,11 +477,11 @@ class CncOp:
 
             if offset_plus_width != 0:
                 # 'right' in 'inside', and 'left' is 'outside'  hopefully
-                geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset_plus_width, 'right', resolution=16, join_style=1, mitre_limit=5)
+                geometry = ShapelyUtils.offsetMultiPolygonAsMultiPolygon(self.geometry, offset_plus_width, 'right', resolution=16, join_style=1, mitre_limit=5)
             else:
                 geometry = self.geometry
             
-            self.preview_geometry = geometry.difference(ShapelyUtils.offsetMultiPolygon(geometry, width, 'right', resolution=16, join_style=1, mitre_limit=5))
+            self.preview_geometry = geometry.difference(ShapelyUtils.offsetMultiPolygonAsMultiPolygon(geometry, width, 'right', resolution=16, join_style=1, mitre_limit=5))
             
             #self.preview_geometry = geometry
 
@@ -522,7 +521,7 @@ class CncOp:
 
         if cam_op != "Engrave" :
             # 'left' for Inside OR pocket, 'right' for Outside
-            geometry = ShapelyUtils.offsetMultiPolygon(geometry, offset, 'right' if cam_op == 'Outside' else 'left', ginterior = True)
+            geometry = ShapelyUtils.offsetMultiPolygonAsMultiPolygon(geometry, offset, 'right' if cam_op == 'Outside' else 'left', ginterior = True)
             print("toolpath - offset geometry")
             print(geometry)
 

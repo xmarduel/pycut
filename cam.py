@@ -69,7 +69,10 @@ class cam:
         
         # use polygons exteriors lines - offset them and and diff with the interiors if any
         geometry = ShapelyUtils.orientMultiPolygon(geometry)
-        current = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left', ginterior=True)
+        multi_offset = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left', ginterior=True)
+        
+        current = ShapelyUtils.offsetMultiPolygonAsMultiPolygon(geometry, cutterDia / 2, 'left', ginterior=True)
+        current = ShapelyUtils.simplifyMultiPoly(current, 0.001)
         current = ShapelyUtils.orientMultiPolygon(current)
 
         print("pocketing - initial offset dia/2", current)
@@ -81,51 +84,55 @@ class cam:
             # cannot offset ! maybe geometry too narrow for the cutter
             return []
 
-        poly_ok = list(current.geoms)
-
-        bounds = geometry  # JSCUT: current.slice(0)
+        bounds = geometry
 
         allPaths : List[shapely.geometry.LineString] = []
-        while poly_ok:
+
+        # -------------------------------------------------------------
+        def collect_paths(multi_offset, allPaths):
+            lines_ok = []
+            
+            for offset in multi_offset:
+                if offset.geom_type == 'LineString':
+                    if len(list(offset.coords)) > 0:
+                        lines_ok.append(offset)
+
+                    print("---- SIMPLIFY #nb pts = ", len(list(offset.coords)))
+                    print("---- SIMPLIFY len = ", offset.length)
+
+                if offset.geom_type == 'MultiLineString':
+                    for geom in offset.geoms:
+                        if geom.geom_type == 'LineString':
+                            if len(list(geom.coords)) > 0:
+                                lines_ok.append(geom)
+
+                            print("---- SIMPLIFY #nb pts = ", len(list(geom.coords)))
+                            print("---- SIMPLIFY len = ", geom.length)
+
+            allPaths = lines_ok + allPaths
+
+            return allPaths
+        # -------------------------------------------------------------
+
+        while True:
             #if climb:
             #    for line in current:
             #        line.reverse()
 
-            lines = ShapelyUtils.multiPolyToMultiLine(current)
+            allPaths = collect_paths(multi_offset, allPaths )
 
-            lines_ok = []
-            for line in lines.geoms:
-                if line.geom_type == 'LineString':
-                    print("---- SIMPLIFY #nb pts = ", len(list(line.coords)))
-                    print("---- SIMPLIFY len = ", line.length)
-
-                    if len(list(line.coords)) > 2:
-                        lines_ok.append(line)
-
-            allPaths = lines_ok + allPaths
-
-            current = ShapelyUtils.offsetMultiPolygon(current, cutterDia * (1 - overlap), 'left')
-            current = ShapelyUtils.orientMultiPolygon(current)
-
-            if current:
-                #current = ShapelyUtils.simplifyMultiLine(current, 0.001)
-                current = ShapelyUtils.simplifyMultiPoly(current, 0.01)
-                current = ShapelyUtils.orientMultiPolygon(current)
+            multi_offset = ShapelyUtils.offsetMultiPolygon(current, cutterDia * (1 - overlap), 'left')
+            current = ShapelyUtils.offsetMultiPolygonAsMultiPolygon(current, cutterDia * (1 - overlap), 'left')
             if not current:
+                allPaths = collect_paths(multi_offset, allPaths )
                 break
-            
-            poly_ok = False
-
-            lines = ShapelyUtils.multiPolyToMultiLine(current)
-            
-            for line in lines.geoms:
-                print("---- SIMPLIFY #nb pts = ", len(list(line.coords)))
-                print("---- SIMPLIFY len = ", line.length)
-
-                if len(list(line.coords)) > 2:
-                    poly_ok = True
-            
-            if not poly_ok:
+            current = ShapelyUtils.simplifyMultiPoly(current, 0.001)
+            if not current:
+                allPaths = collect_paths(multi_offset, allPaths )
+                break
+            current = ShapelyUtils.orientMultiPolygon(current)
+           
+            if not multi_offset:
                 break
             
         return cls.mergePaths(bounds, allPaths)
