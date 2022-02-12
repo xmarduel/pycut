@@ -1,15 +1,12 @@
 {
-  "svg_file": "svg/test_PhM__path.svg",
+  "svg_file": "svg/test_AOBQ_path.svg",
   "operations": [
     {
-      "Name": "op",
+      "Name": "A",
       "type": "Pocket",
       "Deep": 1.6749999999999985,
       "paths": [
-        "path37",
-        "path39",
-        "path41",
-        "path43"
+        "pathA"
       ],
       "RampPlunge": false,
       "Combine": "Union",
@@ -23,7 +20,35 @@
       "type": "Pocket",
       "Deep": 3.175,
       "paths": [
-        "path39"
+        "pathO"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 3.175,
+      "paths": [
+        "pathB"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 3.175,
+      "paths": [
+        "pathQ"
       ],
       "RampPlunge": false,
       "Combine": "Union",
@@ -40,39 +65,14 @@
     "Tabs": {
       "units": "mm",
       "height": 2.0,
-      "tabs": [
-        {
-          "center": [
-            10,
-            10
-          ],
-          "radius": 4,
-          "enabled": false
-        },
-        {
-          "center": [
-            10,
-            20
-          ],
-          "radius": 4,
-          "enabled": false
-        },
-        {
-          "center": [
-            10,
-            30
-          ],
-          "radius": 4,
-          "enabled": false
-        }
-      ]
+      "tabs": []
     },
     "Tool": {
       "Units": "mm",
       "Diameter": 0.4,
       "Angle": 180,
       "PassDepth": 1.0,
-      "StepOver": 0.4,
+      "StepOver": 0.5,
       "Rapid": 1000,
       "Plunge": 127,
       "Cut": 1000

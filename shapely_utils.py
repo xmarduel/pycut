@@ -5,6 +5,9 @@ from typing import List
 from typing import Tuple
 
 import shapely.geometry
+from shapely.validation import make_valid
+
+import matplotlib.pyplot as plt
 
 
 class ShapelyUtils:
@@ -32,6 +35,23 @@ class ShapelyUtils:
         
         if lines:
             res = shapely.geometry.MultiLineString(lines)
+        else:
+            res = None
+
+        return res
+
+    @classmethod
+    def simplifyMultiPoly(cls, multipoly: shapely.geometry.MultiPolygon, tol: float) -> shapely.geometry.MultiPolygon:
+        '''
+        '''
+        polys = []
+        for poly in multipoly.geoms:
+            xpoly = poly.simplify(tol)
+            if xpoly:
+                polys.append(xpoly)
+        
+        if polys:
+            res = shapely.geometry.MultiPolygon(polys)
         else:
             res = None
 
@@ -71,32 +91,136 @@ class ShapelyUtils:
         return offsetted
 
     @classmethod
-    def offsetMultiPolygon(cls, geometry: shapely.geometry.MultiPolygon, amount: float, side, resolution=16, join_style=1, mitre_limit=5.0):
+    def orientMultiPolygon(cls, multipoly: shapely.geometry.MultiPolygon):
+        '''
+        '''
+        geoms = []
+        for geom in multipoly.geoms:
+            xgeom = shapely.geometry.polygon.orient(geom)
+            geoms .append(xgeom)
+        xmultipoly = shapely.geometry.MultiPolygon(geoms)
+
+        return xmultipoly
+
+    @classmethod
+    def offsetMultiPolygon(cls, geometry: shapely.geometry.MultiPolygon, amount: float, side, resolution=16, join_style=1, mitre_limit=5.0) -> shapely.geometry.MultiPolygon :
         '''
         '''
         offseted_polys = []
 
         for poly in geometry.geoms:
-            linestring = cls.polyToLineString(poly)
+            linestring = cls.polyExteriorToLineString(poly)
 
             linestring_offset = linestring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=5.0)
 
             if linestring_offset.geom_type == 'LineString':
-                offseted_polys.append(shapely.geometry.Polygon(linestring_offset))
-            else:
+                if len(list(linestring_offset.coords)) <=  2:
+                    continue
+            lines_ok = []
+            if linestring_offset.geom_type == 'MultiLineString':
                 for line in linestring_offset.geoms:
-                    try:
-                        offseted_polys.append(shapely.geometry.Polygon(line))
-                    except Exception:
-                        pass
+                    if len(list(line.coords)) <=  2:
+                        continue
+                    lines_ok.append(line)
+                linestring_offset = shapely.geometry.MultiLineString(lines_ok)
 
-            
+
+            if poly.interiors:
+                # with interiors
+                interior_polys = []
+                for interior in poly.interiors:
+                    ipoly = shapely.geometry.Polygon(interior)
+                    print("ipoly VALID ? ", ipoly.is_valid)
+                       
+                    if ipoly.is_valid == False:
+                        xx = []
+                        yy = []
+
+                        ipoly = make_valid(ipoly)
+                        print(" --> ipoly VALID ? ", ipoly.is_valid)
+                        print(" --> ipoly AREA ? ", ipoly.area)
+    
+                        DEBUG = True
+                            
+                        for iipoly in ipoly.geoms:
+                            if iipoly.geom_type == 'Polygon':
+
+                                if DEBUG:
+                                    x1,y1 = iipoly.exterior.coords.xy
+                                    xx.append(x1)
+                                    yy.append(y1)
+
+                                if iipoly.area < 1.0e-5:
+                                    continue
+                                interior_polys.append(iipoly)
+                                     
+                        if DEBUG:
+                            x1 = xx[0]
+                            y1 = yy[0]
+                        
+                            x2 = xx[1]
+                            y2 = yy[1]
+                 
+                            plt.plot(x1,y1, 'bo-')
+                            plt.plot(x2,y2, 'r+--')
+                            plt.show()
+
+                    else:
+                        interior_polys.append(ipoly)
+                
+                mpoly = shapely.geometry.MultiPolygon(interior_polys)
+                #mpoly = ShapelyUtils.offsetMultiPolygon(mpoly, amount, 'left')
+
+                if linestring_offset.geom_type == 'LineString':
+                    epoly = shapely.geometry.Polygon(linestring_offset)
+                else:
+                    epolys = []
+                    for line in linestring_offset.geoms:
+                        epoly = shapely.geometry.Polygon(line)
+                        epolys.append(epoly)
+                    epoly = shapely.geometry.MultiPolygon(epolys)
+
+                print("epoly VALID ? ", epoly.is_valid)
+
+                # the diff is the solution
+                try:
+                    sol_poly = epoly.difference(mpoly)
+                except Exception as e :
+  
+                    x1,y1 = linestring.coords.xy
+                    ipoly = interior_polys[0]
+                    x2,y2 = ipoly.exterior.coords.xy
+                    plt.plot(x1,y1, 'bo-')
+                    plt.plot(x2,y2, 'r+--')
+                    plt.show()
+
+                    print("ERROR difference")
+                    print(e)
+                    raise
+
+                if sol_poly.geom_type == 'Polygon':
+                    offseted_polys.append(sol_poly)
+                elif sol_poly.geom_type == 'MultiPolygon':
+                    for geom in sol_poly.geoms:
+                        if geom.geom_type == 'Polygon':
+                            offseted_polys.append(geom)
+
+            else: # without interiors
+                if linestring_offset.geom_type == 'LineString':
+                    if len(list(linestring_offset.coords)) > 2:
+                        offseted_polys.append(shapely.geometry.Polygon(linestring_offset))
+                else:
+                    for line in linestring_offset.geoms:
+                        if len(list(line.coords)) > 2:
+                            offseted_polys.append(shapely.geometry.Polygon(line))
+                        
+
         offsetted = shapely.geometry.MultiPolygon(offseted_polys)
 
         return offsetted
 
     @classmethod
-    def polyToLineString(cls, poly: shapely.geometry.Polygon):
+    def polyExteriorToLineString(cls, poly: shapely.geometry.Polygon):
         '''
         '''
         print(" ------------------------  poly to linestring ---")
@@ -122,7 +246,7 @@ class ShapelyUtils:
         lines = []
 
         for poly in multipoly.geoms:
-            line = cls.polyToLineString(poly)
+            line = cls.polyExteriorToLineString(poly)
             lines.append(line)
         
         multiline = shapely.geometry.MultiLineString(lines)
@@ -130,7 +254,7 @@ class ShapelyUtils:
         return multiline
 
     @classmethod
-    def crosses(cls, bounds, p1: Tuple[int,int], p2: Tuple[int,int]):
+    def crosses(cls, bounds: shapely.geometry.MultiPolygon, p1: Tuple[int,int], p2: Tuple[int,int]):
         '''
         Does the line from p1 to p2 cross outside of bounds?
         '''

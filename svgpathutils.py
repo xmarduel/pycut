@@ -1,6 +1,9 @@
 
 import os
 import math
+import copy
+import re
+import string
 
 from typing import List
 from typing import Tuple
@@ -175,7 +178,7 @@ class SvgPath:
 
         return points
 
-    def toShapelyLineString(self) -> shapely.geometry.LineString:
+    def _toShapelyLineString(self) -> shapely.geometry.LineString:
         '''
         '''
         np_svg_path = self.discretize()
@@ -186,15 +189,91 @@ class SvgPath:
 
         return line
 
+    def _evalNbOfSeparatedPaths(self):
+        '''
+        '''
+        d_def = self.p_attrs["d"]
+
+        nb_separate_paths = d_def.count("M")
+        nb_separate_paths = nb_separate_paths + d_def.count("m")
+
+        return nb_separate_paths
+
+    def _generateSeparatedSvgPath(self) -> List['SvgPath']:
+        '''
+        '''
+        # make all "m" -> "M" for the separated paths
+        path_abs = self.svg_path.d()    # thanks svgpathutils!                             
+
+        # it's easy now
+        paths = path_abs.split("M")
+
+        svgpaths = []
+        for k, sep_path in enumerate(paths):
+            sep_path = sep_path.strip()
+            if not sep_path:
+                continue
+            p_id = self.p_id + "___sep_%d" % k 
+            p_attrs = copy.deepcopy(self.p_attrs)
+            p_attrs["d"] = "M " + sep_path
+            o = SvgPath(p_id, p_attrs)
+            svgpaths.append(o)
+        
+        return svgpaths
+
     def toShapelyPolygon(self) -> shapely.geometry.Polygon:
         '''
+        The main method to transform a svg path into a polygon
+        - if only 1 [Mm] inside the svg path, then it is a simple closed line ie a polygon without holes
+        - if more than 1 [Mm] inside the svg path, then it is a polygon with holes
+        -> split them, the "longuest" one is the exterior, the others are the holes
         '''
-        line = self.toShapelyLineString()
-        poly = shapely.geometry.Polygon(line)
+        nb_separated_paths = self._evalNbOfSeparatedPaths()
 
-        # set the right orientation for this polygon
-        poly = shapely.geometry.polygon.orient(poly)
-    
+        if nb_separated_paths == 1:
+            line = self._toShapelyLineString()
+            poly = shapely.geometry.Polygon(line)
+
+            # set the right orientation for this polygon
+            poly = shapely.geometry.polygon.orient(poly)
+        else:
+            # generate temporary svgpath objects with the separated paths
+            # to build a polygon with holes
+            svgpaths = self._generateSeparatedSvgPath()
+
+            data = {}
+            for svgpath in svgpaths:
+                data[svgpath.p_id] = {
+                    "svgpath" : svgpath,
+                    "linestring": svgpath._toShapelyLineString(),
+                    "exterior": False
+                }
+
+            max_length = -1
+            my_length_p_id = ""
+            for p_id in data:
+                svgpath = data[p_id]["svgpath"]
+                length = svgpath.svg_path.length()
+                if length > max_length:
+                    max_length = length
+                    my_length_p_id = p_id
+
+            data[my_length_p_id]["exterior"] = True    
+                
+            # ok, time to build the polygon
+            exterior = data[my_length_p_id]["linestring"]
+            interiors = []
+            for p_id in data:
+                if data[p_id]["exterior"] == False:
+                    interiors.append(data[p_id]["linestring"])
+
+            poly = shapely.geometry.Polygon(exterior, holes=interiors)
+
+            # seems to be OK
+            fp = open("toShapelyPolygon.svg", "w")
+            fp.write('<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1"><g style="stroke-width:0.264583">' + poly.svg(scale_factor=0.1) + '</g></svg>')
+            fp.close()
+
         return poly
 
     @classmethod
@@ -225,7 +304,7 @@ class SvgPath:
     def fromShapelyPolygon(cls, prefix: str, polygon: shapely.geometry.Polygon) -> 'SvgPath':
         '''
         '''
-        path_str = polygon.svg()
+        path_str = polygon.svg(scale_factor=0.1)
 
         svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
             version="1.1">
@@ -233,6 +312,10 @@ class SvgPath:
             %s
             </g> 
         </svg>''' % path_str
+
+        fp = open("fromShapelyPolygon.svg", "w")
+        fp.write(svg)
+        fp.close()
 
         paths, attributes = cls.svg2paths_from_string(svg)
 

@@ -416,7 +416,9 @@ class CncOp:
             offset = self.margin.toMm()
 
             # 'left' in 'inside', and 'right' is 'outside'
+            self.geometry = ShapelyUtils.orientMultiPolygon(self.geometry)
             self.preview_geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset, 'left')
+            self.preview_geometry = ShapelyUtils.orientMultiPolygon(self.preview_geometry)
 
             print("preview geometry (with offset)")
             print(self.preview_geometry)

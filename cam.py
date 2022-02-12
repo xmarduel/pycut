@@ -67,12 +67,10 @@ class cam:
         '''
         print("pocketing ", geometry)
         
-        # use lines, not polygons
-        multiline = ShapelyUtils.multiPolyToMultiLine(geometry)
-
-        print("pocketing - multiline from polygon", multiline)
-
-        current = ShapelyUtils.offsetMultiLine(multiline, cutterDia / 2, 'left')
+        # use polygons exteriors lines - offset them and and diff with the interiors if any
+        geometry = ShapelyUtils.orientMultiPolygon(geometry)
+        current = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left')
+        current = ShapelyUtils.orientMultiPolygon(current)
 
         print("pocketing - initial offset dia/2", current)
 
@@ -83,32 +81,51 @@ class cam:
             # cannot offset ! maybe geometry too narrow for the cutter
             return []
 
-        lines_ok = list(current.geoms)
+        poly_ok = list(current.geoms)
 
-        bounds = shapely.geometry.MultiLineString(current)  # JSCUT: current.slice(0)
+        bounds = geometry  # JSCUT: current.slice(0)
+
         allPaths : List[shapely.geometry.LineString] = []
-        while lines_ok:
+        while poly_ok:
             #if climb:
             #    for line in current:
             #        line.reverse()
-            allPaths =  lines_ok + allPaths
 
-            current = ShapelyUtils.offsetMultiLine(current, cutterDia * (1 - overlap), 'left')
+            lines = ShapelyUtils.multiPolyToMultiLine(current)
+
+            lines_ok = []
+            for line in lines.geoms:
+                if line.geom_type == 'LineString':
+                    print("---- SIMPLIFY #nb pts = ", len(list(line.coords)))
+                    print("---- SIMPLIFY len = ", line.length)
+
+                    if len(list(line.coords)) > 2:
+                        lines_ok.append(line)
+
+            allPaths = lines_ok + allPaths
+
+            current = ShapelyUtils.offsetMultiPolygon(current, cutterDia * (1 - overlap), 'left')
+            current = ShapelyUtils.orientMultiPolygon(current)
+
             if current:
-                current = ShapelyUtils.simplifyMultiLine(current, 0.001)
+                #current = ShapelyUtils.simplifyMultiLine(current, 0.001)
+                current = ShapelyUtils.simplifyMultiPoly(current, 0.01)
+                current = ShapelyUtils.orientMultiPolygon(current)
             if not current:
                 break
             
-            lines_ok = []
+            poly_ok = False
+
+            lines = ShapelyUtils.multiPolyToMultiLine(current)
             
-            for line in current.geoms:
+            for line in lines.geoms:
                 print("---- SIMPLIFY #nb pts = ", len(list(line.coords)))
                 print("---- SIMPLIFY len = ", line.length)
 
                 if len(list(line.coords)) > 2:
-                    lines_ok.append(line)
+                    poly_ok = True
             
-            if not lines_ok:
+            if not poly_ok:
                 break
             
         return cls.mergePaths(bounds, allPaths)
@@ -233,14 +250,14 @@ class cam:
         return camPaths
 
     @classmethod
-    def mergePaths(cls, _bounds: shapely.geometry.MultiLineString, paths: List[shapely.geometry.LineString]) -> List[CamPath] :
+    def mergePaths(cls, _bounds: shapely.geometry.MultiPolygon, paths: List[shapely.geometry.LineString]) -> List[CamPath] :
         '''
         Try to merge paths. A merged path doesn't cross outside of bounds. 
         '''
         if _bounds and len(_bounds.geoms) > 0:
             bounds = _bounds
         else: 
-            bounds = shapely.geometry.MultiLineString()
+            bounds = shapely.geometry.MultiPolygon()
  
 
         # std list
