@@ -103,7 +103,7 @@ class ShapelyUtils:
         return xmultipoly
 
     @classmethod
-    def offsetMultiPolygon(cls, geometry: shapely.geometry.MultiPolygon, amount: float, side, resolution=16, join_style=1, mitre_limit=5.0) -> shapely.geometry.MultiPolygon :
+    def offsetMultiPolygon(cls, geometry: shapely.geometry.MultiPolygon, amount: float, side, ginterior=False, resolution=16, join_style=1, mitre_limit=5.0) -> shapely.geometry.MultiPolygon :
         '''
         '''
         offseted_polys = []
@@ -169,7 +169,9 @@ class ShapelyUtils:
                         interior_polys.append(ipoly)
                 
                 mpoly = shapely.geometry.MultiPolygon(interior_polys)
-                #mpoly = ShapelyUtils.offsetMultiPolygon(mpoly, amount, 'left')
+                if ginterior == True:
+                    mpoly = ShapelyUtils.orientMultiPolygon(mpoly)
+                    mpoly = ShapelyUtils.offsetMultiPolygon(mpoly, amount, 'right')
 
                 if linestring_offset.geom_type == 'LineString':
                     epoly = shapely.geometry.Polygon(linestring_offset)

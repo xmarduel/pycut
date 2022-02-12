@@ -417,7 +417,7 @@ class CncOp:
 
             # 'left' in 'inside', and 'right' is 'outside'
             self.geometry = ShapelyUtils.orientMultiPolygon(self.geometry)
-            self.preview_geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset, 'left')
+            self.preview_geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset, 'left', ginterior=True)
             self.preview_geometry = ShapelyUtils.orientMultiPolygon(self.preview_geometry)
 
             print("preview geometry (with offset)")
@@ -520,9 +520,9 @@ class CncOp:
 
         offset = margin.toMm()
 
-        if cam_op != "Engrave" : # and offset != 9999:
-            # 'left' for Inside AND pocket
-            geometry = ShapelyUtils.offsetMultiPolygon(geometry, offset, 'right' if cam_op == 'Outside' else 'left')
+        if cam_op != "Engrave" :
+            # 'left' for Inside OR pocket, 'right' for Outside
+            geometry = ShapelyUtils.offsetMultiPolygon(geometry, offset, 'right' if cam_op == 'Outside' else 'left', ginterior = True)
             print("toolpath - offset geometry")
             print(geometry)
 

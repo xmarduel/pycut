@@ -62,14 +62,14 @@ class cam:
         
         Returns array of CamPath.
         
-        cutterDia is in Shapely units. 
+        cutterDia is in "UserUnit" units. 
         overlap is in the range [0, 1).
         '''
         print("pocketing ", geometry)
         
         # use polygons exteriors lines - offset them and and diff with the interiors if any
         geometry = ShapelyUtils.orientMultiPolygon(geometry)
-        current = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left')
+        current = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left', ginterior=True)
         current = ShapelyUtils.orientMultiPolygon(current)
 
         print("pocketing - initial offset dia/2", current)
