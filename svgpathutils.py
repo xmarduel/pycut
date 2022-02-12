@@ -189,15 +189,16 @@ class SvgPath:
 
         return line
 
-    def _evalNbOfSeparatedPaths(self):
+    def _isSimplePath(self) -> bool:
         '''
+        check if path is "simple" closed path or path with hole(s)
         '''
         d_def = self.p_attrs["d"]
 
         nb_separate_paths = d_def.count("M")
         nb_separate_paths = nb_separate_paths + d_def.count("m")
 
-        return nb_separate_paths
+        return nb_separate_paths == 1
 
     def _generateSeparatedSvgPath(self) -> List['SvgPath']:
         '''
@@ -228,9 +229,9 @@ class SvgPath:
         - if more than 1 [Mm] inside the svg path, then it is a polygon with holes
         -> split them, the "longuest" one is the exterior, the others are the holes
         '''
-        nb_separated_paths = self._evalNbOfSeparatedPaths()
+        is_simple_path = self._isSimplePath()
 
-        if nb_separated_paths == 1:
+        if is_simple_path == True:
             line = self._toShapelyLineString()
             poly = shapely.geometry.Polygon(line)
 
@@ -270,9 +271,9 @@ class SvgPath:
             poly = shapely.geometry.Polygon(exterior, holes=interiors)
 
             # seems to be OK
-            fp = open("toShapelyPolygon.svg", "w")
-            fp.write('<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1"><g style="stroke-width:0.264583">' + poly.svg(scale_factor=0.1) + '</g></svg>')
-            fp.close()
+            #fp = open("toShapelyPolygon.svg", "w")
+            #fp.write('<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1"><g style="stroke-width:0.264583">' + poly.svg(scale_factor=0.1) + '</g></svg>')
+            #fp.close()
 
         return poly
 

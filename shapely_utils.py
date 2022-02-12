@@ -163,8 +163,8 @@ class ShapelyUtils:
                         #yy = []
 
                         ipoly = make_valid(ipoly)
-                        print(" --> ipoly VALID ? ", ipoly.is_valid)
-                        print(" --> ipoly AREA ? ", ipoly.area)
+                        print(" --> interior poly VALID = ", ipoly.is_valid)
+                        print(" --> interior poly AREA = ", ipoly.area)
     
                         DEBUG = True
                             
@@ -177,6 +177,7 @@ class ShapelyUtils:
                                 #    yy.append(y1)
 
                                 if iipoly.area < 1.0e-5:
+                                    # was error proned! Ex: "P" char
                                     continue
                                 interior_polys.append(iipoly)
                                      
@@ -199,6 +200,7 @@ class ShapelyUtils:
                     interior_multipoly = ShapelyUtils.orientMultiPolygon(interior_multipoly)
                     interior_offset = ShapelyUtils.offsetMultiPolygon(interior_multipoly, amount, 'right')
                     interior_multipoly = ShapelyUtils.buildMultiPolyFromOffset(interior_offset)
+                
                 # the diff is the solution
                 try:
                     sol_poly = exterior_multipoly.difference(interior_multipoly)
@@ -257,8 +259,8 @@ class ShapelyUtils:
                     if ipoly.is_valid == False:
 
                         ipoly = make_valid(ipoly)
-                        print(" --> ipoly VALID ? ", ipoly.is_valid)
-                        print(" --> ipoly AREA ? ", ipoly.area)
+                        print(" --> interior poly VALID = ", ipoly.is_valid)
+                        print(" --> interior poly AREA = ", ipoly.area)
     
                         DEBUG = True
                             
@@ -266,6 +268,7 @@ class ShapelyUtils:
                             if iipoly.geom_type == 'Polygon':
 
                                 if iipoly.area < 1.0e-5:
+                                    # was error proned! Ex: "P" char
                                     continue
                                 interior_polys.append(iipoly)
 
