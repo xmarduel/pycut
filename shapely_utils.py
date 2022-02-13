@@ -6,6 +6,7 @@ from typing import Tuple
 
 import shapely.geometry
 from shapely.validation import make_valid
+from shapely.validation import explain_validity
 
 import matplotlib.pyplot as plt
 
@@ -217,7 +218,11 @@ class ShapelyUtils:
 
             linestring = cls.polyExteriorToLineString(poly)
 
+            print("linestring VALID = ", linestring.is_valid)
+
             offset = linestring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=5.0)
+
+            print("parallel_offset VALID ? ", offset.is_valid)
 
             exterior_multipoly = cls.buildMultiPolyFromOffset([offset])
             print("exterior_multipoly VALID ? ", exterior_multipoly.is_valid)
@@ -299,7 +304,13 @@ class ShapelyUtils:
                     pass
                 else:
                     lines_ok.append(offset)
-            if offset.geom_type == 'MultiLineString':
+            elif offset.geom_type == 'MultiLineString':
+                for geom in offset.geoms:
+                    if geom.geom_type == 'LineString':
+                        if len(list(geom.coords)) <=  2:
+                            continue
+                        lines_ok.append(geom)
+            elif offset.geom_type == 'GeometryCollection':
                 for geom in offset.geoms:
                     if geom.geom_type == 'LineString':
                         if len(list(geom.coords)) <=  2:
@@ -307,7 +318,18 @@ class ShapelyUtils:
                         lines_ok.append(geom)
                 
             for line_ok in lines_ok:
-                polygon = shapely.geometry.Polygon(line_ok)
+                print("linestring:", line_ok.is_valid, line_ok)
+                if not line_ok.is_valid:
+                    print("linestring:", explain_validity(line_ok))
+                linearring = shapely.geometry.LinearRing(list(line_ok.coords))
+                print("linearring:", linearring.is_valid, linearring)
+                if not linearring.is_valid:
+                    print("linearring:", explain_validity(linearring))
+                polygon = shapely.geometry.Polygon(linearring)
+                print("linestring -> poly :", polygon.is_valid, polygon)
+                if not polygon.is_valid:
+                    polygon = cls.fixSimplePolygon(polygon)
+                    print("linestring -> poly  _>fixed :", polygon.is_valid, polygon)
                 polygons.append(polygon)
 
         return shapely.geometry.MultiPolygon(polygons)
@@ -498,7 +520,7 @@ class ShapelyUtils:
         if valid_poly.geom_type == 'Polygon':
             return valid_poly
 
-        if valid_poly.geom_type == 'MultiPolygon':
+        elif valid_poly.geom_type == 'MultiPolygon':
             polys = []
 
             for geom in valid_poly.geoms:
@@ -518,9 +540,18 @@ class ShapelyUtils:
 
             return largest_poly
 
-        if valid_poly.geom_type == 'GeometryCollection':
+        elif valid_poly.geom_type == 'GeometryCollection':
             # shit
-            pass
+            ok = None
+            for geom in valid_poly:
+                print(geom)
+                if geom.geom_type == 'Polygon':
+                    # the first one ?
+                    if not ok: 
+                        ok = geom
+                else:
+                    pass
+            return ok
 
         return None
 
