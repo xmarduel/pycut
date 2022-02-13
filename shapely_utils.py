@@ -518,68 +518,6 @@ class ShapelyUtils:
 
             return largest_poly
 
-        return None
-
-    @classmethod
-    def fixGenericPolygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :
-        '''
-        fix exterior and interiors in not valid
-        '''
-        if polygon.is_valid:
-            return polygon
-
-        exterior = list(polygon.exterior.coords)
-        interiors = polygon.interiors
-
-        ext_poly = shapely.geometry.Polygon(exterior)
-        if not ext_poly.is_valid:
-            ext_poly = cls.fixSimplePolygon(ext_poly)
-
-        fixed_interiors = []
-        for interior in interiors:
-            int_poly = shapely.geometry.Polygon(list(interior.coords))
-
-            if not int_poly.is_valid:
-                int_poly = cls.fixSimplePolygon(int_poly)
-
-            fixed_interiors.append(int_poly)
-
-        ext_linestring = shapely.geometry.LineString(list(ext_poly.exterior.coords))
-        holes_linestrings = [shapely.geometry.LineString(list(int_poly.exterior.coords)) for int_poly in fixed_interiors] 
-
-        fixed_poly = shapely.geometry.Polygon(ext_linestring, holes=holes_linestrings)
-
-        return fixed_poly
-
-    @classmethod
-    def fixSimplePolygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :
-        '''
-        '''
-        valid_poly = make_valid(polygon)
-
-        if valid_poly.geom_type == 'Polygon':
-            return valid_poly
-
-        if valid_poly.geom_type == 'MultiPolygon':
-            polys = []
-
-            for geom in valid_poly.geoms:
-                if not geom.is_valid:
-                    continue
-
-                polys.append(geom)
-
-            # take the largest one!
-            largest_area = -1
-            largest_poly = None
-            for poly in polys:
-                area = poly.area
-                if area > largest_area:
-                    largest_area = area
-                    largest_poly = poly
-
-            return largest_poly
-
         if valid_poly.geom_type == 'GeometryCollection':
             # shit
             pass
