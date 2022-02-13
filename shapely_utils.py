@@ -152,6 +152,8 @@ class ShapelyUtils:
                 exterior_multipoly = cls.buildMultiPolyFromOffset([offset])
                 print("multipoly VALID ? ", exterior_multipoly.is_valid)
 
+                exterior_multipoly = cls.fixMultipoly(exterior_multipoly)
+
                 # with interiors
                 interior_polys = []
                 for interior in poly.interiors:
@@ -159,39 +161,9 @@ class ShapelyUtils:
                     print("ipoly VALID ? ", ipoly.is_valid)
                        
                     if ipoly.is_valid == False:
-                        #xx = []
-                        #yy = []
-
-                        ipoly = make_valid(ipoly)
-                        print(" --> interior poly VALID = ", ipoly.is_valid)
-                        print(" --> interior poly AREA = ", ipoly.area)
-    
-                        DEBUG = True
-                            
-                        for iipoly in ipoly.geoms:
-                            if iipoly.geom_type == 'Polygon':
-
-                                #if DEBUG:
-                                #    x1,y1 = iipoly.exterior.coords.xy
-                                #    xx.append(x1)
-                                #    yy.append(y1)
-
-                                if iipoly.area < 1.0e-5:
-                                    # was error proned! Ex: "P" char
-                                    continue
-                                interior_polys.append(iipoly)
-                                     
-                        #if DEBUG:
-                        #    x1 = xx[0]
-                        #    y1 = yy[0]
-                        
-                        #    x2 = xx[1]
-                        #    y2 = yy[1]
-                 
-                        #    plt.plot(x1,y1, 'bo-')
-                        #    plt.plot(x2,y2, 'r+--')
-                        #    plt.show()
-
+                        iipoly = cls.fixSimplePolygon(ipoly)
+                        if iipoly:
+                            interior_polys.append(iipoly)
                     else:
                         interior_polys.append(ipoly)
                 
@@ -244,12 +216,13 @@ class ShapelyUtils:
             offset = linestring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=5.0)
 
             exterior_multipoly = cls.buildMultiPolyFromOffset([offset])
+            print("exterior_multipoly VALID ? ", exterior_multipoly.is_valid)
+
+            if not exterior_multipoly.is_valid:
+                exterior_multipoly = cls.fixMultipoly(exterior_multipoly)
 
             if poly.interiors: # with interiors
-                # from the offseted lines, build a multipolygon that we diff with the interiors
-                exterior_multipoly = cls.buildMultiPolyFromOffset([offset])
-                print("multipoly VALID ? ", exterior_multipoly.is_valid)
-
+                
                 # with interiors
                 interior_polys = []
                 for interior in poly.interiors:
@@ -257,21 +230,9 @@ class ShapelyUtils:
                     print("ipoly VALID ? ", ipoly.is_valid)
                        
                     if ipoly.is_valid == False:
-
-                        ipoly = make_valid(ipoly)
-                        print(" --> interior poly VALID = ", ipoly.is_valid)
-                        print(" --> interior poly AREA = ", ipoly.area)
-    
-                        DEBUG = True
-                            
-                        for iipoly in ipoly.geoms:
-                            if iipoly.geom_type == 'Polygon':
-
-                                if iipoly.area < 1.0e-5:
-                                    # was error proned! Ex: "P" char
-                                    continue
-                                interior_polys.append(iipoly)
-
+                        iipoly = cls.fixSimplePolygon(ipoly)
+                        if iipoly:
+                            interior_polys.append(iipoly)
                     else:
                         interior_polys.append(ipoly)
                 
@@ -488,3 +449,119 @@ class ShapelyUtils:
             return shapely.geometry.Polygon(pts)
 
         return poly
+
+    @classmethod
+    def fixMultipoly(cls, multipoly: shapely.geometry.MultiPolygon) -> shapely.geometry.MultiPolygon :
+        '''
+        '''
+        valid_polys = []
+
+        for poly in multipoly.geoms:
+            if not poly.is_valid:
+                fixed_poly = cls.fixGenericPolygon(poly)
+                if fixed_poly is not None:
+                    valid_polys.append(fixed_poly)
+            else:
+                valid_polys.append(poly)
+
+        if len(valid_polys) > 0:
+            return shapely.geometry.MultiPolygon(valid_polys)
+
+        return None
+
+    @classmethod
+    def fixSimplePolygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :
+        '''
+        '''
+        #cls.MatplotlibDebug(polygon)
+
+        valid_poly = make_valid(polygon)
+
+        if valid_poly.geom_type == 'Polygon':
+            return valid_poly
+
+        if valid_poly.geom_type == 'MultiPolygon':
+            polys = []
+
+            for geom in valid_poly.geoms:
+                if not geom.is_valid:
+                    continue
+
+                polys.append(geom)
+
+            # take the largest one!
+            largest_area = -1
+            largest_poly = None
+            for poly in polys:
+                area = poly.area
+                if area > largest_area:
+                    largest_area = area
+                    largest_poly = poly
+
+            return largest_poly
+
+        return None
+
+    @classmethod
+    def fixGenericPolygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :
+        '''
+        fix exterior and interiors in not valid
+        '''
+        if polygon.is_valid:
+            return polygon
+
+        exterior = list(polygon.exterior.coords)
+        interiors = polygon.interiors
+
+        ext_poly = shapely.geometry.Polygon(exterior)
+        if not ext_poly.is_valid:
+            ext_poly = cls.fixSimplePolygon(ext_poly)
+
+        fixed_interiors = []
+        for interior in interiors:
+            int_poly = shapely.geometry.Polygon(list(interior.coords))
+
+            if not int_poly.is_valid:
+                int_poly = cls.fixSimplePolygon(int_poly)
+
+            fixed_interiors.append(int_poly)
+
+        ext_linestring = shapely.geometry.LineString(list(ext_poly.exterior.coords))
+        holes_linestrings = [shapely.geometry.LineString(list(int_poly.exterior.coords)) for int_poly in fixed_interiors] 
+
+        fixed_poly = shapely.geometry.Polygon(ext_linestring, holes=holes_linestrings)
+
+        return fixed_poly
+
+    @classmethod
+    def MatplotlibDebug(cls, multipoly):
+        '''
+        '''
+        valid_multipoly = make_valid(multipoly)
+                              
+        print(" --> multipoly VALID = ", multipoly.is_valid)
+        print(" --> multipoly AREA = ", multipoly.area)
+
+        print(" --> valid_multipoly VALID = ", valid_multipoly.is_valid)
+        print(" --> valid_multipoly AREA = ", valid_multipoly.area)
+
+        xx = []
+        yy = []
+
+        for geom in valid_multipoly.geoms:
+            x = geom.exterior.coords.xy[0]
+            y = geom.exterior.coords.xy[1]
+
+            xx.append(x)
+            yy.append(y)
+        
+        # plot
+        style = {
+            0: 'bo-',
+            1: 'r+--',
+            2: 'go-'
+        }
+        for k, (x,y) in enumerate(zip(xx,yy)):
+            plt.plot(x,y, style[k])
+
+        plt.show()

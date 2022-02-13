@@ -124,11 +124,11 @@ class cam:
             multi_offset = ShapelyUtils.offsetMultiPolygon(current, cutterDia * (1 - overlap), 'left')
             current = ShapelyUtils.offsetMultiPolygonAsMultiPolygon(current, cutterDia * (1 - overlap), 'left')
             if not current:
-                allPaths = collect_paths(multi_offset, allPaths )
+                allPaths = collect_paths(multi_offset, allPaths)
                 break
             current = ShapelyUtils.simplifyMultiPoly(current, 0.001)
             if not current:
-                allPaths = collect_paths(multi_offset, allPaths )
+                allPaths = collect_paths(multi_offset, allPaths)
                 break
             current = ShapelyUtils.orientMultiPolygon(current)
            

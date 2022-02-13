@@ -17,6 +17,8 @@ import numpy as np
 import svgpathtools
 import shapely.geometry
 
+from shapely_utils import ShapelyUtils
+
 
 M_PI = math.acos(-1)
 
@@ -270,6 +272,11 @@ class SvgPath:
 
             poly = shapely.geometry.Polygon(exterior, holes=interiors)
 
+            # wow, some some letters (D, P)
+            # D: exterior/interior is wrong
+            # P: interior in wromg 
+            poly = ShapelyUtils.fixGenericPolygon(poly)
+
             # seems to be OK
             #fp = open("toShapelyPolygon.svg", "w")
             #fp.write('<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1"><g style="stroke-width:0.264583">' + poly.svg(scale_factor=0.1) + '</g></svg>')
@@ -321,7 +328,7 @@ class SvgPath:
         paths, attributes = cls.svg2paths_from_string(svg)
 
         attribs = attributes[0]
-        attribs["fill"] = "#000000"
+        attribs["fill"] = "#ff0000"
 
         return SvgPath(prefix, attribs) 
 
