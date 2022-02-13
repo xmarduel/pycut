@@ -224,12 +224,17 @@ class SvgPath:
         
         return svgpaths
 
-    def toShapelyPolygon(self) -> shapely.geometry.Polygon:
+    def toShapelyPolygons(self) -> List[shapely.geometry.Polygon]:
         '''
-        The main method to transform a svg path into a polygon
+        The main method to transform a svg path into a polygon or a list of polygons
         - if only 1 [Mm] inside the svg path, then it is a simple closed line ie a polygon without holes
         - if more than 1 [Mm] inside the svg path, then it is a polygon with holes
         -> split them, the "longuest" one is the exterior, the others are the holes
+
+        -> Wow! not automatically! for exmaple for i and j there are 2 [Mm] but no interior,
+        indeed i is composed of 2 distincts paths, as j also is.
+
+        -> so we have infact to check if the smaller path in included in the larger one, or not
         '''
         is_simple_path = self._isSimplePath()
 
@@ -239,6 +244,7 @@ class SvgPath:
 
             # set the right orientation for this polygon
             poly = shapely.geometry.polygon.orient(poly)
+            others = []
         else:
             # generate temporary svgpath objects with the separated paths
             # to build a polygon with holes
@@ -270,19 +276,44 @@ class SvgPath:
                 if data[p_id]["exterior"] == False:
                     interiors.append(data[p_id]["linestring"])
 
-            poly = shapely.geometry.Polygon(exterior, holes=interiors)
+            larger = shapely.geometry.Polygon(exterior)
+            holes = []
+            separs = []
+            for interior_line in interiors:
+                if larger.covers(interior_line):
+                    holes.append(interior_line)
+                else:
+                    #ShapelyUtils.MatplotlibLineStringDebug("xx", interior_line)
+                    separs.append(interior_line)
+
+            if holes:
+                poly = shapely.geometry.Polygon(exterior, holes=holes)
+            else:
+                poly = shapely.geometry.Polygon(exterior)
+
+            _others = []
+            
+            for separ in separs:
+                # very necessary!
+                simplyfied_separ =  separ.simplify(0.001)
+                other = shapely.geometry.Polygon(simplyfied_separ)
+                _others.append(other)
+            
+            others = [ShapelyUtils.fixGenericPolygon(other) for other in _others]
 
             # wow, some some letters (D, P)
             # D: exterior/interior is wrong
-            # P: interior in wromg 
+            # P: interior in wrong 
             poly = ShapelyUtils.fixGenericPolygon(poly)
+
+            #ShapelyUtils.MatplotlibPolygonDebug("poly", poly)
 
             # seems to be OK
             #fp = open("toShapelyPolygon.svg", "w")
             #fp.write('<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1"><g style="stroke-width:0.264583">' + poly.svg(scale_factor=0.1) + '</g></svg>')
             #fp.close()
 
-        return poly
+        return [poly] + others
 
     @classmethod
     def fromShapelyLineString(cls, prefix: str, shapely_path: shapely.geometry.LineString) -> 'SvgPath':

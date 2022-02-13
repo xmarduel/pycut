@@ -311,7 +311,7 @@ class CncOp:
         self.shapely_polygons = []
 
         for svg_path in self.svg_paths:
-            shapely_polygon = svg_path.toShapelyPolygon()
+            shapely_polygons = svg_path.toShapelyPolygons()
 
             # JSCUT
             # if (self.rawPaths[i].nonzero)
@@ -329,7 +329,7 @@ class CncOp:
 
             # actually not implemented
             if True:
-                self.shapely_polygons.append(shapely_polygon)
+                self.shapely_polygons += shapely_polygons
             else:
                 pass
                 '''
@@ -418,7 +418,12 @@ class CncOp:
             # 'left' in 'inside', and 'right' is 'outside'
             self.geometry = ShapelyUtils.orientMultiPolygon(self.geometry)
             self.preview_geometry = ShapelyUtils.offsetMultiPolygonAsMultiPolygon(self.geometry, offset, 'left', ginterior=True)
+            
+            ShapelyUtils.MatplotlibMultiPolygonDebug("preview pocket", self.preview_geometry)
+            
             self.preview_geometry = ShapelyUtils.orientMultiPolygon(self.preview_geometry)
+
+            ShapelyUtils.MatplotlibMultiPolygonDebug("preview pocket - oriented", self.preview_geometry)
 
             print("preview geometry (with offset)")
             print(self.preview_geometry)

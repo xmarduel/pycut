@@ -14,6 +14,10 @@ class ShapelyUtils:
     '''
     Helper functions on Shapely
     '''
+    MAPLOTLIB_DEBUG = False
+    #MAPLOTLIB_DEBUG = True
+    cnt = 1
+
     @classmethod
     def diff(cls, paths1: shapely.geometry.MultiLineString, paths2: shapely.geometry.MultiLineString) -> shapely.geometry.MultiLineString:
         '''
@@ -131,7 +135,7 @@ class ShapelyUtils:
         return xmultipoly
 
     @classmethod
-    def offsetMultiPolygon(cls, geometry: shapely.geometry.MultiPolygon, amount: float, side, ginterior=False, resolution=16, join_style=1, mitre_limit=5.0) -> shapely.geometry.MultiLineString :
+    def offsetMultiPolygon(cls, geometry: shapely.geometry.MultiPolygon, amount: float, side, ginterior=False, resolution=16, join_style=1, mitre_limit=5.0) -> List[shapely.geometry.MultiLineString] :
         '''
         Generate offseted lines from the polygons. All the produced lines are good 
         to store in the toolpaths.
@@ -237,13 +241,35 @@ class ShapelyUtils:
                         interior_polys.append(ipoly)
                 
                 interior_multipoly = shapely.geometry.MultiPolygon(interior_polys)
+                # this simplify may be important so that the offset becomes Ok (example: letter "B") 
+                interior_multipoly = ShapelyUtils.simplifyMultiPoly(interior_multipoly, 0.001)
                 if ginterior == True:
+                    ShapelyUtils.MatplotlibMultiPolygonDebug("starting interior offset from", interior_multipoly)
+
                     interior_multipoly = ShapelyUtils.orientMultiPolygon(interior_multipoly)
+                    ShapelyUtils.MatplotlibMultiPolygonDebug("starting interior offset from oriented", interior_multipoly)
+
                     interior_offset = ShapelyUtils.offsetMultiPolygon(interior_multipoly, amount, 'right')
+
+                    for k, offset in enumerate(interior_offset):
+                        if offset.geom_type == 'LineString':
+                            ShapelyUtils.MatplotlibLineStringDebug("interior offseting (linestring) %d" % k, offset)
+                        if offset.geom_type == 'MultiLineString':
+                            ShapelyUtils.MatplotlibMultiLineStringDebug("interior offseting (multilinestring) %d" % k, offset)
+                    
+                    # the diff is the solution
                     interior_multipoly = ShapelyUtils.buildMultiPolyFromOffset(interior_offset)
-                # the diff is the solution
+
+                    ShapelyUtils.MatplotlibMultiPolygonDebug("resulting multipolygon of interior offset", interior_multipoly)
+
                 try:
                     sol_poly = exterior_multipoly.difference(interior_multipoly)
+
+                    if sol_poly.geom_type == 'Polygon':
+                        ShapelyUtils.MatplotlibPolygonDebug("diff of interior offseting", sol_poly)
+                    if sol_poly.geom_type == 'MultiPolygon':
+                        ShapelyUtils.MatplotlibMultiPolygonDebug("diff of interior offseting", sol_poly)
+
                 except Exception as e :
                     print("ERROR difference")
                     print(e)
@@ -473,8 +499,6 @@ class ShapelyUtils:
     def fixSimplePolygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :
         '''
         '''
-        #cls.MatplotlibDebug(polygon)
-
         valid_poly = make_valid(polygon)
 
         if valid_poly.geom_type == 'Polygon':
@@ -534,9 +558,89 @@ class ShapelyUtils:
         return fixed_poly
 
     @classmethod
-    def MatplotlibDebug(cls, multipoly):
+    def fixSimplePolygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :
         '''
         '''
+        #cls.MatplotlibMultiPolygonDebug(polygon)
+
+        valid_poly = make_valid(polygon)
+
+        if valid_poly.geom_type == 'Polygon':
+            return valid_poly
+
+        if valid_poly.geom_type == 'MultiPolygon':
+            polys = []
+
+            for geom in valid_poly.geoms:
+                if not geom.is_valid:
+                    continue
+
+                polys.append(geom)
+
+            # take the largest one!
+            largest_area = -1
+            largest_poly = None
+            for poly in polys:
+                area = poly.area
+                if area > largest_area:
+                    largest_area = area
+                    largest_poly = poly
+
+            return largest_poly
+
+        if valid_poly.geom_type == 'GeometryCollection':
+            # shit
+            pass
+
+        return None
+
+    @classmethod
+    def fixGenericPolygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :
+        '''
+        fix exterior and interiors in not valid
+        '''
+        if polygon.is_valid:
+            return polygon
+
+        exterior = list(polygon.exterior.coords)
+        interiors = polygon.interiors
+
+        ext_poly = shapely.geometry.Polygon(exterior)
+        if not ext_poly.is_valid:
+            ext_poly = cls.fixSimplePolygon(ext_poly)
+
+        if not interiors:
+            ext_linestring = shapely.geometry.LineString(list(ext_poly.exterior.coords))
+
+            fixed_poly = shapely.geometry.Polygon(ext_linestring)
+            
+        else:
+            fixed_interiors = []
+            for interior in interiors:
+                int_poly = shapely.geometry.Polygon(list(interior.coords))
+
+                if not int_poly.is_valid:
+                    int_poly = cls.fixSimplePolygon(int_poly)
+
+                fixed_interiors.append(int_poly)
+
+            ext_linestring = shapely.geometry.LineString(list(ext_poly.exterior.coords))
+            holes_linestrings = [shapely.geometry.LineString(list(int_poly.exterior.coords)) for int_poly in fixed_interiors] 
+
+            fixed_poly = shapely.geometry.Polygon(ext_linestring, holes=holes_linestrings)
+
+        return fixed_poly
+
+    @classmethod
+    def MatplotlibMultiPolygonDebug(cls, title, multipoly):
+        '''
+        '''
+        if cls.MAPLOTLIB_DEBUG == False:
+            return
+
+        plt.figure(cls.cnt)
+        plt.title(title)
+
         valid_multipoly = make_valid(multipoly)
                               
         print(" --> multipoly VALID = ", multipoly.is_valid)
@@ -561,7 +665,109 @@ class ShapelyUtils:
             1: 'r+--',
             2: 'go-'
         }
+
         for k, (x,y) in enumerate(zip(xx,yy)):
             plt.plot(x,y, style[k])
 
+        cls.cnt = cls.cnt + 1
         plt.show()
+
+    @classmethod
+    def MatplotlibLineStringDebug(cls, title, linestring):
+        '''
+        ''' 
+        if cls.MAPLOTLIB_DEBUG == False:
+            return
+            
+        plt.figure(cls.cnt)
+        plt.title(title)
+
+        x = linestring.coords.xy[0]
+        y = linestring.coords.xy[1]
+
+        # plot
+        style = {
+            0: 'bo-',
+            1: 'r+--',
+            2: 'go-'
+        }
+
+        plt.plot(x,y, style[0])
+        plt.show()
+
+        cls.cnt = cls.cnt +1
+
+    @classmethod
+    def MatplotlibMultiLineStringDebug(cls, title, multilinestring):
+        '''
+        '''    
+        if cls.MAPLOTLIB_DEBUG == False:
+            return
+
+        plt.figure(cls.cnt)
+        plt.title(title)
+
+        style = {
+            0: 'bo-',
+            1: 'r+--',
+            2: 'go-',
+            3: 'go-',
+            4: 'go-',
+            5: 'go-'
+        }
+        
+        xx = []
+        yy = []
+
+        for line in multilinestring.geoms:
+            ix = line.coords.xy[0]
+            iy = line.coords.xy[1]
+
+            xx.append(ix)
+            yy.append(iy)
+
+
+        for k, (x,y) in enumerate(zip(xx,yy)):
+            plt.plot(x, y, style[k])
+
+        plt.show()
+
+        cls.cnt = cls.cnt + 1
+
+    @classmethod
+    def MatplotlibPolygonDebug(cls, title, polygon):
+        '''
+        '''
+        if cls.MAPLOTLIB_DEBUG == False:
+            return
+
+        plt.figure(cls.cnt)
+        plt.title(title)
+
+        style = {
+            0: 'bo-',
+            1: 'r+--',
+            2: 'go-'
+        }
+        
+        x = polygon.exterior.coords.xy[0]
+        y = polygon.exterior.coords.xy[1]
+
+        plt.plot(x, y, style[0])
+
+        interiors_xx = []
+        interiors_yy = []
+
+        for interior in polygon.interiors:
+            ix = interior.coords.xy[0]
+            iy = interior.coords.xy[1]
+
+            interiors_xx.append(ix)
+            interiors_yy.append(iy)
+
+        for (ix,iy) in zip(interiors_xx,interiors_yy):
+            plt.plot(ix, iy, style[1])
+
+        plt.show()
+
+        cls.cnt = cls.cnt + 1
