@@ -283,7 +283,6 @@ class SvgPath:
                 if larger.covers(interior_line):
                     holes.append(interior_line)
                 else:
-                    #ShapelyUtils.MatplotlibLineStringDebug("xx", interior_line)
                     separs.append(interior_line)
 
             if holes:
@@ -305,8 +304,6 @@ class SvgPath:
             # D: exterior/interior is wrong
             # P: interior in wrong 
             poly = ShapelyUtils.fixGenericPolygon(poly)
-
-            #ShapelyUtils.MatplotlibPolygonDebug("poly", poly)
 
             # seems to be OK
             #fp = open("toShapelyPolygon.svg", "w")

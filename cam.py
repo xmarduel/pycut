@@ -69,11 +69,21 @@ class cam:
         
         # use polygons exteriors lines - offset them and and diff with the interiors if any
         geometry = ShapelyUtils.orientMultiPolygon(geometry)
+
+        ShapelyUtils.MatplotlibDisplay("geom pocket init", geometry)
+
+        # the exterior
         multi_offset = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left', ginterior=True)
+
+        #for offset in multi_offset:
+        #    ShapelyUtils.MatplotlibDisplay("first_offset", offset)
         
         current = ShapelyUtils.offsetMultiPolygonAsMultiPolygon(geometry, cutterDia / 2, 'left', ginterior=True)
         current = ShapelyUtils.simplifyMultiPoly(current, 0.001)
         current = ShapelyUtils.orientMultiPolygon(current)
+
+        for geom in current.geoms:
+            ShapelyUtils.MatplotlibDisplay("geom pocket init after simplify", geom)
 
         print("pocketing - initial offset dia/2", current)
 
@@ -119,7 +129,7 @@ class cam:
             #    for line in current:
             #        line.reverse()
 
-            allPaths = collect_paths(multi_offset, allPaths )
+            allPaths = collect_paths(multi_offset, allPaths)
 
             multi_offset = ShapelyUtils.offsetMultiPolygon(current, cutterDia * (1 - overlap), 'left')
             current = ShapelyUtils.offsetMultiPolygonAsMultiPolygon(current, cutterDia * (1 - overlap), 'left')
@@ -135,6 +145,9 @@ class cam:
             if not multi_offset:
                 break
             
+        #for path in allPaths:
+        #    ShapelyUtils.MatplotlibDisplay("final path", path)
+
         return cls.mergePaths(bounds, allPaths)
 
     @classmethod
@@ -348,8 +361,8 @@ class cam:
         # 1. from the tabs, build shapely (closed) tab polygons
         for tab_data in tabs:
             tab = Tab(tab_data)
-            shapely_tab = tab.svg_path.toShapelyPolygon()
-            shapely_tabs_.append(shapely_tab)
+            shapely_tabs = tab.svg_path.toShapelyPolygons()
+            shapely_tabs_ += shapely_tabs
 
         # hey, multipolygons are good...
         shapely_tabs = shapely.geometry.MultiPolygon(shapely_tabs_)

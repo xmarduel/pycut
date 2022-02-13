@@ -419,11 +419,11 @@ class CncOp:
             self.geometry = ShapelyUtils.orientMultiPolygon(self.geometry)
             self.preview_geometry = ShapelyUtils.offsetMultiPolygonAsMultiPolygon(self.geometry, offset, 'left', ginterior=True)
             
-            ShapelyUtils.MatplotlibMultiPolygonDebug("preview pocket", self.preview_geometry)
+            ShapelyUtils.MatplotlibDisplay("preview pocket", self.preview_geometry)
             
             self.preview_geometry = ShapelyUtils.orientMultiPolygon(self.preview_geometry)
 
-            ShapelyUtils.MatplotlibMultiPolygonDebug("preview pocket - oriented", self.preview_geometry)
+            ShapelyUtils.MatplotlibDisplay("preview pocket - oriented", self.preview_geometry)
 
             print("preview geometry (with offset)")
             print(self.preview_geometry)
