@@ -10,7 +10,7 @@
         "r2",
         "r3"
       ],
-      "RampPlunge": true,
+      "RampPlunge": false,
       "Combine": "Union",
       "Direction": "Conventional",
       "Units": "mm",
@@ -25,7 +25,7 @@
         "r1",
         "c1"
       ],
-      "RampPlunge": true,
+      "RampPlunge": false,
       "Combine": "Intersection",
       "Direction": "Conventional",
       "Units": "mm",
@@ -40,7 +40,7 @@
         "r1",
         "c1"
       ],
-      "RampPlunge": true,
+      "RampPlunge": false,
       "Combine": "Difference",
       "Direction": "Conventional",
       "Units": "mm",
@@ -49,13 +49,13 @@
     },
     {
       "Name": "op4 - Xor",
-      "type": "Pocket",
+      "type": "Engrave",
       "Deep": 10.0,
       "paths": [
         "r1",
         "c1"
       ],
-      "RampPlunge": true,
+      "RampPlunge": false,
       "Combine": "Xor",
       "Direction": "Conventional",
       "Units": "mm",
@@ -69,12 +69,100 @@
       "paths": [
         "r1"
       ],
-      "RampPlunge": true,
-      "Combine": "Intersection",
+      "RampPlunge": false,
+      "Combine": "Xor",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 5.0
+    },
+    {
+      "Name": "op",
+      "type": "Outside",
+      "Deep": 3.175,
+      "paths": [
+        "r1"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
       "Direction": "Conventional",
       "Units": "mm",
       "Margin": 2.0,
+      "Width": 6.0
+    },
+    {
+      "Name": "op",
+      "type": "Inside",
+      "Deep": 3.175,
+      "paths": [
+        "r1"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 2.0000000000000004,
+      "Width": 5.999999999999995
+    },
+    {
+      "Name": "op",
+      "type": "Outside",
+      "Deep": 3.175,
+      "paths": [
+        "r1",
+        "r2"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 5.0,
       "Width": 5.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 3.175,
+      "paths": [
+        "c1"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Outside",
+      "Deep": 3.175,
+      "paths": [
+        "r1",
+        "r2"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 4.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 3.175,
+      "paths": [
+        "c1",
+        "r1",
+        "r3"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
     }
   ],
   "settings": {
@@ -83,7 +171,7 @@
     },
     "Tabs": {
       "units": "mm",
-      "height": 2.0,
+      "height": 1.0,
       "tabs": [
         {
           "center": [
@@ -91,22 +179,22 @@
             24.0
           ],
           "radius": 8.0,
-          "enabled": true
+          "enabled": false
         },
         {
           "center": [
             10,
             20
           ],
-          "radius": 4,
+          "radius": 3.0,
           "enabled": false
         },
         {
           "center": [
-            10,
-            30
+            15,
+            34.0
           ],
-          "radius": 4,
+          "radius": 3.0,
           "enabled": false
         }
       ]
@@ -129,7 +217,7 @@
     },
     "CurveToLineConversion": {
       "MinimumSegments": 5,
-      "MinimumSegmentsLength": 0.01
+      "MinimumSegmentsLength": 0.1
     },
     "GCodeConversion": {
       "Units": "mm",

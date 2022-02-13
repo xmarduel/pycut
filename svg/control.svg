@@ -9,7 +9,7 @@
    xmlns:svg="http://www.w3.org/2000/svg">
   <g id="layer1">
     <rect
-       style="fill:#ff0000;stroke:#000000;stroke-width:0"
+       style="fill:#0000ff;stroke:#000000;stroke-width:0"
        id="panel"
        width="180"
        height="40"
@@ -35,24 +35,24 @@
        cx="30"
        cy="30"
        r="5" />
-    <rect
-       style="fill:#00ff00;stroke:#f70000;stroke-width:0"
-       id="rect869"
-       width="40"
-       height="20"
-       x="35"
-       y="20"
-       rx="3.2000029"
-       ry="0.0010000006" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="34.307537"
-       y="33.040829"
-       id="text2097"><tspan
-         id="tspan2095"
-         style="stroke-width:0.264583"
-         x="34.307537"
-         y="33.040829">Stecker</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.67266px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265906"
+       x="35.712818"
+       y="28.419682"
+       id="text2097"
+       transform="scale(1.0049988,0.9950261)"><tspan
+         id="tspan1149"
+         x="35.712818"
+         y="28.419682"
+         style="stroke-width:0.265906"><tspan
+           id="tspan2095"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.67266px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.265906"
+           x="35.712818"
+           y="28.419682">Stecker</tspan></tspan><tspan
+         id="tspan1151"
+         x="35.712818"
+         y="35.510506"
+         style="stroke-width:0.265906">Rückseite      </tspan></text>
   </g>
 </svg>

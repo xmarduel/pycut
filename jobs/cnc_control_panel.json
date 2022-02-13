@@ -68,15 +68,15 @@
       "tabs": [
         {
           "center": [
-            84.0,
-            17.0
+            85.0,
+            16.0
           ],
           "radius": 3.0,
           "enabled": true
         },
         {
           "center": [
-            84.0,
+            98.0,
             43.0
           ],
           "radius": 3.0,
@@ -110,7 +110,7 @@
     },
     "Tool": {
       "Units": "mm",
-      "Diameter": 2.0,
+      "Diameter": 3.0,
       "Angle": 180,
       "PassDepth": 1.0,
       "StepOver": 0.4,
