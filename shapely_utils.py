@@ -218,11 +218,11 @@ class ShapelyUtils:
 
             linestring = cls.polyExteriorToLineString(poly)
 
-            print("linestring VALID = ", linestring.is_valid)
+            print("linestring         VALID ? ", linestring.is_valid, linestring)
 
             offset = linestring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=5.0)
 
-            print("parallel_offset VALID ? ", offset.is_valid)
+            print("parallel_offset    VALID ? ", offset.is_valid, offset)
 
             exterior_multipoly = cls.buildMultiPolyFromOffset([offset])
             print("exterior_multipoly VALID ? ", exterior_multipoly.is_valid)
@@ -286,7 +286,11 @@ class ShapelyUtils:
                     if poly.geom_type == 'Polygon':
                         polys.append(poly)
 
-        return shapely.geometry.MultiPolygon(polys)
+        multipoly = shapely.geometry.MultiPolygon(polys)
+        # ensure orientation
+        multipoly = ShapelyUtils.orientMultiPolygon(multipoly)
+
+        return multipoly
 
     @classmethod
     def buildMultiPolyFromOffset(cls, multi_offset: any) -> shapely.geometry.MultiPolygon:
@@ -332,7 +336,11 @@ class ShapelyUtils:
                     print("linestring -> poly  _>fixed :", polygon.is_valid, polygon)
                 polygons.append(polygon)
 
-        return shapely.geometry.MultiPolygon(polygons)
+        multipoly = shapely.geometry.MultiPolygon(polygons)
+        # ensure orientation
+        multipoly = ShapelyUtils.orientMultiPolygon(multipoly)
+
+        return multipoly
 
     @classmethod
     def polyExteriorToLineString(cls, poly: shapely.geometry.Polygon):

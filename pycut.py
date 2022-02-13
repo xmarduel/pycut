@@ -182,9 +182,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         elif job_no == 5:
             self.open_job("./jobs/cnc_letters.json")
         elif job_no == 6:
-            self.open_job("./jobs/cnc_letters_AOBQ.json")
-        elif job_no == 7:
             self.open_job("./jobs/cnc_all_letters.json")
+        elif job_no == 7:
+            self.open_job("./jobs/cnc_control_panel.json")
 
         # these callbacks only after have loading a job
         self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode)

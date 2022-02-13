@@ -175,13 +175,28 @@ class cam:
         if isInside :
             # because we always start from the outer ring -> we go "inside"
             current = ShapelyUtils.offsetMultiLine(multiline, cutterDia /2, 'left')
-            bounds = ShapelyUtils.diff(current, ShapelyUtils.offsetMultiLine(multiline, width - cutterDia / 2, 'left'))
+            offset = ShapelyUtils.offsetMultiLine(multiline, width - cutterDia / 2, 'left')
+            #bounds = ShapelyUtils.diff(current, offset)
+            bounds = current
             eachOffset = eachWidth
             needReverse = climb
         else :
-            # because we always start from the outer ring -> we go "inside"
-            current = ShapelyUtils.offsetMultiLine(multiline, cutterDia /2, 'left')
-            bounds = ShapelyUtils.diff(current, ShapelyUtils.offsetMultiLine(multiline, width - cutterDia / 2, 'left'))
+            direction = "inner2outer"
+            #direction = "outer2inner"
+
+            if direction == "inner2outer":
+                # because we always start from the inner ring -> we go "outside"
+                current = ShapelyUtils.offsetMultiLine(multiline, cutterDia /2, 'right')
+                offset = ShapelyUtils.offsetMultiLine(multiline, width - cutterDia / 2, 'right')
+                #bounds = ShapelyUtils.diff(current, offset)
+                bounds = current
+            else:
+                # because we always start from the outer ring -> we go "inside"
+                current = ShapelyUtils.offsetMultiLine(multiline, cutterDia /2, 'left')
+                offset = ShapelyUtils.offsetMultiLine(multiline, width - cutterDia / 2, 'left')
+                #bounds = ShapelyUtils.diff(current, offset)
+                bounds = current
+
             eachOffset = eachWidth
             needReverse = not climb
 
@@ -206,7 +221,7 @@ class cam:
                 # <<< XAM fix
                 current = ShapelyUtils.offsetMultiLine(current, last_delta, 'left')
                 if current :
-                    current = ShapelyUtils.simplifyMultiLine(current, 0.001)
+                    current = ShapelyUtils.simplifyMultiLine(current, 0.01)
                 
                 if current:
                     if needReverse:

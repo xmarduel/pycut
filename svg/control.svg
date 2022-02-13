@@ -13,20 +13,20 @@
        id="panel"
        width="180"
        height="40"
-       x="10.000001"
-       y="10.000001" />
+       x="10"
+       y="10" />
     <rect
        style="fill:#248900;fill-opacity:1;stroke:#000000;stroke-width:0"
        id="tacho"
        width="60"
-       height="28.999998"
+       height="29"
        x="85"
-       y="15.500001" />
+       y="15.500" />
     <rect
        style="fill:#248900;fill-opacity:1;stroke:#000000;stroke-width:0"
        id="onoff"
-       width="14.999999"
-       height="9.999999"
+       width="15.0"
+       height="10.0"
        x="165"
        y="25" />
     <circle
