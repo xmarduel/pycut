@@ -17,7 +17,7 @@ class ShapelyUtils:
     '''
     MAPLOTLIB_DEBUG = False
     #MAPLOTLIB_DEBUG = True
-    cnt = 1
+    cnt = 1 # matplotlin figures
 
     @classmethod
     def diff(cls, paths1: shapely.geometry.MultiLineString, paths2: shapely.geometry.MultiLineString) -> shapely.geometry.MultiLineString:
@@ -29,8 +29,47 @@ class ShapelyUtils:
         return shapely.geometry.MultiLineString(diffs)
 
     @classmethod
+    def crosses(cls, bounds: shapely.geometry.MultiPolygon, p1: Tuple[int,int], p2: Tuple[int,int]):
+        '''
+        Does the line from p1 to p2 cross outside of bounds?
+        '''
+        if bounds == None:
+            return True
+        if p1[0] == p2[0] and p1[0] == p2[0]:
+            return False
+
+        # JSCUT clipper.AddPath([p1, p2], ClipperLib.PolyType.ptSubject, False)
+        # JSCUT clipper.AddPaths(bounds, ClipperLib.PolyType.ptClip, True)
+
+        p1_p2 = shapely.geometry.LineString([p1,p2])
+
+       
+        result = p1_p2.intersection(bounds)
+    
+        if result.is_empty is True:
+            return False
+            #child : ClipperLib.PolyNode = result.GetFirst() 
+            #points = child.Contour
+            #if len(points) == 2:
+            #    if points[0].X == p1.X and points[1].X == p2.X and points[0].Y == p1.Y and points[1].Y == p2.Y :
+            #        return False
+            #    if points[0].X == p2.X and points[1].X == p1.X and points[0].Y == p2.Y and points[1].Y == p1.Y :
+            #        return False
+
+       
+        if result.geom_type == 'Point':
+            if result.x == p1[0] and result.y == p1[1] :
+                return False
+            if result.x == p2[0] and result.y == p2[1] :
+                return False
+            
+            
+        return True
+
+    @classmethod
     def simplifyMultiLine(cls, multiline: shapely.geometry.MultiLineString, tol: float) -> shapely.geometry.MultiLineString:
         '''
+        Ensure the simplification of a MultiLine is a Multiline or None
         '''
         lines = []
         for line in multiline.geoms:
@@ -46,36 +85,9 @@ class ShapelyUtils:
         return res
 
     @classmethod
-    def simplifyOffset(cls, offset: any, tol: float) -> shapely.geometry.MultiLineString:
-        '''
-        '''
-        geoms = []
-        for geom in offset.geoms:
-            if geom.geom_type == 'LineString':
-                simplified_geom = geom.simplify(tol)
-                geoms.append(simplified_geom)
-            if geom.geom_type == 'MultiLineString':
-                for linestring in geom.geoms:
-                    simplified_linestring = linestring.simplify(tol)
-                    geoms.append(simplified_linestring)
-
-        return geoms
-
-    @classmethod
-    def simplifyMultiOffset(cls, multi_offset: List[any], tol: float) -> shapely.geometry.MultiLineString:
-        '''
-        '''
-        multi_offset_simplify = []
-        for offset in multi_offset:
-            simplified_offset = cls.simplifyOffset(offset)
-            if simplified_offset:
-                multi_offset_simplify.append(simplified_offset)
-
-        return multi_offset_simplify
-
-    @classmethod
     def simplifyMultiPoly(cls, multipoly: shapely.geometry.MultiPolygon, tol: float) -> shapely.geometry.MultiPolygon:
         '''
+        Ensure the simplification of a MultiPolygon is a MultiPolygon or None
         '''
         polys = []
         for poly in multipoly.geoms:
@@ -124,13 +136,14 @@ class ShapelyUtils:
         return offsetted
 
     @classmethod
-    def orientMultiPolygon(cls, multipoly: shapely.geometry.MultiPolygon):
+    def orientMultiPolygon(cls, multipoly: shapely.geometry.MultiPolygon) -> shapely.geometry.MultiPolygon:
         '''
         '''
         geoms = []
         for geom in multipoly.geoms:
             xgeom = shapely.geometry.polygon.orient(geom)
             geoms .append(xgeom)
+        
         xmultipoly = shapely.geometry.MultiPolygon(geoms)
 
         return xmultipoly
@@ -148,7 +161,7 @@ class ShapelyUtils:
 
         for poly in geometry.geoms:
 
-            linestring = cls.polyExteriorToLineString(poly)
+            linestring = shapely.geometry.LineString(poly.exterior)
 
             ext_offset = linestring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=5.0)
             
@@ -177,7 +190,8 @@ class ShapelyUtils:
                 interior_multipoly = shapely.geometry.MultiPolygon(interior_polys)
                 # this simplify may be important so that the offset becomes Ok (example: letter "B") 
                 interior_multipoly = ShapelyUtils.simplifyMultiPoly(interior_multipoly, 0.001)
-                
+                interior_multipoly = ShapelyUtils.orientMultiPolygon(interior_multipoly)
+
                 if ginterior == True:
                     ShapelyUtils.MatplotlibDisplay("starting interior offset from", interior_multipoly)
 
@@ -203,6 +217,8 @@ class ShapelyUtils:
                 except Exception as e :
                     print("ERROR difference")
                     print(e)
+                    print("exterior_multipoly VALID ?", exterior_multipoly.is_valid)
+                    print("interior_multipoly VALID ?", interior_multipoly.is_valid)
                     raise
 
                 if sol_poly.geom_type == 'Polygon':
@@ -262,45 +278,31 @@ class ShapelyUtils:
                         lines_ok.append(geom)
                 
             for line_ok in lines_ok:
-                print("linestring:", line_ok.is_valid, line_ok)
-                if not line_ok.is_valid:
-                    print("linestring:", explain_validity(line_ok))
-                linearring = shapely.geometry.LinearRing(list(line_ok.coords))
-                print("linearring:", linearring.is_valid, linearring)
-                if not linearring.is_valid:
-                    print("linearring:", explain_validity(linearring))
-                polygon = shapely.geometry.Polygon(linearring)
+                print("linestring:", line_ok)
+                polygon = shapely.geometry.Polygon(line_ok)
                 print("linestring -> poly :", polygon.is_valid, polygon)
                 if not polygon.is_valid:
                     polygon = cls.fixSimplePolygon(polygon)
-                    print("linestring -> poly  _>fixed :", polygon.is_valid, polygon)
+                    print("linestring -> poly -> fixed :", polygon.is_valid)
+                    if not  polygon.is_valid:
+                        a = 1
                 polygons.append(polygon)
 
         multipoly = shapely.geometry.MultiPolygon(polygons)
+
+        if not multipoly.is_valid:
+            # two polygon which crosses are not valid
+            #cls.MatplotlibDisplay("multipoly", multipoly, force=True)
+            multipoly = make_valid(multipoly)
+            # this makes their intersection(s) on common point(s)
+            print("multipoly VALID ?", multipoly.is_valid)
+            #cls.MatplotlibDisplay("multipoly", multipoly, force=True)
+
         # ensure orientation
         multipoly = ShapelyUtils.orientMultiPolygon(multipoly)
+        print("multipoly VALID ?", multipoly.is_valid)
 
         return multipoly
-
-    @classmethod
-    def polyExteriorToLineString(cls, poly: shapely.geometry.Polygon):
-        '''
-        '''
-        print(" ------------------------  poly to linestring ---")
-
-        linestring = shapely.geometry.LineString(poly.exterior)
-
-        return linestring
-
-    @classmethod
-    def polyToLinearRing(cls, poly: shapely.geometry.Polygon):
-        '''
-        '''
-        print(" ------------------------  poly to linestring ---")
-
-        linearring = shapely.geometry.LinearRing(list(poly.exterior.coords))
-
-        return linearring
 
     @classmethod
     def multiPolyToMultiLine(cls, multipoly: shapely.geometry.MultiPolygon) -> shapely.geometry.MultiLineString:
@@ -309,50 +311,12 @@ class ShapelyUtils:
         lines = []
 
         for poly in multipoly.geoms:
-            line = cls.polyExteriorToLineString(poly)
+            line = shapely.geometry.LineString(poly.exterior)
             lines.append(line)
         
         multiline = shapely.geometry.MultiLineString(lines)
         
         return multiline
-
-    @classmethod
-    def crosses(cls, bounds: shapely.geometry.MultiPolygon, p1: Tuple[int,int], p2: Tuple[int,int]):
-        '''
-        Does the line from p1 to p2 cross outside of bounds?
-        '''
-        if bounds == None:
-            return True
-        if p1[0] == p2[0] and p1[0] == p2[0]:
-            return False
-
-        # JSCUT clipper.AddPath([p1, p2], ClipperLib.PolyType.ptSubject, False)
-        # JSCUT clipper.AddPaths(bounds, ClipperLib.PolyType.ptClip, True)
-
-        p1_p2 = shapely.geometry.LineString([p1,p2])
-
-       
-        result = p1_p2.intersection(bounds)
-    
-        if result.is_empty is True:
-            return False
-            #child : ClipperLib.PolyNode = result.GetFirst() 
-            #points = child.Contour
-            #if len(points) == 2:
-            #    if points[0].X == p1.X and points[1].X == p2.X and points[0].Y == p1.Y and points[1].Y == p2.Y :
-            #        return False
-            #    if points[0].X == p2.X and points[1].X == p1.X and points[0].Y == p2.Y and points[1].Y == p1.Y :
-            #        return False
-
-       
-        if result.geom_type == 'Point':
-            if result.x == p1[0] and result.y == p1[1] :
-                return False
-            if result.x == p2[0] and result.y == p2[1] :
-                return False
-            
-            
-        return True
 
     @classmethod
     def union_list_of_polygons(cls, poly_list: List[shapely.geometry.Polygon]) -> shapely.geometry.MultiPolygon :
@@ -541,10 +505,10 @@ class ShapelyUtils:
         return fixed_poly
 
     @classmethod
-    def MatplotlibDisplay(cls, title, geom: any):
+    def MatplotlibDisplay(cls, title, geom: any, force=False):
         '''
         '''
-        if cls.MAPLOTLIB_DEBUG == False:
+        if cls.MAPLOTLIB_DEBUG == False and force == False:
             return
 
         cls.cnt += 1
@@ -556,7 +520,7 @@ class ShapelyUtils:
             cls._MatplotlibDisplayMultiLineString(title, geom)
         if geom.geom_type == 'Polygon':
             cls._MatplotlibDisplayPolygon(title, geom)
-        if geom.geom_type == 'MultiMultiPolygon':
+        if geom.geom_type == 'MultiPolygon':
             cls._MatplotlibDisplayMultiPolygon(title, geom)
         else:
             pass
@@ -624,7 +588,7 @@ class ShapelyUtils:
         x = polygon.exterior.coords.xy[0]
         y = polygon.exterior.coords.xy[1]
 
-        plt.plot(x, y, style_ext)
+        plt.plot(x, y, style_ext[0])
 
         interiors_xx = []
         interiors_yy = []
@@ -648,6 +612,15 @@ class ShapelyUtils:
         plt.figure(cls.cnt)
         plt.title(title)
 
+        style_ext = {
+            0: 'bo-',
+            1: 'ro-'
+        }
+        style_int = {
+            0: 'r+--',
+            1: 'go-'
+        }
+
         xx_ext = []
         yy_ext = []
 
@@ -669,10 +642,10 @@ class ShapelyUtils:
                 yy_int.append(iy)
         
         # plot
-        for x,y in zip(xx_ext,yy_ext):
-            plt.plot(x,y, 'bo-')
-        for x,y in zip(xx_int,yy_int):
-            plt.plot(x,y, 'r+--')
+        for k, (x,y) in enumerate(zip(xx_ext,yy_ext)):
+            plt.plot(x,y, style_ext[k%2])
+        for k, (x,y) in enumerate(zip(xx_int,yy_int)):
+            plt.plot(x,y,style_int[k%2])
 
         plt.show()
 
