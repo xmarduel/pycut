@@ -36,7 +36,7 @@ class CamPath:
     }
     '''
     def __init__(self, path: shapely.geometry.LineString, safeToClose: bool = True):
-        # shapely path
+        # shapely linestring
         self.path = path
         # is it safe to close the path without retracting?
         self.safeToClose = safeToClose
@@ -75,9 +75,6 @@ class cam:
         # the exterior
         multi_offset = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left', ginterior=True)
 
-        #for offset in multi_offset:
-        #    ShapelyUtils.MatplotlibDisplay("first_offset", offset)
-        
         current = ShapelyUtils.offsetMultiPolygonAsMultiPolygon(geometry, cutterDia / 2, 'left', ginterior=True)
         current = ShapelyUtils.simplifyMultiPoly(current, 0.001)
         current = ShapelyUtils.orientMultiPolygon(current)
