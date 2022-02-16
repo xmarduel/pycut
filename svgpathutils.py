@@ -26,20 +26,17 @@ M_PI = math.acos(-1)
 
 class SvgPath:
     '''
-    Transform svgpathtools 'Path' into a 'Shapely LineString' object
+    Transform svgpathtools 'Path' into a 'Shapely Polygon' object(s)
 
     - svgpathtools 'Path' are list of 'Segment(s)' and
     each segment has a list of points, given in format 'complex type' (a+bj)
 
-    - Shapely LineString are list of Points[2]
-
-    so the transformation is straightforward
+    - a svg path can describe 1 or more Polygons, Polygons may have holes
 
     Convention:
     - a path from svgpathtools is noted: svg_path
     - a svg <path> definition is noted: svg_path_d
     - the discretization of a svg_path results in a numpy array, noted: np_svg_path
-    - a shapely path (LineString) is noted: shapely_path
     '''
     PYCUT_SAMPLE_LEN_COEFF = 10 # 10 points per "svg unit" ie arc of len 10 -> 100 pts discretization
     PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5 # is in jsCut 1
@@ -59,6 +56,7 @@ class SvgPath:
     @classmethod
     def svg2paths_from_string(cls, svg: str) :
         '''
+        From a svg file content, read all paths and their attributes
         '''
         # a tmp file
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -75,8 +73,10 @@ class SvgPath:
         return None, None
 
     @classmethod
-    def read_svg_shapes_as_paths(cls, svg: str) -> Dict[str,Tuple[Dict[str,str],svgpathtools.Path]] :
+    def read_svg_shapes_as_paths(cls, svg: str) -> Dict[str,Tuple[Dict[str,str], svgpathtools.Path]] :
         '''
+        From a svg file content, read all paths and their attributes
+        and organize them as dictionary with key <path_id>, value <attribs, path>
         '''
         svg_shapes = {}
 
@@ -180,20 +180,10 @@ class SvgPath:
 
         return points
 
-    def _toShapelyLineString(self) -> shapely.geometry.LineString:
+    def _is_simple_path(self) -> bool:
         '''
-        '''
-        np_svg_path = self.discretize()
-
-        coordinates = [ (complex_pt.real, complex_pt.imag)  for complex_pt in np_svg_path ]
-
-        line = shapely.geometry.LineString(coordinates)
-
-        return line
-
-    def _isSimplePath(self) -> bool:
-        '''
-        check if path is "simple" closed path or path with hole(s)
+        check if path is a "simple" one or 'complex' - in the sense there 
+        is no "jump" in the path (svg [mM])
         '''
         d_def = self.p_attrs["d"]
 
@@ -202,8 +192,10 @@ class SvgPath:
 
         return nb_separate_paths == 1
 
-    def _generateSeparatedSvgPath(self) -> List['SvgPath']:
+    def _generate_simple_svgpaths(self) -> List['SvgPath']:
         '''
+        From an instance of SvgPath, generate a list of SvgPath
+        where all paths of the object list are a 'simple' paths 
         '''
         # make all "m" -> "M" for the separated paths
         path_abs = self.svg_path.d()    # thanks svgpathutils!                             
@@ -224,6 +216,17 @@ class SvgPath:
         
         return svgpaths
 
+    def _toShapelyLineString(self) -> shapely.geometry.LineString:
+        '''
+        '''
+        np_svg_path = self.discretize()
+
+        coordinates = [ (complex_pt.real, complex_pt.imag)  for complex_pt in np_svg_path ]
+
+        line = shapely.geometry.LineString(coordinates)
+
+        return line
+
     def toShapelyPolygons(self) -> List[shapely.geometry.Polygon]:
         '''
         The main method to transform a svg path into a polygon or a list of polygons
@@ -236,7 +239,9 @@ class SvgPath:
 
         -> so we have infact to check if the smaller path in included in the larger one, or not
         '''
-        is_simple_path = self._isSimplePath()
+        is_simple_path = self._is_simple_path()
+
+        polys = []
 
         if is_simple_path == True:
             line = self._toShapelyLineString()
@@ -244,12 +249,14 @@ class SvgPath:
 
             # set the right orientation for this polygon
             poly = shapely.geometry.polygon.orient(poly)
-            others = []
+            polys.append(poly)
         else:
             # generate temporary svgpath objects with the separated paths
             # to build a polygon with holes
-            svgpaths = self._generateSeparatedSvgPath()
+            svgpaths = self._generate_simple_svgpaths()
 
+            # from these simple path, build list of polygons, 1 with holes, others without 
+            # FIXME: it should allows something like 1 polys , both with holes 
             data = {}
             for svgpath in svgpaths:
                 data[svgpath.p_id] = {
@@ -278,39 +285,31 @@ class SvgPath:
 
             larger = shapely.geometry.Polygon(exterior)
             holes = []
-            separs = []
+            others = []
             for interior_line in interiors:
                 if larger.covers(interior_line):
                     holes.append(interior_line)
                 else:
-                    separs.append(interior_line)
+                    others.append(interior_line)
 
             if holes:
                 poly = shapely.geometry.Polygon(exterior, holes=holes)
             else:
                 poly = shapely.geometry.Polygon(exterior)
 
-            _others = []
-            
-            for separ in separs:
-                # very necessary!
-                simplyfied_separ =  separ.simplify(0.001)
-                other = shapely.geometry.Polygon(simplyfied_separ)
-                _others.append(other)
-            
-            others = [ShapelyUtils.fixGenericPolygon(other) for other in _others]
-
-            # wow, some some letters (D, P)
+            # wow, for some letters (D, P) there is a problem (TO INQUIRE)
             # D: exterior/interior is wrong
             # P: interior in wrong 
             poly = ShapelyUtils.fixGenericPolygon(poly)
+            polys.append(poly)
 
-            # seems to be OK
-            #fp = open("toShapelyPolygon.svg", "w")
-            #fp.write('<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1"><g style="stroke-width:0.264583">' + poly.svg(scale_factor=0.1) + '</g></svg>')
-            #fp.close()
+            for other in others:
+                # very necessary!
+                poly = shapely.geometry.Polygon(other)
+                poly = ShapelyUtils.fixGenericPolygon(poly)
+                polys.append(poly)
 
-        return [poly] + others
+        return polys
 
     @classmethod
     def fromShapelyLineString(cls, prefix: str, shapely_path: shapely.geometry.LineString) -> 'SvgPath':
@@ -348,10 +347,6 @@ class SvgPath:
             %s
             </g> 
         </svg>''' % path_str
-
-        fp = open("fromShapelyPolygon.svg", "w")
-        fp.write(svg)
-        fp.close()
 
         paths, attributes = cls.svg2paths_from_string(svg)
 

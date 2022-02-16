@@ -73,16 +73,13 @@ class cam:
         ShapelyUtils.MatplotlibDisplay("geom pocket init", geometry)
 
         # the exterior
-        multi_offset = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left', ginterior=True)
-
-        current = ShapelyUtils.offsetMultiPolygonAsMultiPolygon(geometry, cutterDia / 2, 'left', ginterior=True)
+        multi_offset, current = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left', ginterior=True)
+        
         current = ShapelyUtils.simplifyMultiPoly(current, 0.001)
         current = ShapelyUtils.orientMultiPolygon(current)
 
         for geom in current.geoms:
             ShapelyUtils.MatplotlibDisplay("geom pocket init after simplify", geom)
-
-        print("pocketing - initial offset dia/2", current)
 
         if not current:
             return []
@@ -104,7 +101,7 @@ class cam:
                     if len(list(offset.coords)) > 0:
                         lines_ok.append(offset)
 
-                    print("---- SIMPLIFY #nb pts = ", len(list(offset.coords)))
+                    #print("---- SIMPLIFY #nb pts = ", len(list(offset.coords)))
                     print("---- SIMPLIFY len = ", offset.length)
 
                 if offset.geom_type == 'MultiLineString':
@@ -113,7 +110,7 @@ class cam:
                             if len(list(geom.coords)) > 0:
                                 lines_ok.append(geom)
 
-                            print("---- SIMPLIFY #nb pts = ", len(list(geom.coords)))
+                            #print("---- SIMPLIFY #nb pts = ", len(list(geom.coords)))
                             print("---- SIMPLIFY len = ", geom.length)
 
             allPaths = lines_ok + allPaths
@@ -128,8 +125,8 @@ class cam:
 
             allPaths = collect_paths(multi_offset, allPaths)
 
-            multi_offset = ShapelyUtils.offsetMultiPolygon(current, cutterDia * (1 - overlap), 'left')
-            current = ShapelyUtils.offsetMultiPolygonAsMultiPolygon(current, cutterDia * (1 - overlap), 'left')
+            multi_offset, current = ShapelyUtils.offsetMultiPolygon(current, cutterDia * (1 - overlap), 'left')
+            
             if not current:
                 allPaths = collect_paths(multi_offset, allPaths)
                 break
