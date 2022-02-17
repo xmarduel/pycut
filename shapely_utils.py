@@ -319,8 +319,9 @@ class ShapelyUtils:
         return multiline
 
     @classmethod
-    def union_list_of_polygons(cls, poly_list: List[shapely.geometry.Polygon]) -> shapely.geometry.MultiPolygon :
+    def union_polygons(cls, poly_list: List[shapely.geometry.Polygon]) -> shapely.geometry.MultiPolygon :
         '''
+        union the polygons together of after the other
         '''
         first = poly_list[0]
 

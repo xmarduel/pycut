@@ -19,9 +19,8 @@ from typing import List
 from typing import Dict
 from typing import Any
 
-import shapely.geometry as shapely_geom
-import shapely.ops as shapely_ops
 import shapely
+import shapely.geometry
 
 from  shapely_utils import ShapelyUtils
 
@@ -29,8 +28,10 @@ from svgpathutils import SvgPath
 from svgviewer import SvgViewer
 
 from cam import cam
+from cam import CamPath
 
 from val_with_unit import ValWithUnit
+
 
 class UnitConverter:
     '''
@@ -218,7 +219,6 @@ class Tab:
 
 class TabsModel:
     '''
-    Not yet used
     '''
     def __init__(self, tabs: List[Tab]):
 
@@ -275,13 +275,11 @@ class CncOp:
         # and the resulting svg paths from the combinaison, to be displayed in the svg viewer
         self.geometry_svg_paths : List[SvgPath] = []
         
-        # the input "transformed/scaled"
-        self.shapely_lines : List[shapely_geom.LineString] = []
         # the resulting paths from the op combinaison setting + enabled svg paths
-        self.geometry : shapely_geom.MultiPolygon = None
+        self.geometry : shapely.geometry.MultiPolygon = None
         
-
-        self.cam_paths = []
+        # the resulting tool paths
+        self.cam_paths : List[CamPath] = []
         # and the resulting tool paths, to be displayed in the svg viewer
         self.cam_paths_svg_paths : List[SvgPath] = []
 
@@ -307,56 +305,26 @@ class CncOp:
 
     def combine(self):
         '''
+        generate the combinaison of the selected paths
+
+        the generated geometry is a MultiPolygon
         '''
-        self.shapely_polygons = []
+        self.shapely_polygons : List[shapely.geometry.Polygon] = []
 
         for svg_path in self.svg_paths:
             shapely_polygons = svg_path.toShapelyPolygons()
+            self.shapely_polygons += shapely_polygons
 
-            # JSCUT
-            # if (self.rawPaths[i].nonzero)
-            #    fillRule = ClipperLib.PolyFillType.pftNonZero;
-            #  else
-            #    fillRule = ClipperLib.PolyFillType.pftEvenOdd;
-
-            #  the nonzero flag comes from the svg path property 'fill-rule' != "evenodd"
-
-            # FIXME see operationViewModel.js  self.recombine = function () {
-            # how it is simplifyAndClean'ed !
-
-            # PYCUT
-            # -> TODO / TO UNDERSTAND
-
-            # actually not implemented
-            if True:
-                self.shapely_polygons += shapely_polygons
-            else:
-                pass
-                '''
-                fillRule = ClipperLib.PolyFillType.pftNonZero  # FIXME
-
-                wrapper = ClipperLib.PathVector()
-                wrapper.append(clipper_path)
-
-                geom = ClipperUtils.simplifyAndClean(wrapper, fillRule)
-
-                self.clipper_paths +=[path for path in geom]
-                '''
-
-        if len(self.shapely_polygons) < 2:
-            o = self.shapely_polygons[0]
-            self.geometry = shapely_geom.MultiPolygon([o])
+        if len(self.shapely_polygons) == 0:
+            return
+        
+        if len(self.shapely_polygons) == 1:
+            self.geometry = shapely.geometry.MultiPolygon(self.shapely_polygons)
             return
 
-
         o = self.shapely_polygons[0]
-        #other = shapely_geom.MultiPolygon(self.shapely_polygons[1:])
-        other = ShapelyUtils.union_list_of_polygons(self.shapely_polygons[1:])
-
-
-        print("combine:")
-        print(o)
-        print(other)
+        #other = shapely.geometry.MultiPolygon(self.shapely_polygons[1:])
+        other = ShapelyUtils.union_polygons(self.shapely_polygons[1:])
 
         if self.combinaison == "Union":
             geometry = o.union(other)
@@ -366,9 +334,6 @@ class CncOp:
             geometry = o.difference(other)
         if self.combinaison == "Xor":
             geometry = o.symmetric_difference(other)
-
-        print("--> result:")
-        print(geometry)
         
         self.geometry = geometry
 
@@ -378,7 +343,7 @@ class CncOp:
             self.geometry = ShapelyUtils.reorder_poly_points(self.geometry)
 
             self.geometry = shapely.geometry.polygon.orient(self.geometry)
-            self.geometry = shapely_geom.MultiPolygon([self.geometry])
+            self.geometry = shapely.geometry.MultiPolygon([self.geometry])
         else:
             # fix orientation
             fixed_polys = []
@@ -390,7 +355,7 @@ class CncOp:
 
                 fixed_poly = shapely.geometry.polygon.orient(poly)
                 fixed_polys.append(fixed_poly)
-            self.geometry = shapely_geom.MultiPolygon(fixed_polys)
+            self.geometry = shapely.geometry.MultiPolygon(fixed_polys)
 
         print("--> result - reoriented:")
         print(self.geometry)
@@ -456,7 +421,7 @@ class CncOp:
             self.preview_geometry = geometry.difference(innergeometry)
 
             if self.preview_geometry.geom_type == 'Polygon':
-                self.preview_geometry = shapely_geom.MultiPolygon([self.preview_geometry])
+                self.preview_geometry = shapely.geometry.MultiPolygon([self.preview_geometry])
 
         self.geometry_svg_paths = []
          
@@ -487,7 +452,7 @@ class CncOp:
             self.preview_geometry = shapely.geometry.polygon.orient(self.preview_geometry) # check if necessary!
 
             if self.preview_geometry.geom_type == 'Polygon':
-                self.preview_geometry = shapely_geom.MultiPolygon([self.preview_geometry])
+                self.preview_geometry = shapely.geometry.MultiPolygon([self.preview_geometry])
 
         self.geometry_svg_paths = []
          
