@@ -2,10 +2,10 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>PYCUT TUTORIAL</title>
-  <link href="qrc:/doc/css/prism.css" rel="stylesheet">
-  <link href="qrc:/doc/css/pycut.css" rel="stylesheet">
-  <link href="qrc:/doc/css/simpletree.css" rel="stylesheet">
-  <script type="text/javascript" src="qrc:/doc/js/prism.js">
+  <link href="css/prism.css" rel="stylesheet">
+  <link href="css/pycut.css" rel="stylesheet">
+  <link href="css/simpletree.css" rel="stylesheet">
+  <script type="text/javascript" src="js/prism.js">
  </script>
 </head>
 
@@ -232,10 +232,7 @@ supposedly the size of the material to work on. Inkscape automatically sets the
 units are not "px" or whatever. This means, <strong>1 "user unit" is equal to 1
 mm (and the viewbox is "0 0 100 40" while width="100mm" and
 height="40mm")</strong></p>
-
-<div>
-<img src="qrc:/doc/Inkscape_settings_mm.png" width="563"> 
-</div>
+<img src="Inkscape_settings_mm.png" width="563px"> 
 
 <p>Of course when editing the svg (in Inkscape or in a text editor),
 <strong>the user is only concerned with the user units</strong> : he draws a
@@ -251,10 +248,7 @@ that Inkscape automatically change the <strong>user units scale to
 25.4</strong>. Because of this, the <strong>view box remains at "0 0 100
 40"</strong>. That way, a rectangle filling the full document size is still
 100x40.</p>
-
-<div>
-<img src="qrc:/doc/Inkscape_settings_in.png" width="563"> 
-</div>
+<img src="Inkscape_settings_in.png" width="563px"> 
 
 <p>But why would a user use inches and still want to draw a rectangle half the
 size of its material in user units with scale 25.4 (leading infact to work in
@@ -330,9 +324,7 @@ size/postion in the tab table. Yes tabs, for simplicity, are circle. To be
 effective, the tabs have to be enabled and of course placed somewhere on the
 generated toolpaths. The height of the tab is shared by all tabs.</p>
 
-<div>
-<img src="qrc:/doc/pycut_tabs.png" width="310"/>
-</div>
+<img src="./pycut_tabs.png" width="310px"/>
 
 </p>
 
@@ -349,9 +341,7 @@ Ok. </p>
 <p>The Operations "Cut Depth" should be be larger than the material thickness.
 </p>
 
-<div>
-<img src="qrc:/doc/pycut_material.png" width="310"/>
-</div>
+<img src="./pycut_material.png" width="310px"/>
 
 </p>
 
@@ -388,10 +378,7 @@ coordinates. But still the reference is the top-left postion.</p>
   <li>Center of the Gcode area</li>
 </ul>
 
-<div>
-<img src="qrc:/doc/pycut_gcode_conversion.png" width="310"/>
-</div>
-
+<img src="./pycut_gcode_conversion.png" width="310px"/>
 </p>
 
 <p>And further:</p>
@@ -419,9 +406,7 @@ is extracted form the svg file: the svg "height" attribute (with units) </p>
   <li><strong>M2</strong> code</li>
 </ul>
 
-<div>
-<img src="qrc:/doc/pycut_gcode_generation.png" width="310"/>
-</div>
+<img src="./pycut_gcode_generation.png" width="310px"/>
 
 </p>
 

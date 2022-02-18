@@ -23,6 +23,13 @@
         <file>javascript/lib/webgl-utils.js</file>
         <file>qtwebchannel/qwebchannel.js</file>
         <file>doc/tutorial.html</file>
+        <file>doc/Inkscape_settings_in.png</file>
+        <file>doc/Inkscape_settings_mm.png</file>
+        <file>doc/pycut_gcode_conversion.png</file>
+        <file>doc/pycut_gcode_generation.png</file>
+        <file>doc/pycut_material.png</file>
+        <file>doc/pycut_tabs.png</file>
+        <file>doc/pycut_tool.png</file>
         <file>doc/js/prism.js</file>
         <file>doc/css/prism.css</file>
         <file>doc/css/pycut.css</file>
