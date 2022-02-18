@@ -3,7 +3,7 @@ clone of jscut  in python - work in progress -
 
 Note: the project has advanced nicely during the last holidays (24.12.2022), but there are certainly many many bugs.
 
-USAGE: start the program from the installation folder (because of clipper c++ extension modules only for windows)
+USAGE: start the program from the installation folder
 
 > python pycut.py
 
@@ -11,10 +11,8 @@ USAGE: start the program from the installation folder (because of clipper c++ ex
 Dependencies: Python
 - PySide6-6.2.1
 - svgpathtools (latest) - pip installation bundled with numpy/scipy
-- shapely (1.8.0) - good for separating paths withs tabs
-
-Dependencies: C++
-- clipper-6.4.2 (sources in PyCut, SWIG wrapper built in PyCut)
+- shapely (1.8.0)
+- matplotlib (for debugging)
 
 DONE: basic
 - read "config" files : so-called job file with all settings and ops
@@ -37,7 +35,6 @@ BUGS:
 - and all the rest!
 
 TODO:
-- drop clipper in favour of pure python shapely - shapely was at least better for calculating paths with tabs!
 - capability to read text without converting them first to paths 
 - svg "structure viewer" with check boxes for item(s) selection as alternative to svg viewer selection(s)
 
