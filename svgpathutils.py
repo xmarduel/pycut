@@ -312,7 +312,7 @@ class SvgPath:
         return polys
 
     @classmethod
-    def fromShapelyLineString(cls, prefix: str, shapely_path: shapely.geometry.LineString) -> 'SvgPath':
+    def fromShapelyLineString(cls, prefix: str, shapely_path: shapely.geometry.LineString, safeToClose: bool) -> 'SvgPath':
         '''
         '''
         pts = list(shapely_path.coords)
@@ -328,8 +328,9 @@ class SvgPath:
             svg_path.append(svgpathtools.Line(start, end))
 
         # last one : from end point to start point
-        start = discretized_svg_path[-1]
-        end   = discretized_svg_path[0]
+        if safeToClose:
+            start = discretized_svg_path[-1]
+            end   = discretized_svg_path[0]
 
         svg_path.append(svgpathtools.Line(start, end))
 

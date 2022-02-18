@@ -357,9 +357,6 @@ class CncOp:
                 fixed_polys.append(fixed_poly)
             self.geometry = shapely.geometry.MultiPolygon(fixed_polys)
 
-        print("--> result - reoriented:")
-        print(self.geometry)
-
     def calculate_geometry(self, toolModel: ToolModel):
         '''
         '''
@@ -389,9 +386,6 @@ class CncOp:
             self.preview_geometry = ShapelyUtils.orientMultiPolygon(self.preview_geometry)
 
             ShapelyUtils.MatplotlibDisplay("preview pocket - oriented", self.preview_geometry)
-
-            print("preview geometry (with offset)")
-            print(self.preview_geometry)
 
             self.geometry_svg_paths = []
 
@@ -501,8 +495,6 @@ class CncOp:
         if cam_op != "Engrave" :
             # 'left' for Inside OR pocket, 'right' for Outside
             _, geometry = ShapelyUtils.offsetMultiPolygon(geometry, offset, 'right' if cam_op == 'Outside' else 'left', ginterior = True)
-            print("toolpath - offset geometry")
-            print(geometry)
 
         if cam_op == "Pocket":
             self.cam_paths = cam.pocket(geometry, toolData["diameterTool"], 1 - toolData["stepover"], direction == "Climb")
@@ -515,7 +507,7 @@ class CncOp:
             self.cam_paths = cam.engrave(geometry, direction == "Climb")
 
         for cam_path in self.cam_paths:
-            svg_path = SvgPath.fromShapelyLineString("pycut_toolpath", cam_path.path)
+            svg_path = SvgPath.fromShapelyLineString("pycut_toolpath", cam_path.path, cam_path.safeToClose)
             self.cam_paths_svg_paths.append(svg_path)
 
 class JobModel:

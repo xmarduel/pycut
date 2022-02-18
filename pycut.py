@@ -169,21 +169,15 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.init_gui()
 
-        job_no = 7
+        job_no = 3
         
         if job_no == 1:
             self.open_job("./jobs/cnc_three_rects.json")
         elif job_no == 2:
             self.open_job("./jobs/cnc_three_rects_with_circle.json")
         elif job_no == 3:
-            self.open_job("./jobs/cnc_one_rect.json")
-        elif job_no == 4:
-            self.open_job("./jobs/cnc_test_svgpathtools.json")
-        elif job_no == 5:
-            self.open_job("./jobs/cnc_letters.json")
-        elif job_no == 6:
             self.open_job("./jobs/cnc_all_letters.json")
-        elif job_no == 7:
+        elif job_no == 4:
             self.open_job("./jobs/cnc_control_panel.json")
 
         # these callbacks only after have loading a job

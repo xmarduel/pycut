@@ -65,8 +65,6 @@ class cam:
         cutterDia is in "UserUnit" units. 
         overlap is in the range [0, 1).
         '''
-        print("pocketing ", geometry)
-        
         # use polygons exteriors lines - offset them and and diff with the interiors if any
         geometry = ShapelyUtils.orientMultiPolygon(geometry)
 
@@ -88,7 +86,11 @@ class cam:
             # cannot offset ! maybe geometry too narrow for the cutter
             return []
 
-        bounds = geometry
+        # bound must be the exterior enveloppe + the interiors polygons
+        #bounds = geometry 
+
+        # no! the bounds are from the first offset with width cutterDia / 2
+        bounds = shapely.geometry.MultiPolygon(current)
 
         allPaths : List[shapely.geometry.LineString] = []
 
@@ -138,9 +140,6 @@ class cam:
            
             if not multi_offset:
                 break
-            
-        #for path in allPaths:
-        #    ShapelyUtils.MatplotlibDisplay("final path", path)
 
         return cls.mergePaths(bounds, allPaths)
 
@@ -154,13 +153,8 @@ class cam:
         cutterDia and width are in Shapely units. 
         overlap is in the  range [0, 1).
         '''
-        print("INITIAL geometry")
-        print(geometry)
-
         # use lines, not polygons
         multiline = ShapelyUtils.multiPolyToMultiLine(geometry)
-        print("INITIAL multiline")
-        print(multiline)
 
         currentWidth = cutterDia
         allPaths  : List[shapely.geometry.LineString] = []
@@ -238,7 +232,6 @@ class cam:
             if current:
                 current = ShapelyUtils.simplifyMultiLine(current, 0.01)
                 print("--- next toolpath")
-                print(current)
             else:
                 break
 
@@ -257,8 +250,6 @@ class cam:
         '''
         # use lines, not polygons
         multiline = ShapelyUtils.multiPolyToMultiLine(geometry)
-        print("INITIAL multiline")
-        print(multiline)
 
         full_line = shapely.ops.linemerge(list(multiline.geoms))
 
@@ -281,13 +272,27 @@ class cam:
     @classmethod
     def mergePaths(cls, _bounds: shapely.geometry.MultiPolygon, paths: List[shapely.geometry.LineString]) -> List[CamPath] :
         '''
-        Try to merge paths. A merged path doesn't cross outside of bounds. 
+        Try to merge paths. A merged path doesn't cross outside of bounds AND the interior polygons
         '''
+        #ShapelyUtils.MatplotlibDisplay("mergePath", shapely.geometry.MultiLineString(paths), force=True)
+
         if _bounds and len(_bounds.geoms) > 0:
             bounds = _bounds
         else: 
             bounds = shapely.geometry.MultiPolygon()
  
+ 
+        ext_lines = ShapelyUtils.multiPolyToMultiLine(bounds)
+        int_polys = []
+        for poly in bounds.geoms:
+            if poly.interiors:
+                for interior in poly.interiors:
+                    int_poly = shapely.geometry.Polygon(interior)
+                    int_polys.append(int_poly)
+        if int_polys:
+            int_multipoly = shapely.geometry.MultiPolygon(int_polys)
+        else:
+            int_multipoly = None
 
         # std list
         thepaths = [ list(path.coords) for path in paths ]
@@ -298,7 +303,7 @@ class cam:
         pathEndPoint = currentPath[-1]
         pathStartPoint = currentPath[0]
 
-        # close if start/end point not equal
+        # close if start/end point not equal - why ? I could have simple lines!
         if pathEndPoint[0] != pathStartPoint[0] or pathEndPoint[1] != pathStartPoint[1]:
             currentPath = currentPath + [pathStartPoint]
         
@@ -323,12 +328,14 @@ class cam:
             path = paths[closestPathIndex]
             paths[closestPathIndex] = [] # empty
             numLeft -= 1
-            needNew = ShapelyUtils.crosses(bounds, currentPoint, path[closestPointIndex])
+            needNew = ShapelyUtils.crosses(ext_lines, currentPoint, path[closestPointIndex])
+            if (not needNew) and int_multipoly:
+                needNew = ShapelyUtils.crosses(int_multipoly, currentPoint, path[closestPointIndex])
 
             # JSCUT path = path.slice(closestPointIndex, len(path)).concat(path.slice(0, closestPointIndex))
             path = path[closestPointIndex:] + path[:closestPointIndex]
             path.append(path[0])
-            
+
             if needNew:
                 mergedPaths.append(currentPath)
                 currentPath = path
@@ -336,8 +343,6 @@ class cam:
             else:
                 currentPath = currentPath + path
                 currentPoint = currentPath[-1]
-
-        #print(currentPath)
 
         mergedPaths.append(currentPath)
 
@@ -363,8 +368,8 @@ class cam:
 
         shapely_openpath = shapely.geometry.LineString(pts)
 
-        print("origPath", origPath)
-        print("origPath", shapely_openpath)
+        #print("origPath", origPath)
+        #print("origPath", shapely_openpath)
          
         shapely_tabs_ = []
         # 1. from the tabs, build shapely (closed) tab polygons
@@ -380,7 +385,7 @@ class cam:
         shapely_splitted_paths = shapely_openpath.difference(shapely_tabs)
 
         # 3. that's it
-        print("splitted_paths", shapely_splitted_paths)
+        #print("splitted_paths", shapely_splitted_paths)
 
         if shapely_splitted_paths.geom_type == 'LineString':
             shapely_splitted_paths = shapely.geometry.MultiLineString([shapely_splitted_paths])

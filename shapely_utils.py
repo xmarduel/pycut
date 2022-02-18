@@ -43,8 +43,16 @@ class ShapelyUtils:
 
         p1_p2 = shapely.geometry.LineString([p1,p2])
 
+        if bounds.geom_type == 'MultiPolygon':
+            compound = shapely.geometry.GeometryCollection([bounds, p1_p2])
+            ShapelyUtils.MatplotlibDisplay("mergePath bounds check crosses (multipoly) : %d" % cls.cnt, compound, force=False)
+        if bounds.geom_type == 'MultiLineString':
+            compound = shapely.geometry.GeometryCollection([bounds, p1_p2])
+            ShapelyUtils.MatplotlibDisplay("mergePath bounds check crosses (multilines) : %d" % cls.cnt, compound, force=False)
        
         result = p1_p2.intersection(bounds)
+
+        print("crosses: result intersection empty ? ", result.is_empty)
     
         if result.is_empty is True:
             return False
@@ -62,6 +70,10 @@ class ShapelyUtils:
                 return False
             if result.x == p2[0] and result.y == p2[1] :
                 return False
+        if result.geom_type == 'LineString':
+            return True
+        if result.geom_type == 'MultiLineString':
+            return True
             
             
         return True
@@ -74,7 +86,7 @@ class ShapelyUtils:
         lines = []
         for line in multiline.geoms:
             xline = line.simplify(tol)
-            if xline:
+            if xline and xline.geom_type == 'LineString':
                 lines.append(xline)
         
         if lines:
@@ -92,7 +104,7 @@ class ShapelyUtils:
         polys = []
         for poly in multipoly.geoms:
             xpoly = poly.simplify(tol)
-            if xpoly:
+            if xpoly and xpoly.geom_type == 'Polygon':
                 polys.append(xpoly)
         
         if polys:
@@ -278,14 +290,11 @@ class ShapelyUtils:
                         lines_ok.append(geom)
                 
             for line_ok in lines_ok:
-                print("linestring:", line_ok)
                 polygon = shapely.geometry.Polygon(line_ok)
-                print("linestring -> poly :", polygon.is_valid, polygon)
                 if not polygon.is_valid:
                     polygon = cls.fixSimplePolygon(polygon)
-                    print("linestring -> poly -> fixed :", polygon.is_valid)
-                    if not  polygon.is_valid:
-                        a = 1
+                    #print("linestring -> poly -> fixed :", polygon.is_valid)
+
                 polygons.append(polygon)
 
         multipoly = shapely.geometry.MultiPolygon(polygons)
@@ -414,38 +423,26 @@ class ShapelyUtils:
         for poly in multipoly.geoms:
             if not poly.is_valid:
                 fixed_poly = cls.fixGenericPolygon(poly)
-                if fixed_poly is not None:
-                    valid_polys.append(fixed_poly)
+                valid_polys.append(fixed_poly)
             else:
                 valid_polys.append(poly)
 
-        if len(valid_polys) > 0:
-            return shapely.geometry.MultiPolygon(valid_polys)
-
-        return None
+        return shapely.geometry.MultiPolygon(valid_polys)
 
     @classmethod
     def fixSimplePolygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :
         '''
         '''
-        valid_poly = make_valid(polygon)
+        valid = make_valid(polygon)
 
-        if valid_poly.geom_type == 'Polygon':
-            return valid_poly
+        if valid.geom_type == 'Polygon':
+            return valid
 
-        elif valid_poly.geom_type == 'MultiPolygon':
-            polys = []
-
-            for geom in valid_poly.geoms:
-                if not geom.is_valid:
-                    continue
-
-                polys.append(geom)
-
-            # take the largest one!
+        elif valid.geom_type == 'MultiPolygon':
+            # take the largest one! CHECKME
             largest_area = -1
             largest_poly = None
-            for poly in polys:
+            for poly in valid.geoms:
                 area = poly.area
                 if area > largest_area:
                     largest_area = area
@@ -453,30 +450,31 @@ class ShapelyUtils:
 
             return largest_poly
 
-        elif valid_poly.geom_type == 'GeometryCollection':
-            # shit
-            ok = None
-            for geom in valid_poly:
-                print(geom)
+        elif valid.geom_type == 'GeometryCollection':
+            # shit - FIXME  # take the largest Polygon
+            largest_area = -1
+            largest_poly = None
+
+            for geom in valid.geoms:
                 if geom.geom_type == 'Polygon':
-                    # the first one ?
-                    if not ok: 
-                        ok = geom
-                else:
-                    pass
-            return ok
+                    area = geom.area
+                    if area > largest_area:
+                        largest_area = area
+                        largest_poly = geom
+                
+            return largest_poly
 
         return None
 
     @classmethod
     def fixGenericPolygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :
         '''
-        fix exterior and interiors in not valid
+        fix exterior and interiors if not valid
         '''
         if polygon.is_valid:
             return polygon
 
-        exterior = list(polygon.exterior.coords)
+        exterior = polygon.exterior
         interiors = polygon.interiors
 
         ext_poly = shapely.geometry.Polygon(exterior)
@@ -484,22 +482,21 @@ class ShapelyUtils:
             ext_poly = cls.fixSimplePolygon(ext_poly)
 
         if not interiors:
-            ext_linestring = shapely.geometry.LineString(list(ext_poly.exterior.coords))
+            ext_linestring = shapely.geometry.LineString(ext_poly.exterior)
 
             fixed_poly = shapely.geometry.Polygon(ext_linestring)
-            
         else:
-            fixed_interiors = []
+            fixed_interiors : List[shapely.geometry.Polygon] = []
             for interior in interiors:
-                int_poly = shapely.geometry.Polygon(list(interior.coords))
+                int_poly = shapely.geometry.Polygon(interior)
 
                 if not int_poly.is_valid:
                     int_poly = cls.fixSimplePolygon(int_poly)
 
                 fixed_interiors.append(int_poly)
 
-            ext_linestring = shapely.geometry.LineString(list(ext_poly.exterior.coords))
-            holes_linestrings = [shapely.geometry.LineString(list(int_poly.exterior.coords)) for int_poly in fixed_interiors] 
+            ext_linestring = shapely.geometry.LineString(ext_poly.exterior)
+            holes_linestrings = [shapely.geometry.LineString(int_poly.exterior) for int_poly in fixed_interiors] 
 
             fixed_poly = shapely.geometry.Polygon(ext_linestring, holes=holes_linestrings)
 
@@ -523,6 +520,8 @@ class ShapelyUtils:
             cls._MatplotlibDisplayPolygon(title, geom)
         if geom.geom_type == 'MultiPolygon':
             cls._MatplotlibDisplayMultiPolygon(title, geom)
+        if geom.geom_type == 'GeometryCollection':
+            cls._MatplotlibDisplayGeometryCollection(title, geom)
         else:
             pass
 
@@ -552,8 +551,12 @@ class ShapelyUtils:
         plt.title(title)
 
         style = {
-            0: 'bo-',
-            1: 'r+--'
+            0: 'ro-',
+            1: 'go-',
+            2: 'bo-',
+            3: 'r+-',
+            4: 'g+-',
+            5: 'b+-',
         }
         
         xx = []
@@ -567,7 +570,7 @@ class ShapelyUtils:
             yy.append(iy)
 
         for k, (x,y) in enumerate(zip(xx,yy)):
-            plt.plot(x, y, style[k%2])
+            plt.plot(x, y, style[k%6])
 
         plt.show()
 
@@ -647,6 +650,114 @@ class ShapelyUtils:
             plt.plot(x,y, style_ext[k%2])
         for k, (x,y) in enumerate(zip(xx_int,yy_int)):
             plt.plot(x,y,style_int[k%2])
+
+        plt.show()
+
+    @classmethod
+    def _MatplotlibDisplayGeometryCollection(cls, title, collection):
+        '''
+        '''
+        plt.figure(cls.cnt)
+        plt.title(title)
+
+        style_ext = {
+            0: 'bo-',
+            1: 'ro-'
+        }
+        style_int = {
+            0: 'r+--',
+            1: 'go-'
+        }
+
+        for geom in collection.geoms:
+
+            if geom.geom_type == 'MultiPolygon':
+
+                xx_ext = []
+                yy_ext = []
+
+                xx_int = []
+                yy_int = []
+           
+                for ch_geom in geom.geoms:
+                    x = ch_geom.exterior.coords.xy[0]
+                    y = ch_geom.exterior.coords.xy[1]
+
+                    xx_ext.append(x)
+                    yy_ext.append(y)
+
+                    for interior in ch_geom.interiors:
+                        ix = interior.coords.xy[0]
+                        iy = interior.coords.xy[1]
+
+                        xx_int.append(ix)
+                        yy_int.append(iy)
+
+                # plot
+                for k, (x,y) in enumerate(zip(xx_ext,yy_ext)):
+                    plt.plot(x,y, style_ext[k%2])
+                for k, (x,y) in enumerate(zip(xx_int,yy_int)):
+                    plt.plot(x,y,style_int[k%2])
+
+            if geom.geom_type == 'Polygon':
+
+                style_ext = {
+                    0: 'bo-'
+                }
+                style_int = {
+                    0: 'r+--',
+                    1: 'go-'
+                }
+        
+                x = geom.exterior.coords.xy[0]
+                y = geom.exterior.coords.xy[1]
+
+                plt.plot(x, y, style_ext[0])
+
+                interiors_xx = []
+                interiors_yy = []
+
+                for interior in geom.interiors:
+                    ix = interior.coords.xy[0]
+                    iy = interior.coords.xy[1]
+
+                    interiors_xx.append(ix)
+                    interiors_yy.append(iy)
+
+                for k, (ix,iy) in enumerate(zip(interiors_xx,interiors_yy)):
+                    plt.plot(ix, iy, style_int[k%2])
+
+            if geom.geom_type == 'MultiLineString':
+
+                style = {
+                    0: 'bo-',
+                    1: 'r+--'
+                }
+
+                xx = []
+                yy = []
+
+                for line in geom.geoms:
+                    ix = line.coords.xy[0]
+                    iy = line.coords.xy[1]
+
+                    xx.append(ix)
+                    yy.append(iy)
+
+                for k, (x,y) in enumerate(zip(xx,yy)):
+                    plt.plot(x, y, style[k%2])
+
+            if geom.geom_type == 'LineString':
+
+                x = geom.coords.xy[0]
+                y = geom.coords.xy[1]
+
+                # plot
+                style = {
+                    0: 'o-',
+                }
+
+                plt.plot(x,y, style[0], color='black')
 
         plt.show()
 
