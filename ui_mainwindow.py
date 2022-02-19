@@ -78,6 +78,7 @@ class Ui_mainwindow(object):
 
         self.doubleSpinBox_PxPerInch = QDoubleSpinBox(self.centralwidget)
         self.doubleSpinBox_PxPerInch.setObjectName(u"doubleSpinBox_PxPerInch")
+        self.doubleSpinBox_PxPerInch.setEnabled(False)
         self.doubleSpinBox_PxPerInch.setMaximum(999.990000000000009)
         self.doubleSpinBox_PxPerInch.setValue(1.000000000000000)
 

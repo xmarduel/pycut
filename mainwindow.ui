@@ -57,6 +57,9 @@
           </item>
           <item>
            <widget class="QDoubleSpinBox" name="doubleSpinBox_PxPerInch">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="maximum">
              <double>999.990000000000009</double>
             </property>
