@@ -24,6 +24,7 @@ from typing import Tuple
 from val_with_unit import ValWithUnit
 
 import shapely.geometry
+from shapely.validation import make_valid
 import shapely.ops
 from shapely_utils import ShapelyUtils
 
@@ -238,6 +239,14 @@ class cam:
         if len(allPaths) == 0: 
             # no possible paths! TODO . inform user
             return []
+
+        # mergePaths need MultiPolygon
+        polys = []
+        for line in bounds.geoms:
+            poly = shapely.geometry.Polygon(line)
+            polys.append(poly)
+        bounds = shapely.geometry.MultiPolygon(polys)
+        bounds = make_valid(bounds)
 
         return cls.mergePaths(bounds, allPaths)
         
