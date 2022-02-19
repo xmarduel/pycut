@@ -241,12 +241,7 @@ class cam:
             return []
 
         # mergePaths need MultiPolygon
-        polys = []
-        for line in bounds.geoms:
-            poly = shapely.geometry.Polygon(line)
-            polys.append(poly)
-        bounds = shapely.geometry.MultiPolygon(polys)
-        bounds = make_valid(bounds)
+        bounds = ShapelyUtils.multiLineToMultiPoly(bounds)
 
         return cls.mergePaths(bounds, allPaths)
         

@@ -328,6 +328,21 @@ class ShapelyUtils:
         return multiline
 
     @classmethod
+    def multiLineToMultiPoly(cls, multiline: shapely.geometry.MultiLineString) -> shapely.geometry.MultiPolygon:
+        '''
+        '''
+        polys = []
+
+        for line in multiline.geoms:
+            poly = shapely.geometry.Polygon(line)
+            polys.append(poly)
+
+        multipoly = shapely.geometry.MultiPolygon(polys)
+        multipoly = make_valid(multipoly)
+        
+        return multipoly
+
+    @classmethod
     def union_polygons(cls, poly_list: List[shapely.geometry.Polygon]) -> shapely.geometry.MultiPolygon :
         '''
         union the polygons together of after the other
