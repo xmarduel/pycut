@@ -161,7 +161,7 @@ During this process, the shapes will be convert into a &lt;path&gt; shapes.</p>
 <h3>Inkscape</h3>
 
 <p>With Inkscape, the first step is to specify the "Document size". Please
-choose as units "mm", "cm" or "in". This will be use later when creating GCode
+choose as units "mm" or "in". This will be used later when creating GCode
 with the option "Zero Lower Left of Material" as reference. This option needs
 the Y size of the material.</p>
 
@@ -256,14 +256,16 @@ that Inkscape automatically change the <strong>user units scale to
 <img src="Inkscape_settings_in.png" width="563px"> 
 </div>
 
-<p>But why would a user use inches and still want to draw a rectangle half the
-size of its material in user units with scale 25.4 (leading infact to work in
-mm) ? The user can set the user units scale to 1. The effect of this is that
-now, in order to fill the whole document with a rectangle, the rectangle has to
-be of the size 3.93701x1.57480. </p>
+<p>Filling a box half the size of the document is 50x20, right, but what are real 
+dimension of that box ? The user would have to steadily calculate from fancy user units
+(ex: 50x20) in inches</p>
+<p>But why would a user use inches and work with user units scale factor 25.4 
+(leading infact to work in mm) ? The user can set the user units scale factor to 1.
+The effect of this is that now, in order to fill the whole document with a rectangle, 
+the rectangle has to be of the size user unit size of 3.93701x1.57480. </p>
 
 <p>Of course the size of the material is certainly not 3.93701x1.57480 inches,
-but 5x3 inches: an human readable size. The user knows that he has to draw a
+but something like 5x3 inches: an human readable size. The user knows that he has to draw a
 rectangle inside the material of size let say 1.5x1.2 inches. And these
 dimensions are the ones that are effectively saved in the svg document. So the
 user units are exactly the same as the "physical units" when choosing a scale
