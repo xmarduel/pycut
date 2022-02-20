@@ -10,14 +10,6 @@ can it read the svg basic shapes:
   <polygon>
   <polylines>
   <line>
-  <path>
-
-
-note1: 
-  <rect> : with rounded corner : there is actually a patch in pull request
-note2:
-  <text> : https://catherineh.github.io/programming/2018/02/01/text-to-svg-paths ?
-  
 '''
 
 import svgpathtools
