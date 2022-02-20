@@ -272,7 +272,7 @@
       "type": "Pocket",
       "Deep": 3.175,
       "paths": [
-        "path4_t"
+        "path_t"
       ],
       "RampPlunge": false,
       "Combine": "Union",
