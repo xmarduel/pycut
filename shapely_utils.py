@@ -261,6 +261,117 @@ class ShapelyUtils:
         return offsets, multipoly
 
     @classmethod
+    def offsetMultiPolygonInteriors(cls, geometry: shapely.geometry.MultiPolygon, amount: float, side, gexterior=False, resolution=16, join_style=1, mitre_limit=5.0) -> Tuple[List[shapely.geometry.MultiLineString], shapely.geometry.MultiPolygon] :
+        '''
+        Generate offseted lines from the polygons. All the produced lines are good 
+        to store in the toolpaths.
+
+        The returned MultiPolygon is generated from these, but after having eliminated the degenerated ones
+        '''
+        offsets = [] # for each poly in the multipoly - each item can be of various types
+        polys = []
+
+        for poly in geometry.geoms:
+
+            if not poly.interiors: 
+                continue
+
+            linestrings = []
+            for interior in poly.interiors:
+                linestring = shapely.geometry.LineString(interior)
+                linestrings.append(linestring)
+
+            int_offsets = []
+            for linestring in linestrings:
+                int_offset = linestring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=5.0)
+                int_offsets.append(int_offset)
+
+            # from the offseted lines, build a multipolygon that we diff with the exterior
+            interior_multipoly = cls.buildMultiPolyFromOffset(int_offsets)
+            print("exterior_multipoly VALID ? ", interior_multipoly.is_valid)
+
+            #cls.MatplotlibDisplay("interior_multipoly", interior_multipoly, force=True)
+            
+            if not interior_multipoly.is_valid:
+                interior_multipoly = cls.fixMultipoly(interior_multipoly)
+
+            _, exterior_multipolyX = ShapelyUtils.offsetMultiPolygon(geometry, amount, 'left', ginterior=True)
+
+            # only exterior
+            exterior_multipoly = cls.removeHolesMultipoly(exterior_multipolyX)
+
+            # this simplify may be important so that the offset becomes Ok (example: letter "B") 
+            exterior_multipoly = ShapelyUtils.simplifyMultiPoly(exterior_multipoly, 0.001)
+            exterior_multipoly = ShapelyUtils.orientMultiPolygon(exterior_multipoly)
+
+            if gexterior == True:
+                # the diff ** with ~POLY ** is the solution
+                try:
+                    sol_poly = exterior_multipoly.intersection(interior_multipoly)
+                except Exception as e :
+                    print("ERROR difference")
+                    print(e)
+                    print("interior_multipoly VALID ?", interior_multipoly.is_valid)
+                    print("exterior_multipoly VALID ?", exterior_multipoly.is_valid)
+                    raise
+
+                if sol_poly.geom_type == 'LineString':
+                    offset = shapely.geometry.LineString(sol_poly)
+                    offsets.append(offset)
+                elif sol_poly.geom_type == 'MultiLineString':
+                    for line in sol_poly.geoms:
+                        offset = shapely.geometry.LineString(line)
+                        offsets.append(offset)
+                elif sol_poly.geom_type == 'Polygon':
+                    offset = shapely.geometry.LineString(list(sol_poly.exterior.coords))
+                    offsets.append(offset)
+                    polys.append(sol_poly)
+                elif sol_poly.geom_type == 'MultiPolygon':
+                    _offsets = []
+                    for geom in sol_poly.geoms:
+                        offset = shapely.geometry.LineString(geom.exterior)
+                        _offsets.append(offset)
+                        polys.append(geom)
+                    offset = shapely.geometry.MultiLineString(_offsets)
+                    offsets.append(offset)
+                elif sol_poly.geom_type == 'GeometryCollection':
+                    _offsets = []
+                    for geom in sol_poly.geoms:
+                        if geom.geom_type == 'Polygon':
+                            offset = shapely.geometry.LineString(geom.exterior)
+                            _offsets.append(offset)
+                            polys.append(geom)
+                        elif geom.geom_type == 'MultiPolygon':
+                            for poly in geom.geoms:
+                                offset = shapely.geometry.LineString(poly.exterior)
+                                _offsets.append(offset)
+                                polys.append(poly)
+                        elif geom.geom_type == 'Linestring':
+                            offset = shapely.geometry.LineString(line)
+                            _offsets.append(offset)
+                        elif geom.geom_type == 'MultiLinestring':
+                            for line in geom.geoms:
+                                offset = shapely.geometry.LineString(line)
+                                _offsets.append(offset)
+                    offset = shapely.geometry.MultiLineString(_offsets)
+                    offsets.append(offset)
+
+            else: # without exterior
+                offsets.append(int_offset)
+
+                for poly in interior_multipoly.geoms:
+                    if poly.geom_type == 'Polygon':
+                        polys.append(poly)
+
+        multipoly = shapely.geometry.MultiPolygon(polys)
+        # ensure orientation
+        multipoly = ShapelyUtils.orientMultiPolygon(multipoly)
+
+        return offsets, multipoly
+
+
+
+    @classmethod
     def buildMultiPolyFromOffset(cls, multi_offset: any) -> shapely.geometry.MultiPolygon:
         '''
         offset is the direct result of an parallel_offset operation -> can be of various type
@@ -356,6 +467,18 @@ class ShapelyUtils:
         multipoly = make_valid(multipoly)
         
         return multipoly
+
+    @classmethod
+    def removeHolesMultipoly(cls, multipoly: shapely.geometry.MultiPolygon) -> shapely.geometry.MultiPolygon:
+        epolys = []
+        
+        for poly in multipoly.geoms:
+            line = shapely.geometry.LineString(poly.exterior)
+            epoly = shapely.geometry.Polygon(line)
+
+            epolys.append(epoly)
+
+        return shapely.geometry.MultiPolygon(epolys)
 
     @classmethod
     def union_polygons(cls, poly_list: List[shapely.geometry.Polygon]) -> shapely.geometry.MultiPolygon :
@@ -691,13 +814,17 @@ class ShapelyUtils:
         plt.title(title)
 
         style_ext = {
-            0: 'bo-',
-            1: 'ro-'
+            0: 'ro-',
+            1: 'go-',
+            2: 'bo-'
         }
         style_int = {
-            0: 'r+--',
-            1: 'go-'
+            0: 'r+-',
+            1: 'g+-',
+            2: 'b+-'
         }
+
+        pp = 0
 
         for geom in collection.geoms:
 
@@ -724,20 +851,14 @@ class ShapelyUtils:
                         yy_int.append(iy)
 
                 # plot
-                for k, (x,y) in enumerate(zip(xx_ext,yy_ext)):
-                    plt.plot(x,y, style_ext[k%2])
-                for k, (x,y) in enumerate(zip(xx_int,yy_int)):
-                    plt.plot(x,y,style_int[k%2])
+                for x,y in zip(xx_ext,yy_ext):
+                    pp += 1
+                    plt.plot(x,y, style_ext[pp%3])
+                for x,y in zip(xx_int,yy_int):
+                    pp += 1
+                    plt.plot(x,y,style_int[pp%3])
 
             if geom.geom_type == 'Polygon':
-
-                style_ext = {
-                    0: 'bo-'
-                }
-                style_int = {
-                    0: 'r+--',
-                    1: 'go-'
-                }
         
                 x = geom.exterior.coords.xy[0]
                 y = geom.exterior.coords.xy[1]
@@ -754,15 +875,11 @@ class ShapelyUtils:
                     interiors_xx.append(ix)
                     interiors_yy.append(iy)
 
-                for k, (ix,iy) in enumerate(zip(interiors_xx,interiors_yy)):
-                    plt.plot(ix, iy, style_int[k%2])
+                for ix,iy in zip(interiors_xx,interiors_yy):
+                    pp += 1
+                    plt.plot(ix, iy, style_int[pp%3])
 
             if geom.geom_type == 'MultiLineString':
-
-                style = {
-                    0: 'bo-',
-                    1: 'r+--'
-                }
 
                 xx = []
                 yy = []
@@ -774,20 +891,18 @@ class ShapelyUtils:
                     xx.append(ix)
                     yy.append(iy)
 
-                for k, (x,y) in enumerate(zip(xx,yy)):
-                    plt.plot(x, y, style[k%2])
+                for x,y in zip(xx,yy):
+                    pp += 1
+                    plt.plot(x, y, style_ext[pp%3])
 
             if geom.geom_type == 'LineString':
 
                 x = geom.coords.xy[0]
                 y = geom.coords.xy[1]
 
-                # plot
-                style = {
-                    0: 'o-',
-                }
+                pp += 1
 
-                plt.plot(x,y, style[0], color='black')
+                plt.plot(x,y, style_ext[pp%3], color='black')
 
         plt.show()
 

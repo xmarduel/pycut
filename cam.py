@@ -142,6 +142,11 @@ class cam:
             if not multi_offset:
                 break
 
+        # last: make beautiful interiors, only 1 step
+        interior_multi_offset, _ = ShapelyUtils.offsetMultiPolygonInteriors(geometry, cutterDia / 2, 'left', gexterior=True)
+        allPaths = collect_paths(interior_multi_offset, allPaths)
+        # - done !
+
         return cls.mergePaths(bounds, allPaths)
 
     @classmethod
