@@ -227,17 +227,28 @@ class SvgPath:
 
         return line
 
+    def _toShapelySimplePolygon(self) -> shapely.geometry.Polygon:
+        '''
+        '''
+        np_svg_path = self.discretize()
+
+        coordinates = [ (complex_pt.real, complex_pt.imag)  for complex_pt in np_svg_path ]
+
+        poly = shapely.geometry.Polygon(coordinates)
+
+        return poly
+
     def toShapelyPolygons(self) -> List[shapely.geometry.Polygon]:
         '''
         The main method to transform a svg path into a polygon or a list of polygons
-        - if only 1 [Mm] inside the svg path, then it is a simple closed line ie a polygon without holes
+        - if only 1 [Mm] inside the svg path, then it is a simple [closed] line ie a polygon without holes
         - if more than 1 [Mm] inside the svg path, then it is a polygon with holes
-        -> split them, the "longuest" one is the exterior, the others are the holes
+        -> split them, the one with the largest area is the exterior, the others are the holes
 
-        -> Wow! not automatically! for exmaple for i and j there are 2 [Mm] but no interior,
-        indeed i is composed of 2 distincts paths, as j also is.
+        -> Wow! not automatically! for example for 'i' and 'j' there are 2 [Mm] but no interior,
+        indeed 'i' is composed of 2 distincts paths, as 'j' also is.
 
-        -> so we have infact to check if the smaller path in included in the larger one, or not
+        -> so we have infact to check if the simple paths are included in the larger one, or not
         '''
         is_simple_path = self._is_simple_path()
 
@@ -251,61 +262,77 @@ class SvgPath:
             poly = shapely.geometry.polygon.orient(poly)
             polys.append(poly)
         else:
-            # generate temporary svgpath objects with the separated paths
-            # to build a polygon with holes
+            # generate temporary svgpath objects with simple paths
+            # to build polygon(s) with holes
             svgpaths = self._generate_simple_svgpaths()
 
-            # from these simple path, build list of polygons, 1 with holes, others without 
-            # FIXME: it should allows something like 1 polys , both with holes 
+            # from these simple path, build list of polygons
+            # some of them will have holes, other not...
             data = {}
             for svgpath in svgpaths:
+                linestring = svgpath._toShapelyLineString()
+                s_polygon = svgpath._toShapelySimplePolygon()
+
                 data[svgpath.p_id] = {
+                    "id": svgpath.p_id,
                     "svgpath" : svgpath,
-                    "linestring": svgpath._toShapelyLineString(),
-                    "exterior": False
+                    "linestring": linestring,
+                    "s_polygon": s_polygon,
+                    "area": s_polygon.area,
+                    "exterior": None,
+                    "interiors": []
                 }
 
-            max_length = -1
-            my_length_p_id = ""
+            data_sorted = []
             for p_id in data:
-                svgpath = data[p_id]["svgpath"]
-                length = svgpath.svg_path.length()
-                if length > max_length:
-                    max_length = length
-                    my_length_p_id = p_id
+                data_sorted.append( data[p_id] )
+            
+            # sort from the largest area first
+            data_sorted.sort(key=lambda x: -x.get('area'))
+            
+            # build the polygons one after the other, starting from the biggest one
+            # NOTE: polygons SHOULD note overlap themselves
+            
+            # the first is the largest one
+            xpoly = data_sorted[0]
+            xpoly["exterior"] = xpoly["linestring"]
 
-            data[my_length_p_id]["exterior"] = True    
-                
-            # ok, time to build the polygon
-            exterior = data[my_length_p_id]["linestring"]
-            interiors = []
-            for p_id in data:
-                if data[p_id]["exterior"] == False:
-                    interiors.append(data[p_id]["linestring"])
+            xpolys = [xpoly]
+            
+            # the others
+            for data in data_sorted[1:]:
+                line = data["linestring"]
 
-            larger = shapely.geometry.Polygon(exterior)
-            holes = []
-            others = []
-            for interior_line in interiors:
-                if larger.covers(interior_line):
-                    holes.append(interior_line)
+                is_hole = False
+                for xpoly in xpolys: # the existing polys
+                    if xpoly["s_polygon"].covers(line):
+                        is_hole = True
+                        xpoly["interiors"].append(line)
+                        break
+
+                if is_hole is False:
+                    # is a separate polygon
+                    data["exterior"] = line
+                    xpolys.append(data) # append to the list of existing polys
+
+                # sort the list - the smallest are the first to be searched
+                xpolys.sort(key=lambda x: x.get('area'))
+
+            # ok, time to build the "real" polygons
+            all_polys = []
+            for xpoly in xpolys:
+                if xpoly["interiors"]:
+                    poly = shapely.geometry.Polygon(xpoly["exterior"], holes=xpoly["interiors"])
                 else:
-                    others.append(interior_line)
+                    poly = shapely.geometry.Polygon(xpoly["exterior"])
 
-            if holes:
-                poly = shapely.geometry.Polygon(exterior, holes=holes)
-            else:
-                poly = shapely.geometry.Polygon(exterior)
+                all_polys.append(poly)
 
             # wow, for some letters (D, P) there is a problem (TO INQUIRE)
             # D: exterior/interior is wrong
             # P: interior in wrong 
-            poly = ShapelyUtils.fixGenericPolygon(poly)
-            polys.append(poly)
-
-            for other in others:
-                # very necessary!
-                poly = shapely.geometry.Polygon(other)
+            polys = []
+            for poly in all_polys:
                 poly = ShapelyUtils.fixGenericPolygon(poly)
                 polys.append(poly)
 

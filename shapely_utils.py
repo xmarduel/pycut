@@ -328,6 +328,21 @@ class ShapelyUtils:
         return multiline
 
     @classmethod
+    def multiPolyIntToMultiLine(cls, multipoly: shapely.geometry.MultiPolygon) -> shapely.geometry.MultiLineString:
+        '''
+        '''
+        lines = []
+
+        for poly in multipoly.geoms:
+            for interior in poly.interiors:
+                line = shapely.geometry.LineString(interior)
+                lines.append(line)
+        
+        multiline = shapely.geometry.MultiLineString(lines)
+        
+        return multiline
+
+    @classmethod
     def multiLineToMultiPoly(cls, multiline: shapely.geometry.MultiLineString) -> shapely.geometry.MultiPolygon:
         '''
         '''

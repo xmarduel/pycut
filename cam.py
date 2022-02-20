@@ -253,16 +253,17 @@ class cam:
         Returns array of CamPath.
         '''
         # use lines, not polygons
-        multiline = ShapelyUtils.multiPolyToMultiLine(geometry)
+        multiline_ext = ShapelyUtils.multiPolyToMultiLine(geometry)
+        multiline_int = ShapelyUtils.multiPolyIntToMultiLine(geometry)
 
-        full_line = shapely.ops.linemerge(list(multiline.geoms))
+        full_line = shapely.ops.linemerge(list(multiline_ext.geoms) + list(multiline_int.geoms))
 
         if full_line.geom_type == 'LineString':
             camPaths = [ CamPath( full_line, False) ]
             return camPaths
 
         allPaths = []
-        for line in full_line:
+        for line in full_line.geoms:
             coords = list(line.coords)  # JSCUT: path = paths.slice(0)
             if not climb:
                 coords.reverse()
