@@ -1,6 +1,5 @@
 # This Python file uses the following encoding: utf-8
 
-from io import StringIO
 from typing import List
 
 import math
@@ -292,7 +291,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
             self.tabs = tabs
             self.display_tabs(self.tabs)
 
-    def get_svg_path_d(self, p_id):
+    def get_svg_path_d(self, p_id: str) -> str:
         return self.svg_path_d[p_id]
 
     def mousePressEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
@@ -377,7 +376,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
             self.resetTransform()
             self.zoomChanged.emit()
 
-    def zoomBy(self, factor):
+    def zoomBy(self, factor: float):
         ''' allow very strong zoom (100)
         useful when the svg viewBox is very small '''
         currentZoom = self.zoomFactor()
@@ -394,7 +393,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.fill_svg_viewer(self.svg)
         self.display_tabs(self.tabs)
 
-    def display_tabs(self, tabs):
+    def display_tabs(self, tabs: List['Tab']):
         '''
         '''
         from gcode_generator import Tab

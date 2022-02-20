@@ -1,9 +1,6 @@
-
 import os
 import math
 import copy
-import re
-import string
 
 from typing import List
 from typing import Tuple
@@ -42,19 +39,19 @@ class SvgPath:
     PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5 # is in jsCut 1
 
     @classmethod
-    def set_arc_precision(cls, arc_precision):
+    def set_arc_precision(cls, arc_precision: float):
         '''
         '''
         cls.PYCUT_SAMPLE_LEN_COEFF = 1.0 / arc_precision
 
     @classmethod
-    def set_arc_min_nb_segments(cls, arc_min_nb_segments):
+    def set_arc_min_nb_segments(cls, arc_min_nb_segments: int):
         '''
         '''
         cls.PYCUT_SAMPLE_MIN_NB_SEGMENTS = arc_min_nb_segments
 
     @classmethod
-    def svg2paths_from_string(cls, svg: str) :
+    def svg2paths_from_string(cls, svg: str) -> Tuple[List[svgpathtools.Path], List[Dict[str,str]]]:
         '''
         From a svg file content, read all paths and their attributes
         '''
@@ -94,7 +91,7 @@ class SvgPath:
 
         return svg_shapes
 
-    def __init__(self, p_id: str, p_attrs: Dict):
+    def __init__(self, p_id: str, p_attrs: Dict[str,str]):
         '''
         '''
         # the 'id' of a svg <path> definition

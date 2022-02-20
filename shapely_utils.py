@@ -369,8 +369,6 @@ class ShapelyUtils:
 
         return offsets, multipoly
 
-
-
     @classmethod
     def buildMultiPolyFromOffset(cls, multi_offset: any) -> shapely.geometry.MultiPolygon:
         '''
@@ -656,7 +654,7 @@ class ShapelyUtils:
         return fixed_poly
 
     @classmethod
-    def MatplotlibDisplay(cls, title, geom: any, force=False):
+    def MatplotlibDisplay(cls, title: str, geom: any, force: bool =False):
         '''
         '''
         if cls.MAPLOTLIB_DEBUG == False and force == False:
@@ -679,7 +677,7 @@ class ShapelyUtils:
             pass
 
     @classmethod
-    def _MatplotlibDisplayLineString(cls, title, linestring):
+    def _MatplotlibDisplayLineString(cls, title: str, linestring: shapely.geometry.LineString):
         '''
         ''' 
         plt.figure(cls.cnt)
@@ -697,7 +695,7 @@ class ShapelyUtils:
         plt.show()
 
     @classmethod
-    def _MatplotlibDisplayMultiLineString(cls, title, multilinestring):
+    def _MatplotlibDisplayMultiLineString(cls, title: str, multilinestring: shapely.geometry.MultiLineString):
         '''
         '''    
         plt.figure(cls.cnt)
@@ -728,7 +726,7 @@ class ShapelyUtils:
         plt.show()
 
     @classmethod
-    def _MatplotlibDisplayPolygon(cls, title, polygon):
+    def _MatplotlibDisplayPolygon(cls, title: str, polygon: shapely.geometry.Polygon):
         '''
         '''
         plt.figure(cls.cnt)
@@ -763,7 +761,7 @@ class ShapelyUtils:
         plt.show()
 
     @classmethod
-    def _MatplotlibDisplayMultiPolygon(cls, title, multipoly):
+    def _MatplotlibDisplayMultiPolygon(cls, title: str, multipoly: shapely.geometry.MultiPolygon):
         '''
         '''
         plt.figure(cls.cnt)
@@ -807,7 +805,7 @@ class ShapelyUtils:
         plt.show()
 
     @classmethod
-    def _MatplotlibDisplayGeometryCollection(cls, title, collection):
+    def _MatplotlibDisplayGeometryCollection(cls, title: str, collection: shapely.geometry.GeometryCollection):
         '''
         '''
         plt.figure(cls.cnt)
