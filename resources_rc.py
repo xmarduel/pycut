@@ -4377,7 +4377,7 @@ o\x91G\x00\x00\x94\x9e\x9b~8[\x1e\xb9I\x95\xa0\
 \x00\x00t\x90\xa0\x00\x00\xe8 A\x01\x00\xc8\x5cY\xd9\
 \xff\x07\x81J\xd7\xd2'\xc3\x16\xe9\x00\x00\x00\x00IE\
 ND\xaeB`\x82\
-\x00\x00E\xa0\
+\x00\x00E\x96\
 <\
 html>\x0d\x0a<head>\x0d\x0a \
  <meta http-equi\
@@ -5018,481 +5018,481 @@ m\x22 and\x0d\x0aheight=\x22\
 /p>\x0d\x0a\x0d\x0a<div>\x0d\x0a<i\
 mg src=\x22Inkscape\
 _settings_mm.png\
-\x22 width=\x22563px\x22>\
- \x0d\x0a</div>\x0d\x0a\x0d\x0a<p>\
-Of course when e\
-diting the svg (\
-in Inkscape or i\
-n a text editor)\
-,\x0d\x0a<strong>the u\
-ser is only conc\
-erned with the u\
-ser units</stron\
-g> : he draws a\x0d\
-\x0arectangle of si\
-ze 20x30 at the \
-location 10x10. \
-The users may si\
-mply even not be\
-\x0d\x0aaware of this \
-fact. When choos\
-ing mm, conversi\
-on from <strong>\
-user\x0d\x0aunits</str\
-ong> to <strong>\
-mm</strong> is a\
-bsolutely straig\
-htforward as, as\
-\x0d\x0asaid, the user\
- units scale is \
-1 per default .<\
-/p>\x0d\x0a\x0d\x0a<p>Let's \
-consider now the\
- case where the \
-user switches to\
-\x0d\x0a<strong>inches\
-</strong> for th\
-e document size.\
- The size of the\
- document become\
-s\x0d\x0athen <strong>\
-3,93701x1,57480 \
-inches</strong> \
-(yes, 100 / 25.4\
- is 3.93701). No\
-te\x0d\x0athat Inkscap\
-e automatically \
-change the <stro\
-ng>user units sc\
-ale to\x0d\x0a25.4</st\
-rong>. Because o\
-f this, the <str\
-ong>view box rem\
-ains at \x220 0 100\
-\x0d\x0a40\x22</strong>. \
-That way, a rect\
-angle filling th\
-e full document \
-size is still\x0d\x0a1\
-00x40.</p>\x0d\x0a\x0d\x0a<d\
-iv>\x0d\x0a<img src=\x22I\
-nkscape_settings\
-_in.png\x22 width=\x22\
-563px\x22> \x0d\x0a</div>\
-\x0d\x0a\x0d\x0a<p>Filling a\
- box half the si\
-ze of the docume\
-nt is 50x20, rig\
-ht, but what are\
- real \x0d\x0adimensio\
-n of that box ? \
-The user would h\
-ave to steadily \
-calculate from f\
-ancy user units\x0d\
-\x0a(ex: 50x20) in \
-inches</p>\x0d\x0a<p>B\
-ut why would a u\
-ser use inches a\
-nd work with use\
-r units scale fa\
-ctor 25.4 \x0d\x0a(lea\
-ding infact to w\
-ork in mm) ? The\
- user can set th\
-e user units sca\
-le factor to 1.\x0d\
-\x0aThe effect of t\
-his is that now,\
- in order to fil\
-l the whole docu\
-ment with a rect\
-angle, \x0d\x0athe rec\
-tangle has to be\
- of the size use\
-r unit size of 3\
-.93701x1.57480. \
-</p>\x0d\x0a\x0d\x0a<p>Of co\
-urse the size of\
- the material is\
- certainly not 3\
-.93701x1.57480 i\
-nches,\x0d\x0abut some\
-thing like 5x3 i\
-nches: an human \
-readable size. T\
-he user knows th\
-at he has to dra\
-w a\x0d\x0arectangle i\
-nside the materi\
-al of size let s\
-ay 1.5x1.2 inche\
-s. And these\x0d\x0adi\
-mensions are the\
- ones that are e\
-ffectively saved\
- in the svg docu\
-ment. So the\x0d\x0aus\
-er units are exa\
-ctly the same as\
- the \x22physical u\
-nits\x22 when choos\
-ing a scale\x0d\x0aof \
-1.</p>\x0d\x0a\x0d\x0a<p>Now\
- how can <strong\
->PyCut</strong> \
-handles these se\
-ttings?\x0d\x0a<strong\
->PyCut</strong> \
-only works with \
-the <strong>user\
- units</strong>.\
-\x0d\x0a<strong>PyCut<\
-/strong> will ca\
-lculate toolpath\
-s in the same or\
-der of magnitude\
-\x0d\x0aof the user un\
-its values of th\
-e svg. If you ch\
-oose \x22<strong>mm\
-</strong>\x22 for\x0d\x0a\
-the gcode output\
-, you would have\
- set your svg do\
-cument size in\x0d\x0a\
-\x22<strong>mm</str\
-ong>\x22, and the <\
-strong>user unit\
- scale to 1</str\
-ong>. Because\x0d\x0ao\
-f this, the gcod\
-e X,Y and Z valu\
-es are the same \
-as the one of th\
-e paths\x0d\x0avalues.\
-</p>\x0d\x0a\x0d\x0a<p>If yo\
-u choose \x22<stron\
-g>in</strong>\x22 f\
-or the gcode out\
-put, then certai\
-nly you\x0d\x0ahave se\
-t your svg docum\
-ent size in \x22<st\
-rong>in</strong>\
+\x22 width=\x22563\x22> \x0d\
+\x0a</div>\x0d\x0a\x0d\x0a<p>Of\
+ course when edi\
+ting the svg (in\
+ Inkscape or in \
+a text editor),\x0d\
+\x0a<strong>the use\
+r is only concer\
+ned with the use\
+r units</strong>\
+ : he draws a\x0d\x0ar\
+ectangle of size\
+ 20x30 at the lo\
+cation 10x10. Th\
+e users may simp\
+ly even not be\x0d\x0a\
+aware of this fa\
+ct. When choosin\
+g mm, conversion\
+ from <strong>us\
+er\x0d\x0aunits</stron\
+g> to <strong>mm\
+</strong> is abs\
+olutely straight\
+forward as, as\x0d\x0a\
+said, the user u\
+nits scale is 1 \
+per default .</p\
+>\x0d\x0a\x0d\x0a<p>Let's co\
+nsider now the c\
+ase where the us\
+er switches to\x0d\x0a\
+<strong>inches</\
+strong> for the \
+document size. T\
+he size of the d\
+ocument becomes\x0d\
+\x0athen <strong>3,\
+93701x1,57480 in\
+ches</strong> (y\
+es, 100 / 25.4 i\
+s 3.93701). Note\
+\x0d\x0athat Inkscape \
+automatically ch\
+ange the <strong\
+>user units scal\
+e to\x0d\x0a25.4</stro\
+ng>. Because of \
+this, the <stron\
+g>view box remai\
+ns at \x220 0 100\x0d\x0a\
+40\x22</strong>. Th\
+at way, a rectan\
+gle filling the \
+full document si\
+ze is still\x0d\x0a100\
+x40.</p>\x0d\x0a\x0d\x0a<div\
+>\x0d\x0a<img src=\x22Ink\
+scape_settings_i\
+n.png\x22 width=\x2256\
+3\x22> \x0d\x0a</div>\x0d\x0a\x0d\x0a\
+<p>Filling a box\
+ half the size o\
+f the document i\
+s 50x20, right, \
+but what are rea\
+l \x0d\x0adimension of\
+ that box ? The \
+user would have \
+to steadily calc\
+ulate from fancy\
+ user units\x0d\x0a(ex\
+: 50x20) in inch\
+es</p>\x0d\x0a<p>But w\
+hy would a user \
+use inches and w\
+ork with user un\
+its scale factor\
+ 25.4 \x0d\x0a(leading\
+ infact to work \
+in mm) ? The use\
+r can set the us\
+er units scale f\
+actor to 1.\x0d\x0aThe\
+ effect of this \
+is that now, in \
+order to fill th\
+e whole document\
+ with a rectangl\
+e, \x0d\x0athe rectang\
+le has to be of \
+the size user un\
+it size of 3.937\
+01x1.57480. </p>\
+\x0d\x0a\x0d\x0a<p>Of course\
+ the size of the\
+ material is cer\
+tainly not 3.937\
+01x1.57480 inche\
+s,\x0d\x0abut somethin\
+g like 5x3 inche\
+s: an human read\
+able size. The u\
+ser knows that h\
+e has to draw a\x0d\
+\x0arectangle insid\
+e the material o\
+f size let say 1\
+.5x1.2 inches. A\
+nd these\x0d\x0adimens\
+ions are the one\
+s that are effec\
+tively saved in \
+the svg document\
+. So the\x0d\x0auser u\
+nits are exactly\
+ the same as the\
+ \x22physical units\
+\x22 when choosing \
+a scale\x0d\x0aof 1.</\
+p>\x0d\x0a\x0d\x0a<p>Now how\
+ can <strong>PyC\
+ut</strong> hand\
+les these settin\
+gs?\x0d\x0a<strong>PyC\
+ut</strong> only\
+ works with the \
+<strong>user uni\
+ts</strong>.\x0d\x0a<s\
+trong>PyCut</str\
+ong> will calcul\
+ate toolpaths in\
+ the same order \
+of magnitude\x0d\x0aof\
+ the user units \
+values of the sv\
+g. If you choose\
+ \x22<strong>mm</st\
+rong>\x22 for\x0d\x0athe \
+gcode output, yo\
+u would have set\
+ your svg docume\
+nt size in\x0d\x0a\x22<st\
+rong>mm</strong>\
 \x22, and the <stro\
-ng>with\x0d\x0auser un\
-it scale equals \
-to 1</strong>,no\
- conversion is e\
-ither needed.</p\
->\x0d\x0a\x0d\x0a<p>Note tha\
-t this scale fac\
-tor is not expli\
-citely given in \
-the svg file. It\
- is\x0d\x0acalculated \
-from the ratio v\
-iewbox / width. \
-It is eventually\
- the task of the\
-\x0d\x0auser to know w\
-hat is the user \
-units scale valu\
-e, and, theorica\
-lly, to set it i\
-n\x0d\x0a<strong>PyCut\
-</strong>. But m\
-y opinion is, wo\
-rking with a use\
-r unit scal of 1\
-\x0d\x0ais preferably.\
-</p>\x0d\x0a\x0d\x0a<p><stro\
-ng><span style=\x22\
-color:#0000ff\x22>I\
- personnaly stic\
-k to svg documen\
-t units\x0d\x0ain \x22mm\x22\
- with user units\
- scale factor of\
- 1, and output m\
-y gcode in mm. N\
-o\x0d\x0aconfusion! </\
-span></strong></\
-p>\x0d\x0a\x0d\x0a<div class\
-=\x22warning\x22>\x0d\x0a<p>\
-<strong>Warning<\
-/strong>: The us\
-er could use \x22mm\
-\x22, and set a sca\
-le factor of\x0d\x0a10\
- or whatever, bu\
-t it certainly m\
-akes no sense.</\
-p>\x0d\x0a</div>\x0d\x0a\x0d\x0a<p\
-><strong style=\x22\
-color:#0000ff\x22>I\
- apologize for t\
-he ones who woul\
-d like to\x0d\x0awork \
-with user units \
-scale not equals\
- to 1.</strong> \
-</p>\x0d\x0a\x0d\x0a<p>The f\
-urther <strong>G\
-code Units</stro\
-ng> setting is n\
-ot only a flag t\
-o set\x0d\x0athe code \
-<strong>G20</str\
-ong> (inches) or\
- <strong>G21</st\
-rong> (mm) insid\
-e the\x0d\x0agcode fil\
-e: it also allow\
-s the proper con\
-version of the t\
-ool diameter phy\
-sical\x0d\x0asize (inc\
-h or mm) in user\
- units.</p>\x0d\x0a\x0d\x0a<\
-p>The rule is:</\
-p>\x0d\x0a<ul>\x0d\x0a  <li>\
-<strong>Gcode Un\
-its</strong> in \
-\x22mm\x22: tool diame\
-ter is transform\
-ed to mm\x0d\x0a    - \
-the same as the \
-user units</li>\x0d\
-\x0a  <li><strong>G\
-code Units</stro\
-ng> in \x22in\x22: too\
-l diameter is tr\
-ansformed to\x0d\x0a  \
-  inch - the sam\
-e as the user un\
-its</li>\x0d\x0a</ul>\x0d\
-\x0a\x0d\x0a<div class=\x22w\
-arning\x22>\x0d\x0a<p><st\
-rong>Warning</st\
-rong>: <strong>P\
-yCut</strong> as\
-sumes that for\x0d\x0a\
-\x22<strong>mm</str\
-ong>\x22 or \x22<stron\
-g>in</strong>\x22, \
-the <strong>user\
- unit scale\x0d\x0afac\
-tor is always 1<\
-/strong> .</p>\x0d\x0a\
-</div>\x0d\x0a\x0d\x0a<p></p\
->\x0d\x0a\x0d\x0a<h3>Tabs</h\
-3>\x0d\x0a\x0d\x0a<p>It's ea\
-sy to define tab\
-s with <strong>P\
-yCut</strong>: j\
-ust click the bu\
-tton\x0d\x0a\x22Create Ta\
-b\x22 and a red cir\
-cle is created i\
-n the svg viewer\
-, of radius 5 an\
-d position\x0d\x0a(10,\
-10). The user ca\
-n drag 'n drop i\
-t fron the svg v\
-iewer, or set it\
-s\x0d\x0asize/postion \
-in the tab table\
-. Yes tabs, for \
-simplicity, are \
-circle. To be\x0d\x0ae\
-ffective, the ta\
-bs have to be en\
-abled and of cou\
-rse placed somew\
-here on the\x0d\x0agen\
-erated toolpaths\
-. The height of \
-the tab is share\
-d by all tabs.</\
-p>\x0d\x0a\x0d\x0a<div>\x0d\x0a<im\
-g src=\x22pycut_tab\
-s.png\x22 width=\x2231\
-0px\x22/>\x0d\x0a</div>\x0d\x0a\
-\x0d\x0a</p>\x0d\x0a\x0d\x0a<div c\
-lass=\x22warning\x22>\x0d\
-\x0a<p><strong>Warn\
-ing</strong>: Ta\
-bs shall not ove\
-rlap with other \
-tabs (at least\x0d\x0a\
-the enabled ones\
-).</p>\x0d\x0a</div>\x0d\x0a\
-\x0d\x0a<p>You can che\
-ck the Gcode gen\
-eration in the v\
-iewer/simulator \
-if everythings i\
-s\x0d\x0aOk. </p>\x0d\x0a\x0d\x0a<\
-h3>Material</h3>\
-\x0d\x0a\x0d\x0a<p>The Opera\
-tions \x22Cut Depth\
-\x22 should be be l\
-arger than the m\
-aterial thicknes\
-s.\x0d\x0a</p>\x0d\x0a\x0d\x0a<div\
->\x0d\x0a<img src=\x22pyc\
-ut_material.png\x22\
- width=\x22310px\x22/>\
+ng>user unit sca\
+le to 1</strong>\
+. Because\x0d\x0aof th\
+is, the gcode X,\
+Y and Z values a\
+re the same as t\
+he one of the pa\
+ths\x0d\x0avalues.</p>\
+\x0d\x0a\x0d\x0a<p>If you ch\
+oose \x22<strong>in\
+</strong>\x22 for t\
+he gcode output,\
+ then certainly \
+you\x0d\x0ahave set yo\
+ur svg document \
+size in \x22<strong\
+>in</strong>\x22, a\
+nd the <strong>w\
+ith\x0d\x0auser unit s\
+cale equals to 1\
+</strong>,no con\
+version is eithe\
+r needed.</p>\x0d\x0a\x0d\
+\x0a<p>Note that th\
+is scale factor \
+is not explicite\
+ly given in the \
+svg file. It is\x0d\
+\x0acalculated from\
+ the ratio viewb\
+ox / width. It i\
+s eventually the\
+ task of the\x0d\x0aus\
+er to know what \
+is the user unit\
+s scale value, a\
+nd, theorically,\
+ to set it in\x0d\x0a<\
+strong>PyCut</st\
+rong>. But my op\
+inion is, workin\
+g with a user un\
+it scal of 1\x0d\x0ais\
+ preferably.</p>\
+\x0d\x0a\x0d\x0a<p><strong><\
+span style=\x22colo\
+r:#0000ff\x22>I per\
+sonnaly stick to\
+ svg document un\
+its\x0d\x0ain \x22mm\x22 wit\
+h user units sca\
+le factor of 1, \
+and output my gc\
+ode in mm. No\x0d\x0ac\
+onfusion! </span\
+></strong></p>\x0d\x0a\
+\x0d\x0a<div class=\x22wa\
+rning\x22>\x0d\x0a<p><str\
+ong>Warning</str\
+ong>: The user c\
+ould use \x22mm\x22, a\
+nd set a scale f\
+actor of\x0d\x0a10 or \
+whatever, but it\
+ certainly makes\
+ no sense.</p>\x0d\x0a\
+</div>\x0d\x0a\x0d\x0a<p><st\
+rong style=\x22colo\
+r:#0000ff\x22>I apo\
+logize for the o\
+nes who would li\
+ke to\x0d\x0awork with\
+ user units scal\
+e not equals to \
+1.</strong> </p>\
+\x0d\x0a\x0d\x0a<p>The furth\
+er <strong>Gcode\
+ Units</strong> \
+setting is not o\
+nly a flag to se\
+t\x0d\x0athe code <str\
+ong>G20</strong>\
+ (inches) or <st\
+rong>G21</strong\
+> (mm) inside th\
+e\x0d\x0agcode file: i\
+t also allows th\
+e proper convers\
+ion of the tool \
+diameter physica\
+l\x0d\x0asize (inch or\
+ mm) in user uni\
+ts.</p>\x0d\x0a\x0d\x0a<p>Th\
+e rule is:</p>\x0d\x0a\
+<ul>\x0d\x0a  <li><str\
+ong>Gcode Units<\
+/strong> in \x22mm\x22\
+: tool diameter \
+is transformed t\
+o mm\x0d\x0a    - the \
+same as the user\
+ units</li>\x0d\x0a  <\
+li><strong>Gcode\
+ Units</strong> \
+in \x22in\x22: tool di\
+ameter is transf\
+ormed to\x0d\x0a    in\
+ch - the same as\
+ the user units<\
+/li>\x0d\x0a</ul>\x0d\x0a\x0d\x0a<\
+div class=\x22warni\
+ng\x22>\x0d\x0a<p><strong\
+>Warning</strong\
+>: <strong>PyCut\
+</strong> assume\
+s that for\x0d\x0a\x22<st\
+rong>mm</strong>\
+\x22 or \x22<strong>in\
+</strong>\x22, the \
+<strong>user uni\
+t scale\x0d\x0afactor \
+is always 1</str\
+ong> .</p>\x0d\x0a</di\
+v>\x0d\x0a\x0d\x0a<p></p>\x0d\x0a\x0d\
+\x0a<h3>Tabs</h3>\x0d\x0a\
+\x0d\x0a<p>It's easy t\
+o define tabs wi\
+th <strong>PyCut\
+</strong>: just \
+click the button\
+\x0d\x0a\x22Create Tab\x22 a\
+nd a red circle \
+is created in th\
+e svg viewer, of\
+ radius 5 and po\
+sition\x0d\x0a(10,10).\
+ The user can dr\
+ag 'n drop it fr\
+on the svg viewe\
+r, or set its\x0d\x0as\
+ize/postion in t\
+he tab table. Ye\
+s tabs, for simp\
+licity, are circ\
+le. To be\x0d\x0aeffec\
+tive, the tabs h\
+ave to be enable\
+d and of course \
+placed somewhere\
+ on the\x0d\x0agenerat\
+ed toolpaths. Th\
+e height of the \
+tab is shared by\
+ all tabs.</p>\x0d\x0a\
+\x0d\x0a<div>\x0d\x0a<img sr\
+c=\x22pycut_tabs.pn\
+g\x22 width=\x22310\x22/>\
 \x0d\x0a</div>\x0d\x0a\x0d\x0a</p>\
 \x0d\x0a\x0d\x0a<div class=\x22\
 warning\x22>\x0d\x0a<p><s\
 trong>Warning</s\
-trong>: Actually\
- no check is per\
-formed.</p>\x0d\x0a</d\
-iv>\x0d\x0a\x0d\x0a<h3>Curve\
- to Line Convers\
-ion</h3>\x0d\x0a\x0d\x0a<p>I\
-f your design co\
-ntain curves (sv\
-g \x22arcs\x22 or \x22bez\
-ier\x22 curves), th\
-ey have to\x0d\x0abe d\
-iscretized in sm\
-all segments.</p\
->\x0d\x0a\x0d\x0a<p>The 2 fo\
-llowing paramete\
-rs allow to spec\
-ified how fine t\
-he curve\x0d\x0adiscre\
-tization will be\
-</p>\x0d\x0a<ul>\x0d\x0a  <l\
-i>Minimun number\
- of segments</li\
->\x0d\x0a  <li>Segment\
- lenght</li>\x0d\x0a</\
-ul>\x0d\x0a\x0d\x0a<h3>GCode\
+trong>: Tabs sha\
+ll not overlap w\
+ith other tabs (\
+at least\x0d\x0athe en\
+abled ones).</p>\
+\x0d\x0a</div>\x0d\x0a\x0d\x0a<p>Y\
+ou can check the\
+ Gcode generatio\
+n in the viewer/\
+simulator if eve\
+rythings is\x0d\x0aOk.\
+ </p>\x0d\x0a\x0d\x0a<h3>Mat\
+erial</h3>\x0d\x0a\x0d\x0a<p\
+>The Operations \
+\x22Cut Depth\x22 shou\
+ld be be larger \
+than the materia\
+l thickness.\x0d\x0a</\
+p>\x0d\x0a\x0d\x0a<div>\x0d\x0a<im\
+g src=\x22pycut_mat\
+erial.png\x22 width\
+=\x22310\x22/>\x0d\x0a</div>\
+\x0d\x0a\x0d\x0a</p>\x0d\x0a\x0d\x0a<div\
+ class=\x22warning\x22\
+>\x0d\x0a<p><strong>Wa\
+rning</strong>: \
+Actually no chec\
+k is performed.<\
+/p>\x0d\x0a</div>\x0d\x0a\x0d\x0a<\
+h3>Curve to Line\
  Conversion</h3>\
-\x0d\x0a\x0d\x0a<p>The start\
-ing location of \
-a milling operat\
-ion is given by \
-the initial\x0d\x0aloc\
-ation in the GCo\
-de. Per default,\
- PyCut gives as \
-starting point t\
-he (0,0)\x0d\x0acoordi\
-nates of the SVG\
- file, which is \
-located at the t\
-op-left of the m\
-aterial.\x0d\x0aThis i\
-s SVG convention\
-.</p>\x0d\x0a\x0d\x0a<p>But \
-the GCode genera\
-tion will of cou\
-rse invert the d\
-irection of the \
-Y axis\x0d\x0acoordina\
-tes. But still t\
-he reference is \
-the top-left pos\
-tion.</p>\x0d\x0a\x0d\x0a<p>\
-It is possible t\
-o change the ref\
-erence location \
-of the generated\
- GCode</p>\x0d\x0a<ul>\
-\x0d\x0a  <li>Bottom-L\
-eft location of \
-the material</li\
->\x0d\x0a  <li>Bottom-\
-Left location of\
- the Gcode area<\
-/li>\x0d\x0a  <li>Cent\
-er of the Gcode \
-area</li>\x0d\x0a</ul>\
-\x0d\x0a\x0d\x0a<div>\x0d\x0a<img \
-src=\x22pycut_gcode\
-_conversion.png\x22\
- width=\x22310px\x22/>\
-\x0d\x0a</div>\x0d\x0a\x0d\x0a</p>\
-\x0d\x0a\x0d\x0a<p>And furth\
-er:</p>\x0d\x0a<ul>\x0d\x0a \
- <li>Flip X/Y </\
-li>\x0d\x0a</ul>\x0d\x0a\x0d\x0a<p\
->In the generate\
-d G Code, X and \
-Y are switched.T\
-his can be helpf\
-ull, for\x0d\x0aexampl\
-e in the case yo\
-ur <strong>CNC</\
-strong> is the \x22\
-<strong>1419</st\
-rong>\x22\x0d\x0amodel (m\
-ine!) which is n\
-ot as large as d\
-eep. So this opt\
-ion allows to ca\
-rve\x0d\x0asomething l\
-ike 16x10 cm wit\
-hout to -painful\
-ly- rotate all i\
-tems in the sour\
-ce\x0d\x0asvg.</p>\x0d\x0a\x0d\x0a\
-<p></p>\x0d\x0a\x0d\x0a<p>In\
- case of Bottom-\
-Left location of\
- the material, t\
-he Y size of the\
- material\x0d\x0ais ex\
-tracted form the\
- svg file: the s\
-vg \x22height\x22 attr\
-ibute (with unit\
-s) </p>\x0d\x0a\x0d\x0a<h3>G\
-Code Generation<\
-/h3>\x0d\x0a\x0d\x0a<p>Some \
-useful options c\
-an be set up:</p\
->\x0d\x0a<ul>\x0d\x0a  <li>R\
-eturn at initial\
- location at end\
- of the Job</li>\
-\x0d\x0a  <li>Spindle \
-Start/Stop (<str\
-ong>M3</strong>/\
-<strong>M5</stro\
-ng> codes)</li>\x0d\
-\x0a  <li><strong>M\
-2</strong> code<\
+\x0d\x0a\x0d\x0a<p>If your d\
+esign contain cu\
+rves (svg \x22arcs\x22\
+ or \x22bezier\x22 cur\
+ves), they have \
+to\x0d\x0abe discretiz\
+ed in small segm\
+ents.</p>\x0d\x0a\x0d\x0a<p>\
+The 2 following \
+parameters allow\
+ to specified ho\
+w fine the curve\
+\x0d\x0adiscretization\
+ will be</p>\x0d\x0a<u\
+l>\x0d\x0a  <li>Minimu\
+n number of segm\
+ents</li>\x0d\x0a  <li\
+>Segment lenght<\
 /li>\x0d\x0a</ul>\x0d\x0a\x0d\x0a<\
-div>\x0d\x0a<img src=\x22\
-pycut_gcode_gene\
-ration.png\x22 widt\
-h=\x22310px\x22/>\x0d\x0a</d\
-iv>\x0d\x0a\x0d\x0a</p>\x0d\x0a\x0d\x0a<\
-!-- ------------\
+h3>GCode Convers\
+ion</h3>\x0d\x0a\x0d\x0a<p>T\
+he starting loca\
+tion of a millin\
+g operation is g\
+iven by the init\
+ial\x0d\x0alocation in\
+ the GCode. Per \
+default, PyCut g\
+ives as starting\
+ point the (0,0)\
+\x0d\x0acoordinates of\
+ the SVG file, w\
+hich is located \
+at the top-left \
+of the material.\
+\x0d\x0aThis is SVG co\
+nvention.</p>\x0d\x0a\x0d\
+\x0a<p>But the GCod\
+e generation wil\
+l of course inve\
+rt the direction\
+ of the Y axis\x0d\x0a\
+coordinates. But\
+ still the refer\
+ence is the top-\
+left postion.</p\
+>\x0d\x0a\x0d\x0a<p>It is po\
+ssible to change\
+ the reference l\
+ocation of the g\
+enerated GCode</\
+p>\x0d\x0a<ul>\x0d\x0a  <li>\
+Bottom-Left loca\
+tion of the mate\
+rial</li>\x0d\x0a  <li\
+>Bottom-Left loc\
+ation of the Gco\
+de area</li>\x0d\x0a  \
+<li>Center of th\
+e Gcode area</li\
+>\x0d\x0a</ul>\x0d\x0a\x0d\x0a<div\
+>\x0d\x0a<img src=\x22pyc\
+ut_gcode_convers\
+ion.png\x22 width=\x22\
+310\x22/>\x0d\x0a</div>\x0d\x0a\
+\x0d\x0a</p>\x0d\x0a\x0d\x0a<p>And\
+ further:</p>\x0d\x0a<\
+ul>\x0d\x0a  <li>Flip \
+X/Y </li>\x0d\x0a</ul>\
+\x0d\x0a\x0d\x0a<p>In the ge\
+nerated G Code, \
+X and Y are swit\
+ched.This can be\
+ helpfull, for\x0d\x0a\
+example in the c\
+ase your <strong\
+>CNC</strong> is\
+ the \x22<strong>14\
+19</strong>\x22\x0d\x0amo\
+del (mine!) whic\
+h is not as larg\
+e as deep. So th\
+is option allows\
+ to carve\x0d\x0asomet\
+hing like 16x10 \
+cm without to -p\
+ainfully- rotate\
+ all items in th\
+e source\x0d\x0asvg.</\
+p>\x0d\x0a\x0d\x0a<p></p>\x0d\x0a\x0d\
+\x0a<p>In case of B\
+ottom-Left locat\
+ion of the mater\
+ial, the Y size \
+of the material\x0d\
+\x0ais extracted fo\
+rm the svg file:\
+ the svg \x22height\
+\x22 attribute (wit\
+h units) </p>\x0d\x0a\x0d\
+\x0a<h3>GCode Gener\
+ation</h3>\x0d\x0a\x0d\x0a<p\
+>Some useful opt\
+ions can be set \
+up:</p>\x0d\x0a<ul>\x0d\x0a \
+ <li>Return at i\
+nitial location \
+at end of the Jo\
+b</li>\x0d\x0a  <li>Sp\
+indle Start/Stop\
+ (<strong>M3</st\
+rong>/<strong>M5\
+</strong> codes)\
+</li>\x0d\x0a  <li><st\
+rong>M2</strong>\
+ code</li>\x0d\x0a</ul\
+>\x0d\x0a\x0d\x0a<div>\x0d\x0a<img\
+ src=\x22pycut_gcod\
+e_generation.png\
+\x22 width=\x22310px\x22/\
+>\x0d\x0a</div>\x0d\x0a\x0d\x0a</p\
+>\x0d\x0a\x0d\x0a<!-- ------\
 ----------------\
 ----------------\
 ----------------\
 ----------------\
 ----------------\
---------------->\
-\x0d\x0a<!-- ---------\
+----------------\
+----->\x0d\x0a<!-- ---\
 ----------------\
 ----------------\
 ----------------\
 ----------------\
 ----------------\
 ----------------\
--->\x0d\x0a</div>\x0d\x0a</b\
-ody>\x0d\x0a</html>\x0d\x0a\
+-------->\x0d\x0a</div\
+>\x0d\x0a</body>\x0d\x0a</ht\
+ml>\x0d\x0a\
 \x00\x00D\x15\
 \x89\
 PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x0dIHDR\x00\
@@ -47887,45 +47887,45 @@ qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x02\xd8\x00\x02\x00\x00\x00\x03\x00\x00\x00\x08\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x02\xe4\x00\x00\x00\x00\x00\x01\x00\x09\x90%\
+\x00\x00\x02\xe4\x00\x00\x00\x00\x00\x01\x00\x09\x90\x1b\
 \x00\x00\x01K3`o\x88\
-\x00\x00\x03\x10\x00\x00\x00\x00\x00\x01\x00\x0a\xd9>\
+\x00\x00\x03\x10\x00\x00\x00\x00\x00\x01\x00\x0a\xd94\
 \x00\x00\x01K3`o\x88\
-\x00\x00\x032\x00\x01\x00\x00\x00\x01\x00\x0a\xef[\
+\x00\x00\x032\x00\x01\x00\x00\x00\x01\x00\x0a\xefQ\
 \x00\x00\x01K3`o\x88\
 \x00\x00\x01j\x00\x02\x00\x00\x00\x01\x00\x00\x00\x0c\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x05\x0c\x00\x00\x00\x00\x00\x01\x00\x0bQ\xc0\
+\x00\x00\x05\x0c\x00\x00\x00\x00\x00\x01\x00\x0bQ\xb6\
 \x00\x00\x01}Bq\x994\
-\x00\x00\x03d\x00\x01\x00\x00\x00\x01\x00\x0b\x0dJ\
+\x00\x00\x03d\x00\x01\x00\x00\x00\x01\x00\x0b\x0d@\
 \x00\x00\x01~\x8d#\xbd\xf7\
 \x00\x00\x03\x84\x00\x02\x00\x00\x00\x06\x00\x00\x00\x0f\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x04\x88\x00\x00\x00\x00\x00\x01\x00\x0b=5\
+\x00\x00\x04\x88\x00\x00\x00\x00\x00\x01\x00\x0b=+\
 \x00\x00\x01K3`o\x88\
-\x00\x00\x04T\x00\x00\x00\x00\x00\x01\x00\x0b:\x1e\
+\x00\x00\x04T\x00\x00\x00\x00\x00\x01\x00\x0b:\x14\
 \x00\x00\x01K3`o\x88\
-\x00\x00\x04$\x00\x00\x00\x00\x00\x01\x00\x0b3\x0c\
+\x00\x00\x04$\x00\x00\x00\x00\x00\x01\x00\x0b3\x02\
 \x00\x00\x01K3`o\x88\
-\x00\x00\x03\xe0\x00\x00\x00\x00\x00\x01\x00\x0b(\xf7\
+\x00\x00\x03\xe0\x00\x00\x00\x00\x00\x01\x00\x0b(\xed\
 \x00\x00\x01K3`o\x88\
-\x00\x00\x03\x98\x00\x00\x00\x00\x00\x01\x00\x0b%\xe0\
+\x00\x00\x03\x98\x00\x00\x00\x00\x00\x01\x00\x0b%\xd6\
 \x00\x00\x01K3`o\x88\
-\x00\x00\x04\xcc\x00\x00\x00\x00\x00\x01\x00\x0b@\xf2\
+\x00\x00\x04\xcc\x00\x00\x00\x00\x00\x01\x00\x0b@\xe8\
 \x00\x00\x01K3`o\x88\
 \x00\x00\x05N\x00\x02\x00\x00\x00\x02\x00\x00\x00\x1c\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x05^\x00\x02\x00\x00\x00\x05\x00\x00\x00\x17\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x05\xc0\x00\x00\x00\x00\x00\x01\x00\x0bvW\
+\x00\x00\x05\xc0\x00\x00\x00\x00\x00\x01\x00\x0bvM\
 \x00\x00\x01}\xf6k\xf2U\
-\x00\x00\x05\x8c\x00\x00\x00\x00\x00\x01\x00\x0bq\xdd\
+\x00\x00\x05\x8c\x00\x00\x00\x00\x00\x01\x00\x0bq\xd3\
 \x00\x00\x01}\xf6k\xf2\x80\
-\x00\x00\x05\xe0\x00\x00\x00\x00\x00\x01\x00\x0bx\xc1\
+\x00\x00\x05\xe0\x00\x00\x00\x00\x00\x01\x00\x0bx\xb7\
 \x00\x00\x01}\xf6k\xf2\xcc\
-\x00\x00\x05\xaa\x00\x00\x00\x00\x00\x01\x00\x0btU\
+\x00\x00\x05\xaa\x00\x00\x00\x00\x00\x01\x00\x0btK\
 \x00\x00\x01}\xf6k\xf2(\
-\x00\x00\x05p\x00\x00\x00\x00\x00\x01\x00\x0boo\
+\x00\x00\x05p\x00\x00\x00\x00\x00\x01\x00\x0boe\
 \x00\x00\x01}\xf6k\xf2\xab\
 \x00\x00\x06\x08\x00\x02\x00\x00\x00\x01\x00\x00\x00 \
 \x00\x00\x00\x00\x00\x00\x00\x00\
@@ -47933,27 +47933,27 @@ qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x06\xa8\x00\x02\x00\x00\x00\x01\x00\x00\x00\x1f\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x06\xc2\x00\x00\x00\x00\x00\x01\x00\x0b\x91\xc8\
+\x00\x00\x06\xc2\x00\x00\x00\x00\x00\x01\x00\x0b\x91\xbe\
 \x00\x00\x01}\x1b=\x82\xad\
 \x00\x00\x06\x18\x00\x02\x00\x00\x00\x04\x00\x00\x00!\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x06\x90\x00\x00\x00\x00\x00\x01\x00\x0b\x8eW\
+\x00\x00\x06\x90\x00\x00\x00\x00\x00\x01\x00\x0b\x8eM\
 \x00\x00\x01}\x1b=\x82[\
-\x00\x00\x06,\x00\x00\x00\x00\x00\x01\x00\x0b\x80\xb8\
+\x00\x00\x06,\x00\x00\x00\x00\x00\x01\x00\x0b\x80\xae\
 \x00\x00\x01}\x1b=\x82K\
-\x00\x00\x06j\x00\x00\x00\x00\x00\x01\x00\x0b\x88\xff\
+\x00\x00\x06j\x00\x00\x00\x00\x00\x01\x00\x0b\x88\xf5\
 \x00\x00\x01}\x1b=\x82[\
-\x00\x00\x06H\x00\x00\x00\x00\x00\x01\x00\x0b\x84&\
+\x00\x00\x06H\x00\x00\x00\x00\x00\x01\x00\x0b\x84\x1c\
 \x00\x00\x01}\x1b=\x82K\
-\x00\x00\x05,\x00\x01\x00\x00\x00\x01\x00\x0b^\xa3\
+\x00\x00\x05,\x00\x01\x00\x00\x00\x01\x00\x0b^\x99\
 \x00\x00\x01n\xe0\x1e\xf6\xe0\
 \x00\x00\x01j\x00\x02\x00\x00\x00\x01\x00\x00\x007\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x01\xe8\x00\x02\x00\x00\x00\x06\x00\x00\x001\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x01\x14\x00\x00\x00\x00\x00\x01\x00\x01\x10\x89\
-\x00\x00\x01\x7f\x11\x85\xe7\x0e\
-\x00\x00\x01t\x00\x00\x00\x00\x00\x01\x00\x01\x9aF\
+\x00\x00\x01\x7f\x17P\xcb\xd8\
+\x00\x00\x01t\x00\x00\x00\x00\x00\x01\x00\x01\x9a<\
 \x00\x00\x01\x7f\x0el\xd4q\
 \x00\x00\x00V\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
 \x00\x00\x01\x7f\x0el\xd4r\
@@ -47963,25 +47963,25 @@ qt_resource_struct = b"\
 \x00\x00\x01\x7f\x0el\xd4m\
 \x00\x00\x00\x80\x00\x00\x00\x00\x00\x01\x00\x006\x03\
 \x00\x00\x01\x7f\x11R\x9bt\
-\x00\x00\x014\x00\x00\x00\x00\x00\x01\x00\x01V-\
+\x00\x00\x014\x00\x00\x00\x00\x00\x01\x00\x01V#\
 \x00\x00\x01\x7f\x0el\xd4n\
-\x00\x00\x01\xae\x00\x00\x00\x00\x00\x01\x00\x01\xf9\xd3\
+\x00\x00\x01\xae\x00\x00\x00\x00\x00\x01\x00\x01\xf9\xc9\
 \x00\x00\x01\x7f\x0el\xd4r\
 \x00\x00\x00\xd0\x00\x00\x00\x00\x00\x01\x00\x00{=\
 \x00\x00\x01\x7f\x0el\xd4s\
-\x00\x00\x02.\x00\x00\x00\x00\x00\x01\x00\x02(j\
+\x00\x00\x02.\x00\x00\x00\x00\x00\x01\x00\x02(`\
 \x00\x00\x01x\x92\x0f\xed\x09\
-\x00\x00\x02\x90\x00\x00\x00\x00\x00\x01\x00\x02=\xf6\
+\x00\x00\x02\x90\x00\x00\x00\x00\x00\x01\x00\x02=\xec\
 \x00\x00\x01{\xd9\xc1Q(\
-\x00\x00\x02F\x00\x00\x00\x00\x00\x01\x00\x028\xe5\
+\x00\x00\x02F\x00\x00\x00\x00\x00\x01\x00\x028\xdb\
 \x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x02n\x00\x00\x00\x00\x00\x01\x00\x02;\x89\
+\x00\x00\x02n\x00\x00\x00\x00\x00\x01\x00\x02;\x7f\
 \x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x02\x0c\x00\x00\x00\x00\x00\x01\x00\x02%\xeb\
+\x00\x00\x02\x0c\x00\x00\x00\x00\x00\x01\x00\x02%\xe1\
 \x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x01\xf4\x00\x00\x00\x00\x00\x01\x00\x02\x1f5\
+\x00\x00\x01\xf4\x00\x00\x00\x00\x00\x01\x00\x02\x1f+\
 \x00\x00\x01~ \xc4\x8a\x80\
-\x00\x00\x02\xb6\x00\x00\x00\x00\x00\x01\x00\x02@\xa8\
+\x00\x00\x02\xb6\x00\x00\x00\x00\x00\x01\x00\x02@\x9e\
 \x00\x00\x01x\x92\x0f\xed\x12\
 "
 
