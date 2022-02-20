@@ -632,12 +632,12 @@ class cam:
                         minPlungeTime = (currentZ - nextZ) / plungeFeed
                         idealDist = cutFeed * minPlungeTime
                         totalDist = 0
-                        for end in range(1, len(selectedPath)):
+                        for end in range(1, len(list(selectedPath.coords))):
                             if totalDist > idealDist:
                                 break
 
-                            pt1 = selectedPath[end - 1]
-                            pt2 = selectedPath[end]
+                            pt1 = list(selectedPath.coords)[end - 1]
+                            pt2 = list(selectedPath.coords)[end]
                             totalDist += 2 * cam.dist(getX(pt1), getY(pt1), getX(pt2), getY(pt2))
                                 
                         if totalDist > 0:
@@ -645,10 +645,10 @@ class cam:
                             executedRamp = True
                                     
                             #rampPath = selectedPath.slice(0, end)
-                            rampPath = [ selectedPath[k] for k in range(0,end) ] 
+                            rampPath = [ list(selectedPath.coords)[k] for k in range(0,end) ] 
 
                             #rampPathEnd = selectedPath.slice(0, end - 1).reverse()
-                            rampPathEnd = [ selectedPath[k] for k in range(0,end-1) ]
+                            rampPathEnd = [ list(selectedPath.coords)[k] for k in range(0,end-1) ]
                             rampPathEnd.reverse()
 
                             rampPath = rampPath + rampPathEnd
