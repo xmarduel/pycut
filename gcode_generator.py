@@ -189,13 +189,6 @@ class Tab:
         '''
         path = SvgPath.fromCircleDef(self.center, self.radius)
 
-        path.p_attrs["fill"] = "#ff0000"
-
-        if self.enabled:
-            path.p_attrs["fill-opacity"] = "1.0"
-        else:
-            path.p_attrs["fill-opacity"] = "0.3"
-
         return path
 
     def posInsideTab(self, x: float, y: float, z: float, op_cut_depth: float):

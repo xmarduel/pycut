@@ -14,7 +14,6 @@ from PySide6 import QtSvgWidgets
 import xml.etree.ElementTree as etree
 
 from svgpathutils import SvgPath
-from svgpathutils import SvgTransformer
 
 from val_with_unit import ValWithUnit
 
@@ -99,6 +98,27 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
     SVGVIEWER_HIDE_TABS_DISABLED = False
     SVGVIEWER_HIDE_TABS_ALL = False
+
+    TABS =  {
+        "stroke": "#aa4488",
+        "stroke-width": "0",
+        "fill": "#aa4488",
+        "fill-opacity": "1.0",
+        "fill-opacity-disabled": "0.3"
+    }
+
+    GEOMETRY_PREVIEW =  {
+        "stroke": "#ff0000",
+        "stroke-width": "0",
+        "fill": "#ff0000",
+        "fill-opacity": "1.0"
+    }
+
+    TOOLPATHS =  {
+        "stroke": "#00ff00",
+        "stroke-width": "0.2"
+    }
+
 
     def __init__(self, parent):
         super(SvgViewer, self).__init__(parent)
@@ -393,15 +413,13 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.fill_svg_viewer(self.svg)
         self.display_tabs(self.tabs)
 
-    def display_tabs(self, tabs: List['Tab']):
+    def make_tabs_svg_paths(self, tabs: List['Tab']) -> List[any]:
         '''
         '''
         from gcode_generator import Tab
 
-        transformer = SvgTransformer(self.svg)
+        tabs_svg_paths = []
 
-        # then the tabs
-        tabs_paths = []
         for tab in tabs:
             show = True
             if self.SVGVIEWER_HIDE_TABS_ALL:
@@ -412,9 +430,58 @@ class SvgViewer(QtWidgets.QGraphicsView):
             if show == False:
                 continue
 
-            tabs_paths.append(Tab(tab).make_svg_path())
+            tab_svg_path = Tab(tab).make_svg_path()
+            tab_svg_path.p_attrs['stroke'] = self.TABS["stroke"]
+            tab_svg_path.p_attrs['stroke-width'] = self.TABS["stroke-width"]
+            tab_svg_path.p_attrs['fill'] = self.TABS["fill"]
+            tab_svg_path.p_attrs['fill-opacity'] = self.TABS["fill-opacity"]
 
-        augmented_svg = transformer.augment(tabs_paths)
+            if tab["enabled"] == False:
+                tab_svg_path.p_attrs['fill-opacity'] = self.TABS["fill-opacity-disabled"]
+            
+            tabs_svg_paths.append(tab_svg_path)
+
+        return tabs_svg_paths
+    
+    def make_cnc_ops_preview_geometry_svg_paths(self, cnc_ops: List['CncOp']) -> List[any]:
+        '''
+        '''
+        geometry_svg_paths = []
+
+        for cnc_op in cnc_ops:
+            for geometry_svg_path in cnc_op.geometry_svg_paths:
+                geometry_svg_path.p_attrs['stroke'] = self.GEOMETRY_PREVIEW["stroke"]
+                geometry_svg_path.p_attrs['stroke-width'] = self.GEOMETRY_PREVIEW["stroke-width"]
+                geometry_svg_path.p_attrs['fill'] = self.GEOMETRY_PREVIEW["fill"]
+                geometry_svg_path.p_attrs['fill-opacity'] = self.GEOMETRY_PREVIEW["fill-opacity"]
+
+            geometry_svg_paths += cnc_op.geometry_svg_paths
+
+        return geometry_svg_paths
+
+    def make_toolpaths_svg_paths(self, cnc_ops: List['CncOp']) -> List[any]:
+        '''
+        '''
+        cam_paths_svg_paths = []
+        
+        for cnc_op in cnc_ops:
+            for cam_svg_path in cnc_op.cam_paths_svg_paths:
+                cam_svg_path.p_attrs['stroke'] = self.TOOLPATHS["stroke"]
+                cam_svg_path.p_attrs['stroke-width'] = self.TOOLPATHS["stroke-width"]
+                cam_svg_path.p_attrs['fill'] = 'none'
+
+            cam_paths_svg_paths += cnc_op.cam_paths_svg_paths
+
+        return cam_paths_svg_paths
+    
+    def display_tabs(self, tabs: List['Tab']):
+        '''
+        '''
+        # the tabs
+        tabs_svg_paths = self.make_tabs_svg_paths(tabs)
+
+        transformer = SvgTransformer(self.svg)
+        augmented_svg = transformer.augment(tabs_svg_paths)
 
         # done
         self.fill_svg_viewer(augmented_svg)
@@ -424,25 +491,17 @@ class SvgViewer(QtWidgets.QGraphicsView):
         The list of "preview geometries" results of the geometries calculation for given ops
         The resulting geometries will the displayed in black together with the original svg and tabs
         '''
-        from gcode_generator import Tab
-
         # display preview geometries
+        geometry_svg_paths = self.make_cnc_ops_preview_geometry_svg_paths(cnc_ops)
+        
         transformer = SvgTransformer(self.svg)
-
-        geometry_svg_paths = []
-        for cnc_op in cnc_ops:
-            geometry_svg_paths += cnc_op.geometry_svg_paths
-
         augmented_svg = transformer.augment(geometry_svg_paths)
 
         # then the tabs
+        tabs_svg_paths = self.make_tabs_svg_paths(self.tabs)
+
         transformer = SvgTransformer(augmented_svg)
-
-        tabs_paths = []
-        for tab in self.tabs:
-            tabs_paths.append(Tab(tab).make_svg_path())
-
-        augmented_svg = transformer.augment(tabs_paths)
+        augmented_svg = transformer.augment(tabs_svg_paths)
 
         # done
         self.fill_svg_viewer(augmented_svg)
@@ -452,38 +511,126 @@ class SvgViewer(QtWidgets.QGraphicsView):
         The list of svg_paths results of the toolpath calculation for given ops
         The resulting svg_paths will the displayed in green together with the original svg, tabs and preview geometries
         '''
-        from gcode_generator import Tab
-
         # display preview geometries
+        geometry_svg_paths = self.make_cnc_ops_preview_geometry_svg_paths(cnc_ops)
+
         transformer = SvgTransformer(self.svg)
-
-        geometry_svg_paths = []
-        for cnc_op in cnc_ops:
-                geometry_svg_paths += cnc_op.geometry_svg_paths
-
         augmented_svg = transformer.augment(geometry_svg_paths)
 
         # then the tabs
+        tabs_svg_paths = self.make_tabs_svg_paths(self.tabs)
+
         transformer = SvgTransformer(augmented_svg)
-
-        tabs_paths = []
-        for tab in self.tabs:
-            tabs_paths.append(Tab(tab).make_svg_path())
-
-        augmented_svg = transformer.augment(tabs_paths)
+        augmented_svg = transformer.augment(tabs_svg_paths)
 
         # then the toolpaths
+        cam_paths_svg_paths = self.make_toolpaths_svg_paths(cnc_ops)
+
         transformer = SvgTransformer(augmented_svg)
-
-        cam_paths_svg_paths = []
-        for cnc_op in cnc_ops:
-                cam_paths_svg_paths += cnc_op.cam_paths_svg_paths
-
-        augmented_svg = transformer.augment_with_toolpaths(cam_paths_svg_paths)
+        augmented_svg = transformer.augment(cam_paths_svg_paths)
 
         # done
         self.fill_svg_viewer(augmented_svg)
 
+
+class SvgTransformer:
+    '''
+    '''
+    def __init__(self, svg):
+        self.svg = svg
+
+    def collect_shapes(self) -> List[etree.ElementTree]:
+        '''
+        '''
+        # python xml module can load with svg xml header with encoding utf-8
+        tree = etree.fromstring(self.svg)
+        elements = tree.findall('.//*')
+
+        shapes_types = [
+        	"path",
+            "rect",
+            "circle",
+            "ellipse",
+            "polygon",
+            "line",
+            "polyline"
+        ]
+
+        shapes : List[etree.ElementTree] = []
+        
+        for element in elements:
+            if not element.tag.startswith("{http://www.w3.org/2000/svg}"):
+                continue
+            
+            tag = element.tag.split("{http://www.w3.org/2000/svg}")[1]
+            
+            if tag in shapes_types:
+                shapes.append(element)
+
+        return shapes
+        
+    def augment(self, svg_paths: List[SvgPath]) -> str:
+        '''
+        '''
+        all_paths = ""
+
+        shapes = self.collect_shapes()
+
+        for shape in shapes:
+            shape_id = shape.attrib.get('id', None)
+
+            print("svg : found shape %s : %s" % (shape.tag, shape_id))
+
+            if shape_id is None:
+                print("      -> ignoring")
+                continue
+
+            tag = shape.tag.split("}")[1]
+            svg_attrs = ''
+            for key, value in shape.attrib.items():
+                svg_attrs += ' %s="%s"' % (key, value)
+
+            all_paths += '<%s %s/>\r\n' % (tag, svg_attrs)
+
+        for k, svg_path in enumerate(svg_paths):
+            p_id = svg_path.p_id
+            d_def = svg_path.p_attrs['d']
+
+            # defaults
+            stroke = svg_path.p_attrs.get("stroke", '#00ff00')
+            stroke_width = svg_path.p_attrs.get("stroke-width", '0')
+            fill = svg_path.p_attrs.get("fill", "#111111")
+            fill_opacity = svg_path.p_attrs.get("fill-opacity", "1.0")
+            fill_rule = svg_path.p_attrs.get("fill-rule", "nonzero")
+
+            path = '<path id="%(id)s_%(counter)d" style="stroke:%(stroke)s;stroke-width:%(stroke_width)s;fill:%(fill)s;fill-opacity:%(fill_opacity)s;fill-rule:%(fill_rule)s;" \
+              d="%(d_def)s" />' % {
+                'id': p_id, 
+                'counter': k, 
+                'fill': fill,
+                'stroke_width': stroke_width,
+                'stroke': stroke,
+                'fill_opacity': fill_opacity, 
+                'fill_rule': fill_rule, 
+                'd_def': d_def
+            }
+
+            all_paths += path + '\r\n'
+        
+        root = etree.fromstring(self.svg)
+        root_attrib = root.attrib
+        
+        svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+                width="%s"
+                height="%s"
+                viewBox="%s"
+                version="1.1">
+                <g>
+                  %s
+                </g> 
+             </svg>''' % (root_attrib["width"], root_attrib["height"], root_attrib["viewBox"], all_paths)
+        
+        return svg
 
 
 def extract_svg_dimensions(svg: str):
