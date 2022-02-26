@@ -37,7 +37,7 @@ class MaterialWidget(QtSvgWidgets.QSvgWidget):
 
         self.material_units = "mm"
  
-    def display_unit(self, material_units):
+    def display_unit(self, material_units: str):
         '''
         '''
         self.material_units = material_units
