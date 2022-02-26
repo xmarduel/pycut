@@ -30,7 +30,7 @@ bit of the files. Paths can then be calculated and exported. A quick try shown m
 the code shows how deep the author of the package knows true type stuff. I only found one drawback: the output is full
 of "viewbox" fitting exactly the size of the output paths, and these viewboxes are often with negative values. Because
 of this, it is not so straightforward (for me) to use the output and to plug it into the user own svg file as one would
-wish. This is because I personnaly prefer in svg file only 1 viewbox definition (at the top) starting at (0, 0) with
+wish. This is because I personnaly prefer in an svg file only 1 viewbox definition (at the top) starting at (0, 0) with
 <strong>w</strong> and <strong>h</strong> equals to the svg "<strong>width</strong>" and "<strong>height</strong>".
 Negative <strong>x</strong> or <strong>y</strong> viewboxes are simply a pain.</p>
 
@@ -45,6 +45,10 @@ accessible as methods of these objects. Hopefully all informations of the fonts 
 <strong>ziafont</strong> one. But I am quite sure that <strong>ziafont</strong> is much more robust/bug free as my
 <strong>svgtext2svgpaths</strong> package. Naming <strong>svgtext2svgpaths</strong> a package is anyway not quite
 right, it is simply one single file.</p>
+
+<p>There is only <strong>1 hack</strong>: freetype-py performs only 'kern' kerning, not 'GPOS' kerning (as far as I understand). 
+The GPOS table seems not to be accessible from freetype-py, so I use ziafont code to load this table. <strong>Thank you ziafont!</strong>
+So enventually 2 other files from ziafont are needed: </strong>gpos.py</strong> and </strong>fontread.py</strong></p>
 
 <p></p>
 
@@ -64,8 +68,8 @@ elements. How does the result of the conversion has to look like?</p>
 
 <p>It cannot handle the following strings:</p>
 <ul>
-  <li><strong>strings splitted on many lines</strong></li>
-  <li><strong>empty space in strings (?)</strong></li>
+  <li><strong>strings splitted on many lines (ziafont can)</strong></li>
+  <li><strong>strings with different styles for chars</strong></li>
 </ul>
 
 <p></p>
@@ -74,7 +78,7 @@ elements. How does the result of the conversion has to look like?</p>
 
 <h4>Font properties</h4>
 
-<p>From Inkscape, inside the GUI, a text element is entered. for example "Xavier". The font family / type can be chosen
+<p>From Inkscape, inside the GUI, a text element is entered. for example "Hallo Xavier". The font family / type can be chosen
 as well as the font-size, given in "<strong>pt</strong>". Saving this file, we can observe in the svg file that the svg
 font size is different than the one in the GUI.</p>
 
@@ -128,8 +132,8 @@ are stored. </p>
 # -- from a real svg data
 # ---- there can be many &lt;text&gt; tags in the svg file
 
-manager = SvgTextManager("C:\\.....\\svg\\B.svg")
-paths = manager.convert_strings()
+converter = SvgTextConverter("C:\\.....\\svg\\B.svg")
+paths = converter.convert_strings()
 
 for string_paths in paths:
     print("&lt;!-- ------------------------------------------------------------------ --&gt;")
@@ -148,6 +152,7 @@ for string_paths in paths:
 <p>As you can see, conversion is straightforward. Especially, there are no spurious viewboxes around. You can copy from
 the console the output and paste it in the original svg.</p>
 
-<p>All strings should overlap!</p>
+<p>All characters should overlap!</p>
+
 </body>
 </html>

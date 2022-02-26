@@ -22,6 +22,8 @@ import subprocess
 subprocess.call("inkscape.com in.svg --export-text-to-path -o out.svg", shell = True)
 '''
 
+from collections import namedtuple
+from io import BytesIO
 from typing import List
 
 import glob
@@ -31,6 +33,9 @@ import numpy as np
 import freetype
 from svgpathtools import wsvg, Line, QuadraticBezier, Path, parse_path
 from svgpathtools import path as xxpath
+
+#import ziafont
+import gpos
 
 
 class SvgTextObject:
@@ -124,8 +129,7 @@ class SvgTextObject:
         return []
 
 
-
-class SvgTextManager:
+class SvgTextConverter:
     '''
     collect <text> elements and make of them SvgTextObject objects
     '''
@@ -154,8 +158,6 @@ class SvgTextManager:
         '''
         '''
         return [ o.to_paths() for o in self.svgtextobjects ]
-
-
 
 
 class FontDb:
@@ -605,14 +607,13 @@ class FontFiles:
             
         return None
 
-    
    
 class Char2SvgPath:
     '''
     '''
     CHAR_SIZE = 2048
 
-    def __init__(self, char: str, font: str):
+    def __init__(self, char: str, font: str, load_gpos_table=True):
         '''
         '''
         self.char = char
@@ -639,7 +640,7 @@ class Char2SvgPath:
         If both values are zero, 72 dpi is used for both dimensions.
         '''
         # initialize a character - option FT_LOAD_NO_SCALE mandatory
-        self.face.load_char(self.char, freetype.FT_LOAD_NO_SCALE | freetype.FT_LOAD_NO_BITMAP)
+        self.face.load_char(self.char, freetype.FT_LOAD_NO_SCALE | freetype.FT_LOAD_NO_BITMAP | freetype.FT_KERNING_UNSCALED)
 
         # glyph info
         self.glyph_index = self.face.get_char_index(self.char)
@@ -658,6 +659,119 @@ class Char2SvgPath:
         # to eval
         self.path = None
 
+        # GPOS kerning - with ziafont !
+        if load_gpos_table:
+            self.gpos = self.get_gpos_table()
+
+    def get_gpos_table(self):
+        '''
+        from ziafont!
+        '''
+        import struct
+        from datetime import datetime, timedelta
+
+        Table = namedtuple('Table', ['checksum', 'offset', 'length'])
+
+        class FontReader(BytesIO):
+            ''' Class for reading from Font File '''
+            # TTF/OTF is big-endian (>)
+
+            def readuint32(self, offset: int=None) -> int:
+                ''' Read 32-bit unsigned integer '''
+                if offset:
+                     self.seek(offset)
+                return struct.unpack('>I', self.read(4))[0]
+
+            def readuint16(self, offset: int=None) -> int:
+                ''' Read 16-bit unsigned integer '''
+                if offset:
+                    self.seek(offset)
+                return struct.unpack('>H', self.read(2))[0]
+
+            def readuint8(self, offset: int=None) -> int:
+                ''' Read 8-bit unsigned integer '''
+                if offset:
+                    self.seek(offset)
+                return struct.unpack('>B', self.read(1))[0]
+
+            def readint8(self, offset: int=None) -> int:
+                ''' Read 8-bit signed integer '''
+                if offset:
+                    self.seek(offset)
+                return struct.unpack('>b', self.read(1))[0]
+
+            def readdate(self, offset: int=None) -> datetime:
+                ''' Read datetime '''
+                if offset:
+                    self.seek(offset)
+                mtime = self.readuint32() * 0x100000000 + self.readuint32()
+                fontepoch = datetime(1904, 1, 1)
+                mdate = fontepoch + timedelta(seconds=mtime)
+                return mdate
+
+            def readint16(self, offset: int=None) -> int:
+                ''' Read 16-bit signed integer '''
+                if offset:
+                    self.seek(offset)
+                return struct.unpack('>h', self.read(2))[0]
+
+            def readshort(self, offset: int=None) -> float:
+                ''' Read "short" fixed point number (S1.14) '''
+                x = self.readint16()
+                return float(x) * 2**-14
+
+            def readvaluerecord(self, fmt: int) -> dict:
+                ''' Read a GPOS "ValueRecord" into a dictionary. Zero values will be omitted. '''
+                record = {}
+                if fmt & 0x0001:
+                    record['x'] = self.readint16()
+                if fmt & 0x0002:
+                    record['y'] = self.readint16()
+                if fmt & 0x0004:
+                    record['xadvance'] = self.readint16()
+                if fmt & 0x0008:
+                    record['yadvance'] = self.readint16()
+                if fmt & 0x0010:
+                    record['xpladeviceoffset'] = self.readuint16()
+                if fmt & 0x0020:
+                    record['ypladeviceoffset'] = self.readuint16()
+                if fmt & 0x0040:
+                    record['xadvdeviceoffset'] = self.readuint16()
+                if fmt & 0x0080:
+                    record['yadvdeviceoffset'] = self.readuint16()
+                return record
+
+        with open(self.font, 'rb') as f:
+            self.fontfile = FontReader(f.read())
+
+            self.fontfile.seek(0)
+            scalartype = self.fontfile.readuint32()
+            numtables = self.fontfile.readuint16()
+            searchrange = self.fontfile.readuint16()
+            entryselector = self.fontfile.readuint16()
+            rangeshift = self.fontfile.readuint16()   # numtables*16-searchrange
+
+            # Table Directory (table 5)
+            self.tables = {}
+            for i in range(numtables):
+                tag = self.fontfile.read(4).decode()
+                self.tables[tag] = Table(checksum=self.fontfile.readuint32(),
+                                offset=self.fontfile.readuint32(),
+                                length=self.fontfile.readuint32())
+            #for table in self.tables.keys():
+            #    if table != 'head':
+            #        self._verifychecksum(table)
+
+            if 'glyf' not in self.tables:
+                raise ValueError('Unsupported font (no glyf table).')
+
+
+            if 'GPOS' in self.tables:
+                return gpos.Gpos(self.tables['GPOS'].offset, self.fontfile)
+            else:
+                return None
+
+
     def set_yflip_value(self, val):
         '''
         '''
@@ -667,33 +781,28 @@ class Char2SvgPath:
         '''
         '''
         self.xshift_value  = val
-
-    def get_kerning(self, prev):
-        '''
-        We’ll be converting a string character by character. 
-        After converting this character to a path, you use the same method to convert the next character to a path,
-        offset by the kerning
-
-        NOT YET USED
-        '''
-        o = Char2SvgPath(prev, self.font)
-        
-
-        vector =  self.face.get_kerning(o.glyph_index, self.glyph_index)
-    
-        print(dir(vector))
-    
-        print("kerning between %s and %s: x=%f  y=%f" % (prev, self.char, vector.x,  vector.y))
         
     def calc_shift(self, next_ch: str):
         '''
         '''
-        # actually without kerning! still Ok!
-        # oo = Char2SvgPath(next_ch, self.font)
-
+        self.face.has_kerning
+        
         shift = self.glyph_adv 
 
-        return shift
+        adv = 0
+
+        if self.face.has_kerning:
+            if self.gpos:
+                # Only getting x-advance for first glyph.
+                next_cc = Char2SvgPath(next_ch, self.font, load_gpos_table=False)
+                adv = self.gpos.kern(self.glyph_index, next_cc.glyph_index)[0].get('xadvance', 0)
+            else:
+                vector = self.face.get_kerning(self.char, next_ch)
+                adv = vector.x
+
+        #x += std::floor((glyph.lsb_delta - prevRsbDelta + kerning + 31) / 64.0);
+
+        return shift + adv
 
     def calc_path(self, fontsize: float) -> Path:
         '''
@@ -896,6 +1005,7 @@ class Char2SvgPath:
         print("path %s: %s" % (prefix, self.path.d()))
         wsvg(self.path, filename="char2path_%s_%s_convert.svg" % (self.char, prefix))
 
+
 class String2SvgPaths:
     '''
     '''
@@ -1047,7 +1157,7 @@ if __name__ == '__main__':
     #oo.write_paths()
 
     # -- and from a real svg data
-    manager = SvgTextManager("C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\svg\\inki.svg")
+    manager = SvgTextConverter("C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\text2path\\AABBCC.svg")
     paths = manager.convert_texts()
     
     for k, string_paths in enumerate(paths):
@@ -1055,3 +1165,11 @@ if __name__ == '__main__':
         print("-------------------------------------------------------------------------------")
         for p, path in enumerate(string_paths):
             print('<path id="%d_%d" style="fill:#ff0000;fill-opacity:0.5;" d="%s" />' % (k, p, path.d()))
+
+
+    # zia test
+    
+    #ziafont.set_fontsize(22.5778)
+    #font = ziafont.Font('C:\\Windows\\Fonts\\arial.ttf')
+    #font.str2svg('BB  CC  AA  BB').svg()
+    #a = 1

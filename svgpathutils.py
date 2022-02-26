@@ -68,7 +68,7 @@ class SvgPath:
         return None, None
 
     @classmethod
-    def read_svg_shapes_as_paths(cls, svg: str) -> Dict[str,Tuple[Dict[str,str], svgpathtools.Path]] :
+    def read_svg_shapes_as_paths(cls, svg: str) -> Dict[str, Tuple[Dict[str,str], svgpathtools.Path]] :
         '''
         From a svg file content, read all paths and their attributes
         and organize them as dictionary with key <path_id>, value <attribs, path>
@@ -378,7 +378,7 @@ class SvgPath:
         return SvgPath(prefix, attribs) 
 
     @classmethod
-    def fromCircleDef(cls, center, radius) -> 'SvgPath':
+    def fromCircleDef(cls, center:float, radius: float) -> 'SvgPath':
         '''
         PyCut Tab import in svg viewer
         '''

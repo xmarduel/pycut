@@ -9,6 +9,7 @@
 
 
 
+
         {
             "name": "OPENGL DEMO1",
             "type": "python",
@@ -33,25 +34,6 @@
             "program": "testsimulator.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator\\python"
-        },
-        {
-            "name": "clipper",
-            "type": "cppdbg",
-            "request": "launch",
-            "args": [],
-            "stopAtEntry": false,
-            "program": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\clipper_642\\clipper_test_tabs.exe",
-            "MIMode": "gdb",
-            "miDebuggerPath": "C:\\msys64\\mingw64\\bin\\gdb.exe",
-            "setupCommands": [
-                {
-                    "description": "Automatische Strukturierung und Einrückung für \"gdb\" aktivieren",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
-            "externalConsole": false,
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\clipper_642",
         },
         {
             "name": "PYCUT",
