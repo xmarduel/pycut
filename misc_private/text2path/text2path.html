@@ -1,10 +1,33 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+  <link href="prism.css" rel="stylesheet" />
+  <style>
+    pre[class*="language-"] {
+          font-size: 12px;
+          font-style: normal;
+          font-family: monospace;
+          background-color: #ffffff;
+    }
+    
+    span.code {
+      font-size: 10pt;
+      color: black;
+    }
+    span.code_comment {
+      font-size: 10pt;
+      color: green;
+    }
+      </style>
   <title></title>
 </head>
 
+<script src="prism.js"></script>
+<script src="prism_keep_tag.js"></script>
+
 <body>
+
+
 <h3>SVG Text to Paths Conversion</h3>
 
 <p></p>
@@ -76,11 +99,30 @@ elements. How does the result of the conversion has to look like?</p>
 
 <h3><strong>Usage</strong></h3>
 
-<h4>Font properties</h4>
+<h4>Fonts in svg</h4>
 
-<p>From Inkscape, inside the GUI, a text element is entered. for example "Hallo Xavier". The font family / type can be chosen
-as well as the font-size, given in "<strong>pt</strong>". Saving this file, we can observe in the svg file that the svg
-font size is different than the one in the GUI.</p>
+<p>From Inkscape, inside the GUI, a text element is entered. for example <code>BB  CC  AA BB</code>. The font family / type can be chosen
+  as well as the font-size, given in "<strong>pt</strong>". Saving this file, we can observe in the svg file that the svg
+  font size is different than the one in the GUI.</p>
+
+
+<p>Note that a <code>&lt;text&gt;</code> definition in svg from Inkscape looks like: </p>
+<pre><code class="language-xml" data-keep-tags="strong">
+  &lt;text
+       xml:space="preserve"
+       style="<strong>font-style</strong>:normal;font-variant:normal;<strong>font-weight</strong>:normal;<strong>font-stretch</strong>:normal;<strong>font-size</strong>:10.5833px;line-height:1.25;<strong>font-family:Arial;</strong>-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="9.7133684"
+       y="41.712864"
+       id="text1314"&gt;
+    &lt;tspan
+         sodipodi:role="line"
+         id="tspan1312"
+         style="<strong>font-style</strong>:normal;font-variant:normal;<strong>font-weight</strong>:normal;<strong>font-stretch</strong>:normal;<strong>font-size</strong>:10.5833px;<strong>font-family:Arial;</strong>-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         x="9.7133684"
+         y="41.712864"&gt;BB  CC  AA  BB
+    &lt;tspan&gt;
+  &lt;/text&gt;
+</code></pre>
 
 <p></p>
 
@@ -102,14 +144,14 @@ svg file, with units "<strong>px</strong>".</p>
 
 <p></p>
 
-<p>Whatever the conversion is, we have anyway the font-size in the svg file and we will use it for the conversion to
-<code>&lt;paths&gt;</code>.</p>
+<p>Whatever the conversion is, we have anyway the <strong>font-size</strong> in the svg file and we will use it for the conversion to
+<code>&lt;path&gt;</code>s.
+As input we also have the <strong>font family</strong> and style (in the "style" attribute).
+The <strong>font-style</strong>, <strong>font-weight</strong> and <strong>font-stretch</strong> will also be taken into account.</p>
 
-<p>As input we also have the font family and style (in the "style" attribute), as well as the string, the value of the
-text. It can be set as value of the XML <code>&lt;text&gt;</code> element, or as value(s) of the XML
-<code>&lt;tspan&gt;</code> element(s) found inside the <code>&lt;text&gt;</code> element.</p>
-
-<p>So a converter has to correctly parse the XML <code>&lt;text&gt;</code> element.</p>
+<p>The value of the text is found as value of the XML <code>&lt;text&gt;</code> element, or as value(s) of the XML
+<code>&lt;tspan&gt;</code> element(s) found inside the <code>&lt;text&gt;</code> element.
+So a converter has to correctly parse the XML <code>&lt;text&gt;</code> element.</p>
 
 <h4>Font Files</h4>
 
@@ -120,16 +162,13 @@ Font files are located per default in windows in:</p>
 </ul>
 
 <p>All the font files found there are read to extract the family and style, as these two informations does not
-neccessarely appear the the font files name.It should be also possible to specify other folders where other font files
-are stored. </p>
+neccessarely appear the the font files name. It should be also possible to specify other folders where other font files
+are stored (TODO). </p>
 
-<p>In case of the svg font family and style are not found in the lookup data, a default font should be loaded.</p>
-
-<p></p>
+<p>In case of the svg font family and style are not found in the lookup data, a default font should be loaded  (TODO).</p>
 
 <h4>Example</h4>
-<pre><code>
-# -- from a real svg data
+<pre><code  class="language-python"># -- from a real svg data
 # ---- there can be many &lt;text&gt; tags in the svg file
 
 converter = SvgTextConverter("C:\\.....\\svg\\B.svg")
@@ -144,8 +183,7 @@ for string_paths in paths:
 
         print('&lt;path id="%d" style="fill:#ff0000;fill-opacity:0.5;" d="%s" /&gt;' % (k, path.d()))
         print("&lt;!-- ----------------------------------------------------------------------- --&gt;")
-        
-# end</code></pre>
+</code></pre>
 
 <p></p>
 
