@@ -3,6 +3,7 @@
 from typing import List
 
 import math
+import copy
 
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -119,6 +120,26 @@ class SvgViewer(QtWidgets.QGraphicsView):
         "stroke-width": "0.2"
     }
 
+    DEFAULT_TABS =  {
+        "stroke": "#aa4488",
+        "stroke-width": "0",
+        "fill": "#aa4488",
+        "fill-opacity": "1.0",
+        "fill-opacity-disabled": "0.3"
+    }
+
+    DEFAULT_GEOMETRY_PREVIEW =  {
+        "stroke": "#ff0000",
+        "stroke-width": "0",
+        "fill": "#ff0000",
+        "fill-opacity": "1.0"
+    }
+
+    DEFAULT_TOOLPATHS =  {
+        "stroke": "#00ff00",
+        "stroke-width": "0.2"
+    }
+
 
     def __init__(self, parent):
         super(SvgViewer, self).__init__(parent)
@@ -153,6 +174,18 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # keep zoom factor (used when reloading augmented svg: zoom should be kept)
         self.currentZoom = self.zoomFactor()
 
+    @classmethod
+    def set_settings(cls, settings):
+        cls.TABS = copy.deepcopy(settings["TABS"])
+        cls.GEOMETRY_PREVIEW = copy.deepcopy(settings["GEOMETRY_PREVIEW"])
+        cls.TOOLPATHS = copy.deepcopy(settings["TOOLPATHS"])
+
+    @classmethod
+    def set_default_settings(cls):
+        cls.TABS = copy.deepcopy(cls.DEFAULT_TABS)
+        cls.GEOMETRY_PREVIEW = copy.deepcopy(cls.DEFAULT_GEOMETRY_PREVIEW)
+        cls.TOOLPATHS = copy.deepcopy(cls.DEFAULT_TOOLPATHS)
+    
     def set_mainwindow(self, mainwindow):
         self.mainwindow = mainwindow
 

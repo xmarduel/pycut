@@ -28,6 +28,7 @@ import gcodeviewer.widgets.glwidget_container as glwidget_container
 import gcodesimulator.webglviewer as webglviewer
 import operations_tableview
 import tabs_tableview
+import colorpicker
 
 import material_widget
 
@@ -127,6 +128,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.actionSaveJobAs.triggered.connect(self.cb_save_job_as)
         self.ui.actionSaveJob.triggered.connect(self.cb_save_job)
 
+        self.ui.actionSettings.triggered.connect(self.cb_open_settings_dialog)
+
         self.ui.actionTutorial.triggered.connect(self.cb_show_tutorial)
         self.ui.actionAboutQt.triggered.connect(self.cb_show_about_qt)
         self.ui.actionAboutPyCut.triggered.connect(self.cb_show_about_pycut)
@@ -187,6 +190,64 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
 
         self.setWindowState(QtCore.Qt.WindowMaximized)
+
+    def cb_open_settings_dialog(self):
+        '''
+        '''
+        global settings_dialog
+
+        def fill_dialog():
+            settings_dialog.colorpicker_Tabs_fill.setColor(QtGui.QColor(svgviewer.SvgViewer.TABS["fill"]))
+            settings_dialog.doubleSpinBox_Tabs_fill_opacity.setValue(float(svgviewer.SvgViewer.TABS["fill-opacity"]))
+            settings_dialog.doubleSpinBox_Tabs_fill_opacity_disabled.setValue(float(svgviewer.SvgViewer.TABS["fill-opacity-disabled"]))
+
+            settings_dialog.colorpicker_Toolpath_stroke.setColor(QtGui.QColor(svgviewer.SvgViewer.TOOLPATHS["stroke"]))
+            settings_dialog.doubleSpinBox_Toolpath_stroke_width.setValue(float(svgviewer.SvgViewer.TOOLPATHS["stroke-width"]))
+
+            settings_dialog.colorpicker_GeometryPreview_fill.setColor(QtGui.QColor(svgviewer.SvgViewer.GEOMETRY_PREVIEW["fill"]))
+            settings_dialog.doubleSpinBox_GeometryPreview_fill_opacity.setValue(float(svgviewer.SvgViewer.GEOMETRY_PREVIEW["fill-opacity"]))
+        
+
+        def setDefaults():
+            self.svg_viewer.set_default_settings()
+            fill_dialog()
+
+        def setOK():
+            settings = {
+                "TABS" : {
+                    "stroke": "#aa4488",
+                    "stroke-width": "0",
+                    "fill": settings_dialog.colorpicker_Tabs_fill.color().name(),
+                    "fill-opacity": str(settings_dialog.doubleSpinBox_Tabs_fill_opacity.value()),
+                    "fill-opacity-disabled": str(settings_dialog.doubleSpinBox_Tabs_fill_opacity_disabled.value()),
+                },
+                "GEOMETRY_PREVIEW" : {
+                    "stroke": "#ff0000",
+                    "stroke-width": "0",
+                    "fill": settings_dialog.colorpicker_GeometryPreview_fill.color().name(),
+                    "fill-opacity": str(settings_dialog.doubleSpinBox_GeometryPreview_fill_opacity.value()),
+                },
+                "TOOLPATHS" : {
+                    "stroke": settings_dialog.colorpicker_Toolpath_stroke.color().name(),
+                    "stroke-width": str(settings_dialog.doubleSpinBox_Toolpath_stroke_width.value()),
+                }
+            }
+            self.svg_viewer.set_settings(settings)
+            settings_dialog.close()
+
+        def setCancel():
+            settings_dialog.close()
+
+        loader = QUiLoader(None)
+        loader.registerCustomWidget(colorpicker.ColorPicker)
+
+        settings_dialog = loader.load("settings.ui")
+        fill_dialog()
+        settings_dialog.cmdDefaults.clicked.connect(setDefaults)
+        settings_dialog.cmdOK.clicked.connect(setOK)
+        settings_dialog.cmdCancel.clicked.connect(setCancel)
+
+        settings_dialog.exec()
 
     def cb_show_tutorial(self):
         dlg = QtWidgets.QDialog(self)

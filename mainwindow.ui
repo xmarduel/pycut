@@ -1455,8 +1455,15 @@
     <addaction name="actionAboutQt"/>
     <addaction name="actionAboutPyCut"/>
    </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="actionSettings"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuJobs"/>
+   <addaction name="menuSettings"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionOpenSvg">
@@ -1497,6 +1504,11 @@
   <action name="actionAboutPyCut">
    <property name="text">
     <string>About PyCut</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings...</string>
    </property>
   </action>
  </widget>
