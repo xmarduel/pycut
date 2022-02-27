@@ -284,7 +284,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         mainLayout.addWidget(view)
 
         dlg.setLayout(mainLayout)
-        dlg.setWindowTitle("PyCut Tutorial")
+        dlg.setWindowTitle("PyCut Relnotes")
         dlg.setModal(True)
 
         try:
