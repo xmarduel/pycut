@@ -128,9 +128,11 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-misc_private/fonts
-misc_private/images
+misc_private/text2path/fonts
 misc_private/text2path/ziafont
+
+misc_private/images
+
 
 gcodeviewer/drawers/*h
 gcodeviewer/drawers/*cpp

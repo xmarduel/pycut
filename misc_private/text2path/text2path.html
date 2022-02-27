@@ -1,7 +1,7 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
-  <link href="prism.css" rel="stylesheet" />
+  <link href="prism.css" rel="stylesheet">
   <style>
     pre[class*="language-"] {
           font-size: 12px;
@@ -18,15 +18,15 @@
       font-size: 10pt;
       color: green;
     }
-      </style>
+  </style>
   <title></title>
 </head>
 
-<script src="prism.js"></script>
-<script src="prism_keep_tag.js"></script>
-
 <body>
-
+<script type="text/javascript" src="prism.js">
+</script>
+<script type="text/javascript" src="prism_keep_tag.js">
+</script>
 
 <h3>SVG Text to Paths Conversion</h3>
 
@@ -34,59 +34,80 @@
 
 <h4>Introduction</h4>
 
-<p>The conversion of text given in svg files (element <code>&lt;text&gt;</code>) to paths (element
-<code>&lt;path&gt;</code>) seems to be a common concern. There are in Internet plenty of projects/discussions on the
-topic.</p>
+<p>The conversion of text given in svg files (element
+<code>&lt;text&gt;</code>) to paths (element <code>&lt;path&gt;</code>) seems
+to be a common concern. There are in Internet plenty of projects/discussions on
+the topic.</p>
 
-<p>For every language it seems that many solutions are given. Unfortunately, as far as I could observe, there is plenty
-of crap. This is especially the case when searching for solutions for the python language (which is quite a shame)!</p>
+<p>For every language it seems that many solutions are given. Unfortunately, as
+far as I could observe, there is plenty of crap. This is especially the case
+when searching for solutions for the python language (which is quite a
+shame)!</p>
 
 <p></p>
 
-<p>I finally found only <strong>1 (!)</strong> python package that seems to make the conversion in a reasonable way:</p>
+<p>I finally found only <strong>1 (!)</strong> python package that seems to
+make the conversion in a reasonable way:</p>
 <ul>
   <li><strong>ziafont (version 0.2)</strong> (as 15.01.2022)</li>
 </ul>
 
-<p>This package reads the true type font binary files (which is a whole task in its own) and thus has access to every
-bit of the files. Paths can then be calculated and exported. A quick try shown me how good this package is. Diving into
-the code shows how deep the author of the package knows true type stuff. I only found one drawback: the output is full
-of "viewbox" fitting exactly the size of the output paths, and these viewboxes are often with negative values. Because
-of this, it is not so straightforward (for me) to use the output and to plug it into the user own svg file as one would
-wish. This is because I personnaly prefer in an svg file only 1 viewbox definition (at the top) starting at (0, 0) with
-<strong>w</strong> and <strong>h</strong> equals to the svg "<strong>width</strong>" and "<strong>height</strong>".
-Negative <strong>x</strong> or <strong>y</strong> viewboxes are simply a pain.</p>
+<p>This package reads the true type font binary files (which is a whole task in
+its own) and thus has access to every bit of the files. Paths can then be
+calculated and exported. A quick try shown me how good this package is. Diving
+into the code shows how deep the author of the package knows true type stuff. I
+only found one drawback: the output is full of "viewbox" fitting exactly the
+size of the output paths, and these viewboxes are often with negative values.
+Because of this, it is not so straightforward (for me) to use the output and to
+plug it into the user own svg file as one would wish. This is because I
+personnaly prefer in an svg file only 1 viewbox definition (at the top)
+starting at (0, 0) with <strong>w</strong> and <strong>h</strong> equals to the
+svg "<strong>width</strong>" and "<strong>height</strong>". Negative
+<strong>x</strong> or <strong>y</strong> viewboxes are simply a pain.</p>
 
 <p></p>
 
-<p>An other method would be to use the python package "<strong>freetype-py</strong>". This package performs the task of
-reading the binary files, and it is possible to generate the paths from the structures/objects that freetype-py offers.
-These are infact ctypes wrappers, and as a good (excellent) wrapper, many functions of the freetype c library are
-accessible as methods of these objects. Hopefully all informations of the fonts are accessible!</p>
+<p>An other method would be to use the python package
+"<strong>freetype-py</strong>". This package performs the task of reading the
+binary files, and it is possible to generate the paths from the
+structures/objects that freetype-py offers. These are infact ctypes wrappers,
+and as a good (excellent) wrapper, many functions of the freetype c library are
+accessible as methods of these objects. Hopefully all informations of the fonts
+are accessible!</p>
 
-<p>This is the approach that I follow in my package, and because of this, my code is much smaller than the
-<strong>ziafont</strong> one. But I am quite sure that <strong>ziafont</strong> is much more robust/bug free as my
-<strong>svgtext2svgpaths</strong> package. Naming <strong>svgtext2svgpaths</strong> a package is anyway not quite
-right, it is simply one single file.</p>
+<p>This is the approach that I follow in my package, and because of this, my
+code is much smaller than the <strong>ziafont</strong> one. But I am quite sure
+that <strong>ziafont</strong> is much more robust/bug free as my
+<strong>svgtext2svgpaths</strong> package. Naming
+<strong>svgtext2svgpaths</strong> a package is anyway not quite right, it is
+simply one single file.</p>
 
-<p>There is only <strong>1 hack</strong>: freetype-py performs only 'kern' kerning, not 'GPOS' kerning (as far as I understand). 
-The GPOS table seems not to be accessible from freetype-py, so I use ziafont code to load this table. <strong>Thank you ziafont!</strong>
-So enventually 2 other files from ziafont are needed: </strong>gpos.py</strong> and </strong>fontread.py</strong></p>
+<p>There is only <strong>1 hack</strong>: freetype-py performs only 'kern'
+kerning, not 'GPOS' kerning (as far as I understand). The GPOS table seems not
+to be accessible from freetype-py, so I use ziafont code to load this table.
+<strong>Thank you ziafont!</strong> So enventually 2 other files from ziafont
+are needed: gpos.pyand fontread.py</p>
 
 <p></p>
 
 <h4>The svgtext2svgpaths package</h4>
 
-<p>The features of my package are directly dictated from the need to convert svg &lt;text&gt; to svg &lt;path&gt;
-elements. How does the result of the conversion has to look like?</p>
+<p>The features of my package are directly dictated from the need to convert
+svg &lt;text&gt; to svg &lt;path&gt; elements. How does the result of the
+conversion has to look like?</p>
 <ul>
-  <li>It must be <strong>without</strong> any "<strong>transforms</strong>" attributes.</li>
-  <li>the <strong>location</strong> of the text described by the path(s) must match exactly the same input &lt;text&gt;
-    which is given in svg by the "<strong>x</strong>" and "<strong>y</strong>" attributes.</li>
-  <li>the <strong>size</strong> of the letters described by the paths must be exactly the same as the one given in the
-    &lt;text&gt; data: the style "<strong>font-size</strong>" expressed in user units "<strong>px</strong>".</li>
-  <li>and of course, font <strong>family</strong> and <strong>type</strong> must be respected, as far as possible (font
-    files must be found on the computer).</li>
+  <li>It must be <strong>without</strong> any "<strong>transforms</strong>"
+    attributes.</li>
+  <li>the <strong>location</strong> of the text described by the path(s) must
+    match exactly the same input &lt;text&gt; which is given in svg by the
+    "<strong>x</strong>" and "<strong>y</strong>" attributes.</li>
+  <li>the <strong>size</strong> of the letters described by the paths must be
+    exactly the same as the one given in the &lt;text&gt; data: the style
+    "<strong>font-size</strong>" expressed in user units
+  "<strong>px</strong>".</li>
+  <li>and of course, font <strong>family</strong> and <strong>type</strong>
+    must be respected, as far as possible (font files must be found on the
+    computer).</li>
 </ul>
 
 <p>It cannot handle the following strings:</p>
@@ -101,12 +122,13 @@ elements. How does the result of the conversion has to look like?</p>
 
 <h4>Fonts in svg</h4>
 
-<p>From Inkscape, inside the GUI, a text element is entered. for example <code>BB  CC  AA BB</code>. The font family / type can be chosen
-  as well as the font-size, given in "<strong>pt</strong>". Saving this file, we can observe in the svg file that the svg
-  font size is different than the one in the GUI.</p>
+<p>From Inkscape, inside the GUI, a text element is entered. for example
+<code>BB CC AA BB</code>. The font family / type can be chosen as well as the
+font-size, given in "<strong>pt</strong>". Saving this file, we can observe in
+the svg file that the svg font size is different than the one in the GUI.</p>
 
-
-<p>Note that a <code>&lt;text&gt;</code> definition in svg from Inkscape looks like: </p>
+<p>Note that a <code>&lt;text&gt;</code> definition in svg from Inkscape looks
+like: </p>
 <pre><code class="language-xml" data-keep-tags="strong">
   &lt;text
        xml:space="preserve"
@@ -121,10 +143,18 @@ elements. How does the result of the conversion has to look like?</p>
          x="9.7133684"
          y="41.712864"&gt;BB  CC  AA  BB
     &lt;tspan&gt;
-  &lt;/text&gt;
-</code></pre>
+  &lt;/text&gt;</code></pre>
 
-<p></p>
+<p>but one could per hand simplify it:</p>
+
+<pre><code class="language-xml" data-keep-tags="strong">
+  &lt;text style="<strong>font-style</strong>:normal;<strong>font-weight</strong>:normal;<strong>font-stretch</strong>:normal;<strong>font-size</strong>:10.5833px;<strong>font-family:Arial;</strong>fill:#000000;fill-opacity:1;"
+       x="9.7133684"
+       y="41.712864"
+       id="text1314"&gt;BB  CC  AA  BB&lt;/text&gt;</code></pre>
+
+<p>
+The color and opacity do not play a role when cutting, but it is nice to have these properties in the resulting paths.</p>
 
 <p>Example: In Inkscape, give as font size <strong>30 pt</strong>.</p>
 
@@ -139,36 +169,57 @@ elements. How does the result of the conversion has to look like?</p>
   <li>Inkscape resolution: 96 px per inch</li>
 </ul>
 
-<p>From these values : 30 pt are 40 px are (40/96) * 25.4 mm = <strong>10.5833</strong>. This is the value found in the
-svg file, with units "<strong>px</strong>".</p>
+<p>From these values : 30 pt are 40 px are (40/96) * 25.4 mm =
+<strong>10.5833</strong>. This is the value found in the svg file, with units
+"<strong>px</strong>".</p>
 
 <p></p>
 
-<p>Whatever the conversion is, we have anyway the <strong>font-size</strong> in the svg file and we will use it for the conversion to
-<code>&lt;path&gt;</code>s.
-As input we also have the <strong>font family</strong> and style (in the "style" attribute).
-The <strong>font-style</strong>, <strong>font-weight</strong> and <strong>font-stretch</strong> will also be taken into account.</p>
+<p>Whatever the conversion is, we have anyway the <strong>font-size</strong> in
+the svg file and we will use it for the conversion to
+<code>&lt;path&gt;</code>s. As input we also have the <strong>font
+family</strong> and style (in the "style" attribute). The
+<strong>font-style</strong>, <strong>font-weight</strong> and
+<strong>font-stretch</strong> will also be taken into account.</p>
 
-<p>The value of the text is found as value of the XML <code>&lt;text&gt;</code> element, or as value(s) of the XML
-<code>&lt;tspan&gt;</code> element(s) found inside the <code>&lt;text&gt;</code> element.
-So a converter has to correctly parse the XML <code>&lt;text&gt;</code> element.</p>
+<p>The value of the text is found as value of the XML <code>&lt;text&gt;</code>
+element, or as value(s) of the XML <code>&lt;tspan&gt;</code> element(s) found
+inside the <code>&lt;text&gt;</code> element. So a converter has to correctly
+parse the XML <code>&lt;text&gt;</code> element.</p>
 
 <h4>Font Files</h4>
 
-<p>Next, we need something like a "lookup" to find the <strong>ttf</strong> files from the given font family and style.
-Font files are located per default in windows in:</p>
+<p>Next, we need something like a "lookup" to find the <strong>ttf</strong>
+files from the given font family and style. Font files are located per default
+in windows in:</p>
 <ul>
   <li><code>C:\\Windows\\Fonts</code></li>
 </ul>
 
-<p>All the font files found there are read to extract the family and style, as these two informations does not
-neccessarely appear the the font files name. It should be also possible to specify other folders where other font files
-are stored (TODO). </p>
+<p>All the font files found there are read to extract the family and style, as
+these two informations does not neccessarely appear the the font files name. It
+is also possible to specify other folders where other font files are stored:
+the python module "<strong>text_to_path_custom_fonts.py</strong>" is
+automatically loaded and should contains the following (as example):</p>
 
-<p>In case of the svg font family and style are not found in the lookup data, a default font should be loaded  (TODO).</p>
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+ 
+extra_fonts_dir = ["./fonts/slaine"]
+
+extra_family_alias = {
+    #'Sláine': 'Sláine Standard'
+    'sláine': 'sl?ine'
+}
+</code></pre>
+<p>The alias dictionary is to map font family names from the svg (in UTF-8) 
+to the 'real'  (?) font family name. In this case it is the ascii repr of the utf-8 name (i did
+not succeeded to read the utf-8 name from the freetype-py lib)</p>
+
+<p>In case of the svg font family and style are not found in the lookup data, a
+default font should be loaded (TODO).</p>
 
 <h4>Example</h4>
-<pre><code  class="language-python"># -- from a real svg data
+<pre><code class="language-python"># -- from a real svg data
 # ---- there can be many &lt;text&gt; tags in the svg file
 
 converter = SvgTextConverter("C:\\.....\\svg\\B.svg")
@@ -182,15 +233,14 @@ for string_paths in paths:
     for k, path in enumerate(string_paths):
 
         print('&lt;path id="%d" style="fill:#ff0000;fill-opacity:0.5;" d="%s" /&gt;' % (k, path.d()))
-        print("&lt;!-- ----------------------------------------------------------------------- --&gt;")
-</code></pre>
+        print("&lt;!-- ----------------------------------------------------------------------- --&gt;")</code></pre>
 
 <p></p>
 
-<p>As you can see, conversion is straightforward. Especially, there are no spurious viewboxes around. You can copy from
-the console the output and paste it in the original svg.</p>
+<p>As you can see, conversion is straightforward. Especially, there are no
+spurious viewboxes around. You can copy from the console the output and paste
+it in the original svg.</p>
 
 <p>All characters should overlap!</p>
-
 </body>
 </html>

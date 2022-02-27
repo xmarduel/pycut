@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 '''
 Convert svg text to svg path(s)
 '''
@@ -20,10 +22,13 @@ import subprocess
 subprocess.call("inkscape.com in.svg --export-text-to-path -o out.svg", shell = True)
 '''
 
-from io import BytesIO
+import sys
+import io
+import importlib
+import glob
+
 from typing import List
 
-import glob
 import xml.etree.ElementTree as etree
 import numpy as np
 
@@ -33,6 +38,15 @@ from svgpathtools import path as xxpath
 
 #import ziafont
 import gpos
+
+
+class PathWithAttribs:
+    '''
+    Wrapper on Path class to contains the attribs as well
+    '''
+    def __init__(self, path: Path, attribs: any):
+        self.path = path
+        self.attribs = attribs
 
 
 class SvgTextObject:
@@ -111,7 +125,7 @@ class SvgTextObject:
 
         return id
 
-    def to_paths(self) -> List[Path]:
+    def to_paths(self) -> List[PathWithAttribs]:
         '''
         '''
         fontfile = FontFiles.get_fontfile(self.font_family, 
@@ -121,7 +135,9 @@ class SvgTextObject:
 
         if fontfile:
             converter = String2SvgPaths(self.text, fontfile)
-            return converter.calc_paths(self.font_size_float, self.position)
+            all_paths = converter.calc_paths(self.font_size_float, self.position)
+
+            return [ PathWithAttribs(path, self.elt_style) for path in all_paths ]
 
         return []
 
@@ -515,6 +531,12 @@ class FontFiles:
         font-family:arial     font-style:italic   font-weight:bold    -> "bold italic"
         font-family:arial     font-style:italic   font-weight:normal  -> "italic"
     '''
+    family_alias = {
+        'sans-serif': 'microsoft sans serif'
+    }
+
+    extra_family_alias = {}
+
     lookup = None
 
     @classmethod
@@ -522,6 +544,14 @@ class FontFiles:
         '''
         look into the C:\\Windows\\Fonts folder and fill the lookup
         '''
+        try:
+            custom_fonts = importlib.import_module("text_to_path_custom_fonts")
+
+            cls.extra_family_alias = custom_fonts.extra_family_alias
+        except Exception as e:
+            custom_fonts = None
+            cls.extra_family_alias = {}
+
         cls.lookup = {}
 
         ttfs = glob.glob("C:\\Windows\\Fonts\\*.ttf")
@@ -535,6 +565,20 @@ class FontFiles:
                 cls.lookup[family] = {}
 
             cls.lookup[family][style] = ttf
+
+        if custom_fonts :
+            for font_dir in custom_fonts.extra_fonts_dir:
+                ttfs = glob.glob(font_dir + "/*.ttf")
+
+                for ttf in ttfs:
+                    face = freetype.Face(ttf)
+                    family = face.family_name.decode("ascii", "strict").lower()
+                    style = face.style_name.decode().lower()
+            
+                    if family not in cls.lookup:
+                        cls.lookup[family] = {}
+
+                    cls.lookup[family][style] = ttf
 
         for family in cls.lookup:
             print("----------------", family)
@@ -589,6 +633,12 @@ class FontFiles:
         style = style.lower()
         stretch = stretch.lower()
         
+        if not family in cls.lookup:
+            if family in cls.family_alias:
+                family = cls.family_alias[family]
+            elif family in cls.extra_family_alias:
+                family = cls.extra_family_alias[family]
+
         if family in cls.lookup:
             font_styles = cls.build_font_styles(style, weight, stretch)
             
@@ -670,7 +720,7 @@ class Char2SvgPath:
 
         Table = namedtuple('Table', ['checksum', 'offset', 'length'])
 
-        class FontReader(BytesIO):
+        class FontReader(io.BytesIO):
             ''' Class for reading from Font File '''
             # TTF/OTF is big-endian (>)
 
@@ -1109,7 +1159,7 @@ class String2SvgPaths:
     viewBox="0 0 600 600">
     <g
         id="%s"
-        style="fill:#ff2222;fill-opacity:0.5;line-height:1.25;stroke-width:0.264583">
+        style="fill:#ff2222;fill-opacity:0.5;line-height:1.25;stroke:none;stroke-width:0.264583">
 %s
     </g>
 </svg>  """ % (self.text, paths))
@@ -1155,14 +1205,21 @@ if __name__ == '__main__':
     #oo.write_paths()
 
     # -- and from a real svg data
-    manager = SvgTextConverter("C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\text2path\\AABBCC.svg")
+    manager = SvgTextConverter("./examples/AABBCC.svg")
+    manager = SvgTextConverter("./examples/sans_serif.svg")
+    manager = SvgTextConverter("./examples/slaine.svg")
     paths = manager.convert_texts()
     
-    for k, string_paths in enumerate(paths):
+    for k, text_as_paths in enumerate(paths):
         print("-------------------------------------------------------------------------------")
         print("-------------------------------------------------------------------------------")
-        for p, path in enumerate(string_paths):
-            print('<path id="%d_%d" style="fill:#ff0000;fill-opacity:0.5;" d="%s" />' % (k, p, path.d()))
+        for p, path_with_attribs in enumerate(text_as_paths):
+            attribs = path_with_attribs.attribs
+            path = path_with_attribs.path
+
+            style = "fill:%s;fill-opacity:%s;" % (attribs.get("fill", "#000000"), attribs.get("fill-opacity", "1.0"))
+            
+            print('<path id="%d_%d" style=\"%s\" d="%s" />' % (k, p, style, path.d()))
 
 
     # ziafont test
@@ -1170,4 +1227,3 @@ if __name__ == '__main__':
     #ziafont.set_fontsize(22.5778)
     #font = ziafont.Font('C:\\Windows\\Fonts\\arial.ttf')
     #font.str2svg('BB  CC  AA  BB').svg()
-    #a = 1
