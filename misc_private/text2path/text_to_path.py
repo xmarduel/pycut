@@ -1,7 +1,5 @@
 '''
 Convert svg text to svg path(s)
-
-NOT YET FINISHED, but in a very good way
 '''
 
 '''
@@ -22,7 +20,6 @@ import subprocess
 subprocess.call("inkscape.com in.svg --export-text-to-path -o out.svg", shell = True)
 '''
 
-from collections import namedtuple
 from io import BytesIO
 from typing import List
 
@@ -669,6 +666,7 @@ class Char2SvgPath:
         '''
         import struct
         from datetime import datetime, timedelta
+        from collections import namedtuple
 
         Table = namedtuple('Table', ['checksum', 'offset', 'length'])
 
@@ -824,7 +822,7 @@ class Char2SvgPath:
         scaling = fontsize / self.CHAR_SIZE
         
         '''
-        You’ll need to flip the y values of the points in order to render
+        You'll need to flip the y values of the points in order to render
         the characters right-side-up:
         '''
         outline : freetype.Outline = self.face.glyph.outline
@@ -1167,7 +1165,7 @@ if __name__ == '__main__':
             print('<path id="%d_%d" style="fill:#ff0000;fill-opacity:0.5;" d="%s" />' % (k, p, path.d()))
 
 
-    # zia test
+    # ziafont test
     
     #ziafont.set_fontsize(22.5778)
     #font = ziafont.Font('C:\\Windows\\Fonts\\arial.ttf')
