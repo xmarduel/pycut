@@ -86,15 +86,15 @@ simply one single file.</p>
 kerning, not 'GPOS' kerning (as far as I understand). The GPOS table seems not
 to be accessible from freetype-py, so I use ziafont code to load this table.
 <strong>Thank you ziafont!</strong> So enventually 2 other files from ziafont
-are needed: gpos.pyand fontread.py</p>
+are needed: gpos.py and fontread.py</p>
 
 <p></p>
 
 <h4>The svgtext2svgpaths package</h4>
 
 <p>The features of my package are directly dictated from the need to convert
-svg &lt;text&gt; to svg &lt;path&gt; elements. How does the result of the
-conversion has to look like?</p>
+svg &lt;text&gt; to svg &lt;path&gt; elements inside a svg file.
+How does the result of the conversion has to look like?</p>
 <ul>
   <li>It must be <strong>without</strong> any "<strong>transforms</strong>"
     attributes.</li>
@@ -154,13 +154,15 @@ like: </p>
        id="text1314"&gt;BB  CC  AA  BB&lt;/text&gt;</code></pre>
 
 <p>
-The color and opacity do not play a role when cutting, but it is nice to have these properties in the resulting paths.</p>
+The color and opacity do not play a role when cutting, but it is nice to have these properties in the resulting paths. 
+Infact, the path elements resulting from the conversion will be shown in the svg viewer, so eventually they should 
+have at least the same color as the original text, as well as all other properties.</p>
 
-<p>Example: In Inkscape, give as font size <strong>30 pt</strong>.</p>
+<h4>Note on the font size</h4>
 
-<p></p>
+<p>In Inkscape, font size in given in <strong>pt</strong> units.
 
-<p>Units conversion are as following:</p>
+<p>Units conversion is as following:</p>
 
 <p>https://oreillymedia.github.io/Using_SVG/guide/units.html</p>
 <ul>
@@ -169,13 +171,13 @@ The color and opacity do not play a role when cutting, but it is nice to have th
   <li>Inkscape resolution: 96 px per inch</li>
 </ul>
 
-<p>From these values : 30 pt are 40 px are (40/96) * 25.4 mm =
+<p>So when giving in Inkscape a font soze of <strong>30 pt</strong>: 30 pt are 40 px are (40/96) * 25.4 mm =
 <strong>10.5833</strong>. This is the value found in the svg file, with units
 "<strong>px</strong>".</p>
 
 <p></p>
 
-<p>Whatever the conversion is, we have anyway the <strong>font-size</strong> in
+<p>Whatever the conversion is, we have anyway the <strong>font-size</strong> property in
 the svg file and we will use it for the conversion to
 <code>&lt;path&gt;</code>s. As input we also have the <strong>font
 family</strong> and style (in the "style" attribute). The
@@ -190,29 +192,32 @@ parse the XML <code>&lt;text&gt;</code> element.</p>
 <h4>Font Files</h4>
 
 <p>Next, we need something like a "lookup" to find the <strong>ttf</strong>
-files from the given font family and style. Font files are located per default
-in windows in:</p>
-<ul>
-  <li><code>C:\\Windows\\Fonts</code></li>
-</ul>
+files from the given font family and style. In order to simplify the lookup of the fonts, 
+a python module (my is named <code>pycut_fonts_text2path.py</code>) is given describing where to find the fonts files.</p>
 
-<p>All the font files found there are read to extract the family and style, as
-these two informations does not neccessarely appear the the font files name. It
-is also possible to specify other folders where other font files are stored:
-the python module "<strong>text_to_path_custom_fonts.py</strong>" is
-automatically loaded and should contains the following (as example):</p>
+<p>This module is then specified with absolute path in the environment variable <strong>PYCUT_FONTS_TEXT_2_PATHS</strong>. (no .py ending)</p>
+
+<p>All the font files found there (or better said the font directories) are read to extract the font family and others styles.
+As example of a <code>pycut_fonts_text2path.py</code>:</p>
 
 <pre><code class="language-python"># -*- coding: utf-8 -*-
  
-extra_fonts_dir = ["./fonts/slaine"]
+fonts_dirs = [
+    "C:\\Windows\\Fonts",
+    "./fonts/slaine"
+]
 
-extra_family_alias = {
+fonts_family_alias = {
+    "sans-serif": "microsoft sans serif",
+
     #'Sláine': 'Sláine Standard'
     'sláine': 'sl?ine'
 }
 </code></pre>
-<p>The alias dictionary is to map font family names from the svg (in UTF-8) 
-to the 'real'  (?) font family name. In this case it is the ascii repr of the utf-8 name (i did
+<p>The alias dictionary is to map the font family names from the svg text styles (in UTF-8) 
+to the 'real' (?) font family name, when they do not match. In this case we see that the "sans-serif" fonts family
+does not exist in all the found font filles, but there is a quite similar font named "microsoft sans serif". The font "Slaine" 
+is also not found in the <code>slaine.ttf</code> font file, but in it it describes the font <code>'sl?ine'</code> : the ascii repr of the utf-8 name (i did
 not succeeded to read the utf-8 name from the freetype-py lib)</p>
 
 <p>In case of the svg font family and style are not found in the lookup data, a
@@ -220,20 +225,11 @@ default font should be loaded (TODO).</p>
 
 <h4>Example</h4>
 <pre><code class="language-python"># -- from a real svg data
-# ---- there can be many &lt;text&gt; tags in the svg file
 
-converter = SvgTextConverter("C:\\.....\\svg\\B.svg")
-paths = converter.convert_strings()
-
-for string_paths in paths:
-    print("&lt;!-- ------------------------------------------------------------------ --&gt;")
-    print("&lt;!-- ----------- STRING CONVERSION ------------------------------------ --&gt;")
-    print("&lt;"-- ------------------------------------------------------------------- -&gt;")
-
-    for k, path in enumerate(string_paths):
-
-        print('&lt;path id="%d" style="fill:#ff0000;fill-opacity:0.5;" d="%s" /&gt;' % (k, path.d()))
-        print("&lt;!-- ----------------------------------------------------------------------- --&gt;")</code></pre>
+manager = SvgTextConverter("./examples/slaine.svg")
+svg = manager.transform_svg()
+print(svg)
+</code></pre>
 
 <p></p>
 

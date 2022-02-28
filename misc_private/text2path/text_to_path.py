@@ -22,6 +22,7 @@ import subprocess
 subprocess.call("inkscape.com in.svg --export-text-to-path -o out.svg", shell = True)
 '''
 
+import os
 import sys
 import io
 import importlib
@@ -44,9 +45,10 @@ class PathWithAttribs:
     '''
     Wrapper on Path class to contains the attribs as well
     '''
-    def __init__(self, path: Path, attribs: any):
+    def __init__(self, path: Path, id: str, attribs: any):
         self.path = path
         self.attribs = attribs
+        self.id = id
 
 
 class SvgTextObject:
@@ -137,7 +139,7 @@ class SvgTextObject:
             converter = String2SvgPaths(self.text, fontfile)
             all_paths = converter.calc_paths(self.font_size_float, self.position)
 
-            return [ PathWithAttribs(path, self.elt_style) for path in all_paths ]
+            return [ PathWithAttribs(path, self.id, self.elt_style) for path in all_paths ]
 
         return []
 
@@ -171,6 +173,46 @@ class SvgTextConverter:
         '''
         '''
         return [ o.to_paths() for o in self.svgtextobjects ]
+
+    def transform_svg(self) -> str:
+        '''
+        return a "new" sbg strong containing path elements instead of text elements 
+        '''
+        paths = self.convert_texts()
+    
+        transf_tree = etree.parse(self.svgfile)
+        transf_root = transf_tree.getroot()
+
+        # from transf_tree:
+        # 1. remove all text elements
+        # 2. insert all path elements 
+        
+        for k, text_as_paths in enumerate(paths):
+            for p, path_with_attribs in enumerate(text_as_paths):
+                element = self.make_xml_etree_element(p, path_with_attribs)
+                transf_root.append(element)
+
+        #for text_el in transf_root.findall('text'):
+        #    # using root.findall() to avoid removal during traversal
+        #    transf_root.remove(text_el)
+        etree.register_namespace("", "http://www.w3.org/2000/svg" )
+
+        transf_svg = etree.tostring(transf_root)
+
+        return transf_svg
+
+    def make_xml_etree_element(self, p: int, wpath: PathWithAttribs) -> etree.Element :
+        '''
+        '''
+        element = etree.Element("path")
+        element.attrib = {
+            "id": "%s_%d" % (wpath.id, p),
+            "fill": wpath.attribs.get("fill", "#000000"),
+            "fill-opacity": wpath.attribs.get("fill-opacity", "1.0"),
+            "d":  wpath.path.d()
+        }
+
+        return element
 
 
 class FontDb:
@@ -531,54 +573,42 @@ class FontFiles:
         font-family:arial     font-style:italic   font-weight:bold    -> "bold italic"
         font-family:arial     font-style:italic   font-weight:normal  -> "italic"
     '''
-    family_alias = {
-        'sans-serif': 'microsoft sans serif'
-    }
-
-    extra_family_alias = {}
+    fonts_dir = ["C:\\Windows\\Fonts"]
+    fonts_family_alias = { 'sans-serif': 'microsoft sans serif' }
 
     lookup = None
 
     @classmethod
     def setupFonts(cls):
         '''
-        look into the C:\\Windows\\Fonts folder and fill the lookup
         '''
         try:
-            custom_fonts = importlib.import_module("text_to_path_custom_fonts")
+            pycut_fonts_module = os.environ["PYCUT_TEXT_2_PATHS"]
+            
+            base, name = os.path.split(pycut_fonts_module)
+            sys.path.append(base)
+            pycut_fonts = importlib.import_module(name)
 
-            cls.extra_family_alias = custom_fonts.extra_family_alias
+            cls.fonts_dir = pycut_fonts.fonts_dir
+            cls.fonts_family_alias = pycut_fonts.fonts_family_alias
         except Exception as e:
-            custom_fonts = None
-            cls.extra_family_alias = {}
+            print("failed to load %s - %s" % (pycut_fonts_module, e))
+            print("using default font dirs %ss" % cls.fonts_dir)
 
         cls.lookup = {}
 
-        ttfs = glob.glob("C:\\Windows\\Fonts\\*.ttf")
+        for font_dir in cls.fonts_dir:
+            ttfs = glob.glob(os.path.join(font_dir, "*.ttf"))
 
-        for ttf in ttfs:
-            face = freetype.Face(ttf)
-            family = face.family_name.decode().lower()
-            style = face.style_name.decode().lower()
+            for ttf in ttfs:
+                face = freetype.Face(ttf)
+                family = face.family_name.decode("ascii", "strict").lower()
+                style = face.style_name.decode("ascii", "strict").lower()
             
-            if family not in cls.lookup:
-                cls.lookup[family] = {}
+                if family not in cls.lookup:
+                    cls.lookup[family] = {}
 
-            cls.lookup[family][style] = ttf
-
-        if custom_fonts :
-            for font_dir in custom_fonts.extra_fonts_dir:
-                ttfs = glob.glob(font_dir + "/*.ttf")
-
-                for ttf in ttfs:
-                    face = freetype.Face(ttf)
-                    family = face.family_name.decode("ascii", "strict").lower()
-                    style = face.style_name.decode().lower()
-            
-                    if family not in cls.lookup:
-                        cls.lookup[family] = {}
-
-                    cls.lookup[family][style] = ttf
+                cls.lookup[family][style] = ttf
 
         for family in cls.lookup:
             print("----------------", family)
@@ -634,10 +664,8 @@ class FontFiles:
         stretch = stretch.lower()
         
         if not family in cls.lookup:
-            if family in cls.family_alias:
-                family = cls.family_alias[family]
-            elif family in cls.extra_family_alias:
-                family = cls.extra_family_alias[family]
+            if family in cls.fonts_family_alias:
+                family = cls.fonts_family_alias[family]
 
         if family in cls.lookup:
             font_styles = cls.build_font_styles(style, weight, stretch)
@@ -1210,17 +1238,22 @@ if __name__ == '__main__':
     manager = SvgTextConverter("./examples/slaine.svg")
     paths = manager.convert_texts()
     
-    for k, text_as_paths in enumerate(paths):
+    for text_as_paths in paths:
         print("-------------------------------------------------------------------------------")
         print("-------------------------------------------------------------------------------")
         for p, path_with_attribs in enumerate(text_as_paths):
             attribs = path_with_attribs.attribs
             path = path_with_attribs.path
+            elt_id = path_with_attribs.id
 
             style = "fill:%s;fill-opacity:%s;" % (attribs.get("fill", "#000000"), attribs.get("fill-opacity", "1.0"))
             
-            print('<path id="%d_%d" style=\"%s\" d="%s" />' % (k, p, style, path.d()))
+            print('<path id="%s_%d" style=\"%s\" d="%s" />' % (elt_id, p, style, path.d()))
 
+
+    # or the full svg with the paths
+    svg = manager.transform_svg()
+    print(svg)
 
     # ziafont test
     

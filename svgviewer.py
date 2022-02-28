@@ -265,6 +265,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # eval initial zoom factor
         self.currentZoom = 250.0 / viewbox_size
 
+        # TODO -----------------------------------------------------
+        # TODO -----------------------------------------------------
+        
+        svg = self.svg_text_to_paths(svg)
+
+        # TODO -----------------------------------------------------
+        # TODO -----------------------------------------------------
+         
         self.svg = svg
         self.fill_svg_viewer(self.svg)
 
@@ -302,11 +310,6 @@ class SvgViewer(QtWidgets.QGraphicsView):
             
             if tag in shapes_types:
                 shapes.append(element)
-
-        # lxml - exception with svg xml header with encoding utf-8
-        #
-        #tree = etree.parse(StringIO(svg))
-        #shapes = tree.xpath('//*[local-name()="path" or local-name()="circle" or local-name()="rect" or local-name()="ellipse" or local-name()="polygon" or local-name()="line" or local-name()="polyline"]')
 
         for shape in shapes:
             shape_id = shape.attrib.get('id', None)
@@ -564,6 +567,12 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         # done
         self.fill_svg_viewer(augmented_svg)
+
+    def svg_text_to_paths(self, svg: str) -> str :
+        '''
+        The super mega method: transform all text elements into path elements
+        '''
+        return svg  # TODO
 
 
 class SvgTransformer:
