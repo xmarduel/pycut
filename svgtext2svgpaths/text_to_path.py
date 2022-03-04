@@ -583,7 +583,7 @@ class FontFiles:
         '''
         '''
         try:
-            pycut_fonts_module = os.environ["PYCUT_TEXT_2_PATHS"]
+            pycut_fonts_module = os.environ["PYCUT_FONTS_TEXT_2_PATHS"]
             
             base, name = os.path.split(pycut_fonts_module)
             sys.path.append(base)
@@ -1233,10 +1233,10 @@ if __name__ == '__main__':
     #oo.write_paths()
 
     # -- and from a real svg data
-    manager = SvgTextConverter("./examples/AABBCC.svg")
-    manager = SvgTextConverter("./examples/sans_serif.svg")
-    manager = SvgTextConverter("./examples/slaine.svg")
-    paths = manager.convert_texts()
+    converter = SvgTextConverter("./examples/AABBCC.svg")
+    converter = SvgTextConverter("./examples/sans_serif.svg")
+    converter = SvgTextConverter("./examples/slaine.svg")
+    paths = converter.convert_texts()
     
     for text_as_paths in paths:
         print("-------------------------------------------------------------------------------")
@@ -1252,11 +1252,11 @@ if __name__ == '__main__':
 
 
     # or the full svg with the paths
-    svg = manager.transform_svg()
+    svg = converter.transform_svg()
     print(svg)
 
     # ziafont test
     
     #ziafont.set_fontsize(22.5778)
     #font = ziafont.Font('C:\\Windows\\Fonts\\arial.ttf')
-    #font.str2svg('BB  CC  AA  BB').svg()
+    #font.str2svg("BB  CC  AA  BB").svg()

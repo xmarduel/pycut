@@ -77,7 +77,7 @@
             "request": "launch",
             "program": "text_to_path.py",
             "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\text2path",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\svgtext2svgpaths",
             "args": []
         }
     ]
