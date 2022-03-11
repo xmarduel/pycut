@@ -771,27 +771,5 @@
       "SpindleSpeed": 1000,
       "ProgramEnd": false
     }
-  },
-  "gui" : {
-    "svgviewer": {
-      "geometry_preview": {
-        "fill": "#ffff00",
-        "fill-opacity": 1.0,
-        "stroke": "#ffff00",
-        "stroke_width": 0
-      },
-      "tabs": {
-        "fill": "#ff0000",
-        "fill-opacity": 1.0,
-        "fill-opacity-disabled": 0.3,
-        "stroke": "#ff0000",
-        "stroke_width": 0
-      },
-      "toolpaths": {
-        "stroke": "#00ffff",
-        "stroke_width": 0.2,
-        "fill": "none"
-      }
-    }
   }
 }

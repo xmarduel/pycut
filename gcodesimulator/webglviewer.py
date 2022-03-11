@@ -118,6 +118,11 @@ jscut_webgl = """
   cursor: pointer;
 }
 
+#bloc1, #bloc2, #bloc3, #bloc4
+{
+    display:inline;
+}
+
 </style>
 
 <title>GCODE Simulator</title>
@@ -135,10 +140,65 @@ jscut_webgl = """
 
 <script>
 var gcode_simulator = null;
+var runner = null;
+var current_time = 0;
 
 function sliderChangeVal(newVal) {
   if (gcode_simulator) {
     gcode_simulator.timeChanged(0, newVal);
+    current_time = newVal;
+  }
+}
+
+function increaseTime() {
+  current_time = current_time + 0.01;
+  if (current_time > gcode_simulator.maxTime) {
+    current_time = 0;
+  }
+
+  gcode_simulator.timeChanged(0, current_time);
+  const input_slider = document.getElementById('input_slider');
+  input_slider.value = current_time;
+  
+  runner = setTimeout(increaseTime, 1);
+}
+
+function run() {
+  if (gcode_simulator) {
+    if (runner === null) {
+      runner = setTimeout(increaseTime, 1);
+    }
+  }
+}
+
+function pause() {
+  if (gcode_simulator) {
+    if (runner !== null) {
+      clearTimeout(runner);
+    }
+    runner = null;
+  }
+}
+
+function to_begin() {
+  if (gcode_simulator) {
+    current_time = 0;
+
+    gcode_simulator.timeChanged(0, current_time);
+
+    const input_slider = document.getElementById('input_slider');
+    input_slider.value = current_time;
+  }
+}
+
+function to_end() {
+  if (gcode_simulator) {
+    current_time = gcode_simulator.maxTime;
+
+    gcode_simulator.timeChanged(0, current_time);
+
+    const input_slider = document.getElementById('input_slider');
+    input_slider.value = current_time;
   }
 }
 </script>
@@ -147,7 +207,13 @@ function sliderChangeVal(newVal) {
 
 <div>
     <canvas id="glCanvas" width="460" height="460"></canvas>
-    <input id="input_slider" type="range" min="1" max="100" value="50" oninput="sliderChangeVal(this.value)" style="width: 460px"></input>
+    <input id="input_slider" type="range" min="1" max="10000" value="5000" oninput="sliderChangeVal(this.value)" style="width: 460px"></input>
+    <div id="block_container">
+      <div id="bloc1"><button type="button" onclick="to_begin()"><img src="qrc:/images/tango/22x22/actions/media-skip-backward.png"/></button> </div>  
+      <div id="bloc2"><button type="button" onclick="run()"><img src="qrc:/images/tango/22x22/actions/media-playback-start.png"/></button> </div>
+      <div id="bloc3"><button type="button" onclick="pause()"><img src="qrc:/images/tango/22x22/actions/media-playback-pause.png"/></button> </div>
+      <div id="bloc4"><button type="button" onclick="to_end()"><img src="qrc:/images/tango/22x22/actions/media-skip-forward.png"/></button> </div>
+    </div>
   </div>
 </div>
 
