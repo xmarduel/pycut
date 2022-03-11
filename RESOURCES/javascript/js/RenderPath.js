@@ -776,7 +776,7 @@ function startRenderPath(options, canvas, timeSliderElement, shaderDir, ready) {
         timeSlider = timeSliderElement.slider({
             formater: function (value) {
                 if (renderPath)
-                    return 'Time: ' + Math.round(value / 10000 * renderPath.totalTime) + 's';
+                    return 'Time: ' + Math.round(value / 2000 * renderPath.totalTime) + 's';
                 else
                     return value;
             }
@@ -813,7 +813,7 @@ function startRenderPath(options, canvas, timeSliderElement, shaderDir, ready) {
 
         if (timeSlider)
             timeSlider.on('slide', function () {
-                renderPath.setStopAtTime(timeSlider.val() / 10000 * renderPath.totalTime);
+                renderPath.setStopAtTime(timeSlider.val() / 2000 * renderPath.totalTime);
             });
 
         ready(renderPath);
