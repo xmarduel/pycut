@@ -44,10 +44,15 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
             "cutterDiameter" : 3.175, 
             "cutterHeight" : 25.4,
             "cutterAngle" : 180,
-            "elementsUrl" : "http://api.jscut.org/js"
+            "elementsUrl" : "http://api.jscut.org/js",
             #"elementsUrl" : "qrc:/javascript/js/shaders" # CORS problem by "get"
+
+            #"simulation_strategy" : "with_number_of_steps",
+            "simulation_strategy": "with_step_size",
+            "simulation_step_size" : 0.05,
+            "simulation_nb_steps": 10000
         }
-        
+
         # communication between qt and javascript html editor
         self.talkie = TalkyTalky(self)
         self.register_talkie()
@@ -140,9 +145,9 @@ jscut_webgl = """
 
 <script>
 var gcode_simulator = null;
-var runner = null;
+var auto_runner = null;
 var current_time = 0;
-var time_step = 0.05;
+var time_step = 0;
 
 function sliderChangeVal(newVal) {
   if (gcode_simulator) {
@@ -152,57 +157,63 @@ function sliderChangeVal(newVal) {
 }
 
 function increaseTime() {
-  current_time = current_time + time_step;
-  if (current_time > gcode_simulator.maxTime) {
-    current_time = 0;
-  }
+  if (gcode_simulator) {
+    current_time = current_time + time_step;
+    if (current_time > gcode_simulator.maxTime) {
+      current_time = 0;
+    }
 
-  gcode_simulator.timeChanged(0, current_time);
-  const input_slider = document.getElementById('input_slider');
-  input_slider.value = current_time;
+    gcode_simulator.timeChanged(0, current_time);
+
+    const input_slider = document.getElementById('input_slider');
+    input_slider.value = current_time;
   
-  runner = setTimeout(increaseTime, 1);
+    auto_runner = setTimeout(increaseTime, 1);
+  }
 }
 
 function run() {
   if (gcode_simulator) {
-    if (runner === null) {
-      runner = setTimeout(increaseTime, 1);
+    if (auto_runner === null) {
+      auto_runner = setTimeout(increaseTime, 1);
     }
   }
 }
 
 function decreaseTime() {
-  current_time = current_time - time_step;
-  if (current_time < 0) {
-    current_time = gcode_simulator.maxTime;
-  }
+  if (gcode_simulator) {
+    current_time = current_time - time_step;
+    if (current_time < 0) {
+      current_time = gcode_simulator.maxTime;
+    }
 
-  gcode_simulator.timeChanged(0, current_time);
-  const input_slider = document.getElementById('input_slider');
-  input_slider.value = current_time;
+    gcode_simulator.timeChanged(0, current_time);
+
+    const input_slider = document.getElementById('input_slider');
+    input_slider.value = current_time;
   
-  runner = setTimeout(decreaseTime, 1);
+    auto_runner = setTimeout(decreaseTime, 1);
+  }
 }
 
 function run_back() {
   if (gcode_simulator) {
-    if (runner === null) {
-      runner = setTimeout(decreaseTime, 1);
+    if (auto_runner === null) {
+      auto_runner = setTimeout(decreaseTime, 1);
     }
   }
 }
 
 function pause() {
   if (gcode_simulator) {
-    if (runner !== null) {
-      clearTimeout(runner);
+    if (auto_runner !== null) {
+      clearTimeout(auto_runner);
     }
-    runner = null;
+    auto_runner = null;
   }
 }
 
-function step_back() {
+function step_backward() {
   if (gcode_simulator) {
     current_time = current_time - time_step;
     if (current_time < 0) {
@@ -216,7 +227,7 @@ function step_back() {
   }
 }
 
-function step_for() {
+function step_forward() {
   if (gcode_simulator) {
     current_time = current_time + time_step;
     if (current_time > gcode_simulator.maxTime) {
@@ -257,14 +268,14 @@ function to_end() {
 
 <div>
     <canvas id="glCanvas" width="460" height="460"></canvas>
-    <input id="input_slider" type="range" min="0" max="2000" value="500" oninput="sliderChangeVal(this.value)" style="width: 460px"></input>
+    <input id="input_slider" type="range" min="0" max="1000" value="1000" step="1" oninput="sliderChangeVal(this.value)" style="width: 460px"></input>
     <div id="block_container">
       <div id="bloc1"><button type="button" onclick="to_begin()"><img src="qrc:/images/tango/22x22/actions/media-skip-backward.png"/></button> </div>  
-      <div id="bloc1"><button type="button" onclick="step_back()"><img src="qrc:/images/tango/22x22/actions/media-seek-backward.png"/></button> </div>  
+      <div id="bloc1"><button type="button" onclick="step_backward()"><img src="qrc:/images/tango/22x22/actions/media-seek-backward.png"/></button> </div>  
       <div id="bloc2"><button type="button" onclick="run()"><img src="qrc:/images/tango/22x22/actions/media-playback-start.png"/></button> </div>
       <div id="bloc3"><button type="button" onclick="pause()"><img src="qrc:/images/tango/22x22/actions/media-playback-pause.png"/></button> </div>
       <div id="bloc2"><button type="button" onclick="run_back()"><img src="qrc:/images/tango/22x22/actions/go-previous.png"/></button> </div>
-      <div id="bloc4"><button type="button" onclick="step_for()"><img src="qrc:/images/tango/22x22/actions/media-seek-forward.png"/></button> </div>
+      <div id="bloc4"><button type="button" onclick="step_forward()"><img src="qrc:/images/tango/22x22/actions/media-seek-forward.png"/></button> </div>
       <div id="bloc4"><button type="button" onclick="to_end()"><img src="qrc:/images/tango/22x22/actions/media-skip-forward.png"/></button> </div>
     </div>
   </div>
@@ -297,6 +308,11 @@ class GCodeSimulator {
     this.maxTime = 0;
     this.filled = false; 
     this.renderPath = null;
+
+    // simulation runner settings
+    this.simulation_strategy = simdata["simulation_strategy"];
+    this.simulation_step_size = simdata["simulation_step_size"];
+    this.simulation_nb_steps = simdata["simulation_nb_steps"];
   }
 
   simulate () {
@@ -326,6 +342,17 @@ class GCodeSimulator {
         if ( self.maxTimeRounded > 0 ) {
           input_slider.max = self.maxTimeRounded + 2;
           input_slider.value = self.maxTimeRounded + 2;
+          
+          if (self.simulation_strategy == "with_number_of_steps") {
+            // set the number of steps, step size is calculated from this
+            input_slider.step = input_slider.max / self.simulation_nb_steps;
+            time_step = self.maxTimeRounded / self.simulation_nb_steps;
+          } 
+          if (self.simulation_strategy == "with_step_size") {
+            // set the time step, number of steps calculated from this
+            time_step = self.simulation_step_size;
+            input_slider.step = time_step;
+          }
         }
       });
     });
