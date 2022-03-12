@@ -23,8 +23,10 @@ function RenderPath(options, canvas, shaderDir, shadersReady) {
     var needToDrawHeightMap = false;
     var requestFrame;
 
-    var gpuMem = 2 * 1024 * 1024;
-    var resolution = 1024;
+    var xm = 2; // HUAWEI Matebook pro: xm = 2 Ok, xm= 4 nok
+
+    var gpuMem = 2 * 1024 * 1024 * xm * xm;
+    var resolution = 1024 * xm;
     var cutterDia = .125;
     var cutterAngleRad = Math.PI;
     var isVBit = false;
@@ -43,6 +45,18 @@ function RenderPath(options, canvas, shaderDir, shadersReady) {
     });
 
     self.gl = WebGLUtils.setupWebGL(canvas);
+
+    function loadSourceShader(source, type, callback) {
+        if (self.gl) {
+            var shader = self.gl.createShader(type);
+            self.gl.shaderSource(shader, source);
+            self.gl.compileShader(shader);
+            if (self.gl.getShaderParameter(shader, self.gl.COMPILE_STATUS))
+                callback(shader);
+            else
+                alert(self.gl.getShaderInfoLog(shader));
+        }
+    }
 
     function loadShader(filename, type, callback) {
         if (self.gl)
@@ -735,7 +749,7 @@ function RenderPath(options, canvas, shaderDir, shadersReady) {
         requestFrame();
     }
 
-    if (self.gl) {
+    if (self.gl && false) {
         loadShader(shaderDir + "/rasterizePathVertexShader.txt", self.gl.VERTEX_SHADER, function (shader) {
             rasterizePathVertexShader = shader;
             loadedShader();
@@ -762,6 +776,38 @@ function RenderPath(options, canvas, shaderDir, shadersReady) {
         });
 
         loadShader(shaderDir + "/basicFragmentShader.txt", self.gl.FRAGMENT_SHADER, function (shader) {
+            basicFragmentShader = shader;
+            loadedShader();
+        });
+    }
+
+    if (self.gl) {
+        loadSourceShader(shaderDir["rasterizePathVertexShader"], self.gl.VERTEX_SHADER, function (shader) {
+            rasterizePathVertexShader = shader;
+            loadedShader();
+        });
+
+        loadSourceShader(shaderDir["rasterizePathFragmentShader"], self.gl.FRAGMENT_SHADER, function (shader) {
+            rasterizePathFragmentShader = shader;
+            loadedShader();
+        });
+
+        loadSourceShader(shaderDir["renderHeightMapVertexShader"], self.gl.VERTEX_SHADER, function (shader) {
+            renderHeightMapVertexShader = shader;
+            loadedShader();
+        });
+
+        loadSourceShader(shaderDir["renderHeightMapFragmentShader"], self.gl.FRAGMENT_SHADER, function (shader) {
+            renderHeightMapFragmentShader = shader;
+            loadedShader();
+        });
+
+        loadSourceShader(shaderDir["basicVertexShader"], self.gl.VERTEX_SHADER, function (shader) {
+            basicVertexShader = shader;
+            loadedShader();
+        });
+
+        loadSourceShader(shaderDir["basicFragmentShader"], self.gl.FRAGMENT_SHADER, function (shader) {
             basicFragmentShader = shader;
             loadedShader();
         });

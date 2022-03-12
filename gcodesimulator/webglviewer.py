@@ -37,6 +37,13 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
 
         self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
+        shader_basicFragmentShader = self.get_shader_source(":/javascript/js/shaders/basicFragmentShader.txt")
+        shader_basicVertexShader = self.get_shader_source(":/javascript/js/shaders/basicVertexShader.txt")
+        shader_rasterizePathFragmentShader = self.get_shader_source(":/javascript/js/shaders/rasterizePathFragmentShader.txt")
+        shader_rasterizePathVertexShader = self.get_shader_source(":/javascript/js/shaders/rasterizePathVertexShader.txt")
+        shader_renderHeightMapFragmentShader = self.get_shader_source(":/javascript/js/shaders/renderHeightMapFragmentShader.txt")
+        shader_renderHeightMapVertexShader = self.get_shader_source(":/javascript/js/shaders/renderHeightMapVertexShader.txt")
+
         self.data = {
             "width": 460,
             "height" : 460,
@@ -44,13 +51,20 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
             "cutterDiameter" : 3.175, 
             "cutterHeight" : 25.4,
             "cutterAngle" : 180,
-            "elementsUrl" : "http://api.jscut.org/js",
-            #"elementsUrl" : "qrc:/javascript/js/shaders" # CORS problem by "get"
+            #"elementsUrl" : "http://api.jscut.org/js",
+            #"elementsUrl" : ":/javascript/js/shaders", # CORS problem by "get"
 
             #"simulation_strategy" : "with_number_of_steps",
             "simulation_strategy": "with_step_size",
             "simulation_step_size" : 0.05,
-            "simulation_nb_steps": 10000
+            "simulation_nb_steps": 10000,
+
+            "basicFragmentShader": shader_basicFragmentShader,
+            "basicVertexShader": shader_basicVertexShader,
+            "rasterizePathFragmentShader": shader_rasterizePathFragmentShader,
+            "rasterizePathVertexShader": shader_rasterizePathVertexShader,
+            "renderHeightMapFragmentShader": shader_renderHeightMapFragmentShader,
+            "renderHeightMapVertexShader": shader_renderHeightMapVertexShader
         }
 
         # communication between qt and javascript html editor
@@ -84,7 +98,18 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
         except Exception as err:
             self.setHtml(self.notfound % {'message': str(err)})
 
+    def get_shader_source(self, shader_filename: str) -> str:
+        '''
+        '''
+        fd = QtCore.QFile(shader_filename)
 
+        shader_source = ""
+
+        if fd.open(QtCore.QIODevice.ReadOnly | QtCore.QFile.Text):
+            shader_source = QtCore.QTextStream(fd).readAll()
+            fd.close()
+
+        return shader_source
 
 
 jscut_webgl = """
@@ -313,6 +338,16 @@ class GCodeSimulator {
     this.simulation_strategy = simdata["simulation_strategy"];
     this.simulation_step_size = simdata["simulation_step_size"];
     this.simulation_nb_steps = simdata["simulation_nb_steps"];
+
+    // shader code
+    this.shaders = {
+      "basicFragmentShader": simdata["basicFragmentShader"],
+      "basicVertexShader": simdata["basicVertexShader"],
+      "rasterizePathFragmentShader": simdata["rasterizePathFragmentShader"],
+      "rasterizePathVertexShader": simdata["rasterizePathVertexShader"],
+      "renderHeightMapFragmentShader": simdata["renderHeightMapFragmentShader"],
+      "renderHeightMapVertexShader": simdata["renderHeightMapVertexShader"]
+    };
   }
 
   simulate () {
@@ -329,7 +364,8 @@ class GCodeSimulator {
   ready () {
     self = this;
     window.requestAnimationFrame(function () {
-      self.renderPath = startRenderPath({}, document.getElementById("glCanvas"), null, self.elementsUrl , function (renderPath) {
+      const time_widget = null;
+      self.renderPath = startRenderPath({}, document.getElementById("glCanvas"), time_widget, self.shaders, function (renderPath) {
         renderPath.fillPathBuffer(self.parsedGcode, 0, self.cutterDiameter, self.cutterAngle, self.cutterHeight);
         self.maxTime = renderPath.totalTime;
         self.maxTimeRounded = Math.ceil(renderPath.totalTime * 10) / 10;
