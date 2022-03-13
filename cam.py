@@ -560,7 +560,9 @@ class cam:
 
             return result
 
-        hasTabs = len(tabs) > 0
+        # tabs are globals - bau maybe with path does not hits tabs
+        has_active_tabs = len(tabs) > 0
+        # --> has_active_tabs will be fixed later
 
         for pathIndex, path in enumerate(paths):
             origPath = path.path
@@ -570,6 +572,12 @@ class cam:
             # split the path to cut into many partials paths to avoid tabs eraas
             #separatedPaths = cls.separateTabs(origPath, tabs)
             separatedPaths = cls.separateTabs(origPath, tabs)
+
+            # tabs are globals and may not hit the origPath -> no "active tabs"
+            if len(separatedPaths) == 1:
+                has_active_tabs = False
+            else:
+                has_active_tabs = True
 
             gcode += \
                 f'\r\n' + \
@@ -584,7 +592,7 @@ class cam:
             while finishedZ > botZ:
                 nextZ = max(finishedZ - passDepth, botZ)
 
-                if hasTabs:
+                if has_active_tabs:
                     if nextZ == tabZ:
                         exactTabZLevelDone = True
                     elif nextZ < tabZ:
@@ -594,12 +602,15 @@ class cam:
                             exactTabZLevelDone = True
 
 
-                if (currentZ < safeZ and ((not path.safeToClose) or len(tabs) > 0)) :
+                if (currentZ <= tabZ and ((not path.safeToClose) or has_active_tabs)) :
+                    gcode += retractGcode
+                    currentZ = safeZ
+                elif (currentZ < safeZ and (not path.safeToClose)) :
                     gcode += retractGcode
                     currentZ = safeZ
 
                 # check this - what does it mean ???
-                if not hasTabs:
+                if not has_active_tabs:
                     currentZ = finishedZ
                 else:
                     currentZ = max(finishedZ, tabZ)
@@ -609,7 +620,7 @@ class cam:
 
                 inTabsHeight = False
                 
-                if not hasTabs:
+                if not has_active_tabs:
                     inTabsHeight = False
                     selectedPaths = [origPath]
                     gcode += 'G1 Z' + ValWithUnit(currentZ, "-").toFixed(decimal) + '\r\n'
