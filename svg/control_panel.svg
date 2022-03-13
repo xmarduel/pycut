@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="190mm"
+   height="140mm"
+   viewBox="0 0 190 140"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="control_panel.svg"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs887" />
+  <sodipodi:namedview
+     id="namedview885"
+     pagecolor="#ffffff"
+     bordercolor="#cccccc"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="1"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.0308586"
+     inkscape:cx="376.87031"
+     inkscape:cy="293.92974"
+     inkscape:window-width="1500"
+     inkscape:window-height="938"
+     inkscape:window-x="-6"
+     inkscape:window-y="-6"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid946" />
+  </sodipodi:namedview>
+  <g
+     id="layer1">
+    <rect
+       style="opacity:0.25;fill:#0000ff;stroke:#000000;stroke-width:0"
+       id="rect_panel"
+       width="170"
+       height="40"
+       x="10"
+       y="10" />
+    <rect
+       style="fill:#248900;fill-opacity:1;stroke:#000000;stroke-width:0"
+       id="tacho"
+       width="60"
+       height="29"
+       x="80"
+       y="15.5" />
+    <rect
+       style="fill:#248900;fill-opacity:1;stroke:#000000;stroke-width:0"
+       id="onoff"
+       width="15"
+       height="10"
+       x="150"
+       y="25" />
+    <circle
+       style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#007c00;fill-opacity:1;fill-rule:evenodd;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
+       id="regler"
+       cx="30"
+       cy="30"
+       r="5" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 16.15,10 h 158 v 8 h 6.15 v 8 h -6.15 v 8 h 6.15 v 8 h -6.15 v 8 H 16.15 v -8 h -6.15 v -8 h 6.15 v -8 h -6.15 v -8 h 6.15 z"
+       id="panel" />
+    <path
+       style="opacity:0.2;fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 45,60 V 95 H 30 v -3 h -5 v 3 h -5 v -3 h -5 v 3 H 10 V 88.3 L 38.3,60 Z"
+       id="side_left_glatt" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.25"
+       d="M 90,60 V 95 H 75 v -3 h -5 v 3 h -5 v -3 h -5 v 3 H 55 V 88.3 L 83.3,60 Z"
+       id="side_right_glatt" />
+    <rect
+       style="opacity:0.25;fill:#a00000;stroke:#f70000;stroke-width:0"
+       id="rect_base"
+       width="170"
+       height="25"
+       x="10.000001"
+       y="105" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.255618px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 16.15,105 h 158 v 5 h 6.15 v 5 h -6.15 v 5 h 6.15 v 5 h -6.15 v 5 H 16.15 v -5 h -6.15 v -5 h 6.15 v -5 h -6.15 v -5 h 6.15 z"
+       id="base" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 38.3,60 H 45 V 95 H 30 v -3 h -5 v 3 h -5 v -3 h -5 v 3 h -5 v -6.7 l 5.65,-5.65 2.4,2.4 5.65,-5.65 -2.4,-2.4 5.65,-5.65 2.4,2.4 5.65,-5.65 -2.4,-2.4 z"
+       id="side_left" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 83.3,60 H 90 V 95 H 55 v -6.7 l 5.5,-5.5 2.4,2.4 5.8,-5.8 -2.4,-2.4 5.8,-5.8 2.4,2.4 5.8,-5.8 -2.4,-2.4 z"
+       id="side_right" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="102.1519"
+       y="79.822205"
+       id="text2939"><tspan
+         sodipodi:role="line"
+         id="tspan2937"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         x="102.1519"
+         y="79.822205">thickness:6.15 mm</tspan></text>
+  </g>
+</svg>

@@ -1,10 +1,66 @@
 {
-  "svg_file": "C:/Users/xavie/Documents/GITHUB/pycut/svg/control.svg",
+  "svg_file": "C:/Users/xavie/Documents/GITHUB/pycut/svg/control_panel.svg",
   "operations": [
     {
-      "Name": "onoff",
+      "Name": "op",
+      "type": "Outside",
+      "Deep": 6.15,
+      "paths": [
+        "side_left"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Outside",
+      "Deep": 6.15,
+      "paths": [
+        "side_right"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Outside",
+      "Deep": 2.4,
+      "paths": [
+        "base"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Outside",
+      "Deep": 2.4,
+      "paths": [
+        "panel"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
       "type": "Inside",
-      "Deep": 3.1,
+      "Deep": 2.4,
       "paths": [
         "onoff"
       ],
@@ -12,27 +68,13 @@
       "Combine": "Union",
       "Direction": "Conventional",
       "Units": "mm",
-      "Margin": 1.0,
+      "Margin": 0.5,
       "Width": 0.0
     },
     {
-      "Name": "tacho",
+      "Name": "op",
       "type": "Inside",
-      "Deep": 3.1,
-      "paths": [
-        "tacho"
-      ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 1.0,
-      "Width": 0.0
-    },
-    {
-      "Name": "regler",
-      "type": "Inside",
-      "Deep": 3.1,
+      "Deep": 2.4,
       "paths": [
         "regler"
       ],
@@ -44,17 +86,17 @@
       "Width": 0.0
     },
     {
-      "Name": "panel",
-      "type": "Outside",
-      "Deep": 3.1,
+      "Name": "op",
+      "type": "Inside",
+      "Deep": 2.4,
       "paths": [
-        "panel"
+        "tacho"
       ],
       "RampPlunge": false,
       "Combine": "Union",
       "Direction": "Conventional",
       "Units": "mm",
-      "Margin": 0.0,
+      "Margin": 1.0,
       "Width": 0.0
     }
   ],
@@ -64,7 +106,7 @@
     },
     "Tabs": {
       "units": "mm",
-      "height": 1.0,
+      "height": 0.4,
       "tabs": [
         {
           "center": [
@@ -88,7 +130,7 @@
             26.0
           ],
           "radius": 3.0,
-          "enabled": true
+          "enabled": false
         },
         {
           "center": [
@@ -105,14 +147,30 @@
           ],
           "radius": 5.0,
           "enabled": true
+        },
+        {
+          "center": [
+            99.0,
+            103.0
+          ],
+          "radius": 5,
+          "enabled": true
+        },
+        {
+          "center": [
+            83.0,
+            129.0
+          ],
+          "radius": 5,
+          "enabled": true
         }
       ]
     },
     "Tool": {
       "Units": "mm",
-      "Diameter": 3.0,
+      "Diameter": 2.3,
       "Angle": 180,
-      "PassDepth": 1.0,
+      "PassDepth": 0.5,
       "StepOver": 0.4,
       "Rapid": 1000,
       "Plunge": 127,
@@ -130,9 +188,9 @@
     },
     "GCodeConversion": {
       "Units": "mm",
-      "FlipXY": false,
-      "XOffset": 0.0,
-      "YOffset": 60.0
+      "FlipXY": true,
+      "XOffset": -8.85,
+      "YOffset": 51.15
     },
     "GCodeGeneration": {
       "ReturnToZeroAtEnd": true,
