@@ -30,7 +30,7 @@
       "Width": 0.0
     },
     {
-      "Name": "op",
+      "Name": "base",
       "type": "Outside",
       "Deep": 2.4,
       "paths": [
@@ -44,7 +44,7 @@
       "Width": 0.0
     },
     {
-      "Name": "op",
+      "Name": "panel",
       "type": "Outside",
       "Deep": 2.4,
       "paths": [

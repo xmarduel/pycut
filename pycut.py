@@ -298,17 +298,22 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         '''
         if self.job:
+            jobname = os.path.basename(self.jobfilename)
+            jobname = os.path.splitext(jobname)[0]
+
+            opname = self.job.operations[0].name
+
+            filename = "pycut_%s_%s.nc" % (jobname, opname)
+
             gcode = self.job.gcode
             gcode = gcode.replace('\r\n', '\n')
 
-            filename = "pycut_gcode.gcode"
-
             if os.path.exists(filename):
                 k = 1
-                filename = "pycut_gcode-%d.gcode" % k
+                filename = "pycut_%s_%s_%d.nc" % (jobname, opname, k)
                 while os.path.exists(filename):
                     k += 1
-                    filename = "pycut_gcode-%d.gcode" % k
+                    filename = "pycut_%s_%s_%d.nc" % (jobname, opname, k)
 
             fp = open(filename, "w")
             fp.write(gcode)
