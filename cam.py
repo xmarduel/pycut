@@ -113,7 +113,7 @@ class cam:
                             if len(list(geom.coords)) > 0:
                                 lines_ok.append(geom)
 
-                            #print("---- SIMPLIFY #nb pts = ", len(list(geom.coords)))
+                            print("---- SIMPLIFY #nb pts = ", len(list(geom.coords)))
                             print("---- SIMPLIFY len = ", geom.length)
 
             allPaths = lines_ok + allPaths

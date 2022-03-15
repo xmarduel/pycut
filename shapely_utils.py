@@ -271,6 +271,8 @@ class ShapelyUtils:
         offsets = [] # for each poly in the multipoly - each item can be of various types
         polys = []
 
+        cls.MatplotlibDisplay("geometry", geometry, force=False)
+
         for poly in geometry.geoms:
 
             if not poly.interiors: 
@@ -290,12 +292,14 @@ class ShapelyUtils:
             interior_multipoly = cls.buildMultiPolyFromOffset(int_offsets)
             print("exterior_multipoly VALID ? ", interior_multipoly.is_valid)
 
-            #cls.MatplotlibDisplay("interior_multipoly", interior_multipoly, force=True)
+            cls.MatplotlibDisplay("interior_multipoly", interior_multipoly, force=False)
             
             if not interior_multipoly.is_valid:
                 interior_multipoly = cls.fixMultipoly(interior_multipoly)
 
             _, exterior_multipolyX = ShapelyUtils.offsetMultiPolygon(geometry, amount, 'left', ginterior=True)
+
+            cls.MatplotlibDisplay("exterior_multipolyX", exterior_multipolyX, force=False)
 
             # only exterior
             exterior_multipoly = cls.removeHolesMultipoly(exterior_multipolyX)
@@ -304,10 +308,23 @@ class ShapelyUtils:
             exterior_multipoly = ShapelyUtils.simplifyMultiPoly(exterior_multipoly, 0.001)
             exterior_multipoly = ShapelyUtils.orientMultiPolygon(exterior_multipoly)
 
+            cls.MatplotlibDisplay("exterior_multipoly", exterior_multipoly, force=False)
+
+            #both = shapely.geometry.MultiPolygon(list(interior_multipoly.geoms) + list(exterior_multipoly.geoms))
+            #cls.MatplotlibDisplay("interior_exterior_multipoly", both, force=True)
+
             if gexterior == True:
                 # the diff ** with ~POLY ** is the solution
                 try:
-                    sol_poly = exterior_multipoly.intersection(interior_multipoly)
+                    interior_is_contained_in_exterior = exterior_multipoly.contains(interior_multipoly)
+                    print("XXXXXX offset -> interior_is_contained_in_exterior", interior_is_contained_in_exterior)
+
+                    if interior_is_contained_in_exterior:
+                        sol_poly = exterior_multipoly.intersection(interior_multipoly)
+                    else:
+                        # big problem! should actually never happens... (g letter)
+                        sol_poly = interior_multipoly  # bug: can cut outside the exterior...
+                
                 except Exception as e :
                     print("ERROR difference")
                     print(e)
