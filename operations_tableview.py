@@ -313,13 +313,13 @@ class PyCutComboBoxDelegate(QtWidgets.QStyledItemDelegate):
         col = index.column()
 
         self.items = []
-        if col == 2:
+        if col == 1:
             self.items = ["Pocket", "Inside", "Outside", "Engrave"]
-        if col == 5:
+        if col == 4:
             self.items = ["inch", "mm"]
-        if col == 8:
+        if col == 7:
             self.items = ["Union", "Intersection", "Difference", "Xor"]
-        if col == 9:
+        if col == 8:
             self.items = ["Conventional", "Climb"]
        
 
@@ -376,17 +376,27 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
 
         # bottom section of the window:
         # let's have a text input and a pushbutton that add an item to our model.
-        hbox = QtWidgets.QHBoxLayout()
+        hbox_add = QtWidgets.QHBoxLayout()
 
         # create the button, and hook it up to the slot below.
         self._button_add = QtWidgets.QPushButton("Create Operation")
         self._button_add.clicked.connect(self.add_item)
         self._button_add.setIcon(QtGui.QIcon(":/images/tango/32x32/actions/list-add"))
 
-        hbox.addWidget(self._button_add)
+        hbox_add.addWidget(self._button_add)
+
+
+        hbox_gen = QtWidgets.QHBoxLayout()
+
+        self._button_gen = QtWidgets.QPushButton("Generate GCode")
+        self._button_gen.clicked.connect(self.gen_gcode)
+        self._button_gen.setIcon(QtGui.QIcon(":/images/tango/22x22/actions/view-refresh.png"))
+
+        hbox_gen.addWidget(self._button_gen)
 
         # add bottom to main window layout
-        vbox.addLayout(hbox)
+        vbox.addLayout(hbox_add)
+        vbox.addLayout(hbox_gen)
 
         # set layout on the window
         self.setLayout(vbox)
@@ -456,6 +466,12 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
         for op in self.get_model_operations():
             print(op)
 
+    def gen_gcode(self):
+        '''
+        '''
+        # instruct the model to generate the g-code for all selected items
+        self.model.generate_gcode()
+
 
 class PyCutSimpleTableView(QtWidgets.QTableView):
     '''
@@ -482,48 +498,47 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         '''
         self.header =  [
             "name",                     # [0] str
-            "gcode",                    # [1] button
             "cam_op",
-            "enabled",                  # [3] checkbox
-            "paths",                    # [4] str
+            "enabled",                  # [2] checkbox
+            "paths",                    # [3] str
             "units",
-            "cutDepth",                 # [6] float
-            "ramp",                     # [7] checkbox
+            "cutDepth",                 # [5] float
+            "ramp",                     # [6] checkbox
             "combinaison",
             "direction",
-            "margin",                   # [10] float
-            "width",                    # [11] float
-            "del",                      # [12] button
-            "up",                       # [13] button
-            "down",                     # [14] button
+            "margin",                   # [9] float
+            "width",                    # [10] float
+            "del",                      # [11] button
+            "up",                       # [12] button
+            "down",                     # [13] button
         ]
         '''
         delegate = PyCutComboBoxDelegate(self)
+        self.setItemDelegateForColumn(1, delegate)
+
+        delegate = PyCutCheckBoxDelegate(self)
         self.setItemDelegateForColumn(2, delegate)
 
-        delegate = PyCutCheckBoxDelegate(self)
-        self.setItemDelegateForColumn(3, delegate)
-        
         delegate = PyCutComboBoxDelegate(self)
-        self.setItemDelegateForColumn(5, delegate)
+        self.setItemDelegateForColumn(4, delegate)
 
         delegate = PyCutDoubleSpinBoxDelegate(self)
-        self.setItemDelegateForColumn(6, delegate)
+        self.setItemDelegateForColumn(5, delegate)
         
         delegate = PyCutCheckBoxDelegate(self)
-        self.setItemDelegateForColumn(7, delegate)
+        self.setItemDelegateForColumn(6, delegate)
     
         delegate = PyCutComboBoxDelegate(self)
-        self.setItemDelegateForColumn(8, delegate)
+        self.setItemDelegateForColumn(7, delegate)
         
         delegate = PyCutComboBoxDelegate(self)
-        self.setItemDelegateForColumn(9, delegate)
+        self.setItemDelegateForColumn(8, delegate)
 
         self.delegate_col_margin = delegate = PyCutDoubleSpinBoxDelegate(self)
-        self.setItemDelegateForColumn(10, delegate)
+        self.setItemDelegateForColumn(9, delegate)
 
         self.delegate_col_width = delegate = PyCutDoubleSpinBoxDelegate(self)
-        self.setItemDelegateForColumn(11, delegate)
+        self.setItemDelegateForColumn(10, delegate)
 
         self.setup_persistent_editors()
 
@@ -532,58 +547,42 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         '''
         # Make the combo boxes / check boxes / others specials always displayed.
         for k in range(self.model().rowCount(None)):
-            self.openPersistentEditor(self.model().index(k, 2)) # cam_op
-            self.openPersistentEditor(self.model().index(k, 3)) #   enabled
-            self.openPersistentEditor(self.model().index(k, 5)) # units
-            self.openPersistentEditor(self.model().index(k, 6)) #       cutDepth
-            self.openPersistentEditor(self.model().index(k, 7)) #   ramp
-            self.openPersistentEditor(self.model().index(k, 8)) # combinaison
-            self.openPersistentEditor(self.model().index(k, 9)) # direction
-            self.openPersistentEditor(self.model().index(k, 10)) #      margin
-            self.openPersistentEditor(self.model().index(k, 11)) #      dwidth
+            self.openPersistentEditor(self.model().index(k, 1)) # cam_op
+            self.openPersistentEditor(self.model().index(k, 2)) #   enabled
+            self.openPersistentEditor(self.model().index(k, 4)) # units
+            self.openPersistentEditor(self.model().index(k, 5)) #       cutDepth
+            self.openPersistentEditor(self.model().index(k, 6)) #   ramp
+            self.openPersistentEditor(self.model().index(k, 7)) # combinaison
+            self.openPersistentEditor(self.model().index(k, 8)) # direction
+            self.openPersistentEditor(self.model().index(k, 9)) #      margin
+            self.openPersistentEditor(self.model().index(k, 10)) #      width
 
         for row in range(self.model().rowCount(None)):
-            btn_gcode_op = QtWidgets.QPushButton()
-            btn_gcode_op.setText("")
-            btn_gcode_op.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/view-refresh.png'))
-            btn_gcode_op.setToolTip("generate G-Code")
-            btn_gcode_op.clicked.connect(self.cb_gen_gcode_op)
-            self.setIndexWidget(self.model().index(row, 1), btn_gcode_op)
-        
             btn_del_op = QtWidgets.QPushButton()
             btn_del_op.setText("")
             btn_del_op.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/edit-clear.png'))
             btn_del_op.setToolTip("Delete Op")
             btn_del_op.clicked.connect(self.cb_delete_op)
-            self.setIndexWidget(self.model().index(row, 12), btn_del_op)
+            self.setIndexWidget(self.model().index(row, 11), btn_del_op)
 
             btn_up_op = QtWidgets.QPushButton()
             btn_up_op.setText("")
             btn_up_op.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/go-up.png'))
             btn_up_op.setToolTip("Up")
             btn_up_op.clicked.connect(self.cb_move_up_op)
-            self.setIndexWidget(self.model().index(row, 13), btn_up_op)
+            self.setIndexWidget(self.model().index(row, 12), btn_up_op)
 
             btn_dw_op = QtWidgets.QPushButton()
             btn_dw_op.setText("")
             btn_dw_op.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/go-down.png'))
             btn_dw_op.setToolTip("Down")
             btn_dw_op.clicked.connect(self.cb_move_down_op)
-            self.setIndexWidget(self.model().index(row, 14), btn_dw_op)
-
-        # setup a right grid size
-        vwidth = self.verticalHeader().width()
-        hwidth = self.horizontalHeader().length()
-        swidth = self.style().pixelMetric(QtWidgets.QStyle.PM_ScrollBarExtent)
-        fwidth = self.frameWidth() * 2
-
-        #self.setFixedWidth(vwidth + hwidth + swidth + fwidth)
-        #self.setMinimumWidth(vwidth + hwidth + swidth + fwidth)
+            self.setIndexWidget(self.model().index(row, 13), btn_dw_op)
 
         self.resizeColumnsToContents() # now!
 
-        self.setColumnWidth(0, 100)  # name
-        self.setColumnWidth(4, 100)  # paths
+        self.setColumnWidth(3, 90)  # paths
+        self.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
 
         self.enable_disable_cells()
 
@@ -627,12 +626,6 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         self.model().addItem(op_data)
         self.setup_persistent_editors()  # to show the editors on a new item
 
-    def cb_gen_gcode_op(self):
-        index = self.currentIndex()
-        idx = index.row()
-        # instruct the model to generate the g-code for all selected items
-        self.model().generate_gcode()
-
     def enable_disable_cells(self):
         margin = {'Pocket': True, 'Inside': True, 'Outside': True, 'Engrave': False} 
         width = {'Pocket': False, 'Inside': True, 'Outside': True, 'Engrave': False} 
@@ -640,8 +633,8 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         for row in range(self.model().rowCount(None)):
             cam_op = self.model().operations[row].cam_op
             
-            self.delegate_col_margin.xeditors[(row, 10)].setEnabled(margin[cam_op]) 
-            self.delegate_col_width.xeditors[(row, 11)].setEnabled(width[cam_op]) 
+            self.delegate_col_margin.xeditors[(row, 9)].setEnabled(margin[cam_op]) 
+            self.delegate_col_width.xeditors[(row, 10)].setEnabled(width[cam_op]) 
 
 
 class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
@@ -657,20 +650,19 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
 
         self.header =  [
             "name",                     # [0] str
-            "gcode",                    # [1] button
             "cam_op",
-            "enabled",                  # [3] checkbox
-            "paths",                    # [4] str
+            "enabled",                  # [2] checkbox
+            "paths",                    # [3] str
             "units",
-            "cutDepth",                 # [6] float
-            "ramp",                     # [7] checkbox
+            "cutDepth",                 # [5] float
+            "ramp",                     # [6] checkbox
             "combinaison",
             "direction",
-            "margin",                   # [10] float
-            "width",                    # [11] float
-            "del",                      # [12] button
-            "up",                       # [13] button
-            "down",                     # [14] button
+            "margin",                   # [9] float
+            "width",                    # [10] float
+            "del",                      # [11] button
+            "up",                       # [12] button
+            "down",                     # [13] button
         ]
 
         self.cnt = 0
@@ -742,25 +734,23 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
         # for check box, data is displayed in the "editor"
         col = index.column()
 
-        if col == 1:  # button
+        if col == 11:  # button
             return None
         if col == 12:  # button
             return None
         if col == 13:  # button
             return None
-        if col == 14:  # button
-            return None
 
         # for checkboxes only
-        if col == 3:   # checkbox
+        if col == 2:   # checkbox
             return None
-        if col == 7:   # checkbox
+        if col == 6:   # checkbox
             return None
 
         if role == QtCore.Qt.DisplayRole:
             val = getattr(op, attr)
 
-            if col == 4:  # make a string of the list
+            if col == 3:  # make a string of the list
                 # list of svg paths ids
                 val = str(val)
 
@@ -768,7 +758,7 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
         if role == QtCore.Qt.EditRole:
             val = getattr(op, attr)
 
-            if col == 4:
+            if col == 3:
                 # list of svg paths ids
                 val = str(val)
 
