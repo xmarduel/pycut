@@ -19,7 +19,7 @@
      <widget class="QScrollArea" name="scrollArea_left">
       <property name="minimumSize">
        <size>
-        <width>200</width>
+        <width>220</width>
         <height>0</height>
        </size>
       </property>
@@ -31,685 +31,681 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>285</width>
+         <width>301</width>
          <height>986</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,1">
         <property name="leftMargin">
-         <number>0</number>
+         <number>9</number>
         </property>
         <property name="rightMargin">
-         <number>0</number>
+         <number>9</number>
         </property>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayoutLeft" stretch="0,0,0,0,1">
+         <layout class="QVBoxLayout" name="verticalLayoutSettingsContent">
+          <property name="bottomMargin">
+           <number>20</number>
+          </property>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayoutSettingsContent">
-            <property name="bottomMargin">
-             <number>20</number>
+           <widget class="QLabel" name="label_SvgSettings">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(198, 198, 198);</string>
+            </property>
+            <property name="text">
+             <string> Svg Settings</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <property name="leftMargin">
+             <number>8</number>
             </property>
             <item>
-             <widget class="QLabel" name="label_SvgSettings">
+             <widget class="QLabel" name="label_PxPerInch">
               <property name="font">
                <font>
-                <pointsize>14</pointsize>
                 <bold>true</bold>
                </font>
               </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(198, 198, 198);</string>
-              </property>
               <property name="text">
-               <string> Svg Settings</string>
+               <string>user units scale factor</string>
               </property>
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout">
-              <property name="leftMargin">
-               <number>8</number>
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_PxPerInch">
+              <property name="enabled">
+               <bool>false</bool>
               </property>
-              <item>
-               <widget class="QLabel" name="label_PxPerInch">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>user units scale factor</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QDoubleSpinBox" name="doubleSpinBox_PxPerInch">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="maximum">
-                 <double>999.990000000000009</double>
-                </property>
-                <property name="value">
-                 <double>1.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_4">
-              <property name="leftMargin">
-               <number>8</number>
+              <property name="maximum">
+               <double>999.990000000000009</double>
               </property>
-              <item>
-               <widget class="QLabel" name="label_SvgModelWidth">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>width</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QDoubleSpinBox" name="doubleSpinBox_SvgModelWidth">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="suffix">
-                 <string>mm</string>
-                </property>
-                <property name="maximum">
-                 <double>999.990000000000009</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
-              <property name="leftMargin">
-               <number>8</number>
+              <property name="value">
+               <double>1.000000000000000</double>
               </property>
-              <item>
-               <widget class="QLabel" name="label_SvgModelHeight">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>height</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QDoubleSpinBox" name="doubleSpinBox_SvgModelHeight">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="suffix">
-                 <string>mm</string>
-                </property>
-                <property name="maximum">
-                 <double>999.990000000000009</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
+             </widget>
             </item>
            </layout>
           </item>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayoutToolContent">
-            <property name="bottomMargin">
-             <number>20</number>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <property name="leftMargin">
+             <number>8</number>
             </property>
             <item>
-             <widget class="QLabel" name="label_Tool">
+             <widget class="QLabel" name="label_SvgModelWidth">
               <property name="font">
                <font>
-                <pointsize>14</pointsize>
                 <bold>true</bold>
                </font>
               </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(198, 198, 198);</string>
-              </property>
               <property name="text">
-               <string> Tool (shared for all operations)</string>
+               <string>width</string>
               </property>
              </widget>
             </item>
             <item>
-             <layout class="QGridLayout" name="gridLayout_Tool">
-              <property name="leftMargin">
-               <number>8</number>
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_SvgModelWidth">
+              <property name="enabled">
+               <bool>false</bool>
               </property>
-              <property name="topMargin">
-               <number>0</number>
+              <property name="suffix">
+               <string>mm</string>
               </property>
-              <property name="bottomMargin">
-               <number>0</number>
+              <property name="maximum">
+               <double>999.990000000000009</double>
               </property>
-              <item row="6" column="1">
-               <widget class="QLabel" name="label_Tool_Plunge_UnitsDescr">
-                <property name="text">
-                 <string>__units__</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLabel" name="label_Tool_Diameter_UnitsDescr">
-                <property name="text">
-                 <string>__units__</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0">
-               <widget class="QLabel" name="label_Tool_StepOver">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Step Over</string>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="2">
-               <widget class="QSpinBox" name="spinBox_Tool_Rapid">
-                <property name="toolTip">
-                 <string>The speed the tool moves while not cutting</string>
-                </property>
-                <property name="maximum">
-                 <number>1000</number>
-                </property>
-                <property name="value">
-                 <number>500</number>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_Tool_Units">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Units</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QLabel" name="label_Tool_PassDepth">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Pass Depth</string>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="1">
-               <widget class="QLabel" name="label_Tool_Rapid_UnitsDescr">
-                <property name="text">
-                 <string>__units__</string>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="0">
-               <widget class="QLabel" name="label_Tool_Plunge">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Plunge</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QLabel" name="label_Tool_Angle_UnitsDescr">
-                <property name="text">
-                 <string>__units__</string>
-                </property>
-               </widget>
-              </item>
-              <item row="7" column="1">
-               <widget class="QLabel" name="label_Tool_Cut_UnitsDescr">
-                <property name="text">
-                 <string>__units__</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_Tool_Angle">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Angle</string>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="0">
-               <widget class="QLabel" name="label_Tool_Rapid">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Rapid</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="2">
-               <widget class="QSpinBox" name="spinBox_Tool_Angle">
-                <property name="maximum">
-                 <number>180</number>
-                </property>
-                <property name="value">
-                 <number>180</number>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="1">
-               <widget class="QLabel" name="label_Tool_StepOver_UnitsDescr">
-                <property name="text">
-                 <string>__units__</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_Diameter">
-                <property name="decimals">
-                 <number>3</number>
-                </property>
-                <property name="maximum">
-                 <double>32.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>1.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_Tool_Diameter">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Diameter</string>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="2">
-               <widget class="QSpinBox" name="spinBox_Tool_Plunge">
-                <property name="toolTip">
-                 <string>The speed the tool plunges downwards into the material</string>
-                </property>
-                <property name="maximum">
-                 <number>1000</number>
-                </property>
-                <property name="value">
-                 <number>100</number>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QLabel" name="label_Tool_PassDepth_UnitsDescr">
-                <property name="text">
-                 <string>__units__</string>
-                </property>
-               </widget>
-              </item>
-              <item row="7" column="0">
-               <widget class="QLabel" name="label_Tool_Cut">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Cut</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="2">
-               <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_StepOver">
-                <property name="decimals">
-                 <number>3</number>
-                </property>
-                <property name="maximum">
-                 <double>1.000000000000000</double>
-                </property>
-                <property name="singleStep">
-                 <double>0.010000000000000</double>
-                </property>
-                <property name="value">
-                 <double>0.400000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QComboBox" name="comboBox_Tool_Units">
-                <item>
-                 <property name="text">
-                  <string>inch</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>mm</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="3" column="2">
-               <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_PassDepth">
-                <property name="decimals">
-                 <number>3</number>
-                </property>
-                <property name="maximum">
-                 <double>10.000000000000000</double>
-                </property>
-                <property name="singleStep">
-                 <double>0.500000000000000</double>
-                </property>
-                <property name="value">
-                 <double>0.200000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="7" column="2">
-               <widget class="QSpinBox" name="spinBox_Tool_Cut">
-                <property name="toolTip">
-                 <string>The speed the tool moves horizontally during cutting</string>
-                </property>
-                <property name="maximum">
-                 <number>1000</number>
-                </property>
-                <property name="value">
-                 <number>200</number>
-                </property>
-               </widget>
-              </item>
-             </layout>
+             </widget>
             </item>
            </layout>
           </item>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayoutCurveToLineConversion">
-            <property name="bottomMargin">
-             <number>20</number>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <property name="leftMargin">
+             <number>8</number>
             </property>
             <item>
-             <widget class="QLabel" name="labelCurveToLineConversion">
+             <widget class="QLabel" name="label_SvgModelHeight">
               <property name="font">
                <font>
-                <pointsize>14</pointsize>
                 <bold>true</bold>
                </font>
               </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(196, 196, 196);</string>
-              </property>
               <property name="text">
-               <string> Curve To Line Conversion</string>
+               <string>height</string>
               </property>
              </widget>
             </item>
             <item>
-             <layout class="QFormLayout" name="formLayoutCurveToLineConversion">
-              <property name="labelAlignment">
-               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_SvgModelHeight">
+              <property name="enabled">
+               <bool>false</bool>
               </property>
-              <property name="formAlignment">
-               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              <property name="suffix">
+               <string>mm</string>
               </property>
-              <property name="verticalSpacing">
-               <number>6</number>
+              <property name="maximum">
+               <double>999.990000000000009</double>
               </property>
-              <property name="leftMargin">
-               <number>8</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_CurveToLineConversion_MinimumNbSegments">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Minimum Segments</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QSpinBox" name="spinBox_CurveToLineConversion_MinimumNbSegments">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
-                <property name="value">
-                 <number>5</number>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_CurveToLineConversion_MinimumSegmentsLength">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Minimum Segments Length                </string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QDoubleSpinBox" name="doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength">
-                <property name="maximum">
-                 <double>1.000000000000000</double>
-                </property>
-                <property name="singleStep">
-                 <double>0.010000000000000</double>
-                </property>
-                <property name="value">
-                 <double>0.010000000000000</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
+             </widget>
             </item>
            </layout>
           </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayoutToolContent">
+          <property name="bottomMargin">
+           <number>20</number>
+          </property>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayoutTabsContent">
-            <property name="bottomMargin">
-             <number>20</number>
+           <widget class="QLabel" name="label_Tool">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+              <bold>true</bold>
+             </font>
             </property>
-            <item>
-             <widget class="QLabel" name="label_Tabs">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(198, 198, 198);</string>
+            </property>
+            <property name="text">
+             <string> Tool (shared for all operations)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_Tool">
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item row="6" column="1">
+             <widget class="QLabel" name="label_Tool_Plunge_UnitsDescr">
+              <property name="text">
+               <string>__units__</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="label_Tool_Diameter_UnitsDescr">
+              <property name="text">
+               <string>__units__</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_Tool_StepOver">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Step Over</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="2">
+             <widget class="QSpinBox" name="spinBox_Tool_Rapid">
+              <property name="toolTip">
+               <string>The speed the tool moves while not cutting</string>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+              <property name="value">
+               <number>500</number>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_Tool_Units">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Units</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_Tool_PassDepth">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Pass Depth</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLabel" name="label_Tool_Rapid_UnitsDescr">
+              <property name="text">
+               <string>__units__</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_Tool_Plunge">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Plunge</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="label_Tool_Angle_UnitsDescr">
+              <property name="text">
+               <string>__units__</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QLabel" name="label_Tool_Cut_UnitsDescr">
+              <property name="text">
+               <string>__units__</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_Tool_Angle">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Angle</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_Tool_Rapid">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Rapid</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QSpinBox" name="spinBox_Tool_Angle">
+              <property name="maximum">
+               <number>180</number>
+              </property>
+              <property name="value">
+               <number>180</number>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLabel" name="label_Tool_StepOver_UnitsDescr">
+              <property name="text">
+               <string>__units__</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_Diameter">
+              <property name="decimals">
+               <number>3</number>
+              </property>
+              <property name="maximum">
+               <double>32.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_Tool_Diameter">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Diameter</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="2">
+             <widget class="QSpinBox" name="spinBox_Tool_Plunge">
+              <property name="toolTip">
+               <string>The speed the tool plunges downwards into the material</string>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+              <property name="value">
+               <number>100</number>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="label_Tool_PassDepth_UnitsDescr">
+              <property name="text">
+               <string>__units__</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="label_Tool_Cut">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Cut</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="2">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_StepOver">
+              <property name="decimals">
+               <number>3</number>
+              </property>
+              <property name="maximum">
+               <double>1.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.010000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.400000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="comboBox_Tool_Units">
+              <item>
+               <property name="text">
+                <string>inch</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>mm</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_PassDepth">
+              <property name="decimals">
+               <number>3</number>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.500000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.200000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="2">
+             <widget class="QSpinBox" name="spinBox_Tool_Cut">
+              <property name="toolTip">
+               <string>The speed the tool moves horizontally during cutting</string>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+              <property name="value">
+               <number>200</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayoutCurveToLineConversion">
+          <property name="bottomMargin">
+           <number>20</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="labelCurveToLineConversion">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(196, 196, 196);</string>
+            </property>
+            <property name="text">
+             <string> Curve To Line Conversion</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QFormLayout" name="formLayoutCurveToLineConversion">
+            <property name="labelAlignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+            <property name="formAlignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+            <property name="verticalSpacing">
+             <number>6</number>
+            </property>
+            <property name="leftMargin">
+             <number>8</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_CurveToLineConversion_MinimumNbSegments">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Minimum Segments</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QSpinBox" name="spinBox_CurveToLineConversion_MinimumNbSegments">
               <property name="enabled">
                <bool>true</bool>
               </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>5</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_CurveToLineConversion_MinimumSegmentsLength">
               <property name="font">
                <font>
-                <pointsize>14</pointsize>
                 <bold>true</bold>
                </font>
               </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(198, 198, 198);</string>
-              </property>
               <property name="text">
-               <string> Tabs</string>
+               <string>Minimum Segments Length                </string>
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QWidget" name="tabsGlobals" native="true">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>44</height>
-               </size>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength">
+              <property name="maximum">
+               <double>1.000000000000000</double>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_4">
-               <property name="leftMargin">
-                <number>8</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>9</number>
-               </property>
-               <item>
-                <layout class="QFormLayout" name="formLayout_Tabs">
-                 <property name="labelAlignment">
-                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                 </property>
-                 <property name="formAlignment">
-                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-                 </property>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_TabsUnits">
-                   <property name="font">
-                    <font>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Units</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QComboBox" name="comboBox_Tabs_Units">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <item>
-                    <property name="text">
-                     <string>inch</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>mm</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_Tabs_Height">
-                   <property name="font">
-                    <font>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Height</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_Tabs_Height">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="decimals">
-                    <number>3</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label">
-                   <property name="text">
-                    <string/>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QCheckBox" name="checkBox_Tabs_hideAllTabs">
-                   <property name="font">
-                    <font>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Hide all Tabs</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="1">
-                  <widget class="QCheckBox" name="checkBox_Tabs_hideDisabledTabs">
-                   <property name="font">
-                    <font>
-                     <bold>true</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Hide disabled Tabs</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="PyCutTabsTableViewManager" name="tabsview_manager" native="true">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>100</height>
-               </size>
+              <property name="singleStep">
+               <double>0.010000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.010000000000000</double>
               </property>
              </widget>
             </item>
            </layout>
           </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayoutTabsContent">
+          <property name="bottomMargin">
+           <number>20</number>
+          </property>
           <item>
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
+           <widget class="QLabel" name="label_Tabs">
+            <property name="enabled">
+             <bool>true</bool>
             </property>
-            <property name="sizeHint" stdset="0">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(198, 198, 198);</string>
+            </property>
+            <property name="text">
+             <string> Tabs</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="tabsGlobals" native="true">
+            <property name="minimumSize">
              <size>
-              <width>20</width>
-              <height>40</height>
+              <width>0</width>
+              <height>0</height>
              </size>
             </property>
-           </spacer>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <property name="leftMargin">
+              <number>8</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>9</number>
+             </property>
+             <item>
+              <layout class="QFormLayout" name="formLayout_Tabs">
+               <property name="labelAlignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+               <property name="formAlignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_TabsUnits">
+                 <property name="font">
+                  <font>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Units</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="comboBox_Tabs_Units">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>inch</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>mm</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_Tabs_Height">
+                 <property name="font">
+                  <font>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Height</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_Tabs_Height">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="decimals">
+                  <number>3</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label">
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QCheckBox" name="checkBox_Tabs_hideAllTabs">
+                 <property name="font">
+                  <font>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Hide all Tabs</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QCheckBox" name="checkBox_Tabs_hideDisabledTabs">
+                 <property name="font">
+                  <font>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Hide disabled Tabs</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="PyCutTabsTableViewManager" name="tabsview_manager" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>100</height>
+             </size>
+            </property>
+           </widget>
           </item>
          </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -822,654 +818,650 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>316</width>
+         <width>314</width>
          <height>986</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_5">
+       <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,0,0,1">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayoutRight" stretch="0,0,0,1">
+         <layout class="QVBoxLayout" name="verticalLayoutMaterial">
+          <property name="bottomMargin">
+           <number>20</number>
+          </property>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayoutMaterial">
-            <property name="bottomMargin">
-             <number>20</number>
+           <widget class="QLabel" name="labelMaterial">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+              <bold>true</bold>
+             </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(200, 200, 200);</string>
+            </property>
+            <property name="text">
+             <string> Material</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
             <item>
-             <widget class="QLabel" name="labelMaterial">
-              <property name="font">
-               <font>
-                <pointsize>14</pointsize>
-                <bold>true</bold>
-               </font>
+             <spacer name="horizontalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
               </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(200, 200, 200);</string>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
               </property>
-              <property name="text">
-               <string> Material</string>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QWidget" name="widget_display_material" native="true">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>150</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>200</width>
+                <height>150</height>
+               </size>
               </property>
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_6">
-              <item>
-               <spacer name="horizontalSpacer_3">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QWidget" name="widget_display_material" native="true">
-                <property name="minimumSize">
-                 <size>
-                  <width>200</width>
-                  <height>150</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>200</width>
-                  <height>150</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_4">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QFormLayout" name="formLayout_Material">
-              <property name="labelAlignment">
-               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             <spacer name="horizontalSpacer_4">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
               </property>
-              <property name="formAlignment">
-               <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
               </property>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_Material_Units">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Units</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QComboBox" name="comboBox_Material_Units">
-                <item>
-                 <property name="text">
-                  <string>inch</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>mm</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_Material_Thickness">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Thickness</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QDoubleSpinBox" name="doubleSpinBox_Material_Thickness">
-                <property name="maximum">
-                 <double>100.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>50.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_Material_ZOrigin">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Z Origin</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QComboBox" name="comboBox_Material_ZOrigin">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>Top</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Bottom</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QLabel" name="label_Material_Clearance">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Cleareance                                     </string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QDoubleSpinBox" name="doubleSpinBox_Material_Clearance">
-                <property name="maximum">
-                 <double>100.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>20.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
+             </spacer>
             </item>
            </layout>
           </item>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayoutGCodeConversion" stretch="0,0">
-            <property name="bottomMargin">
-             <number>20</number>
+           <layout class="QFormLayout" name="formLayout_Material">
+            <property name="labelAlignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
             </property>
-            <item>
-             <widget class="QLabel" name="label_GCcodeConversion">
+            <property name="formAlignment">
+             <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+            </property>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_Material_Units">
               <property name="font">
                <font>
-                <pointsize>14</pointsize>
                 <bold>true</bold>
                </font>
               </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(198, 198, 198);</string>
-              </property>
               <property name="text">
-               <string> GCode Conversion</string>
+               <string>Units</string>
               </property>
              </widget>
             </item>
-            <item>
-             <layout class="QGridLayout" name="gridLayout_GCodeConversion">
-              <item row="7" column="2">
-               <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MinX">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimum">
-                 <double>-1000.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>1000.000000000000000</double>
-                </property>
-               </widget>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="comboBox_Material_Units">
+              <item>
+               <property name="text">
+                <string>inch</string>
+               </property>
               </item>
-              <item row="9" column="2">
-               <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MinY">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimum">
-                 <double>-1000.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>1000.000000000000000</double>
-                </property>
-               </widget>
+              <item>
+               <property name="text">
+                <string>mm</string>
+               </property>
               </item>
-              <item row="2" column="2">
-               <widget class="QCheckBox" name="checkBox_GCodeConversion_ZeroLowerLeft_AsDefault">
-                <property name="text">
-                 <string>as Default</string>
-                </property>
-               </widget>
-              </item>
-              <item row="7" column="1">
-               <widget class="QLabel" name="label_GCodeConversion_MinX_UnitsDescr">
-                <property name="text">
-                 <string>__units__</string>
-                </property>
-               </widget>
-              </item>
-              <item row="9" column="0">
-               <widget class="QLabel" name="label_GCodeConversion_MinY">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Min Y</string>
-                </property>
-               </widget>
-              </item>
-              <item row="8" column="2">
-               <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MaxX">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimum">
-                 <double>-1000.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>1000.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="8" column="1">
-               <widget class="QLabel" name="label_GCodeConversion_MaxX_UnitsDescr">
-                <property name="text">
-                 <string>__units__</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_GCodeConversion_GCodeUnits">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Gcode Units</string>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="2">
-               <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_XOffset">
-                <property name="minimum">
-                 <double>-100.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>100.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="10" column="0">
-               <widget class="QLabel" name="label_GCodeConversion_MaxY">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Max Y</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="2">
-               <widget class="QCheckBox" name="checkBox_GCodeConversion_ZeroCenter_AsDefault">
-                <property name="text">
-                 <string>as Default</string>
-                </property>
-               </widget>
-              </item>
-              <item row="10" column="2">
-               <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MaxY">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimum">
-                 <double>-1000.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>1000.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>0.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="7" column="0">
-               <widget class="QLabel" name="label_GCodeConversion_MinX">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Min X</string>
-                </property>
-               </widget>
-              </item>
-              <item row="8" column="0">
-               <widget class="QLabel" name="label_GCodeConversion_MaxX">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Max X</string>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="1">
-               <widget class="QLabel" name="label_GCodeConversion_XOffset_UnitsDescr">
-                <property name="text">
-                 <string>__units__</string>
-                </property>
-               </widget>
-              </item>
-              <item row="10" column="1">
-               <widget class="QLabel" name="label_GCodeConversion_MaxY_UnitsDescr">
-                <property name="text">
-                 <string>__units__</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QCheckBox" name="checkBox_GCodeConversion_ZeroLowerLeftOfMaterial_AsDefault">
-                <property name="text">
-                 <string>as Default</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0" colspan="2">
-               <widget class="QPushButton" name="pushButton_GCodeConversion_ZeroCenter">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Zero center (Op)               </string>
-                </property>
-                <property name="icon">
-                 <iconset theme=":/images/tango/22x22/actions/view-refresh.png">
-                  <normaloff>.</normaloff>.</iconset>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0" colspan="2">
-               <widget class="QPushButton" name="pushButton_GCodeConversion_ZeroLowerLeft">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Zero lower left (Op)         </string>
-                </property>
-                <property name="icon">
-                 <iconset theme=":/images/tango/22x22/actions/view-refresh.png">
-                  <normaloff>.</normaloff>.</iconset>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="0">
-               <widget class="QLabel" name="label_GCodeConversion_YOffset">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Y Offset</string>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="2">
-               <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_YOffset">
-                <property name="minimum">
-                 <double>-100.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>100.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="9" column="1">
-               <widget class="QLabel" name="label_GCodeConversion_MinY_UnitsDescr">
-                <property name="text">
-                 <string>__units__</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0" colspan="2">
-               <widget class="QPushButton" name="pushButton_GCodeConversion_ZeroLowerLeftOfMaterial">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Zero lower left (Material)</string>
-                </property>
-                <property name="icon">
-                 <iconset theme=":/images/tango/22x22/actions/view-refresh.png">
-                  <normaloff>.</normaloff>.</iconset>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QComboBox" name="comboBox_GCodeConversion_Units">
-                <item>
-                 <property name="text">
-                  <string>inch</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>mm</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="5" column="0">
-               <widget class="QLabel" name="label_GCodeConversion_XOffset">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>X Offset</string>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="1">
-               <widget class="QLabel" name="label_GCodeConversion_YOffset_UnitsDescr">
-                <property name="text">
-                 <string>__units__</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0" colspan="2">
-               <widget class="QCheckBox" name="checkBox_GCodeConversion_FlipXY">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                  <kerning>false</kerning>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Flip X/Y</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
+             </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayoutGCodeGeneration">
-            <item>
-             <widget class="QLabel" name="labelGCodeGeneration">
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_Material_Thickness">
               <property name="font">
                <font>
-                <pointsize>14</pointsize>
                 <bold>true</bold>
                </font>
               </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(188, 188, 188);</string>
-              </property>
               <property name="text">
-               <string> GCode Generation</string>
+               <string>Thickness</string>
               </property>
              </widget>
             </item>
-            <item>
-             <layout class="QFormLayout" name="formLayout_GCodeGeneration">
-              <property name="formAlignment">
-               <set>Qt::AlignCenter</set>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_Material_Thickness">
+              <property name="maximum">
+               <double>100.000000000000000</double>
               </property>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_GCodeGeneration_ReturnToZeroAtEnd">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Return to 0,0 at end</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                </property>
-               </widget>
+              <property name="value">
+               <double>50.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_Material_ZOrigin">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Z Origin</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QComboBox" name="comboBox_Material_ZOrigin">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <item>
+               <property name="text">
+                <string>Top</string>
+               </property>
               </item>
-              <item row="0" column="1">
-               <widget class="QCheckBox" name="checkBox_GCodeGeneration_ReturnToZeroAtEnd">
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
+              <item>
+               <property name="text">
+                <string>Bottom</string>
+               </property>
               </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_GCodeGeneration_SpindleControl">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Spindle automatic</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QCheckBox" name="checkBox_GCodeGeneration_SpindleControl">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>[M3/M5]</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_GCodeGeneration_SpindleSpeed">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Spindle speed</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QSpinBox" name="spinBox_GCodeGeneration_SpindleSpeed">
-                <property name="maximum">
-                 <number>50000</number>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QLabel" name="label_GCodeGeneration_ProgramEnd">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Program End</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QCheckBox" name="checkBox_GCodeGeneration_ProgramEnd">
-                <property name="font">
-                 <font>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>[M2]</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_Material_Clearance">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Cleareance                                     </string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_Material_Clearance">
+              <property name="maximum">
+               <double>100.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>20.000000000000000</double>
+              </property>
+             </widget>
             </item>
            </layout>
-          </item>
-          <item>
-           <spacer name="verticalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
           </item>
          </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayoutGCodeConversion" stretch="0,0">
+          <property name="bottomMargin">
+           <number>20</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_GCcodeConversion">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(198, 198, 198);</string>
+            </property>
+            <property name="text">
+             <string> GCode Conversion</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_GCodeConversion">
+            <item row="7" column="2">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MinX">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimum">
+               <double>-1000.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1000.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="2">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MinY">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimum">
+               <double>-1000.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1000.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QCheckBox" name="checkBox_GCodeConversion_ZeroLowerLeft_AsDefault">
+              <property name="text">
+               <string>as Default</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QLabel" name="label_GCodeConversion_MinX_UnitsDescr">
+              <property name="text">
+               <string>__units__</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="0">
+             <widget class="QLabel" name="label_GCodeConversion_MinY">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Min Y</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="2">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MaxX">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimum">
+               <double>-1000.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1000.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="1">
+             <widget class="QLabel" name="label_GCodeConversion_MaxX_UnitsDescr">
+              <property name="text">
+               <string>__units__</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_GCodeConversion_GCodeUnits">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Gcode Units</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="2">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_XOffset">
+              <property name="minimum">
+               <double>-100.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>100.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="0">
+             <widget class="QLabel" name="label_GCodeConversion_MaxY">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Max Y</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QCheckBox" name="checkBox_GCodeConversion_ZeroCenter_AsDefault">
+              <property name="text">
+               <string>as Default</string>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="2">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MaxY">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimum">
+               <double>-1000.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1000.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="label_GCodeConversion_MinX">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Min X</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QLabel" name="label_GCodeConversion_MaxX">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Max X</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLabel" name="label_GCodeConversion_XOffset_UnitsDescr">
+              <property name="text">
+               <string>__units__</string>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="1">
+             <widget class="QLabel" name="label_GCodeConversion_MaxY_UnitsDescr">
+              <property name="text">
+               <string>__units__</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QCheckBox" name="checkBox_GCodeConversion_ZeroLowerLeftOfMaterial_AsDefault">
+              <property name="text">
+               <string>as Default</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" colspan="2">
+             <widget class="QPushButton" name="pushButton_GCodeConversion_ZeroCenter">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Zero center (Op)               </string>
+              </property>
+              <property name="icon">
+               <iconset theme=":/images/tango/22x22/actions/view-refresh.png">
+                <normaloff>.</normaloff>.</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0" colspan="2">
+             <widget class="QPushButton" name="pushButton_GCodeConversion_ZeroLowerLeft">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Zero lower left (Op)         </string>
+              </property>
+              <property name="icon">
+               <iconset theme=":/images/tango/22x22/actions/view-refresh.png">
+                <normaloff>.</normaloff>.</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_GCodeConversion_YOffset">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Y Offset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="2">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_YOffset">
+              <property name="minimum">
+               <double>-100.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>100.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="1">
+             <widget class="QLabel" name="label_GCodeConversion_MinY_UnitsDescr">
+              <property name="text">
+               <string>__units__</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="2">
+             <widget class="QPushButton" name="pushButton_GCodeConversion_ZeroLowerLeftOfMaterial">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Zero lower left (Material)</string>
+              </property>
+              <property name="icon">
+               <iconset theme=":/images/tango/22x22/actions/view-refresh.png">
+                <normaloff>.</normaloff>.</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="comboBox_GCodeConversion_Units">
+              <item>
+               <property name="text">
+                <string>inch</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>mm</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_GCodeConversion_XOffset">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>X Offset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QLabel" name="label_GCodeConversion_YOffset_UnitsDescr">
+              <property name="text">
+               <string>__units__</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0" colspan="2">
+             <widget class="QCheckBox" name="checkBox_GCodeConversion_FlipXY">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="font">
+               <font>
+                <bold>true</bold>
+                <kerning>false</kerning>
+               </font>
+              </property>
+              <property name="text">
+               <string>Flip X/Y</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayoutGCodeGeneration">
+          <item>
+           <widget class="QLabel" name="labelGCodeGeneration">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(188, 188, 188);</string>
+            </property>
+            <property name="text">
+             <string> GCode Generation</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QFormLayout" name="formLayout_GCodeGeneration">
+            <property name="formAlignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_GCodeGeneration_ReturnToZeroAtEnd">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Return to 0,0 at end</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QCheckBox" name="checkBox_GCodeGeneration_ReturnToZeroAtEnd">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_GCodeGeneration_SpindleControl">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Spindle automatic</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QCheckBox" name="checkBox_GCodeGeneration_SpindleControl">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>[M3/M5]</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_GCodeGeneration_SpindleSpeed">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Spindle speed</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QSpinBox" name="spinBox_GCodeGeneration_SpindleSpeed">
+              <property name="maximum">
+               <number>50000</number>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_GCodeGeneration_ProgramEnd">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Program End</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QCheckBox" name="checkBox_GCodeGeneration_ProgramEnd">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>[M2]</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
