@@ -19,7 +19,7 @@
      <widget class="QScrollArea" name="scrollArea_left">
       <property name="minimumSize">
        <size>
-        <width>220</width>
+        <width>320</width>
         <height>0</height>
        </size>
       </property>
@@ -31,11 +31,11 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>301</width>
+         <width>318</width>
          <height>986</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,1">
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0">
         <property name="leftMargin">
          <number>9</number>
         </property>
@@ -543,9 +543,9 @@
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayoutTabsContent">
+         <layout class="QVBoxLayout" name="verticalLayoutTabsContent" stretch="0,0,1">
           <property name="bottomMargin">
-           <number>20</number>
+           <number>0</number>
           </property>
           <item>
            <widget class="QLabel" name="label_Tabs">
@@ -574,7 +574,7 @@
               <height>0</height>
              </size>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_4">
+            <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0">
              <property name="leftMargin">
               <number>8</number>
              </property>
@@ -687,25 +687,12 @@
             <property name="minimumSize">
              <size>
               <width>0</width>
-              <height>100</height>
+              <height>200</height>
              </size>
             </property>
            </widget>
           </item>
          </layout>
-        </item>
-        <item>
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>
@@ -739,7 +726,7 @@
          </property>
          <widget class="QTabWidget" name="tabWidget">
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="svg">
            <attribute name="title">
