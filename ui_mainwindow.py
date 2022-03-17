@@ -740,9 +740,9 @@ class Ui_mainwindow(object):
         self.gridLayout_GCodeConversion.addWidget(self.comboBox_GCodeConversion_Units, 0, 1, 1, 1)
 
         self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial = QPushButton(self.scrollAreaWidgetContents_2)
-        self.buttonGroup = QButtonGroup(mainwindow)
-        self.buttonGroup.setObjectName(u"buttonGroup")
-        self.buttonGroup.addButton(self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial)
+        self.buttonGroup_GCodeConversion = QButtonGroup(mainwindow)
+        self.buttonGroup_GCodeConversion.setObjectName(u"buttonGroup_GCodeConversion")
+        self.buttonGroup_GCodeConversion.addButton(self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial)
         self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setObjectName(u"pushButton_GCodeConversion_ZeroTopLeftOfMaterial")
         self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setFont(font1)
         icon = QIcon()
@@ -759,7 +759,7 @@ class Ui_mainwindow(object):
         self.gridLayout_GCodeConversion.addWidget(self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial, 1, 0, 1, 3)
 
         self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial = QPushButton(self.scrollAreaWidgetContents_2)
-        self.buttonGroup.addButton(self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial)
+        self.buttonGroup_GCodeConversion.addButton(self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial)
         self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setObjectName(u"pushButton_GCodeConversion_ZeroLowerLeftOfMaterial")
         self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setFont(font1)
         self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setIcon(icon)
@@ -768,7 +768,7 @@ class Ui_mainwindow(object):
         self.gridLayout_GCodeConversion.addWidget(self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial, 2, 0, 1, 3)
 
         self.pushButton_GCodeConversion_ZeroLowerLeftOfOp = QPushButton(self.scrollAreaWidgetContents_2)
-        self.buttonGroup.addButton(self.pushButton_GCodeConversion_ZeroLowerLeftOfOp)
+        self.buttonGroup_GCodeConversion.addButton(self.pushButton_GCodeConversion_ZeroLowerLeftOfOp)
         self.pushButton_GCodeConversion_ZeroLowerLeftOfOp.setObjectName(u"pushButton_GCodeConversion_ZeroLowerLeftOfOp")
         self.pushButton_GCodeConversion_ZeroLowerLeftOfOp.setFont(font1)
         self.pushButton_GCodeConversion_ZeroLowerLeftOfOp.setIcon(icon)
@@ -777,7 +777,7 @@ class Ui_mainwindow(object):
         self.gridLayout_GCodeConversion.addWidget(self.pushButton_GCodeConversion_ZeroLowerLeftOfOp, 3, 0, 1, 3)
 
         self.pushButton_GCodeConversion_ZeroCenterOfOp = QPushButton(self.scrollAreaWidgetContents_2)
-        self.buttonGroup.addButton(self.pushButton_GCodeConversion_ZeroCenterOfOp)
+        self.buttonGroup_GCodeConversion.addButton(self.pushButton_GCodeConversion_ZeroCenterOfOp)
         self.pushButton_GCodeConversion_ZeroCenterOfOp.setObjectName(u"pushButton_GCodeConversion_ZeroCenterOfOp")
         self.pushButton_GCodeConversion_ZeroCenterOfOp.setFont(font1)
         self.pushButton_GCodeConversion_ZeroCenterOfOp.setIcon(icon)

@@ -76,6 +76,13 @@ class GcodeModel:
     ZERO_LOWER_LEFT_OF_OP = 3
     ZERO_CENTER_OF_OP = 4
 
+    XYRef = {
+        ZERO_TOP_LEFT_OF_MATERIAL : "ZERO_TOP_LEFT_OF_MATERIAL",
+        ZERO_LOWER_LEFT_OF_MATERIAL : "ZERO_LOWER_LEFT_OF_MATERIAL",
+        ZERO_LOWER_LEFT_OF_OP : "ZERO_LOWER_LEFT_OF_OP",
+        ZERO_CENTER_OF_OP : "ZERO_CENTER_OF_OP",
+    }
+
     def __init__(self):
         # --------------------------- not sure yet for these
         self.units = "mm"

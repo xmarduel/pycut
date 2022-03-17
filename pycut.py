@@ -82,6 +82,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "FlipXY"        : False,
             "XOffset"       : 0.0,
             "YOffset"       : 0.0,
+            "XYReference"   : "ZERO_TOP_LEFT_OF_MATERIAL"
         },
         "GCodeGeneration" : {
             "ReturnToZeroAtEnd" : True,
@@ -170,6 +171,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfOp.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/view-refresh.png'))
         self.ui.pushButton_GCodeConversion_ZeroCenterOfOp.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/view-refresh.png'))
 
+        self.ui.buttonGroup_GCodeConversion.setId(self.ui.pushButton_GCodeConversion_ZeroTopLeftOfMaterial, GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL)
+        self.ui.buttonGroup_GCodeConversion.setId(self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial, GcodeModel.ZERO_LOWER_LEFT_OF_MATERIAL)
+        self.ui.buttonGroup_GCodeConversion.setId(self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfOp, GcodeModel.ZERO_LOWER_LEFT_OF_OP)
+        self.ui.buttonGroup_GCodeConversion.setId(self.ui.pushButton_GCodeConversion_ZeroCenterOfOp, GcodeModel.ZERO_CENTER_OF_OP)
+        
         self.ui.checkBox_Tabs_hideAllTabs.clicked.connect(self.cb_tabs_hide_all)
         self.ui.checkBox_Tabs_hideDisabledTabs.clicked.connect(self.cb_tabs_hide_disabled)
 
@@ -187,8 +193,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.open_job("./jobs/cnc_control_panel.json")
 
         # these callbacks only after have loading a job
-        self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode)
-        self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode)
+        self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
+        self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode_y_offset)
         self.ui.checkBox_GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
 
 
@@ -402,7 +408,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "Units"           : self.ui.comboBox_GCodeConversion_Units.currentText(),
                 "FlipXY"          : self.ui.checkBox_GCodeConversion_FlipXY.isChecked(),
                 "XOffset"         : self.ui.doubleSpinBox_GCodeConversion_XOffset.value(),
-                "YOffset"         : self.ui.doubleSpinBox_GCodeConversion_YOffset.value()
+                "YOffset"         : self.ui.doubleSpinBox_GCodeConversion_YOffset.value(),
+                "XYReference"     : GcodeModel.XYRef[self.ui.buttonGroup_GCodeConversion.checkedId()]
             },
             "GCodeGeneration" : {
                 "ReturnToZeroAtEnd" : self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.isChecked(),
@@ -447,6 +454,15 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue(settings["GCodeConversion"]["XOffset"])
         self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(settings["GCodeConversion"]["YOffset"])
             
+        if settings["GCodeConversion"]["XYReference"] == "ZERO_TOP_LEFT_OF_MATERIAL":
+            self.ui.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setChecked(True)
+        elif settings["GCodeConversion"]["XYReference"] == "ZERO_LOWER_LEFT_OF_MATERIAL":
+            self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setChecked(True)
+        elif settings["GCodeConversion"]["XYReference"] == "ZERO_LOWER_LEFT_OF_OP":
+            self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfOp.setChecked(True)
+        elif settings["GCodeConversion"]["XYReference"] == "ZERO_CENTER_OF_OP":
+            self.ui.pushButton_GCodeConversion_ZeroCenterOfOp.setChecked(True)
+
         # GCodeGeneration 
         self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setChecked(settings["GCodeGeneration"]["ReturnToZeroAtEnd"]),
         self.ui.checkBox_GCodeGeneration_SpindleControl.setChecked(settings["GCodeGeneration"]["SpindleControl"]),
@@ -1038,6 +1054,36 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.after_gcode_generation(generator)
 
+    def cb_generate_gcode_x_offset(self):
+        '''
+        '''
+        self.job = job = self.get_jobmodel()
+
+        ok = self.jobmodel_check_toolpaths()
+        if not ok:
+            return
+
+        generator = GcodeGenerator(job)
+        generator.setXOffset(self.ui.doubleSpinBox_GCodeConversion_XOffset.value())
+        #generator.generateGcode()
+
+        self.after_gcode_generation(generator)
+
+    def cb_generate_gcode_y_offset(self):
+        '''
+        '''
+        self.job = job = self.get_jobmodel()
+
+        ok = self.jobmodel_check_toolpaths()
+        if not ok:
+            return
+
+        generator = GcodeGenerator(job)
+        generator.setYOffset(self.ui.doubleSpinBox_GCodeConversion_YOffset.value())
+        #generator.generateGcode()
+
+        self.after_gcode_generation(generator)
+
     def jobmodel_check_toolpaths(self):
         '''
         '''
@@ -1061,14 +1107,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         '''
         # with the resulting calculation, we can fill the min/max in X/Y as well as the offsets
-        self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.disconnect(self.cb_generate_gcode)
-        self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.disconnect(self.cb_generate_gcode)
+        self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.disconnect(self.cb_generate_gcode_x_offset)
+        self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.disconnect(self.cb_generate_gcode_y_offset)
 
         self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue(generator.offsetX)
         self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(generator.offsetY)
         
-        self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode)
-        self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode)
+        self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
+        self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode_y_offset)
 
         self.ui.doubleSpinBox_GCodeConversion_MinX.setValue(generator.minX)
         self.ui.doubleSpinBox_GCodeConversion_MinY.setValue(generator.minY)

@@ -763,12 +763,13 @@
       "Units": "mm",
       "FlipXY": false,
       "XOffset": 0.0,
-      "YOffset": 100.0
+      "YOffset": 100.0,
+      "XYReference": "ZERO_LOWER_LEFT_OF_OP"
     },
     "GCodeGeneration": {
       "ReturnToZeroAtEnd": true,
       "SpindleControl": true,
-      "SpindleSpeed": 1000,
+      "SpindleSpeed": 12000,
       "ProgramEnd": false
     }
   }

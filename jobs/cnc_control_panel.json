@@ -190,12 +190,13 @@
       "Units": "mm",
       "FlipXY": true,
       "XOffset": -8.85,
-      "YOffset": 51.15
+      "YOffset": 51.15,
+      "XYReference": "ZERO_LOWER_LEFT_OF_OP"
     },
     "GCodeGeneration": {
       "ReturnToZeroAtEnd": true,
       "SpindleControl": true,
-      "SpindleSpeed": 1000,
+      "SpindleSpeed": 12000,
       "ProgramEnd": false
     }
   }

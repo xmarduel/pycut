@@ -223,12 +223,13 @@
       "Units": "mm",
       "FlipXY": false,
       "XOffset": 0.0,
-      "YOffset": 0.0
+      "YOffset": 0.0,
+      "XYReference": "ZERO_TOP_LEFT_OF_MATERIAL"
     },
     "GCodeGeneration": {
       "ReturnToZeroAtEnd": true,
       "SpindleControl": true,
-      "SpindleSpeed": 1000,
+      "SpindleSpeed": 10000,
       "ProgramEnd": false
     }
   }
