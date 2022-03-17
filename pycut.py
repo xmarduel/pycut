@@ -159,13 +159,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.ui.checkBox_GCodeGeneration_SpindleControl.clicked.connect(self.cb_spindle_control)
 
-        self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.clicked.connect(self.cb_generate_gcode_zerolowerleft_of_material)
-        self.ui.pushButton_GCodeConversion_ZeroLowerLeft.clicked.connect(self.cb_generate_gcode_zerolowerleft)
-        self.ui.pushButton_GCodeConversion_ZeroCenter.clicked.connect(self.cb_generate_gcode_zerocenter)
+        self.ui.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.clicked.connect(self.cb_generate_gcode)
+        self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.clicked.connect(self.cb_generate_gcode)
+        self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfOp.clicked.connect(self.cb_generate_gcode)
+        self.ui.pushButton_GCodeConversion_ZeroCenterOfOp.clicked.connect(self.cb_generate_gcode)
 
+
+        self.ui.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/view-refresh.png'))
         self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/view-refresh.png'))
-        self.ui.pushButton_GCodeConversion_ZeroLowerLeft.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/view-refresh.png'))
-        self.ui.pushButton_GCodeConversion_ZeroCenter.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/view-refresh.png'))
+        self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfOp.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/view-refresh.png'))
+        self.ui.pushButton_GCodeConversion_ZeroCenterOfOp.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/view-refresh.png'))
 
         self.ui.checkBox_Tabs_hideAllTabs.clicked.connect(self.cb_tabs_hide_all)
         self.ui.checkBox_Tabs_hideDisabledTabs.clicked.connect(self.cb_tabs_hide_disabled)
@@ -1004,70 +1007,26 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         gcodeModel.spindleControl = settings["GCodeGeneration"]["SpindleControl"]
         gcodeModel.spindleSpeed = settings["GCodeGeneration"]["SpindleSpeed"]
         gcodeModel.programEnd = settings["GCodeGeneration"]["ProgramEnd"]
+        
+        gcodeModel.gcodeZero = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
+        if self.ui.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.isChecked():
+            gcodeModel.gcodeZero = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
+        if self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.isChecked():
+            gcodeModel.gcodeZero = GcodeModel.ZERO_LOWER_LEFT_OF_MATERIAL
+        if self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfOp.isChecked():
+            gcodeModel.gcodeZero = GcodeModel.ZERO_LOWER_LEFT_OF_OP
+        if self.ui.pushButton_GCodeConversion_ZeroCenterOfOp.isChecked():
+            gcodeModel.gcodeZero = GcodeModel.ZERO_CENTER_OF_OP
 
         cnc_ops = self.get_jobmodel_operations()
 
         job = JobModel(self.svg_viewer, cnc_ops, materialModel, svgModel, toolModel, tabsmodel, gcodeModel)
 
         return job  
-        
-    def cb_generate_gcode_zerolowerleft_of_material(self):
-        '''
-        '''
-        self.job = job = self.get_jobmodel()
-
-        generator = GcodeGenerator(job)
-        generator.generateGcode_zeroLowerLeftOfMaterial()
-
-        self.after_gcode_generation(generator)
-
-    def cb_generate_gcode_zerolowerleft(self):
-        '''
-        '''
-        self.job = job = self.get_jobmodel()
-
-        ok = self.jobmodel_check_toolpaths()
-        if not ok:
-            return
-
-        generator = GcodeGenerator(job)
-        generator.generateGcode_zeroLowerLeft()
-
-        self.after_gcode_generation(generator)
-
-    def cb_generate_gcode_zerocenter(self):
-        '''
-        '''
-        self.job = job = self.get_jobmodel()
-
-        ok = self.jobmodel_check_toolpaths()
-        if not ok:
-            return
-
-        ok = self.jobmodel_check_toolpaths()
-        if not ok:
-            return
-
-        generator = GcodeGenerator(job)
-        generator.generateGcode_zeroCenter()
-
-        self.after_gcode_generation(generator)
 
     def cb_generate_gcode(self):
         '''
         '''
-        if self.ui.checkBox_GCodeConversion_ZeroLowerLeftOfMaterial_AsDefault.isChecked():
-            self.cb_generate_gcode_zerolowerleft_of_material()
-            return
-
-        if self.ui.checkBox_GCodeConversion_ZeroLowerLeft_AsDefault.isChecked():
-            self.cb_generate_gcode_zerolowerleft()
-            return
-
-        if self.ui.checkBox_GCodeConversion_ZeroCenter_AsDefault.isChecked():
-            self.cb_generate_gcode_zerocenter()
-            return
-
         self.job = job = self.get_jobmodel()
 
         ok = self.jobmodel_check_toolpaths()
