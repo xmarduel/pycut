@@ -26,19 +26,18 @@ DONE: basic
    + vPocket   NO
 - svg items selection and new op with combinaison Union/Diff/Inter/Xor (geometry calculated)
 - preview geom displayed in svg viewer
+- tabs "on the fly"
 - toolpaths displayed in svg viewer
 - gcode produced
 - gcode viewer (as in Candle)
 - gcode simulator (as in jsCut)
-- tabs
 
 BUGS:
-- still cannot completely read Inkscape svg files because of all the Inkscape "garbage" with sodipodi namspaces etc.
+- gui main window not ok on notebooks with display 1920x1080 (huawei notebook 3000x2000 resolution OK).
 - and all the rest!
 
 TODO:
 - capability to read text without converting them first to paths 
-- svg "structure viewer" with check boxes for item(s) selection as alternative to svg viewer selection(s)
 
 WILL NEVER BE IMPLEMENTED:
 - vPocket (I do not need them)
