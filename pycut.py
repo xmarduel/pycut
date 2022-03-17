@@ -1,8 +1,11 @@
 # This Python file uses the following encoding: utf-8
 
+VERSION = "0_3_3"
+
 import sys
 import os
 import json
+import argparse
 
 from typing import List
 from typing import Dict
@@ -48,6 +51,8 @@ import resources_rc
 from ui_mainwindow import Ui_mainwindow
 
 class PyCutMainWindow(QtWidgets.QMainWindow):
+    '''
+    '''
     default_settings = {
         "svg": {
             "px_per_inch" : 96,
@@ -92,7 +97,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         }
     }
     
-    def __init__(self):
+    def __init__(self, options):
+        '''
+        '''
         super(PyCutMainWindow, self).__init__()
 
         self.ui = Ui_mainwindow()
@@ -181,16 +188,28 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.init_gui()
 
-        job_no = 4
+        if options.load_job is not None:
+            if os.path.exists(options.load_job):
+                self.open_job(options.load_job)
+            else:
+                # alert
+                msgBox = QtWidgets.QMessageBox()
+                msgBox.setWindowTitle("PyCut")
+                msgBox.setText("Job File %s not found" % options.load_job)
+                msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
+                msgBox.exec()
+
+
+        #job_no = 4 # DEBUGGING SHORTCUT
         
-        if job_no == 1:
-            self.open_job("./jobs/cnc_three_rects.json")
-        elif job_no == 2:
-            self.open_job("./jobs/cnc_three_rects_with_circle.json")
-        elif job_no == 3:
-            self.open_job("./jobs/cnc_all_letters.json")
-        elif job_no == 4:
-            self.open_job("./jobs/cnc_control_panel.json")
+        #if job_no == 1:
+        #    self.open_job("./jobs/cnc_three_rects.json")
+        #elif job_no == 2:
+        #    self.open_job("./jobs/cnc_three_rects_with_circle.json")
+        #elif job_no == 3:
+        #    self.open_job("./jobs/cnc_all_letters.json")
+        #elif job_no == 4:
+        #    self.open_job("./jobs/cnc_control_panel.json")
 
         # these callbacks only after have loading a job
         self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
@@ -1045,6 +1064,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         self.job = job = self.get_jobmodel()
 
+        ok = self.jobmodel_check_operations()
+        if not ok:
+            return
+
         ok = self.jobmodel_check_toolpaths()
         if not ok:
             return
@@ -1083,6 +1106,21 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         #generator.generateGcode()
 
         self.after_gcode_generation(generator)
+
+    def jobmodel_check_operations(self):
+        '''
+        '''
+        has_operations = len(self.job.operations) > 0
+
+        if not has_operations:
+            # alert
+            msgBox = QtWidgets.QMessageBox()
+            msgBox.setWindowTitle("PyCut")
+            msgBox.setText("The Job has no operations!")
+            msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
+            msgBox.exec()
+            
+        return has_operations
 
     def jobmodel_check_toolpaths(self):
         '''
@@ -1131,7 +1169,19 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(prog="PyCut", description="PyCut CAM program - Read the doc!")
+
+    # argument
+    parser.add_argument('-job', "--jobfile", dest="load_job", help="load job file")
+
+    # version info
+    parser.add_argument("--version", action='version', version='%s' % VERSION)
+
+    options = parser.parse_args()
+
     app = QtWidgets.QApplication([])
-    mainwindow = PyCutMainWindow()
+    app.setApplicationName("PyCut")
+
+    mainwindow = PyCutMainWindow(options)
     mainwindow.show()
     sys.exit(app.exec())
