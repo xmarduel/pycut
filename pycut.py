@@ -529,8 +529,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         xfilter = "JSON Files (*.json)"
         jobfilename, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
         
+        self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.disconnect(self.cb_generate_gcode_x_offset)
+        self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.disconnect(self.cb_generate_gcode_y_offset)
+        self.ui.checkBox_GCodeConversion_FlipXY.clicked.disconnect(self.cb_generate_gcode)
+
         self.open_job(jobfilename)
         
+        self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
+        self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode_y_offset)
+        self.ui.checkBox_GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
+
     def open_job(self, jobfilename):
         with open(jobfilename) as f:
             self.jobfilename = jobfilename
