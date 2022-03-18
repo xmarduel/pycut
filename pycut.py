@@ -386,10 +386,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         self.apply_settings(self.default_settings)
 
-        self.cb_update_tabs_display()
-        self.cb_update_tool_display()
-        self.cb_update_material_display()
-        self.cb_update_gcodeconversion_display()
+        #self.cb_update_tabs_display()
+        #self.cb_update_tool_display()
+        #self.cb_update_material_display()
+        #self.cb_update_gcodeconversion_display()
     
     def get_current_settings(self):
         '''
@@ -483,10 +483,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.pushButton_GCodeConversion_ZeroCenterOfOp.setChecked(True)
 
         # GCodeGeneration 
-        self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setChecked(settings["GCodeGeneration"]["ReturnToZeroAtEnd"]),
-        self.ui.checkBox_GCodeGeneration_SpindleControl.setChecked(settings["GCodeGeneration"]["SpindleControl"]),
-        self.ui.spinBox_GCodeGeneration_SpindleSpeed.setValue(settings["GCodeGeneration"]["SpindleSpeed"]),
-        self.ui.checkBox_GCodeGeneration_ProgramEnd.setChecked(settings["GCodeGeneration"]["ProgramEnd"]),
+        self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setChecked(settings["GCodeGeneration"]["ReturnToZeroAtEnd"])
+        self.ui.checkBox_GCodeGeneration_SpindleControl.setChecked(settings["GCodeGeneration"]["SpindleControl"])
+        self.ui.spinBox_GCodeGeneration_SpindleSpeed.setValue(settings["GCodeGeneration"]["SpindleSpeed"])
+        self.ui.checkBox_GCodeGeneration_ProgramEnd.setChecked(settings["GCodeGeneration"]["ProgramEnd"])
 
     def cb_open_svg(self):
         '''

@@ -331,7 +331,7 @@ factor is always 1</strong> .</p>
 
 <div>
   <img src="pycut_tool.png" width="310"/>
-  </div>
+</div>
 
 <h3>Tabs</h3>
 
@@ -388,13 +388,14 @@ discretization will be</p>
 <p>The starting location of a milling operation is given by the initial
 location in the GCode. Per default, PyCut gives as starting point the (0,0)
 coordinates of the SVG file, which is located at the top-left of the material.
-This is SVG convention.</p>
+The SVG conventions are opposite to GCode convention considering the Y direction.</p>
 
-<p>But the GCode generation will of course invert the direction of the Y axis
+<p>So the GCode generation will have to invert the direction of the Y axis
 coordinates. But still the reference is the top-left postion.</p>
 
 <p>It is possible to change the reference location of the generated GCode</p>
 <ul>
+  <li>Top-Left location of the material</li>
   <li>Bottom-Left location of the material</li>
   <li>Bottom-Left location of the Gcode area</li>
   <li>Center of the Gcode area</li>
@@ -404,6 +405,10 @@ coordinates. But still the reference is the top-left postion.</p>
 <img src="pycut_gcode_conversion.png" width="310"/>
 </div>
 
+<p>Note that these 4 buttons act as radio buttons.</p>
+<p>These four references points set the XOffset and YOffset of the GCode calculation.
+After a GCode generation, it is still possible to modify the XOffset and YOffset to fit 
+at best how to user wants to have the origin be located with the help of the 2 spin boxes.  
 </p>
 
 <p>And further:</p>

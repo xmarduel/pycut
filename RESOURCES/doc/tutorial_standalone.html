@@ -248,7 +248,11 @@ that Inkscape automatically change the <strong>user units scale to
 25.4</strong>. Because of this, the <strong>view box remains at "0 0 100
 40"</strong>. That way, a rectangle filling the full document size is still
 100x40.</p>
+
+
+
 <img src="Inkscape_settings_in.png" width="563px"> 
+
 
 <p>Filling a box half the size of the document is 50x20, right, but what are real 
 dimension of that box ? The user would have to steadily calculate from fancy user units
@@ -317,6 +321,12 @@ factor is always 1</strong> .</p>
 
 <p></p>
 
+<h3>Tool</h3>
+
+
+  <img src="./pycut_tool.png" width="310px"/>
+
+
 <h3>Tabs</h3>
 
 <p>It's easy to define tabs with <strong>PyCut</strong>: just click the button
@@ -368,13 +378,14 @@ discretization will be</p>
 <p>The starting location of a milling operation is given by the initial
 location in the GCode. Per default, PyCut gives as starting point the (0,0)
 coordinates of the SVG file, which is located at the top-left of the material.
-This is SVG convention.</p>
+The SVG conventions are opposite to GCode convention considering the Y direction.</p>
 
-<p>But the GCode generation will of course invert the direction of the Y axis
+<p>So the GCode generation will have to invert the direction of the Y axis
 coordinates. But still the reference is the top-left postion.</p>
 
 <p>It is possible to change the reference location of the generated GCode</p>
 <ul>
+  <li>Top-Left location of the material</li>
   <li>Bottom-Left location of the material</li>
   <li>Bottom-Left location of the Gcode area</li>
   <li>Center of the Gcode area</li>

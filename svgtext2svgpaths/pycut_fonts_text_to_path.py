@@ -2,7 +2,8 @@
  
 fonts_dir = [
     "C:\\Windows\\Fonts",
-    "./fonts/slaine"
+    "./fonts/slaine",
+    "./fonts/boere-tudor"
 ]
 
 fonts_family_alias = {

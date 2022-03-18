@@ -10,6 +10,7 @@
 
 
 
+
         {
             "name": "OPENGL DEMO1",
             "type": "python",
@@ -36,12 +37,23 @@
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator\\python"
         },
         {
-            "name": "PYCUT",
+            "name": "PYCUT cnc_control_panel",
             "type": "python",
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut"
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": ["-job", "./jobs/cnc_control_panel.json"]
+        },
+        ,
+        {
+            "name": "PYCUT EMPTY",
+            "type": "python",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": []
         },
         {
             "name": "TABLEVIEW",
