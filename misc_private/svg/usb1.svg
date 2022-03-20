@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="usb1.svg"
+   inkscape:version="1.0.2-2 (e86c870879, 2021-01-15)"
+   id="svg893"
+   version="1.1"
+   viewBox="0 0 30 10"
+   height="10mm"
+   width="30mm">
+  <defs
+     id="defs887">
+    <marker
+       id="CheckToolsAndOPMarker"
+       orient="auto"
+       refX="-4"
+       refY="-1.687441"
+       style="overflow:visible">
+      <path
+         d="m 4.588864,-1.687441 0.0,0.0 L 9.177728,0.0 c -0.73311,-0.996261 -0.728882,-2.359329 0.0,-3.374882"
+         style="fill:#000044;fill-rule:evenodd;stroke:none"
+         id="path143" />
+    </marker>
+    <marker
+       id="DrawCurveMarker"
+       orient="auto"
+       refX="-4"
+       refY="-1.687441"
+       style="overflow:visible">
+      <path
+         d="m 4.588864,-1.687441 0.0,0.0 L 9.177728,0.0 c -0.73311,-0.996261 -0.728882,-2.359329 0.0,-3.374882"
+         style="fill:#000044;fill-rule:evenodd;stroke:none"
+         id="path146" />
+    </marker>
+    <marker
+       id="DrawCurveMarker_r"
+       orient="auto"
+       refX="4"
+       refY="-1.687441"
+       style="overflow:visible">
+      <path
+         d="m -4.588864,-1.687441 0.0,0.0 L -9.177728,0.0 c 0.73311,-0.996261 0.728882,-2.359329 0.0,-3.374882"
+         style="fill:#000044;fill-rule:evenodd;stroke:none"
+         id="path149" />
+    </marker>
+    <marker
+       id="InOutPathMarker"
+       orient="auto"
+       refX="-4"
+       refY="-1.687441"
+       style="overflow:visible">
+      <path
+         d="m 4.588864,-1.687441 0.0,0.0 L 9.177728,0.0 c -0.73311,-0.996261 -0.728882,-2.359329 0.0,-3.374882"
+         style="fill:#0072a7;fill-rule:evenodd;stroke:none"
+         id="path152" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="-129.38778"
+     inkscape:cy="-9.9302701"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:window-width="1452"
+     inkscape:window-height="960"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata890">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect895"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.14213"
+       d="M 4.2973586,1.5069125 V 8.3714181 H 27.023435 V 1.5069125 Z" />
+    <g
+       aria-label="C.WM"
+       id="text908"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583">
+      <path
+         d="m 12.060626,3.336894 0.07476,1.1117325 h -0.07476 Q 11.911109,3.9494321 11.633779,3.7299794 11.356449,3.5105268 10.968186,3.5105268 q -0.325561,0 -0.588422,0.1663982 -0.262861,0.1639865 -0.4147896,0.5257216 -0.1495171,0.3617351 -0.1495171,0.8995147 0,0.4437284 0.1422824,0.76929 0.1422823,0.3255616 0.4268473,0.4991944 0.286977,0.1736329 0.653535,0.1736329 0.318327,0 0.561895,-0.1350478 0.243568,-0.1374594 0.535368,-0.5426027 l 0.07476,0.048231 q -0.24598,0.4364937 -0.573953,0.6390653 -0.327974,0.2025717 -0.778937,0.2025717 -0.812698,0 -1.2588378,-0.6028919 -0.3327963,-0.4485515 -0.3327963,-1.0562665 0,-0.4895481 0.2194526,-0.8995146 0.2194527,-0.4099664 0.6028915,-0.6342422 0.385851,-0.2266873 0.841637,-0.2266873 0.354501,0 0.699355,0.1736328 0.101286,0.053055 0.144694,0.053055 0.06511,0 0.113344,-0.04582 0.0627,-0.065112 0.08923,-0.1808675 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         id="path910" />
+      <path
+         d="m 12.998726,6.2138938 q 0.113344,0 0.190514,0.079582 0.07717,0.07717 0.07717,0.1881022 0,0.1109321 -0.07958,0.1905138 -0.07717,0.07717 -0.188103,0.07717 -0.110932,0 -0.190514,-0.07717 -0.07717,-0.079582 -0.07717,-0.1905138 0,-0.1133437 0.07717,-0.1905138 0.07958,-0.07717 0.190514,-0.07717 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         id="path912" />
+      <path
+         d="m 18.239062,3.4116525 v 0.089228 q -0.127813,0 -0.207395,0.04582 -0.07958,0.04582 -0.151928,0.1712213 -0.04823,0.084405 -0.151929,0.4027317 l -0.911573,2.6358432 h -0.09646 L 15.9746,4.6656676 15.234249,6.7564965 h -0.08682 L 14.175571,4.0410716 q -0.10852,-0.3038575 -0.137459,-0.3593235 -0.04823,-0.09164 -0.132636,-0.1350478 -0.08199,-0.04582 -0.224276,-0.04582 v -0.089228 h 1.210607 v 0.089228 h -0.05788 q -0.127813,0 -0.195337,0.057878 -0.06752,0.057878 -0.06752,0.1398709 0,0.084405 0.106109,0.3882623 l 0.643889,1.8352028 0.542602,-1.5602841 -0.09646,-0.2749187 -0.07717,-0.2194526 q -0.05064,-0.1205784 -0.113343,-0.212218 -0.03135,-0.04582 -0.07717,-0.07717 -0.06029,-0.043408 -0.120579,-0.062701 -0.04582,-0.014469 -0.144694,-0.014469 v -0.089228 h 1.273308 v 0.089228 h -0.08682 q -0.135047,0 -0.197748,0.057878 -0.0627,0.057878 -0.0627,0.1567518 0,0.12299 0.108521,0.429259 l 0.627007,1.7773252 0.622184,-1.8014409 q 0.106109,-0.2990343 0.106109,-0.4147895 0,-0.055466 -0.03617,-0.1036974 -0.03376,-0.048231 -0.08682,-0.067524 -0.09164,-0.033762 -0.238745,-0.033762 v -0.089228 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         id="path914" />
+      <path
+         d="M 20.29854,6.6817379 19.034879,3.9301395 v 2.1848801 q 0,0.3014459 0.06511,0.3762045 0.08923,0.1012858 0.282154,0.1012858 H 19.4979 v 0.089228 h -1.13826 v -0.089228 h 0.115756 q 0.207394,0 0.294211,-0.1254015 0.05305,-0.07717 0.05305,-0.3520888 V 3.9783709 q 0,-0.2170411 -0.04823,-0.3135038 -0.03376,-0.069935 -0.125402,-0.1157552 -0.08923,-0.048231 -0.289388,-0.048231 v -0.089228 h 0.926042 l 1.186491,2.558673 1.167199,-2.558673 h 0.926042 v 0.089228 H 22.45207 q -0.209806,0 -0.296623,0.1254015 -0.05305,0.07717 -0.05305,0.3520889 v 2.1366487 q 0,0.3014459 0.06752,0.3762045 0.08923,0.1012858 0.282153,0.1012858 h 0.113344 v 0.089228 h -1.389063 v -0.089228 h 0.115755 q 0.209807,0 0.294211,-0.1254015 0.05306,-0.07717 0.05306,-0.3520888 V 3.9301395 l -1.26125,2.7515984 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         id="path916" />
+    </g>
+    <g
+       id="g215" />
+    <g
+       gcodetools="Preview group"
+       id="g545" />
+    <g
+       gcodetools="Preview group"
+       id="g547" />
+    <g
+       gcodetools="Preview group"
+       id="g549" />
+    <g
+       id="g965" />
+    <g
+       gcodetools="Preview group"
+       id="g1295" />
+    <g
+       gcodetools="Preview group"
+       id="g1297" />
+    <g
+       gcodetools="Preview group"
+       id="g1299" />
+  </g>
+</svg>
