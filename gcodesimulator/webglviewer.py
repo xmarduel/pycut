@@ -87,7 +87,7 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
         '''
         self.data["gcode"] = data["gcode"]
         self.data["cutterDiameter"] = data["cutterDiameter"]
-        #self.data["cutterHeight"] = data["cutterHeight"]
+        self.data["cutterHeight"] = data["cutterHeight"]
         self.data["cutterAngle"] = data["cutterAngle"]
 
     def show_gcode(self):
