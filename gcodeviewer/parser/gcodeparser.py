@@ -6,6 +6,7 @@
 
 # Copyright 2020-2030 Xavier Marduel
 
+from functools import singledispatchmethod
 import math
 
 from typing import List
@@ -102,28 +103,22 @@ class GcodeParser :
         self.m_currentPlane = PointSegment.Plane.XY
         self.m_points.append(PointSegment.PointSegment_FromQVector3D(self.m_currentPoint, -1))
 
-    #def addCommand(self, command: str) -> PointSegment:
-    #    stripped = GcodePreprocessorUtils.removeComment(command)
-    #    args = GcodePreprocessorUtils.splitCommand(stripped)
-    #    return self.addCommand(args)
+    @singledispatchmethod
+    def addCommand(self, command) -> PointSegment:
+        raise NotImplementedError("Cannot addCommand command")
 
-    #def addCommand(self, args: List[str]) -> PointSegment:
-    #    if len(args) == 0:
-    #        return None
-    
-    #    return self.processCommand(args)
+    @addCommand.register
+    def _(self, command: str) -> PointSegment:
+        stripped = GcodePreprocessorUtils.removeComment(command)
+        args = GcodePreprocessorUtils.splitCommand(stripped)
+        return self.addCommand(args)
 
-    def addCommand(self, command: str) -> PointSegment:
-        if isinstance(command, str):
-            stripped = GcodePreprocessorUtils.removeComment(command)
-            args = GcodePreprocessorUtils.splitCommand(stripped)
-            return self.addCommand(args)
-        else:
-            # a list of str
-            if len(command) == 0:
-                return None
+    @addCommand.register
+    def _(self, command: list) -> PointSegment:   ### List[int] is not a class !!!
+        if len(command) == 0:
+            return None
     
-            return self.processCommand(command)
+        return self.processCommand(command)
 
     def getCurrentPoint(self) -> QVector3D:
         return self.m_currentPoint

@@ -6,6 +6,7 @@
 
 # Copyright 2020-2030 Xavier Marduel
 
+from functools import singledispatchmethod
 from typing import List
 
 from PySide6.QtGui import QVector3D
@@ -116,7 +117,7 @@ class GcodeViewParse :
                             #ls.setSpeed(ps.getSpeed())
                             #ls.setSpindleSpeed(ps.getSpindleSpeed())
                             #ls.setDwell(ps.getDwell())
-                            #self.testExtremes_Vector3D(nextPoint)
+                            #self.testExtremes(nextPoint)
 
                             ls.m_isArc = ps.m_isArc
                             ls.m_isClockwise = ps.isClockwise()
@@ -133,7 +134,7 @@ class GcodeViewParse :
                             ls.m_second = nextPoint
                             ls.m_lineNumber = lineIndex
 
-                            self.testExtremes_Vector3D(nextPoint)
+                            self.testExtremes(nextPoint)
                             self.m_lines.append(ls)
                             self.m_lineIndexes[ps.getLineNumber()].append(len(self.m_lines) - 1)
                             startPoint = nextPoint
@@ -166,7 +167,7 @@ class GcodeViewParse :
                     ls.m_spindleSpeed = ps.m_spindleSpeed
                     ls.m_dwell = ps.m_dwell
 
-                    self.testExtremes_Vector3D(end)
+                    self.testExtremes(end)
                     self.testLength(start, end)
                     self.m_lines.append(ls)
                     self.m_lineIndexes[ps.getLineNumber()].append(len(self.m_lines) - 1)
@@ -190,10 +191,16 @@ class GcodeViewParse :
         self.m_max = QVector3D(qQNaN(), qQNaN(), qQNaN())
         self.m_minLength = qQNaN()
 
-    def testExtremes_Vector3D(self, p3d: QVector3D):
+    @singledispatchmethod
+    def testExtremes(self, arg):
+        print("testExtremes : not implemented with this arg type")
+
+    @testExtremes.register
+    def _(self, p3d: QVector3D):
         self.testExtremes(p3d.x(), p3d.y(), p3d.z())
 
-    def testExtremes(self, x: float, y: float, z: float):
+    @testExtremes.register
+    def _(self, x: float, y: float, z: float):
         self.m_min.setX(Util.nMin(self.m_min.x(), x))
         self.m_min.setY(Util.nMin(self.m_min.y(), y))
         self.m_min.setZ(Util.nMin(self.m_min.z(), z))
