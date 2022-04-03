@@ -542,15 +542,20 @@ class GcodeDrawer(ShaderDrawable) :
             while lastTriangle < numTriangles:
                 n = min(numTriangles - lastTriangle, maxTriangles)
                 
-                b = np.empty(0, dtype=ctypes.c_float) # TODO !! ??
-                b = new Float32Array(pathBufferContent.buffer, 
-                        lastTriangle * self.pathStride * 3 * (VertexData.NB_FLOATS_PER_VERTEX * 4), 
-                        n * self.pathStride * 3)
+                offset = lastTriangle * self.pathStride * 3 * (VertexData.NB_FLOATS_PER_VERTEX * 4) 
+                size = n * self.pathStride * 3
+
+                b = np.empty(size, dtype=ctypes.c_float)
                 
-                context.glBufferSubData(GL.GL_ARRAY_BUFFER, 0, b)
-                context.glDrawArrays(GL.GL_TRIANGLES, 0, n * 3)
+                #b = new Float32Array(pathBufferContent.buffer, 
+                #        lastTriangle * self.pathStride * 3 * (VertexData.NB_FLOATS_PER_VERTEX * 4), 
+                #        n * self.pathStride * 3)
+                
+                self.glBufferSubData(GL.GL_ARRAY_BUFFER, offset, size, b)  # target, offset, size, data
+                self.glDrawArrays(GL.GL_TRIANGLES, 0, n * 3)
                 lastTriangle += n
             '''
+            # TODO -------------------------------------------
 
             self.glDrawArrays(GL.GL_TRIANGLES, 0, len(self.m_triangles))
 

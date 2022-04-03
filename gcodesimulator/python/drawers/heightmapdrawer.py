@@ -371,24 +371,24 @@ class HeightMapDrawer(ShaderDrawable):
                     QSize(self.m_gcodedrawer.resolution, self.m_gcodedrawer.resolution),
                     QtOpenGL.QOpenGLFramebufferObject.CombinedDepthStencil)
             
-            #self.pathFramebuffer.bind()
+            self.pathFramebuffer.bind()
 
-            #self.pathRgbaTexture = QtOpenGL.QOpenGLTexture()
-            #self.glActiveTexture(GL.GL_TEXTURE0)
+            self.pathRgbaTexture = QtOpenGL.QOpenGLTexture(QtOpenGL.QOpenGLTexture.Target2D)
+            self.glActiveTexture(GL.GL_TEXTURE0)
             #self.pathRgbaTexture.bind(GL.GL_TEXTURE_2D)
-            #self.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, self.m_gcodedrawer.resolution, self.m_gcodedrawer.resolution, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, None)
-            #self.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
-            #self.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
-            #self.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, self.pathRgbaTexture, 0)
-            #self.pathRgbaTexture.release()
+            self.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, self.m_gcodedrawer.resolution, self.m_gcodedrawer.resolution, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, None)
+            self.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
+            self.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
+            self.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, self.pathRgbaTexture, 0)
+            self.pathRgbaTexture.release()
 
-            #renderbuffer = QtOpenGL.QOpenGLBuffer()
-            #renderbuffer.bind(GL.GL_RENDERBUFFER)
-            #self.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, self.m_gcodedrawer.resolution, self.m_gcodedrawer.resolution)
-            #self.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, renderbuffer)
-            #renderbuffer.release()
+            renderbuffer = QtOpenGL.QOpenGLBuffer()
+            renderbuffer.bind(GL.GL_RENDERBUFFER)
+            self.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, self.m_gcodedrawer.resolution, self.m_gcodedrawer.resolution)
+            self.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, renderbuffer)
+            renderbuffer.release()
             
-            #self.pathFramebuffer.release()
+            self.pathFramebuffer.release()
             self.pathRgbaTexture = self.pathFramebuffer.texture()
         
         self.pathFramebuffer.bind()

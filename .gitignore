@@ -131,8 +131,10 @@ dmypy.json
 misc_private/text2path/fonts
 misc_private/text2path/ziafont
 
-misc_private/images
-
+misc_private/cnc*
+misc_private/mesh*
+misc_private/mesh*
+misc_private/
 
 gcodeviewer/drawers/*h
 gcodeviewer/drawers/*cpp

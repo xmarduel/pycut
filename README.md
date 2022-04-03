@@ -8,7 +8,7 @@ Disclamer: This software is used at the user's own risk. No responsibility is ac
 USAGE: start the program from the installation folder
 
 > python pycut.py
-
+> python pycut.py -h
 
 Dependencies: Python
 - PySide6-6.2.1
@@ -26,19 +26,25 @@ DONE: basic
    + vPocket   NO
 - svg items selection and new op with combinaison Union/Diff/Inter/Xor (geometry calculated)
 - preview geom displayed in svg viewer
-- tabs "on the fly"
+- tabs
 - toolpaths displayed in svg viewer
 - gcode produced
 - gcode viewer (as in Candle)
 - gcode simulator (as in jsCut)
 
 BUGS:
-- gui main window not ok on notebooks with display 1920x1080 (huawei notebook 3000x2000 resolution OK).
 - and all the rest!
+
+IMPROVMENTS OVER JSCUT
+- tabs "on the fly" (no need to define them in the svg file)
+- flip X/Y in GCode (good for my machine -the 1419-)
+- Zero reference on lower left corner of the material/part
 
 TODO:
 - capability to read text without converting them first to paths 
 
 WILL NEVER BE IMPLEMENTED:
 - vPocket (I do not need them)
+
+See the Wiki page for more
 
