@@ -49,7 +49,7 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
             "height" : 460,
             "gcode": "",
             "cutterDiameter" : 3.175, 
-            "cutterHeight" : 25.4,
+            "cutterHeight" : 2 * 25.4,
             "cutterAngle" : 180,
             #"elementsUrl" : "http://api.jscut.org/js",
             #"elementsUrl" : ":/javascript/js/shaders", # CORS problem by "get"

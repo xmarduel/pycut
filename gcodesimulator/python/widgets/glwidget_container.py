@@ -65,7 +65,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
     def loadFile(self, fileName):
         topZ = 0.0
         cutterDiameter = 3.175
-        cutterHeight = 25.4
+        cutterHeight = 2 * 25.4
         cutterAngle = 180
         gcode = ""
 
