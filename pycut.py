@@ -353,9 +353,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         simulator_data =  {
             "gcode": gcode,
+            "cutterHeight": 3 * 4.0,
             "cutterDiameter": self.ui.doubleSpinBox_Tool_Diameter.value(),
             "cutterAngle": self.ui.spinBox_Tool_Angle.value(),
-            "cutterHeight": 4.0
         }
         
         self.webgl_viewer.set_data(simulator_data)
