@@ -37,6 +37,14 @@
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator\\python"
         },
         {
+            "name": "TEST VIEWER PROFILER",
+            "type": "python",
+            "request": "launch",
+            "program": "test_parser.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodeviewer"
+        },
+        {
             "name": "PYCUT cnc_control_panel",
             "type": "python",
             "request": "launch",
@@ -45,7 +53,6 @@
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
             "args": ["-job", "./jobs/cnc_control_panel.json"]
         },
-        ,
         {
             "name": "PYCUT EMPTY",
             "type": "python",

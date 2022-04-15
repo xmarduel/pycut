@@ -183,16 +183,16 @@ function sliderChangeVal(newVal) {
 
 function increaseTime() {
   if (gcode_simulator) {
-    current_time = current_time + time_step;
-    if (current_time > gcode_simulator.maxTime) {
-      current_time = 0;
+    var new_current_time = current_time + time_step;
+    if (new_current_time > gcode_simulator.maxTime) {
+      new_current_time = 0;
     }
 
-    gcode_simulator.timeChanged(0, current_time);
-
     const input_slider = document.getElementById('input_slider');
-    input_slider.value = current_time;
+    input_slider.value = new_current_time;
   
+    sliderChangeVal(new_current_time);
+
     auto_runner = setTimeout(increaseTime, 1);
   }
 }
@@ -207,15 +207,15 @@ function run() {
 
 function decreaseTime() {
   if (gcode_simulator) {
-    current_time = current_time - time_step;
-    if (current_time < 0) {
-      current_time = gcode_simulator.maxTime;
+    var new_current_time = current_time - time_step;
+    if (new_current_time < 0) {
+      new_current_time = gcode_simulator.maxTime;
     }
 
-    gcode_simulator.timeChanged(0, current_time);
-
     const input_slider = document.getElementById('input_slider');
-    input_slider.value = current_time;
+    input_slider.value = new_current_time;
+
+    sliderChangeVal(new_current_time);
   
     auto_runner = setTimeout(decreaseTime, 1);
   }
@@ -240,51 +240,51 @@ function pause() {
 
 function step_backward() {
   if (gcode_simulator) {
-    current_time = current_time - time_step;
-    if (current_time < 0) {
-      current_time = gcode_simulator.maxTime;
+    var new_current_time = current_time - time_step;
+    if (new_current_time < 0) {
+      new_current_time = gcode_simulator.maxTime;
     }
 
-    gcode_simulator.timeChanged(0, current_time);
-
     const input_slider = document.getElementById('input_slider');
-    input_slider.value = current_time;
+    input_slider.value = new_current_time;
+
+    sliderChangeVal(new_current_time);
   }
 }
 
 function step_forward() {
   if (gcode_simulator) {
-    current_time = current_time + time_step;
-    if (current_time > gcode_simulator.maxTime) {
-      current_time = 0;
+    var new_current_time = current_time + time_step;
+    if (new_current_time > gcode_simulator.maxTime) {
+      new_current_time = 0;
     }
 
-    gcode_simulator.timeChanged(0, current_time);
-
     const input_slider = document.getElementById('input_slider');
-    input_slider.value = current_time;
+    input_slider.value = new_current_time;
+
+    sliderChangeVal(new_current_time);
+
   }
 }
 
 function to_begin() {
   if (gcode_simulator) {
-    current_time = 0;
-
-    gcode_simulator.timeChanged(0, current_time);
 
     const input_slider = document.getElementById('input_slider');
-    input_slider.value = current_time;
+    input_slider.value = 0;
+
+    sliderChangeVal(0);
+    click() ;
   }
 }
 
 function to_end() {
   if (gcode_simulator) {
-    current_time = gcode_simulator.maxTime;
-
-    gcode_simulator.timeChanged(0, current_time);
 
     const input_slider = document.getElementById('input_slider');
-    input_slider.value = current_time;
+    input_slider.value = gcode_simulator.maxTime;
+
+    sliderChangeVal(gcode_simulator.maxTime);
   }
 }
 </script>
@@ -297,12 +297,13 @@ function to_end() {
     <div id="block_container">
       <div id="bloc1"><button type="button" onclick="to_begin()"><img src="qrc:/images/tango/22x22/actions/media-skip-backward.png"/></button> </div>  
       <div id="bloc1"><button type="button" onclick="step_backward()"><img src="qrc:/images/tango/22x22/actions/media-seek-backward.png"/></button> </div>  
-      <div id="bloc2"><button type="button" onclick="run()"><img src="qrc:/images/tango/22x22/actions/media-playback-start.png"/></button> </div>
+      <div id="bloc2"><button type="button" onclick="run_back()"><img src="qrc:/images/media-playback-back.png"/></button> </div>
       <div id="bloc3"><button type="button" onclick="pause()"><img src="qrc:/images/tango/22x22/actions/media-playback-pause.png"/></button> </div>
-      <div id="bloc2"><button type="button" onclick="run_back()"><img src="qrc:/images/tango/22x22/actions/go-previous.png"/></button> </div>
+      <div id="bloc2"><button type="button" onclick="run()"><img src="qrc:/images/tango/22x22/actions/media-playback-start.png"/></button> </div>
       <div id="bloc4"><button type="button" onclick="step_forward()"><img src="qrc:/images/tango/22x22/actions/media-seek-forward.png"/></button> </div>
       <div id="bloc4"><button type="button" onclick="to_end()"><img src="qrc:/images/tango/22x22/actions/media-skip-forward.png"/></button> </div>
     </div>
+    <div>Click twice a button or move the mouse outside the buttons to refresh the view!</div>
   </div>
 </div>
 

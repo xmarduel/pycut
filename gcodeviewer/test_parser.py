@@ -137,7 +137,7 @@ if __name__ =='__main__':
     '''
     python -m cProfile -o test_parser.prof test_parser.py
     '''
-    filename = "pycut_gcode.gcode"
+    filename = "pycut_cnc_all_letters_op.nc"
 
     main()
     #main_profiled()
