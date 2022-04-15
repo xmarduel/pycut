@@ -274,7 +274,6 @@ function to_begin() {
     input_slider.value = 0;
 
     sliderChangeVal(0);
-    click() ;
   }
 }
 
