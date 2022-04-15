@@ -381,7 +381,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
         # create the button, and hook it up to the slot below.
         self._button_add = QtWidgets.QPushButton("Create Operation")
         self._button_add.clicked.connect(self.add_item)
-        self._button_add.setIcon(QtGui.QIcon(":/images/tango/32x32/actions/list-add"))
+        self._button_add.setIcon(QtGui.QIcon(':/images/milling-machine-op.png'))
 
         hbox_add.addWidget(self._button_add)
 

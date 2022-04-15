@@ -128,6 +128,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.operationsview_manager.set_svg_viewer(self.svg_viewer)
 
         # callbacks
+        self.ui.pushButton_SaveGcode.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/document-save-as.png'))
         self.ui.pushButton_SaveGcode.clicked.connect(self.cb_save_gcode)
 
         self.ui.actionOpenSvg.triggered.connect(self.cb_open_svg)
