@@ -581,7 +581,7 @@ class cam:
 
             gcode += \
                 f'\r\n' + \
-                f'; Path {pathIndex}\r\n'
+                f'; Path {pathIndex+1}\r\n'
 
             currentZ = safeZ
             finishedZ = topZ

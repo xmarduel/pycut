@@ -348,6 +348,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             fp.write(gcode)
             fp.close()
 
+            # status bar -> msg
+            self.statusBar().showMessage("Saved GCode to \"%s\"" % filename, 3000)
+
     def display_gcode(self, gcode: str):
         '''
         display gcode in webgl!
