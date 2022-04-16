@@ -371,8 +371,6 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
 
         # let's add two views of the same data source we just created:
         self.table = PyCutSimpleTableView(self)
-        self.table.resizeColumnsToContents()
-        self.table.setMinimumWidth(800)
 
         # bottom section of the window:
         # let's have a text input and a pushbutton that add an item to our model.
@@ -483,7 +481,6 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
 
         self.parent = parent
 
-        self.resizeColumnsToContents()
         # Fixes the width of columns and the height of rows.
         try:
             #self.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Fixed)
@@ -493,6 +490,9 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
             pass  # PySide
 
         self.setAlternatingRowColors(True)
+
+        self.resizeColumnsToContents()
+        self.setMinimumWidth(800)
 
     def setup(self):
         '''

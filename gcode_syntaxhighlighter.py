@@ -32,7 +32,8 @@ STYLES = {
 
 
 class GCodeSyntaxHighlighter (QSyntaxHighlighter):
-    """Syntax highlighter for the GCode language.
+    """
+    Syntax highlighter for the GCode language.
     """
     def __init__(self, document):
         super(GCodeSyntaxHighlighter, self).__init__(document)
@@ -52,13 +53,12 @@ class GCodeSyntaxHighlighter (QSyntaxHighlighter):
         ]
 
         # Build a QRegularExpression for each pattern
-        self.rules = [(QRegularExpression(pat), index, fmt)
-                      for (pat, index, fmt) in rules]
+        self.rules = [ (QRegularExpression(pat), index, fmt) for (pat, index, fmt) in rules ]
 
     def highlightBlock(self, text):
-        """Apply syntax highlighting to the given block of text.
         """
-        # Do other syntax formatting
+        Apply syntax highlighting to the given block of text.
+        """
         for expression, nth, format in self.rules:
             nth = 0
             match = expression.match(text, offset=0)

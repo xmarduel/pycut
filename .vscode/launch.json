@@ -11,6 +11,7 @@
 
 
 
+
         {
             "name": "OPENGL DEMO1",
             "type": "python",
@@ -61,6 +62,15 @@
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
             "args": []
+        },
+        {
+            "name": "PYCUT JOB",
+            "type": "python",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": ["-job", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_three_rects_with_circle.json"]
         },
         {
             "name": "TABLEVIEW",

@@ -29,6 +29,7 @@ from gcodeviewer.parser.gcodepreprocessorutils import  GcodePreprocessorUtils
 from gcodeviewer.parser.gcodeparser import  GcodeParser 
 from gcodeviewer.parser.linesegment import LineSegment
 
+from gcodeviewer.tables.gcodetableview import GCodeTableView
 from gcodeviewer.tables.gcodetablemodel import GCodeItem
 from gcodeviewer.tables.gcodetablemodel import GCodeTableModel
 
@@ -52,24 +53,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.splitter.setHandleWidth(6)
 
         self.glwVisualizer = GLWidget(self.splitter)
-        self.tblProgram = QTableView(self.splitter)
-
-        # table properties
-        self.tblProgram.setObjectName(u"tblProgram")
-        font = QtGui.QFont()
-        font.setPointSize(9)
-        self.tblProgram.setFont(font)
-        self.tblProgram.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.tblProgram.setEditTriggers(QtWidgets.QAbstractItemView.AnyKeyPressed|QtWidgets.QAbstractItemView.DoubleClicked|QtWidgets.QAbstractItemView.EditKeyPressed|QtWidgets.QAbstractItemView.SelectedClicked)
-        self.tblProgram.setSelectionMode(QtWidgets.QAbstractItemView.ContiguousSelection)
-        self.tblProgram.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
-        self.tblProgram.setGridStyle(Qt.DashLine)
-        self.tblProgram.horizontalHeader().setMinimumSectionSize(50)
-        self.tblProgram.horizontalHeader().setHighlightSections(False)
-        self.tblProgram.verticalHeader().setVisible(False)
-        #self.tblProgram.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
-        #self.tblProgram.verticalHeader().setDefaultSectionSize(12)
-        self.tblProgram.setStyleSheet("background-color: rgb(255,255,255); gridline-color: rgb(255,255,255);" )
+        self.tblProgram = GCodeTableView(self.splitter)
 
         self.splitter.addWidget(self.glwVisualizer)
         self.splitter.addWidget(self.tblProgram)
@@ -82,8 +66,6 @@ class GLWidgetContainer(QtWidgets.QWidget):
         layout = self.layout()
 
         layout.addWidget(self.splitter)
-
-
 
         self.m_programFileName = None
 
@@ -122,6 +104,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.tblProgram.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         self.tblProgram.verticalScrollBar().actionTriggered.connect(self.onScrollBarAction)
         self.tblProgram.selectionModel().currentChanged.connect(self.onTableCurrentChanged)    
+        self.tblProgram.setup()
 
         self.tblProgram.hideColumn(2)
         self.tblProgram.hideColumn(3)
@@ -247,6 +230,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         # Set table model
         self.tblProgram.setModel(self.m_programModel)
         self.tblProgram.horizontalHeader().restoreState(headerState)
+        self.tblProgram.setup()
 
         # connect this model
         self.tblProgram.selectionModel().currentChanged.connect(self.onTableCurrentChanged) 

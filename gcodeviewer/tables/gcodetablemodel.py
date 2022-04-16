@@ -5,7 +5,7 @@ from typing import List
 from typing import Any
 
 from PySide6 import QtCore
-
+from PySide6 import QtGui
 
 class GCodeItem:
 
@@ -68,6 +68,12 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
                 return QtCore.Qt.AlignCenter
             else:
                 return QtCore.Qt.AlignVCenter
+
+        if role == QtCore.Qt.FontRole:
+            if index.column() == 1: # text items are bold.
+                font = QtGui.QFont()
+                font.setBold(True)
+                return font
 
         return None  # QVariant()
 
@@ -140,6 +146,7 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
             return None
 
         if index.column() == 1:
-            return super().flags(index) | QtCore.Qt.ItemIsEditable
+            # not editable
+            return super().flags(index) | ~QtCore.Qt.ItemIsEditable
         else:
             return super().flags(index)
