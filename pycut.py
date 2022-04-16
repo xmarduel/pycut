@@ -29,6 +29,8 @@ from val_with_unit import ValWithUnit
 import svgviewer
 import gcodeviewer.widgets.glwidget_container as glwidget_container
 import gcodesimulator.webglviewer as webglviewer
+import gcodesimulator.gcodefileviewer as gcodefileviewer
+
 import operations_tableview
 import tabs_tableview
 import colorpicker
@@ -117,6 +119,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # open/read/write job settings
         self.jobfilename = None
 
+        self.webgl_viewer = None
         self.gcode_textviewer = None
 
         self.svg_viewer = self.setup_svg_viewer()
@@ -365,8 +368,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.webgl_viewer.set_data(simulator_data)
         self.webgl_viewer.show_gcode()
 
-        self.gcode_textviewer.setPlainText(gcode)
-        gcode_syntaxhighlighter.GCodeSyntaxHighlighter(self.gcode_textviewer.document())
+        self.gcode_textviewer.load_data(gcode)
 
         self.candle_viewer.loadData(gcode)
 
@@ -786,17 +788,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         simulator = self.ui.simulator
         layout = simulator.layout()
         
-        webgl_viewer = webglviewer.WebGlViewer(simulator)
+        self.webgl_viewer = webglviewer.WebGlViewer(simulator)
 
-        self.gcode_textviewer = QtWidgets.QPlainTextEdit(simulator)
-        self.gcode_textviewer.setMinimumWidth(100)
+        self.gcode_textviewer = gcodefileviewer.GCodeFileViewer(simulator, self.webgl_viewer)
 
-        layout.addWidget(webgl_viewer)
+        layout.addWidget(self.webgl_viewer)
         layout.addWidget(self.gcode_textviewer)
         layout.setStretch(0, 3)
         layout.setStretch(1, 2)
         
-        return webgl_viewer
+        return self.webgl_viewer
 
     def display_svg(self, svg):
         '''

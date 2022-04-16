@@ -34,17 +34,26 @@ class GcodeMiniParser:
         '''
         self.gcode = ""
 
-        self.idx = 0
+        self.char_no = 0 # index of the character in the whole gcode text
+        self.line_no = 0 # related line no in the whole gcode text
 
         self.path : List[Tuple[float, float, float, float]] = []
         self.path_time = None
 
+        self.path_idx_line_no = {}  # map path "index" -> gcode line no
+        self.path_time_map = {}  # map gcode line no -> sim time
+
     def reset(self):
         '''
         '''
-        self.idx = 0
+        self.char_no = 0
+        self.line_no = 0 
+
         self.path = []
         self.path_time = None
+
+        self.path_idx_line_no = {}
+        self.path_time_map = {}
 
     def get_path(self) -> List[Tuple[float, float, float, float]] :
         return self.path
@@ -65,19 +74,22 @@ class GcodeMiniParser:
         lastF = sNaN
 
         def parse() -> float:
-            self.idx += 1
-            while self.idx < len(self.gcode) and (self.gcode[self.idx] == ' ' or self.gcode[self.idx] == '\t'):
-                self.idx += 1
-            begin = self.idx
-            while (self.idx < len(self.gcode) and self.gcode[self.idx] in "+-.0123456789"):
-                self.idx += 1
+            self.char_no += 1
+            while self.char_no < len(self.gcode) and (self.gcode[self.char_no] == ' ' or self.gcode[self.char_no] == '\t'):
+                self.char_no += 1
+            begin = self.char_no
+            while (self.char_no < len(self.gcode) and self.gcode[self.char_no] in "+-.0123456789"):
+                self.char_no += 1
             try:
-                end = self.idx
+                end = self.char_no
                 return float(self.gcode[begin:end])
             except Exception:
                 return None
 
-        while self.idx < len(self.gcode) :
+        self.char_no = 0
+        self.line_no = 0 
+
+        while self.char_no < len(self.gcode) :
 
             g = sNaN
             x = sNaN
@@ -85,19 +97,19 @@ class GcodeMiniParser:
             z = sNaN
             f = sNaN
 
-            while self.idx < len(self.gcode) and self.gcode[self.idx] != '' and self.gcode[self.idx] != '\r' and self.gcode[self.idx] != '\n':
-                if self.gcode[self.idx] == 'G' or self.gcode[self.idx] == 'g':
+            while self.char_no < len(self.gcode) and self.gcode[self.char_no] != '' and self.gcode[self.char_no] != '\r' and self.gcode[self.char_no] != '\n':
+                if self.gcode[self.char_no] == 'G' or self.gcode[self.char_no] == 'g':
                     g = parse()
-                elif self.gcode[self.idx] == 'X' or self.gcode[self.idx] == 'x':
+                elif self.gcode[self.char_no] == 'X' or self.gcode[self.char_no] == 'x':
                     x = parse()
-                elif self.gcode[self.idx] == 'Y' or self.gcode[self.idx] == 'y':
+                elif self.gcode[self.char_no] == 'Y' or self.gcode[self.char_no] == 'y':
                     y = parse()
-                elif self.gcode[self.idx] == 'Z' or self.gcode[self.idx] == 'z':
+                elif self.gcode[self.char_no] == 'Z' or self.gcode[self.char_no] == 'z':
                     z = parse()
-                elif self.gcode[self.idx] == 'F' or self.gcode[self.idx] == 'f':
+                elif self.gcode[self.char_no] == 'F' or self.gcode[self.char_no] == 'f':
                     f = parse()
                 else:
-                    self.idx += 1
+                    self.char_no += 1
 
             if g == 0 or g == 1:
                 if not qIsNaN(x):
@@ -125,11 +137,14 @@ class GcodeMiniParser:
                     lastF = f
 
                 self.path.append([lastX, lastY, lastZ, lastF])
+                self.path_idx_line_no[len(self.path)-1] = self.line_no
 
-            while self.idx < len(self.gcode) and self.gcode[self.idx] != '\r' and self.gcode[self.idx] != '\n':
-                self.idx += 1
-            while self.idx < len(self.gcode) and (self.gcode[self.idx] == '\r' or self.gcode[self.idx] == '\n'):
-                self.idx += 1
+            while self.char_no < len(self.gcode) and self.gcode[self.char_no] != '\r' and self.gcode[self.char_no] != '\n':
+                self.char_no += 1
+            while self.char_no < len(self.gcode) and (self.gcode[self.char_no] == '\r' or self.gcode[self.char_no] == '\n'):
+                if self.gcode[self.char_no] == '\n':
+                    self.line_no += 1 
+                self.char_no += 1
 
         # last thing
         self.eval_path_time()
@@ -139,8 +154,8 @@ class GcodeMiniParser:
         '''
         total_time = 0 
 
-        for idx, point in enumerate(self.path):
-            prevIdx = max(idx - 1, 0)
+        for path_idx, point in enumerate(self.path):
+            prevIdx = max(path_idx - 1, 0)
             prevPoint = self.path[prevIdx]
            
             x = point[0]
@@ -156,5 +171,21 @@ class GcodeMiniParser:
             dist = math.sqrt((x - prevX) * (x - prevX) + (y - prevY) * (y - prevY) + (z - prevZ) * (z - prevZ))
             
             total_time = total_time + dist / f * 60
+
+            # ------------------------------------------
+            # fill self.path_time_map
+            # ------------------------------------------
+            if path_idx in self.path_idx_line_no:
+                line_no = self.path_idx_line_no[path_idx]
+            else:
+                idx0 = path_idx
+                while True:
+                    idx0 = idx0 - 1
+                    if idx0 in self.path_idx_line_no:
+                        line_no = self.path_idx_line_no[idx0]
+                        break
+            # ------------------------------------------
+            self.path_time_map[line_no] = total_time
+            # ------------------------------------------
         
         self.path_time = total_time

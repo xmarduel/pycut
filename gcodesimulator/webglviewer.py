@@ -28,8 +28,6 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
 </body>
 </html>'''
 
-    send_data_js_side = QtCore.Signal(str)
-
     def __init__(self, parent):
         '''
         '''
@@ -111,6 +109,11 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
 
         return shader_source
 
+    def show_simulation_at_time(self, simtime: float):
+        '''
+        '''
+        self.talkie.show_simulation_at_time(simtime)
+
 
 jscut_webgl = """
 <html lang="en">
@@ -173,6 +176,15 @@ var gcode_simulator = null;
 var auto_runner = null;
 var current_time = 0;
 var time_step = 0;
+
+function showAtTime(simtine) {
+  if (gcode_simulator) {
+    const input_slider = document.getElementById('input_slider');
+    input_slider.value = simtine;
+  
+    sliderChangeVal(simtine);
+  }
+}
 
 function sliderChangeVal(newVal) {
   if (gcode_simulator) {
@@ -427,10 +439,16 @@ document.addEventListener("DOMContentLoaded", function () {
         // An example of receiving information pushed from the Python side
         // It's really neat how this looks just like the Python code
         talkie.send_data_js_side.connect(function(data) {
-            var simdata = JSON.parse(data);
+            const simdata = JSON.parse(data);
 
             gcode_simulator = new GCodeSimulator(simdata);
             gcode_simulator.simulate();      
+        });
+
+        talkie.send_simtime_js_side.connect(function(data) {
+          const simtime = JSON.parse(data);
+          
+          showAtTime(simtime);      
         });
         
         talkie.fill_webgl();
@@ -446,6 +464,8 @@ class TalkyTalky(QtCore.QObject):
     '''
     '''
     send_data_js_side = QtCore.Signal(str)
+    send_simtime_js_side = QtCore.Signal(float)
+
     send_error_annotation = QtCore.Signal(int, int, str, str)
 
     def __init__(self, widget: WebGlViewer):
@@ -460,3 +480,9 @@ class TalkyTalky(QtCore.QObject):
         jsondata = json.dumps(self.widget.data, indent = 4) 
         
         self.send_data_js_side.emit(jsondata)
+
+    def show_simulation_at_time(self, simtine: float):
+        '''
+        '''
+        self.send_simtime_js_side.emit(simtine)
+
