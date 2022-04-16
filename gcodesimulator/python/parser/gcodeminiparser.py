@@ -168,7 +168,11 @@ class GcodeMiniParser:
             prevZ = prevPoint[2]
             #prevF = prevPoint[3]
             
-            dist = math.sqrt((x - prevX) * (x - prevX) + (y - prevY) * (y - prevY) + (z - prevZ) * (z - prevZ))
+            dx = x - prevX
+            dy = y - prevY
+            dz = z - prevZ
+
+            dist = math.sqrt(dx * dx + dy * dy + dz * dz)
             
             total_time = total_time + dist / f * 60
 
