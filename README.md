@@ -35,10 +35,9 @@ DONE: basic
 BUGS:
 - and all the rest!
 
-IMPROVMENTS OVER JSCUT
+MAIN IMPROVMENTS OVER JSCUT
 - tabs "on the fly" (no need to define them in the svg file)
-- flip X/Y in GCode (good for my machine -the 1419-)
-- Zero reference on lower left corner of the material/part
+- flip X/Y in GCode (good for my machine -the so-called 1419-)
 
 TODO:
 - capability to read text without converting them first to paths 

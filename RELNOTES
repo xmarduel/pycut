@@ -1,8 +1,13 @@
-0.4.0
-=====
+0.4.0  (TODO)
+=============
 
 Can process basic <text> elements without converting them before to <path> elements
 
+
+0.3.3
+=====
+
+Link gcode browser -> gcode simulator (1 way)
 
 0.3.2
 =====
