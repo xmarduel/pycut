@@ -33,7 +33,7 @@ import gcodesimulator.gcodefileviewer as gcodefileviewer
 
 import operations_tableview
 import tabs_tableview
-import colorpicker
+import settings.colorpicker as colorpicker
 
 import material_widget
 
@@ -202,6 +202,22 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 msgBox.exec()
 
 
+        self.layoutToggleLeftSideAction = QtGui.QAction(QtGui.QIcon(":/images/icons8-hide-30.png"), "hide/show",
+                self, shortcut=QtGui.QKeySequence.Back,
+                statusTip="Toggle Left Side", triggered=self.toggleLeftSide)
+        self.layoutToggleLeftSideAction.setCheckable(True)
+        self.layoutToggleLeftSideAction.setToolTip("Toggle Left Side View") # still not shown
+
+        self.layoutToggleRightSideAction = QtGui.QAction(QtGui.QIcon(":/images/icons8-hide-30.png"), "hide/show",
+                self, shortcut=QtGui.QKeySequence.Forward,
+                statusTip="Toggle Right Side", triggered=self.toggleRightSide)
+        self.layoutToggleRightSideAction.setCheckable(True)
+        self.layoutToggleRightSideAction.setToolTip("Toggle Right Side View") # still not shown
+
+        self.menuBar().addAction(self.layoutToggleLeftSideAction)
+        self.menuBar().addAction(self.layoutToggleRightSideAction)
+        
+
         #job_no = 4 # DEBUGGING SHORTCUT
         
         #if job_no == 1:
@@ -220,6 +236,30 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
 
         self.setWindowState(QtCore.Qt.WindowMaximized)
+
+    def toggleLeftSide(self):
+        '''
+        '''
+        print("toggle... isChecked() = ", self.layoutToggleLeftSideAction.isChecked())
+        
+        if self.layoutToggleLeftSideAction.isChecked():
+            self.ui.scrollArea_left.hide()
+            #self.layoutToggleLeftSideAction.setIcon(":/images/tango/22x22/actions/document-save-as.png")
+        else:
+            self.ui.scrollArea_left.show()
+            #self.layoutToggleLeftSideAction.setIcon(":/images/tango/22x22/actions/view-refresh.png'")
+
+    def toggleRightSide(self):
+        '''
+        '''
+        print("toggle... isChecked() = ", self.layoutToggleRightSideAction.isChecked())
+        
+        if self.layoutToggleRightSideAction.isChecked():
+            self.ui.scrollArea_right.hide()
+            #self.layoutToggleRightSideAction.setIcon(":/images/tango/22x22/actions/document-save-as.png")
+        else:
+            self.ui.scrollArea_right.show()
+            #self.v.setIcon(":/images/tango/22x22/actions/view-refresh.png'")
 
     def cb_open_settings_dialog(self):
         '''
@@ -271,7 +311,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         loader = QUiLoader(None)
         loader.registerCustomWidget(colorpicker.ColorPicker)
 
-        settings_dialog = loader.load("settings.ui")
+        settings_dialog = loader.load("./settings/settings.ui")
         fill_dialog()
         settings_dialog.cmdDefaults.clicked.connect(setDefaults)
         settings_dialog.cmdOK.clicked.connect(setOK)
