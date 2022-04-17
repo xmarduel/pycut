@@ -47,8 +47,6 @@ from gcode_generator import JobModel
 
 from gcode_generator import GcodeGenerator
 
-import gcode_syntaxhighlighter
-
 import resources_rc
 from ui_mainwindow import Ui_mainwindow
 

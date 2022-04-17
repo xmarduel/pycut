@@ -5,65 +5,13 @@ from PySide6 import QtCore
 
 from PySide6.QtCore import QRegularExpression
 
-from gcode_syntaxhighlighter import GCodeSyntaxHighlighter
-
-
-class GCodeSyntaxHighlightDelegateXXX(QtWidgets.QStyledItemDelegate):
-    '''
-    BUGGY - QPlainTextEdit document FAILS to be painted...
-    '''
-    def __init__(self, parent):
-        '''
-        '''
-        super().__init__(parent)
-
-    def paint(self, painter: QtGui.QPainter, option: QtWidgets.QStyleOptionViewItem, index: QtCore.QModelIndex) :
-        
-        painter.save()
-
-        options = QtWidgets.QStyleOptionViewItem(option)
-        self.initStyleOption(options, index)
-
-        print("----------------------------------")
-        print("paint...", index.data())
-
-        plaintextedit = QtWidgets.QPlainTextEdit()
-        plaintextedit.setPlainText(index.data())
-        GCodeSyntaxHighlighter(plaintextedit.document())
-
-        print("paint... HTML", plaintextedit.document().toHtml())
-        print("paint... PLAIN TEXT", plaintextedit.document().toPlainText())
-        print("paint... RAW TEXT", plaintextedit.document().toRawText())
-        print("paint... MARKDOWN", plaintextedit.document().toMarkdown())
-        
-        painter.translate(options.rect.left(), options.rect.top())
-
-        doc = plaintextedit.document()
-        doc.drawContents(painter)
-
-        painter.restore()
-
-    #def sizeHint(self, options, index):
-    #    return QtCore.QSize(50, 50)
-
-    #def createEditor(self, parent, option, index: QtCore.QModelIndex):
-    #    plaintextedit = QtWidgets.QPlainTextEdit(parent)
-    #    return plaintextedit
-
-    #def setEditorData(self, plaintextedit: QtWidgets.QPlainTextEdit, index: QtCore.QModelIndex):
-    #    plaintextedit.setPlainText(index.data())
-    #    GCodeSyntaxHighlighter(plaintextedit.document())
-
-    #def setModelData(self, plaintextedit: QtWidgets.QPlainTextEdit, model, index: QtCore.QModelIndex):
-    #    return
-
-    #def updateEditorGeometry(self, plaintextedit: QtWidgets.QPlainTextEdit, option, index: QtCore.QModelIndex):
-    #    plaintextedit.setGeometry(option.rect)
 
 
 class GCodeSyntaxHighlightDelegate(QtWidgets.QStyledItemDelegate):
     '''
     Html of QTextDocument can be painted
+
+    Note: QPlainTextEdit document FAILS to be painted...
     '''
     HTML_STYLES = {
         'comment': "color:darkGreen;font-style:italic",
