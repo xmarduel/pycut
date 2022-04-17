@@ -208,6 +208,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.layoutToggleLeftSideAction.setCheckable(True)
         self.layoutToggleLeftSideAction.setToolTip("Toggle Left Side View") # still not shown
 
+        self.layoutToggleMiddleAreaAction = QtGui.QAction(QtGui.QIcon(":/images/icons8-hide-30.png"), "hide/show",
+                self, shortcut=QtGui.QKeySequence.Forward,
+                statusTip="Toggle Middle Area", triggered=self.toggleMiddleArea)
+        self.layoutToggleMiddleAreaAction.setCheckable(True)
+        self.layoutToggleMiddleAreaAction.setToolTip("Toggle Middle Area View") # still not shown
+
         self.layoutToggleRightSideAction = QtGui.QAction(QtGui.QIcon(":/images/icons8-hide-30.png"), "hide/show",
                 self, shortcut=QtGui.QKeySequence.Forward,
                 statusTip="Toggle Right Side", triggered=self.toggleRightSide)
@@ -215,6 +221,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.layoutToggleRightSideAction.setToolTip("Toggle Right Side View") # still not shown
 
         self.menuBar().addAction(self.layoutToggleLeftSideAction)
+        self.menuBar().addAction(self.layoutToggleMiddleAreaAction)
         self.menuBar().addAction(self.layoutToggleRightSideAction)
         
 
@@ -240,26 +247,26 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def toggleLeftSide(self):
         '''
         '''
-        print("toggle... isChecked() = ", self.layoutToggleLeftSideAction.isChecked())
-        
         if self.layoutToggleLeftSideAction.isChecked():
             self.ui.scrollArea_left.hide()
-            #self.layoutToggleLeftSideAction.setIcon(":/images/tango/22x22/actions/document-save-as.png")
         else:
             self.ui.scrollArea_left.show()
-            #self.layoutToggleLeftSideAction.setIcon(":/images/tango/22x22/actions/view-refresh.png'")
+
+    def toggleMiddleArea(self):
+        '''
+        '''
+        if self.layoutToggleMiddleAreaAction.isChecked():
+            self.ui.operationsview_manager.hide()
+        else:
+            self.ui.operationsview_manager.show()
 
     def toggleRightSide(self):
         '''
         '''
-        print("toggle... isChecked() = ", self.layoutToggleRightSideAction.isChecked())
-        
         if self.layoutToggleRightSideAction.isChecked():
             self.ui.scrollArea_right.hide()
-            #self.layoutToggleRightSideAction.setIcon(":/images/tango/22x22/actions/document-save-as.png")
         else:
             self.ui.scrollArea_right.show()
-            #self.v.setIcon(":/images/tango/22x22/actions/view-refresh.png'")
 
     def cb_open_settings_dialog(self):
         '''

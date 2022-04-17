@@ -63,7 +63,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
 
         # if splitted horizontally
         self.tblProgram.setMaximumWidth(260)
-        self.tblProgram.setMinimumWidth(260)
+        self.tblProgram.setMinimumWidth(0)
         
         self.setLayout(QtWidgets.QVBoxLayout())
 
