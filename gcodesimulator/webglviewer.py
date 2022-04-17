@@ -43,8 +43,8 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
         shader_renderHeightMapVertexShader = self.get_shader_source(":/javascript/js/shaders/renderHeightMapVertexShader.txt")
 
         self.data = {
-            "width": 460,
-            "height" : 460,
+            "width": 500,
+            "height" : 500,
             "gcode": "",
             "cutterDiameter" : 3.175, 
             "cutterHeight" : 2 * 25.4,
@@ -114,6 +114,11 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
         '''
         self.talkie.show_simulation_at_time(simtime)
 
+    def set_gl_canvas_size(self, size: int):
+        '''
+        '''
+        self.talkie.set_gl_canvas_size(size)
+
 
 jscut_webgl = """
 <html lang="en">
@@ -151,7 +156,7 @@ jscut_webgl = """
   cursor: pointer;
 }
 
-#bloc1, #bloc2, #bloc3, #bloc4
+#bloc1, #bloc2, #bloc3, #bloc4, #bloc5, #bloc6, #bloc7
 {
     display:inline;
 }
@@ -303,16 +308,16 @@ function to_end() {
 <!-- Controls with parameters bound to simulator -->
 
 <div>
-    <canvas id="glCanvas" width="460" height="460"></canvas>
-    <input id="input_slider" type="range" min="0" max="1000" value="1000" step="1" oninput="sliderChangeVal(this.value)" style="width: 460px"></input>
+    <canvas id="glCanvas" width="500" height="500"></canvas>
+    <input id="input_slider" type="range" min="0" max="1000" value="1000" step="1" oninput="sliderChangeVal(this.value)" style="width: 500px"></input>
     <div id="block_container">
       <div id="bloc1"><button type="button" onclick="to_begin()"><img src="qrc:/images/tango/22x22/actions/media-skip-backward.png"/></button> </div>  
-      <div id="bloc1"><button type="button" onclick="step_backward()"><img src="qrc:/images/tango/22x22/actions/media-seek-backward.png"/></button> </div>  
-      <div id="bloc2"><button type="button" onclick="run_back()"><img src="qrc:/images/media-playback-back.png"/></button> </div>
-      <div id="bloc3"><button type="button" onclick="pause()"><img src="qrc:/images/tango/22x22/actions/media-playback-pause.png"/></button> </div>
-      <div id="bloc2"><button type="button" onclick="run()"><img src="qrc:/images/tango/22x22/actions/media-playback-start.png"/></button> </div>
-      <div id="bloc4"><button type="button" onclick="step_forward()"><img src="qrc:/images/tango/22x22/actions/media-seek-forward.png"/></button> </div>
-      <div id="bloc4"><button type="button" onclick="to_end()"><img src="qrc:/images/tango/22x22/actions/media-skip-forward.png"/></button> </div>
+      <div id="bloc2"><button type="button" onclick="step_backward()"><img src="qrc:/images/tango/22x22/actions/media-seek-backward.png"/></button> </div>  
+      <div id="bloc3"><button type="button" onclick="run_back()"><img src="qrc:/images/media-playback-back.png"/></button> </div>
+      <div id="bloc4"><button type="button" onclick="pause()"><img src="qrc:/images/tango/22x22/actions/media-playback-pause.png"/></button> </div>
+      <div id="bloc5"><button type="button" onclick="run()"><img src="qrc:/images/tango/22x22/actions/media-playback-start.png"/></button> </div>
+      <div id="bloc6"><button type="button" onclick="step_forward()"><img src="qrc:/images/tango/22x22/actions/media-seek-forward.png"/></button> </div>
+      <div id="bloc7"><button type="button" onclick="to_end()"><img src="qrc:/images/tango/22x22/actions/media-skip-forward.png"/></button> </div>
     </div>
     <div>Click twice a button or move the mouse outside the buttons to refresh the view!</div>
   </div>
@@ -441,6 +446,16 @@ document.addEventListener("DOMContentLoaded", function () {
         talkie.send_data_js_side.connect(function(data) {
             const simdata = JSON.parse(data);
 
+            // size of canvas from outside
+            const gl_canvas = document.getElementById('glCanvas');
+            gl_canvas.width = simdata["width"];
+            gl_canvas.height = simdata["height"];
+
+            // size of slider from outside
+            const input_slider = document.getElementById('input_slider');
+            input_slider.width = simdata["width"];
+
+
             gcode_simulator = new GCodeSimulator(simdata);
             gcode_simulator.simulate();      
         });
@@ -450,6 +465,21 @@ document.addEventListener("DOMContentLoaded", function () {
           
           showAtTime(simtime);      
         });
+
+        talkie.send_canvas_size_js_side.connect(function(data) {
+          const size = JSON.parse(data);
+          
+          // size of canvas from outside
+          const gl_canvas = document.getElementById('glCanvas');
+          gl_canvas.width = size;
+          gl_canvas.height = size;
+
+          // size of slider from outside
+          const input_slider = document.getElementById('input_slider');
+          input_slider.width = size;   
+        });
+
+        
         
         talkie.fill_webgl();
     });
@@ -465,6 +495,7 @@ class TalkyTalky(QtCore.QObject):
     '''
     send_data_js_side = QtCore.Signal(str)
     send_simtime_js_side = QtCore.Signal(float)
+    send_canvas_size_js_side = QtCore.Signal(int)
 
     send_error_annotation = QtCore.Signal(int, int, str, str)
 
@@ -485,4 +516,9 @@ class TalkyTalky(QtCore.QObject):
         '''
         '''
         self.send_simtime_js_side.emit(simtine)
+
+    def set_gl_canvas_size(self, size: int):
+        '''
+        '''
+        self.send_canvas_size_js_side.emit(size)
 

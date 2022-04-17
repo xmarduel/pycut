@@ -23,6 +23,7 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
         self.curr_line_nb = -1
 
         self.setMinimumWidth(100)
+        self.setMaximumWidth(280)
 
         self.miniparser = GcodeMiniParser()
 
