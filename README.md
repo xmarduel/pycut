@@ -9,14 +9,15 @@ USAGE: start the program from the installation folder
 
 > python pycut.py
 > python pycut.py -h
+> python pycut.py -job <path_to_job>
 
-Dependencies: Python
+Dependencies: Python 3.9
 - PySide6-6.2.1
 - svgpathtools (latest) - pip installation bundled with numpy/scipy
 - shapely (1.8.0)
-- matplotlib (for debugging)
+- matplotlib (to debug/view shapely offsets ops)
 
-DONE: basic
+DONE:
 - read "config" files : so-called job file with all settings and ops
 - select 1 or more ops in the list and "generate" Gcode -> toolpaths OK for
    + pocket   YES
@@ -37,7 +38,7 @@ BUGS:
 
 MAIN IMPROVMENTS OVER JSCUT
 - tabs "on the fly" (no need to define them in the svg file)
-- flip X/Y in GCode (good for my machine -the so-called 1419-)
+- flip X/Y in GCode (good for my machine - the "1419" one -)
 
 TODO:
 - capability to read text without converting them first to paths 
