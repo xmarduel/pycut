@@ -49,7 +49,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
 
         self.splitter = QtWidgets.QSplitter(self)
         self.splitter.setObjectName(u"splitter")
-        self.splitter.setOrientation(Qt.Vertical)
+        self.splitter.setOrientation(Qt.Horizontal)
         self.splitter.setHandleWidth(6)
 
         self.glwVisualizer = GLWidget(self.splitter)
@@ -60,6 +60,10 @@ class GLWidgetContainer(QtWidgets.QWidget):
 
         self.glwVisualizer.setMinimumHeight(100)
         self.tblProgram.setMinimumHeight(100)
+
+        # if splitted horizontally
+        self.tblProgram.setMaximumWidth(260)
+        self.tblProgram.setMinimumWidth(260)
         
         self.setLayout(QtWidgets.QVBoxLayout())
 
@@ -106,6 +110,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.tblProgram.selectionModel().currentChanged.connect(self.onTableCurrentChanged)    
         self.tblProgram.setup()
 
+        self.tblProgram.hideColumn(0)
         self.tblProgram.hideColumn(2)
         self.tblProgram.hideColumn(3)
         self.tblProgram.hideColumn(4)

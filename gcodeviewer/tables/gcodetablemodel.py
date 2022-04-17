@@ -64,10 +64,7 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
                 return self.m_data[index.row()].args
 
         if role == QtCore.Qt.TextAlignmentRole:
-            if index.column() == 0: 
-                return QtCore.Qt.AlignCenter
-            else:
-                return QtCore.Qt.AlignVCenter
+            return QtCore.Qt.AlignVCenter
 
         if role == QtCore.Qt.FontRole:
             if index.column() == 1: # text items are bold.

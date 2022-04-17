@@ -170,7 +170,7 @@ class GCodeTableView(QtWidgets.QTableView):
         self.setGridStyle(QtCore.Qt.DashLine)
         self.horizontalHeader().setMinimumSectionSize(50)
         self.horizontalHeader().setHighlightSections(False)
-        self.verticalHeader().setVisible(False)
+        self.verticalHeader().setVisible(True)
         self.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         self.verticalHeader().setDefaultSectionSize(12)
         self.setShowGrid(False)
