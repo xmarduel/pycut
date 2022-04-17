@@ -114,49 +114,104 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
         '''
         self.talkie.show_simulation_at_time(simtime)
 
-    def set_gl_canvas_size(self, size: int):
-        '''
-        '''
-        self.talkie.set_gl_canvas_size(size)
-
 
 jscut_webgl = """
 <html lang="en">
 <head>
 <style>
 
-.slider {
+input[type=range] {
+  height: 25px;
   -webkit-appearance: none;
+  margin: 10px 0;
   width: 100%;
-  height: 25px;
-  background: #d3d3d3;
+}
+input[type=range]:focus {
   outline: none;
-  opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
 }
-
-.slider:hover {
-  opacity: 1;
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 5px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000;
+  background: #2497E3;
+  border-radius: 1px;
+  border: 0px solid #000000;
 }
-
-.slider::-webkit-slider-thumb {
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 0px 0px 0px #000000;
+  border: 1px solid #2497E3;
+  height: 18px;
+  width: 18px;
+  border-radius: 25px;
+  background: #A1D0FF;
+  cursor: pointer;
   -webkit-appearance: none;
-  appearance: none;
-  width: 25px;
-  height: 25px;
-  background: #04AA6D;
+  margin-top: -7px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #2497E3;
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 5px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000;
+  background: #2497E3;
+  border-radius: 1px;
+  border: 0px solid #000000;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: 0px 0px 0px #000000;
+  border: 1px solid #2497E3;
+  height: 18px;
+  width: 18px;
+  border-radius: 25px;
+  background: #A1D0FF;
   cursor: pointer;
 }
-
-.slider::-moz-range-thumb {
-  width: 25px;
-  height: 25px;
-  background: #04AA6D;
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 5px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #2497E3;
+  border: 0px solid #000000;
+  border-radius: 2px;
+  box-shadow: 0px 0px 0px #000000;
+}
+input[type=range]::-ms-fill-upper {
+  background: #2497E3;
+  border: 0px solid #000000;
+  border-radius: 2px;
+  box-shadow: 0px 0px 0px #000000;
+}
+input[type=range]::-ms-thumb {
+  margin-top: 1px;
+  box-shadow: 0px 0px 0px #000000;
+  border: 1px solid #2497E3;
+  height: 18px;
+  width: 18px;
+  border-radius: 25px;
+  background: #A1D0FF;
   cursor: pointer;
 }
+input[type=range]:focus::-ms-fill-lower {
+  background: #2497E3;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #2497E3;
+}
 
-#bloc1, #bloc2, #bloc3, #bloc4, #bloc5, #bloc6, #bloc7
+
+#bloc1, #bloc2, #bloc3, #bloc4, #bloc5, #bloc6, #bloc7, #bloc8
 {
     display:inline;
 }
@@ -182,16 +237,28 @@ var auto_runner = null;
 var current_time = 0;
 var time_step = 0;
 
+
+function sliderSizeCanvas(size) {
+  // size of canvas
+  const gl_canvas = document.getElementById('glCanvas');
+  gl_canvas.width = size;
+  gl_canvas.height = size;
+
+  // size of slider
+  const simtime_slider = document.getElementById('simtime_slider');
+  simtime_slider.style.width = size; 
+}
+
 function showAtTime(simtine) {
   if (gcode_simulator) {
-    const input_slider = document.getElementById('input_slider');
-    input_slider.value = simtine;
+    const simtime_slider = document.getElementById('simtime_slider');
+    simtime_slider.value = simtine;
   
-    sliderChangeVal(simtine);
+    sliderChangeSimTime(simtine);
   }
 }
 
-function sliderChangeVal(newVal) {
+function sliderChangeSimTime(newVal) {
   if (gcode_simulator) {
     gcode_simulator.timeChanged(0, newVal);
     current_time = newVal;
@@ -205,10 +272,10 @@ function increaseTime() {
       new_current_time = 0;
     }
 
-    const input_slider = document.getElementById('input_slider');
-    input_slider.value = new_current_time;
+    const simtime_slider = document.getElementById('simtime_slider');
+    simtime_slider.value = new_current_time;
   
-    sliderChangeVal(new_current_time);
+    sliderChangeSimTime(new_current_time);
 
     auto_runner = setTimeout(increaseTime, 1);
   }
@@ -229,10 +296,10 @@ function decreaseTime() {
       new_current_time = gcode_simulator.maxTime;
     }
 
-    const input_slider = document.getElementById('input_slider');
-    input_slider.value = new_current_time;
+    const simtime_slider = document.getElementById('simtime_slider');
+    simtime_slider.value = new_current_time;
 
-    sliderChangeVal(new_current_time);
+    sliderChangeSimTime(new_current_time);
   
     auto_runner = setTimeout(decreaseTime, 1);
   }
@@ -262,10 +329,10 @@ function step_backward() {
       new_current_time = gcode_simulator.maxTime;
     }
 
-    const input_slider = document.getElementById('input_slider');
-    input_slider.value = new_current_time;
+    const simtime_slider = document.getElementById('simtime_slider');
+    simtime_slider.value = new_current_time;
 
-    sliderChangeVal(new_current_time);
+    sliderChangeSimTime(new_current_time);
   }
 }
 
@@ -276,10 +343,10 @@ function step_forward() {
       new_current_time = 0;
     }
 
-    const input_slider = document.getElementById('input_slider');
-    input_slider.value = new_current_time;
+    const simtime_slider = document.getElementById('simtime_slider');
+    simtime_slider.value = new_current_time;
 
-    sliderChangeVal(new_current_time);
+    sliderChangeSimTime(new_current_time);
 
   }
 }
@@ -287,20 +354,20 @@ function step_forward() {
 function to_begin() {
   if (gcode_simulator) {
 
-    const input_slider = document.getElementById('input_slider');
-    input_slider.value = 0;
+    const simtime_slider = document.getElementById('simtime_slider');
+    simtime_slider.value = 0;
 
-    sliderChangeVal(0);
+    sliderChangeSimTime(0);
   }
 }
 
 function to_end() {
   if (gcode_simulator) {
 
-    const input_slider = document.getElementById('input_slider');
-    input_slider.value = gcode_simulator.maxTime;
+    const simtime_slider = document.getElementById('simtime_slider');
+    simtime_slider.value = gcode_simulator.maxTime;
 
-    sliderChangeVal(gcode_simulator.maxTime);
+    sliderChangeSimTime(gcode_simulator.maxTime);
   }
 }
 </script>
@@ -309,7 +376,7 @@ function to_end() {
 
 <div>
     <canvas id="glCanvas" width="500" height="500"></canvas>
-    <input id="input_slider" type="range" min="0" max="1000" value="1000" step="1" oninput="sliderChangeVal(this.value)" style="width: 500px"></input>
+    <input id="simtime_slider" type="range" min="0" max="1000" value="1000" step="1" oninput="sliderChangeSimTime(this.value)" style="width: 500px"></input>
     <div id="block_container">
       <div id="bloc1"><button type="button" onclick="to_begin()"><img src="qrc:/images/tango/22x22/actions/media-skip-backward.png"/></button> </div>  
       <div id="bloc2"><button type="button" onclick="step_backward()"><img src="qrc:/images/tango/22x22/actions/media-seek-backward.png"/></button> </div>  
@@ -318,6 +385,7 @@ function to_end() {
       <div id="bloc5"><button type="button" onclick="run()"><img src="qrc:/images/tango/22x22/actions/media-playback-start.png"/></button> </div>
       <div id="bloc6"><button type="button" onclick="step_forward()"><img src="qrc:/images/tango/22x22/actions/media-seek-forward.png"/></button> </div>
       <div id="bloc7"><button type="button" onclick="to_end()"><img src="qrc:/images/tango/22x22/actions/media-skip-forward.png"/></button> </div>
+      <div id="bloc8"><input id="size_slider" type="range" min="250" max="750" value="500" step="10" oninput="sliderSizeCanvas(this.value)" style="width: 100px"></input></div>
     </div>
     <div>Click twice a button or move the mouse outside the buttons to refresh the view!</div>
   </div>
@@ -390,21 +458,21 @@ class GCodeSimulator {
         self.time2 = self.maxTimeRounded;
         self.filled = true;
 
-        const input_slider = document.getElementById('input_slider');
-        input_slider.min = 0;
+        const simtime_slider = document.getElementById('simtime_slider');
+        simtime_slider.min = 0;
         if ( self.maxTimeRounded > 0 ) {
-          input_slider.max = self.maxTimeRounded + 2;
-          input_slider.value = self.maxTimeRounded + 2;
+          simtime_slider.max = self.maxTimeRounded + 2;
+          simtime_slider.value = self.maxTimeRounded + 2;
           
           if (self.simulation_strategy == "with_number_of_steps") {
             // set the number of steps, step size is calculated from this
-            input_slider.step = input_slider.max / self.simulation_nb_steps;
+            simtime_slider.step = simtime_slider.max / self.simulation_nb_steps;
             time_step = self.maxTimeRounded / self.simulation_nb_steps;
           } 
           if (self.simulation_strategy == "with_step_size") {
             // set the time step, number of steps calculated from this
             time_step = self.simulation_step_size;
-            input_slider.step = time_step;
+            simtime_slider.step = time_step;
           }
         }
       });
@@ -452,8 +520,8 @@ document.addEventListener("DOMContentLoaded", function () {
             gl_canvas.height = simdata["height"];
 
             // size of slider from outside
-            const input_slider = document.getElementById('input_slider');
-            input_slider.width = simdata["width"];
+            const simtime_slider = document.getElementById('simtime_slider');
+            simtime_slider.width = simdata["width"];
 
 
             gcode_simulator = new GCodeSimulator(simdata);
@@ -464,22 +532,7 @@ document.addEventListener("DOMContentLoaded", function () {
           const simtime = JSON.parse(data);
           
           showAtTime(simtime);      
-        });
-
-        talkie.send_canvas_size_js_side.connect(function(data) {
-          const size = JSON.parse(data);
-          
-          // size of canvas from outside
-          const gl_canvas = document.getElementById('glCanvas');
-          gl_canvas.width = size;
-          gl_canvas.height = size;
-
-          // size of slider from outside
-          const input_slider = document.getElementById('input_slider');
-          input_slider.width = size;   
-        });
-
-        
+        }); 
         
         talkie.fill_webgl();
     });
@@ -495,7 +548,6 @@ class TalkyTalky(QtCore.QObject):
     '''
     send_data_js_side = QtCore.Signal(str)
     send_simtime_js_side = QtCore.Signal(float)
-    send_canvas_size_js_side = QtCore.Signal(int)
 
     send_error_annotation = QtCore.Signal(int, int, str, str)
 
@@ -514,11 +566,6 @@ class TalkyTalky(QtCore.QObject):
 
     def show_simulation_at_time(self, simtine: float):
         '''
+        set the sim time from the outside into js (from the gcode file browser per example)
         '''
         self.send_simtime_js_side.emit(simtine)
-
-    def set_gl_canvas_size(self, size: int):
-        '''
-        '''
-        self.send_canvas_size_js_side.emit(size)
-
