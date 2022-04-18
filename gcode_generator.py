@@ -41,7 +41,7 @@ class UnitConverter:
         '''
         self.units = units
 
-    def toInch(self, x):
+    def toInch(self, x: float):
         '''
         Convert x from the current unit to inch
         '''
@@ -50,7 +50,7 @@ class UnitConverter:
         else:
             return x / 25.4
 
-    def fromInch(self, x):
+    def fromInch(self, x: float):
         '''
         Convert x from inch to the current unit
         '''
@@ -59,7 +59,7 @@ class UnitConverter:
         else:
             return ValWithUnit(x * 25.4, "mm")
 
-    def fromMm(self, x):
+    def fromMm(self, x: float):
         '''
         Convert x from mm to the current unit
         '''
@@ -125,7 +125,9 @@ class ToolModel:
         self.cutRate = ValWithUnit(40, self.units)
 
     def getCamData(self):
-        ''' convert to the gcode units FIXME actual per default mm '''
+        ''' 
+        convert to the gcode units FIXME actual per default mm 
+        '''
         result = {
             "diameterTool": self.diameter.toMm(),
             "passDepthTool": self.passDepth.toMm(),
@@ -290,7 +292,7 @@ class CncOp:
         # and the resulting tool paths, to be displayed in the svg viewer
         self.cam_paths_svg_paths : List[SvgPath] = []
 
-    def put_value(self, attr, value):
+    def put_value(self, attr: str, value: Any):
         '''
         '''
         setattr(self, attr, value)
@@ -521,7 +523,7 @@ class JobModel:
     '''
     '''
     def __init__(self,
-            svg_viewer,
+            svg_viewer: SvgViewer,
             cnc_ops: List[CncOp],
             materialModel: MaterialModel,
             svgModel: SvgModel,
@@ -620,7 +622,6 @@ class GcodeGenerator:
             # as flipped: is -maxY when "no flip"
             return self.unitConverter.fromMm(self.job.minY) - self.offsetY
 
-
     @property
     def maxX(self):
         '''
@@ -687,15 +688,15 @@ class GcodeGenerator:
         self.offsetY = - self.unitConverter.fromMm(-(self.job.minY + self.job.maxY) / 2)
         self.generateGcodeAction()
 
-    def setXOffset(self, value):
+    def setXOffset(self, value: float):
         self.offsetX = value
         self.generateGcodeAction()
 
-    def setYOffset(self, value):
+    def setYOffset(self, value: float):
         self.offsetY = value
         self.generateGcodeAction()
 
-    def setFlipXY(self, value):
+    def setFlipXY(self, value: float):
         self.flipXY = value
         self.generateGcodeAction()
 

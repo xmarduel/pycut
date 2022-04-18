@@ -31,7 +31,7 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
 
     simtime_received_from_js = QtCore.Signal(float)
 
-    def __init__(self, parent):
+    def __init__(self, parent: QtWidgets.QWidget):
         '''
         '''
         super(WebGlViewer, self).__init__(parent)
@@ -112,12 +112,12 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
 
         return shader_source
 
-    def show_simulation_at_time(self, simtime: float):
+    def set_simtime(self, simtime: float):
         '''
         '''
-        self.talkie.show_simulation_at_time(simtime)
+        self.talkie.set_simtime(simtime)
 
-    def received_simtime_python_side(self, simtime: float):
+    def received_simtime_from_js_side(self, simtime: float):
         '''
         '''
         # set cursor on gcode file browser
@@ -584,7 +584,7 @@ class TalkyTalky(QtCore.QObject):
         self.send_data_js_side.emit(jsondata)
 
     @QtCore.Slot() 
-    def show_simulation_at_time(self, simtine: float):
+    def set_simtime(self, simtine: float):
         '''
         set the sim time from the outside into js (from the gcode file browser per example)
         '''
@@ -596,4 +596,4 @@ class TalkyTalky(QtCore.QObject):
         get the sim time from the js and send it to "listeners" (to the gcode file browser per example)
         '''
         # inform listeners
-        self.widget.received_simtime_python_side(simtime)
+        self.widget.received_simtime_from_js_side(simtime)

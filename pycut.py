@@ -417,7 +417,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.candle_viewer.loadData(gcode)
 
-    def load_ui(self, uifile):
+    def load_ui(self, uifile: str):
         '''
         old method th load ui, not OK when a QMainWindow ui file
         has to be loaded, OK when simple widget.
@@ -591,7 +591,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode_y_offset)
         self.ui.checkBox_GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
 
-    def open_job(self, jobfilename):
+    def open_job(self, jobfilename: str):
         with open(jobfilename) as f:
             self.jobfilename = jobfilename
 
@@ -965,13 +965,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             # and the tabs if any
             self.svg_viewer.set_tabs(self.tabs)
 
-    def assign_tabs(self, tabs):
+    def assign_tabs(self, tabs: List['Tab']):
         '''
         '''
         self.tabs = tabs
         self.ui.tabsview_manager.set_tabs(self.tabs)
     
-    def display_cnc_tabs(self, tabs: Dict[str, Any]):
+    def display_cnc_tabs(self, tabs: List['Tab']):
         '''
         '''
         self.tabs = tabs

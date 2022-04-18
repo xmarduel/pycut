@@ -578,7 +578,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 class SvgTransformer:
     '''
     '''
-    def __init__(self, svg):
+    def __init__(self, svg: str):
         self.svg = svg
 
     def collect_shapes(self) -> List[etree.ElementTree]:
