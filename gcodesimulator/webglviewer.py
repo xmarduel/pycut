@@ -28,6 +28,9 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
 </body>
 </html>'''
 
+
+    simtime_received_from_js = QtCore.Signal(float)
+
     def __init__(self, parent):
         '''
         '''
@@ -113,6 +116,12 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
         '''
         '''
         self.talkie.show_simulation_at_time(simtime)
+
+    def received_simtime_python_side(self, simtime: float):
+        '''
+        '''
+        # set cursor on gcode file browser
+        self.simtime_received_from_js.emit(simtime)
 
 
 jscut_webgl = """
@@ -237,6 +246,9 @@ var auto_runner = null;
 var current_time = 0;
 var time_step = 0;
 
+var talkie = null;
+var simtime_from_python = false;
+
 
 function sliderSizeCanvas(size) {
   // size of canvas
@@ -258,10 +270,14 @@ function showAtTime(simtine) {
   }
 }
 
-function sliderChangeSimTime(newVal) {
+function sliderChangeSimTime(simtime) {
   if (gcode_simulator) {
-    gcode_simulator.timeChanged(0, newVal);
-    current_time = newVal;
+    gcode_simulator.timeChanged(0, simtime);
+    current_time = simtime;
+
+    if (talkie !== null && simtime_from_python === false && auto_runner === null) {
+      talkie.js_inform_python_for_simtime(parseFloat(simtime)); 
+    }
   }
 }
 
@@ -507,7 +523,7 @@ document.addEventListener("DOMContentLoaded", function () {
     new QWebChannel(qt.webChannelTransport, function(channel) {
         // All the functions we use to communicate with the Python code are here   
 
-        var talkie = channel.objects.talkie; // global variable
+        talkie = channel.objects.talkie; // global variable
 
         // An example of receiving information pushed from the Python side
         // It's really neat how this looks just like the Python code
@@ -531,7 +547,9 @@ document.addEventListener("DOMContentLoaded", function () {
         talkie.send_simtime_js_side.connect(function(data) {
           const simtime = JSON.parse(data);
           
-          showAtTime(simtime);      
+          simtime_from_python = true; 
+          showAtTime(simtime);  
+          simtime_from_python = false;    
         }); 
         
         talkie.fill_webgl();
@@ -549,8 +567,6 @@ class TalkyTalky(QtCore.QObject):
     send_data_js_side = QtCore.Signal(str)
     send_simtime_js_side = QtCore.Signal(float)
 
-    send_error_annotation = QtCore.Signal(int, int, str, str)
-
     def __init__(self, widget: WebGlViewer):
         super().__init__()
         self.widget = widget
@@ -564,8 +580,17 @@ class TalkyTalky(QtCore.QObject):
         
         self.send_data_js_side.emit(jsondata)
 
+    @QtCore.Slot() 
     def show_simulation_at_time(self, simtine: float):
         '''
         set the sim time from the outside into js (from the gcode file browser per example)
         '''
         self.send_simtime_js_side.emit(simtine)
+
+    @QtCore.Slot(float) 
+    def js_inform_python_for_simtime(self, simtime: float):
+        '''
+        get the sim time from the js and send it to "listeners" (to the gcode file browser per example)
+        '''
+        # inform listeners
+        self.widget.received_simtime_python_side(simtime)

@@ -38,10 +38,13 @@ class GcodeMiniParser:
         self.line_no = 0 # related line no in the whole gcode text
 
         self.path : List[Tuple[float, float, float, float]] = []
+        self.path_time_map : List[float] = []    # idx -> time
+        
         self.path_time = None
 
+        # helpers
         self.path_idx_line_no = {}  # map path "index" -> gcode line no
-        self.path_time_map = {}  # map gcode line no -> sim time
+        self.line_no_time_map = {}  # map gcode line no -> sim time
 
     def reset(self):
         '''
@@ -53,13 +56,16 @@ class GcodeMiniParser:
         self.path_time = None
 
         self.path_idx_line_no = {}
-        self.path_time_map = {}
+        self.line_no_time_map = {}
+
+        self.path_time_map = []
 
     def get_path(self) -> List[Tuple[float, float, float, float]] :
         return self.path
     
     def get_path_time(self) -> float:
-        self.eval_path_time()
+        if self.path_time == None:
+            self.eval_path_time()
         return self.path_time
     
     def parse_gcode(self, gcode: str):
@@ -152,6 +158,9 @@ class GcodeMiniParser:
     def eval_path_time(self):
         '''
         '''
+        self.path_time_map = []
+        self.line_no_time_map =  {}
+
         total_time = 0 
 
         for path_idx, point in enumerate(self.path):
@@ -177,7 +186,7 @@ class GcodeMiniParser:
             total_time = total_time + dist / f * 60
 
             # ------------------------------------------
-            # fill self.path_time_map
+            # fill self.line_no_time_map
             # ------------------------------------------
             if path_idx in self.path_idx_line_no:
                 line_no = self.path_idx_line_no[path_idx]
@@ -189,7 +198,26 @@ class GcodeMiniParser:
                         line_no = self.path_idx_line_no[idx0]
                         break
             # ------------------------------------------
-            self.path_time_map[line_no] = total_time
+            self.line_no_time_map[line_no] = total_time
+            # ------------------------------------------
+            self.path_time_map.append(total_time)
             # ------------------------------------------
         
         self.path_time = total_time
+
+    def get_path_idx_for_time(self, atime: float) -> int:
+        if atime == 0:
+            return 0
+
+        begin = 0
+        end = len(self.path_time_map)
+        
+        while begin < end:
+            i = math.floor((begin + end) / 2)
+            if self.path_time_map[i] < atime:
+                begin = i + 1
+            else:
+                end = i
+    
+        return end
+

@@ -834,13 +834,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         layout = simulator.layout()
         
         self.webgl_viewer = webglviewer.WebGlViewer(simulator)
-
         self.gcode_textviewer = gcodefileviewer.GCodeFileViewer(simulator, self.webgl_viewer)
+
+        self.webgl_viewer.simtime_received_from_js.connect(self.gcode_textviewer.on_simtime_from_js)
 
         layout.addWidget(self.webgl_viewer)
         layout.addWidget(self.gcode_textviewer)
-        layout.setStretch(0, 3)
-        layout.setStretch(1, 2)
+        layout.setStretch(0, 1)
+        layout.setStretch(1, 0)
         
         return self.webgl_viewer
 
