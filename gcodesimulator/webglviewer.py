@@ -335,6 +335,9 @@ function pause() {
       clearTimeout(auto_runner);
     }
     auto_runner = null;
+
+    // inform python on "stop"
+    talkie.js_inform_python_for_simtime(parseFloat(current_time)); 
   }
 }
 
