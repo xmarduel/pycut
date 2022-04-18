@@ -202,23 +202,23 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 msgBox.exec()
 
 
-        self.layoutToggleLeftSideAction = QtGui.QAction(QtGui.QIcon(":/images/icons8-hide-30.png"), "hide/show",
+        self.layoutToggleLeftSideAction = QtGui.QAction(QtGui.QIcon(":/images/left-area.png"), "hide/show",
                 self, shortcut=QtGui.QKeySequence.Back,
-                statusTip="Toggle Left Side", triggered=self.toggleLeftSide)
+                statusTip="Show/Hide Left Side", triggered=self.toggleLeftSide)
         self.layoutToggleLeftSideAction.setCheckable(True)
-        self.layoutToggleLeftSideAction.setToolTip("Toggle Left Side View") # still not shown
+        self.layoutToggleLeftSideAction.setToolTip("Show/Hide Left Side View") # still not shown
 
-        self.layoutToggleMiddleAreaAction = QtGui.QAction(QtGui.QIcon(":/images/icons8-hide-30.png"), "hide/show",
+        self.layoutToggleMiddleAreaAction = QtGui.QAction(QtGui.QIcon(":/images/bellow-area.png"), "hide/show",
                 self, shortcut=QtGui.QKeySequence.Forward,
-                statusTip="Toggle Middle Area", triggered=self.toggleMiddleArea)
+                statusTip="Show/Hide Op. Table", triggered=self.toggleMiddleArea)
         self.layoutToggleMiddleAreaAction.setCheckable(True)
-        self.layoutToggleMiddleAreaAction.setToolTip("Toggle Middle Area View") # still not shown
+        self.layoutToggleMiddleAreaAction.setToolTip("Show/Hide Op. Table View") # still not shown
 
-        self.layoutToggleRightSideAction = QtGui.QAction(QtGui.QIcon(":/images/icons8-hide-30.png"), "hide/show",
+        self.layoutToggleRightSideAction = QtGui.QAction(QtGui.QIcon(":/images/right-area.png"), "hide/show",
                 self, shortcut=QtGui.QKeySequence.Forward,
-                statusTip="Toggle Right Side", triggered=self.toggleRightSide)
+                statusTip="Show/Hide Right Side", triggered=self.toggleRightSide)
         self.layoutToggleRightSideAction.setCheckable(True)
-        self.layoutToggleRightSideAction.setToolTip("Toggle Right Side View") # still not shown
+        self.layoutToggleRightSideAction.setToolTip("Show/Hide Right Side View") # still not shown
 
         self.menuBar().addAction(self.layoutToggleLeftSideAction)
         self.menuBar().addAction(self.layoutToggleMiddleAreaAction)
