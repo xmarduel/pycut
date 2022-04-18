@@ -1439,7 +1439,10 @@
             <item row="2" column="1">
              <widget class="QSpinBox" name="spinBox_GCodeGeneration_SpindleSpeed">
               <property name="maximum">
-               <number>50000</number>
+               <number>25000</number>
+              </property>
+              <property name="singleStep">
+               <number>50</number>
               </property>
              </widget>
             </item>

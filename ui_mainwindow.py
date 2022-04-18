@@ -836,7 +836,8 @@ class Ui_mainwindow(object):
 
         self.spinBox_GCodeGeneration_SpindleSpeed = QSpinBox(self.scrollAreaWidgetContents_2)
         self.spinBox_GCodeGeneration_SpindleSpeed.setObjectName(u"spinBox_GCodeGeneration_SpindleSpeed")
-        self.spinBox_GCodeGeneration_SpindleSpeed.setMaximum(50000)
+        self.spinBox_GCodeGeneration_SpindleSpeed.setMaximum(25000)
+        self.spinBox_GCodeGeneration_SpindleSpeed.setSingleStep(50)
 
         self.formLayout_GCodeGeneration.setWidget(2, QFormLayout.FieldRole, self.spinBox_GCodeGeneration_SpindleSpeed)
 
