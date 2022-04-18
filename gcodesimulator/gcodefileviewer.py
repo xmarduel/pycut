@@ -81,7 +81,6 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
             block = self.document().findBlockByLineNumber(self.curr_line_no)
             cursor = QtGui.QTextCursor(block)
             self.setTextCursor(cursor)
-            #self.moveCursor(QtGui.QTextCursor.End)
 
             self.highlightCurrentLine()
 
