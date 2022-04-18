@@ -4,10 +4,10 @@
 Can process basic <text> elements without converting them before to <path> elements
 
 
-0.3.3
+0.3.4
 =====
 
-Link gcode browser -> gcode simulator (1 way)
+Link gcode browser <-> gcode simulator
 
 0.3.2
 =====

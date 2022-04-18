@@ -8,7 +8,9 @@ Disclamer: This software is used at the user's own risk. No responsibility is ac
 USAGE: start the program from the installation folder
 
 > python pycut.py
+
 > python pycut.py -h
+
 > python pycut.py -job <path_to_job>
 
 Dependencies: Python 3.9
