@@ -42,6 +42,10 @@ MAIN IMPROVMENTS OVER JSCUT
 - tabs "on the fly" (no need to define them in the svg file)
 - flip X/Y in GCode (good for my machine - the "1419" one -)
 
+MAIN REGRESSIONS OVER JSCUT
+- fonts (especially the fancy ones) can fail to be pocketed (my fault)
+- what else ?
+
 TODO:
 - capability to read text without converting them first to paths 
 
