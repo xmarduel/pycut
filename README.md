@@ -13,10 +13,10 @@ USAGE: start the program from the installation folder
 
 > python pycut.py -job <path_to_job>
 
-Dependencies: Python 3.9
-- PySide6-6.2.1
+Dependencies: Python 3.10
+- PySide6-6.3.0
 - svgpathtools (latest) - pip installation bundled with numpy/scipy
-- shapely (1.8.0)
+- shapely (1.8.2)
 - matplotlib (to debug/view shapely offsets ops)
 
 DONE:
