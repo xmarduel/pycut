@@ -16,6 +16,7 @@ USAGE: start the program from the installation folder
 Dependencies: Python 3.10
 - PySide6-6.3.0
 - svgpathtools (latest) - pip installation bundled with numpy/scipy
+- svgelements (latest) - to resolve transformations in svg datas
 - shapely (1.8.2) with PyOpenGL
 - matplotlib (to debug/view shapely offsets ops)
 
