@@ -1,3 +1,5 @@
+import sys
+import os
 
 from lxml import etree
 import svgelements
@@ -10,6 +12,8 @@ class SvgResolver:
 
     def __init__(self, filename: str):
         self.filename = filename
+        self.resolved_filename = os.path.splitext(filename)[0] + '.resolved.svg'
+        
         self.shapes = []
         self.svg = svgelements.SVG.parse(filename, reify=True, ppi=25.4)  # so that there is no "scaling"
 
@@ -196,7 +200,7 @@ class SvgResolver:
         if "style" in shape.values:
             p.attrib["style"] = shape.values["style"]
 
-    def resolve(self, to_file: str):
+    def resolve(self):
         '''
         '''
         self.collect_shapes()
@@ -245,7 +249,7 @@ class SvgResolver:
                 print ("shape not recognized!", shape.__class__)
 
         root = etree.ElementTree(asvg)
-        root.write(to_file, 
+        root.write(self.resolved_filename, 
                 pretty_print=True, 
                 xml_declaration=True, 
                 encoding='utf-8')
@@ -253,5 +257,7 @@ class SvgResolver:
     
     
 if __name__ == '__main__':
-    resolver = SvgResolver('test_svgelements.svg')
-    resolver.resolve('test_svgelements_resolved.svg')
+    filename = sys.argv[1]
+    
+    resolver = SvgResolver(filename)
+    resolver.resolve()
