@@ -395,6 +395,9 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
         # add bottom to main window layout
         vbox.addLayout(hbox_add)
         vbox.addLayout(hbox_gen)
+        vbox.addWidget(self.table)
+
+        vbox.setStretch(2, 1)
 
         # set layout on the window
         self.setLayout(vbox)

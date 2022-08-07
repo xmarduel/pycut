@@ -257,6 +257,9 @@ class PyCutTabsTableViewManager(QtWidgets.QWidget):
 
         # add bottom to main window layout
         vbox.addLayout(hbox)
+        vbox.addWidget(self.table)
+
+        vbox.setStretch(1, 1)
 
         # set layout on the window
         self.setLayout(vbox)

@@ -583,16 +583,17 @@ class FontFiles:
         '''
         '''
         try:
-            pycut_fonts_module = os.environ["PYCUT_FONTS_TEXT_2_PATHS"]
+            # $PYCUT_FONTS_TEXT_2_PATHS = !text_to_path_fonts_specs.py!
+            pycut_fonts_specs__module = os.environ["PYCUT_FONTS_TEXT_2_PATHS"]
             
-            base, name = os.path.split(pycut_fonts_module)
+            base, name = os.path.split(pycut_fonts_specs__module)
             sys.path.append(base)
             pycut_fonts = importlib.import_module(name)
 
             cls.fonts_dir = pycut_fonts.fonts_dir
             cls.fonts_family_alias = pycut_fonts.fonts_family_alias
         except Exception as e:
-            print("failed to load %s - %s" % (pycut_fonts_module, e))
+            print("failed to load %s - %s" % (pycut_fonts_specs__module, e))
             print("using default font dirs %ss" % cls.fonts_dir)
 
         cls.lookup = {}

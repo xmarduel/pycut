@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="100mm"
    height="125mm"
    viewBox="0 0 100 125"
    version="1.1"
    id="svg8"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
-   sodipodi:docname="cnc1310-55.svg">
+   sodipodi:docname="cnc1310-55-90mm.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -50,7 +50,6 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -59,49 +58,49 @@
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       style="fill:none;stroke:#0000ff;stroke-width:0.26449px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 5.1322452,5.1322452 H 97.067755 V 72.6323 a 45.967755,46.000038 0 0 1 -91.9355098,0 z"
+       style="fill:none;stroke:#0000ff;stroke-width:0.261315px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 5.0,5.0 h 90 v 70 a 45,45 0 0 1 -90,0 z"
        id="contour" />
     <circle
        style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.388054;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
        id="bearing_left"
-       cx="22"
+       cx="21"
        cy="21"
        r="10.5" />
     <circle
        style="font-variation-settings:normal;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.388054;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
        id="bearing_right"
-       cx="80"
+       cx="78.699997"
        cy="21"
        r="10.5" />
     <circle
        style="font-variation-settings:normal;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.352776;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
        id="central_small_hole"
-       cx="51"
+       cx="50"
        cy="21"
        r="10" />
     <circle
        style="font-variation-settings:normal;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.970135;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
        id="spindle-hole"
-       cx="51"
-       cy="74"
+       cx="50"
+       cy="75"
        r="27.5" />
     <circle
-       style="font-variation-settings:normal;vector-effect:none;fill:#ff00ff;fill-opacity:0.2;fill-rule:evenodd;stroke-width:0.991695;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+       style="font-variation-settings:normal;vector-effect:none;fill:#ff00ff;fill-opacity:0.2;fill-rule:evenodd;stroke-width:0.970137;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
        id="circle841"
-       cx="51"
-       cy="72.5"
-       r="46" />
+       cx="50"
+       cy="75"
+       r="45" />
     <circle
        style="font-variation-settings:normal;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.211666;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
        id="abstand_NW"
-       cx="19"
+       cx="18"
        cy="51"
        r="6" />
     <circle
        style="font-variation-settings:normal;vector-effect:none;fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.314309;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
        id="screw_NW"
-       cx="19.1"
+       cx="18.200001"
        cy="51.099998"
        r="4.1999998" />
     <circle
@@ -114,7 +113,7 @@
        style="font-variation-settings:normal;vector-effect:none;fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.314309;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
        id="screw_NE"
        cx="83.199997"
-       cy="51.200001"
+       cy="51.099998"
        r="4.1999998" />
     <circle
        style="font-variation-settings:normal;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.211666;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
@@ -131,13 +130,13 @@
     <circle
        style="font-variation-settings:normal;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.211666;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
        id="abstand_SW"
-       cx="19"
+       cx="18"
        cy="91"
        r="6" />
     <circle
        style="font-variation-settings:normal;vector-effect:none;fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.314309;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
        id="screw_SW"
-       cx="19.1"
+       cx="18.200001"
        cy="91.099998"
        r="4.1999998" />
     <text
@@ -151,5 +150,19 @@
          style="font-size:4.93889px;stroke-width:0.264583"
          x="20"
          y="39.5">Diameter Spindle: 55 mm</tspan></text>
+    <rect
+       style="fill:#000080;fill-opacity:0.4;stroke:#f70000;stroke-width:0"
+       id="rect927"
+       width="32"
+       height="32"
+       x="63"
+       y="5.0000005" />
+    <rect
+       style="fill:#000080;fill-opacity:0.4;stroke:#f70000;stroke-width:0"
+       id="rect927-4"
+       width="32"
+       height="32"
+       x="5.0000005"
+       y="5.0000005" />
   </g>
 </svg>
