@@ -1,9 +1,5 @@
 {
-<<<<<<< Updated upstream
   "svg_file": "./svg/control_panel.svg",
-=======
-  "svg_file": "svg/control_panel.svg",
->>>>>>> Stashed changes
   "operations": [
     {
       "Name": "op",
