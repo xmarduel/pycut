@@ -119,44 +119,52 @@ file:</p>
 
 <p>Because <strong>PyCut</strong> finally processes "paths" in order to
 calculate cnc paths, these shapes have to be interpreted/converted first to svg
-&lt;path&gt;.</p>
+&lt;path&gt; items.</p>
 
 <p>The first possibility is to convert all the shapes and text (strings) found
-in your data into &lt;path&gt; shapes only, and then import this &lt;path&gt;
-only svg file into <strong>PyCut</strong>.</p>
+in your data into &lt;path&gt; shapes, and then import this &lt;path&gt;
+only svg file into <strong>PyCut</strong>. This conversion can be done within Inkscape.
+However it is not very practical as you ends managing 2 svg datas, the first one
+containing your initial shapes (circle, rect etc) and the converted one.</p>
 
-<p>The second possibility is to only convert the &lt;text&gt; items in
-&lt;path&gt; shapes, because <strong>PyCut</strong> actually can internally
-convert the other shapes into &lt;path&gt; shapes.</p>
+<p>The second possibility is to not convert your svg data at all. Indeed, <strong>PyCut</strong>
+can read the shapes by itself, so every thing will be Ok. It is nevertheless only
+true if there are no &lt;text&gt; items in the svg data, as <strong>PyCut</strong> 
+cannot (yet) convert &lt;text&gt; items into paths and wil thus ingnore them. </p>
 
-<p><strong><span style="color:#8000ff">IN PROGRESS</span>:</strong> The second
-possibility in to not convert the svg file at all, because
-<strong>PyCut</strong> can actually convert all these shapes/text internally.
-Nevertheless, special attention should be given to the &lt;text&gt; items. A
-successfull conversion will only occurs if the &lt;text&gt; item is simple
+<p>So how to handle &lt;text&gt; items ? <strong><span style="color:#8000ff">IN PROGRESS</span>:</strong> 
+Well actually <strong>PyCut</strong>
+comes with it own  &lt;text&gt; to &lt;path&gt; converter as a small utility, so
+just use it and copy/paste the result of a  &lt;text&gt;  conversion into your svg.
+A successfull conversion will only occurs if the &lt;text&gt; item is simple
 enough: the text "value" should not be splitted into several &lt;tspan&gt;
 items with different fonts. No &lt;tspan&gt; tag at all is also possible (and
 simpler). </p>
 
-<p>All in all, if PyCut were to display text strings at the wrong positions,
+<p>All in all, if <strong>PyCut</strong> were to display text strings at the wrong positions,
 the user can always export the svg from Inkscape (and write
 <strong>PyCut</strong> a ticket).</p>
 
 <h4>Shapes "id"</h4>
 
-<p>In order to reference the shapes, these shapes must have an "id", hopefully
-unique inside the svg document. If the user has edited the svg "per hand", then
+<p>In order to reference the shapes, these shapes must have an <strong> "id"</strong>, 
+hopefully unique inside the svg document.</p>
+<p> If the user has edited the svg "per hand", then
 he should not forget to give all shapes an unique id. If the user has created
 the svg with <strong>Inkscape</strong>, then "id" are automatically given, but
 maybe the user will want to edit them and give them meaningfull content.</p>
 
 <h4>Transformations</h4>
 
-<p>It is usual to translate, rotate, scale and skew the shapes. Unfortunately,
-<strong>PyCut</strong> cannot handle these transformations. If the user has
-used such transformations, then it is possible inside Inkscape to "resolve" the
-transformation: just "ungroup" and then "group" again the desired shapes.
-During this process, the shapes will be convert into a &lt;path&gt; shapes.</p>
+<p>It is usual to translate, rotate, scale and skew the shapes, especially when using
+&lt;defs&gt; items together with &lt;use&gt;.</p>
+
+<p>Unfortunately, <strong>PyCut</strong> cannot handle these transformations 
+"out of the box". Nevertheless, if the user is using such transformations inside his svg data, 
+it is then possible to "resolve" them, as <strong>PyCut</strong> also comes 
+with a small utility just to resolve any possible transformation while keeping
+the<strong> "id"</strong>s right.  <strong><span style="color:#8000ff">IN PROGRESS</span></strong>:
+This utility should be integrated into <strong>PyCut</strong> so that the user cab spare this step.</p>
 
 <h3>Inkscape</h3>
 
@@ -165,8 +173,6 @@ choose as units "mm" or "in". This will be used later when creating GCode
 with the option "Zero Lower Left of Material" as reference. This option needs
 the Y size of the material.</p>
 
-<p>Then, after having creating your design (rectangles, circles, text etc),
-convert all the &lt;text&gt; items to "paths".</p>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
