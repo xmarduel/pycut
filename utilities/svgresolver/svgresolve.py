@@ -1,5 +1,9 @@
-import sys
+# This Python file uses the following encoding: utf-8
+ 
+VERSION = "1_0_0"
+
 import os
+import argparse
 
 from lxml import etree
 import svgelements
@@ -257,7 +261,15 @@ class SvgResolver:
     
     
 if __name__ == '__main__':
-    filename = sys.argv[1]
+    parser = argparse.ArgumentParser(prog="svgresolver", description="svg defs-use / transformations resolver - Read the doc!")
+
+    # argument
+    parser.add_argument('-i', "--input", dest="input", help="input svg to resolve")
+
+    # version info
+    parser.add_argument("--version", action='version', version='%s' % VERSION)
+
+    options = parser.parse_args()
     
-    resolver = SvgResolver(filename)
+    resolver = SvgResolver(options.input)
     resolver.resolve()
