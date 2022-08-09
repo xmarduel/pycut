@@ -34,12 +34,60 @@
 
 <h3>Introduction</h3>
 
-<p>The SVG standard is huge and there are many ways to write a svg data. ...</p>
+<p>The SVG standard is huge and there are many ways to write a svg data. One very useful feature is to define basic shapes info the <code>defs</code> part,
+and re-use these items many times, applying different transformation for 1 element.</p>
 
+<pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;svg id="svg" width="100mm" height="200mm" viewBox="0 0 100 200" version="1.1"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg"&gt;
+  &lt;defs id="defs"&gt;
+    &lt;circle id="my_circle" cx="0" cy="0" r="2.25"
+      style="opacity:1;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609"
+       /&gt;
+    &lt;rect id="my_rect" x="0" y="0" width="10" height="20"
+      style="opacity:1;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;"
+       /&gt;
+  &lt;/defs&gt;
+  &lt;g id="layer1"&gt;
+      &lt;use href="#my_circle" x="4.680" y="4.680" id="circle_left" /&gt;
+      &lt;use href="#my_circle" x="27.32" y="4.680" id="circle_right" /&gt;
+      &lt;use href="#my_rect" x="5" y="5" id="rect_1" /&gt;
+      &lt;use href="#my_rect" x="25" y="25" id="rect_2" /&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</pre></code>
 
-<p></p>
+<p>But at the end of the day, an application (like PyCut) prefers to (or can only) work with a svg data 
+where all elements (shapes) are defined without transformations, because evaluatings such transformations is not an easy task.</p>
 
+<p>Fortunately, the package <code><strong>svgelements</strong></code> does the job...</p>
 
-<p>TODO: integrate the converter in <strong>PyCut</string>.</p>
+<p>My utility uses <code><strong>svgelements</strong></code> and write the result to a svg file (what  <code><strong>svgelements</strong></code> does not).
+It also manage to preserve the <code>id</code>s of the resolved items</p>
+
+<h3>Usage</h3>
+
+<pre><code class="language-python"># -- from a "raw" svg file
+resolver = SvgResolver("./xtest.svg")
+resolver.resolve()</code></pre>
+
+<p>A file named xtest.resolved.svg is created</p>
+
+<pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" width="100mm" height="200mm" viewBox="0 0 100 200" version="1.1" id="svg"&gt;
+  &lt;g id="layer1"&gt;
+    &lt;circle id="circle_left" cx="4.680" cy="4.680" r="2.250" style="opacity:1;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;"/&gt;
+    &lt;circle id="circler_right" cx="27.320" cy="4.680" r="2.250" style="opacity:1;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609"/&gt;
+    &lt;rect id="rect_1" width="10.000" height="20.000" x="5.000" y="5.000" rx="0.000" ry="0.000" style="opacity:1;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609"/&gt;
+    &lt;rect id="rect_2" width="10.000" height="20.000" x="25.000" y="25.000" rx="0.000" ry="0.000" style="opacity:1;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609"/&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</pre></code>
+
+<p>and PyCut can use this "resolved" svg data as input. Note how the <code>id</code>s are preserved.</p>
+
+<h3>ToDo</h3>
+<p> integrate the converter in <strong>PyCut</string>.</p>
+
 </body>
 </html>
