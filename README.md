@@ -17,7 +17,7 @@ Dependencies: Python 3.10
 - PySide6-6.3.0
 - svgpathtools (latest) - pip installation bundled with numpy/scipy
 - svgelements (latest) - to resolve transformations in svg datas
-- freetype-py (latest) - not yet used, not needed for text_2_path
+- freetype-py (latest) - not yet used, needed for text_2_path utility
 - shapely (1.8.2) with PyOpenGL
 - matplotlib (to debug/view shapely offsets ops)
 
