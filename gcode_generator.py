@@ -24,6 +24,8 @@ import shapely.geometry
 
 from  shapely_utils import ShapelyUtils
 
+from matplotlib_utils import MatplotLibUtils
+
 from svgpathutils import SvgPath
 from svgviewer import SvgViewer
 
@@ -390,11 +392,11 @@ class CncOp:
             self.geometry = ShapelyUtils.orientMultiPolygon(self.geometry)
             _, self.preview_geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset, 'left', ginterior=True)
             
-            ShapelyUtils.MatplotlibDisplay("preview pocket", self.preview_geometry)
+            MatplotLibUtils.MatplotlibDisplay("preview pocket", self.preview_geometry)
             
             self.preview_geometry = ShapelyUtils.orientMultiPolygon(self.preview_geometry)
 
-            ShapelyUtils.MatplotlibDisplay("preview pocket - oriented", self.preview_geometry)
+            MatplotLibUtils.MatplotlibDisplay("preview pocket - oriented", self.preview_geometry)
 
             self.geometry_svg_paths = []
 

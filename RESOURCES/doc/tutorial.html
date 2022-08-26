@@ -122,57 +122,75 @@ calculate cnc paths, these shapes have to be interpreted/converted first to svg
 &lt;path&gt; items.</p>
 
 <p>The first possibility is to convert all the shapes and text (strings) found
-in your data into &lt;path&gt; shapes, and then import this &lt;path&gt;
-only svg file into <strong>PyCut</strong>. This conversion can be done within Inkscape.
-However it is not very practical as you ends managing 2 svg datas, the first one
-containing your initial shapes (circle, rect etc) and the converted one.</p>
+in your data into &lt;path&gt; shapes, and then import this &lt;path&gt; only
+svg file into <strong>PyCut</strong>. This conversion can be done within
+Inkscape. However it is not very practical as you ends managing 2 svg datas,
+the first one containing your initial shapes (circle, rect etc) and the
+converted one.</p>
 
-<p>The second possibility is to not convert your svg data at all. Indeed, <strong>PyCut</strong>
-can read the shapes by itself, so every thing will be Ok. It is nevertheless only
-true if there are no &lt;text&gt; items in the svg data, as <strong>PyCut</strong> 
-cannot (yet) convert &lt;text&gt; items into paths and wil thus ingnore them. </p>
+<p>The second possibility is to not convert your svg data at all. Indeed,
+<strong>PyCut</strong> can read the shapes by itself, so every thing will be
+Ok. It is nevertheless only true if there are no &lt;text&gt; items in the svg
+data, as <strong>PyCut</strong> cannot (yet) convert &lt;text&gt; items into
+paths and wil thus ingnore them. </p>
 
-<p>So how to handle &lt;text&gt; items ? <strong><span style="color:#8000ff">IN PROGRESS</span>:</strong> 
-Well actually <strong>PyCut</strong>
-comes with it own  &lt;text&gt; to &lt;path&gt; converter as a small utility, so
-just use it and copy/paste the result of a  &lt;text&gt;  conversion into your svg.
-A successfull conversion will only occurs if the &lt;text&gt; item is simple
+<p>So how to handle &lt;text&gt; items ? <strong><span style="color:#8000ff">IN
+PROGRESS</span>:</strong> Well actually <strong>PyCut</strong> comes with it
+own &lt;text&gt; to &lt;path&gt; converter as a small utility, so just use it
+and copy/paste the result of a &lt;text&gt; conversion into your svg. A
+successfull conversion will only occurs if the &lt;text&gt; item is simple
 enough: the text "value" should not be splitted into several &lt;tspan&gt;
 items with different fonts. No &lt;tspan&gt; tag at all is also possible (and
 simpler). </p>
 
-<p>All in all, if <strong>PyCut</strong> were to display text strings at the wrong positions,
-the user can always export the svg from Inkscape (and write
+<p>All in all, if <strong>PyCut</strong> were to display text strings at the
+wrong positions, the user can always export the svg from Inkscape (and write
 <strong>PyCut</strong> a ticket).</p>
+
+<p>Can <strong>PyCut</strong> handle svg datas where shapes/paths are defined
+with "svg transform" operations? Well, not yet, but please read further. There
+is for this problem a solution...</p>
+
+<h2>Svg Documents</h2>
+
+<p>Svg datas can be written with basic editors (vi, emacs etc..) or with real
+applications, as Inkscape. In both case, the svg datas should contains (and
+<strong>Inkscape</strong> does it automatically) a <strong>viewBox</strong>,
+and the svg attributes <strong>width</strong> and <strong>height.</strong>
+These 2 important attributes shoul be given with a unit, i.e
+"<strong>mm</strong>" or "<strong>in</strong>".</p>
 
 <h4>Shapes "id"</h4>
 
-<p>In order to reference the shapes, these shapes must have an <strong> "id"</strong>, 
-hopefully unique inside the svg document.</p>
-<p> If the user has edited the svg "per hand", then
-he should not forget to give all shapes an unique id. If the user has created
-the svg with <strong>Inkscape</strong>, then "id" are automatically given, but
-maybe the user will want to edit them and give them meaningfull content.</p>
+<p>In order to reference the shapes or paths, the shapes / paths must have
+their own <strong>"id"</strong>, hopefully unique inside the svg document.</p>
+
+<p>If the user has edited the svg "per hand", then he should not forget to give
+all shapes an unique id. If the user has created the svg with
+<strong>Inkscape</strong>, then "id"s are automatically given, but maybe the
+user will want to edit them and give them meaningfull name.</p>
 
 <h4>Transformations</h4>
 
-<p>It is usual to translate, rotate, scale and skew the shapes, especially when using
-&lt;defs&gt; items together with &lt;use&gt;.</p>
+<p>It is usual to translate, rotate, scale and skew the shapes, especially when
+using &lt;defs&gt; items together with &lt;use&gt;.</p>
 
-<p>Unfortunately, <strong>PyCut</strong> cannot handle these transformations 
-"out of the box". Nevertheless, if the user is using such transformations inside his svg data, 
-it is then possible to "resolve" them, as <strong>PyCut</strong> also comes 
-with a small utility just to resolve any possible transformation while keeping
-the<strong> "id"</strong>s right.  <strong><span style="color:#8000ff">IN PROGRESS</span></strong>:
-This utility should be integrated into <strong>PyCut</strong> so that the user cab spare this step.</p>
+<p>Unfortunately, <strong>PyCut</strong> cannot handle these transformations
+"out of the box". Nevertheless, if the user is using such transformations
+inside his svg data, it is then possible to "resolve" them, as
+<strong>PyCut</strong> also comes with a small utility just to resolve any
+possible transformation while keeping the<strong>"id"</strong>s right.
+<strong><span style="color:#8000ff">IN PROGRESS</span></strong>: This utility
+should be integrated into <strong>PyCut</strong> so that the user can spare
+this step. Actually, this utility is found in the source code under the folder
+"<strong>utilities/svgresolver</strong>".</p>
 
 <h3>Inkscape</h3>
 
 <p>With Inkscape, the first step is to specify the "Document size". Please
-choose as units "mm" or "in". This will be used later when creating GCode
-with the option "Zero Lower Left of Material" as reference. This option needs
-the Y size of the material.</p>
-
+choose as units "mm" or "in". This will be used later when creating GCode with
+the option "Zero Lower Left of Material" as reference. This option needs the Y
+size of the material.</p>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
@@ -184,8 +202,9 @@ the Y size of the material.</p>
 displayed in the central area. </p>
 
 <div class="info">
-<p><strong>Note:</strong> text is not displayed. It has to be converted as
-&lt;path&gt; in order to be procesed by <strong>PyCut</strong>.</p>
+<p><strong>Note:</strong> text is not displayed inside the
+<strong>PyCut</strong> svg viewer. It has to be converted as &lt;path&gt; in
+order to be further processed.</p>
 </div>
 
 <h3>Creating a PyCut Job</h3>
@@ -230,8 +249,7 @@ Simulator" display areas.</p>
 <h3>Svg Settings</h3>
 
 <div>
-<img src="pycut_svgsettings.png" width="310"/>
-</div>
+<img src="pycut_svgsettings.png" width="310"> </div>
 
 <h4>user units scale</h4>
 
@@ -244,8 +262,7 @@ mm (and the viewbox is "0 0 100 40" while width="100mm" and
 height="40mm")</strong></p>
 
 <div>
-<img src="Inkscape_settings_mm.png" width="563"> 
-</div>
+<img src="Inkscape_settings_mm.png" width="563"> </div>
 
 <p>Of course when editing the svg (in Inkscape or in a text editor),
 <strong>the user is only concerned with the user units</strong> : he draws a
@@ -263,23 +280,24 @@ that Inkscape automatically change the <strong>user units scale to
 100x40.</p>
 
 <div>
-<img src="Inkscape_settings_in.png" width="563"> 
-</div>
+<img src="Inkscape_settings_in.png" width="563"> </div>
 
-<p>Filling a box half the size of the document is 50x20, right, but what are real 
-dimension of that box ? The user would have to steadily calculate from fancy user units
-(ex: 50x20) in inches</p>
-<p>But why would a user use inches and work with user units scale factor 25.4 
-(leading infact to work in mm) ? The user can set the user units scale factor to 1.
-The effect of this is that now, in order to fill the whole document with a rectangle, 
-the rectangle has to be of the size user unit size of 3.93701x1.57480. </p>
+<p>Filling a box half the size of the document is 50x20, right, but what are
+real dimension of that box ? The user would have to steadily calculate from
+fancy user units (ex: 50x20) in inches</p>
+
+<p>But why would a user use inches and work with user units scale factor 25.4
+(leading infact to work in mm) ? The user can set the user units scale factor
+to 1. The effect of this is that now, in order to fill the whole document with
+a rectangle, the rectangle has to be of the size user unit size of
+3.93701x1.57480. </p>
 
 <p>Of course the size of the material is certainly not 3.93701x1.57480 inches,
-but something like 5x3 inches: an human readable size. The user knows that he has to draw a
-rectangle inside the material of size let say 1.5x1.2 inches. And these
-dimensions are the ones that are effectively saved in the svg document. So the
-user units are exactly the same as the "physical units" when choosing a scale
-of 1.</p>
+but something like 5x3 inches: an human readable size. The user knows that he
+has to draw a rectangle inside the material of size let say 1.5x1.2 inches. And
+these dimensions are the ones that are effectively saved in the svg document.
+So the user units are exactly the same as the "physical units" when choosing a
+scale of 1.</p>
 
 <p>Now how can <strong>PyCut</strong> handles these settings?
 <strong>PyCut</strong> only works with the <strong>user units</strong>.
@@ -336,23 +354,19 @@ factor is always 1</strong> .</p>
 <h3>Tool</h3>
 
 <div>
-  <img src="pycut_tool.png" width="310"/>
-</div>
+<img src="pycut_tool.png" width="310"> </div>
 
 <h3>Tabs</h3>
 
 <p>It's easy to define tabs with <strong>PyCut</strong>: just click the button
-"Create Tab" and a red circle is created in the svg viewer, of radius 5 and position
-(10,10). The user can drag 'n drop it fron the svg viewer, or set its
+"Create Tab" and a red circle is created in the svg viewer, of radius 5 and
+position (10,10). The user can drag 'n drop it fron the svg viewer, or set its
 size/postion in the tab table. Yes tabs, for simplicity, are circle. To be
 effective, the tabs have to be enabled and of course placed somewhere on the
 generated toolpaths. The height of the tab is shared by all tabs.</p>
 
 <div>
-<img src="pycut_tabs.png" width="310"/>
-</div>
-
-</p>
+<img src="pycut_tabs.png" width="310"> </div>
 
 <div class="warning">
 <p><strong>Warning</strong>: Tabs shall not overlap with other tabs (at least
@@ -368,10 +382,7 @@ Ok. </p>
 </p>
 
 <div>
-<img src="pycut_material.png" width="310"/>
-</div>
-
-</p>
+<img src="pycut_material.png" width="310"> </div>
 
 <div class="warning">
 <p><strong>Warning</strong>: Actually no check is performed.</p>
@@ -394,7 +405,8 @@ discretization will be</p>
 <p>The starting location of a milling operation is given by the initial
 location in the GCode. Per default, PyCut gives as starting point the (0,0)
 coordinates of the SVG file, which is located at the top-left of the material.
-The SVG conventions are opposite to GCode convention considering the Y direction.</p>
+The SVG conventions are opposite to GCode convention considering the Y
+direction.</p>
 
 <p>So the GCode generation will have to invert the direction of the Y axis
 coordinates. But still the reference is the top-left postion.</p>
@@ -408,14 +420,14 @@ coordinates. But still the reference is the top-left postion.</p>
 </ul>
 
 <div>
-<img src="pycut_gcode_conversion.png" width="310"/>
-</div>
+<img src="pycut_gcode_conversion.png" width="310"> </div>
 
 <p>Note that these 4 buttons act as radio buttons.</p>
-<p>These four references points set the XOffset and YOffset of the GCode calculation.
-After a GCode generation, it is still possible to modify the XOffset and YOffset to fit 
-at best how to user wants to have the origin be located with the help of the 2 spin boxes.  
-</p>
+
+<p>These four references points set the XOffset and YOffset of the GCode
+calculation. After a GCode generation, it is still possible to modify the
+XOffset and YOffset to fit at best how to user wants to have the origin be
+located with the help of the 2 spin boxes. </p>
 
 <p>And further:</p>
 <ul>
@@ -443,11 +455,7 @@ is extracted form the svg file: the svg "height" attribute (with units) </p>
 </ul>
 
 <div>
-<img src="pycut_gcode_generation.png" width="310"/>
-</div>
-
-</p>
-
+<img src="pycut_gcode_generation.png" width="310"> </div>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 </div>

@@ -28,6 +28,8 @@ from shapely.validation import make_valid
 import shapely.ops
 from shapely_utils import ShapelyUtils
 
+from matplotlib_utils import MatplotLibUtils
+
 
 class CamPath:
     '''
@@ -69,7 +71,7 @@ class cam:
         # use polygons exteriors lines - offset them and and diff with the interiors if any
         geometry = ShapelyUtils.orientMultiPolygon(geometry)
 
-        ShapelyUtils.MatplotlibDisplay("geom pocket init", geometry)
+        MatplotLibUtils.MatplotlibDisplay("geom pocket init", geometry)
 
         # the exterior
         multi_offset, current = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left', ginterior=True)
@@ -78,7 +80,7 @@ class cam:
         current = ShapelyUtils.orientMultiPolygon(current)
 
         for geom in current.geoms:
-            ShapelyUtils.MatplotlibDisplay("geom pocket init after simplify", geom)
+            MatplotLibUtils.MatplotlibDisplay("geom pocket init after simplify", geom)
 
         if not current:
             return []
@@ -284,7 +286,7 @@ class cam:
         '''
         Try to merge paths. A merged path doesn't cross outside of bounds AND the interior polygons
         '''
-        #ShapelyUtils.MatplotlibDisplay("mergePath", shapely.geometry.MultiLineString(paths), force=True)
+        #MatplotLibUtils.MatplotlibDisplay("mergePath", shapely.geometry.MultiLineString(paths), force=True)
 
         if _bounds and len(_bounds.geoms) > 0:
             bounds = _bounds

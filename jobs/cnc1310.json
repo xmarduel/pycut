@@ -1,0 +1,173 @@
+{
+  "svg_file": "C:/Users/xavie/Documents/GITHUB/pycut/misc_private/svg/cnc1310/svgelements/cnc1310-60-100mm.resolved.svg",
+  "operations": [
+    {
+      "Name": "op",
+      "type": "Inside",
+      "Deep": 8.0,
+      "paths": [
+        "z_screw_central_holex"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Inside",
+      "Deep": 8.0,
+      "paths": [
+        "bearing_cylinder_left"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Inside",
+      "Deep": 8.0,
+      "paths": [
+        "bearing_cylinder_right"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 8.0,
+      "paths": [
+        "abstand_screw_SW",
+        "abstand_screw_SE",
+        "abstand_screw_NE",
+        "abstand_screw_NW"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Inside",
+      "Deep": 4.0,
+      "paths": [
+        "abstand_SW",
+        "abstand_SE",
+        "abstand_NE",
+        "abstand_NW"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Inside",
+      "Deep": 8.0,
+      "paths": [
+        "spindle-hole"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Outside",
+      "Deep": 8.0,
+      "paths": [
+        "contour"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 8.0,
+      "paths": [
+        "bearing_screw_4.5mm_use28",
+        "bearing_screw_4.5mm_use30",
+        "bearing_screw_4.5mm_use32",
+        "bearing_screw_4.5mm_use34",
+		    "bearing_screw_4.5mm_use36",
+        "bearing_screw_4.5mm_use38",
+        "bearing_screw_4.5mm_use40",
+        "bearing_screw_4.5mm_use42"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    }
+  ],
+  "settings": {
+    "svg": {
+      "px_per_inch": 96
+    },
+    "Tabs": {
+      "units": "mm",
+      "height": 1.0,
+      "tabs": []
+    },
+    "Tool": {
+      "Units": "mm",
+      "Diameter": 3.0,
+      "Angle": 180,
+      "PassDepth": 1.0,
+      "StepOver": 0.4,
+      "Rapid": 500,
+      "Plunge": 100,
+      "Cut": 200
+    },
+    "Material": {
+      "Units": "mm",
+      "Thickness": 50.0,
+      "ZOrigin": "Top",
+      "Clearance": 10.0
+    },
+    "CurveToLineConversion": {
+      "MinimumSegments": 5,
+      "MinimumSegmentsLength": 0.1
+    },
+    "GCodeConversion": {
+      "Units": "mm",
+      "FlipXY": false,
+      "XOffset": 0.0,
+      "YOffset": 0.0,
+      "XYReference": "ZERO_TOP_LEFT_OF_MATERIAL"
+    },
+    "GCodeGeneration": {
+      "ReturnToZeroAtEnd": true,
+      "SpindleControl": true,
+      "SpindleSpeed": 10000,
+      "ProgramEnd": false
+    }
+  }
+}
