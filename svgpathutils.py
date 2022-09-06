@@ -11,6 +11,9 @@ import tempfile
 import numpy as np
 import svgpathtools
 import shapely.geometry
+import shapely.validation
+
+from matplotlib_utils import MatplotLibUtils
 
 from shapely_utils import ShapelyUtils
 
@@ -111,6 +114,21 @@ class SvgPath:
         => add in the first calculated segment a "middle point" and set this middle point as starting
         point of the path. Finally, at the end of the path, the "old" starting point in then the **last**
         point of the path 
+
+        SHAPELY WARNING: it is **extremely important** not to duplicate identical points (or nearly identical) 
+        because shapely may find that it create an "invalid" polygon with the reason:
+        
+        >>>>> Self-intersection[184.211463517 186.153838406]
+
+        This occurs if the sequence of points is like the following:
+
+        184.24701507756535 186.2492779464199
+        184.211463517 186.15383840599998
+        184.211463517 186.153838406
+        184.86553017294605 185.57132365078505
+
+        so between 2 svg paths "segments", avoid duplicating the point at the end of the first segment and 
+        the one at the beginning of the second segment.
         '''
         points = np.array([], dtype=np.complex128)
 
@@ -127,11 +145,9 @@ class SvgPath:
                     pts = segment.points([0,1])
                 else:
                     if k == 0:
-                        pts = segment.points([0.5]) # shapely fix!
-                    elif k < len(self.svg_path)-1:
-                        pts = segment.points([0])
+                        pts = segment.points([0.5, 1]) # shapely fix!
                     else:
-                        pts = segment.points([0, 1])
+                        pts = segment.points([1])
                     
             elif segment.__class__.__name__ == 'Arc':
                 # no 'points' method for 'Arc'!
@@ -142,11 +158,12 @@ class SvgPath:
                 
                 _pts = []
                 if k == 0:
-                    for k in range(1, nb_samples+1):
-                        _pts.append(segment.point(float(k)/float(nb_samples)))
+                    for p in range(0, nb_samples+1):
+                        _pts.append(segment.point(float(p)/float(nb_samples)))
                 else:
-                    for k in range(0, nb_samples+1):
-                        _pts.append(segment.point(float(k)/float(nb_samples)))
+                    # not the first one
+                    for p in range(1, nb_samples+1):
+                        _pts.append(segment.point(float(p)/float(nb_samples)))
 
                 pts = np.array(_pts, dtype=np.complex128)
 
@@ -158,11 +175,12 @@ class SvgPath:
                 
                 _pts = []
                 if k == 0:
-                    for k in range(1, nb_samples+1):
-                        _pts.append(segment.point(float(k)/float(nb_samples)))
+                    for p in range(0, nb_samples+1):
+                        _pts.append(segment.point(float(p)/float(nb_samples)))
                 else:
-                    for k in range(0, nb_samples+1):
-                        _pts.append(segment.point(float(k)/float(nb_samples)))
+                    # not the first one
+                    for p in range(1, nb_samples+1):
+                        _pts.append(segment.point(float(p)/float(nb_samples)))
 
                 pts = np.array(_pts, dtype=np.complex128)
 
@@ -252,6 +270,12 @@ class SvgPath:
         if is_simple_path == True:
             line = self._toShapelyLineString()
             poly = shapely.geometry.Polygon(line)
+
+            # a warning if th einital polygon is not valid! 
+            if not poly.is_valid:
+                print("not valid poly", line)
+                print(shapely.validation.explain_validity(poly))
+                MatplotLibUtils.MatplotlibDisplay("not valid poly", line, force=True)
 
             # set the right orientation for this polygon
             poly = shapely.geometry.polygon.orient(poly)

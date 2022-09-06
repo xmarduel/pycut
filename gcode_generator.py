@@ -314,7 +314,7 @@ class CncOp:
 
             self.svg_paths.append(svg_path)
 
-    def combine(self):
+    def combine(self) -> None:
         '''
         generate the combinaison of the selected paths
 
@@ -407,20 +407,20 @@ class CncOp:
     def calculate_preview_geometry_inside(self, toolModel: ToolModel):
         '''
         '''
+        toolData = toolModel.getCamData()
+
         if self.geometry is not None:
             margin = self.margin.toMm()
-            
+
+            width = self.width.toMm()
+  
+            if width < toolData["diameterTool"]:
+                width = toolData["diameterTool"]
+
             if margin != 0:
                 _, geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, margin, 'left')
             else:
                 geometry = self.geometry
-
-            toolData = toolModel.getCamData()
-
-            width = self.width.toMm()
-
-            if width < toolData["diameterTool"]:
-                width = toolData["diameterTool"]
 
             _, innergeometry = ShapelyUtils.offsetMultiPolygon(geometry, width, 'left')
             self.preview_geometry = geometry.difference(innergeometry)
@@ -443,6 +443,7 @@ class CncOp:
 
         if self.geometry is not None:
             width = self.width.toMm()
+
             if width < toolData["diameterTool"]:
                 width = toolData["diameterTool"]
 
@@ -454,7 +455,6 @@ class CncOp:
             _, geometry_inner = ShapelyUtils.offsetMultiPolygon(self.geometry, margin           , 'right', resolution=16, join_style=1, mitre_limit=5)
             
             self.preview_geometry = geometry_outer.difference(geometry_inner)
-            self.preview_geometry = shapely.geometry.polygon.orient(self.preview_geometry) # check if necessary!
 
             if self.preview_geometry.geom_type == 'Polygon':
                 self.preview_geometry = shapely.geometry.MultiPolygon([self.preview_geometry])

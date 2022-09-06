@@ -1,0 +1,76 @@
+{
+  "svg_file": "C:/Users/xavie/Documents/GITHUB/pycut/misc_private/svg/hobbymat/hobbymat_gear_20.resolved.svg",
+  "operations": [
+    {
+      "Name": "op",
+      "type": "Outside",
+      "Deep": 10.0,
+      "paths": [
+        "gear"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Inside",
+      "Deep": 10.0,
+      "paths": [
+        "bearing"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    }
+  ],
+  "settings": {
+    "svg": {
+      "px_per_inch": 96
+    },
+    "Tabs": {
+      "units": "mm",
+      "height": 1.0,
+      "tabs": []
+    },
+    "Tool": {
+      "Units": "mm",
+      "Diameter": 1.0,
+      "Angle": 180,
+      "PassDepth": 3.0,
+      "StepOver": 1.0,
+      "Rapid": 500,
+      "Plunge": 100,
+      "Cut": 200
+    },
+    "Material": {
+      "Units": "mm",
+      "Thickness": 50.0,
+      "ZOrigin": "Top",
+      "Clearance": 10.0
+    },
+    "CurveToLineConversion": {
+      "MinimumSegments": 5,
+      "MinimumSegmentsLength": 0.1
+    },
+    "GCodeConversion": {
+      "Units": "mm",
+      "FlipXY": false,
+      "XOffset": -100.0,
+      "YOffset": 100.0,
+      "XYReference": "ZERO_LOWER_LEFT_OF_OP"
+    },
+    "GCodeGeneration": {
+      "ReturnToZeroAtEnd": true,
+      "SpindleControl": true,
+      "SpindleSpeed": 1000,
+      "ProgramEnd": true
+    }
+  }
+}

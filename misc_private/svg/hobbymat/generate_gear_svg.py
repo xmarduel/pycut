@@ -43,7 +43,7 @@ class GearMaker:
     MODULE = 1.0
 
     # Gear basic size # change me
-    NB_TEETHS = 100
+    NB_TEETHS = 60
 
     # size of the gear
     PITCH_CIRCLE_DIAMETER = MODULE * NB_TEETHS

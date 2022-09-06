@@ -6,7 +6,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
-   sodipodi:docname="cnc1310-55-90mm.svg"
+   sodipodi:docname="cnc1310-52-90mm.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -110,7 +110,7 @@
         style="font-variation-settings:normal;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.970135;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
         cx="45"
         cy="65"
-        r="27.5" />
+        r="26.0" />
       <circle  id="large_circle_indicator"
         style="font-variation-settings:normal;vector-effect:none;fill:#ff00ff;fill-opacity:0.2;fill-rule:evenodd;stroke-width:0.970137;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
         cx="45"
@@ -138,7 +138,7 @@
             id="tspan918"
             style="font-size:4.93889px;stroke-width:0.264583"
             x="20"
-            y="39.5">Diameter Spindle: 55 mm
+            y="39.5">Diameter Spindle: 52 mm
          </tspan>
       </text>
 

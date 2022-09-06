@@ -178,7 +178,7 @@ class ShapelyUtils:
             ext_offset = linestring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=5.0)
             
             # from the offseted lines, build a multipolygon that we diff with the interiors
-            exterior_multipoly = cls.buildMultiPolyFromOffset([ext_offset])
+            exterior_multipoly = cls.buildMultiPolyFromOffsets([ext_offset])
             print("exterior_multipoly VALID ? ", exterior_multipoly.is_valid)
             
             if not exterior_multipoly.is_valid:
@@ -216,7 +216,7 @@ class ShapelyUtils:
                         MatplotLibUtils.MatplotlibDisplay("interior offseting (linestring) %d" % k, offset)
                     
                     # the diff is the solution
-                    interior_multipoly = ShapelyUtils.buildMultiPolyFromOffset(interior_offset)
+                    interior_multipoly = ShapelyUtils.buildMultiPolyFromOffsets(interior_offset)
                 
                     MatplotLibUtils.MatplotlibDisplay("resulting multipolygon of interior offset", interior_multipoly)
 
@@ -289,7 +289,7 @@ class ShapelyUtils:
                 int_offsets.append(int_offset)
 
             # from the offseted lines, build a multipolygon that we diff with the exterior
-            interior_multipoly = cls.buildMultiPolyFromOffset(int_offsets)
+            interior_multipoly = cls.buildMultiPolyFromOffsets(int_offsets)
             print("exterior_multipoly VALID ? ", interior_multipoly.is_valid)
 
             MatplotLibUtils.MatplotlibDisplay("interior_multipoly", interior_multipoly, force=False)
@@ -387,7 +387,7 @@ class ShapelyUtils:
         return offsets, multipoly
 
     @classmethod
-    def buildMultiPolyFromOffset(cls, multi_offset: any) -> shapely.geometry.MultiPolygon:
+    def buildMultiPolyFromOffsets(cls, multi_offset: List[shapely.geometry.LineString|shapely.geometry.MultiLineString]) -> shapely.geometry.MultiPolygon:
         '''
         offset is the direct result of an parallel_offset operation -> can be of various type
 
@@ -428,9 +428,15 @@ class ShapelyUtils:
         if not multipoly.is_valid:
             # two polygon which crosses are not valid
             #MatplotLibUtils.MatplotlibDisplay("multipoly", multipoly, force=True)
-            multipoly = make_valid(multipoly)
+            xpoly = make_valid(multipoly)  # -> can turn to a simple poly...
             # this makes their intersection(s) on common point(s)
-            print("multipoly VALID ?", multipoly.is_valid)
+            print("xpoly VALID ?", xpoly.is_valid)
+
+            if xpoly.geom_type == 'MultiPolygon':
+                multipoly = xpoly
+            elif xpoly.geom_type == 'Polygon':
+                multipoly = shapely.geometry.MultiPolygon([xpoly])
+
             #MatplotLibUtils.MatplotlibDisplay("multipoly", multipoly, force=True)
 
         # ensure orientation
@@ -629,6 +635,10 @@ class ShapelyUtils:
                     if area > largest_area:
                         largest_area = area
                         largest_poly = geom
+                elif geom.geom_type == 'MultiLineString':
+                    pass
+                elif geom.geom_type == 'LineString':
+                    pass
                 
             return largest_poly
 

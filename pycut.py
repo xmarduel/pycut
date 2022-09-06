@@ -65,7 +65,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         "Tool" : {
             "Units"       : "mm",
             "Diameter"    : 1.0,
-            "Angle"       : 2,
+            "Angle"       : 180,
             "PassDepth"   : 3.0,
             "StepOver"    : 4.0,
             "Rapid"       : 500,

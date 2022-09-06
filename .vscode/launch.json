@@ -73,6 +73,15 @@
             "args": ["-job", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_three_rects_with_circle.json"]
         },
         {
+            "name": "PYCUT GEAR 40",
+            "type": "python",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": ["-job", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\svg\\hobbymat\\hobbymat_gear_40.json"]
+        },
+        {
             "name": "TABLEVIEW",
             "type": "python",
             "request": "launch",

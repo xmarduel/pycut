@@ -237,6 +237,7 @@ class Ui_mainwindow(object):
         self.doubleSpinBox_Tool_Diameter.setDecimals(3)
         self.doubleSpinBox_Tool_Diameter.setMaximum(32.000000000000000)
         self.doubleSpinBox_Tool_Diameter.setValue(1.000000000000000)
+        self.doubleSpinBox_Tool_Diameter.setSingleStep(0.10000000000000)
 
         self.gridLayout_Tool.addWidget(self.doubleSpinBox_Tool_Diameter, 1, 2, 1, 1)
 
