@@ -1,7 +1,7 @@
 # pycut
 clone of jscut  in python - work in progress -
 
-Note: the project has advanced nicely during the last holidays (24.12.2022), but there are certainly many many bugs.
+Note: the project has advanced nicely during the last holidays (24.12.2021), but there are certainly many many bugs.
 
 Disclamer: This software is used at the user's own risk. No responsibility is accepted by its creator.
 
