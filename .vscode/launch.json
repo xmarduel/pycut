@@ -82,6 +82,15 @@
             "args": ["-job", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\svg\\hobbymat\\hobbymat_gear_40.json"]
         },
         {
+            "name": "PYCUT RESOLVER",
+            "type": "python",
+            "request": "launch",
+            "program": "svgresolve.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
+            "args": ["-i", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\svg\\hobbymat\\hobbymat_gear_40.svg"]
+        },
+        {
             "name": "TABLEVIEW",
             "type": "python",
             "request": "launch",

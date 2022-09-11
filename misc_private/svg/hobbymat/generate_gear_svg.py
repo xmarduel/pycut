@@ -27,13 +27,44 @@ SVG_TPL = '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
      %(GEAR)s
      %(BEARING)s
    </defs>
+
+   <!--
+   module                   : %(GEAR_MODULE)f
+   nb-teeth                 : %(GEAR_NB_TEETH)d
+   ratio-teeth-gap          : %(GEAR_RATIO_GAP_TEETH)f
+   teeth-curvature          : %(GEAR_TEETH_CURVATURE)f
+   ratio-teeth-head-base    : %(GEAR_TEETH_RATION_HEAD_BASE)f
+
+   25 -> 8.45
+   40 -> ok
+   80
+   -->
+
    <g>
-     <use href="#gear" id="gear_1"  transform="translate(200,200)"/>
-     <use href="#bearing" id="bearing_1" transform="translate(200,200)"/>
+     <!-- first gear -->
+     <use href="#gear"    id="gear_1"    transform="translate(200,200) rotate(0)" >
+      <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 0 0" to="380 0 0" dur="%(ANIMATE_PERIOD)fs" additive="sum" repeatCount="indefinite" />
+     </use>
+     <use href="#bearing" id="bearing_1" transform="translate(200,200)">
+      <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 0 0" to="380 0 0" dur="%(ANIMATE_PERIOD)fs" additive="sum" repeatCount="indefinite" />
+     </use>
 
      <!-- second gear -->
-     <use href="#gear"    id="gear_2"    transform="translate(200,240) rotate(1.1) "/>
-     <use href="#bearing" id="bearing_2" transform="translate(200,240) rotate(1.1) "/>
+     <use href="#gear"    id="gear_2"    transform="translate(%(SECOND_GEAR_X_POS)f,200) rotate(0)">
+      <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="%(SECOND_GEAR_ROTATION_ANIM_START)f 0 0" to="%(SECOND_GEAR_ROTATION_ANIM_END)f 0 0" dur="%(ANIMATE_PERIOD)fs" additive="sum" repeatCount="indefinite" />
+    </use>
+     
+     <use href="#bearing" id="bearing_2" transform="translate(%(SECOND_GEAR_X_POS)f,200) rotate(0)">
+       <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="%(SECOND_GEAR_ROTATION_ANIM_START)f 0 0" to="%(SECOND_GEAR_ROTATION_ANIM_END)f 0 0" dur="%(ANIMATE_PERIOD)fs" additive="sum" repeatCount="indefinite" />
+     </use>
+
+     <!-- refernece line -->
+    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 0 200 L 300 200" ></path>
+    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 200 0 L 200 300" ></path>
+    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M %(SECOND_GEAR_X_POS)f 0 L %(SECOND_GEAR_X_POS)f 300" ></path>
+
+    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M %(SECOND_GEAR_X_LEFT)f 0 L %(SECOND_GEAR_X_LEFT)f 300" ></path>
+
    </g>
    
 </svg>
@@ -472,6 +503,25 @@ class GearMaker:
 
         self.bearing_segments.append(nut)
 
+    def get_second_gear_rotation(self):
+        '''
+        '''
+        alpha = self.PITCH / self.PITCH_CIRCLE_RADIUS
+        alpha_gap =   (alpha) / (1 + self.RATIO_GEAR_GAP_TEETH)
+        alpha_teeth = (alpha) / (1 + 1.0/self.RATIO_GEAR_GAP_TEETH)
+
+        return  (alpha_teeth - alpha_gap) / 2.0 * (180 / math.pi )
+        #return  alpha * (180 / 2.0)  / math.pi 
+
+    def get_second_gear_x_pos(self):
+        '''
+        '''
+        return self.PITCH_CIRCLE_DIAMETER  + 200
+
+    def get_second_gear_x_left(self):
+        '''
+        '''
+        return self.PITCH_CIRCLE_DIAMETER / 2.0  + 200
 
 def main():
     '''
@@ -479,7 +529,24 @@ def main():
 
     gearMaker = GearMaker()
 
-    svg = SVG_TPL % { 'GEAR': gearMaker.get_gear(), 'BEARING': gearMaker.get_bearing()}
+    svg = SVG_TPL % { 
+        'GEAR': gearMaker.get_gear(), 
+        'BEARING': gearMaker.get_bearing(), 
+        'SECOND_GEAR_ROTATION': gearMaker.get_second_gear_rotation(), 
+        'SECOND_GEAR_X_POS': gearMaker.get_second_gear_x_pos(),
+        'SECOND_GEAR_X_LEFT': gearMaker.get_second_gear_x_left(),
+
+        'GEAR_MODULE': gearMaker.MODULE,
+        'GEAR_NB_TEETH': gearMaker.NB_TEETHS,
+        'GEAR_RATIO_GAP_TEETH': gearMaker.RATIO_GEAR_GAP_TEETH,
+        'GEAR_TEETH_CURVATURE': gearMaker.TEETH_CURVATURE,
+        'GEAR_TEETH_RATION_HEAD_BASE': gearMaker.RATIO_TEETH_HEAD_BASE,
+
+        'SECOND_GEAR_ROTATION_ANIM_START':  gearMaker.get_second_gear_rotation(),
+        'SECOND_GEAR_ROTATION_ANIM_END':  gearMaker.get_second_gear_rotation() - 380.0,
+
+        'ANIMATE_PERIOD': 30
+    }
 
     fp = open("hobbymat_gear_%d.svg" % GearMaker.NB_TEETHS, "w")
     fp.write(svg)

@@ -33,29 +33,31 @@ class SvgResolver:
             if isinstance(e, svgelements.Text):
                 #print("text")
                 self.shapes.append(e)
-                #self.id_mapping.setdefault(e.id, []).append(e.id)
             elif isinstance(e, svgelements.Path):
                 #print("path")
                 self.shapes.append(e)
-                #self.id_mapping.setdefault(e.id, []).append(e.id)
             elif isinstance(e, svgelements.Shape):
                 #print("shape")
                 self.shapes.append(e)
-                #self.id_mapping.setdefault(e.id, []).append(e.id)
             else:
                 try:
-                    print("ignore", e.__class__, e.id, e.values["href"])
-                    if e.values["tag"] == "use":
-                        print("... could it be a '<use>' ding ?  ... yes")
+                    if e.values["tag"] == svgelements.SVG_TAG_USE:
+                        print("... found a '<use>' tag !")
                         id_ref = e.values["href"][1:] # remove the '#'
+                        print("        -> def id = %r ### %r" % (id_ref, e.id))
                         self.id_mapping.setdefault(id_ref, []).append(e.id)
                 except Exception as e:
                     pass
 
         print("ID MAPPING", self.id_mapping)
         
-    def get_id(self, shape):
+    def extract_id(self, shape):
         '''
+        if not in "id_mapping":
+            - return the id of the shape
+        else:
+            - return the id of the shape mapping and remove this value
+            from the mapping
         '''
         if shape.id in self.id_mapping:
             # in <use> hopefully
@@ -70,7 +72,11 @@ class SvgResolver:
         print("Circle!")
 
         c = etree.SubElement(parent, "circle")
-        c.attrib["id"] = self.get_id(shape)
+
+        the_id = self.extract_id(shape)
+
+        if the_id != None:
+            c.attrib["id"] = the_id
 
         c.attrib["cx"] = self.lf_format % shape.cx
         c.attrib["cy"] = self.lf_format % shape.cy
@@ -83,7 +89,11 @@ class SvgResolver:
         print("Rect!")
 
         r = etree.SubElement(parent, "rect")
-        r.attrib["id"] = self.get_id(shape)
+        
+        the_id = self.extract_id(shape)
+
+        if the_id != None:
+            r.attrib["id"] = the_id
 
         r.attrib["width"] = self.lf_format % shape.width
         r.attrib["height"] = self.lf_format % shape.height
@@ -101,7 +111,11 @@ class SvgResolver:
         print("Ellipse!")
 
         e = etree.SubElement(parent, "ellipse")
-        e.attrib["id"] = self.get_id(shape)
+
+        the_id = self.extract_id(shape)
+
+        if the_id != None:
+            e.attrib["id"] = the_id
 
         e.attrib["cx"] = self.lf_format % shape.cx
         e.attrib["cy"] = self.lf_format % shape.cy
@@ -117,7 +131,11 @@ class SvgResolver:
         print("Polygon!")
 
         p = etree.SubElement(parent, "polygon")
-        p.attrib["id"] = self.get_id(shape)
+
+        the_id = self.extract_id(shape)
+
+        if the_id != None:
+            p.attrib["id"] = the_id
 
         p.attrib["points"] =  " ".join(["%.3f,%.3f" % (pt.x, pt.y) for pt in shape.points])
             
@@ -139,7 +157,11 @@ class SvgResolver:
         print("SimpleLine!")
 
         l = etree.SubElement(parent, "line")
-        l.attrib["id"] = self.get_id(shape)
+
+        the_id = self.extract_id(shape)
+
+        if the_id != None:
+            l.attrib["id"] = the_id
 
         l.attrib["x1"] = self.lf_format % shape.x1
         l.attrib["y1"] = self.lf_format % shape.y1
@@ -161,7 +183,11 @@ class SvgResolver:
         print("Polyline!")
 
         p = etree.SubElement(parent, "polyline")
-        p.attrib["id"] = self.get_id(shape)
+
+        the_id = self.extract_id(shape)
+
+        if the_id != None:
+            p.attrib["id"] = the_id
 
         p.attrib["points"] =  " ".join(["%.3f,%.3f" %(pt.x, pt.y) for pt in shape.points])
             
@@ -178,7 +204,11 @@ class SvgResolver:
         print("Path!")
 
         p = etree.SubElement(parent, "path")
-        p.attrib["id"] = self.get_id(shape)
+
+        the_id = self.extract_id(shape)
+
+        if the_id != None:
+            p.attrib["id"] = the_id
 
         p.attrib["d"] = shape.d()
 
@@ -191,18 +221,22 @@ class SvgResolver:
         '''
         print("Text!")
 
-        p = etree.SubElement(parent, "text")
-        p.attrib["id"] = self.get_id(shape)
+        t = etree.SubElement(parent, "text")
 
-        p.attrib["x"] = self.lf_format % shape.x  # bug!
-        p.attrib["y"] = self.lf_format % shape.y  # bug!
+        the_id = self.extract_id(shape)
+
+        if the_id != None:
+            t.attrib["id"] = the_id
+
+        t.attrib["x"] = self.lf_format % shape.x  # bug!
+        t.attrib["y"] = self.lf_format % shape.y  # bug!
 
         #print(shape)
 
-        p.text = shape.text
+        t.text = shape.text
 
         if "style" in shape.values:
-            p.attrib["style"] = shape.values["style"]
+            t.attrib["style"] = shape.values["style"]
 
     def resolve(self):
         '''
