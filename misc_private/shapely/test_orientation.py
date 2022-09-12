@@ -4,9 +4,21 @@ import matplotlib.pyplot as plt
 from shapely.geometry import LineString, Polygon, LinearRing
 import shapely
 
+'''
+This show how the outside offset of a quadra is somehow buggy when
+the coords list is setup with the 4 corners coordinate
+
+To fix the offset, we use a new additional point that is in the 
+middle of a face -> not a corner and setup as first oint of the 
+coordinate list.
+
+=> then the outside offset is perfect!
+
+'''
+
 # ------------- SETUP INITIAL LINESTRING AND POLYGONS --------------------
 
-# we give two list of coords wit "opposite directions"
+# we give two list of coords with "opposite directions"
  
 coords1 = [(10,10), (20,10), (20,20), (10,20)]
 coords2 = [(10,10), (10,20), (20,20), (20,10)]
@@ -63,8 +75,9 @@ print("off2_left", off2_left)
 
 x1,y1 = off1_left.coords.xy
 x2,y2 = off2_left.coords.xy
+plt.title("left offset")
 plt.plot(x1,y1, 'bo-')
-plt.plot(x2,y2, 'r+--')
+plt.plot(x2,y2, 'r+-')
 plt.show()
 
 # ------------------------------------------
@@ -75,6 +88,7 @@ print("off2_right", off2_right)
 
 x1,y1 = off1_right.coords.xy
 x2,y2 = off2_right.coords.xy
+plt.title("right offset")
 plt.plot(x1,y1, 'bo-')
 plt.plot(x2,y2, 'r+--')
 plt.show()
@@ -183,6 +197,7 @@ print("off2_left", off2_left)
 
 x1,y1 = off1_left.coords.xy
 x2,y2 = off2_left.coords.xy
+plt.title("left offset")
 plt.plot(x1,y1, 'bo-')
 plt.plot(x2,y2, 'r+--')
 plt.show()
@@ -194,6 +209,7 @@ print("off2_right", off2_right)
 
 x1,y1 = off1_right.coords.xy
 x2,y2 = off2_right.coords.xy
+plt.title("right offset")
 plt.plot(x1,y1, 'bo-')
 plt.plot(x2,y2, 'r+--')
 plt.show()

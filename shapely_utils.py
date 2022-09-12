@@ -29,7 +29,7 @@ class ShapelyUtils:
         return shapely.geometry.MultiLineString(diffs)
 
     @classmethod
-    def crosses(cls, bounds: shapely.geometry.MultiPolygon, p1: Tuple[int,int], p2: Tuple[int,int]):
+    def crosses(cls, bounds: shapely.geometry.MultiPolygon, p1: Tuple[int,int], p2: Tuple[int,int]) -> bool:
         '''
         Does the line from p1 to p2 cross outside of bounds?
         '''
@@ -79,7 +79,7 @@ class ShapelyUtils:
         return True
 
     @classmethod
-    def simplifyMultiLine(cls, multiline: shapely.geometry.MultiLineString, tol: float) -> shapely.geometry.MultiLineString:
+    def simplifyMultiLine(cls, multiline: shapely.geometry.MultiLineString, tol: float) -> shapely.geometry.MultiLineString | None:
         '''
         Ensure the simplification of a MultiLine is a Multiline or None
         '''
@@ -97,7 +97,7 @@ class ShapelyUtils:
         return res
 
     @classmethod
-    def simplifyMultiPoly(cls, multipoly: shapely.geometry.MultiPolygon, tol: float) -> shapely.geometry.MultiPolygon:
+    def simplifyMultiPoly(cls, multipoly: shapely.geometry.MultiPolygon, tol: float) -> shapely.geometry.MultiPolygon | None:
         '''
         Ensure the simplification of a MultiPolygon is a MultiPolygon or None
         '''
@@ -115,7 +115,7 @@ class ShapelyUtils:
         return res
 
     @classmethod
-    def offsetLine(cls, line: shapely.geometry.LineString, amount: float, side: str, resolution=16, join_style=1, mitre_limit=5.0) -> shapely.geometry.LineString:
+    def offsetLine(cls, line: shapely.geometry.LineString, amount: float, side: str, resolution=16, join_style=1, mitre_limit=5.0) -> shapely.geometry.LineString | shapely.geometry.MultiLineString:
         '''
         '''
         return line.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=mitre_limit)
