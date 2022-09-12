@@ -154,7 +154,7 @@ class ShapelyUtils:
         geoms = []
         for geom in multipoly.geoms:
             xgeom = shapely.geometry.polygon.orient(geom)
-            geoms .append(xgeom)
+            geoms.append(xgeom)
         
         xmultipoly = shapely.geometry.MultiPolygon(geoms)
 
