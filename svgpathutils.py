@@ -13,6 +13,9 @@ import svgpathtools
 import shapely.geometry
 import shapely.validation
 
+from shapely.validation import make_valid
+from shapely.validation import explain_validity
+
 from matplotlib_utils import MatplotLibUtils
 
 from shapely_utils import ShapelyUtils
@@ -271,11 +274,14 @@ class SvgPath:
             line = self._toShapelyLineString()
             poly = shapely.geometry.Polygon(line)
 
-            # a warning if th einital polygon is not valid! 
+            # a warning if the inital polygon is not valid! 
             if not poly.is_valid:
                 print("not valid poly", line)
                 print(shapely.validation.explain_validity(poly))
                 MatplotLibUtils.MatplotlibDisplay("not valid poly", line, force=True)
+                #poly = make_valid(poly)
+                #print(shapely.validation.explain_validity(poly))
+                #MatplotLibUtils.MatplotlibDisplay("--> valid poly", poly, force=True)
 
             # set the right orientation for this polygon
             poly = shapely.geometry.polygon.orient(poly)
