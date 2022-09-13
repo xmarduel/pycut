@@ -191,6 +191,20 @@ this step. Actually, this utility is found in the source code under the folder
 choose as units "mm" or "in". This will be used later when creating GCode with
 the option "Zero Lower Left of Material" as reference. This option needs the Y
 size of the material.</p>
+
+<h2>Svg File Editing with a Text Editor</h2>
+
+<p>Sometimes it is easier to edit a svg without a graphical app like Inkscape, but simply with a text editor.</p>
+<p>This way, it is easy for example to define shapes in the <strong>&lt;def&gt;</strong> paragraph 
+and reuse theses shapes in the main body of the svg file with the help of the <strong>&lt;use&gt;</strong>
+tag and some transformations.
+</p>
+
+<p>PyCut will not be able to read such a svg file, but PyCut includes an utility called svgrevolver.py 
+which resolves all the items with their transformations.</p>
+
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
@@ -209,16 +223,14 @@ order to be further processed.</p>
 
 <h3>Creating a PyCut Job</h3>
 
-<p>Then create a new "job" : this is a kind of container that stores the svg
-file name, the CAM operations that will be created for this specific svg file,
-and all the settings relevant when generating g-code.</p>
-
-<p>Later, after having saved the job, it will be possble to reload it, with all
-its stored CAM operations and others settings.</p>
+<p>Then create a new "job" : this is a kind of setting file that stores for a
+given svg file all the CAM operations that the users has created, together with
+all others settings relevant when generating g-code.
+It can be created, saved and loaded again and modified - quite practical.</p>
 
 <h3>Creating CAM operations</h3>
 
-<p>Once an empty job is created, it is time to create some CAM operations:
+<p>Once an empty job is created and a svg file loaded, it is time to create some CAM operations:
 select 1 or more items in SVG window (they should turn beige) and click the
 button "Create Operation": a new operation in the operation table should
 appear.</p>
@@ -240,7 +252,9 @@ regions.</p>
 <p>The produced G-Code can be inspected in the "G code viewer" and the "G code
 Simulator" display areas.</p>
 
-<p>You just have to save the G-Code and you're done.</p>
+<p>You just have to save the G-Code and you're done. The gcode file should be named
+as the CAM operation name.</p>
+
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
@@ -368,6 +382,8 @@ generated toolpaths. The height of the tab is shared by all tabs.</p>
 <div>
 <img src="pycut_tabs.png" width="310"> </div>
 
+<p></p>
+
 <div class="warning">
 <p><strong>Warning</strong>: Tabs shall not overlap with other tabs (at least
 the enabled ones).</p>
@@ -378,11 +394,13 @@ Ok. </p>
 
 <h3>Material</h3>
 
-<p>The Operations "Cut Depth" should be be larger than the material thickness.
+<p>The Operations "Cut Depth" should not be larger than the material thickness.
 </p>
 
 <div>
 <img src="pycut_material.png" width="310"> </div>
+
+<p></p>
 
 <div class="warning">
 <p><strong>Warning</strong>: Actually no check is performed.</p>
@@ -458,6 +476,7 @@ is extracted form the svg file: the svg "height" attribute (with units) </p>
 <img src="pycut_gcode_generation.png" width="310"> </div>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
-</div>
+
+
 </body>
 </html>
