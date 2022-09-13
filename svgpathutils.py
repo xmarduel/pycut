@@ -279,9 +279,16 @@ class SvgPath:
                 print("not valid poly", line)
                 print(shapely.validation.explain_validity(poly))
                 MatplotLibUtils.MatplotlibDisplay("not valid poly", line, force=True)
-                #poly = make_valid(poly)
-                #print(shapely.validation.explain_validity(poly))
-                #MatplotLibUtils.MatplotlibDisplay("--> valid poly", poly, force=True)
+                
+                # try this:
+                valid_poly = ShapelyUtils.fixSimplePolygon(poly)
+
+                if valid_poly != None:
+                    poly = valid_poly
+                    print("-> fixed to valid poly", poly)
+                    MatplotLibUtils.MatplotlibDisplay("fixed valid poly", poly, force=True)
+               
+
 
             # set the right orientation for this polygon
             poly = shapely.geometry.polygon.orient(poly)
