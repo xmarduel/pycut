@@ -1517,7 +1517,13 @@
     <property name="title">
      <string>Jobs</string>
     </property>
+    <widget class="QMenu" name="menuOpen_Recent_Jobs">
+     <property name="title">
+      <string>Open Recent Jobs</string>
+     </property>
+    </widget>
     <addaction name="actionNewJob"/>
+    <addaction name="menuOpen_Recent_Jobs"/>
     <addaction name="actionOpenJob"/>
     <addaction name="actionSaveJobAs"/>
     <addaction name="actionSaveJob"/>

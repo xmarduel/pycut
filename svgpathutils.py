@@ -173,17 +173,37 @@ class SvgPath:
             else:  # 'QuadraticBezier', 'CubicBezier'
                 seg_length = segment.length()
 
-                nb_samples = int(seg_length * self.PYCUT_SAMPLE_LEN_COEFF)
-                nb_samples = max(nb_samples, self.PYCUT_SAMPLE_MIN_NB_SEGMENTS)
-                
                 _pts = []
-                if k == 0:
-                    for p in range(0, nb_samples+1):
-                        _pts.append(segment.point(float(p)/float(nb_samples)))
+
+                ### SVGPATHTOOLS BUG !!!
+                if seg_length == math.inf:  # WTF!
+
+                    p1 = segment.start
+                    p2 = segment.end
+
+                    line = svgpathtools.Line(p1, p2)
+
+                    # start and end points
+                    if len(self.svg_path) == 1:
+                        _pts = line.points([0,1])
+                    else:
+                        if k == 0:
+                            _pts = line.points([0.5, 1]) # shapely fix!
+                        else:
+                            _pts = line.points([1])
+
                 else:
-                    # not the first one
-                    for p in range(1, nb_samples+1):
-                        _pts.append(segment.point(float(p)/float(nb_samples)))
+
+                    nb_samples = int(seg_length * self.PYCUT_SAMPLE_LEN_COEFF)
+                    nb_samples = max(nb_samples, self.PYCUT_SAMPLE_MIN_NB_SEGMENTS)
+                
+                    if k == 0:
+                        for p in range(0, nb_samples+1):
+                            _pts.append(segment.point(float(p)/float(nb_samples)))
+                    else:
+                        # not the first one
+                        for p in range(1, nb_samples+1):
+                            _pts.append(segment.point(float(p)/float(nb_samples)))
 
                 pts = np.array(_pts, dtype=np.complex128)
 

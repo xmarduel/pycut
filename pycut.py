@@ -1,6 +1,6 @@
 # This Python file uses the following encoding: utf-8
 
-VERSION = "0_3_5"
+VERSION = "0_3_6"
 
 import sys
 import os
@@ -102,11 +102,15 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         super(PyCutMainWindow, self).__init__()
 
+        self.recent_jobs = self.read_recent_jobs()
+
         self.ui = Ui_mainwindow()
         self.ui.setupUi(self)
 
         self.setWindowTitle("PyCut")
         self.setWindowIcon(QtGui.QIcon(":/images/tango/32x32/categories/applications-system.png"))
+
+        self.build_recent_jobs_submenu()
 
         self.operations = []
         self.tabs = []
@@ -574,6 +578,22 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.tabs = []
         self.ui.tabsview_manager.set_tabs(self.tabs)
 
+    def cb_open_recent_job_file(self):
+        '''
+        '''
+        sender = self.sender()
+        jobfilename = sender.text()
+
+        self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.disconnect(self.cb_generate_gcode_x_offset)
+        self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.disconnect(self.cb_generate_gcode_y_offset)
+        self.ui.checkBox_GCodeConversion_FlipXY.clicked.disconnect(self.cb_generate_gcode)
+
+        self.open_job(jobfilename)
+        
+        self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
+        self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode_y_offset)
+        self.ui.checkBox_GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
+
     def cb_open_job(self):
         '''
         '''
@@ -586,6 +606,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.checkBox_GCodeConversion_FlipXY.clicked.disconnect(self.cb_generate_gcode)
 
         self.open_job(jobfilename)
+
+        self.prepend_recent_jobs(jobfilename)
         
         self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
         self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode_y_offset)
@@ -1225,7 +1247,48 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         gcode = generator.gcode
         self.display_gcode(gcode)
 
-    
+    def read_recent_jobs(self):
+        '''
+        Returns the list of recent jobs fron the setting file
+        '''
+        self.recent_jobs = []
+
+        if not os.path.exists("./recent_jobs.json"):
+            fp = open("./recent_jobs.json", "w")
+            json.dump([], fp, indent=2)  
+            fp.close()
+
+        with open("./recent_jobs.json", "r") as f:
+            self.recent_jobs = json.load(f)
+
+        return self.recent_jobs
+
+    def write_recent_jobs(self):
+        '''
+        Write the list of recent jobs to the settings file
+        '''
+        with open("./recent_jobs.json", 'w') as json_file:
+            json.dump(self.recent_jobs, json_file, indent=2)   
+
+    def prepend_recent_jobs(self, jobfile):
+        '''
+        '''
+        self.recent_jobs.insert(0, jobfile)
+        self.recent_jobs = self.read_recent_jobs[:5]
+
+    def closeEvent(self, event):
+        # do stuff
+        self.write_recent_jobs()
+        event.accept() # let the window close
+
+    def build_recent_jobs_submenu(self):
+        '''
+        '''
+        for jobfilename in self.recent_jobs:
+            icon = QtGui.QIcon.fromTheme("edit-paste")
+            item = QtGui.QAction(icon, jobfilename, self.ui.menuOpen_Recent_Jobs)
+            item.triggered.connect(self.cb_open_recent_job_file)
+            self.ui.menuOpen_Recent_Jobs.addAction(item)
 
 
 if __name__ == "__main__":

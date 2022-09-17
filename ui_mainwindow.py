@@ -236,8 +236,8 @@ class Ui_mainwindow(object):
         self.doubleSpinBox_Tool_Diameter.setObjectName(u"doubleSpinBox_Tool_Diameter")
         self.doubleSpinBox_Tool_Diameter.setDecimals(3)
         self.doubleSpinBox_Tool_Diameter.setMaximum(32.000000000000000)
+        self.doubleSpinBox_Tool_Diameter.setSingleStep(0.100000000000000)
         self.doubleSpinBox_Tool_Diameter.setValue(1.000000000000000)
-        self.doubleSpinBox_Tool_Diameter.setSingleStep(0.10000000000000)
 
         self.gridLayout_Tool.addWidget(self.doubleSpinBox_Tool_Diameter, 1, 2, 1, 1)
 
@@ -881,6 +881,8 @@ class Ui_mainwindow(object):
         self.menuFile.setObjectName(u"menuFile")
         self.menuJobs = QMenu(self.menubar)
         self.menuJobs.setObjectName(u"menuJobs")
+        self.menuOpen_Recent_Jobs = QMenu(self.menuJobs)
+        self.menuOpen_Recent_Jobs.setObjectName(u"menuOpen_Recent_Jobs")
         self.menuHelp = QMenu(self.menubar)
         self.menuHelp.setObjectName(u"menuHelp")
         self.menuSettings = QMenu(self.menubar)
@@ -894,6 +896,7 @@ class Ui_mainwindow(object):
         self.menuFile.addAction(self.actionOpenSvg)
         self.menuFile.addSeparator()
         self.menuJobs.addAction(self.actionNewJob)
+        self.menuJobs.addAction(self.menuOpen_Recent_Jobs.menuAction())
         self.menuJobs.addAction(self.actionOpenJob)
         self.menuJobs.addAction(self.actionSaveJobAs)
         self.menuJobs.addAction(self.actionSaveJob)
@@ -1014,6 +1017,7 @@ class Ui_mainwindow(object):
         self.checkBox_GCodeGeneration_ProgramEnd.setText(QCoreApplication.translate("mainwindow", u"[M2]", None))
         self.menuFile.setTitle(QCoreApplication.translate("mainwindow", u"File", None))
         self.menuJobs.setTitle(QCoreApplication.translate("mainwindow", u"Jobs", None))
+        self.menuOpen_Recent_Jobs.setTitle(QCoreApplication.translate("mainwindow", u"Open Recent Jobs", None))
         self.menuHelp.setTitle(QCoreApplication.translate("mainwindow", u"Help", None))
         self.menuSettings.setTitle(QCoreApplication.translate("mainwindow", u"Settings", None))
     # retranslateUi
