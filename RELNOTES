@@ -5,6 +5,12 @@ Can process basic <text> elements without converting them before to <path> eleme
 Can process defs/transformations in svg (ie resolve them)
 
 
+0.3.6
+=====
+
+Fix generation of shapely polygons fron SVG
+(cvgpathtools bug workaround)
+
 0.3.5
 =====
 
