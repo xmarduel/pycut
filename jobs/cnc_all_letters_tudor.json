@@ -45,7 +45,7 @@
     },
     {
       "Name": "op",
-      "type": "Outside",
+      "type": "Pocket",
       "Deep": 3.175,
       "paths": [
         "D"
@@ -742,7 +742,7 @@
     },
     "Tool": {
       "Units": "mm",
-      "Diameter": 0.3,
+      "Diameter": 0.5,
       "Angle": 0,
       "PassDepth": 1.0,
       "StepOver": 0.5,

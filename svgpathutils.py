@@ -133,11 +133,32 @@ class SvgPath:
         so between 2 svg paths "segments", avoid duplicating the point at the end of the first segment and 
         the one at the beginning of the second segment.
         '''
+        SEGMENT_THREAHOLD = 1.0e-5
+        # -----------------------------------------------------------------
+        def ignore_segment(k, segment) -> bool:
+            '''
+            for letters, very small segments can lead to unvalid geometries.
+            We can fix them with the "make_valid" function but I would like
+            to avoid this. It seems to be caused by very little segments which 
+            are somehow wrong (or rounding values stuff makes them wrong).
+            '''
+            if segment.length() < SEGMENT_THREAHOLD :
+                print("segment[%i]: %lf  -> ignoring" % (k, segment.length()) )
+                return True
+
+            return False
+        # ------------------------------------------------------------------
         points = np.array([], dtype=np.complex128)
 
         first_pt = None
         
         for k, segment in enumerate(self.svg_path):
+
+            ## ---------------------------------------
+            if ignore_segment(k, segment) == True:
+                continue
+            ## ---------------------------------------
+            
             if k == 0:
                 # shapely fix : global initial pt
                 first_pt = segment.point(0)
@@ -197,21 +218,26 @@ class SvgPath:
                     nb_samples = int(seg_length * self.PYCUT_SAMPLE_LEN_COEFF)
                     nb_samples = max(nb_samples, self.PYCUT_SAMPLE_MIN_NB_SEGMENTS)
                 
-                    if k == 0:
-                        for p in range(0, nb_samples+1):
-                            _pts.append(segment.point(float(p)/float(nb_samples)))
-                    else:
-                        # not the first one
-                        for p in range(1, nb_samples+1):
-                            _pts.append(segment.point(float(p)/float(nb_samples)))
+                    # not the first one
+                    for p in range(1, nb_samples+1):
+                        _pts.append(segment.point(float(p)/float(nb_samples)))
 
                 pts = np.array(_pts, dtype=np.complex128)
 
             points = np.concatenate((points, pts))
 
         # shapely fix : add as last point the "virtual" first one, the first "middle one" is already the "new" first
-        #points = np.concatenate((points, [first_pt], [points[0]]))
-        points = np.concatenate((points, [first_pt]))
+
+        # distance between the last pt and and stored first pt
+        line = svgpathtools.Line(points[-1], first_pt)
+        # test it
+        ignore = ignore_segment(-1, line)
+
+        if ignore == True:
+            pass
+        else:
+            points = np.concatenate((points, [first_pt]))
+
         #print(points)
 
         return points
