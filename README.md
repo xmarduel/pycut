@@ -16,8 +16,8 @@ USAGE: start the program from the installation folder
 Dependencies: Python 3.10
 - PySide6-6.3.0
 - svgpathtools (latest) - pip installation bundled with numpy/scipy
-- svgelements (latest) - to resolve transformations in svg datas
-- freetype-py (latest) - not yet used, needed for text_2_path utility
+- svgelements (latest) - used in the svgresolver.py utility
+- freetype-py (latest) - used in svgtext2svpath.py utility
 - shapely (1.8.2) with PyOpenGL
 - matplotlib (to debug/view shapely offsets ops)
 
@@ -28,7 +28,7 @@ DONE:
    + outside  YES
    + inside   YES
    + engrave  YES
-   + vPocket   NO
+   + vPocket   NO  (will never be implemented - I do not need this -)
 - svg items selection and new op with combinaison Union/Diff/Inter/Xor (geometry calculated)
 - preview geom displayed in svg viewer
 - tabs
@@ -44,15 +44,9 @@ MAIN IMPROVMENTS OVER JSCUT
 - tabs "on the fly" (no need to define them in the svg file)
 - flip X/Y in GCode (good for my machine - the "1419" one -)
 
-MAIN REGRESSIONS OVER JSCUT
-- fonts (especially the fancy ones) can fail to be pocketed (my fault)
-- what else ?
-
 TODO:
-- capability to read text without converting them first to paths 
+- better settings
+- what else ??
 
-WILL NEVER BE IMPLEMENTED:
-- vPocket (I do not need them)
-
-See the Wiki page for more
+See the Wiki page for more.
 
