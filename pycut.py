@@ -6,6 +6,7 @@ import sys
 import os
 import json
 import argparse
+import pathlib
 
 from typing import List
 from typing import Dict
@@ -546,12 +547,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
     def cb_open_svg(self):
         '''
-        not a job, a svg only -> no oerations
+        not a job, a svg only -> no operations
         '''
         xfilter = "SVG Files (*.svg)"
         svg_file, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
 
         if svg_file:
+            svg_file = self.minify_path(svg_file)
+
             self.svg_file = svg_file
             
             # clean current job (table)
@@ -572,7 +575,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         # clean current job (operations table)
         self.operations = []
-        self.ui.operationsview_manager.set_operations(self.operations )
+        self.ui.operationsview_manager.set_operations(self.operations)
 
         # clean current job (tabs table)
         self.tabs = []
@@ -600,6 +603,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # read json
         xfilter = "JSON Files (*.json)"
         jobfilename, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
+
+        jobfilename = self.minify_path(jobfilename)
         
         self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.disconnect(self.cb_generate_gcode_x_offset)
         self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.disconnect(self.cb_generate_gcode_y_offset)
@@ -665,10 +670,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # open file dialog for a file name
         jobfilename, _ = QtWidgets.QFileDialog.getSaveFileName(self, caption="Save As", dir=".", filter=xfilter)
 
-        with open(jobfilename, 'w') as json_file:
-            json.dump(job, json_file, indent=2)
+        if jobfilename:
+            jobfilename = self.minify_path(jobfilename)
 
-        self.jobfilename = jobfilename
+            with open(jobfilename, 'w') as json_file:
+                json.dump(job, json_file, indent=2)
+
+            self.jobfilename = jobfilename
     
     def cb_curve_min_segments(self):
         '''
@@ -1274,7 +1282,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         '''
         self.recent_jobs.insert(0, jobfile)
-        self.recent_jobs = self.read_recent_jobs[:5]
+        self.recent_jobs = self.recent_jobs[:5]
 
     def closeEvent(self, event):
         # do stuff
@@ -1289,6 +1297,18 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             item = QtGui.QAction(icon, jobfilename, self.ui.menuOpen_Recent_Jobs)
             item.triggered.connect(self.cb_open_recent_job_file)
             self.ui.menuOpen_Recent_Jobs.addAction(item)
+
+    def minify_path(self, apath):
+        '''
+        '''
+        cwd = os.getcwd()
+        cwd = pathlib.PurePath(cwd).as_posix()
+
+        if apath.startswith(cwd):
+            apath = apath.split(cwd)[1]
+            apath = apath[1:]  # remove the leading slash
+
+        return apath
 
 
 if __name__ == "__main__":

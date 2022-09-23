@@ -1,5 +1,5 @@
 {
-  "svg_file": "./svg/three_rects_with_circle.svg",
+  "svg_file": "svg/three_rects_with_circle.svg",
   "operations": [
     {
       "Name": "op1 - Union",
