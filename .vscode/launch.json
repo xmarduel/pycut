@@ -13,6 +13,7 @@
 
 
 
+
         {
             "name": "OPENGL DEMO1",
             "type": "python",
@@ -99,6 +100,15 @@
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
             "args": ["-i", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver\\test_basic.svg"]
+        },
+        {
+            "name": "PYCUT RESOLVER TEST_BASIC2",
+            "type": "python",
+            "request": "launch",
+            "program": "svgresolve2.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
+            "args": ["-i", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver\\test_basic2.svg"]
         },
         {
             "name": "TABLEVIEW",
