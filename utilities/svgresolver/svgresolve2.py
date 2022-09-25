@@ -137,6 +137,10 @@ class SvgResolver:
             else:
                 print ("shape not recognized!", shape.__class__)
 
+        if item.tag.endswith("g"):
+            if "transform" in item.attrib:
+                del item.attrib["transform"]
+
         # process the children
         for ch in item:
             self.replace_elements(ch)
