@@ -186,7 +186,7 @@ class SvgResolver:
             return self.id_style[shape.id].pop(0)
 
         # was not a <use> but a normal element
-        return shape.style
+        return shape.values["style"]
 
     def merge_styles(self, ref_style:str, style: str) -> str:
         '''

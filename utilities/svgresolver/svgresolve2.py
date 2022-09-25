@@ -179,7 +179,7 @@ class SvgResolver:
             return self.id_style[shape.id].pop(0)
 
         # was not a <use> but a normal element
-        return shape.style
+        return shape.values["style"]
 
     def merge_styles(self, ref_style:str, style: str) -> str:
         '''
@@ -413,17 +413,29 @@ class SvgResolver:
     def get_svg_shape_for_item(self, item: etree.Element) -> svgelements.Shape | None:
         '''
         '''
-        if not item.tag.endswith("use"):
+        if item.getparent() == None:
             return None
-        
-        id_ref = item.attrib["href"][1:] # not the '#'
+        if item.getparent().tag.endswith("defs"):
+            return None
 
-        # get related shape
-        for idx, shape in enumerate(self.shapes):
-            if shape.id == id_ref:
-                # remove it from the list of shapes and give back
-                self.shapes.pop(idx)
-                return shape
+        if item.tag.endswith("use"):
+        
+            id_ref = item.attrib["href"][1:] # not the '#'
+
+            # get related shape
+            for idx, shape in enumerate(self.shapes):
+                if shape.id == id_ref:
+                    # remove it from the list of shapes and give back
+                    self.shapes.pop(idx)
+                    return shape
+
+        else:
+            
+            for idx, shape in enumerate(self.shapes):
+                if shape.id == item.attrib["id"]:
+                    # remove it from the list of shapes and give back
+                    self.shapes.pop(idx)
+                    return shape
 
         return None
 
