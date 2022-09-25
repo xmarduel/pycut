@@ -35,7 +35,7 @@
 <h3>Introduction</h3>
 
 <p>The SVG standard is huge and there are many ways to write a svg data. One very useful feature is to define basic shapes info the <code>defs</code> part,
-and re-use these items many times, applying different transformation for 1 element.</p>
+and re-use these items many times, applying different transformation for a given element.</p>
 
 <pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
 &lt;svg id="svg" width="100mm" height="200mm" viewBox="0 0 100 200" version="1.1"
@@ -47,14 +47,16 @@ and re-use these items many times, applying different transformation for 1 eleme
     &lt;rect id="my_rect" x="0" y="0" width="10" height="20" style="opacity:1;fill:#000080;stroke-width:0.2;" /&gt;
   &lt;/defs&gt;
   &lt;g id="layer1"&gt;
+    &lt;g id="layer2"&gt;
       &lt;use href="#my_circle" transform="translate(10,10)" style="opacity:0.5" id="circle_left" /&gt;
       &lt;use href="#my_circle" x="10" y="15"                                    id="circle_right" /&gt;
       &lt;use href="#my_rect"   x="30" y="10"                id="rect_1" /&gt;
       &lt;use href="#my_rect"   transform="translate(50,10)" id="rect_2" /&gt;
+    &lt;/g&gt;
   &lt;/g&gt;
 &lt;/svg&gt;</pre></code>
 
-<p>But at the end of the day, an application (like PyCut) prefers to (or can only) work with a svg data 
+<p>But at the end of the day, an application (like <strong>PyCut</strong>) prefers to (or can only) work with a svg data 
 where all elements (shapes) are defined without transformations, because evaluatings such transformations is not an easy task.</p>
 
 <p>Fortunately, the package <code><strong>svgelements</strong></code> does the job...</p>
@@ -66,29 +68,28 @@ It also manage to preserve the <code>id</code>s of the resolved items as well as
 
 <p>From the command line</p>
 
-<pre><code class="language-shell">> python svgresolver.py -i test_basic.svg
-</code></pre>
+<pre><code class="language-shell">> python svgresolver.py test_basic.svg</code></pre>
 
 <p>A file named test_basic.resolved.svg is created</p>
 
 <pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
 &lt;svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" width="100mm" height="200mm" viewBox="0 0 100 200" version="1.1" id="svg"&gt;
-  &lt;g id="layer1"&gt;
-  &lt;circle id="circle_left" cx="10.000" cy="10.000" r="2.250" style="opacity:0.5;fill:#080080;stroke-width:0.2"/&gt;
-  &lt;circle id="circle_right" cx="10.000" cy="15.000" r="2.250" style="opacity:1;fill:#080080;stroke-width:0.2"/&gt;
-  &lt;rect id="rect_1" width="10.000" height="20.000" x="30.000" y="10.000" rx="0.000" ry="0.000" style="opacity:1;fill:#800080;stroke-width:0.2;"/&gt;
-  &lt;rect id="rect_2" width="10.000" height="20.000" x="50.000" y="10.000" rx="0.000" ry="0.000" style="opacity:1;fill:#800080;stroke-width:0.2;"/&gt;
+  &lt;g id="layer"&gt;
+    &lt;circle id="circle_left" cx="10.000" cy="10.000" r="2.250" style="opacity:0.5;fill:#080080;stroke-width:0.2"/&gt;
+    &lt;circle id="circle_right" cx="10.000" cy="15.000" r="2.250" style="opacity:1;fill:#080080;stroke-width:0.2"/&gt;
+    &lt;rect id="rect_1" width="10.000" height="20.000" x="30.000" y="10.000" rx="0.000" ry="0.000" style="opacity:1;fill:#800080;stroke-width:0.2;"/&gt;
+    &lt;rect id="rect_2" width="10.000" height="20.000" x="50.000" y="10.000" rx="0.000" ry="0.000" style="opacity:1;fill:#800080;stroke-width:0.2;"/&gt;
   &lt;/g&gt;
 &lt;/svg&gt;</pre></code>
 
-<p>and PyCut can use this "resolved" svg data as input. Note how the <code>id</code>s are preserved. 
+<p>and <strong>PyCut</strong> can use this "resolved" svg data as input. Note how the <code>id</code>s are preserved. 
 Also note how the styles are merged in the resolved items.</p>
 
 <h3>ToDo</h3>
 
 <ul>
   <li><p>Preserve the structure of the initial svg (&lt;g&gt; paragraphs)</p></li>
-  <li><p>integrate the converter in <strong>PyCut</string>.</p></li>
+  <li><p>integrate the converter in <strong>PyCut</strong>.</p></li>
 </ul>
 
 </body>

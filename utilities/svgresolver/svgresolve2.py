@@ -442,15 +442,15 @@ class SvgResolver:
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(prog="svgresolver", description="svg defs-use / transformations resolver - Read the doc!")
+    parser = argparse.ArgumentParser(prog="svgresolver", description="svg defs-use / transformations resolver")
 
     # argument
-    parser.add_argument('-i', "--input", dest="input", help="input svg to resolve")
+    parser.add_argument("svg", help="svg to resolve")
 
     # version info
     parser.add_argument("--version", action='version', version='%s' % VERSION)
 
     options = parser.parse_args()
     
-    resolver = SvgResolver(options.input)
+    resolver = SvgResolver(options.svg)
     resolver.resolve()
