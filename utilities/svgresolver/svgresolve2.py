@@ -71,9 +71,13 @@ class SvgResolver:
         for e in self.svg.elements():
             try:
                 if e.values["tag"] == svgelements.SVG_TAG_USE:
-                    print("... found a '<use>' tag !")
+                    '''
+                    'e' is not a Shape as in collect_shapes
+                    but a SVGElement. This object helds the 'raw'
+                    xml data and thus the initial 'id' of the xml element
+                    '''
                     id_ref = e.values["href"][1:] # remove the '#'
-                    print("        -> def id = %r ### %r" % (id_ref, e.id))
+                    print('... <use href="#%s" id="%s" ...> ' % (id_ref, e.id))
                     self.id_mapping.setdefault(id_ref, []).append(e.id)
             except Exception as e:
                 pass
@@ -87,7 +91,12 @@ class SvgResolver:
         for e in self.svg.elements():
             try:
                 if e.values["tag"] == svgelements.SVG_TAG_USE:
-                    print("... found a '<use>' tag !")
+                    '''
+                    'e' is not a Shape as in collect_shapes
+                    but a SVGElement. This object helds the 'raw'
+                    xml data and thus the initial 'id' of the xml element
+                    '''
+                    #print("... found a '<use>' tag !")
                     id_ref = e.values["href"][1:] # remove the '#'
                     self.id_style.setdefault(id_ref, []).append(e.values.get("style", {}))
             except Exception as e:
@@ -142,7 +151,7 @@ class SvgResolver:
                 xml_declaration=True, 
                 encoding='utf-8')
 
-    def resolve_id(self, shape: svgelements.Shape):
+    def resolve_id(self, shape: svgelements.Shape) -> str|None:
         '''
         if not in "id_mapping":
             - return the id of the shape
@@ -216,6 +225,8 @@ class SvgResolver:
 
         if the_id != None:
             c.attrib["id"] = the_id
+        #else:
+        #    c.attrib["id"] = shape.id
 
         c.attrib["cx"] = self.lf_format % shape.cx
         c.attrib["cy"] = self.lf_format % shape.cy
@@ -402,9 +413,7 @@ class SvgResolver:
     def get_svg_shape_for_item(self, item: etree.Element) -> svgelements.Shape | None:
         '''
         '''
-        if not "href" in item.attrib:
-            return None
-        if not "id" in item.attrib:
+        if not item.tag.endswith("use"):
             return None
         
         id_ref = item.attrib["href"][1:] # not the '#'
