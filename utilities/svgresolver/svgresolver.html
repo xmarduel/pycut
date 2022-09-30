@@ -68,15 +68,20 @@ where all elements (shapes) are defined without transformations, because evaluat
 <p>This utility uses <code><strong>svgelements</strong></code> and write the result to a svg file (what  <code><strong>svgelements</strong></code> does not).
 It also manage to preserve the <code>id</code>s of the resolved items as well as merging the styles of the referenced items with the used items.</p>
 
-<p><em>Note: By experimenting with styles within the use elements, it seems that the opacity (fill or stroke) is inherired, but the fill or stroke color is not! I did not check for other style properties. There is also a strange (to me) dependency between opacity and stroke-opacity that I do not completely understand... So the rule(s) concerning the style in use elements remain a mystery for me.</em></p>
+<p><em>Note: By experimenting with styles within the <code>use</code> elements, it seems that the opacities (fill or stroke) defined in the <code>use</code> elements 
+overwrite the opacities defined in the referenced <code>defs</code>, but the colors (fill or stroke-color) do not! I did not check for other style properties. 
+There is also a strange (to me) dependency between opacity and stroke-opacity that I do not completely understand... 
+So the rule(s) concerning the style in use elements remain a somehow mystery for me.</em></p>
 
-<p>At the end, I will only inherit in the Shapes the (fill) opacity, and the stroke opacity **only in the case of it is defined in the def element and is different from the opacity** (seems to be the rule!).</p>
+<p><em>Finally, the utility will only overwrite in the Shapes the <code>opacity</code> and <code>stroke-opacity</code>, but for the stroke opacity **only** in the case 
+it is defined in the def element and if it is different from the normal <code>opacity</code> (seems to be the rule!).</em></p>
 
 <h3>Usage</h3>
 
 <p>From the command line</p>
 
-<pre><code class="language-shell">> python svgresolver.py test_basic.svg</code></pre>
+<pre><code class="language-shell">> python svgresolver.py -h
+> python svgresolver.py test_basic.svg</code></pre>
 
 <p>A file named test_basic.resolved.svg is created</p>
 
@@ -86,7 +91,7 @@ It also manage to preserve the <code>id</code>s of the resolved items as well as
     &lt;g id="layer2"&gt;
       &lt;g id="layer_circle"&gt;
         &lt;circle id="circle_left" cx="10.000" cy="10.000" r="2.250" style="opacity:0.5;fill:#880088;stroke:#00ffff;stroke-opacity:0.25;stroke-width:0.2"/&gt;
-        &lt;circle id="circle_right" cx="10.000" cy="15.000" r="2.250" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-width:0.2"/&gt;
+        &lt;circle id="circle_right" cx="10.000" cy="15.000" r="2.250" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-opacity:0.5;stroke-width:0.2"/&gt;
       &lt;/g&gt;
       &lt;g id="layer_rect"&gt;
         &lt;rect id="rect_1" width="10.000" height="20.000" x="30.000" y="10.000" rx="0.000" ry="0.000" style="opacity:1;fill:#880088;stroke-width:0.2;"/&gt;
@@ -97,7 +102,7 @@ It also manage to preserve the <code>id</code>s of the resolved items as well as
 &lt;/svg&gt;</pre></code>
 
 <p>and <strong>PyCut</strong> can use this "resolved" svg data as input. Note how the <code>id</code>s are preserved. 
-Also note how the styles are merged in the resolved items (only the opacities).</p>
+Also note how the opacity values in the styles are merged in the resolved items's styles.</p>
 
 <h3>ToDo</h3>
 

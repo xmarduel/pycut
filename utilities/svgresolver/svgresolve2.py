@@ -14,14 +14,27 @@ class SvgResolver:
     '''
     lf_format = "%.3f"
 
-    def __init__(self, filename: str):
+    def __init__(self, options):
         '''
         '''
-        self.filename = filename
-        self.resolved_filename = os.path.splitext(filename)[0] + '.resolved.svg'
+        self.filename = options.svg
+        self.resolved_filename = os.path.splitext(self.filename)[0] + '.resolved.svg'
         
         self.shapes = []
-        self.svg = svgelements.SVG.parse(filename, reify=True, ppi=25.4)  # so that there is no "scaling"
+
+        # There are a few things I do not understand in the svg standard : for example
+        # a width and height defined in "px" or in "mm" or in "in"
+        # - defined in "px" -> use ppi=svgelements.DEFAULT_PPI (96)
+        # - defined in "mm" -> use ppi=25.4
+        # - defined in "in" -> use ppi=1
+        
+        if options.units == "px":
+            self.svg = svgelements.SVG.parse(self.filename, reify=True, ppi=svgelements.DEFAULT_PPI)  
+        if options.units == "mm":
+            self.svg = svgelements.SVG.parse(self.filename, reify=True, ppi=25.4)  # so that there is no "scaling" : 1 inch = 25.4 mm
+        if options.units == "in":
+            self.svg = svgelements.SVG.parse(self.filename, reify=True, ppi=1)  # so that there is no "scaling" : 1 inch <-> 96 px
+        
 
         #print("======================================")
         #for e in list(self.svg.elements()):
@@ -35,7 +48,7 @@ class SvgResolver:
 
         # we will write the resolved svg from the initial svg
         parser = etree.XMLParser(remove_blank_text=True)
-        self.tree = etree.parse(filename, parser)
+        self.tree = etree.parse(self.filename, parser)
 
     def resolve(self):
         '''
@@ -466,11 +479,12 @@ if __name__ == '__main__':
 
     # argument
     parser.add_argument("svg", help="svg to resolve")
+    parser.add_argument("-u", "--units", dest="units", default="mm", help='viewbox units ("px", "mm" or "in")')
 
     # version info
     parser.add_argument("--version", action='version', version='%s' % VERSION)
 
     options = parser.parse_args()
     
-    resolver = SvgResolver(options.svg)
+    resolver = SvgResolver(options)
     resolver.resolve()
