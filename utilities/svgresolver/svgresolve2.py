@@ -23,6 +23,12 @@ class SvgResolver:
         self.shapes = []
         self.svg = svgelements.SVG.parse(filename, reify=True, ppi=25.4)  # so that there is no "scaling"
 
+        #print("======================================")
+        #for e in list(self.svg.elements()):
+        #    print(f"ID: {e.id} / {e.__class__.__name__}: {e}")
+        #print("======================================")
+
+
         # to use the right id in the <use> stuff and the right style
         self.id_mapping = {}
         self.id_style = {}
@@ -205,8 +211,16 @@ class SvgResolver:
                 key, value = item.split(":")
                 the_style[key] = value
 
+            # only the opacity styles should be merged!
+            the_style_opacity_items = {}
+            for key in the_style:
+                if key == 'opacity':
+                    the_style_opacity_items[key] = the_style[key]
+                if key == 'stroke-opacity':
+                    the_style_opacity_items[key] = the_style[key]
+             
             # merge dict
-            the_ref_style.update(the_style)
+            the_ref_style.update(the_style_opacity_items)
 
             merge_style = []
             for key in the_ref_style:
@@ -418,6 +432,8 @@ class SvgResolver:
         '''
         '''
         if item.getparent() == None:
+            return None
+        if item.tag.endswith("defs"):
             return None
         if item.getparent().tag.endswith("defs"):
             return None
