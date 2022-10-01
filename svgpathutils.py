@@ -42,6 +42,9 @@ class SvgPath:
     PYCUT_SAMPLE_LEN_COEFF = 10 # 10 points per "svg unit" ie arc of len 10 -> 100 pts discretization
     PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5 # is in jsCut 1
 
+    DISCRETIZATION_USE_MODULE = 'SVGPATHTOOLS'
+    #DISCRETIZATION_USE_MODULE = 'SVGELEMENTS'
+
     @classmethod
     def set_arc_precision(cls, arc_precision: float):
         '''
@@ -74,10 +77,10 @@ class SvgPath:
         return None, None
 
     @classmethod
-    def read_svg_shapes_as_paths(cls, svg: str) -> Dict[str, Tuple[Dict[str,str], svgpathtools.Path]] :
+    def read_svg_shapes_as_paths(cls, svg: str) -> Dict[str, Tuple[svgpathtools.Path, Dict[str,str]]] :
         '''
         From a svg file content, read all paths and their attributes
-        and organize them as dictionary with key <path_id>, value <attribs, path>
+        and organize them as dictionary with key <path_id>, value (path, attrib)
         '''
         svg_shapes = {}
 
@@ -91,7 +94,7 @@ class SvgPath:
 
             if path_id is None:
                 continue
-            svg_shapes[path_id] = (attribs, path)
+            svg_shapes[path_id] = (path, attribs)
 
         return svg_shapes
 
@@ -104,7 +107,14 @@ class SvgPath:
         self.p_attrs = p_attrs
 
         # the transformation of the svg_path_d to a svgpathtools 'path'
-        self.svg_path = svgpathtools.parse_path(self.p_attrs['d'])
+        
+        if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
+            # svgpathtools
+            self.svg_path : svgpathtools.Path = svgpathtools.parse_path(self.p_attrs['d']) 
+        #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
+        #    # svgelements
+        #    self.svg_path = svgelements.Path(self.p_attrs['d'])
+        
 
     def discretize(self) -> np.array :
         '''
@@ -119,7 +129,7 @@ class SvgPath:
         point of the path 
 
         SHAPELY WARNING: it is **extremely important** not to duplicate identical points (or nearly identical) 
-        because shapely may find that it create an "invalid" polygon with the reason:
+        because shapely may find that it creates an "invalid" polygon with the reason:
         
         >>>>> Self-intersection[184.211463517 186.153838406]
 
@@ -133,7 +143,7 @@ class SvgPath:
         so between 2 svg paths "segments", avoid duplicating the point at the end of the first segment and 
         the one at the beginning of the second segment.
         '''
-        SEGMENT_THREAHOLD = 1.0e-5
+        SEGMENT_IGNORE_THRESHOLD = 1.0e-5
         # -----------------------------------------------------------------
         def ignore_segment(k, segment) -> bool:
             '''
@@ -142,7 +152,7 @@ class SvgPath:
             to avoid this. It seems to be caused by very little segments which 
             are somehow wrong (or rounding values stuff makes them wrong).
             '''
-            if segment.length() < SEGMENT_THREAHOLD :
+            if segment.length() < SEGMENT_IGNORE_THRESHOLD :
                 print("segment[%i]: %lf  -> ignoring" % (k, segment.length()) )
                 return True
 
@@ -166,12 +176,21 @@ class SvgPath:
             if segment.__class__.__name__ == 'Line':
                 # start and end points
                 if len(self.svg_path) == 1:
-                    pts = segment.points([0,1])
+                    if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
+                        pts = segment.points([0,1])
+                    #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
+                    #    pts = [segment.point(0.0), segment.point(1.0)]
                 else:
                     if k == 0:
-                        pts = segment.points([0.5, 1]) # shapely fix!
+                        if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
+                            pts = segment.points([0.5, 1]) # shapely fix!
+                        #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
+                        #    pts = [segment.point(0.5), segment.point(1.0)] # shapely fix!
                     else:
-                        pts = segment.points([1])
+                        if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
+                            pts = segment.points([1])
+                        #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
+                        #    pts = [segment.point(1.0)] # shapely fix!
                     
             elif segment.__class__.__name__ == 'Arc':
                 # no 'points' method for 'Arc'!
@@ -202,7 +221,10 @@ class SvgPath:
                     p1 = segment.start
                     p2 = segment.end
 
-                    line = svgpathtools.Line(p1, p2)
+                    if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
+                        line = svgpathtools.Line(p1, p2)
+                    #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
+                    #    line = svgelements.Line(p1, p2)
 
                     # start and end points
                     if len(self.svg_path) == 1:
@@ -229,7 +251,12 @@ class SvgPath:
         # shapely fix : add as last point the "virtual" first one, the first "middle one" is already the "new" first
 
         # distance between the last pt and and stored first pt
-        line = svgpathtools.Line(points[-1], first_pt)
+
+        if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
+            line = svgpathtools.Line(points[-1], first_pt)
+        #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
+        #    line = svgelements.Line(points[-1], first_pt)
+
         # test it
         ignore = ignore_segment(-1, line)
 

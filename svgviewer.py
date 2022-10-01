@@ -320,7 +320,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
                 print("    -> ignoring")
                 continue
 
-            attribs, path = self.svg_shapes[shape_id]
+            path, attrib = self.svg_shapes[shape_id]
 
             self.svg_path_d[shape_id] = path.d()
 
