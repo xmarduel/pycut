@@ -145,11 +145,16 @@ class SvgResolver:
         asvg = etree.Element("svg", nsmap=NSMAP)
         asvg.append(self.layer)
 
-        asvg.attrib["width"] = self.svg.values["width"]
-        asvg.attrib["height"] = self.svg.values["height"]
-        asvg.attrib["viewBox"] = self.svg.values["viewBox"]
-        asvg.attrib["version"] = self.svg.values["version"]
-        asvg.attrib["id"] = self.svg.values["id"]
+        if "width" in self.svg.values:
+            asvg.attrib["width"] = self.svg.values["width"]
+        if "height" in self.svg.values:
+            asvg.attrib["height"] = self.svg.values["height"]
+        if "viewBox" in self.svg.values:
+            asvg.attrib["viewBox"] = self.svg.values["viewBox"]
+        if "version" in self.svg.values:
+            asvg.attrib["version"] = self.svg.values["version"]
+        if "id" in self.svg.values:
+            asvg.attrib["id"] = self.svg.values["id"]
 
         root = etree.ElementTree(asvg)
         

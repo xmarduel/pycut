@@ -156,7 +156,7 @@ class SvgResolver:
             else:
                 print ("shape not recognized!", shape.__class__)
 
-        if item.tag.endswith("g"):
+        if item.tag == "{http://www.w3.org/2000/svg}g":
             if "transform" in item.attrib:
                 del item.attrib["transform"]
 
@@ -446,9 +446,11 @@ class SvgResolver:
         '''
         if item.getparent() == None:
             return None
-        if item.tag.endswith("defs"):
+        if item.tag == "{http://www.w3.org/2000/svg}defs":
             return None
-        if item.getparent().tag.endswith("defs"):
+        if item.getparent() == "{http://www.w3.org/2000/svg}defs":
+            return None
+        if item.tag == "{http://www.w3.org/2000/svg}g":
             return None
 
         if item.tag.endswith("use"):
