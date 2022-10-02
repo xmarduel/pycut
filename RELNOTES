@@ -1,7 +1,7 @@
 # 0.4.0 (TODO)
 
 Can process basic <text> elements without converting them before to <path> elements
-Can process defs/transformations in svg (ie resolve them)
+Can process defs/use and transformations in svg (ie resolve them)
 
 # 0.3.6
 
