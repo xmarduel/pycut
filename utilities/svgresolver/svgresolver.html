@@ -38,7 +38,7 @@
 and re-use these items many times, applying different transformation for a given element.</p>
 
 <pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
-&lt;svg id="svg" width="100mm" height="200mm" viewBox="0 0 100 200" version="1.1"
+&lt;svg version="1.1" id="svg" width="100mm" height="200mm" viewBox="0 0 100 200"
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns="http://www.w3.org/2000/svg"
   xmlns:svg="http://www.w3.org/2000/svg"&gt;
@@ -47,15 +47,13 @@ and re-use these items many times, applying different transformation for a given
     &lt;rect id="my_rect" x="0" y="0" width="10" height="20" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-width:0.2;" /&gt;
   &lt;/defs&gt;
   &lt;g id="layer1"&gt;
-    &lt;g id="layer2"&gt;
-      &lt;g id="layer_circle"&gt;
-        &lt;use href="#my_circle" transform="translate(10,10)" style="opacity:0.5;stroke-opacity:0.25" id="circle_left" /&gt;
-        &lt;use href="#my_circle" x="10" y="15"                                                        id="circle_right" /&gt;
-      &lt;/g&gt;
-      &lt;g id="layer_rect"&gt;
-        &lt;use href="#my_rect"   x="30" y="10"                id="rect_1" /&gt;
-        &lt;use href="#my_rect"   transform="translate(50,10)" id="rect_2" /&gt;
-      &lt;/g&gt;
+    &lt;g id="layer_circle"&gt;
+      &lt;use href="#my_circle" transform="translate(10,10)" style="opacity:0.5;stroke-opacity:0.25" id="circle_left" /&gt;
+      &lt;use href="#my_circle" x="10" y="15"                                                        id="circle_right" /&gt;
+    &lt;/g&gt;
+    &lt;g id="layer_rect"&gt;
+      &lt;use href="#my_rect"   x="30" y="10"                id="rect_1" /&gt;
+      &lt;use href="#my_rect"   transform="translate(50,10)" id="rect_2" /&gt;
     &lt;/g&gt;
   &lt;/g&gt;
 &lt;/svg&gt;</pre></code>
@@ -88,15 +86,13 @@ it is defined in the def element and if it is different from the normal <code>op
 <pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
 &lt;svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" width="100mm" height="200mm" viewBox="0 0 100 200" version="1.1" id="svg"&gt;
   &lt;g id="layer1"&gt;
-    &lt;g id="layer2"&gt;
-      &lt;g id="layer_circle"&gt;
-        &lt;circle id="circle_left" cx="10.000" cy="10.000" r="2.250" style="opacity:0.5;fill:#880088;stroke:#00ffff;stroke-opacity:0.25;stroke-width:0.2"/&gt;
-        &lt;circle id="circle_right" cx="10.000" cy="15.000" r="2.250" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-opacity:0.5;stroke-width:0.2"/&gt;
-      &lt;/g&gt;
-      &lt;g id="layer_rect"&gt;
-        &lt;rect id="rect_1" width="10.000" height="20.000" x="30.000" y="10.000" rx="0.000" ry="0.000" style="opacity:1;fill:#880088;stroke-width:0.2;"/&gt;
-        &lt;rect id="rect_2" width="10.000" height="20.000" x="50.000" y="10.000" rx="0.000" ry="0.000" style="opacity:1;fill:#880088;stroke-width:0.2;"/&gt;
-      &lt;/g&gt;
+    &lt;g id="layer_circle"&gt;
+      &lt;circle id="circle_left" cx="10.000" cy="10.000" r="2.250" style="opacity:0.5;fill:#880088;stroke:#00ffff;stroke-opacity:0.25;stroke-width:0.2"/&gt;
+      &lt;circle id="circle_right" cx="10.000" cy="15.000" r="2.250" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-opacity:0.5;stroke-width:0.2"/&gt;
+    &lt;/g&gt;
+    &lt;g id="layer_rect"&gt;
+      &lt;rect id="rect_1" width="10.000" height="20.000" x="30.000" y="10.000" rx="0.000" ry="0.000" style="opacity:1;fill:#880088;stroke-width:0.2;"/&gt;
+      &lt;rect id="rect_2" width="10.000" height="20.000" x="50.000" y="10.000" rx="0.000" ry="0.000" style="opacity:1;fill:#880088;stroke-width:0.2;"/&gt;
     &lt;/g&gt;
   &lt;/g&gt;
 &lt;/svg&gt;</pre></code>

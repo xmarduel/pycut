@@ -444,7 +444,7 @@ class SvgResolver:
     def get_svg_shape_for_item(self, item: etree.Element) -> svgelements.Shape | None:
         '''
         '''
-        if item.getparent() == None:
+        if item.tag == "{http://www.w3.org/2000/svg}svg":
             return None
         if item.tag == "{http://www.w3.org/2000/svg}defs":
             return None
