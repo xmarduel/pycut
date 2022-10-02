@@ -117,31 +117,25 @@ file:</p>
   <li>&lt;text&gt;</li>
 </ul>
 
-<p>Because <strong>PyCut</strong> finally processes "paths" in order to
-calculate cnc paths, these shapes have to be interpreted/converted first to svg
-&lt;path&gt; items.</p>
+<p><strong>PyCut</strong> processes "paths" in order to calculate cnc paths,
+but thankfully it can read out of the box all kind of shapes, so there is
+<strong>no need</strong> to convert your svg file into "paths only" svg.</p>
 
-<p>The first possibility is to convert all the shapes and text (strings) found
-in your data into &lt;path&gt; shapes, and then import this &lt;path&gt; only
-svg file into <strong>PyCut</strong>. This conversion can be done within
-Inkscape. However it is not very practical as you ends managing 2 svg datas,
-the first one containing your initial shapes (circle, rect etc) and the
-converted one.</p>
-
-<p>The second possibility is to not convert your svg data at all. Indeed,
-<strong>PyCut</strong> can read the shapes by itself, so every thing will be
-Ok. It is nevertheless only true if there are no &lt;text&gt; items in the svg
-data, as <strong>PyCut</strong> cannot (yet) convert &lt;text&gt; items into
-paths and wil thus ingnore them. </p>
-
-<p>So how to handle &lt;text&gt; items ? <strong><span style="color:#8000ff">IN
-PROGRESS</span>:</strong> Well actually <strong>PyCut</strong> comes with it
-own &lt;text&gt; to &lt;path&gt; converter as a small utility, so just use it
-and copy/paste the result of a &lt;text&gt; conversion into your svg. A
-successfull conversion will only occurs if the &lt;text&gt; item is simple
-enough: the text "value" should not be splitted into several &lt;tspan&gt;
-items with different fonts. No &lt;tspan&gt; tag at all is also possible (and
-simpler). </p>
+<p>There is one exception: <strong>PyCut</strong> cannot process yet
+<code>&lt;text&gt;</code> items. Fortunately, <code>&lt;text&gt;</code> items
+can be converted into <code>&lt;path&gt;</code> items within
+<strong>Inkscape</strong>, sonce they will be ignored by
+<strong>PyCut</strong>. <strong>PyCut</strong> also comes with the utiilty
+<strong>svgtext2svgpath.py</strong> which will also convert your
+<code>&lt;text&gt;</code> items. How to use it? just call the
+<strong>svgtext2svgpath.py</strong> program which outputs in a new svg the
+&lt;text&gt; items as &lt;path&gt; items. Copy/paste the result of a
+<code>&lt;text&gt;</code> conversion into your own svg. A successfull
+conversion will only occurs if the <code>&lt;text&gt;</code> item is simple
+enough: the text "value" should not be splitted into several
+<code>&lt;tspan&gt;</code> items with different fonts. No
+<code>&lt;tspan&gt;</code> tag at all is also possible (and simpler). 
+<strong><span style="color:#8000ff">Work IN PROGRESS</span></strong>.</p>
 
 <p>All in all, if <strong>PyCut</strong> were to display text strings at the
 wrong positions, the user can always export the svg from Inkscape (and write
@@ -158,7 +152,8 @@ applications, as Inkscape. In both case, the svg datas should contains (and
 <strong>Inkscape</strong> does it automatically) a <strong>viewBox</strong>,
 and the svg attributes <strong>width</strong> and <strong>height.</strong>
 These 2 important attributes shoul be given with a unit, i.e
-"<strong>mm</strong>" or "<strong>in</strong>".</p>
+"<strong>mm</strong>" or "<strong>in</strong>" as we are editing data in order to
+later generate gcode (with "mm" or "in" units).</p>
 
 <h4>Shapes "id"</h4>
 
@@ -173,16 +168,18 @@ user will want to edit them and give them meaningfull name.</p>
 <h4>Transformations</h4>
 
 <p>It is usual to translate, rotate, scale and skew the shapes, especially when
-using &lt;defs&gt; items together with &lt;use&gt;.</p>
+using <code>&lt;defs&gt;</code> items together with
+<code>&lt;use&gt;</code>.</p>
 
 <p>Unfortunately, <strong>PyCut</strong> cannot handle these transformations
 "out of the box". Nevertheless, if the user is using such transformations
 inside his svg data, it is then possible to "resolve" them, as
-<strong>PyCut</strong> also comes with a small utility just to resolve any
-possible transformation while keeping the<strong>"id"</strong>s right.
-<strong><span style="color:#8000ff">IN PROGRESS</span></strong>: This utility
-should be integrated into <strong>PyCut</strong> so that the user can spare
-this step. Actually, this utility is found in the source code under the folder
+<strong>PyCut</strong> also comes with the utility
+<strong>svgresolver.py</strong> which resolves any possible transformation
+while keeping the<strong>"id"</strong>s right. <strong><span
+style="color:#8000ff">IN PROGRESS</span></strong>: This utility should be
+integrated into <strong>PyCut</strong> so that the user can spare this step.
+Actually, this utility is found in the source code under the folder
 "<strong>utilities/svgresolver</strong>".</p>
 
 <h3>Inkscape</h3>
@@ -194,14 +191,17 @@ size of the material.</p>
 
 <h2>Svg File Editing with a Text Editor</h2>
 
-<p>Sometimes it is easier to edit a svg without a graphical app like Inkscape, but simply with a text editor.</p>
-<p>This way, it is easy for example to define shapes in the <strong>&lt;def&gt;</strong> paragraph 
-and reuse theses shapes in the main body of the svg file with the help of the <strong>&lt;use&gt;</strong>
-tag and some transformations.
-</p>
+<p>Sometimes it is easier to edit a svg without a graphical app like Inkscape,
+but simply with a text editor.</p>
 
-<p>PyCut will not be able to read such a svg file, but PyCut includes an utility called svgrevolver.py 
-which resolves all the items with their transformations.</p>
+<p>This way, it is easy for example to define shapes in the
+<strong>&lt;def&gt;</strong> paragraph and reuse theses shapes in the main body
+of the svg file with the help of the <strong>&lt;use&gt;</strong> tag and some
+transformations. </p>
+
+<p>PyCut will not be able to read such a svg file, but PyCut includes an
+utility called <strong>svgrevolver.py</strong> which resolves all the items with their
+transformations.</p>
 
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
@@ -225,19 +225,20 @@ order to be further processed.</p>
 
 <p>Then create a new "job" : this is a kind of setting file that stores for a
 given svg file all the CAM operations that the users has created, together with
-all others settings relevant when generating g-code.
-It can be created, saved and loaded again and modified - quite practical.</p>
+all others settings relevant when generating g-code. It can be created, saved
+and loaded again and modified - quite practical.</p>
 
 <h3>Creating CAM operations</h3>
 
-<p>Once an empty job is created and a svg file loaded, it is time to create some CAM operations:
-select 1 or more items in SVG window (they should turn beige) and click the
-button "Create Operation": a new operation in the operation table should
-appear.</p>
+<p>Once an empty job is created and a svg file loaded, it is time to create
+some CAM operations: select 1 or more items in SVG window (they should turn
+beige) and click the button "Create Operation": a new operation in the
+operation table should appear.</p>
 
 <p>Define the properties of the operation: the main one is the CAM operation
-type: "Pocket", "Engrave", "Inside" or "Outside". The others options wil be
-discussed later. Default values at this point should be Ok.</p>
+type: "<strong>Pocket</strong>", "<strong>Engrave</strong>",
+"<strong>Inside</strong>" or "<strong>Outside</strong>". The others options wil
+be discussed later. Default values at this point should be Ok.</p>
 
 <h3>Create the GCode</h3>
 
@@ -252,9 +253,8 @@ regions.</p>
 <p>The produced G-Code can be inspected in the "G code viewer" and the "G code
 Simulator" display areas.</p>
 
-<p>You just have to save the G-Code and you're done. The gcode file should be named
-as the CAM operation name.</p>
-
+<p>You just have to save the G-Code and you're done. The gcode file should be
+named as the CAM operation name.</p>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
@@ -268,12 +268,12 @@ as the CAM operation name.</p>
 <h4>user units scale</h4>
 
 <p>What is this? And why is it disabled and set to 1? Let's take an example: in
-Inkscape, the user would set the document's size to <strong>100x40 mm</strong>,
-supposedly the size of the material to work on. Inkscape automatically sets the
-<strong>user units scale </strong><strong>to 1</strong>. Note that the user
-units are not "px" or whatever. This means, <strong>1 "user unit" is equal to 1
-mm (and the viewbox is "0 0 100 40" while width="100mm" and
-height="40mm")</strong></p>
+<strong>Inkscape</strong>, the user would set the document's size to
+<strong>100x40 mm</strong>, supposedly the size of the material to work on.
+Inkscape automatically sets the <strong>user units scale </strong><strong>to
+1</strong>. Note that the user units are not "px" or whatever. This means,
+<strong>1 "user unit" is equal to 1 mm (and the viewbox is "0 0 100 40" while
+width="100mm" and height="40mm")</strong></p>
 
 <div>
 <img src="Inkscape_settings_mm.png" width="563"> </div>
@@ -288,17 +288,17 @@ said, the user units scale is 1 per default .</p>
 <p>Let's consider now the case where the user switches to
 <strong>inches</strong> for the document size. The size of the document becomes
 then <strong>3,93701x1,57480 inches</strong> (yes, 100 / 25.4 is 3.93701). Note
-that Inkscape automatically change the <strong>user units scale to
-25.4</strong>. Because of this, the <strong>view box remains at "0 0 100
-40"</strong>. That way, a rectangle filling the full document size is still
+that <strong>Inkscape</strong> automatically change the <strong>user units
+scale to 25.4</strong>. Because of this, the <strong>view box remains at "0 0
+100 40"</strong>. That way, a rectangle filling the full document size is still
 100x40.</p>
 
 <div>
 <img src="Inkscape_settings_in.png" width="563"> </div>
 
 <p>Filling a box half the size of the document is 50x20, right, but what are
-real dimension of that box ? The user would have to steadily calculate from
-fancy user units (ex: 50x20) in inches</p>
+real physical dimensions of that box ? The user would have to steadily
+calculate from fancy user units (ex: 50x20) in inches</p>
 
 <p>But why would a user use inches and work with user units scale factor 25.4
 (leading infact to work in mm) ? The user can set the user units scale factor
@@ -344,10 +344,10 @@ confusion! </span></strong></p>
 <p><strong style="color:#0000ff">I apologize for the ones who would like to
 work with user units scale not equals to 1.</strong> </p>
 
-<p>The further <strong>Gcode Units</strong> setting is not only a flag to set
-the code <strong>G20</strong> (inches) or <strong>G21</strong> (mm) inside the
-gcode file: it also allows the proper conversion of the tool diameter physical
-size (inch or mm) in user units.</p>
+<p>The further <strong>PyCut Gcode Units</strong> setting is not only a flag to
+set the code <strong>G20</strong> (inches) or <strong>G21</strong> (mm) inside
+the gcode file: it also allows the proper conversion of the tool diameter
+physical size (inch or mm) in user units.</p>
 
 <p>The rule is:</p>
 <ul>
@@ -476,7 +476,6 @@ is extracted form the svg file: the svg "height" attribute (with units) </p>
 <img src="pycut_gcode_generation.png" width="310"> </div>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
-
-
+</div>
 </body>
 </html>
