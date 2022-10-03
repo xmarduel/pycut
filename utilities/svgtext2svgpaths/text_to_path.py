@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+VERSION = "0_9_0"
+
 '''
 Convert svg text to svg path(s)
 '''
@@ -27,6 +29,7 @@ import sys
 import io
 import importlib
 import glob
+import argparse
 
 from typing import List
 
@@ -1109,7 +1112,6 @@ class String2SvgPaths:
 
         self.pos[0] += self.string_leftmargin * fontsize / Char2SvgPath.CHAR_SIZE 
         self.pos[1] -= self.string_top * fontsize / Char2SvgPath.CHAR_SIZE 
-    
 
     def calc_string_top(self):
         top = 0
@@ -1209,34 +1211,54 @@ Inkscape font 30 pt leads to a font-size of 10.5833 "px"
 
 '''
 
-if __name__ == '__main__':
 
+def test_char(char: str, font: str):
+    '''
     char = 'B'
     font = 'C:\\Windows\\Fonts\\arial.ttf'
     #font = 'C:\\Windows\\Fonts\\BROADW.TTF'
+    '''
 
     fontsize = 10.5833 # px
 
     o = Char2SvgPath(char, font)
 
     # convert single char shifting x and flipping y --------------
-    #o.calc_path(fontsize)
-    #o.write_path("A")
+    o.calc_path(fontsize)
+    o.write_path("A")
 
-    #o.calc_path_freetype_decompose(fontsize)
-    #o.write_path("B")
+    o.calc_path_freetype_decompose(fontsize)
+    o.write_path("B")
 
-    #pos = (9.2248564, 17.575741)
+    pos = (9.2248564, 17.575741)
 
     # convert whole string
-    #oo = String2SvgPaths("Bac", font)
-    #oo.calc_paths(fontsize, pos)
-    #oo.write_paths()
+    oo = String2SvgPaths("Bac", font)
+    oo.calc_paths(fontsize, pos)
+    oo.write_paths()
 
-    # -- and from a real svg data
-    converter = SvgTextConverter("./examples/AABBCC.svg")
-    converter = SvgTextConverter("./examples/sans_serif.svg")
-    converter = SvgTextConverter("./examples/slaine.svg")
+    # ziafont test
+    
+    #ziafont.set_fontsize(22.5778)
+    #font = ziafont.Font('C:\\Windows\\Fonts\\arial.ttf')
+    #font.str2svg("BB  CC  AA  BB").svg()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(prog="svgtext2svgpath", description="svg text to xvg path")
+
+    # argument
+    parser.add_argument("svg", help="svg to transform")
+    
+    # version info
+    parser.add_argument("--version", action='version', version='%s' % VERSION)
+
+    options = parser.parse_args()
+    
+    #resolver = String2SvgPaths(options.svg)
+    #resolver.resolve()
+
+    converter = SvgTextConverter(options.svg)
     paths = converter.convert_texts()
     
     for text_as_paths in paths:
@@ -1255,9 +1277,3 @@ if __name__ == '__main__':
     # or the full svg with the paths
     svg = converter.transform_svg()
     print(svg)
-
-    # ziafont test
-    
-    #ziafont.set_fontsize(22.5778)
-    #font = ziafont.Font('C:\\Windows\\Fonts\\arial.ttf')
-    #font.str2svg("BB  CC  AA  BB").svg()

@@ -16,6 +16,9 @@
 
 
 
+
+
+
         {
             "name": "OPENGL DEMO1",
             "type": "python",
@@ -84,6 +87,15 @@
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
             "args": ["-job", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\svg\\hobbymat\\hobbymat_gear_40.json"]
+        },
+        {
+            "name": "PYCUT SVGTEXT_2_SVGPATH",
+            "type": "python",
+            "request": "launch",
+            "program": "text_to_path.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgtext2svgpaths",
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgtext2svgpaths\\examples\\all_letters_slaine.svg"]
         },
         {
             "name": "PYCUT RESOLVER",
