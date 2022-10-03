@@ -6,7 +6,7 @@
       "type": "Pocket",
       "Deep": 3.175,
       "paths": [
-        "text_uppercase_0"
+        "text_a"
       ],
       "RampPlunge": false,
       "Combine": "Union",
@@ -20,7 +20,7 @@
       "type": "Pocket",
       "Deep": 3.175,
       "paths": [
-        "text_uppercase_1"
+        "text_b"
       ],
       "RampPlunge": false,
       "Combine": "Union",
@@ -34,7 +34,7 @@
       "type": "Pocket",
       "Deep": 3.175,
       "paths": [
-        "text_uppercase_2"
+        "text_c"
       ],
       "RampPlunge": false,
       "Combine": "Union",
@@ -48,7 +48,7 @@
       "type": "Pocket",
       "Deep": 3.175,
       "paths": [
-        "text_uppercase_3"
+        "text_d"
       ],
       "RampPlunge": false,
       "Combine": "Union",
@@ -62,7 +62,7 @@
       "type": "Pocket",
       "Deep": 3.175,
       "paths": [
-        "text_uppercase_4"
+        "text_e"
       ],
       "RampPlunge": false,
       "Combine": "Union",
@@ -76,7 +76,7 @@
       "type": "Pocket",
       "Deep": 3.175,
       "paths": [
-        "text_uppercase_5"
+        "text_f"
       ],
       "RampPlunge": false,
       "Combine": "Union",
@@ -90,7 +90,7 @@
       "type": "Pocket",
       "Deep": 3.175,
       "paths": [
-        "text_uppercase_6"
+        "text_g"
       ],
       "RampPlunge": false,
       "Combine": "Union",
