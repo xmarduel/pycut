@@ -177,7 +177,7 @@ class SvgTextConverter:
         '''
         return [ o.to_paths() for o in self.svgtextobjects ]
 
-    def transform_svg(self) -> str:
+    def transform_text(self) -> str:
         '''
         return a "new" sbg strong containing path elements instead of text elements 
         '''
@@ -1243,6 +1243,9 @@ def test_char(char: str, font: str):
     #font = ziafont.Font('C:\\Windows\\Fonts\\arial.ttf')
     #font.str2svg("BB  CC  AA  BB").svg()
 
+    #resolver = String2SvgPaths(options.svg)
+    #resolver.resolve()
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog="svgtext2svgpath", description="svg text to xvg path")
@@ -1254,9 +1257,6 @@ if __name__ == '__main__':
     parser.add_argument("--version", action='version', version='%s' % VERSION)
 
     options = parser.parse_args()
-    
-    #resolver = String2SvgPaths(options.svg)
-    #resolver.resolve()
 
     converter = SvgTextConverter(options.svg)
     paths = converter.convert_texts()
@@ -1275,5 +1275,5 @@ if __name__ == '__main__':
 
 
     # or the full svg with the paths
-    svg = converter.transform_svg()
+    svg = converter.transform_text()
     print(svg)

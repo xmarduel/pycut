@@ -188,9 +188,9 @@ have at least the same color as the original text, as well as all other properti
 
 <p>Next, we need something like a "lookup" to find the <strong>ttf</strong>
 files with the given font family and style. In order to simplify the lookup of the fonts, 
-a python module (mine is named <code>test_to_path_fonts_specs.py</code>) is given describing where to find the fonts files.</p>
+a python module (mine is named <code>pycut_fonts_specs__svgtext2svgpaths.py</code>) is given describing where to find the fonts files.</p>
 
-<p>This module is then specified with absolute path in the environment variable <strong>PYCUT_TEXT_TO_PATH_FONTS_SPECS</strong>. (no .py ending)</p>
+<p>This module is then specified with absolute path in the environment variable <strong>PYCUT_FONTS_SPECS__SVGTEXT2SVGPATHS</strong>. (no .py ending)</p>
 
 <p>All the font files found in the specified font directories are read to extract the font family and others font styles.
 As example of a <code>test_to_path_fonts_specs.py</code>:</p>
@@ -199,7 +199,9 @@ As example of a <code>test_to_path_fonts_specs.py</code>:</p>
  
 fonts_dirs = [
     "C:\\Windows\\Fonts",
-    "./fonts/slaine"
+    "./fonts/slaine",
+    "./fonts/boere-tudor",
+    "./fonts/pacmania_6918891",
 ]
 
 fonts_family_alias = {
@@ -222,10 +224,18 @@ not succeeded to read the utf-8 name from the freetype-py lib)</p>
 
 <h4>Example</h4>
 
+<p>Inside python code:</p>
+
 <pre><code class="language-python"># -- from a "raw" svg file
 converter = SvgTextConverter("./examples/slaine.svg")
-svg = converter.transform_svg()
+svg = converter.transform_text()
 print(svg)
+</code></pre>
+
+<p>or from the command line:</p>
+
+<pre><code class="shell">> python svgtext2svgpaths.py -h
+> python svgtext2svgpaths.py all_letters_slaine.svg
 </code></pre>
 
 <p>The input svg was</p>
