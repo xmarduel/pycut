@@ -34,9 +34,10 @@
 
 <h3>Introduction</h3>
 
-<p>The conversion of text given in svg files (<code>&lt;text&gt;</code> elements) 
+<p>The conversion of text (<code>&lt;text&gt;</code> elements) given in svg files
 to paths (<code>&lt;path&gt;</code> elements) is a often a concern for applications
-manipulating text elements. There are in Internet plenty of projects/discussions on the topic.</p>
+manipulating svg data and particularely text elements. 
+There are in Internet plenty of projects/discussions on the topic.</p>
 
 <p>For every language it seems that many solutions are given. Unfortunately, as
 far as I could observe, there is plenty of crap (unfinished packages, or deprecated etc.).
@@ -167,7 +168,8 @@ have at least the same color as the original text, as well as all other properti
 
 <h4>Note on the font size</h4>
 
-<p>In Inkscape, font size in given in <strong>pt</strong> units.
+<p>In Inkscape, font size in given in <strong>pt</strong> units in the font formular, 
+  and is transformed in <strong>px</strong>  units in the svg document itself.
 
 <p>Units conversion is as following:</p>
 
@@ -241,8 +243,6 @@ print(svg)
 <p>The input svg was</p>
 
 <pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
-&lt;!-- Created with Inkscape (http://www.inkscape.org/) --&gt;
-
 &lt;svg
   width="210mm"
   height="60mm"
@@ -269,8 +269,6 @@ print(svg)
 <p>... and the resulting one </p>
 
 <pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
-&lt;!-- Created with Inkscape (http://www.inkscape.org/) --&gt;
-
 &lt;svg
   width="210mm"
   height="60mm"
