@@ -586,8 +586,8 @@ class FontFiles:
         '''
         '''
         try:
-            # $PYCUT_FONTS_TEXT_2_PATHS = !text_to_path_fonts_specs.py!
-            pycut_fonts_specs__module = os.environ["PYCUT_FONTS_TEXT_2_PATHS"]
+            # $SVGTEXT2SVGPATHS_FONTS_SPECS = !svgtext2svgpath_fonts_specs.py!
+            pycut_fonts_specs__module = os.environ["SVGTEXT2SVGPATHS_FONTS_SPECS"]
             
             base, name = os.path.split(pycut_fonts_specs__module)
             sys.path.append(base)

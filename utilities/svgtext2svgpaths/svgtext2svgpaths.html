@@ -118,8 +118,23 @@ How does the result of the conversion has to look like?</p>
 
 <p>From the Inkscape App, a text is entered, for example
 <code>BB CC AA BB</code>. The font family / type can be chosen as well as the
-font-size, given in "<strong>pt</strong>". Saving this file, we can observe in
-the svg file that the svg font size is different than the one in the Inkscape App: in "<strong>px</strong>".</p>
+font-size, given in "<strong>pt</strong>" in the Inkscpae App GUI. Saving this file, 
+we can observe in the svg file that the text size is given in "<strong>px</strong>" units.</p>
+
+<h4>Note on the font size</h4>
+
+<p>Units conversion is as following:</p>
+
+<p>https://oreillymedia.github.io/Using_SVG/guide/units.html</p>
+<ul>
+  <li>1 px = 3/4 pt</li>
+  <li>1 inch = 25.4 mm</li>
+  <li>Inkscape resolution: 96 px per inch</li>
+</ul>
+
+<p>So when giving in Inkscape a font size of <strong>30 pt</strong>: 30 pt are 40 px are (40/96) * 25.4 mm =
+<strong>10.5833</strong>. This is the value found in the svg file, with units
+"<strong>px</strong>".</p>
 
 <p>Note that a <code>&lt;text&gt;</code> definition in svg from Inkscape looks
 like: </p>
@@ -166,36 +181,17 @@ have at least the same color as the original text, as well as all other properti
   <strong>font-style</strong>, <strong>font-weight</strong> and
   <strong>font-stretch</strong> attributes will also be taken into account when possible.</p>
 
-<h4>Note on the font size</h4>
-
-<p>In Inkscape, font size in given in <strong>pt</strong> units in the font formular, 
-  and is transformed in <strong>px</strong>  units in the svg document itself.
-
-<p>Units conversion is as following:</p>
-
-<p>https://oreillymedia.github.io/Using_SVG/guide/units.html</p>
-<ul>
-  <li>1 px = 3/4 pt</li>
-  <li>1 inch = 25.4 mm</li>
-  <li>Inkscape resolution: 96 px per inch</li>
-</ul>
-
-<p>So when giving in Inkscape a font size of <strong>30 pt</strong>: 30 pt are 40 px are (40/96) * 25.4 mm =
-<strong>10.5833</strong>. This is the value found in the svg file, with units
-"<strong>px</strong>".</p>
-
-
 
 <h3>Font Files</h3>
 
 <p>Next, we need something like a "lookup" to find the <strong>ttf</strong>
 files with the given font family and style. In order to simplify the lookup of the fonts, 
-a python module (mine is named <code>pycut_fonts_specs__svgtext2svgpaths.py</code>) is given describing where to find the fonts files.</p>
+a python module (mine is named <code>svgtext2svgpaths_fonts_specs.py</code>) is given describing where to find the fonts files.</p>
 
-<p>This module is then specified with absolute path in the environment variable <strong>PYCUT_FONTS_SPECS__SVGTEXT2SVGPATHS</strong>. (no .py ending)</p>
+<p>This module is then specified with absolute path in the environment variable <strong>SVGTEXT2SVGPATHS_FONTS_SPECS</strong>. (no .py ending)</p>
 
 <p>All the font files found in the specified font directories are read to extract the font family and others font styles.
-As example of a <code>test_to_path_fonts_specs.py</code>:</p>
+As example of a <code>svgtext2svgpaths_fonts_specs.py</code>:</p>
 
 <pre><code class="language-python"># -*- coding: utf-8 -*-
  
