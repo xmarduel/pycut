@@ -65,9 +65,10 @@ are defined without transformations, because evaluatings such
 transformations is not an easy task (indeed...).</p>
 
 <p>Fortunately, the package <code><strong>svgelements</strong></code> does the job...</p>
-<p>This utility uses <code><strong>svgelements</strong></code> and write
-the result to a svg file (what <code><strong>svgelements</strong></code>
-does not). It also manage to preserve the <code>id</code>s of the
+
+<p>This utility uses <code><strong>svgelements</strong></code>, "resolves" all transformations
+and writes the result to a svg file (what <code><strong>svgelements</strong></code>
+does not). It also manages to preserve the <code>id</code>s of the
 resolved items as well as merging the styles of the referenced items with
 the used items.</p>
 
@@ -91,7 +92,7 @@ concerning the style in use elements remain a somehow mystery for me.</em></p>
 <pre><code class="language-shell">&gt; python svgresolver.py -h
 &gt; python svgresolver.py test_basic.svg</code></pre>
 
-<p>A file named test_basic.resolved.svg is created</p>
+<p>A file named <code>test_basic.resolved.svg</code> is created</p>
 
 <pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
 &lt;svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" width="100mm" height="200mm" viewBox="0 0 100 200" version="1.1" id="svg"&gt;

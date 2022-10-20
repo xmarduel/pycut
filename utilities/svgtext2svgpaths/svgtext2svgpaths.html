@@ -36,7 +36,7 @@
 
 <p>The conversion of text (<code>&lt;text&gt;</code> elements) given in svg files
 to paths (<code>&lt;path&gt;</code> elements) is a often a concern for applications
-manipulating svg data and particularely text elements. 
+manipulating text in svg files. 
 There are in Internet plenty of projects/discussions on the topic.</p>
 
 <p>For every language it seems that many solutions are given. Unfortunately, as
@@ -58,12 +58,11 @@ calculated and exported. A quick try shown me how good this package is. Diving
 into the code shows how deep the author of the package knows true type stuff. I
 only found one drawback: the output is full of "viewbox" fitting exactly the
 size of the output paths, and these viewboxes are often with negative values.
-Because of this, it is not so straightforward (for me) to use the output and to
-plug it into the user own svg file as one would wish. This is because I
-personnaly prefer in an svg file only 1 viewbox definition (at the top)
-starting at (0, 0) with <strong>w</strong> and <strong>h</strong> equals to the
-svg "<strong>width</strong>" and "<strong>height</strong>". Negative
-<strong>x</strong> or <strong>y</strong> viewboxes are simply a pain.</p>
+This is because this package is not meant to transform <code>text</code> elements
+into <code>path</code> elements, but to directly generate <code>path</code> data
+from a given string. And because of this, it is not so straightforward
+to use the <code>path</code> data output and to plug it into the user own svg 
+file as one would wish.</p>
 
 <p></p>
 
@@ -121,11 +120,7 @@ How does the result of the conversion has to look like?</p>
 font-size, given in "<strong>pt</strong>" in the Inkscpae App GUI. Saving this file, 
 we can observe in the svg file that the text size is given in "<strong>px</strong>" units.</p>
 
-<h4>Note on the font size</h4>
-
-<p>Units conversion is as following:</p>
-
-<p>https://oreillymedia.github.io/Using_SVG/guide/units.html</p>
+<p><a href="https://oreillymedia.github.io/Using_SVG/guide/units.html">Units conversion </a> is as following:</p>
 <ul>
   <li>1 px = 3/4 pt</li>
   <li>1 inch = 25.4 mm</li>
@@ -136,8 +131,7 @@ we can observe in the svg file that the text size is given in "<strong>px</stron
 <strong>10.5833</strong>. This is the value found in the svg file, with units
 "<strong>px</strong>".</p>
 
-<p>Note that a <code>&lt;text&gt;</code> definition in svg from Inkscape looks
-like: </p>
+<p>A <code>&lt;text&gt;</code> definition in svg from Inkscape looks like: </p>
 <pre><code class="language-xml" data-keep-tags="strong">
   &lt;text
        xml:space="preserve"
@@ -163,7 +157,7 @@ like: </p>
        id="text1314"&gt;BB  CC  AA  BB&lt;/text&gt;</code></pre>
 
 <p>
-The color and opacity do not play a role when cutting, but it is nice to have these properties in the resulting paths. 
+The color (fill) and opacity do not play a role when cutting, but it is nice to have these properties in the resulting paths. 
 Infact, the path elements resulting from the conversion will be shown in the svg viewer, so eventually they should 
 have at least the same color as the original text, as well as all other properties.</p>
 
@@ -186,9 +180,9 @@ have at least the same color as the original text, as well as all other properti
 
 <p>Next, we need something like a "lookup" to find the <strong>ttf</strong>
 files with the given font family and style. In order to simplify the lookup of the fonts, 
-a python module (mine is named <code>svgtext2svgpaths_fonts_specs.py</code>) is given describing where to find the fonts files.</p>
+a python module named <code>svgtext2svgpaths_fonts_specs.py</code> is given describing where to find the fonts files.</p>
 
-<p>This module is then specified with absolute path in the environment variable <strong>SVGTEXT2SVGPATHS_FONTS_SPECS</strong>. (no .py ending)</p>
+<p>This module can be edited in order to find the fonts on the user computer</p>
 
 <p>All the font files found in the specified font directories are read to extract the font family and others font styles.
 As example of a <code>svgtext2svgpaths_fonts_specs.py</code>:</p>
