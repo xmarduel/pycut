@@ -1,6 +1,6 @@
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <link href="prism.css" rel="stylesheet">
   <style>
     pre[class*="language-"] {
@@ -219,15 +219,15 @@ not succeeded to read the utf-8 name from the freetype-py lib)</p>
 <p>Inside python code:</p>
 
 <pre><code class="language-python"># -- from a "raw" svg file
-converter = SvgTextConverter("./examples/slaine.svg")
-svg = converter.transform_text()
+converter = SvgText2SvgPathsConverter("./examples/slaine.svg")
+svg = converter.convert_svg()
 print(svg)
 </code></pre>
 
 <p>or from the command line:</p>
 
 <pre><code class="shell">> python svgtext2svgpaths.py -h
-> python svgtext2svgpaths.py all_letters_slaine.svg
+> python svgtext2svgpaths.py ./examples/slaine.svg
 </code></pre>
 
 <p>The input svg was</p>
@@ -243,11 +243,11 @@ print(svg)
   &lt;g id="layer1"&gt;
     &lt;text id="mytext"
       xml:space="preserve"
-      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5778px;line-height:1.25;font-family:Sl�ine;-inkscape-font-specification:'Sl�ine, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5778px;line-height:1.25;font-family:Sl�ine;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
       x="40.99437"
       y="30.954929" &gt;
       &lt;tspan id="mytspan"
-        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5778px;font-family:Sl�ine;-inkscape-font-specification:'Sl�ine, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5778px;font-family:Sl�ine;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
         x="40.99437"
         y="30.954929"&gt;CHAbpk
       &lt;/tspan&gt;
@@ -269,17 +269,15 @@ print(svg)
   &lt;g id="layer1"&gt;
     &lt;text id="mytext"
       xml:space="preserve"
-      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5778px;line-height:1.25;font-family:Sl�ine;-inkscape-font-specification:'Sl�ine, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5778px;line-height:1.25;font-family:Sl�ine;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
       x="40.99437"
       y="30.954929" &gt;
       &lt;tspan id="mytspan"
-        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5778px;font-family:Sl�ine;-inkscape-font-specification:'Sl�ine, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5778px;font-family:Sl�ine;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
         x="40.99437"
         y="30.954929"&gt;CHAbpk
       &lt;/tspan&gt;
     &lt;/text&gt;
-  &lt;/g&gt;
-  &lt;g&gt;
     &lt;path id="mytext_0" style="fill:#ff0000;fill-opacity:0.5;" d="M 52.90063171875,26.721591500000002 L 53.914868828125,28.3090930625 Q 52.150978203125,30.954929 48.9980237109375,31.0210748984375 Q 45.84506921875,31.087220796875002 43.6402059375,29.191038375 Q 41.43534265625,27.294855953125 41.4132940234375,24.340339156250003 Q 41.391245390625,21.385822359375002 43.155136015625004,19.004570015625 Q 44.919026640625,16.623317671875 48.446807890625,16.579220406250002 Q 51.974589140625,16.535123140625 54.179452421875,20.371585250000003 L 51.710005546875,21.2535305625 Q 50.651671171875,17.064290328125 48.182224296875,17.1304362265625 Q 45.712777421875,17.196582125 44.588297148437505,20.3936338828125 Q 43.463816875,23.590685640625 44.6985403125,27.0523209921875 Q 45.93326375,30.51395634375 48.799586015625,30.51395634375 Q 51.66590828125,30.51395634375 52.90063171875,26.721591500000002" /&gt;
     &lt;path id="mytext_1" style="fill:#ff0000;fill-opacity:0.5;" d="M 59.8679996875,20.151098921875 Q 59.647513359375,24.60492275 59.779805156250006,26.3908620078125 Q 59.912096953125,28.176801265625002 60.529458671875005,30.954929 L 57.001677421875,30.954929 Q 57.266261015625005,26.148327046875004 57.244212382812506,22.4221081015625 Q 57.22216375,18.69588915625 56.9796287890625,17.6155061484375 Q 56.737093828125,16.535123140625 55.414175859375,16.535123140625 Q 57.795428203125,15.212205171875 58.015914531250004,14.065676265625001 Q 59.8679996875,14.374357125000001 59.823902421875005,18.96047275 Q 61.323209453125,16.579220406250002 63.880850859375,16.579220406250002 Q 66.438492265625,16.579220406250002 68.0921397265625,18.9825213828125 Q 69.7457871875,21.385822359375002 68.731550078125,24.9797495078125 Q 67.71731296875001,28.57367665625 65.51244968750001,30.4257618125 Q 67.452729375,30.24937275 69.3930090625,29.235135640625003 L 68.731550078125,30.954929 L 63.48397546875,30.954929 Q 67.849604765625,27.294855953125 67.0338053515625,23.3040534140625 Q 66.21800593750001,19.313250875 63.7265104296875,18.6297432578125 Q 61.235014921875006,17.946235640625 59.8679996875,20.151098921875" /&gt;
     &lt;path id="mytext_2" style="fill:#ff0000;fill-opacity:0.5;" d="M 71.59787234375,30.96595331640625 Q 73.6263465625,28.000412203125002 78.82982390625,16.535123140625 L 80.59371453125,16.535123140625 Q 84.959343828125,28.088606734375 87.29649890625001,30.954929 L 83.63642585937501,30.954929 Q 83.460036796875,29.896594625 82.974966875,28.92645478125 Q 81.607951640625,30.69034540625 79.226699296875,30.8005885703125 Q 76.84544695312499,30.910831734375 75.12565359375,28.75006571875 Q 74.464194609375,29.676108296875 74.59648640625,30.954929 L 71.59787234375,30.96595331640625 M 76.00759890625,26.721591500000002 Q 77.286419609375,30.072983687500003 79.11094397460937,30.078495845703127 Q 80.93546833984375,30.084008003906252 82.137118828125,27.16256415625 Q 80.6819090625,21.429919625 79.491282890625,19.40144540625 Q 78.2124621875,21.34172509375 76.00759890625,26.721591500000002" /&gt;
@@ -294,8 +292,6 @@ print(svg)
 <p>As you can see, conversion is straightforward. Especially, there are no spurious viewboxes around.
 All characters, the ones from the <code>text</code> elements and the ones from the <code>path</code> elements, should overlap! 
 fill and opacity properties were changed per hand to view the perfect overlapping.</p>
-
-<p>You can now copy/paste these paths in your original svg.</p>
 
 <h3>ToDo</h3>
 

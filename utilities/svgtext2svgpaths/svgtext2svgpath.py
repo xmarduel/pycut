@@ -27,13 +27,13 @@ subprocess.call("inkscape.com in.svg --export-text-to-path -o out.svg", shell = 
 import os
 import sys
 import io
-import importlib
 import glob
 import argparse
 
 from typing import List
+from typing import Dict
 
-import xml.etree.ElementTree as etree
+from lxml import etree
 import numpy as np
 
 import freetype
@@ -50,8 +50,9 @@ class PathWithAttribs:
     '''
     Wrapper on Path class to contains the attribs as well
     '''
-    def __init__(self, path: Path, id: str, attribs: any):
+    def __init__(self, path: Path, elt: etree.Element, id: str, attribs: any):
         self.path = path
+        self.elt = elt
         self.attribs = attribs
         self.id = id
 
@@ -144,79 +145,89 @@ class SvgTextObject:
             converter = String2SvgPaths(self.text, fontfile)
             all_paths = converter.calc_paths(self.font_size_float, self.position)
 
-            return [ PathWithAttribs(path, self.id, self.elt_style) for path in all_paths ]
+            return [ PathWithAttribs(path, self.elt, self.id, self.elt_style) for path in all_paths ]
 
         return []
 
 
-class SvgTextConverter:
+class SvgText2SvgPathsConverter:
     '''
-    collect <text> elements and make of them SvgTextObject objects
+    the converter class
+    Collect <text> elements and make of them SvgTextObject objects ready to be converted
     '''
     def __init__(self, svgfile):
         '''
         '''
         self.svgfile = svgfile
 
-        self.tree = etree.parse(svgfile)
+        parser = etree.XMLParser(remove_blank_text=True)
+        self.tree = etree.parse(svgfile, parser)
         self.svgtextobjects = self.collect_svgtext_objects()
 
-    def collect_svgtext_objects(self) -> List[SvgTextObject]:
+    def collect_svgtext_objects(self) -> Dict[etree.Element,SvgTextObject]:
         '''
         '''
-        svgtextobjects = []
+        svgtextobjects = {}
 
         elements = self.tree.findall(".//{http://www.w3.org/2000/svg}text")
 
         for elt in elements:
             o = SvgTextObject(elt)
-            svgtextobjects.append(o)
+            svgtextobjects[elt] = o
 
         return svgtextobjects
 
-    def convert_texts(self) -> List[List[Path]]:
+    def convert_texts(self) -> Dict[etree.Element,List[Path]]:
         '''
         '''
-        return [ o.to_paths() for o in self.svgtextobjects ]
+        paths = {}
 
-    def transform_text(self) -> str:
+        for elt in self.svgtextobjects.keys():
+            o = self.svgtextobjects[elt]
+            paths[elt] = o.to_paths() 
+
+        return paths
+
+    def convert_svg(self) -> str:
         '''
-        return a "new" sbg strong containing path elements instead of text elements 
+        return a "new" svg containing path elements together with initial text elements 
         '''
         paths = self.convert_texts()
     
-        transf_tree = etree.parse(self.svgfile)
-        transf_root = transf_tree.getroot()
+        root = self.tree.getroot()
 
-        # from transf_tree:
+        # from tree:
         # 1. remove all text elements
         # 2. insert all path elements 
         
-        for k, text_as_paths in enumerate(paths):
-            for p, path_with_attribs in enumerate(text_as_paths):
-                element = self.make_xml_etree_element(p, path_with_attribs)
-                transf_root.append(element)
+        for text_paths in paths.values():
+            for idx, text_path in enumerate(text_paths):
+                parent_elt = text_path.elt.getparent()
+                element = self.make_xml_etree_element(idx, text_path)
+                parent_elt.append(element)
 
-        #for text_el in transf_root.findall('text'):
-        #    # using root.findall() to avoid removal during traversal
-        #    transf_root.remove(text_el)
-        etree.register_namespace("", "http://www.w3.org/2000/svg" )
+        #for text_paths in paths.values():
+        #    for idx, text_path in enumerate(text_paths):
+        #        parent_elt = text_path.elt.getparent()
+        #        parent_elt.remove(text_path.elt)
+        #        break
 
-        transf_svg = etree.tostring(transf_root)
+        new_svg = etree.tostring(root)
 
-        return transf_svg
+        return new_svg
 
-    def make_xml_etree_element(self, p: int, wpath: PathWithAttribs) -> etree.Element :
+    def make_xml_etree_element(self, idx: int, wpath: PathWithAttribs) -> etree.Element :
         '''
         '''
         element = etree.Element("path")
-        element.attrib = {
-            "id": "%s_%d" % (wpath.id, p),
-            "fill": wpath.attribs.get("fill", "#000000"),
-            "fill-opacity": wpath.attribs.get("fill-opacity", "1.0"),
-            "d":  wpath.path.d()
-        }
-
+        element.attrib['id'] = "%s_%d" % (wpath.id, idx)
+        element.attrib["fill"] = wpath.attribs.get("fill", "#ff0000")
+        element.attrib["fill-opacity"] = wpath.attribs.get("fill-opacity", "0.5")
+        element.attrib["d"] = wpath.path.d()
+        
+        #formatting...
+        #element.tail = wpath.elt.tail
+        
         return element
 
 
@@ -1239,7 +1250,7 @@ def test_char(char: str, font: str):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(prog="svgtext2svgpath", description="svg text to xvg path")
+    parser = argparse.ArgumentParser(prog="svgtext2svgpath", description="svg text to svg path")
 
     # argument
     parser.add_argument("svg", help="svg to transform")
@@ -1249,10 +1260,10 @@ if __name__ == '__main__':
 
     options = parser.parse_args()
 
-    converter = SvgTextConverter(options.svg)
+    converter = SvgText2SvgPathsConverter(options.svg)
     paths = converter.convert_texts()
     
-    for text_as_paths in paths:
+    for text_as_paths in paths.values():
         print("-------------------------------------------------------------------------------")
         print("-------------------------------------------------------------------------------")
         for p, path_with_attribs in enumerate(text_as_paths):
@@ -1266,5 +1277,15 @@ if __name__ == '__main__':
 
 
     # or the full svg with the paths
-    svg = converter.transform_text()
+    svg = converter.convert_svg()
+    print("-------------------------------------------------------------------------------")
+    print("---------------------------------- SVG   --------------------------------------")
+    print("-------------------------------------------------------------------------------")
     print(svg)
+    svg_name = os.path.basename(options.svg) + ".paths.svg"
+
+    doc = etree.ElementTree(converter.tree.getroot())
+    doc.write(svg_name, 
+                pretty_print=True, 
+                xml_declaration=True, 
+                encoding='utf-8')
