@@ -464,13 +464,13 @@ class SvgResolver:
                     self.shapes.pop(idx)
                     return shape
 
-        else:
+        #else:
             
-            for idx, shape in enumerate(self.shapes):
-                if shape.id == item.attrib["id"]:
-                    # remove it from the list of shapes and give back
-                    self.shapes.pop(idx)
-                    return shape
+        #    for idx, shape in enumerate(self.shapes):
+        #        if shape.id == item.attrib["id"]:
+        #            # remove it from the list of shapes and give back
+        #            #self.shapes.pop(idx)
+        #            return shape
 
         return None
 
