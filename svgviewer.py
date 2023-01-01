@@ -6,7 +6,6 @@ import math
 import copy
 
 from PySide6 import QtCore
-from PySide6 import QtGui
 from PySide6 import QtWidgets
 
 from PySide6 import QtSvg
@@ -291,7 +290,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         elements = tree.findall('.//*')
 
         shapes_types = [
-        	"path",
+            "path",
             "rect",
             "circle",
             "ellipse",
@@ -589,7 +588,7 @@ class SvgTransformer:
         elements = tree.findall('.//*')
 
         shapes_types = [
-        	"path",
+            "path",
             "rect",
             "circle",
             "ellipse",

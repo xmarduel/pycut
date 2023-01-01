@@ -24,10 +24,9 @@ from typing import Tuple
 from val_with_unit import ValWithUnit
 
 import shapely.geometry
-from shapely.validation import make_valid
 import shapely.ops
-from shapely_utils import ShapelyUtils
 
+from shapely_utils import ShapelyUtils
 from matplotlib_utils import MatplotLibUtils
 
 

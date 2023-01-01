@@ -9,8 +9,6 @@ import argparse
 import pathlib
 
 from typing import List
-from typing import Dict
-from typing import Any
 
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -22,7 +20,6 @@ from PySide6.QtUiTools import QUiLoader
 # from gcodesimulator.python.parser.gcodeminiparser import GcodeMiniParser
 #import gcodesimulator.python.widgets.glwidget_container as glwidget_simulator_container
 
-import svgpathtools
 import svgpathutils
 
 from val_with_unit import ValWithUnit
@@ -45,6 +42,7 @@ from gcode_generator import MaterialModel
 from gcode_generator import TabsModel
 from gcode_generator import CncOp
 from gcode_generator import JobModel
+from gcode_generator import Tab
 
 from gcode_generator import GcodeGenerator
 
@@ -995,13 +993,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             # and the tabs if any
             self.svg_viewer.set_tabs(self.tabs)
 
-    def assign_tabs(self, tabs: List['Tab']):
+    def assign_tabs(self, tabs: List[Tab]):
         '''
         '''
         self.tabs = tabs
         self.ui.tabsview_manager.set_tabs(self.tabs)
     
-    def display_cnc_tabs(self, tabs: List['Tab']):
+    def display_cnc_tabs(self, tabs: List[Tab]):
         '''
         '''
         self.tabs = tabs

@@ -478,11 +478,11 @@ class CncOp:
         '''
         toolData = toolModel.getCamData()
 
-        name = self.name
-        ramp = self.ramp
+        #name = self.name
+        #ramp = self.ramp
         cam_op = self.cam_op
         direction = self.direction
-        cutDepth = self.cutDepth
+        #cutDepth = self.cutDepth
         margin = self.margin
         width = self.width
 
