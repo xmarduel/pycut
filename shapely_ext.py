@@ -48,10 +48,10 @@ class ShapelyPolygonOffset:
     def offset(self, amount:float, side: str, consider_interiors_offsets: bool, resolution: int, join_style: JOIN_STYLE, mitre_limit:float):
         '''
         '''
-        linearring  = self.poly.exterior
+        linestring = shapely.geometry.LineString(self.poly.exterior)
 
         # LineString or MultiLineString
-        ext_offset = linearring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=mitre_limit)
+        ext_offset = linestring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=mitre_limit)
             
         # from the offsetted lines, build a multipolygon that we will diff with the interiors
         exterior_multipoly = ShapelyPolygonOffset.buildMultiPolyFromOffset(ext_offset)
@@ -59,14 +59,21 @@ class ShapelyPolygonOffset:
         # now consider the interiors
         if self.poly.interiors:
 
-            # consider interiors and their offsets
             interior_polys = []
             for interior in self.poly.interiors:
                 ipoly = shapely.geometry.Polygon(interior)
+
+                # simplify the polygon 
+                # this may be important so that the offset becomes Ok (example: tudor [AD])
+                # where of offset is a MultiLineString instead of a Linestring 
+                ipoly = ipoly.simplify(0.001)
+                ipoly = shapely.geometry.polygon.orient(ipoly)
+                
                 interior_polys.append(ipoly)
                 
             interior_multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(interior_polys)
 
+            # consider interiors and their offsets
             if consider_interiors_offsets == True:
                 MatplotLibUtils.MatplotlibDisplay("starting interior offset from", interior_multipoly)
 
@@ -121,8 +128,19 @@ class ShapelyPolygonOffset:
         '''
         offset is the direct result of an parallel_offset operation -> can be of various type
 
-        We filter the degenerated lines to build a MultiPoly
-        and assure that the resulting MultiPoly is valid
+        We filter the degenerated lines
+
+        Warning: shapely offset of a Linestring can produce a MultiLineString.
+        This is a problem!
+
+        Example: an interior offset 'right' (-> become bigger) should be a LineString, not
+        a MultiineString. As pycut builds from this offset polygons to diff with the offset
+        of the exterior, this is a huge problem. See Tudor "AD"
+        Hint: simplify the interior first, then maybe the offset is "ok" i.e. is 
+        a simple LineString
+
+        Todo: considering interiors offseted 'right', pycut could the MultiLineString 
+        into a single LineString ?
         '''
         lines_ok = []
         if offset.geom_type == 'LineString':

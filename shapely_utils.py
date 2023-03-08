@@ -181,12 +181,9 @@ class ShapelyUtils:
 
             # from the offseted lines, build a multipolygon that we diff with the interiors
             exterior_multipoly = cls.buildMultiPolyFromOffsets([ext_offset])
-            print("exterior_multipoly VALID ? ", exterior_multipoly.is_valid)
+            #print("exterior_multipoly VALID ? ", exterior_multipoly.is_valid)
             
             MatplotLibUtils.MatplotlibDisplay("geom multipoly from ext offset", exterior_multipoly, force=False)
-
-            if not exterior_multipoly.is_valid:
-                exterior_multipoly = cls.fixMultipoly(exterior_multipoly)
 
             # now consider the interiors
             if poly.interiors:
@@ -205,6 +202,7 @@ class ShapelyUtils:
                 
                 interior_multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(interior_polys)
 
+                # consider interiors offsets
                 if consider_interiors_offsets == True:
                     MatplotLibUtils.MatplotlibDisplay("starting interior offset from", interior_multipoly)
 
@@ -237,10 +235,9 @@ class ShapelyUtils:
                 elif sol_poly.geom_type == 'MultiPolygon':
                     _offsets = []
                     for geom in sol_poly.geoms:
-                        if geom.geom_type == 'Polygon':
-                            offset = shapely.geometry.LineString(geom.exterior)
-                            _offsets.append(offset)
-                            polys.append(geom)
+                        offset = shapely.geometry.LineString(geom.exterior)
+                        _offsets.append(offset)
+                        polys.append(geom)
                     offset = shapely.geometry.MultiLineString(_offsets)
                     offsets.append(offset)
 
@@ -417,8 +414,6 @@ class ShapelyUtils:
                         if len(list(geom.coords)) <=  2:
                             continue
                         lines_ok.append(geom)
-            else:
-                1/0
                 
             for line_ok in lines_ok:
                 polygon = shapely.geometry.Polygon(line_ok)
