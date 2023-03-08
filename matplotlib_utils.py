@@ -1,5 +1,6 @@
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 import shapely.geometry
 
@@ -36,6 +37,13 @@ class MatplotLibUtils:
             pass
 
     @classmethod
+    def rectify_y(cls, y) :
+        yy = []
+        for v in y:
+            yy.append(-v)
+        return np.array(yy)
+
+    @classmethod
     def _MatplotlibDisplayLineString(cls, title: str, linestring: shapely.geometry.LineString):
         '''
         ''' 
@@ -45,11 +53,14 @@ class MatplotLibUtils:
         x = linestring.coords.xy[0]
         y = linestring.coords.xy[1]
 
+        y = cls.rectify_y(y)
+
         # plot
         style = {
             0: 'bo-',
         }
 
+        plt.axis('equal')
         plt.plot(x,y, style[0])
         plt.show()
 
@@ -62,10 +73,10 @@ class MatplotLibUtils:
 
         style = {
             0: 'ro-',
-            1: 'go-',
+            1: 'g+-',
             2: 'bo-',
             3: 'r+-',
-            4: 'g+-',
+            4: 'go-',
             5: 'b+-',
         }
         
@@ -76,12 +87,15 @@ class MatplotLibUtils:
             ix = line.coords.xy[0]
             iy = line.coords.xy[1]
 
+            iy = cls.rectify_y(iy)
+
             xx.append(ix)
             yy.append(iy)
 
         for k, (x,y) in enumerate(zip(xx,yy)):
             plt.plot(x, y, style[k%6])
-
+      
+        plt.axis('equal')
         plt.show()
 
     @classmethod
@@ -102,6 +116,8 @@ class MatplotLibUtils:
         x = polygon.exterior.coords.xy[0]
         y = polygon.exterior.coords.xy[1]
 
+        y = cls.rectify_y(y)
+
         plt.plot(x, y, style_ext[0])
 
         interiors_xx = []
@@ -111,12 +127,15 @@ class MatplotLibUtils:
             ix = interior.coords.xy[0]
             iy = interior.coords.xy[1]
 
+            iy = cls.rectify_y(iy)
+
             interiors_xx.append(ix)
             interiors_yy.append(iy)
 
         for k, (ix,iy) in enumerate(zip(interiors_xx,interiors_yy)):
             plt.plot(ix, iy, style_int[k%2])
 
+        plt.axis('equal')
         plt.show()
 
     @classmethod
@@ -128,11 +147,13 @@ class MatplotLibUtils:
 
         style_ext = {
             0: 'bo-',
-            1: 'ro-'
+            1: 'ro-',
+            2: 'go-',
         }
         style_int = {
-            0: 'r+--',
-            1: 'go-'
+            0: 'b+--',
+            1: 'r+--',
+            2: 'g+--'
         }
 
         xx_ext = []
@@ -145,12 +166,16 @@ class MatplotLibUtils:
             x = geom.exterior.coords.xy[0]
             y = geom.exterior.coords.xy[1]
 
+            y = cls.rectify_y(y)
+
             xx_ext.append(x)
             yy_ext.append(y)
 
             for interior in geom.interiors:
                 ix = interior.coords.xy[0]
                 iy = interior.coords.xy[1]
+
+                iy = cls.rectify_y(iy)
 
                 xx_int.append(ix)
                 yy_int.append(iy)
@@ -161,6 +186,7 @@ class MatplotLibUtils:
         for k, (x,y) in enumerate(zip(xx_int,yy_int)):
             plt.plot(x,y,style_int[k%2])
 
+        plt.axis('equal')
         plt.show()
 
     @classmethod
@@ -197,12 +223,16 @@ class MatplotLibUtils:
                     x = ch_geom.exterior.coords.xy[0]
                     y = ch_geom.exterior.coords.xy[1]
 
+                    y = cls.rectify_y(y)
+
                     xx_ext.append(x)
                     yy_ext.append(y)
 
                     for interior in ch_geom.interiors:
                         ix = interior.coords.xy[0]
                         iy = interior.coords.xy[1]
+
+                        iy = cls.rectify_y(iy)
 
                         xx_int.append(ix)
                         yy_int.append(iy)
@@ -220,6 +250,8 @@ class MatplotLibUtils:
                 x = geom.exterior.coords.xy[0]
                 y = geom.exterior.coords.xy[1]
 
+                y = cls.rectify_y(y)
+
                 plt.plot(x, y, style_ext[0])
 
                 interiors_xx = []
@@ -228,6 +260,8 @@ class MatplotLibUtils:
                 for interior in geom.interiors:
                     ix = interior.coords.xy[0]
                     iy = interior.coords.xy[1]
+
+                    iy = cls.rectify_y(iy)
 
                     interiors_xx.append(ix)
                     interiors_yy.append(iy)
@@ -245,6 +279,8 @@ class MatplotLibUtils:
                     ix = line.coords.xy[0]
                     iy = line.coords.xy[1]
 
+                    iy = cls.rectify_y(iy)
+
                     xx.append(ix)
                     yy.append(iy)
 
@@ -257,9 +293,12 @@ class MatplotLibUtils:
                 x = geom.coords.xy[0]
                 y = geom.coords.xy[1]
 
+                y = cls.rectify_y(y)
+
                 pp += 1
 
                 plt.plot(x,y, style_ext[pp%3], color='black')
 
+        plt.axis('equal')
         plt.show()
 

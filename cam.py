@@ -67,13 +67,12 @@ class cam:
         # use polygons exteriors lines - offset them and and diff with the offseted interiors if any
         geometry = ShapelyUtils.orientMultiPolygon(geometry)
 
-        MatplotLibUtils.MatplotlibDisplay("geom pocket init", geometry)
+        MatplotLibUtils.MatplotlibDisplay("geom pocket init", geometry, force=False)
 
         # the exterior
         multi_offset, current = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left', consider_interiors_offsets=True)
 
-        for geom in current.geoms:
-            MatplotLibUtils.MatplotlibDisplay("geom pocket init after simplify", geom)
+        MatplotLibUtils.MatplotlibDisplay("geom pocket first offset", current, force=False)
             
         if len(current.geoms) == 0:
             # cannot offset ! maybe geometry too narrow for the cutter

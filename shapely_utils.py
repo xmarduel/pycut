@@ -176,11 +176,15 @@ class ShapelyUtils:
             linestring = shapely.geometry.LineString(poly.exterior)
 
             ext_offset = linestring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=mitre_limit)
-            
+
+            MatplotLibUtils.MatplotlibDisplay("offset as LineString|MultiLineString (from linestring)", ext_offset, force=False)
+
             # from the offseted lines, build a multipolygon that we diff with the interiors
             exterior_multipoly = cls.buildMultiPolyFromOffsets([ext_offset])
             print("exterior_multipoly VALID ? ", exterior_multipoly.is_valid)
             
+            MatplotLibUtils.MatplotlibDisplay("geom multipoly from ext offset", exterior_multipoly, force=False)
+
             if not exterior_multipoly.is_valid:
                 exterior_multipoly = cls.fixMultipoly(exterior_multipoly)
 
@@ -190,6 +194,13 @@ class ShapelyUtils:
                 interior_polys = []
                 for interior in poly.interiors:
                     ipoly = shapely.geometry.Polygon(interior)
+
+                    # simplify the polygon 
+                    # this may be important so that the offset becomes Ok (example: tudor [AD])
+                    # where of offset is a MultiLineString instead of a Linestring 
+                    ipoly = ipoly.simplify(0.001)
+                    ipoly = shapely.geometry.polygon.orient(ipoly)
+
                     interior_polys.append(ipoly)
                 
                 interior_multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(interior_polys)
@@ -197,15 +208,14 @@ class ShapelyUtils:
                 if consider_interiors_offsets == True:
                     MatplotLibUtils.MatplotlibDisplay("starting interior offset from", interior_multipoly)
 
-                    interior_offset, _ = ShapelyUtils.offsetMultiPolygon(interior_multipoly, amount, 'right')
+                    interior_offset, _current = ShapelyUtils.offsetMultiPolygon(interior_multipoly, amount, 'right')
                     
-                    for k, offset in enumerate(interior_offset):
-                        MatplotLibUtils.MatplotlibDisplay("interior offseting (linestring) %d" % k, offset)
+                    MatplotLibUtils.MatplotlibDisplay("geom pocket first offset of int (1)", _current, force=False)
                     
                     # the diff is the solution
                     interior_multipoly = ShapelyUtils.buildMultiPolyFromOffsets(interior_offset)
                 
-                    MatplotLibUtils.MatplotlibDisplay("resulting multipolygon of interior offset", interior_multipoly)
+                    MatplotLibUtils.MatplotlibDisplay("geom pocket first offset of int (2)", interior_multipoly, force=False)
 
                 # the diff is the solution
                 try:
@@ -379,6 +389,18 @@ class ShapelyUtils:
         offset is the direct result of an parallel_offset operation -> can be of various type
 
         We filter the degenerated lines
+
+        Warning: shapely offset of a Linestring can produce a MultiLineString.
+        This is a problem!
+
+        Example: an interior offset 'right' (-> become bigger) should be a LineString, not
+        a MultiineString. As pycut builds from this offset polygons to diff with the offset
+        of the exterior, this is a huge problem. See Tudor "AD"
+        Hint: simplify the interior first, then maybe the offset is "ok" i.e. is 
+        a simple LineString
+
+        Todo: considering interiors offseted 'right', pycut could the MultiLineString 
+        into a single LineString ?
         '''
         polygons = []
 
