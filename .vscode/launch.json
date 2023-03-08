@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "OPENGL DEMO1",
             "type": "python",
@@ -63,6 +64,15 @@
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
             "args": ["-job", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_three_rects_with_circle.json"]
+        },
+        {
+            "name": "PYCUT JOB ALL LETTERS",
+            "type": "python",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": ["-job", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_all_letters.json"]
         },
         {
             "name": "PYCUT GEAR 40",

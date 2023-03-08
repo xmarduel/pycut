@@ -33,7 +33,7 @@ from matplotlib_utils import MatplotLibUtils
 class CamPath:
     '''
     CamPath has this format: {
-      path:               Shapely path
+      path:               Shapely LineString
       safeToClose:        Is it safe to close the path without retracting?
     }
     '''
@@ -67,31 +67,31 @@ class cam:
         cutterDia is in "UserUnit" units. 
         overlap is in the range [0, 1).
         '''
-        # use polygons exteriors lines - offset them and and diff with the interiors if any
+        #new_algo = False
+        #if new_algo:
+        #    for poly in geometry.geoms:
+        #        pc = PocketCalculator(poly, cutterDia, overlap, climb)
+        #        pc.calculate()
+        #        return pc.camPath
+
+        # use polygons exteriors lines - offset them and and diff with the offseted interiors if any
         geometry = ShapelyUtils.orientMultiPolygon(geometry)
 
         MatplotLibUtils.MatplotlibDisplay("geom pocket init", geometry)
 
         # the exterior
         multi_offset, current = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left', ginterior=True)
-        
-        current = ShapelyUtils.simplifyMultiPoly(current, 0.001)
-        current = ShapelyUtils.orientMultiPolygon(current)
 
         for geom in current.geoms:
             MatplotLibUtils.MatplotlibDisplay("geom pocket init after simplify", geom)
-
-        if not current:
-            return []
             
         if len(current.geoms) == 0:
             # cannot offset ! maybe geometry too narrow for the cutter
             return []
 
         # bound must be the exterior enveloppe + the interiors polygons
-        #bounds = geometry 
-
         # no! the bounds are from the first offset with width cutterDia / 2
+        #bounds = geometry 
         bounds = shapely.geometry.MultiPolygon(current)
 
         allPaths : List[shapely.geometry.LineString] = []

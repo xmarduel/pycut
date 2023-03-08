@@ -184,31 +184,19 @@ class ShapelyUtils:
             if not exterior_multipoly.is_valid:
                 exterior_multipoly = cls.fixMultipoly(exterior_multipoly)
 
-            if poly.interiors: # with interiors
+            # now consider the interiors
+            if poly.interiors:
 
-                # with interiors
+                # consider interiors and their offsets
                 interior_polys = []
                 for interior in poly.interiors:
                     ipoly = shapely.geometry.Polygon(interior)
-                    print("ipoly VALID ? ", ipoly.is_valid)
-                       
-                    if ipoly.is_valid == False:
-                        iipoly = cls.fixSimplePolygon(ipoly)
-                        if iipoly:
-                            interior_polys.append(iipoly)
-                    else:
-                        interior_polys.append(ipoly)
+                    interior_polys.append(ipoly)
                 
-                interior_multipoly = shapely.geometry.MultiPolygon(interior_polys)
-                # this simplify may be important so that the offset becomes Ok (example: letter "B") 
-                interior_multipoly = ShapelyUtils.simplifyMultiPoly(interior_multipoly, 0.001)
-                interior_multipoly = ShapelyUtils.orientMultiPolygon(interior_multipoly)
+                interior_multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(interior_polys)
 
                 if ginterior == True:
                     MatplotLibUtils.MatplotlibDisplay("starting interior offset from", interior_multipoly)
-
-                    interior_multipoly = ShapelyUtils.orientMultiPolygon(interior_multipoly)
-                    MatplotLibUtils.MatplotlibDisplay("starting interior offset from oriented", interior_multipoly)
 
                     interior_offset, _ = ShapelyUtils.offsetMultiPolygon(interior_multipoly, amount, 'right')
                     
@@ -234,7 +222,7 @@ class ShapelyUtils:
                     raise
 
                 if sol_poly.geom_type == 'Polygon':
-                    offset = shapely.geometry.LineString(list(sol_poly.exterior.coords))
+                    offset = shapely.geometry.LineString(sol_poly.exterior)
                     offsets.append(offset)
                     polys.append(sol_poly)
                 elif sol_poly.geom_type == 'MultiPolygon':
@@ -408,37 +396,58 @@ class ShapelyUtils:
                         if len(list(geom.coords)) <=  2:
                             continue
                         lines_ok.append(geom)
-            elif offset.geom_type == 'GeometryCollection':
-                for geom in offset.geoms:
-                    if geom.geom_type == 'LineString':
-                        if len(list(geom.coords)) <=  2:
-                            continue
-                        lines_ok.append(geom)
+            else:
+                1/0
                 
             for line_ok in lines_ok:
                 polygon = shapely.geometry.Polygon(line_ok)
-                if not polygon.is_valid:
-                    polygon = cls.fixSimplePolygon(polygon)
-                    #print("linestring -> poly -> fixed :", polygon.is_valid)
 
-                polygons.append(polygon)
+                if  polygon.is_valid:
+                    polygons.append(polygon)
+                else:
+                    res = polygon.make_valid()
+                    # hoping the result is valid!
+                    if res.geom_type == 'Polygon':
+                        polygons.append(polygon)
+                    if res.geom_type == 'MultiPolygon':
+                        for poly in res.geoms:
+                            polygons.append(polygon)
+                    if res.geom_type == 'GeometryCollection':
+                        for geom in res.geoms:
+                            if geom.geom_type == 'Polygon':
+                                polygons.append(polygon)
+                            if geom.geom_type == 'MultiPolygon':
+                                for poly in geom.geoms:
+                                    polygons.append(polygon)
 
-        multipoly = shapely.geometry.MultiPolygon(polygons)
+        polygons_ok = []
+        for poly in polygons:
+            polygon = shapely.geometry.polygon.orient(poly)
+            polygons_ok.append(polygon)
 
-        if not multipoly.is_valid:
-            # two polygon which crosses are not valid
-            #MatplotLibUtils.MatplotlibDisplay("multipoly", multipoly, force=True)
-            xpoly = make_valid(multipoly)  # -> can turn to a simple poly...
-            # this makes their intersection(s) on common point(s)
-            print("xpoly VALID ?", xpoly.is_valid)
+        multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(polygons)
 
-            if xpoly.geom_type == 'MultiPolygon':
-                multipoly = xpoly
-            elif xpoly.geom_type == 'Polygon':
-                multipoly = shapely.geometry.MultiPolygon([xpoly])
+        return multipoly
 
-            #MatplotLibUtils.MatplotlibDisplay("multipoly", multipoly, force=True)
+    @classmethod
+    def buildMultiPolyFromListOfPolygons(cls, polygons: List[shapely.geometry.Polygon]) -> shapely.geometry.MultiPolygon:
+        '''
+        '''
+        union = shapely.ops.unary_union(polygons)
 
+        if union.geom_type == 'Polygon':
+            multipoly = shapely.geometry.MultiPolygon([union])
+        elif union.geom_type == 'MultiPolygon':
+            multipoly = union
+        elif union.geom_type == 'GeometryCollection':
+            polygons = []
+            for item in union.geoms:
+                if item.geom_type == 'Polygon':
+                    polygons.append(item)
+                elif union.geom_type == 'MultiPolygon':
+                    polygons = polygons + list(union.geoms)
+            multipoly = shapely.geometry.MultiPolygon(polygons)    
+        
         # ensure orientation
         multipoly = ShapelyUtils.orientMultiPolygon(multipoly)
         print("multipoly VALID ?", multipoly.is_valid)
