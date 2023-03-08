@@ -75,6 +75,15 @@
             "args": ["-job", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_all_letters.json"]
         },
         {
+            "name": "PYCUT JOB ALL LETTERS TUDORS",
+            "type": "python",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": ["-job", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_all_letters_tudor.json"]
+        },
+        {
             "name": "PYCUT GEAR 40",
             "type": "python",
             "request": "launch",

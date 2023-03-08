@@ -390,7 +390,7 @@ class CncOp:
 
             # 'left' in 'inside', and 'right' is 'outside'
             self.geometry = ShapelyUtils.orientMultiPolygon(self.geometry)
-            _, self.preview_geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset, 'left', ginterior=True)
+            _, self.preview_geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset, 'left', consider_interiors_offsets=True)
             
             MatplotLibUtils.MatplotlibDisplay("preview pocket", self.preview_geometry)
             
@@ -505,7 +505,7 @@ class CncOp:
 
         if cam_op != "Engrave" :
             # 'left' for Inside OR pocket, 'right' for Outside
-            _, geometry = ShapelyUtils.offsetMultiPolygon(geometry, offset, 'right' if cam_op == 'Outside' else 'left', ginterior = True)
+            _, geometry = ShapelyUtils.offsetMultiPolygon(geometry, offset, 'right' if cam_op == 'Outside' else 'left', consider_interiors_offsets = True)
 
         if cam_op == "Pocket":
             self.cam_paths = cam.pocket(geometry, toolData["diameterTool"], 1 - toolData["stepover"], direction == "Climb")

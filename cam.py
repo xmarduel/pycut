@@ -47,16 +47,6 @@ class CamPath:
 class cam:
     '''
     '''
-    @staticmethod
-    def dist(x1: float, y1: float, x2: float, y2: float) -> float :
-        dx = x2 - x1
-        dy = y2 - y1
-        return dx * dx + dy * dy
-    
-    @staticmethod
-    def distP(p1:Tuple[int,int], p2:Tuple[int,int]) -> float :
-        return cam.dist(p1[0], p1[1], p2[0], p2[1])
-
     @classmethod
     def pocket(cls, geometry: shapely.geometry.MultiPolygon, cutterDia: float, overlap: float, climb: bool) -> List[CamPath] :
         '''
@@ -80,7 +70,7 @@ class cam:
         MatplotLibUtils.MatplotlibDisplay("geom pocket init", geometry)
 
         # the exterior
-        multi_offset, current = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left', ginterior=True)
+        multi_offset, current = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left', consider_interiors_offsets=True)
 
         for geom in current.geoms:
             MatplotLibUtils.MatplotlibDisplay("geom pocket init after simplify", geom)
@@ -129,7 +119,7 @@ class cam:
 
             allPaths = collect_paths(multi_offset, allPaths)
 
-            multi_offset, current = ShapelyUtils.offsetMultiPolygon(current, cutterDia * (1 - overlap), 'left')
+            multi_offset, current = ShapelyUtils.offsetMultiPolygon(current, cutterDia * (1 - overlap), 'left', consider_interiors_offsets=False)
             
             if not current:
                 allPaths = collect_paths(multi_offset, allPaths)
@@ -307,6 +297,11 @@ class cam:
 
         # std list
         thepaths = [ list(path.coords) for path in paths ]
+
+        #####
+        #thepaths = thepaths[19:22]
+        #####
+
         paths = thepaths
 
         currentPath = paths[0]
@@ -484,6 +479,16 @@ class cam:
 
         return paths
 
+    @staticmethod
+    def dist(x1: float, y1: float, x2: float, y2: float) -> float :
+        dx = x2 - x1
+        dy = y2 - y1
+        return dx * dx + dy * dy
+    
+    @staticmethod
+    def distP(p1:Tuple[int,int], p2:Tuple[int,int]) -> float :
+        return cam.dist(p1[0], p1[1], p2[0], p2[1])
+    
     @classmethod
     def getGcode(cls, args):
         '''
