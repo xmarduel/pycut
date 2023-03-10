@@ -5,49 +5,8 @@
    viewBox="0 0 90 111"
    version="1.1"
    id="spindle-D52"
-   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
-   sodipodi:docname="cnc1310-52-90mm.svg"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:dc="http://purl.org/dc/elements/1.1/">
-   <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="143.92857"
-     inkscape:cy="244.28571"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     inkscape:document-rotation="0"
-     showgrid="true"
-     inkscape:window-width="1500"
-     inkscape:window-height="938"
-     inkscape:window-x="-6"
-     inkscape:window-y="-6"
-     inkscape:window-maximized="1"
-     inkscape:snap-grids="true"
-     inkscape:pagecheckerboard="0">
-    <inkscape:grid
-       type="xygrid"
-       id="grid1402"
-       empspacing="5" />
-   </sodipodi:namedview>
-   <metadata id="metadata5">
-      <rdf:RDF>
-         <cc:Work rdf:about="">
-            <dc:format>image/svg+xml</dc:format>
-            <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-         </cc:Work>
-      </rdf:RDF>
-   </metadata>
+   xmlns:svg="http://www.w3.org/2000/svg">
    <defs id="defs">
       <circle id="z_screw_central_hole"
         style="font-variation-settings:normal;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.352776;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
@@ -75,11 +34,11 @@
         cx="0"
         cy="0"
         r="10.5" />
-      <circle id="bearing_screw_3.5mm"
+      <circle id="bearing_screw_4.5mm"
         style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
         cx="0"
         cy="0"
-        r="1.75" />
+        r="2.25" />
 	   <circle id="spacer"
         style="font-variation-settings:normal;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.211666;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
         cx="0"
@@ -91,10 +50,7 @@
         cy="0"
         r="2.5" />
    </defs>
-   <g
-      inkscape:label="Layer 1"
-      inkscape:groupmode="layer"
-      id="layer1">
+   <g id="layer1">
       <path id="contour" 
        style="fill:none;stroke:#0000ff;stroke-width:0.261315px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="M 0.0,0.0 h 90 v 66 a 45,45 0 0 1 -90,0 z"
@@ -110,18 +66,18 @@
 	   
 
 	   <use href="#bearing_base"        x="0"  y="0"  id="bearing_base_left" />
-  	   <use href="#bearing_cylinder"    x="16" y="16" id="bearing_cylinder_left" />
+  	 <use href="#bearing_cylinder"    x="16" y="16" id="bearing_cylinder_left" />
 	   <use href="#bearing_base"        x="58" y="0"  id="bearing_base_right" />
 	   <use href="#bearing_cylinder"    x="74" y="16" id="bearing_cylinder_right" />
 
-      <use href="#bearing_screw_3.5mm" x="4.680"  y="4.680" id="bearing_screw_3.5mm_use28" />
-      <use href="#bearing_screw_3.5mm" x="27.32"  y="4.680" id="bearing_screw_3.5mm_use30" />
-      <use href="#bearing_screw_3.5mm" x="4.680"  y="27.32" id="bearing_screw_3.5mm_use36" />
-      <use href="#bearing_screw_3.5mm" x="27.32"  y="27.32" id="bearing_screw_3.5mm_use38" />
-      <use href="#bearing_screw_3.5mm" x="62.68"  y="4.680" id="bearing_screw_3.5mm_use32" />
-      <use href="#bearing_screw_3.5mm" x="85.32"  y="4.680" id="bearing_screw_3.5mm_use34" />
-      <use href="#bearing_screw_3.5mm" x="62.68"  y="27.32" id="bearing_screw_3.5mm_use40" />
-      <use href="#bearing_screw_3.5mm" x="85.32"  y="27.32" id="bearing_screw_3.5mm_use42" />
+      <use href="#bearing_screw_4.5mm" x="4.680"  y="4.680" id="bearing_screw_4.5mm_use28" />
+      <use href="#bearing_screw_4.5mm" x="27.32"  y="4.680" id="bearing_screw_4.5mm_use30" />
+      <use href="#bearing_screw_4.5mm" x="4.680"  y="27.32" id="bearing_screw_4.5mm_use36" />
+      <use href="#bearing_screw_4.5mm" x="27.32"  y="27.32" id="bearing_screw_4.5mm_use38" />
+      <use href="#bearing_screw_4.5mm" x="62.68"  y="4.680" id="bearing_screw_4.5mm_use32" />
+      <use href="#bearing_screw_4.5mm" x="85.32"  y="4.680" id="bearing_screw_4.5mm_use34" />
+      <use href="#bearing_screw_4.5mm" x="62.68"  y="27.32" id="bearing_screw_4.5mm_use40" />
+      <use href="#bearing_screw_4.5mm" x="85.32"  y="27.32" id="bearing_screw_4.5mm_use42" />
 
       <circle  id="spindle-hole"
         style="font-variation-settings:normal;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.970135;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
@@ -149,15 +105,7 @@
          style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
          x="20"
          y="39.5"
-         >
-         <tspan
-            sodipodi:role="line"
-            id="tspan918"
-            style="font-size:4.93889px;stroke-width:0.264583"
-            x="20"
-            y="39.5">Spindle Diameter: 52 mm
-         </tspan>
-      </text>
+         >Spindle Diameter: 52 mm</text>
 
       <path id="horizontal_line"
         style="fill:none;stroke:#000000;stroke-width:0.144139px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
