@@ -58,7 +58,7 @@
         y="0" />
    </defs>
    <g id="layer1" transform="translate(20 0)">
-      <path id="contour" 
+      <path id="contour_no_clamp" 
        style="fill:none;stroke:#0000ff;stroke-width:0.261315px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="M 0.0,0.0 h 90 
        v 68 
@@ -72,17 +72,17 @@
        a 1 1 0 0 1 1 1 
        v 48
        a 1 1 0 0 0 1 1 
-       h 10
+       h 12
        a 1 1 0 0 1 1 1
        v 38
        a 1 1 0 0 1 -1 1
-       h -16.7
-       A  45,45 0 0 1 5.7,90
-       h -16.7
+       h -18.7
+       A  45,45 0 0 1  5.7,90
+       h -18.7
        a 1 1 0 0 1 -1 -1 
        v -38
        a 1 1 0 0 1 1 -1 
-       h 10
+       h 12
        a 1 1 0 0 0 1 -1 
        v -48
        a 1 1 0 0 1 1 -1 
