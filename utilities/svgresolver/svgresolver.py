@@ -162,6 +162,9 @@ class SvgResolver:
 
         # process the children
         for ch in item:
+            if not isinstance(ch.tag, str):  # a comment ?
+                continue
+
             self.replace_elements(ch)
 
     def write_result(self, root:etree.ElementTree):
@@ -259,8 +262,15 @@ class SvgResolver:
         #else:
         #    c.attrib["id"] = shape.id
 
-        c.attrib["cx"] = self.lf_format % shape.cx
-        c.attrib["cy"] = self.lf_format % shape.cy
+        # SHIT! when rotating, the cx,cy are not evaluated, but transformation matrix is given ! 
+        cx = shape.transform.a * shape.cx + shape.transform.b * shape.cy +  shape.transform.e
+        cy = shape.transform.c * shape.cx + shape.transform.d * shape.cy +  shape.transform.f
+         
+        #c.attrib["cx"] = self.lf_format % shape.cx
+        #c.attrib["cy"] = self.lf_format % shape.cy
+        c.attrib["cx"] = str(cx)
+        c.attrib["cy"] = str(cy)
+
         c.attrib["r"] = self.lf_format % shape.rx
 
         # merge style of ref item with used item
@@ -283,6 +293,7 @@ class SvgResolver:
         if the_id != None:
             r.attrib["id"] = the_id
 
+        # SHIT! when rotating, it is no more a rectangle! 
         r.attrib["width"] = self.lf_format % shape.width
         r.attrib["height"] = self.lf_format % shape.height
         r.attrib["x"] = self.lf_format % shape.x
