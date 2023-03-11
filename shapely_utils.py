@@ -232,11 +232,7 @@ class ShapelyUtils:
                     if poly.geom_type == 'Polygon':
                         polys.append(poly)
 
-        #multipoly = shapely.geometry.MultiPolygon(polys)
-        multipoly = shapely.ops.unary_union(polys)
-
-        if multipoly.geom_type == 'Polygon':
-            multipoly = shapely.geometry.MultiPolygon([multipoly])
+        multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(polys)
 
         # ensure orientation
         multipoly = ShapelyUtils.orientMultiPolygon(multipoly)
@@ -244,12 +240,9 @@ class ShapelyUtils:
         return multipoly
 
     @classmethod
-    def offsetMultiPolygonInteriors(cls, geometry: shapely.geometry.MultiPolygon, amount: float, side, gexterior=False, resolution=16, join_style=1, mitre_limit=5.0) -> shapely.geometry.MultiPolygon :
+    def offsetMultiPolygonInteriors(cls, geometry: shapely.geometry.MultiPolygon, amount: float, side, consider_exteriors_offsets=False, resolution=16, join_style=1, mitre_limit=5.0) -> shapely.geometry.MultiPolygon :
         '''
-        Generate offseted lines from the polygons. All the produced lines are good 
-        to store in the toolpaths.
-
-        The returned MultiPolygon is generated from these, but after having eliminated the degenerated ones
+        Generate offseted lines from the polygons interiors
         '''
         polys = []
 
@@ -270,21 +263,20 @@ class ShapelyUtils:
                 int_offset = linestring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=mitre_limit)
                 int_offsets.append(int_offset)
 
-            # from the offseted lines, build a multipolygon that we diff with the exterior
+            # from the offseted lines, build a multipolygon that we will diff with the exterior
             interior_multipoly = cls.buildMultiPolyFromOffsets(int_offsets)
-            print("exterior_multipoly VALID ? ", interior_multipoly.is_valid)
 
             MatplotLibUtils.MatplotlibDisplay("interior_multipoly", interior_multipoly, force=False)
             
             if not interior_multipoly.is_valid:
                 interior_multipoly = cls.fixMultipoly(interior_multipoly)
 
-            exterior_multipolyX = ShapelyUtils.offsetMultiPolygon(geometry, amount, 'left', consider_interiors_offsets=True)
+            exterior_multipoly = ShapelyUtils.offsetMultiPolygon(geometry, amount, 'left', consider_interiors_offsets=True)
 
-            MatplotLibUtils.MatplotlibDisplay("exterior_multipolyX", exterior_multipolyX, force=False)
+            MatplotLibUtils.MatplotlibDisplay("exterior_multipoly", exterior_multipoly, force=False)
 
             # only exterior
-            exterior_multipoly = cls.removeHolesMultipoly(exterior_multipolyX)
+            exterior_multipoly = cls.removeHolesMultipoly(exterior_multipoly)
 
             # this simplify may be important so that the offset becomes Ok (example: letter "B") 
             exterior_multipoly = ShapelyUtils.simplifyMultiPoly(exterior_multipoly, 0.001)
@@ -292,23 +284,21 @@ class ShapelyUtils:
 
             MatplotLibUtils.MatplotlibDisplay("exterior_multipoly", exterior_multipoly, force=False)
 
-            #both = shapely.geometry.MultiPolygon(list(interior_multipoly.geoms) + list(exterior_multipoly.geoms))
-            #MatplotLibUtils.MatplotlibDisplay("interior_exterior_multipoly", both, force=True)
-
-            if gexterior == True:
+            if consider_exteriors_offsets == True:
                 # the diff ** with ~POLY ** is the solution
                 try:
-                    interior_is_contained_in_exterior = exterior_multipoly.contains(interior_multipoly)
-                    print("XXXXXX offset -> interior_is_contained_in_exterior", interior_is_contained_in_exterior)
+                    o_interior_is_contained_in_o_exterior = exterior_multipoly.contains(interior_multipoly)
+                    print("XXXXXX offset -> interior_is_contained_in_exterior", o_interior_is_contained_in_o_exterior)
 
-                    if interior_is_contained_in_exterior:
+                    if o_interior_is_contained_in_o_exterior:
                         sol_poly = exterior_multipoly.intersection(interior_multipoly)
                     else:
-                        # big problem! should actually never happens... (g letter)
+                        # big problem!
                         sol_poly = interior_multipoly  # bug: can cut outside the exterior...
+                        sol_poly = exterior_multipoly # TEST -> GOOD !
                 
                 except Exception as e :
-                    print("ERROR difference")
+                    print("ERROR intersection")
                     print(e)
                     print("interior_multipoly VALID ?", interior_multipoly.is_valid)
                     print("exterior_multipoly VALID ?", exterior_multipoly.is_valid)
@@ -333,7 +323,8 @@ class ShapelyUtils:
                     if poly.geom_type == 'Polygon':
                         polys.append(poly)
 
-        multipoly = shapely.geometry.MultiPolygon(polys)
+        multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(polys)
+
         # ensure orientation
         multipoly = ShapelyUtils.orientMultiPolygon(multipoly)
 

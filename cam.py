@@ -48,19 +48,19 @@ class cam:
     '''
     '''
     @classmethod
-    def pocket(cls, geometry: shapely.geometry.MultiPolygon, cutterDia: float, overlap: float, climb: bool) -> List[CamPath] :
+    def pocket(cls, geometry: shapely.geometry.MultiPolygon, cutter_dia: float, overlap: float, climb: bool) -> List[CamPath] :
         '''
         Compute paths for pocket operation on Shapely geometry. 
         
         Returns array of CamPath.
         
-        cutterDia is in "UserUnit" units. 
+        cutter_dia is in "UserUnit" units. 
         overlap is in the range [0, 1).
         '''
         #new_algo = False
         #if new_algo:
         #    for poly in geometry.geoms:
-        #        pc = PocketCalculator(poly, cutterDia, overlap, climb)
+        #        pc = PocketCalculator(poly, cutter_dia, overlap, climb)
         #        pc.calculate()
         #        return pc.camPath
 
@@ -70,7 +70,7 @@ class cam:
         MatplotLibUtils.MatplotlibDisplay("geom pocket init", geometry, force=False)
 
         # the exterior
-        current = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left', consider_interiors_offsets=True)
+        current = ShapelyUtils.offsetMultiPolygon(geometry, cutter_dia / 2, 'left', consider_interiors_offsets=True)
 
         MatplotLibUtils.MatplotlibDisplay("geom pocket first offset", current, force=False)
             
@@ -79,7 +79,7 @@ class cam:
             return []
 
         # bound must be the exterior enveloppe + the interiors polygons
-        # no! the bounds are from the first offset with width cutterDia / 2
+        # no! the bounds are from the first offset with width cutter_dia / 2
         #bounds = geometry 
         bounds = shapely.geometry.MultiPolygon(current)
 
@@ -120,7 +120,7 @@ class cam:
 
             allPaths = collect_paths(exteriors, allPaths)
 
-            current = ShapelyUtils.offsetMultiPolygon(current, cutterDia * (1 - overlap), 'left', consider_interiors_offsets=False)
+            current = ShapelyUtils.offsetMultiPolygon(current, cutter_dia * (1 - overlap), 'left', consider_interiors_offsets=False)
 
             if not current:
                 break
@@ -130,34 +130,34 @@ class cam:
             current = ShapelyUtils.orientMultiPolygon(current)
 
         # last: make beautiful interiors, only 1 step
-        interiors_offsets = ShapelyUtils.offsetMultiPolygonInteriors(geometry, cutterDia / 2, 'left', gexterior=True)
-        interiors = [ShapelyUtils.multiPolyToMultiLine(interiors_offsets)]
-        allPaths = collect_paths(interiors, allPaths)
+        interiors = ShapelyUtils.offsetMultiPolygonInteriors(geometry, cutter_dia / 2, 'left', consider_exteriors_offsets=True)
+        interiors_offsets = [ShapelyUtils.multiPolyToMultiLine(interiors)]
+        allPaths = collect_paths(interiors_offsets, allPaths)
         # - done !
 
         return cls.mergePaths(bounds, allPaths)
 
     @classmethod
-    def outline(cls, geometry: shapely.geometry.MultiPolygon, cutterDia: float, isInside: bool, width: float, overlap: float, climb: bool) -> List[CamPath] :
+    def outline(cls, geometry: shapely.geometry.MultiPolygon, cutter_dia: float, isInside: bool, width: float, overlap: float, climb: bool) -> List[CamPath] :
         '''
         Compute paths for outline operation on Shapely geometry. 
         
         Returns array of CamPath.
         
-        cutterDia and width are in Shapely units. 
+        cutter_dia and width are in Shapely units. 
         overlap is in the  range [0, 1).
         '''
         # use lines, not polygons
         multiline = ShapelyUtils.multiPolyToMultiLine(geometry)
 
-        currentWidth = cutterDia
+        currentWidth = cutter_dia
         allPaths  : List[shapely.geometry.LineString] = []
-        eachWidth = cutterDia * (1 - overlap)
+        eachWidth = cutter_dia * (1 - overlap)
 
         if isInside :
             # because we always start from the outer ring -> we go "inside"
-            current = ShapelyUtils.offsetMultiLine(multiline, cutterDia /2, 'left')
-            offset = ShapelyUtils.offsetMultiLine(multiline, width - cutterDia / 2, 'left')
+            current = ShapelyUtils.offsetMultiLine(multiline, cutter_dia /2, 'left')
+            offset = ShapelyUtils.offsetMultiLine(multiline, width - cutter_dia / 2, 'left')
             #bounds = ShapelyUtils.diff(current, offset)
             bounds = current
             eachOffset = eachWidth
@@ -168,14 +168,14 @@ class cam:
 
             if direction == "inner2outer":
                 # because we always start from the inner ring -> we go "outside"
-                current = ShapelyUtils.offsetMultiLine(multiline, cutterDia /2, 'right')
-                offset = ShapelyUtils.offsetMultiLine(multiline, width - cutterDia / 2, 'right')
+                current = ShapelyUtils.offsetMultiLine(multiline, cutter_dia /2, 'right')
+                offset = ShapelyUtils.offsetMultiLine(multiline, width - cutter_dia / 2, 'right')
                 #bounds = ShapelyUtils.diff(current, offset)
                 bounds = current
             else:
                 # because we always start from the outer ring -> we go "inside"
-                current = ShapelyUtils.offsetMultiLine(multiline, cutterDia /2, 'left')
-                offset = ShapelyUtils.offsetMultiLine(multiline, width - cutterDia / 2, 'left')
+                current = ShapelyUtils.offsetMultiLine(multiline, cutter_dia /2, 'left')
+                offset = ShapelyUtils.offsetMultiLine(multiline, width - cutter_dia / 2, 'left')
                 #bounds = ShapelyUtils.diff(current, offset)
                 bounds = current
 

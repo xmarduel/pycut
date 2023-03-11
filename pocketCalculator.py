@@ -46,13 +46,13 @@ class PocketCalculator:
     '''
     !!EXPERIMENTAL!!
     '''
-    def __init__(self, poly: shapely.geometry.Polygon, cutterDia: float, overlap: float, climb: bool):
+    def __init__(self, poly: shapely.geometry.Polygon, cutter_dia: float, overlap: float, climb: bool):
         '''
-        cutterDia is in user units. 
+        cutter_dia is in user units. 
         overlap is in the range [0, 1].
         '''
         self.poly = poly
-        self.cutterDia = cutterDia
+        self.cutter_dia = cutter_dia
         self.overlap = overlap
         self.climb = climb
 
@@ -80,7 +80,7 @@ class PocketCalculator:
         poly = shapely.geometry.polygon.orient(self.poly)
 
         # the exterior
-        offset_poly = self.offsetPolygon(poly, self.cutterDia / 2, 'left')
+        offset_poly = self.offsetPolygon(poly, self.cutter_dia / 2, 'left')
         
         offset_poly = ShapelyUtils.simplifyMultiPoly(offset_poly, 0.001)
         offset_poly = ShapelyUtils.orientMultiPolygon(offset_poly)
@@ -95,7 +95,7 @@ class PocketCalculator:
         # bound must be the exterior enveloppe + the interiors polygons
         #bounds = geometry 
 
-        # no! the bounds are from the first offset with width cutterDia / 2
+        # no! the bounds are from the first offset with width cutter_dia / 2
         bounds = shapely.geometry.MultiPolygon(offset_poly)
 
         # --------------------------------------------------------------------
@@ -107,7 +107,7 @@ class PocketCalculator:
 
             self.collect_paths(offset_poly)
 
-            offset_poly = self.offsetMultiPolygon(offset_poly, self.cutterDia * (1 - self.overlap), 'left')
+            offset_poly = self.offsetMultiPolygon(offset_poly, self.cutter_dia * (1 - self.overlap), 'left')
             
             if len(offset_poly.geoms) == 0:
                 # cannot offset ! maybe geometry too narrow for the cutter
@@ -118,7 +118,7 @@ class PocketCalculator:
             offset_poly = ShapelyUtils.orientMultiPolygon(offset_poly)
 
         # last: make beautiful interiors, only 1 step
-        interiors_offsets = self.offsetPolygonInteriors(self.poly, self.cutterDia / 2, 'left')
+        interiors_offsets = self.offsetPolygonInteriors(self.poly, self.cutter_dia / 2, 'left')
         self.collect_paths(interiors_offsets)
         # - done !
 

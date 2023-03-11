@@ -116,9 +116,9 @@ class ShapelyPolygonOffset:
                     if geom.geom_type == 'Polygon':
                         polys.append(geom)
                     if geom.geom_type == 'MultiPolygon':
-                        for pp in geom.geoms:
-                           polys.append(pp)
-                self.res_multipoly = shapely.geometry.MultiPolygon(polys)
+                        for poly in geom.geoms:
+                           polys.append(poly)
+                self.res_multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(polys)
                     
         else: # without interiors
             self.res_multipoly = exterior_multipoly

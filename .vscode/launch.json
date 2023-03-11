@@ -5,6 +5,7 @@
     "version": "0.2.0",
     "configurations": [
 
+
         {
             "name": "OPENGL DEMO1",
             "type": "python",
@@ -127,6 +128,15 @@
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
             "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver\\test_basic2.svg"]
+        },
+        {
+            "name": "PYCUT RESOLVER TEST_BEARING",
+            "type": "python",
+            "request": "launch",
+            "program": "svgresolver.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver\\test_bearing.svg"]
         },
         {
             "name": "TABLEVIEW",
