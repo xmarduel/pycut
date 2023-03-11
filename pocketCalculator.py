@@ -126,41 +126,28 @@ class PocketCalculator:
 
     def offsetPolygon(self, poly: shapely.geometry.Polygon, amount: float, side: str, resolution=16, join_style=1, mitre_limit=5.0) -> shapely.geometry.MultiPolygon:
         '''
-        Generate offseted lines from the polygon. 
-        All the produced lines are good to store in the toolpaths.
-
-        The returned MultiPolygon is generated from these, but after having eliminated the degenerated ones
-
-        For the first round of the offsets, **do** consider the polygon interiors and their offsets
         '''
         offsetter = ShapelyPolygonOffset(poly)
-        offsetter.offset(amount, side, True, resolution, join_style, mitre_limit)
-        
-        return offsetter.res_multipoly
+        return offsetter.offset(amount, side, True, resolution, join_style, mitre_limit)
     
     def offsetMultiPolygon(self, multipoly: shapely.geometry.MultiPolygon, amount: float, side: str, resolution=16, join_style=1, mitre_limit=5.0) -> shapely.geometry.MultiPolygon:
         '''
-        For the next steps of the pocktings, no need to consider the interiors of the initial polygon
         '''
         polys = []
 
         for poly in multipoly.geoms:
             offsetter = ShapelyPolygonOffset(poly)
-            offsetter.offset(amount, side, False, resolution, join_style, mitre_limit)
+            multipoly = offsetter.offset(amount, side, False, resolution, join_style, mitre_limit)
 
-            polys = polys + list(offsetter.res_multipoly.geoms)
+            polys = polys + list(multipoly.geoms)
         
         return shapely.geometry.MultiPolygon(polys)
 
-    def offsetPolygonInteriors(self, poly: shapely.geometry.Polygon, amount: float, side: str, resolution=16, join_style=1, mitre_limit=5.0) -> List[shapely.geometry.LineString]:
+    def offsetPolygonInteriors(self, poly: shapely.geometry.Polygon, amount: float, side: str, resolution=16, join_style=1, mitre_limit=5.0) -> shapely.geometry.MultiPolygon:
         '''
         '''
         offsetter = ShapelyPolygonOffsetInteriors(poly)
-        offsetter.offset(amount, side, True, resolution, join_style, mitre_limit)
-
-        offsets = offsetter.res_multipoly
-        
-        return offsets
+        return offsetter.offset(amount, side, True, resolution, join_style, mitre_limit)
     
     @classmethod
     def mergePaths(cls, _bounds: shapely.geometry.MultiPolygon, paths: List[shapely.geometry.LineString]) -> List[CamPath] :

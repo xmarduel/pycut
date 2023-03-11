@@ -29,7 +29,7 @@ from matplotlib_utils import MatplotLibUtils
 class ShapelyPolygonOffset:
     '''
     The class to perform an offset of a polygon.
-    It has to take care of the possible interiors of the polygon
+    It has to take care of the possible offseted interiors of the polygon
     '''
     def __init__(self, poly: shapely.geometry.Polygon):
         '''
@@ -37,16 +37,9 @@ class ShapelyPolygonOffset:
         # input
         self.poly = poly
 
-        # output: results of the offset operation
-        # - the resulting multi polygon
-        self.res_multipoly : shapely.geometry.MultiPolygon = None 
-
-        # Note that some lines can be "degenerated" : we take them into account for the cam paths
-        # but maybe do not corespond to any polygon.
-        # this means: the exteriors of the multi polygons do not correspond to the full cam paths TO CHECK
-
-    def offset(self, amount:float, side: str, consider_interiors_offsets: bool, resolution: int, join_style: JOIN_STYLE, mitre_limit:float):
+    def offset(self, amount:float, side: str, consider_interiors_offsets: bool, resolution: int, join_style: JOIN_STYLE, mitre_limit:float) -> shapely.geometry.MultiPolygon:
         '''
+        main method
         '''
         linestring = shapely.geometry.LineString(self.poly.exterior)
 
@@ -107,9 +100,9 @@ class ShapelyPolygonOffset:
                 raise
 
             if sol_poly.geom_type == 'Polygon':
-                self.res_multipoly = shapely.geometry.MultiPolygon([sol_poly])
+                return shapely.geometry.MultiPolygon([sol_poly])
             elif sol_poly.geom_type == 'MultiPolygon':
-                self.res_multipoly = sol_poly
+                return  sol_poly
             elif sol_poly.geom_type == 'GeometryCollection':
                 polys = []
                 for geom in sol_poly:
@@ -118,10 +111,12 @@ class ShapelyPolygonOffset:
                     if geom.geom_type == 'MultiPolygon':
                         for poly in geom.geoms:
                            polys.append(poly)
-                self.res_multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(polys)
+                return ShapelyUtils.buildMultiPolyFromListOfPolygons(polys)
+            else:
+                return None ## error!
                     
         else: # without interiors
-            self.res_multipoly = exterior_multipoly
+            return exterior_multipoly
 
     @staticmethod
     def buildMultiPolyFromOffset(offset: shapely.geometry.LineString|shapely.geometry.MultiLineString) -> shapely.geometry.MultiPolygon:
@@ -169,7 +164,7 @@ class ShapelyPolygonOffset:
             if polygon.is_valid:
                 polygons.append(polygon)
             else:
-                res = polygon.make_valid()
+                res = make_valid(polygon)
                 # hoping the result is valid!
                 if res.geom_type == 'Polygon':
                     polygons.append(polygon)
@@ -196,25 +191,21 @@ class ShapelyPolygonOffset:
 
 class ShapelyPolygonOffsetInteriors:
     '''
+    The class to perform an offset 'right' (goint to the exterior) of the interior of a polygon.
+    It has to take care of the offseted exterior of the polygon
     '''
     def __init__(self, poly: shapely.geometry.Polygon):
         '''
         '''
         self.poly = poly
 
-        # result of the offset operation
-        self.res_offsets : List[shapely.geometry.LineString] = [] 
-        self.res_multipoly : shapely.geometry.MultiPolygon = None
-
-    def offset(self, amount:float, side: str, consider_exteriors: bool, resolution: int, join_style: int, mitre_limit:float):
+    def offset(self, amount:float, side: str, consider_exteriors_offsets: bool, resolution: int, join_style: int, mitre_limit:float) -> shapely.geometry.MultiPolygon | None:
         '''
+        main method
         '''
-        offsets : List[shapely.geometry.LineString] = []
         polys: List[shapely.geometry.Polygon] = []
 
         if not self.poly.interiors: 
-            self.res_offsets = []
-            self.res_polys = []
             return
 
         linestrings = []
@@ -229,7 +220,6 @@ class ShapelyPolygonOffsetInteriors:
 
         # from the offseted lines, build a multipolygon that we diff with the exterior
         interior_multipoly = ShapelyUtils.buildMultiPolyFromOffsets(int_offsets)
-        print("exterior_multipoly VALID ? ", interior_multipoly.is_valid)
 
         MatplotLibUtils.MatplotlibDisplay("interior_multipoly", interior_multipoly, force=False)
             
@@ -239,13 +229,12 @@ class ShapelyPolygonOffsetInteriors:
         offsetter = ShapelyPolygonOffset(self.poly)
         offsetter.offset(amount, 'left', True, resolution, join_style, mitre_limit)
 
-        exterior_multipolyX = offsetter.res_multipoly
+        exterior_multipoly = offsetter.res_multipoly
 
-
-        MatplotLibUtils.MatplotlibDisplay("exterior_multipolyX", exterior_multipolyX, force=False)
+        MatplotLibUtils.MatplotlibDisplay("exterior_multipolyX", exterior_multipoly, force=False)
 
         # only exterior
-        exterior_multipoly = ShapelyUtils.removeHolesMultipoly(exterior_multipolyX)
+        exterior_multipoly = ShapelyUtils.removeHolesMultipoly(exterior_multipoly)
 
         # this simplify may be important so that the offset becomes Ok (example: letter "B") 
         exterior_multipoly = ShapelyUtils.simplifyMultiPoly(exterior_multipoly, 0.001)
@@ -253,21 +242,19 @@ class ShapelyPolygonOffsetInteriors:
 
         MatplotLibUtils.MatplotlibDisplay("exterior_multipoly", exterior_multipoly, force=False)
 
-        #both = shapely.geometry.MultiPolygon(list(interior_multipoly.geoms) + list(exterior_multipoly.geoms))
-        #MatplotLibUtils.MatplotlibDisplay("interior_exterior_multipoly", both, force=True)
-
-        if consider_exteriors == True:
+        if consider_exteriors_offsets == True:
             # the diff ** with ~POLY ** is the solution
             try:
-                interior_is_contained_in_exterior = exterior_multipoly.contains(interior_multipoly)
-                print("XXXXXX offset -> interior_is_contained_in_exterior", interior_is_contained_in_exterior)
+                o_interior_is_contained_in_o_exterior = exterior_multipoly.contains(interior_multipoly)
+                print("XXXXXX offset -> interior_offset_is_contained_in_exterior_offset", o_interior_is_contained_in_o_exterior)
 
-                if interior_is_contained_in_exterior:
+                if o_interior_is_contained_in_o_exterior:
                     sol_poly = exterior_multipoly.intersection(interior_multipoly)
                 else:
                     # big problem! should actually never happens... (g letter)
                     sol_poly = interior_multipoly  # bug: can cut outside the exterior...
-                
+                    sol_poly = exterior_multipoly # TEST -> GOOD !
+
             except Exception as e :
                 print("ERROR difference")
                 print(e)
@@ -275,43 +262,30 @@ class ShapelyPolygonOffsetInteriors:
                 print("exterior_multipoly VALID ?", exterior_multipoly.is_valid)
                 raise
 
-            if sol_poly.geom_type == 'LineString':
-                offsets.append(sol_poly)
-            elif sol_poly.geom_type == 'MultiLineString':
-                offsets = offsets + sol_poly.geoms
-            elif sol_poly.geom_type == 'Polygon':
-                offset = shapely.geometry.LineString(sol_poly.exterior)
-                offsets.append(offset)
+        
+            if sol_poly.geom_type == 'Polygon':
                 polys.append(sol_poly)
             elif sol_poly.geom_type == 'MultiPolygon':
                 for geom in sol_poly.geoms:
-                    offsets.append(shapely.geometry.LineString(geom.exterior))
                     polys.append(geom)
             elif sol_poly.geom_type == 'GeometryCollection':
                 for geom in sol_poly.geoms:
                     if geom.geom_type == 'Polygon':
-                        offsets.append(shapely.geometry.LineString(geom.exterior))
                         polys.append(geom)
                     elif geom.geom_type == 'MultiPolygon':
                         for poly in geom.geoms:
-                            offsets.append(shapely.geometry.LineString(poly.exterior))
                             polys.append(poly)
-                    elif geom.geom_type == 'Linestring':
-                        offsets.append(shapely.geometry.LineString(line))
-                    elif geom.geom_type == 'MultiLinestring':
-                        for line in geom.geoms:
-                            offsets.append(shapely.geometry.LineString(line))
+            else:
+                return None
 
         else: # without exterior offsets
-            offsets.append(int_offset)
-
             for poly in interior_multipoly.geoms:
                 if poly.geom_type == 'Polygon':
                     polys.append(poly)
 
-        self.res_offsets = offsets
-        self.res_multipoly = shapely.ops.unary_union(polys)
+        multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(polys)
 
-        if self.res_multipoly.geom_type == 'Polygon':
-            self.res_multipoly = shapely.geometry.MultiPolygon([self.res_multipoly])
+        # ensure orientation
+        multipoly = ShapelyUtils.orientMultiPolygon(multipoly)
 
+        return multipoly

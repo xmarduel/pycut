@@ -53,7 +53,7 @@ class ShapelyUtils:
        
         result = p1_p2.intersection(bounds)
 
-        print("crosses: result intersection empty ? ", result.is_empty)
+        #print("crosses: result intersection empty ? ", result.is_empty)
     
         if result.is_empty is True:
             return False
@@ -288,7 +288,7 @@ class ShapelyUtils:
                 # the diff ** with ~POLY ** is the solution
                 try:
                     o_interior_is_contained_in_o_exterior = exterior_multipoly.contains(interior_multipoly)
-                    print("XXXXXX offset -> interior_is_contained_in_exterior", o_interior_is_contained_in_o_exterior)
+                    print("XXXXXX offset -> interior_offset_is_contained_in_exterior_offset", o_interior_is_contained_in_o_exterior)
 
                     if o_interior_is_contained_in_o_exterior:
                         sol_poly = exterior_multipoly.intersection(interior_multipoly)
@@ -418,7 +418,8 @@ class ShapelyUtils:
         
         # ensure orientation
         multipoly = ShapelyUtils.orientMultiPolygon(multipoly)
-        print("multipoly VALID ?", multipoly.is_valid)
+        
+        #print("multipoly VALID ?", multipoly.is_valid)
 
         return multipoly
 
