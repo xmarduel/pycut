@@ -70,7 +70,7 @@ class cam:
         MatplotLibUtils.MatplotlibDisplay("geom pocket init", geometry, force=False)
 
         # the exterior
-        multi_offset, current = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left', consider_interiors_offsets=True)
+        current = ShapelyUtils.offsetMultiPolygon(geometry, cutterDia / 2, 'left', consider_interiors_offsets=True)
 
         MatplotLibUtils.MatplotlibDisplay("geom pocket first offset", current, force=False)
             
@@ -116,21 +116,18 @@ class cam:
             #    for line in current:
             #        line.reverse()
 
-            allPaths = collect_paths(multi_offset, allPaths)
+            exteriors = [ShapelyUtils.multiPolyToMultiLine(current)]
 
-            multi_offset, current = ShapelyUtils.offsetMultiPolygon(current, cutterDia * (1 - overlap), 'left', consider_interiors_offsets=False)
-            
+            allPaths = collect_paths(exteriors, allPaths)
+
+            current = ShapelyUtils.offsetMultiPolygon(current, cutterDia * (1 - overlap), 'left', consider_interiors_offsets=False)
+
             if not current:
-                allPaths = collect_paths(multi_offset, allPaths)
                 break
             current = ShapelyUtils.simplifyMultiPoly(current, 0.001)
             if not current:
-                allPaths = collect_paths(multi_offset, allPaths)
                 break
             current = ShapelyUtils.orientMultiPolygon(current)
-           
-            if not multi_offset:
-                break
 
         # last: make beautiful interiors, only 1 step
         interior_multi_offset, _ = ShapelyUtils.offsetMultiPolygonInteriors(geometry, cutterDia / 2, 'left', gexterior=True)

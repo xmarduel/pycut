@@ -5,6 +5,7 @@ from typing import List
 from typing import Tuple
 
 import shapely.geometry
+import shapely.ops
 from shapely.validation import make_valid
 from shapely.validation import explain_validity
 
@@ -161,7 +162,7 @@ class ShapelyUtils:
         return xmultipoly
 
     @classmethod
-    def offsetMultiPolygon(cls, geometry: shapely.geometry.MultiPolygon, amount: float, side, consider_interiors_offsets=False, resolution=16, join_style=1, mitre_limit=5.0) -> Tuple[List[shapely.geometry.MultiLineString], shapely.geometry.MultiPolygon] :
+    def offsetMultiPolygon(cls, geometry: shapely.geometry.MultiPolygon, amount: float, side, consider_interiors_offsets=False, resolution=16, join_style=1, mitre_limit=5.0) -> shapely.geometry.MultiPolygon:
         '''
         Generate offseted lines from the polygons. All the produced lines are good 
         to store in the toolpaths.
@@ -202,18 +203,14 @@ class ShapelyUtils:
                 
                 interior_multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(interior_polys)
 
+                MatplotLibUtils.MatplotlibDisplay("starting interior offset from", interior_multipoly, force=False)
+
                 # consider interiors offsets
                 if consider_interiors_offsets == True:
-                    MatplotLibUtils.MatplotlibDisplay("starting interior offset from", interior_multipoly)
-
-                    interior_offset, _current = ShapelyUtils.offsetMultiPolygon(interior_multipoly, amount, 'right')
                     
-                    MatplotLibUtils.MatplotlibDisplay("geom pocket first offset of int (1)", _current, force=False)
+                    interior_multipoly = ShapelyUtils.offsetMultiPolygon(interior_multipoly, amount, 'right')
                     
-                    # the diff is the solution
-                    interior_multipoly = ShapelyUtils.buildMultiPolyFromOffsets(interior_offset)
-                
-                    MatplotLibUtils.MatplotlibDisplay("geom pocket first offset of int (2)", interior_multipoly, force=False)
+                    MatplotLibUtils.MatplotlibDisplay("interior first offset", interior_multipoly, force=False)
 
                 # the diff is the solution
                 try:
@@ -248,11 +245,16 @@ class ShapelyUtils:
                     if poly.geom_type == 'Polygon':
                         polys.append(poly)
 
-        multipoly = shapely.geometry.MultiPolygon(polys)
+        #multipoly = shapely.geometry.MultiPolygon(polys)
+        multipoly = shapely.ops.unary_union(polys)
+
+        if multipoly.geom_type == 'Polygon':
+            multipoly = shapely.geometry.MultiPolygon([multipoly])
+
         # ensure orientation
         multipoly = ShapelyUtils.orientMultiPolygon(multipoly)
 
-        return offsets, multipoly
+        return multipoly
 
     @classmethod
     def offsetMultiPolygonInteriors(cls, geometry: shapely.geometry.MultiPolygon, amount: float, side, gexterior=False, resolution=16, join_style=1, mitre_limit=5.0) -> Tuple[List[shapely.geometry.MultiLineString], shapely.geometry.MultiPolygon] :
