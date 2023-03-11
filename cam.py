@@ -86,7 +86,7 @@ class cam:
         allPaths : List[shapely.geometry.LineString] = []
 
         # -------------------------------------------------------------
-        def collect_paths(multi_offset, allPaths):
+        def collect_paths(multi_offset, allPaths: List[shapely.geometry.LineString]):
             lines_ok = []
             
             for offset in multi_offset:
@@ -130,8 +130,9 @@ class cam:
             current = ShapelyUtils.orientMultiPolygon(current)
 
         # last: make beautiful interiors, only 1 step
-        interior_multi_offset, _ = ShapelyUtils.offsetMultiPolygonInteriors(geometry, cutterDia / 2, 'left', gexterior=True)
-        allPaths = collect_paths(interior_multi_offset, allPaths)
+        interiors_offsets = ShapelyUtils.offsetMultiPolygonInteriors(geometry, cutterDia / 2, 'left', gexterior=True)
+        interiors = [ShapelyUtils.multiPolyToMultiLine(interiors_offsets)]
+        allPaths = collect_paths(interiors, allPaths)
         # - done !
 
         return cls.mergePaths(bounds, allPaths)
