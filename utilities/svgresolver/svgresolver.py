@@ -247,6 +247,15 @@ class SvgResolver:
         except:
             return ref_style 
 
+    @classmethod
+    def eval_pt_transform(cls, pt, transform):
+        '''
+        '''
+        xx = transform.a * pt[0] + transform.b * pt[1] + transform.e
+        yy = transform.c * pt[0] + transform.d * pt[1] + transform.f 
+
+        return (xx, yy)
+    
     def make_xml_circle(self, item: etree.Element, shape: svgelements.Shape):
         '''
         '''
@@ -263,11 +272,8 @@ class SvgResolver:
         #    c.attrib["id"] = shape.id
 
         # SHIT! when rotating, the cx,cy are not evaluated, but transformation matrix is given ! 
-        cx = shape.transform.a * shape.cx + shape.transform.b * shape.cy +  shape.transform.e
-        cy = shape.transform.c * shape.cx + shape.transform.d * shape.cy +  shape.transform.f
-         
-        #c.attrib["cx"] = self.lf_format % shape.cx
-        #c.attrib["cy"] = self.lf_format % shape.cy
+        cx, cy = self.eval_pt_transform( (shape.cx, shape.cy), shape.transform)
+        
         c.attrib["cx"] = str(cx)
         c.attrib["cy"] = str(cy)
 
