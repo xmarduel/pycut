@@ -139,7 +139,7 @@ class PocketCalculator:
             offsetter = ShapelyPolygonOffset(poly)
             multipoly = offsetter.offset(amount, side, False, resolution, join_style, mitre_limit)
 
-            polys = polys + list(multipoly.geoms)
+            polys.extend(list(multipoly.geoms))
         
         return shapely.geometry.MultiPolygon(polys)
 

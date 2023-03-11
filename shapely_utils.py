@@ -413,8 +413,8 @@ class ShapelyUtils:
                 if item.geom_type == 'Polygon':
                     polygons.append(item)
                 elif union.geom_type == 'MultiPolygon':
-                    polygons = polygons + list(union.geoms)
-            multipoly = shapely.geometry.MultiPolygon(polygons)    
+                    polygons.extend(list(union.geoms))
+            multipoly = shapely.geometry.MultiPolygon(polygons)
         
         # ensure orientation
         multipoly = ShapelyUtils.orientMultiPolygon(multipoly)

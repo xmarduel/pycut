@@ -78,7 +78,7 @@ class ShapelyPolygonOffset:
 
                     i_multipoly = interior_offseter.res_multipoly
 
-                    interiors_polys = interiors_polys + list(i_multipoly.geoms)
+                    interiors_polys.extend(list(i_multipoly.geoms))
                     
                 for k, i_poly in enumerate(interiors_polys):
                     MatplotLibUtils.MatplotlibDisplay("interior offseting (linestring) %d" % k, i_poly)
