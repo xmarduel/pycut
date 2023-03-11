@@ -21,6 +21,7 @@ class SvgResolver:
         self.resolved_filename = os.path.splitext(self.filename)[0] + '.resolved.svg'
         
         self.shapes = []
+        self.groups = []
 
         # There are a few things I do not understand in the svg standard : for example
         # a width and height defined in "px" or in "mm" or in "in"
@@ -71,6 +72,7 @@ class SvgResolver:
         '''
         '''
         self.shapes = []
+        self.groups = []
 
         for e in self.svg.elements():
             if isinstance(e, svgelements.Text):
@@ -82,6 +84,10 @@ class SvgResolver:
             elif isinstance(e, svgelements.Shape):
                 #print("shape")
                 self.shapes.append(e)
+            elif isinstance(e, svgelements.Group):
+                self.groups.append(e)
+            elif isinstance(e, svgelements.SVG):
+                print("processing svg #id:", e.id)
 
     def collect_id_mapping(self):
         '''
@@ -126,9 +132,12 @@ class SvgResolver:
     def replace_elements(self, item: etree.Element):
         '''
         '''
-        shape = self.get_svg_shape_for_item(item)
+        shape = self.get_svg_shape_for_use_item(item)
+        group = self.get_svg_group_for_use_item(item)
 
         if shape:
+            print("replacing shape for etree elt =", item.attrib["id"])
+
             if isinstance(shape, svgelements.Circle):
                 self.make_xml_circle(item, shape)
 
@@ -156,6 +165,11 @@ class SvgResolver:
             else:
                 print ("shape not recognized!", shape.__class__)
 
+        if group:
+            print("replacing group for etree elt =", item.attrib["id"])
+
+            self.make_xml_group(item, group)
+
         if item.tag == "{http://www.w3.org/2000/svg}g":
             if "transform" in item.attrib:
                 del item.attrib["transform"]
@@ -163,6 +177,9 @@ class SvgResolver:
         # process the children
         for ch in item:
             if not isinstance(ch.tag, str):  # a comment ?
+                continue
+            # leaves defs unchanged
+            if ch.tag == "{http://www.w3.org/2000/svg}defs":
                 continue
 
             self.replace_elements(ch)
@@ -256,7 +273,48 @@ class SvgResolver:
 
         return (xx, yy)
     
-    def make_xml_circle(self, item: etree.Element, shape: svgelements.Shape):
+    def make_xml_group(self, item: etree.Element, group: svgelements.Group):
+        '''
+        '''
+        print("replacing group items for etree elt =", group.id)
+
+        def resolve_group_items(item, group_e):
+            '''
+            '''
+            for svge in group_e:
+                if isinstance(svge, svgelements.Circle):
+                    self.make_xml_circle(item, svge, remove_item=False)
+
+                elif isinstance(svge, svgelements.Rect):
+                    self.make_xml_rect(item, svge, remove_item=False)
+
+                elif isinstance(svge, svgelements.Ellipse):
+                    self.make_xml_ellipse(item, svge, remove_item=False)
+
+                elif isinstance(svge, svgelements.Polygon):
+                    self.make_xml_polygon(item, svge, remove_item=False)
+
+                elif isinstance(svge, svgelements.SimpleLine):
+                    self.make_xml_line(item, svge, remove_item=False)
+
+                elif isinstance(svge, svgelements.Polyline):
+                    self.make_xml_polyline(item, svge, remove_item=False)
+
+                elif isinstance(svge, svgelements.Path):
+                    self.make_xml_path(item, svge, remove_item=False)
+
+                elif isinstance(svge, svgelements.Text):
+                    self.make_xml_text(item, svge, remove_item=False)
+
+                elif isinstance(svge, list):
+                    resolve_group_items(item, svge)
+
+        
+        resolve_group_items(item, group)
+
+        item.getparent().remove(item)
+
+    def make_xml_circle(self, item: etree.Element, shape: svgelements.Shape, remove_item=True):
         '''
         '''
         print("Circle!")
@@ -284,9 +342,10 @@ class SvgResolver:
         if style:
             c.attrib["style"] = style
 
-        item.getparent().remove(item)
+        if remove_item:
+            item.getparent().remove(item)
 
-    def make_xml_rect(self, item: etree.Element, shape: svgelements.Shape):
+    def make_xml_rect(self, item: etree.Element, shape: svgelements.Shape, remove_item=False):
         '''
         '''
         print("Rect!")
@@ -312,9 +371,10 @@ class SvgResolver:
         if style:
             r.attrib["style"] = style
 
-        item.getparent().remove(item)
+        if remove_item:
+            item.getparent().remove(item)
 
-    def make_xml_ellipse(self, item: etree.Element, shape: svgelements.Shape):
+    def make_xml_ellipse(self, item: etree.Element, shape: svgelements.Shape, remove_item=False):
         '''
         '''
         print("Ellipse!")
@@ -337,9 +397,10 @@ class SvgResolver:
         if style:
             e.attrib["style"] = style
 
-        item.getparent().remove(item)
+        if remove_item:
+            item.getparent().remove(item)
 
-    def make_xml_polygon(self, item: etree.Element, shape: svgelements.Shape):
+    def make_xml_polygon(self, item: etree.Element, shape: svgelements.Shape, remove_item=False):
         '''
         '''
         print("Polygon!")
@@ -359,9 +420,10 @@ class SvgResolver:
         if style:
             p.attrib["style"] = style
 
-        item.getparent().remove(item)
+        if remove_item:
+            item.getparent().remove(item)
 
-    def make_xml_line(self, item: etree.Element, shape: svgelements.Shape):
+    def make_xml_line(self, item: etree.Element, shape: svgelements.Shape, remove_item=False):
         '''
         '''
         print("SimpleLine!")
@@ -384,9 +446,10 @@ class SvgResolver:
         if style:
             l.attrib["style"] = style
 
-        item.getparent().remove(item)
+        if remove_item:
+            item.getparent().remove(item)
 
-    def make_xml_polyline(self, item: etree.Element, shape: svgelements.Shape):
+    def make_xml_polyline(self, item: etree.Element, shape: svgelements.Shape, remove_item=False):
         '''
         '''
         print("Polyline!")
@@ -406,9 +469,10 @@ class SvgResolver:
         if style:
             p.attrib["style"] = style
 
-        item.getparent().remove(item)
+        if remove_item:
+            item.getparent().remove(item)
 
-    def make_xml_path(self, item: etree.Element, shape: svgelements.Shape):
+    def make_xml_path(self, item: etree.Element, shape: svgelements.Shape, remove_item=False):
         '''
         '''
         print("Path!")
@@ -428,9 +492,10 @@ class SvgResolver:
         if style:
             p.attrib["style"] = style
         
-        item.getparent().remove(item)
+        if remove_item:
+            item.getparent().remove(item)
 
-    def make_xml_text(self, item: etree.Element, shape: svgelements.Shape):
+    def make_xml_text(self, item: etree.Element, shape: svgelements.Shape, remove_item=False):
         '''
         BUG: svgelements : shape.x and shape.y are **NOT** calculated!
         '''
@@ -456,18 +521,15 @@ class SvgResolver:
         if style:
             t.attrib["style"] = style
 
-        item.getparent().remove(item)
+        if remove_item:
+            item.getparent().remove(item)
 
-    def get_svg_shape_for_item(self, item: etree.Element) -> svgelements.Shape | None:
+    def get_svg_shape_for_use_item(self, item: etree.Element) -> svgelements.Shape | None:
         '''
         '''
         if item.tag == "{http://www.w3.org/2000/svg}svg":
             return None
         if item.tag == "{http://www.w3.org/2000/svg}defs":
-            return None
-        if item.getparent() == "{http://www.w3.org/2000/svg}defs":
-            return None
-        if item.tag == "{http://www.w3.org/2000/svg}g":
             return None
 
         if item.tag.endswith("use"):
@@ -481,17 +543,28 @@ class SvgResolver:
                     self.shapes.pop(idx)
                     return shape
 
-        #else:
-            
-        #    for idx, shape in enumerate(self.shapes):
-        #        if shape.id == item.attrib["id"]:
-        #            # remove it from the list of shapes and give back
-        #            #self.shapes.pop(idx)
-        #            return shape
-
         return None
 
+    def get_svg_group_for_use_item(self, item: etree.Element) -> svgelements.Shape | None:
+        '''
+        '''
+        if item.tag == "{http://www.w3.org/2000/svg}svg":
+            return None
+        if item.tag == "{http://www.w3.org/2000/svg}defs":
+            return None
 
+        if item.tag.endswith("use"):
+        
+            id_ref = item.attrib["href"][1:] # not the '#'
+                
+            # get related group
+            for idx, group in enumerate(self.groups):
+                if group.id == id_ref:
+                    # remove it from the list of shapes and give back
+                    self.groups.pop(idx)
+                    return group
+
+        return None
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog="svgresolver", description="svg defs-use / transformations resolver")
