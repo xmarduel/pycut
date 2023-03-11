@@ -358,7 +358,7 @@ class CncOp:
         else:
             # fix orientation
             fixed_polys = []
-            for poly in self.geometry:
+            for poly in self.geometry.geoms:
                 if not poly.geom_type == 'Polygon':
                     continue
                 # fix - do not start a poly from a convex corner
