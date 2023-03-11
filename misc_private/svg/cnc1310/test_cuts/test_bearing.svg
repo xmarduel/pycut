@@ -17,9 +17,9 @@ DIMENSIONS LMK12UU:
 
 -->
 <svg
-  width="50mm"
+  width="150mm"
   height="50mm"
-  viewBox="0 0 50 50"
+  viewBox="0 0 150 50"
   version="1.1"
   id="test_bearing"
   xmlns="http://www.w3.org/2000/svg"
@@ -44,23 +44,47 @@ DIMENSIONS LMK12UU:
       cx="0"
       cy="0"
       r="2.25" />
+
+    <!-- IN TEST : the full object : can I "resolve it" ? Actually NO -->
+    <g id="bearing" transform="translate(-16 -16)">
+	    <!-- centered at origin -->
+      <use href="#bearing_base"  id="bering_base_from_full" />
+
+      <!-- reference is the center of the bearing item -->
+      <g id="layer" transform="translate(16 16)">
+  	    <use href="#bearing_cylinder" id="bearing_cylinder_from_full" />
+	       
+        <use href="#bearing_screw_4.5mm" transform="rotate( 45) translate(16 0)" id="bearing_screw_4.5mm_SE_from_full" />
+        <use href="#bearing_screw_4.5mm" transform="rotate(135) translate(16 0)" id="bearing_screw_4.5mm_SW_from_full" />
+        <use href="#bearing_screw_4.5mm" transform="rotate(225) translate(16 0)" id="bearing_screw_4.5mm_NW_from_full" />
+        <use href="#bearing_screw_4.5mm" transform="rotate(315) translate(16 0)" id="bearing_screw_4.5mm_NE_from_full" />
+      </g>
+    </g>
+    <!-- IN TEST -->
   </defs>
 
   <g id="layer" >
     <rect id="PLATE" x="0" y="0" width="50" height="50" style="fill:rgb(0,125,125);stroke-width:0;stroke:rgb(0,0,0)" />
       
     <g id="layer" transform="translate(10 10)">
-	   <use href="#bearing_base" id="LEFT_bearing_base_left" />
+	   <use href="#bearing_base" id="bearing_base_r" />
 
       <!-- reference is the center of the bearing item -->
       <g id="layer" transform="translate(16 16)">
-  	     <use href="#bearing_cylinder" id="LEFT_bearing_cylinder_left" />
+  	    <use href="#bearing_cylinder" id="bearing_cylinder_r" />
 	       
-        <use href="#bearing_screw_4.5mm" transform="rotate( 45) translate(16 0)" id="LEFT_bearing_screw_4.5mm_use28" />
-        <use href="#bearing_screw_4.5mm" transform="rotate(135) translate(16 0)" id="LEFT_bearing_screw_4.5mm_use30" />
-        <use href="#bearing_screw_4.5mm" transform="rotate(225) translate(16 0)" id="LEFT_bearing_screw_4.5mm_use36" />
-        <use href="#bearing_screw_4.5mm" transform="rotate(315) translate(16 0)" id="LEFT_bearing_screw_4.5mm_use38" />
+        <use href="#bearing_screw_4.5mm" transform="rotate( 45) translate(16 0)" id="bearing_screw_4.5mm_SE" />
+        <use href="#bearing_screw_4.5mm" transform="rotate(135) translate(16 0)" id="bearing_screw_4.5mm_SW" />
+        <use href="#bearing_screw_4.5mm" transform="rotate(225) translate(16 0)" id="bearing_screw_4.5mm_NW" />
+        <use href="#bearing_screw_4.5mm" transform="rotate(315) translate(16 0)" id="bearing_screw_4.5mm_NE" />
       </g>
     </g>
+
+    <!-- this is unfortunately not resolved -->
+    <g id="layer_bearing" transform="translate(80 26)">
+      <use href="#bearing" id="bearing_full" />
+    </g>
+
+    
   </g>
 </svg>

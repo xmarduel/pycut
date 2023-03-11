@@ -47,11 +47,11 @@ This in to test the spindle holder
       <!-- cut through material -->
       <g id="layer_spindle_screws">
         <use href="#spindle-screw" transform="rotate(0)   translate(22,0)" id="spindle_screw_1"/>
-        <use href="#spindle-screw" transform="rotate(60)  translate(22,0)" id="spindle_screw_1"/>
-        <use href="#spindle-screw" transform="rotate(120) translate(22,0)" id="spindle_screw_2"/>
-        <use href="#spindle-screw" transform="rotate(180) translate(22,0)" id="spindle_screw_2"/>
-        <use href="#spindle-screw" transform="rotate(240) translate(22,0)" id="spindle_screw_2"/>
-        <use href="#spindle-screw" transform="rotate(300) translate(22,0)" id="spindle_screw_3"/>
+        <use href="#spindle-screw" transform="rotate(60)  translate(22,0)" id="spindle_screw_2"/>
+        <use href="#spindle-screw" transform="rotate(120) translate(22,0)" id="spindle_screw_3"/>
+        <use href="#spindle-screw" transform="rotate(180) translate(22,0)" id="spindle_screw_4"/>
+        <use href="#spindle-screw" transform="rotate(240) translate(22,0)" id="spindle_screw_5"/>
+        <use href="#spindle-screw" transform="rotate(300) translate(22,0)" id="spindle_screw_6"/>
       </g>
     </g>
   </g>
