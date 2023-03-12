@@ -27,6 +27,9 @@ import shapely.geometry
 import shapely.ops
 
 from shapely_utils import ShapelyUtils
+from shapely_ext import ShapelyMultiPolygonOffset
+from shapely_ext import ShapelyMultiPolygonOffsetInteriors
+
 from matplotlib_utils import MatplotLibUtils
 
 
@@ -48,94 +51,18 @@ class cam:
     '''
     '''
     @classmethod
-    def pocket(cls, geometry: shapely.geometry.MultiPolygon, cutter_dia: float, overlap: float, climb: bool) -> List[CamPath] :
+    def pocket(cls, multipoly: shapely.geometry.MultiPolygon, cutter_dia: float, overlap: float, climb: bool) -> List[CamPath] :
         '''
-        Compute paths for pocket operation on Shapely geometry. 
+        Compute paths for pocket operation on Shapely multipolygon. 
         
         Returns array of CamPath.
         
         cutter_dia is in "UserUnit" units. 
         overlap is in the range [0, 1).
         '''
-        #new_algo = False
-        #if new_algo:
-        #    for poly in geometry.geoms:
-        #        pc = PocketCalculator(poly, cutter_dia, overlap, climb)
-        #        pc.calculate()
-        #        return pc.camPath
-
-        # use polygons exteriors lines - offset them and and diff with the offseted interiors if any
-        geometry = ShapelyUtils.orientMultiPolygon(geometry)
-
-        MatplotLibUtils.MatplotlibDisplay("geom pocket init", geometry, force=False)
-
-        # the exterior
-        current = ShapelyUtils.offsetMultiPolygon(geometry, cutter_dia / 2, 'left', consider_interiors_offsets=True)
-
-        MatplotLibUtils.MatplotlibDisplay("geom pocket first offset", current, force=False)
-            
-        if len(current.geoms) == 0:
-            # cannot offset ! maybe geometry too narrow for the cutter
-            return []
-
-        # bound must be the exterior enveloppe + the interiors polygons
-        # no! the bounds are from the first offset with width cutter_dia / 2
-        #bounds = geometry 
-        bounds = shapely.geometry.MultiPolygon(current)
-
-        allPaths : List[shapely.geometry.LineString] = []
-
-        # -------------------------------------------------------------
-        def collect_paths(multi_offset, allPaths: List[shapely.geometry.LineString]):
-            lines_ok = []
-            
-            for offset in multi_offset:
-                if offset.geom_type == 'LineString':
-                    if len(list(offset.coords)) > 0:
-                        lines_ok.append(offset)
-
-                    #print("---- SIMPLIFY #nb pts = ", len(list(offset.coords)))
-                    print("---- SIMPLIFY len = ", offset.length)
-
-                if offset.geom_type == 'MultiLineString':
-                    for geom in offset.geoms:
-                        if geom.geom_type == 'LineString':
-                            if len(list(geom.coords)) > 0:
-                                lines_ok.append(geom)
-
-                            print("---- SIMPLIFY #nb pts = ", len(list(geom.coords)))
-                            print("---- SIMPLIFY len = ", geom.length)
-
-            allPaths = lines_ok + allPaths
-
-            return allPaths
-        # -------------------------------------------------------------
-
-        while True:
-            #if climb:
-            #    for line in current:
-            #        line.reverse()
-
-            exteriors = [ShapelyUtils.multiPolyToMultiLine(current)]
-
-            allPaths = collect_paths(exteriors, allPaths)
-
-            current = ShapelyUtils.offsetMultiPolygon(current, cutter_dia * (1 - overlap), 'left', consider_interiors_offsets=False)
-
-            if not current:
-                break
-            current = ShapelyUtils.simplifyMultiPoly(current, 0.001)
-            if not current:
-                break
-            current = ShapelyUtils.orientMultiPolygon(current)
-
-        # last: make beautiful interiors, only 1 step
-        interiors = ShapelyUtils.offsetMultiPolygonInteriors(geometry, cutter_dia / 2, 'left', consider_exteriors_offsets=True)
-        interiors_offsets = [ShapelyUtils.multiPolyToMultiLine(interiors)]
-        allPaths = collect_paths(interiors_offsets, allPaths)
-        # - done !
-
-        return cls.mergePaths(bounds, allPaths)
+        pc = pocket_calculator(multipoly, cutter_dia, overlap, climb)
+        pc.pocket()
+        return pc.cam_paths
 
     @classmethod
     def outline(cls, geometry: shapely.geometry.MultiPolygon, cutter_dia: float, isInside: bool, width: float, overlap: float, climb: bool) -> List[CamPath] :
@@ -241,7 +168,7 @@ class cam:
     @classmethod
     def engrave(cls, geometry: shapely.geometry.MultiPolygon, climb: bool) -> List[CamPath] :
         '''
-        Compute paths for engrave operation on Shapely geometry. 
+        Compute paths for engrave operation on Shapely multipolygon. 
         
         Returns array of CamPath.
         '''
@@ -715,3 +642,203 @@ class cam:
             gcode += retractGcode
 
         return gcode
+    
+
+
+
+
+
+class pocket_calculator:
+    '''
+    '''
+    def __init__(self, multipoly: shapely.geometry.MultiPolygon, cutter_dia: float, overlap: float, climb: bool):
+        '''
+        cutter_dia is in user units. 
+        overlap is in the range [0, 1].
+        '''
+        self.multipoly = multipoly
+
+        self.cutter_dia = cutter_dia
+        self.overlap = overlap
+        self.climb = climb
+
+        self.resolution = 16
+        self.join_style = 1
+        self.mitre_limit = 5.0
+
+
+        # result of a the calculation
+        self.cam_paths : List[CamPath] = [] 
+
+        # temp variables
+        self.all_paths : List[shapely.geometry.LineString] = []
+
+    def pocket(self):
+        '''
+        main algo
+        '''
+        # use polygons exteriors lines - offset them and and diff with the offseted interiors if any
+        multipoly = ShapelyUtils.orientMultiPolygon(self.multipoly)
+        
+        MatplotLibUtils.MatplotlibDisplay("multipoly pocket init", self.multipoly)
+        
+        # the exterior
+        current = self.offsetMultiPolygon(multipoly, self.cutter_dia / 2, 'left', consider_interiors_offsets=True)
+        
+        MatplotLibUtils.MatplotlibDisplay("multipoly pocket first offset", current, force=False)
+
+        if len(current.geoms) == 0:
+            # cannot offset ! maybe geometry too narrow for the cutter
+            return []
+                
+        # bound must be the exterior enveloppe + the interiors polygons
+        # no! the bounds are from the first offset with width cutter_dia / 2
+        #bounds = multipoly 
+        bounds = shapely.geometry.MultiPolygon(current)
+
+        # --------------------------------------------------------------------
+      
+        while True:
+            #if climb:
+            #    for line in current:
+            #        line.reverse()
+
+            exteriors = ShapelyUtils.multiPolyToMultiLine(current)
+
+            self.collectPaths(exteriors)
+
+            current = self.offsetMultiPolygon(current, self.cutter_dia * (1 - self.overlap), 'left', consider_interiors_offsets=False)
+            
+            if not current:
+                break
+            current = ShapelyUtils.simplifyMultiPoly(current, 0.001)
+            if not current:
+                break
+            current = ShapelyUtils.orientMultiPolygon(current)
+
+        # last: make beautiful interiors, only 1 step
+        interiors = self.offsetMultiPolygonInteriors(multipoly, self.cutter_dia / 2, 'left', consider_exteriors_offsets=True)
+        interiors_offsets = ShapelyUtils.multiPolyToMultiLine(interiors)
+        self.collectPaths(interiors_offsets)
+        # - done !
+
+        self.mergePaths(bounds, self.all_paths)
+ 
+    def offsetMultiPolygon(self, multipoly: shapely.geometry.MultiPolygon, amount: float, side: str, consider_interiors_offsets=False) -> shapely.geometry.MultiPolygon:
+        '''
+        Generate offseted polygons.
+        '''
+        offseter = ShapelyMultiPolygonOffset(multipoly)
+        return offseter.offset(amount, side, consider_interiors_offsets, self.resolution, self.join_style, self.mitre_limit)
+
+    def offsetMultiPolygonInteriors(self, multipoly: shapely.geometry.MultiPolygon, amount: float, side: str, consider_exteriors_offsets=False) -> shapely.geometry.MultiPolygon:
+        '''
+        Generate offseted polygons from the polygons interiors
+        '''
+        offseter = ShapelyMultiPolygonOffsetInteriors(multipoly)
+        return offseter.offset(amount, side, consider_exteriors_offsets, self.resolution, self.join_style, self.mitre_limit)
+
+    def collectPaths(self, multiline: shapely.geometry.MultiLineString):
+        '''
+        ''' 
+        lines_ok = []
+            
+        for line in multiline.geoms:
+            if len(list(line.coords)) > 0:
+                lines_ok.append(line)
+
+        self.all_paths = lines_ok + self.all_paths
+  
+    def mergePaths(self, _bounds: shapely.geometry.MultiPolygon, paths: List[shapely.geometry.LineString]) -> List[CamPath] :
+        '''
+        Try to merge paths. A merged path doesn't cross outside of bounds AND the interior polygons
+        '''
+        #MatplotLibUtils.MatplotlibDisplay("mergePath", shapely.geometry.MultiLineString(paths), force=True)
+
+        if _bounds and len(_bounds.geoms) > 0:
+            bounds = _bounds
+        else: 
+            bounds = shapely.geometry.MultiPolygon()
+ 
+ 
+        ext_lines = ShapelyUtils.multiPolyToMultiLine(bounds)
+        int_polys = []
+        for poly in bounds.geoms:
+            if poly.interiors:
+                for interior in poly.interiors:
+                    int_poly = shapely.geometry.Polygon(interior)
+                    int_polys.append(int_poly)
+        if int_polys:
+            int_multipoly = shapely.geometry.MultiPolygon(int_polys)
+        else:
+            int_multipoly = None
+
+        # std list
+        thepaths = [ list(path.coords) for path in paths ]
+        paths = thepaths
+
+        currentPath = paths[0]
+        
+        pathEndPoint = currentPath[-1]
+        pathStartPoint = currentPath[0]
+
+        # close if start/end point not equal - why ? I could have simple lines!
+        if pathEndPoint[0] != pathStartPoint[0] or pathEndPoint[1] != pathStartPoint[1]:
+            currentPath = currentPath + [pathStartPoint]
+        
+        currentPoint = currentPath[-1]
+        paths[0] = [] # empty
+
+        mergedPaths : List[shapely.geometry.LineString] = [] 
+        numLeft = len(paths) - 1
+
+        while numLeft > 0 :
+            closestPathIndex = None
+            closestPointIndex = None
+            closestPointDist = sys.maxsize
+            for pathIndex, path in enumerate(paths):
+                for pointIndex, point in enumerate(path):
+                    dist = pocket_calculator.distP(currentPoint, point)
+                    if dist < closestPointDist:
+                        closestPathIndex = pathIndex
+                        closestPointIndex = pointIndex
+                        closestPointDist = dist
+
+            path = paths[closestPathIndex]
+            paths[closestPathIndex] = [] # empty
+            numLeft -= 1
+            needNew = ShapelyUtils.crosses(ext_lines, currentPoint, path[closestPointIndex])
+            if (not needNew) and int_multipoly:
+                needNew = ShapelyUtils.crosses(int_multipoly, currentPoint, path[closestPointIndex])
+
+            # JSCUT path = path.slice(closestPointIndex, len(path)).concat(path.slice(0, closestPointIndex))
+            path = path[closestPointIndex:] + path[:closestPointIndex]
+            path.append(path[0])
+
+            if needNew:
+                mergedPaths.append(currentPath)
+                currentPath = path
+                currentPoint = currentPath[-1]
+            else:
+                currentPath = currentPath + path
+                currentPoint = currentPath[-1]
+
+        mergedPaths.append(currentPath)
+
+        cam_paths : List[CamPath] = []
+        for path in mergedPaths:
+            safeToClose = not ShapelyUtils.crosses(bounds, path[0], path[-1])
+            cam_paths.append( CamPath( shapely.geometry.LineString(path), safeToClose) )
+
+        self.cam_paths = cam_paths
+
+    @staticmethod
+    def dist(x1: float, y1: float, x2: float, y2: float) -> float :
+        dx = x2 - x1
+        dy = y2 - y1
+        return dx * dx + dy * dy
+    
+    @staticmethod
+    def distP(p1:Tuple[int,int], p2:Tuple[int,int]) -> float :
+        return pocket_calculator.dist(p1[0], p1[1], p2[0], p2[1])
+   

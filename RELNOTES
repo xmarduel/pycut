@@ -5,8 +5,7 @@ Can process defs/use and transformations in svg (ie resolve them)
 
 # 0.4.0
 
-with shapely 2.0
-with svgelements 1.9.0
+with shapely 2.0.1
 
 # 0.3.6
 
