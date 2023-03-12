@@ -8,11 +8,14 @@
   xmlns="http://www.w3.org/2000/svg"
   xmlns:svg="http://www.w3.org/2000/svg">
   <defs id="defs">
-    <circle id="backlash_item_hole"
+    <!-- 10mm or 10.3 mm ??  -->
+    <circle id="backlash_item_hole" 
       style="font-variation-settings:normal;vector-effect:none;fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.352776;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
       cx="0"
       cy="0"
-      r="4" />
+      r="5" />
+
+    <!-- 2.0mm or 3.5 mm ??  -->
     <circle id="backlash_item_screw_2.0mm"
       style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
       cx="0"
@@ -26,10 +29,10 @@
 
     <!-- cut through -->
     <g id="layer_backlash_item_screws">
-      <use href="#backlash_item_screw_2.0mm" transform="rotate(0)   translate(7,0)"  id="backlash_item_screw_2.0mm_E" />
-	   <use href="#backlash_item_screw_2.0mm" transform="rotate(90)  translate(7,0)"  id="backlash_item_screw_2.0mm_S" />
-	   <use href="#backlash_item_screw_2.0mm" transform="rotate(180) translate(7,0)"  id="backlash_item_screw_2.0mm_W" />
-	   <use href="#backlash_item_screw_2.0mm" transform="rotate(270) translate(7,0)"  id="backlash_item_screw_2.0mm_N" />
+      <use href="#backlash_item_screw_2.0mm" transform="rotate(0)   translate(8,0)"  id="backlash_item_screw_2.0mm_E" />
+	    <use href="#backlash_item_screw_2.0mm" transform="rotate(90)  translate(8,0)"  id="backlash_item_screw_2.0mm_S" />
+	    <use href="#backlash_item_screw_2.0mm" transform="rotate(180) translate(8,0)"  id="backlash_item_screw_2.0mm_W" />
+	    <use href="#backlash_item_screw_2.0mm" transform="rotate(270) translate(8,0)"  id="backlash_item_screw_2.0mm_N" />
     </g>
   </g>
 </svg>

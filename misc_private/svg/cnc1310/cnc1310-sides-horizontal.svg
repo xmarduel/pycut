@@ -33,11 +33,11 @@
       cy="0"
       r="5.0" />
 
-    <circle id="motor_screw_2.0mm"
+    <circle id="motor_screw_3.0mm"
       style="font-variation-settings:normal;vector-effect:none;fill:#00ffff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.314309;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
       cx="0"
       cy="0"
-      r="1.0" />
+      r="1.5" />
 
     <circle id="motor_screw_hole_4.0mm"
       style="opacity:0.5;font-variation-settings:normal;vector-effect:none;fill:#00ffff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.314309;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
@@ -53,15 +53,15 @@
 
   </defs>
   
-  <g id="layer">
+  <g id="main">
      
     <path id="contour" style="fill:rgb(0,125,125);stroke:#0000ff;stroke-width:0.261315px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
       d="M 11,0          h 52  
-      a 4,4 0 0 1 4,4    v 26  
-      C 67 34 74 34  74 38  v 42
+      a 4,4 0 0 1 4,4    v 27.5  
+      C 67 35.5 74 35.5  74 39.5  v 42
       a 4,4 0 0 1 -4,4   h -66
       a 4,4 0 0 1 -4,-4  v -42
-      C 0 34 7 34  7 30  v -26
+      C 0 35.5 7 35.5  7 30  v -27.5
       a 4,4 0 0 1 4,-4   z" />
 
     <!--
@@ -69,64 +69,68 @@
     <use href="#plate_2" />
     -->
 
-    <rect id="motor_base" x="16" y="42" rx="4" ry="4" width="42" height="42" style="fill:rgb(0,0,0);opacity:0.4;stroke-width:0;stroke:rgb(0,0,0)" />
+    <g id="motor_base" transform="translate(16 43.5)">
+      <rect id="motor_base" rx="4" ry="4" width="42" height="42" style="fill:rgb(0,0,0);opacity:0.4;stroke-width:0;stroke:rgb(0,0,0)" />
       
-    <use href="#motor_screw_2.0mm" transform="translate(20 80)" id="motor_screw_2.0mm_NW" />
-    <use href="#motor_screw_2.0mm" transform="translate(54 80)" id="motor_screw_2.0mm_NE" />
-    <use href="#motor_screw_2.0mm" transform="translate(20 46)" id="motor_screw_2.0mm_NW" />
-    <use href="#motor_screw_2.0mm" transform="translate(54 46)" id="motor_screw_2.0mm_NE" />
-
-    <use href="#motor_screw_hole_4.0mm" transform="translate(20 80)" id="motor_screw_hole_4.0mm_NW" />
-    <use href="#motor_screw_hole_4.0mm" transform="translate(54 80)" id="motor_screw_hole_4.0mm_NE" />
-    <use href="#motor_screw_hole_4.0mm" transform="translate(20 46)" id="motor_screw_hole_4.0mm_NW" />
-    <use href="#motor_screw_hole_4.0mm" transform="translate(54 46)" id="motor_screw_hole_4.0mm_NE" />
+      <g id="motor_center" transform="translate(21 21)">
+        <use href="#motor_screw_3.0mm" transform="translate(15.5 15.5)" id="motor_screw_3.0mm_NW" />
+        <use href="#motor_screw_3.0mm" transform="translate(15.5 -15.5)" id="motor_screw_3.0mm_NE" />
+        <use href="#motor_screw_3.0mm" transform="translate(-15.5 -15.5)" id="motor_screw_3.0mm_NW" />
+        <use href="#motor_screw_3.0mm" transform="translate(-15.5 15.5)" id="motor_screw_3.0mm_NE" />
      
-    <use href="#h_screw_central_hole" x="37"  y="63"  id="screw_central_hole" />
+        <use href="#motor_screw_hole_4.0mm" transform="translate(15.5 15.5)" id="motor_screw_hole_4.0mm_NW" />
+        <use href="#motor_screw_hole_4.0mm" transform="translate(15.5 -15.5)" id="motor_screw_hole_4.0mm_NE" />
+        <use href="#motor_screw_hole_4.0mm" transform="translate(-15.5 -15.5)" id="motor_screw_hole_4.0mm_NW" />
+        <use href="#motor_screw_hole_4.0mm" transform="translate(-15.5 15.5)" id="motor_screw_hole_4.0mm_NE" />
+       </g>
+    </g>
 
-    <use href="#spacer_hole" transform="translate(8  63)" id="spacer_hole_L" />
-    <use href="#spacer_hole" transform="translate(66 63)" id="spacer_hole_R" />
+    <use href="#h_screw_central_hole" x="37"  y="64.5"  id="screw_central_hole" />
 
-    <use href="#spacer_screw_hole_10.0mm" transform="translate(8  63)" id="#spacer_screw_hole_10.0mm_L1" />
-    <use href="#spacer_screw_hole_10.0mm" transform="translate(66 63)" id="#spacer_screw_hole_10.0mm_R1" />
+    <use href="#spacer_hole" transform="translate(8  64.5)" id="spacer_hole_L" />
+    <use href="#spacer_hole" transform="translate(66 64.5)" id="spacer_hole_R" />
+
+    <use href="#spacer_screw_hole_10.0mm" transform="translate(8  64.5)" id="#spacer_screw_hole_10.0mm_L1" />
+    <use href="#spacer_screw_hole_10.0mm" transform="translate(66 64.5)" id="#spacer_screw_hole_10.0mm_R1" />
       
-    <use href="#spacer_screw_5.0mm" transform="translate(8  63)" id="spacer_screw_5.0mm_L1" />
-    <use href="#spacer_screw_5.0mm" transform="translate(66 63)" id="spacer_screw_5.0mm_R1" />
+    <use href="#spacer_screw_5.0mm" transform="translate(8  64.5)" id="spacer_screw_5.0mm_L1" />
+    <use href="#spacer_screw_5.0mm" transform="translate(66 64.5)" id="spacer_screw_5.0mm_R1" />
 
     <!--   screws on vertical alu profile -->
-    <use href="#spacer_screw_hole_10.0mm" transform="translate(27  36)" id="#spacer_screw_hole_10.0mm_L2" />
-    <use href="#spacer_screw_hole_10.0mm" transform="translate(47  36)" id="#spacer_screw_hole_10.0mm_R2" />
+    <use href="#spacer_screw_hole_10.0mm" transform="translate(27  37.5)" id="#spacer_screw_hole_10.0mm_L2" />
+    <use href="#spacer_screw_hole_10.0mm" transform="translate(47  37.5)" id="#spacer_screw_hole_10.0mm_R2" />
 
-    <use href="#spacer_screw_5.0mm" transform="translate(27 36)" id="spacer_screw_5.0mm_L2" />
-    <use href="#spacer_screw_5.0mm" transform="translate(47 36)" id="spacer_screw_5.0mm_R2" />
+    <use href="#spacer_screw_5.0mm" transform="translate(27 37.5)" id="spacer_screw_5.0mm_L2" />
+    <use href="#spacer_screw_5.0mm" transform="translate(47 37.5)" id="spacer_screw_5.0mm_R2" />
       
     <!-- some arrows to display distances -->
 
-    <path id="line_h_36" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 0,36  84,36" />
-    <path id="line_h_63" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 0,63  84,63" />
-    <path id="line_h_84" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 0,84  84,84" />
+    <path id="line_h_36" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 0,37.5  84,37.5" />
+    <path id="line_h_63" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 0,64.5  84,64.5" />
+    <path id="line_h_84" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 0,85.5  84,85.5" />
       
     <!-- vertical lines -->
-    <path id="line_v_37"      style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"        d="M 37,0  37,84" />
+    <path id="line_v_37"      style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"        d="M 37,0  37,85.5" />
 
-    <path id="arrow_v_dist36" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 84,0  L 84,36" />
+    <path id="arrow_v_dist36" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 84,0  L 84,37.5" />
     
     <use href="#arrow_up" transform="translate(84 0)" />
-    <use href="#arrow_dw" transform="translate(84 36)" />
-    <text x="85" y="20" xml:space="preserve" style="font-size:5px">36</text>
+    <use href="#arrow_dw" transform="translate(84 37.5)" />
+    <text x="85" y="20" xml:space="preserve" style="font-size:5px">37.5</text>
 
-    <path id="arrowe_v_dist36" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 84,36  L 84,63" />
-    <use href="#arrow_up" transform="translate(84 36)" />
-    <use href="#arrow_dw" transform="translate(84 63)" />
+    <path id="arrowe_v_dist36" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 84,37  L 84,64.5" />
+    <use href="#arrow_up" transform="translate(84 37.5)" />
+    <use href="#arrow_dw" transform="translate(84 64.5)" />
     <text x="85" y="52" xml:space="preserve" style="font-size:5px">27</text>
 
-    <path id="arrowe_v_dist36" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 84,63  L 84,84" />
-    <use href="#arrow_up" transform="translate(84 63)" />
-    <use href="#arrow_dw" transform="translate(84 84)" />
+    <path id="arrowe_v_dist21" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 84,64.5  L 84,85.5" />
+    <use href="#arrow_up" transform="translate(84 64.5)" />
+    <use href="#arrow_dw" transform="translate(84 85.5)" />
     <text x="85" y="75" xml:space="preserve" style="font-size:5px">21</text>
 
-    <path id="arrowe_v_dist84" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 94,0  L 94,84" />
+    <path id="arrowe_v_dist84" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 94,0  L 94,85.5" />
     <use href="#arrow_up" transform="translate(94 0)" />
-    <use href="#arrow_dw" transform="translate(94 84)" />
-    <text x="95" y="46" xml:space="preserve" style="font-size:5px">84</text>
+    <use href="#arrow_dw" transform="translate(94 85.5)" />
+    <text x="95" y="46" xml:space="preserve" style="font-size:5px">85.5</text>
   </g>
 </svg>

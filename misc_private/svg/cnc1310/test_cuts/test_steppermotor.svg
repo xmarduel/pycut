@@ -10,13 +10,16 @@
 >
   <defs id="defs">
     <rect id="motor_base" rx="4" ry="4" width="42" height="42" style="fill:rgb(0,0,0);opacity:0.4;stroke-width:0;stroke:rgb(0,0,0)" />
+    <rect id="motor_support" rx="4" ry="4" width="52" height="52" style="fill:rgb(155,77,0);opacity:0.5;stroke-width:0;stroke:rgb(0,0,0)" />
       
-    <circle id="motor_screw_2.0mm"
+    <!-- screws are 3mm diameter 9mm long-->
+    <circle id="motor_screw_3.0mm"
       style="font-variation-settings:normal;vector-effect:none;fill:#00ffff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.314309;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
       cx="0"
       cy="0"
-      r="1.0" />
+      r="1.5" />
 
+    <!-- hole depth = 5mm to disappear into the plate -->
     <circle id="motor_screw_hole_4.0mm"
       style="opacity:0.5;font-variation-settings:normal;vector-effect:none;fill:#00ffff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.314309;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
       cx="0"
@@ -25,21 +28,38 @@
   </defs>
 
   <g id="layer" transform="translate(19,19)">
-    <!-- just as indicator , no ops -->
-    <use href="#motor_base" />
+    <!-- so that the motor is centered on [40;40] -->
+    
+    <use href="#motor_base" /> <!-- just as indicator , no ops -->
+    <use href="#motor_support" transform="translate(-5 -5)" />
   </g>
 
   <g id="layer_screws_and_holes" transform="translate(40,40)">  
     <!-- cut through material -->
-    <use href="#motor_screw_2.0mm" transform="rotate(45)  translate(24 0)" id="motor_screw_2.0mm_NW" />
-    <use href="#motor_screw_2.0mm" transform="rotate(135) translate(24 0)" id="motor_screw_2.0mm_NE" />
-    <use href="#motor_screw_2.0mm" transform="rotate(225) translate(24 0)" id="motor_screw_2.0mm_NW" />
-    <use href="#motor_screw_2.0mm" transform="rotate(315) translate(24 0)" id="motor_screw_2.0mm_NE" />
+    <!--
+    <use href="#motor_screw_3.0mm" transform="rotate(45)  translate(24 0)" id="motor_screw_3.0mm_NW" />
+    <use href="#motor_screw_3.0mm" transform="rotate(135) translate(24 0)" id="motor_screw_3.0mm_NE" />
+    <use href="#motor_screw_3.0mm" transform="rotate(225) translate(24 0)" id="motor_screw_3.0mm_NW" />
+    <use href="#motor_screw_3.0mm" transform="rotate(315) translate(24 0)" id="motor_screw_3.0mm_NE" />
+    -->
 
-    <!-- pocket 2mm so that the screws heads are hidden in material -->
+    <!-- pocket 5mm so that the screws heads are hidden in material and can reach their holes -->
+    <!--
     <use href="#motor_screw_hole_4.0mm" transform="rotate(45)  translate(24 0)" id="motor_screw_hole_4.0mm_NW" />
     <use href="#motor_screw_hole_4.0mm" transform="rotate(135) translate(24 0)" id="motor_screw_hole_4.0mm_NE" />
     <use href="#motor_screw_hole_4.0mm" transform="rotate(225) translate(24 0)" id="motor_screw_hole_4.0mm_NW" />
     <use href="#motor_screw_hole_4.0mm" transform="rotate(315) translate(24 0)" id="motor_screw_hole_4.0mm_NE" />
+    -->
+
+    <use href="#motor_screw_3.0mm" transform="translate(15.5 15.5 )"   id="motor_screw_3.0mm_NW" />
+    <use href="#motor_screw_3.0mm" transform="translate(15.5 -15.5 )"  id="motor_screw_3.0mm_NW" />
+    <use href="#motor_screw_3.0mm" transform="translate(-15.5 -15.5 )" id="motor_screw_3.0mm_NW" />
+    <use href="#motor_screw_3.0mm" transform="translate(-15.5 15.5 )"  id="motor_screw_3.0mm_NW" />
+
+    <use href="#motor_screw_hole_4.0mm" transform="translate(15.5 15.5 )"  id="motor_screw_hole_4.0mm_NW" />
+    <use href="#motor_screw_hole_4.0mm" transform="translate(15.5 -15.5 )"  id="motor_screw_hole_4.0mm_NE" />
+    <use href="#motor_screw_hole_4.0mm" transform="translate(-15.5 -15.5 )" id="motor_screw_hole_4.0mm_NW" />
+    <use href="#motor_screw_hole_4.0mm" transform="translate(-15.5 15.5 )"  id="motor_screw_hole_4.0mm_NE" />
+    
   </g>
 </svg>

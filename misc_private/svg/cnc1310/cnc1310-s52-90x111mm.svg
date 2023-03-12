@@ -13,7 +13,7 @@
       cx="0" cy="0" r="11" />
 	  <circle id="z_screw_backlash_item_hole"
       style="font-variation-settings:normal;vector-effect:none;fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.352776;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-      cx="0" cy="0" r="4" />
+      cx="0" cy="0" r="5" />
 	  <circle id="z_screw_backlash_item_screw_2.0mm"
       style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
       cx="0" cy="0" r="1.0" />
@@ -22,7 +22,7 @@
     <circle id="bearing_cylinder" style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.388054;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
       cx="0" cy="0" r="10.5" />
     <circle id="bearing_screw_4.5mm" style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
-      cx="0"cy="0" r="2.25" />
+      cx="0" cy="0" r="2.25" />
 	  <circle id="spacer" style="font-variation-settings:normal;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.211666;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
       cx="0" cy="0" r="6" />
     <circle id="spacer_screw_5.0mm" style="font-variation-settings:normal;vector-effect:none;fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.314309;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"

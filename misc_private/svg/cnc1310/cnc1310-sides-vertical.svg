@@ -18,7 +18,7 @@
       style="font-variation-settings:normal;vector-effect:none;fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.352776;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
       cx="0"
       cy="0"
-      r="4" />
+      r="5" />
 	  <circle id="h_screw_backlash_item_screw_2.0mm"
       style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
       cx="0"
@@ -52,7 +52,7 @@
   </defs>
   
   <g id="layer">
-    <rect id="PLATE" x="0" y="0" rx="1" ry="1" width="100" height="50" style="fill:rgb(0,125,125);stroke-width:0;stroke:rgb(0,0,0)" />
+    <rect id="PLATE" x="0" y="0" rx="1" ry="1" width="100" height="47.5" style="fill:rgb(0,125,125);stroke-width:0;stroke:rgb(0,0,0)" />
       
     <use href="#h_screw_central_hole" x="50"  y="16"  id="screw_central_hole" />
 
@@ -71,10 +71,10 @@
     <use href="#bearing_screw_4.5mm" x="72.68"  y="27.32" id="RIGHT_bearing_screw_4.5mm_NW" />
     <use href="#bearing_screw_4.5mm" x="95.32"  y="27.32" id="RIGHT_bearing_screw_4.5mm_NE" />
    
-    <use href="#spacer_screw_5.0mm" x="12.5"  y="38" />
-    <use href="#spacer_screw_5.0mm" x="37.5"  y="38" />
-    <use href="#spacer_screw_5.0mm" x="62.5"  y="38" />
-    <use href="#spacer_screw_5.0mm" x="87.5"  y="38" />
+    <use href="#spacer_screw_5.0mm" x="12.5"  y="37.5" />
+    <use href="#spacer_screw_5.0mm" x="37.5"  y="37.5" />
+    <use href="#spacer_screw_5.0mm" x="62.5"  y="37.5" />
+    <use href="#spacer_screw_5.0mm" x="87.5"  y="37.5" />
    
 
     <use href="#h_screw_backlash_item_hole" x="50"  y="16"  id="screw_backlash_item_hole" />
@@ -86,27 +86,39 @@
 
     <!-- guides -->
 
-    <path id="line_v_1" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 12.5,0  12.5,60" />
-    <path id="line_v_2" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 37.5,0  37.5,60" />
-    <path id="line_v_2" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 62.5,0  62.5,60" />
-    <path id="line_v_2" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 87.5,0  87.5,60" />
-    <path id="line_v_2" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 100,0   100,60"  />
-    <path id="line_h_2" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 0,60    100,60"  />
+    <path id="line_v_1" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 12.5,0  12.5,55" />
+    <path id="line_v_2" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 37.5,0  37.5,55" />
+    <path id="line_v_3" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 50.0,0  50.0,55" />
+    <path id="line_v_4" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 62.5,0  62.5,55" />
+    <path id="line_v_5" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 87.5,0  87.5,55" />
+    <path id="line_v_6" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 100,0   100,55"  />
+    <path id="line_h_7" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 0,55    100,55"  />
+    <path id="line_v_8" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 110,0   110,47.5"  />
+    <path id="line_v_9" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 105,37.5   105,47.5"  />
 
-    <use href="#arrow_up" transform="translate(12.5  60) rotate(90)" />
-    <use href="#arrow_dw" transform="translate(0     60) rotate(90)" />
+    <use href="#arrow_up" transform="translate(12.5  55) rotate(90)" />
+    <use href="#arrow_dw" transform="translate(0     55) rotate(90)" />
 
-    <use href="#arrow_up" transform="translate(37.5  60) rotate(90)" />
-    <use href="#arrow_dw" transform="translate(12.5  60) rotate(90)" />
+    <use href="#arrow_up" transform="translate(37.5  55) rotate(90)" />
+    <use href="#arrow_dw" transform="translate(12.5  55) rotate(90)" />
 
-    <use href="#arrow_up" transform="translate(62.5  60) rotate(90)" />
-    <use href="#arrow_dw" transform="translate(37.5  60) rotate(90)" />
+    <use href="#arrow_up" transform="translate(50  55) rotate(90)" />
+    <use href="#arrow_dw" transform="translate(50  55) rotate(90)" />
 
-    <use href="#arrow_up" transform="translate(87.5  60) rotate(90)" />
-    <use href="#arrow_dw" transform="translate(62.5  60) rotate(90)" />
+    <use href="#arrow_up" transform="translate(62.5  55) rotate(90)" />
+    <use href="#arrow_dw" transform="translate(37.5  55) rotate(90)" />
 
-    <use href="#arrow_up" transform="translate(100   60) rotate(90)" />
-    <use href="#arrow_dw" transform="translate(87.5  60) rotate(90)" />
+    <use href="#arrow_up" transform="translate(87.5  55) rotate(90)" />
+    <use href="#arrow_dw" transform="translate(62.5  55) rotate(90)" />
+
+    <use href="#arrow_up" transform="translate(100   55) rotate(90)" />
+    <use href="#arrow_dw" transform="translate(87.5  55) rotate(90)" />
+
+    <use href="#arrow_up" transform="translate(110   0) rotate(0)" />
+    <use href="#arrow_dw" transform="translate(110  47.5) rotate(0)" />
+
+    <use href="#arrow_up" transform="translate(105  37.5) rotate(0)" />
+    <use href="#arrow_dw" transform="translate(105  47.5) rotate(0)" />
 
   </g>
 </svg>
