@@ -1,4 +1,4 @@
-# Copyright 2014 Xavier
+# Copyright 2022 Xavier
 #
 # This file is part of pycut.
 #
