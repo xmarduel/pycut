@@ -16,8 +16,7 @@ import shapely.validation
 from shapely.validation import make_valid
 from shapely.validation import explain_validity
 
-from matplotlib_utils import MatplotLibUtils
-
+from shapely_matplotlib import MatplotLibUtils
 from shapely_utils import ShapelyUtils
 
 

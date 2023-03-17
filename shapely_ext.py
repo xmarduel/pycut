@@ -21,7 +21,7 @@ import shapely.ops
 from shapely.geometry.base import JOIN_STYLE
 
 from shapely_utils import ShapelyUtils
-from matplotlib_utils import MatplotLibUtils
+from shapely_matplotlib import MatplotLibUtils
 
 
 class ShapelyMultiPolygonOffset:

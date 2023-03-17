@@ -24,8 +24,7 @@ import shapely.geometry
 
 from shapely_utils import ShapelyUtils
 from shapely_svgpath_io import SvgPath
-
-from matplotlib_utils import MatplotLibUtils
+from shapely_matplotlib import MatplotLibUtils
 
 from svgviewer import SvgViewer
 

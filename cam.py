@@ -29,8 +29,7 @@ import shapely.ops
 from shapely_utils import ShapelyUtils
 from shapely_ext import ShapelyMultiPolygonOffset
 from shapely_ext import ShapelyMultiPolygonOffsetInteriors
-
-from matplotlib_utils import MatplotLibUtils
+from shapely_matplotlib import MatplotLibUtils
 
 
 class CamPath:
