@@ -20,7 +20,7 @@ from PySide6.QtUiTools import QUiLoader
 # from gcodesimulator.python.parser.gcodeminiparser import GcodeMiniParser
 #import gcodesimulator.python.widgets.glwidget_container as glwidget_simulator_container
 
-import svgpathutils
+import shapely_svgpath_io
 
 from val_with_unit import ValWithUnit
 
@@ -682,13 +682,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         seems to be redundant with cb_curve_min_segments_length
         '''
         value = self.ui.spinBox_CurveToLineConversion_MinimumNbSegments.value()
-        svgpathutils.SvgPath.set_arc_min_nb_segments(value)
+        shapely_svgpath_io.SvgPath.set_arc_min_nb_segments(value)
 
     def cb_curve_min_segments_length(self):
         '''
         '''
         value = self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.value()
-        svgpathutils.SvgPath.set_arc_precision(value)
+        shapely_svgpath_io.SvgPath.set_arc_precision(value)
 
     def cb_update_tabs_display(self):
         '''

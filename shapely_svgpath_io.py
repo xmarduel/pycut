@@ -10,9 +10,9 @@ import tempfile
 
 import numpy as np
 import svgpathtools
+
 import shapely.geometry
 import shapely.validation
-
 from shapely.validation import make_valid
 from shapely.validation import explain_validity
 
@@ -114,7 +114,6 @@ class SvgPath:
         #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
         #    # svgelements
         #    self.svg_path = svgelements.Path(self.p_attrs['d'])
-        
 
     def discretize(self) -> np.array :
         '''
@@ -287,7 +286,7 @@ class SvgPath:
         where all paths of the object list are a 'simple' paths 
         '''
         # make all "m" -> "M" for the separated paths
-        path_abs = self.svg_path.d()    # thanks svgpathutils!                             
+        path_abs = self.svg_path.d()    # thanks svgpathtools!                             
 
         # it's easy now
         paths = path_abs.split("M")
@@ -305,7 +304,7 @@ class SvgPath:
         
         return svgpaths
 
-    def _toShapelyLineString(self) -> shapely.geometry.LineString:
+    def import_as_linestring(self) -> shapely.geometry.LineString:
         '''
         '''
         np_svg_path = self.discretize()
@@ -316,7 +315,7 @@ class SvgPath:
 
         return line
 
-    def _toShapelySimplePolygon(self) -> shapely.geometry.Polygon:
+    def import_as_polygon(self) -> shapely.geometry.Polygon:
         '''
         '''
         np_svg_path = self.discretize()
@@ -327,7 +326,7 @@ class SvgPath:
 
         return poly
 
-    def toShapelyPolygons(self) -> List[shapely.geometry.Polygon]:
+    def import_as_polygons_list(self) -> List[shapely.geometry.Polygon]:
         '''
         The main method to transform a svg path into a polygon or a list of polygons
         - if only 1 [Mm] inside the svg path, then it is a simple [closed] line ie a polygon without holes
@@ -344,7 +343,7 @@ class SvgPath:
         polys = []
 
         if is_simple_path == True:
-            line = self._toShapelyLineString()
+            line = self.import_as_linestring()
             poly = shapely.geometry.Polygon(line)
 
             # a warning if the inital polygon is not valid! 
@@ -375,8 +374,8 @@ class SvgPath:
             # some of them will have holes, other not...
             data = {}
             for svgpath in svgpaths:
-                linestring = svgpath._toShapelyLineString()
-                s_polygon = svgpath._toShapelySimplePolygon()
+                linestring = svgpath.import_as_linestring()
+                s_polygon = svgpath.import_as_polygon()
 
                 data[svgpath.p_id] = {
                     "id": svgpath.p_id,
@@ -444,7 +443,7 @@ class SvgPath:
         return polys
 
     @classmethod
-    def fromShapelyLineString(cls, prefix: str, shapely_path: shapely.geometry.LineString, safeToClose: bool) -> 'SvgPath':
+    def from_shapely_linestring(cls, prefix: str, shapely_path: shapely.geometry.LineString, safeToClose: bool) -> 'SvgPath':
         '''
         '''
         pts = list(shapely_path.coords)
@@ -469,7 +468,7 @@ class SvgPath:
         return SvgPath(prefix, {'d': svg_path.d(), 'fill-rule': 'nonzero'})
 
     @classmethod
-    def fromShapelyPolygon(cls, prefix: str, polygon: shapely.geometry.Polygon) -> 'SvgPath':
+    def from_shapely_polygon(cls, prefix: str, polygon: shapely.geometry.Polygon) -> 'SvgPath':
         '''
         '''
         path_str = polygon.svg(scale_factor=0.1)
@@ -488,7 +487,7 @@ class SvgPath:
         return SvgPath(prefix, attribs) 
 
     @classmethod
-    def fromCircleDef(cls, center:float, radius: float) -> 'SvgPath':
+    def from_circle_def(cls, center:float, radius: float) -> 'SvgPath':
         '''
         PyCut Tab import in svg viewer
         '''

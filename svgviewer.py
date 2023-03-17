@@ -13,7 +13,7 @@ from PySide6 import QtSvgWidgets
 
 import xml.etree.ElementTree as etree
 
-from svgpathutils import SvgPath
+from shapely_svgpath_io import SvgPath
 
 from val_with_unit import ValWithUnit
 

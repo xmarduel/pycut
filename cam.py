@@ -305,7 +305,7 @@ class cam:
         # 1. from the tabs, build shapely (closed) tab polygons
         for tab_data in tabs:
             tab = Tab(tab_data)
-            shapely_tabs = tab.svg_path.toShapelyPolygons()
+            shapely_tabs = tab.svg_path.import_as_polygons_list()
             shapely_tabs_ += shapely_tabs
 
         # hey, multipolygons are good...

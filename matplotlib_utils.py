@@ -14,13 +14,14 @@ class MatplotLibUtils:
     cnt = 1 # matplotlib figures
 
     @classmethod
-    def MatplotlibDisplay(cls, title: str, geom: any, force: bool =False):
+    def MatplotlibDisplay(cls, title: str, geom: any, force: bool =False) -> int :
         '''
         '''
+        # a counter
+        cls.cnt += 1
+
         if cls.MAPLOTLIB_DEBUG == False and force == False:
             return
-
-        cls.cnt += 1
 
         # dispatch
         if geom.geom_type == 'LineString':
@@ -35,6 +36,8 @@ class MatplotLibUtils:
             cls._MatplotlibDisplayGeometryCollection(title, geom)
         else:
             pass
+
+        return cls.cnt
 
     @classmethod
     def rectify_y(cls, y) :

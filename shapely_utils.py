@@ -119,7 +119,11 @@ class ShapelyUtils:
     def offsetLine(cls, line: shapely.geometry.LineString, amount: float, side: str, resolution=16, join_style=1, mitre_limit=5.0) -> shapely.geometry.LineString | shapely.geometry.MultiLineString:
         '''
         '''
-        return line.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=mitre_limit)
+        # shapely 2.0 fix
+        if amount != 0.0:
+            return line.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=mitre_limit)
+        else:
+            return shapely.geometry.LineString(line)
 
     @classmethod
     def offsetMultiLine(cls, multiline: shapely.geometry.MultiLineString, amount: float, side: str, resolution=16, join_style=1, mitre_limit=5.0) -> shapely.geometry.MultiLineString:

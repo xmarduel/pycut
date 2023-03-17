@@ -22,11 +22,11 @@ from typing import Any
 import shapely
 import shapely.geometry
 
-from  shapely_utils import ShapelyUtils
+from shapely_utils import ShapelyUtils
+from shapely_svgpath_io import SvgPath
 
 from matplotlib_utils import MatplotLibUtils
 
-from svgpathutils import SvgPath
 from svgviewer import SvgViewer
 
 from cam import cam
@@ -205,7 +205,7 @@ class Tab:
     def make_svg_path(self):
         '''
         '''
-        path = SvgPath.fromCircleDef(self.center, self.radius)
+        path = SvgPath.from_circle_def(self.center, self.radius)
 
         return path
 
@@ -323,7 +323,7 @@ class CncOp:
         self.shapely_polygons : List[shapely.geometry.Polygon] = []
 
         for svg_path in self.svg_paths:
-            shapely_polygons = svg_path.toShapelyPolygons()
+            shapely_polygons = svg_path.import_as_polygons_list()
             self.shapely_polygons += shapely_polygons
 
         if len(self.shapely_polygons) == 0:
@@ -401,7 +401,7 @@ class CncOp:
             self.geometry_svg_paths = []
 
             for poly in self.preview_geometry.geoms:
-                geometry_svg_path = SvgPath.fromShapelyPolygon("pycut_geometry_pocket", poly)
+                geometry_svg_path = SvgPath.from_shapely_polygon("pycut_geometry_pocket", poly)
                 self.geometry_svg_paths.append(geometry_svg_path)
         
     def calculate_preview_geometry_inside(self, toolModel: ToolModel):
@@ -432,7 +432,7 @@ class CncOp:
          
         # should have 2 paths, one inner, one outer -> show the "ring"
         for poly in self.preview_geometry.geoms:
-            geometry_svg_path = SvgPath.fromShapelyPolygon("pycut_geometry_pocket", poly)
+            geometry_svg_path = SvgPath.from_shapely_polygon("pycut_geometry_pocket", poly)
             self.geometry_svg_paths.append(geometry_svg_path)
         
     def calculate_preview_geometry_outside(self, toolModel: ToolModel):
@@ -463,14 +463,14 @@ class CncOp:
          
         # should have 2 paths, one inner, one outer -> show the "ring"
         for poly in self.preview_geometry.geoms:
-            geometry_svg_path = SvgPath.fromShapelyPolygon("pycut_geometry_pocket", poly)
+            geometry_svg_path = SvgPath.from_shapely_polygon("pycut_geometry_pocket", poly)
             self.geometry_svg_paths.append(geometry_svg_path)
 
     def calculate_preview_geometry_engrave(self):
         '''
         '''
         for poly in self.geometry.geoms:
-            svg_path = SvgPath.fromShapelyPolygon("pycut_geometry_engrave", poly)
+            svg_path = SvgPath.from_shapely_polygon("pycut_geometry_engrave", poly)
             self.geometry_svg_paths.append(svg_path)
 
     def calculate_toolpaths(self, svgModel: SvgModel, toolModel: ToolModel, materialModel: MaterialModel):
@@ -518,7 +518,7 @@ class CncOp:
             self.cam_paths = cam.engrave(geometry, direction == "Climb")
 
         for cam_path in self.cam_paths:
-            svg_path = SvgPath.fromShapelyLineString("pycut_toolpath", cam_path.path, cam_path.safeToClose)
+            svg_path = SvgPath.from_shapely_linestring("pycut_toolpath", cam_path.path, cam_path.safeToClose)
             self.cam_paths_svg_paths.append(svg_path)
 
 class JobModel:

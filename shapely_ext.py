@@ -45,15 +45,21 @@ class ShapelyMultiPolygonOffset:
 
             linestring = shapely.geometry.LineString(poly.exterior)
 
-            ext_offset = linestring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=mitre_limit)
+            # cnt = MatplotLibUtils.MatplotlibDisplay("offset - linestring to offset", linestring, force=True)
 
-            MatplotLibUtils.MatplotlibDisplay("offset as LineString|MultiLineString (from linestring)", ext_offset, force=False)
+            # shapely 2.0 fix : if amount = 0
+            if amount != 0.0:
+                ext_offset = linestring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=mitre_limit)
+            else: 
+                ext_offset = shapely.geometry.LineString(linestring)
+
+            #cnt = MatplotLibUtils.MatplotlibDisplay("offset - as LineString|MultiLineString (from linestring)", ext_offset, force=True)
 
             # from the offseted lines, build a multipolygon that we diff with the interiors
             exterior_multipoly = ShapelyUtils.buildMultiPolyFromOffsets([ext_offset])
             #print("exterior_multipoly VALID ? ", exterior_multipoly.is_valid)
             
-            MatplotLibUtils.MatplotlibDisplay("geom multipoly from ext offset", exterior_multipoly, force=False)
+            #MatplotLibUtils.MatplotlibDisplay("geom multipoly from ext offset", exterior_multipoly, force=True)
 
             # now consider the interiors
             if poly.interiors:
@@ -99,6 +105,13 @@ class ShapelyMultiPolygonOffset:
                 elif sol_poly.geom_type == 'MultiPolygon':
                     for geom in sol_poly.geoms:
                         polys.append(geom)
+                elif sol_poly.geom_type == 'GeometryCollection':
+                    for geom in sol_poly.geoms:
+                        if geom.geom_type == 'Polygon':
+                            polys.append(geom)
+                        elif geom.geom_type == 'MultiPolygon':
+                            for geomc in sol_poly.geoms:
+                                polys.append(geomc)
                     
             else: # polygon without interiors
                 for poly in exterior_multipoly.geoms:
@@ -143,7 +156,12 @@ class ShapelyMultiPolygonOffsetInteriors:
 
             int_offsets = []
             for linestring in linestrings:
-                int_offset = linestring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=mitre_limit)
+                # shapely 2.0 fix : if amount = 0
+                if amount != 0.0:
+                    int_offset = linestring.parallel_offset(amount, side, resolution=resolution, join_style=join_style, mitre_limit=mitre_limit)
+                else:
+                    int_offset = shapely.geometry.LineString(linestring)
+
                 int_offsets.append(int_offset)
 
             # from the offseted lines, build a multipolygon that we will diff with the exterior
