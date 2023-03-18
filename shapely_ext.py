@@ -55,6 +55,21 @@ class ShapelyMultiPolygonOffset:
 
             #cnt = MatplotLibUtils.MatplotlibDisplay("offset - as LineString|MultiLineString (from linestring)", ext_offset, force=True)
 
+            # simplfy resulting offset  !WICHTIG!
+            #print("offset: ", ext_offset)
+            if ext_offset.geom_type == 'LineString':
+                #print("offset length (1)= ", ext_offset.length, len(list(ext_offset.coords)))
+                ext_offset = ext_offset.simplify(0.005)
+                #print("offset length (2)= ", ext_offset.length, len(list(ext_offset.coords)))
+            elif ext_offset.geom_type == 'MultiLineString':
+                lines = []
+                for line in ext_offset.geoms:
+                    #print("offset length (1)= ", line.length, len(list(line.coords)))
+                    s_line = line.simplify(0.005)
+                    #print("offset length (2)= ", s_line.length, len(list(s_line.coords)))
+                    lines.append(s_line)
+                ext_offset = shapely.geometry.MultiLineString(lines)
+
             # from the offseted lines, build a multipolygon that we diff with the interiors
             exterior_multipoly = ShapelyUtils.buildMultiPolyFromOffsets([ext_offset])
             #print("exterior_multipoly VALID ? ", exterior_multipoly.is_valid)

@@ -17,12 +17,47 @@ from shapely.validation import make_valid
 from shapely.validation import explain_validity
 
 from shapely_matplotlib import MatplotLibUtils
-from shapely_utils import ShapelyUtils
 
 
 M_PI = math.acos(-1)
 
+'''
+SVG paths:
 
+9.3.3. The "moveto" commands
+============================
+The "moveto" commands (M or m) must establish a new initial point and a new current point. 
+The effect is as if the "pen" were lifted and moved to a new location. 
+A path data segment (if there is one) must begin with a "moveto" command. 
+Subsequent "moveto" commands (i.e., when the "moveto" is not the first command) represent 
+the start of a new subpath
+
+9.3.4. The "closepath" command
+==============================
+The "closepath" (Z or z) ends the current subpath by connecting it back to its initial point. 
+An automatic straight line is drawn from the current point to the initial point of the current subpath. 
+This path segment may be of zero length.
+
+If a "closepath" is followed immediately by a "moveto", then the "moveto" identifies the start point 
+of the next subpath. If a "closepath" is followed immediately by any other command, 
+then the next subpath starts at the same initial point as the current subpath.
+...
+If a "closepath" is followed immediately by a "moveto", then the "moveto" identifies 
+the start point of the next subpath. If a "closepath" is followed immediately by any other command, 
+then the next subpath must start at the same initial point as the current subpath.
+
+
+PYCUT IMPORT RULES:
+1. subpaths are defined stating with [Mm]. Hopefully the path starts with [Mn]
+2. every closed path (Zz) form a polygon, if not this is a line
+3. first point of a polygon|line (after a [Zz]) is given with the [Mm] data .
+4. if not [Mm] after [Zz], initial point is the previous initial point
+5. we use shapely to query if subpaths as interiors of polygons of form separates polygons|lines
+6. if not completely contained/outside, the path as polygon is ignored for pycut
+7. lines are actually completely ignored 
+
+So rewrite this module... actually such a bad algo...
+'''
 
 class SvgPath:
     '''
@@ -57,7 +92,7 @@ class SvgPath:
         cls.PYCUT_SAMPLE_MIN_NB_SEGMENTS = arc_min_nb_segments
 
     @classmethod
-    def svg2paths_from_string(cls, svg: str) -> Tuple[List[svgpathtools.Path], List[Dict[str,str]]]:
+    def svg2paths_from_string(cls, svg_str: str) -> Tuple[List[svgpathtools.Path], List[Dict[str,str]]]:
         '''
         From a svg file content, read all paths and their attributes
         '''
@@ -66,7 +101,7 @@ class SvgPath:
             filename = os.path.join(tmpdir, 'temp_svg.svg')
             
             fp = open(filename, "w")
-            fp.write(svg)
+            fp.write(svg_str)
             fp.close()
 
             paths, attributes = svgpathtools.svg2paths(filename)
@@ -76,23 +111,25 @@ class SvgPath:
         return None, None
 
     @classmethod
-    def read_svg_shapes_as_paths(cls, svg: str) -> Dict[str, Tuple[svgpathtools.Path, Dict[str,str]]] :
+    def read_svg_shapes_as_paths(cls, svg_str: str) -> Dict[str, Tuple[svgpathtools.Path, Dict[str,str]]] :
         '''
         From a svg file content, read all paths and their attributes
-        and organize them as dictionary with key <path_id>, value (path, attrib)
+        and organize them as dictionary with key <path_id>, value (path, attribs)
         '''
         svg_shapes = {}
 
-        paths, attributes = cls.svg2paths_from_string(svg)
+        paths, attributes = cls.svg2paths_from_string(svg_str)
 
         for k, path in enumerate(paths):
             attribs = attributes[k]
 
             path_id = attribs.get('id', None)
-            print("============= path %s =================" % path_id)
+            print("============= svg : path %s =================" % path_id)
 
+            # ignore paths without id
             if path_id is None:
                 continue
+
             svg_shapes[path_id] = (path, attribs)
 
         return svg_shapes
@@ -102,9 +139,12 @@ class SvgPath:
         '''
         # the 'id' of a svg <path> definition
         self.p_id = p_id
-        # and the attributes of the <path>
+        # the attributes of the <path> definition
         self.p_attrs = p_attrs
 
+        # the svgpath as instance of type 'svgpathtools.Path' extracted from p_attrs["d"]
+        self.svg_path : svgpathtools.Path = None
+        
         # the transformation of the svg_path_d to a svgpathtools 'path'
         
         if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
@@ -282,22 +322,22 @@ class SvgPath:
     def _generate_simple_svgpaths(self) -> List['SvgPath']:
         '''
         From an instance of SvgPath, generate a list of SvgPath
-        where all paths of the object list are a 'simple' paths 
+        where all subpaths of the object list are a 'simple' paths 
         '''
-        # make all "m" -> "M" for the separated paths
+        # make all "m" -> "M" for the subpaths
         path_abs = self.svg_path.d()    # thanks svgpathtools!                             
 
         # it's easy now
-        paths = path_abs.split("M")
+        subpaths = path_abs.split("M")
 
         svgpaths = []
-        for k, sep_path in enumerate(paths):
-            sep_path = sep_path.strip()
-            if not sep_path:
+        for k, subpath in enumerate(subpaths):
+            subpath = subpath.strip()
+            if not subpath:
                 continue
-            p_id = self.p_id + "___sep_%d" % k 
+            p_id = self.p_id + "___sub_%d" % k 
             p_attrs = copy.deepcopy(self.p_attrs)
-            p_attrs["d"] = "M " + sep_path
+            p_attrs["d"] = "M " + subpath
             o = SvgPath(p_id, p_attrs)
             svgpaths.append(o)
         
@@ -335,7 +375,7 @@ class SvgPath:
         -> Wow! not automatically! for example for 'i' and 'j' there are 2 [Mm] but no interior,
         indeed 'i' is composed of 2 distincts paths, as 'j' also is.
 
-        -> so we have infact to check if the simple paths are included in the larger one, or not
+        -> so we have infact to check if the subpaths are included in largers one, or not
         '''
         is_simple_path = self._is_simple_path()
 
@@ -352,7 +392,7 @@ class SvgPath:
                 MatplotLibUtils.MatplotlibDisplay("not valid poly", line, force=True)
                 
                 # try this:
-                valid_poly = ShapelyUtils.fixSimplePolygon(poly)
+                valid_poly = self.fix_simple_polygon(poly)
 
                 if valid_poly != None:
                     poly = valid_poly
@@ -365,25 +405,28 @@ class SvgPath:
             poly = shapely.geometry.polygon.orient(poly)
             polys.append(poly)
         else:
-            # generate temporary svgpath objects with simple paths
-            # to build polygon(s) with holes
+            # Generate temporary svgpath objects with simple paths
+            # to build polygon(s) with holes.
             svgpaths = self._generate_simple_svgpaths()
 
-            # from these simple path, build list of polygons
-            # some of them will have holes, other not...
+            # From these subpaths, build a list of polygons without holes.
+            # The holes will be handled later.
             data = {}
             for svgpath in svgpaths:
-                linestring = svgpath.import_as_linestring()
-                s_polygon = svgpath.import_as_polygon()
+                is_closed = True  # TODO
+
+                if not is_closed:
+                    continue
+
+                polygon = svgpath.import_as_polygon()
 
                 data[svgpath.p_id] = {
                     "id": svgpath.p_id,
                     "svgpath" : svgpath,
-                    "linestring": linestring,
-                    "s_polygon": s_polygon,
-                    "area": s_polygon.area,
-                    "exterior": None,
-                    "interiors": []
+                    "polygon": polygon,
+                    "area": polygon.area,
+                    "exterior": polygon.exterior,
+                    "interiors": [] # init
                 }
 
             data_sorted = []
@@ -393,30 +436,30 @@ class SvgPath:
             # sort from the largest area first
             data_sorted.sort(key=lambda x: -x.get('area'))
             
-            # build the polygons one after the other, starting from the biggest one
+            # build the 'real' polygons one after the other, starting from the biggest one
             # NOTE: polygons SHOULD note overlap themselves
+            # NOTE: polygons which interect previous ones will be ignored 
+            # FIXME: result should be a List of  valid shapely Polygon|MultiPolygon
             
             # the first is the largest one
             xpoly = data_sorted[0]
-            xpoly["exterior"] = xpoly["linestring"]
 
             xpolys = [xpoly]
             
             # the others
             for data in data_sorted[1:]:
-                line = data["linestring"]
+                exterior = data["exterior"]
 
                 is_hole = False
                 for xpoly in xpolys: # the existing polys
-                    if xpoly["s_polygon"].covers(line):
+                    if xpoly["polygon"].covers(exterior):
                         is_hole = True
-                        xpoly["interiors"].append(line)
+                        xpoly["interiors"].append(exterior)
                         break
 
                 if is_hole is False:
-                    # is a separate polygon
-                    data["exterior"] = line
-                    xpolys.append(data) # append to the list of existing polys
+                    # it is a separate polygon  FIXME: check completely separated
+                    xpolys.append(data) # append to the list of existing, well separated polys
 
                 # sort the list - the smallest are the first to be searched
                 xpolys.sort(key=lambda x: x.get('area'))
@@ -436,7 +479,7 @@ class SvgPath:
             # P: interior in wrong 
             polys = []
             for poly in all_polys:
-                poly = ShapelyUtils.fixGenericPolygon(poly)
+                poly = self.fix_complex_poly(poly)
                 polys.append(poly)
 
         return polys
@@ -506,3 +549,81 @@ class SvgPath:
             svg_path.append(svgpathtools.Line(start, end))
 
         return SvgPath("pycut_tab", {'d': svg_path.d()})
+
+    @classmethod
+    def fix_simple_polygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :
+        '''
+        A simple polygon is a polygon without holes!
+        '''
+        valid_poly = make_valid(polygon)
+
+        if valid_poly.geom_type == 'Polygon':
+            return valid_poly
+
+        elif valid_poly.geom_type == 'MultiPolygon':
+            # take the largest one! CHECKME
+            largest_area = -1
+            largest_poly = None
+            for poly in valid_poly.geoms:
+                area = poly.area
+                if area > largest_area:
+                    largest_area = area
+                    largest_poly = poly
+
+            return largest_poly
+
+        elif valid_poly.geom_type == 'GeometryCollection':
+            # take the largest Polygon
+            largest_area = -1
+            largest_poly = None
+
+            for geom in valid_poly.geoms:
+                if geom.geom_type == 'Polygon':
+                    area = geom.area
+                    if area > largest_area:
+                        largest_area = area
+                        largest_poly = geom
+                elif geom.geom_type == 'MultiLineString':
+                    pass
+                elif geom.geom_type == 'LineString':
+                    pass
+                
+            return largest_poly
+
+        return None
+    
+    @classmethod
+    def fix_complex_poly(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :
+        '''
+        A complex polygon is a polygon with holes!
+        '''
+        if polygon.is_valid:
+            return polygon
+
+        exterior = polygon.exterior
+        interiors = polygon.interiors
+
+        ext_poly = shapely.geometry.Polygon(exterior)
+        if not ext_poly.is_valid:
+            ext_poly = cls.fix_simple_polygon(ext_poly)
+
+        if not interiors:
+            ext_linestring = shapely.geometry.LineString(ext_poly.exterior)
+
+            fixed_poly = shapely.geometry.Polygon(ext_linestring)
+        else:
+            fixed_interiors : List[shapely.geometry.Polygon] = []
+            for interior in interiors:
+                int_poly = shapely.geometry.Polygon(interior)
+
+                if not int_poly.is_valid:
+                    int_poly = cls.fix_simple_polygon(int_poly)
+
+                fixed_interiors.append(int_poly)
+
+            ext_linestring = shapely.geometry.LineString(ext_poly.exterior)
+            holes_linestrings = [shapely.geometry.LineString(int_poly.exterior) for int_poly in fixed_interiors] 
+
+            fixed_poly = shapely.geometry.Polygon(ext_linestring, holes=holes_linestrings)
+
+        return fixed_poly
