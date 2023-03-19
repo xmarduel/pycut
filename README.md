@@ -1,6 +1,8 @@
 # pycut
 clone of jscut  in python - work in progress -
 
+![pycut1](https://user-images.githubusercontent.com/28778239/226173273-8989a03e-e9d6-4753-9ade-17af9e15d4c3.png)
+
 Note: the project has advanced nicely during the last holidays (24.12.2021), but there are certainly many many bugs.
 
 Disclamer: This software is used at the user's own risk. No responsibility is accepted by its creator.
@@ -49,6 +51,4 @@ TODO:
 - what else ??
 
 See the Wiki page for more.
-
-![pycut1](https://user-images.githubusercontent.com/28778239/226173273-8989a03e-e9d6-4753-9ade-17af9e15d4c3.png)
 
