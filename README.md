@@ -50,5 +50,5 @@ TODO:
 
 See the Wiki page for more.
 
-![pycut1](https://user-images.githubusercontent.com/28778239/225381829-2bd563fc-80d9-4a20-8069-54930b157b27.png)
+![pycut1](https://user-images.githubusercontent.com/28778239/226173273-8989a03e-e9d6-4753-9ade-17af9e15d4c3.png)
 
