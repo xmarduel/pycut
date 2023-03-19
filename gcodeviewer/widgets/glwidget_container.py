@@ -34,6 +34,7 @@ from gcodeviewer.tables.gcodetablemodel import GCodeItem
 from gcodeviewer.tables.gcodetablemodel import GCodeTableModel
 
 from gcodeviewer.widgets.glwidget import GLWidget
+from gcodeviewer.widgets.glcontrolswidget import GCodeControlsWidget
 
 sNan = float('NaN')
 
@@ -47,15 +48,29 @@ class GLWidgetContainer(QtWidgets.QWidget):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
 
+        # run/stop/steps/ewind etc controls
+        self.view_with_controls = QtWidgets.QWidget()
+
+        self.glwVisualizer = GLWidget(self)
+        self.controls = GCodeControlsWidget(self)
+
+        self.vbox = QtWidgets.QVBoxLayout()
+        self.vbox.setContentsMargins(0, 0, 0, 0)
+
+        self.vbox.addWidget(self.glwVisualizer)
+        self.vbox.addWidget(self.controls)
+        self.vbox.setStretch(0, 1)
+
+        self.view_with_controls.setLayout(self.vbox)
+
         self.splitter = QtWidgets.QSplitter(self)
         self.splitter.setObjectName(u"splitter")
         self.splitter.setOrientation(Qt.Horizontal)
         self.splitter.setHandleWidth(6)
 
-        self.glwVisualizer = GLWidget(self.splitter)
         self.tblProgram = GCodeTableView(self.splitter)
 
-        self.splitter.addWidget(self.glwVisualizer)
+        self.splitter.addWidget(self.view_with_controls)
         self.splitter.addWidget(self.tblProgram)
 
         self.glwVisualizer.setMinimumHeight(100)
@@ -64,7 +79,9 @@ class GLWidgetContainer(QtWidgets.QWidget):
         # if splitted horizontally
         self.tblProgram.setMaximumWidth(260)
         self.tblProgram.setMinimumWidth(0)
-        
+
+        self.controls.setTblProgram(self.tblProgram)
+
         self.setLayout(QtWidgets.QVBoxLayout())
 
         layout = self.layout()
@@ -115,6 +132,8 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.tblProgram.hideColumn(3)
         self.tblProgram.hideColumn(4)
         self.tblProgram.hideColumn(5)
+
+        self.controls.setTblProgram(self.tblProgram) # renew the slider range
     
         self.clearTable()
 
@@ -250,6 +269,8 @@ class GLWidgetContainer(QtWidgets.QWidget):
         #self.resetHeightmap()
         #self.updateControlsState()
 
+        self.controls.setTblProgram(self.tblProgram) # renew the slider range
+
         self.update()
 
     def clearTable(self):
@@ -361,4 +382,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
             self.m_selectionDrawer.setEndPosition(QVector3D(sNan, sNan, sNan))
         
         self.m_selectionDrawer.update()
+
+        # and update the controls widget slider
+        self.controls.set_slider_pos(idx1.row())
 
