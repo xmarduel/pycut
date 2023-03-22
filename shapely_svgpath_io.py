@@ -152,8 +152,7 @@ class SvgPath:
         self.lines : List[shapely.geometry.LineString] = []
         self.polys : List[shapely.geometry.Polygon] = []
 
-
-    def discretize(self) -> np.array :
+    def discretize_closed_path(self) -> np.array :
         '''
         Transform the svg_path (a list of svgpathtools Segments) into a list of 'complex' points
         - Line: only 2 points
@@ -306,6 +305,124 @@ class SvgPath:
 
         return points
 
+    def discretize_opened_path(self) -> np.array :
+        '''
+        Transform the svg_path (a list of svgpathtools Segments) into a list of 'complex' points
+        - Line: only 2 points
+        - Arc: discretize per hand
+        - QuadraticBezier, CubicBezier: discretize per hand
+
+        WE DO NOT APPLY OUR SHAPELY TRICK FOR CLOSED PATHS
+
+        SHAPELY WARNING: it is **extremely important** not to duplicate identical points (or nearly identical) 
+        because shapely may find that it creates an "invalid" polygon with the reason:
+        
+        >>>>> Self-intersection[184.211463517 186.153838406]
+
+        This occurs if the sequence of points is like the following:
+
+        184.24701507756535 186.2492779464199
+        184.211463517 186.15383840599998
+        184.211463517 186.153838406
+        184.86553017294605 185.57132365078505
+
+        so between 2 svg paths "segments", avoid duplicating the point at the end of the first segment and 
+        the one at the beginning of the second segment.
+        '''
+        SEGMENT_IGNORE_THRESHOLD = 1.0e-5
+        # -----------------------------------------------------------------
+        def ignore_segment(k, segment) -> bool:
+            '''
+            for letters, very small segments can lead to unvalid geometries.
+            We can fix them with the "make_valid" function but I would like
+            to avoid this. It seems to be caused by very little segments which 
+            are somehow wrong (or rounding values stuff makes them wrong).
+            '''
+            if segment.length() < SEGMENT_IGNORE_THRESHOLD :
+                print("segment[%i]: %lf  -> ignoring" % (k, segment.length()) )
+                return True
+
+            return False
+        # ------------------------------------------------------------------
+        points = np.array([], dtype=np.complex128)
+        
+        for k, segment in enumerate(self.svg_path):
+
+            ## ---------------------------------------
+            if ignore_segment(k, segment) == True:
+                continue
+            ## ---------------------------------------
+
+            if segment.__class__.__name__ == 'Line':
+                # start and end points
+                if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
+                    pts = segment.points([0, 1])
+                #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
+                #    pts = [segment.point(0.0), segment.point(1.0)] 
+                else:
+                    if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
+                        pts = segment.points([1])
+                    #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
+                    #    pts = [segment.point(1.0)] 
+                    
+            elif segment.__class__.__name__ == 'Arc':
+                # no 'points' method for 'Arc'!
+                seg_length = segment.length()
+
+                nb_samples = int(seg_length * self.PYCUT_SAMPLE_LEN_COEFF)
+                nb_samples = max(nb_samples, self.PYCUT_SAMPLE_MIN_NB_SEGMENTS)
+                
+                _pts = []
+                if k == 0:
+                    for p in range(0, nb_samples+1):
+                        _pts.append(segment.point(float(p)/float(nb_samples)))
+                else:
+                    # not the first one
+                    for p in range(1, nb_samples+1):
+                        _pts.append(segment.point(float(p)/float(nb_samples)))
+
+                pts = np.array(_pts, dtype=np.complex128)
+
+            else:  # 'QuadraticBezier', 'CubicBezier'
+                seg_length = segment.length()
+
+                _pts = []
+
+                ### SVGPATHTOOLS BUG !!!
+                if seg_length == math.inf:  # WTF!
+
+                    p1 = segment.start
+                    p2 = segment.end
+
+                    if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
+                        line = svgpathtools.Line(p1, p2)
+                    #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
+                    #    line = svgelements.Line(p1, p2)
+
+                    # start and end points
+                    if len(self.svg_path) == 1:
+                        _pts = line.points([0,1])
+                    else:
+                        if k == 0:
+                            _pts = line.points([0, 1])
+                        else:
+                            _pts = line.points([1])
+
+                else:
+
+                    nb_samples = int(seg_length * self.PYCUT_SAMPLE_LEN_COEFF)
+                    nb_samples = max(nb_samples, self.PYCUT_SAMPLE_MIN_NB_SEGMENTS)
+                
+                    # not the first one
+                    for p in range(1, nb_samples+1):
+                        _pts.append(segment.point(float(p)/float(nb_samples)))
+
+                pts = np.array(_pts, dtype=np.complex128)
+
+            points = np.concatenate((points, pts))
+
+        return points
+
     def _is_simple_path(self) -> bool:
         '''
         check if path is a 'simple' one or a 'complex' one -
@@ -354,7 +471,7 @@ class SvgPath:
     def import_subpath_as_linestring(self) -> shapely.geometry.LineString:
         '''
         '''
-        pts = self.discretize()
+        pts = self.discretize_opened_path()
 
         coordinates = [ (complex_pt.real, complex_pt.imag)  for complex_pt in pts ]
 
@@ -365,7 +482,7 @@ class SvgPath:
     def import_subpath_as_polygon(self) -> shapely.geometry.Polygon:
         '''
         '''
-        pts = self.discretize()
+        pts = self.discretize_closed_path()
 
         coordinates = [ (complex_pt.real, complex_pt.imag)  for complex_pt in pts ]
 
