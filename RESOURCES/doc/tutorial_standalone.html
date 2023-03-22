@@ -399,8 +399,10 @@ to carve something like 16x10 cm without to -painfully- rotate all items in the 
 
 <p>This is where the user defined its cam operations, thus this is where the action takes place.</p>
 
+<img src="./pycut_ops.png" width="1170px">
+
 <p>First one or more item(s) have to be selected in the svgviewer, click on "Create Operation" and a default operation
-is created. When more than is item have been selected, the user can perform logical operations on this set of item</p>
+is created. When more than one item has been selected, the user can perform logical operations on this set of item</p>
 <ul>
   <li>diff</li>
   <li>intersect</li>
@@ -408,7 +410,11 @@ is created. When more than is item have been selected, the user can perform logi
   <li>xor</li>
 </ul>
 
-<p>The resulting geometry wil be displayed ion the svgviewer</p>
+<p>When "enabling" this op, the resulting geometry will be displayed ion the svgviewer</p>
+
+<div class="info">
+  <p><strong>Note:</strong>the geometry is highlighted in red. the highlight color can be setup in the settings dialog.</p>
+</div>
 
 <p>Then the cam operation can be chosen</p>
 <ul>
@@ -423,8 +429,8 @@ is created. When more than is item have been selected, the user can perform logi
 <p>In order to generate G code, enable one or many operations and click on "Generate G code". <strong>PyCut</strong>
 will try to do its best... The resulting G code is displayed in the G code viewer and G code simulator.</p>
 
-<p>Finally, clicking on "Save G code" will produce a valid G code file. <strong>PyCut</strong> recommands
-<strong>Candle</strong> to send the G code to your machine.</p>
+<p>Finally, clicking on "Save G code" will produce a valid G code file. <strong>Candle</strong> can be used 
+to send the G code to your machine. Have fun...</p>
 </div>
 </body>
 </html>
