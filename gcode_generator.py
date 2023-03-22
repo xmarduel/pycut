@@ -21,6 +21,7 @@ from typing import Any
 
 import shapely
 import shapely.geometry
+import shapely.ops
 
 from shapely_utils import ShapelyUtils
 from shapely_svgpath_io import SvgPath
@@ -320,12 +321,17 @@ class CncOp:
         the generated geometry is a MultiPolygon
         '''
         self.shapely_polygons : List[shapely.geometry.Polygon] = []
+        self.shapely_lines : List[shapely.geometry.LineString] = []
 
         for svg_path in self.svg_paths:
             shapely_polygons = svg_path.import_as_polygons_list()
             self.shapely_polygons += shapely_polygons
 
         if len(self.shapely_polygons) == 0:
+            # try import as line
+            shapely_lines = svg_path.import_as_lines_list()
+            self.shapely_lines += shapely_lines
+            # TODO: process lines only! no pocket op!
             return
         
         if len(self.shapely_polygons) == 1:
@@ -333,8 +339,7 @@ class CncOp:
             return
 
         o = self.shapely_polygons[0]
-        #other = shapely.geometry.MultiPolygon(self.shapely_polygons[1:])
-        other = ShapelyUtils.union_polygons(self.shapely_polygons[1:])
+        other = shapely.ops.unary_union(self.shapely_polygons[1:])
 
         if self.combinaison == "Union":
             geometry = o.union(other)

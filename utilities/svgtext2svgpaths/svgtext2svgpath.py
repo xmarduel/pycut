@@ -223,7 +223,12 @@ class SvgText2SvgPathsConverter:
         element.attrib['id'] = "%s_%d" % (wpath.id, idx)
         element.attrib["fill"] = wpath.attribs.get("fill", "#ff0000")
         element.attrib["fill-opacity"] = wpath.attribs.get("fill-opacity", "0.5")
-        element.attrib["d"] = wpath.path.d()
+
+        # svgpathtols fix
+        if wpath.path.closed:  # wpath.path.isclosed():
+            element.attrib["d"] = wpath.path.d() + " Z"
+        else: 
+            element.attrib["d"] = wpath.path.d()
         
         #formatting...
         #element.tail = wpath.elt.tail
@@ -1019,6 +1024,7 @@ class Char2SvgPath:
             start = end + 1
 
         self.path = Path(*paths)
+        self.path.closed = True  # letters are closed polygons
 
         return self.path
 
@@ -1158,7 +1164,9 @@ class String2SvgPaths:
         self.paths.append(paths[0])
 
         for k, path in enumerate(paths[1:]):
+            is_closed = path.closed  # svgpathtools bug! closed props is lost by translated
             path = path.translated(shifts[k]  * fontsize / Char2SvgPath.CHAR_SIZE )
+            path.closed = is_closed
             self.paths.append(path)
 
         # svg positioning
@@ -1168,7 +1176,9 @@ class String2SvgPaths:
         translate_pos = self.pos[0] + self.pos[1] * 1j
         
         for k, path in enumerate(self.paths):
+            is_closed = path.closed  # svgpathtools bug! closed props is lost by translated
             path = path.translated(translate_pos)
+            path.closed = is_closed
             pos_paths.append(path)
 
         self.paths = pos_paths
@@ -1178,7 +1188,15 @@ class String2SvgPaths:
     def write_paths(self):
         paths = ""
         for path in self.paths:
-            paths += '        <path d="%s" />\n' % path.d()
+            is_closed = path.closed  # path.isclosed()
+            d = ""
+            if is_closed:
+                # svgpathtools fix
+                d = path.d() + " Z"
+            else:
+                d = path.d()
+
+            paths += '        <path d="%s" />\n' % d
 
         fp = open("text2paths_%s_convert.svg" % self.text, "w")
 
@@ -1272,8 +1290,15 @@ if __name__ == '__main__':
             elt_id = path_with_attribs.id
 
             style = "fill:%s;fill-opacity:%s;" % (attribs.get("fill", "#000000"), attribs.get("fill-opacity", "1.0"))
-            
-            print('<path id="%s_%d" style=\"%s\" d="%s" />' % (elt_id, p, style, path.d()))
+
+            is_closed = path.closed  # path.isclosed()
+            d = ""
+            if is_closed:
+                d = path.d() + " Z"
+            else:
+                d = path.d()
+
+            print('<path id="%s_%d" style=\"%s\" d="%s" />' % (elt_id, p, style, d))
 
 
     # or the full svg with the paths

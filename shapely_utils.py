@@ -335,20 +335,6 @@ class ShapelyUtils:
         return shapely.geometry.MultiPolygon(epolys)
 
     @classmethod
-    def union_polygons(cls, poly_list: List[shapely.geometry.Polygon]) -> shapely.geometry.MultiPolygon :
-        '''
-        union the polygons together of after the other
-        '''
-        first = poly_list[0]
-
-        geometry = first
-        
-        for poly in poly_list[1:]:
-            geometry = geometry.union(poly)
-
-        return geometry
-
-    @classmethod
     def reorder_poly_points(cls, poly: shapely.geometry.Polygon) -> shapely.geometry.Polygon:
         '''
         Problem: shapely bug when outsiding a polygon where the stating point

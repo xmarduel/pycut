@@ -2,9 +2,9 @@
 <svg
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   width="100mm"
-   height="100mm"
-   viewBox="0 0 100 100"
+   width="150mm"
+   height="150mm"
+   viewBox="0 0 150 150"
    version="1.1"
    id="svg8">
    <g id="layer1">
@@ -29,21 +29,11 @@
          points="100,20 140,40 140,80 100,100 60,80 60,40" />
       <line 
          id="line"
-         x1="0" y1="0" x2="100" y2="100" 
-         stroke="black" stroke-width="3" fill="rgb(121,0,121)"></line>
-     
-      <!-- Example of a polyline with the default fill -->
+         x1="150" y1="0" x2="150" y2="150" 
+         stroke="blue" stroke-width="2" fill="rgb(121,0,121)"></line>
       <polyline 
         id="polyline_default_fill" 
-        points="0,100 50,25 50,75 100,0" />
+        points="0,100 50,25 50,75 100,0" stroke="cyan" stroke-width="2" fill="none" />
 
-      <!-- Example of the same polyline shape with stroke and no fill -->
-      <!-- 
-      <polyline 
-         id="polyline_fill_none" 
-         points="0,100 50,25 50,75 100,0"
-         fill="none" 
-         stroke="black" /> 
-      -->
    </g>
 </svg>

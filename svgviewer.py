@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 
 from typing import List
+from typing import Dict
 
 import math
 import copy
@@ -156,11 +157,11 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # and the extra tabs contained in the job description
         self.tabs = []
 
-        # dictionnay path id -> path d def for all path definition in the svg
-        self.svg_path_d = {}
+        # dictionnay path id -> path d (string) def for all path definition in the svg
+        self.svg_path_d : Dict[str,str] = {} 
 
         # when loading a svg with shapes that are not <path>
-        self.svg_shapes = {} # path id -> circle, ellipse, rect, polygon, etc
+        self.svg_shapes = {} # path id -> svgpathtools.Path from svg circle, ellipse, rect, polygon, etc
 
         # the graphical items in the view
         self.items : List[SvgItem] = []
@@ -319,9 +320,13 @@ class SvgViewer(QtWidgets.QGraphicsView):
                 print("    -> ignoring")
                 continue
 
-            path, attrib = self.svg_shapes[shape_id]
+            path, _ = self.svg_shapes[shape_id]
 
             self.svg_path_d[shape_id] = path.d()
+
+            # FIXME: is the 'closed' property lost forever by path.d()? 
+            if path.closed:
+                self.svg_path_d[shape_id] += " Z"
 
             item = SvgItem(shape_id, self, self.renderer)
             self.scene.addItem(item)

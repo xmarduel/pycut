@@ -301,14 +301,23 @@ class cam:
         #print("origPath", shapely_openpath)
          
         shapely_tabs_ = []
-        # 1. from the tabs, build shapely (closed) tab polygons
+        # 1. from the tabs, build shapely tab polygons
         for tab_data in tabs:
             tab = Tab(tab_data)
             shapely_tabs = tab.svg_path.import_as_polygons_list()
             shapely_tabs_ += shapely_tabs
 
         # hey, multipolygons are good...
-        shapely_tabs = shapely.geometry.MultiPolygon(shapely_tabs_)
+        shapely_tabs = shapely.ops.unary_union(shapely_tabs_)
+        if shapely_tabs.geom_type == 'Polygon':
+            shapely_tabs = shapely.geometry.MultiPolygon([shapely_tabs])
+        if shapely_tabs.geom_type == 'GeometryCollection':
+            for geom in shapely_tabs.geoms:
+                if geom.geom_type == 'MultiPolygon':
+                    shapely_tabs = geom
+                if geom.geom_type == 'Polygon':
+                    shapely_tabs = geom
+
 
         # 2. then "diff" the origin path with the tabs paths
         shapely_splitted_paths = shapely_openpath.difference(shapely_tabs)
