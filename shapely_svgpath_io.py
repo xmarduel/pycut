@@ -373,7 +373,7 @@ class SvgPath:
 
         return poly
 
-    def import_as_lines_list(self) -> List[shapely.geometry.Line]:
+    def import_as_lines_list(self) -> List[shapely.geometry.LineString]:
         '''
         '''
         self.import_svgpath()
