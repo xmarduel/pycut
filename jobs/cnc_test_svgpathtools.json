@@ -20,7 +20,35 @@
       "type": "Pocket",
       "Deep": 3.175,
       "paths": [
-        "rect"
+        "rect_with_corner"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Engrave",
+      "Deep": 13.175,
+      "paths": [
+        "line"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Engrave",
+      "Deep": 13.175,
+      "paths": [
+        "polyline"
       ],
       "RampPlunge": false,
       "Combine": "Union",
@@ -39,17 +67,26 @@
       "height": 1.0,
       "tabs": [
         {
-          "center": [10, 10],
+          "center": [
+            10,
+            10
+          ],
           "radius": 4,
           "enabled": false
         },
         {
-          "center": [10, 20],
+          "center": [
+            10,
+            20
+          ],
           "radius": 4,
           "enabled": false
         },
         {
-          "center": [10, 30],
+          "center": [
+            10,
+            30
+          ],
           "radius": 4,
           "enabled": false
         }
@@ -57,7 +94,7 @@
     },
     "Tool": {
       "Units": "mm",
-      "Diameter": 0.1,
+      "Diameter": 3.0000000000000013,
       "Angle": 180,
       "PassDepth": 2.0,
       "StepOver": 0.4,
