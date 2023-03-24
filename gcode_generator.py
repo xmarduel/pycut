@@ -436,14 +436,12 @@ class CncOp:
 
             self.combine_opened_paths()
 
-            if self.cam_op == "Engrave" or True:
+            if self.cam_op == "Engrave":
                 self.calculate_opened_paths_preview_geometry_engrave()
-            '''
             elif self.cam_op == "Inside":
                 self.calculate_opened_paths_preview_geometry_inside(toolModel)  # TODO
             elif self.cam_op == "Outside":
                 self.calculate_opened_paths_preview_geometry_outside(toolModel) # TODO
-            '''
 
     def calculate_opened_paths_preview_geometry_engrave(self):
         '''
@@ -451,6 +449,50 @@ class CncOp:
         for line in self.geometry.geoms:
             svg_path = SvgPath.from_shapely_linestring("pycut_geometry_engrave", line, False)
             self.geometry_svg_paths.append(svg_path)
+
+    def calculate_opened_paths_preview_geometry_inside(self, tool_model: ToolModel):
+        '''
+        '''
+        if self.geometry is not None:
+            margin = self.margin.toMm()
+
+            if margin != 0:
+                self.preview_geometry = ShapelyUtils.offsetMultiLine(self.geometry, margin, 'left')
+            else:
+                self.preview_geometry = self.geometry
+
+            if self.preview_geometry.geom_type == 'LineString':
+                self.preview_geometry = shapely.geometry.MultiLineString([self.preview_geometry])
+
+        self.geometry_svg_paths = []
+         
+        for line in self.preview_geometry.geoms:
+            geometry_svg_path = SvgPath.from_shapely_linestring("pycut_geometry_inside", line, False)
+            self.geometry_svg_paths.append(geometry_svg_path)
+        
+    def calculate_opened_paths_preview_geometry_outside(self, tool_model: ToolModel):
+        '''
+        '''
+        if self.geometry is not None:
+            margin = self.margin.toMm()
+
+            if margin != 0:
+                self.preview_geometry = ShapelyUtils.offsetMultiLine(self.geometry, margin, 'right')
+            else:
+                self.preview_geometry = self.geometry
+
+            # 'right' in 'inside', and 'left' is 'outside'  hopefully
+            if self.preview_geometry.geom_type == 'LineString':
+                self.preview_geometry = shapely.geometry.MultiLineString([self.preview_geometry])
+
+        self.geometry_svg_paths = []
+         
+        # should have 2 paths, one inner, one outer -> show the "ring"
+        for line in self.preview_geometry.geoms:
+            geometry_svg_path = SvgPath.from_shapely_linestring("pycut_geometry_outside", line, False)
+            self.geometry_svg_paths.append(geometry_svg_path)
+
+
 
     def calculate_preview_geometry_pocket(self):
         '''
@@ -593,13 +635,11 @@ class CncOp:
 
             if cam_op == "Engrave":
                 self.cam_paths = cam.engrave_opened_paths(geometry, direction == "Climb")
-            '''
             elif cam_op == "Inside" or cam_op == "Outside":
                 width = width.toMm()
                 if width < toolData["diameterTool"]:
                     width = toolData["diameterTool"]
                 self.cam_paths = cam.outline_opened_paths(geometry, toolData["diameterTool"], cam_op == "Inside", width, 1 - toolData["stepover"], direction == "Climb")
-            '''
 
         # -------------------------------------------------------------------------------------
 

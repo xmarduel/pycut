@@ -669,7 +669,7 @@ class SvgPath:
 
         svg_path.append(svgpathtools.Line(start, end))
 
-        return SvgPath(prefix, {'d': svg_path.d(), 'fill-rule': 'nonzero'})
+        return SvgPath(prefix, {'d': svg_path.d()})
 
     @classmethod
     def from_shapely_polygon(cls, prefix: str, polygon: shapely.geometry.Polygon) -> 'SvgPath':

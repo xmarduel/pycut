@@ -118,7 +118,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
     GEOMETRY_PREVIEW_OPENED_PATHS =  {
         "stroke": "#ff0000",
         "stroke-width": "1",
-        "fill": "#ff0000",
+        "fill": "none",
         "fill-opacity": "1.0"
     }
 
@@ -185,12 +185,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
     def set_settings(cls, settings):
         cls.TABS = copy.deepcopy(settings["TABS"])
         cls.GEOMETRY_PREVIEW_CLOSED_PATHS = copy.deepcopy(settings["GEOMETRY_PREVIEW"])
+        cls.GEOMETRY_PREVIEW_OPENED_PATHS = copy.deepcopy(settings["GEOMETRY_PREVIEW"])
         cls.TOOLPATHS = copy.deepcopy(settings["TOOLPATHS"])
 
     @classmethod
     def set_default_settings(cls):
         cls.TABS = copy.deepcopy(cls.DEFAULT_TABS)
         cls.GEOMETRY_PREVIEW_CLOSED_PATHS = copy.deepcopy(cls.DEFAULT_GEOMETRY_PREVIEW)
+        cls.GEOMETRY_PREVIEW_OPENED_PATHS = copy.deepcopy(cls.DEFAULT_GEOMETRY_PREVIEW)
         cls.TOOLPATHS = copy.deepcopy(cls.DEFAULT_TOOLPATHS)
     
     def set_mainwindow(self, mainwindow):
@@ -504,9 +506,11 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
                 if not geometry_svg_path.svg_path.closed:
                     # lines
+                    geometry_svg_path.p_attrs['stroke'] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"]
                     geometry_svg_path.p_attrs['stroke-width'] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]
+                    geometry_svg_path.p_attrs['fill'] = "none"
+                    geometry_svg_path.p_attrs['fill-opacity'] = self.GEOMETRY_PREVIEW_OPENED_PATHS["fill-opacity"]
                 
-
             geometry_svg_paths += cnc_op.geometry_svg_paths
 
         return geometry_svg_paths

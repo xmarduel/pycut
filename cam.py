@@ -64,9 +64,9 @@ class cam:
         return pc.cam_paths
 
     @classmethod
-    def outline(cls, geometry: shapely.geometry.MultiPolygon, cutter_dia: float, isInside: bool, width: float, overlap: float, climb: bool) -> List[CamPath] :
+    def outline(cls, geometry: shapely.geometry.MultiPolygon, cutter_dia: float, is_inside: bool, width: float, overlap: float, climb: bool) -> List[CamPath] :
         '''
-        Compute paths for outline operation on Shapely geometry. 
+        Compute paths for outline operation on Shapely geometry "MultiPolygon". 
         
         Returns array of CamPath.
         
@@ -80,7 +80,108 @@ class cam:
         allPaths  : List[shapely.geometry.LineString] = []
         eachWidth = cutter_dia * (1 - overlap)
 
-        if isInside :
+        if is_inside :
+            # because we always start from the outer ring -> we go "inside"
+            current = ShapelyUtils.offsetMultiLine(multiline, cutter_dia /2, 'left')
+            offset = ShapelyUtils.offsetMultiLine(multiline, width - cutter_dia / 2, 'left')
+            #bounds = ShapelyUtils.diff(current, offset)
+            bounds = current
+            eachOffset = eachWidth
+            needReverse = climb
+        else :
+            direction = "inner2outer"
+            #direction = "outer2inner"
+
+            if direction == "inner2outer":
+                # because we always start from the inner ring -> we go "outside"
+                current = ShapelyUtils.offsetMultiLine(multiline, cutter_dia /2, 'right')
+                offset = ShapelyUtils.offsetMultiLine(multiline, width - cutter_dia / 2, 'right')
+                #bounds = ShapelyUtils.diff(current, offset)
+                bounds = current
+            else:
+                # because we always start from the outer ring -> we go "inside"
+                current = ShapelyUtils.offsetMultiLine(multiline, cutter_dia /2, 'left')
+                offset = ShapelyUtils.offsetMultiLine(multiline, width - cutter_dia / 2, 'left')
+                #bounds = ShapelyUtils.diff(current, offset)
+                bounds = current
+
+            eachOffset = eachWidth
+            needReverse = not climb
+
+            # TEST
+            #allPaths = [p for p in current.geoms] 
+
+        while True and currentWidth <= width :
+            if needReverse:
+                reversed = []
+                for path in current.geoms:
+                    coords = list(path.coords)  # is a tuple!  JSCUT current reversed in place
+                    coords.reverse()
+                    reversed.append(shapely.geometry.LineString(coords))
+                allPaths = reversed + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+            else:
+                allPaths = [p for p in current.geoms] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+
+            nextWidth = currentWidth + eachWidth
+            if nextWidth > width and (width - currentWidth) > 0 :
+                # >>> XAM fix
+                last_delta = width - currentWidth
+                # <<< XAM fix
+                current = ShapelyUtils.offsetMultiLine(current, last_delta, 'left')
+                if current :
+                    current = ShapelyUtils.simplifyMultiLine(current, 0.01)
+                
+                if current:
+                    if needReverse:
+                        reversed = []
+                        for path in current.geoms:
+                            coords = list(path.coords)  # is a tuple!  JSCUT current reversed in place
+                            coords.reverse()
+                            reversed.append(shapely.geometry.LineString(coords))
+                        allPaths = reversed + allPaths # JSCUT: allPaths = current.concat(allPaths)
+                    else:
+                        allPaths = [p for p in current.geoms] + allPaths # JSCUT: allPaths = current.concat(allPaths)
+                    break
+            
+            currentWidth = nextWidth
+
+            if not current:
+                break
+
+            current = ShapelyUtils.offsetMultiLine(current, eachOffset, 'left', resolution=16)
+            if current:
+                current = ShapelyUtils.simplifyMultiLine(current, 0.01)
+                print("--- next toolpath")
+            else:
+                break
+
+        if len(allPaths) == 0: 
+            # no possible paths! TODO . inform user
+            return []
+
+        # mergePaths need MultiPolygon
+        bounds = ShapelyUtils.multiLineToMultiPoly(bounds)
+
+        return cls.mergePaths(bounds, allPaths)
+
+    @classmethod
+    def outline_opened_paths(cls, geometry: shapely.geometry.MultiLineString, cutter_dia: float, is_inside: bool, width: float, overlap: float, climb: bool) -> List[CamPath] :
+        '''
+        Compute paths for outline operation on Shapely geometry "MultiLineString". 
+        
+        Returns array of CamPath.
+        
+        cutter_dia and width are in Shapely units. 
+        overlap is in the  range [0, 1).
+        '''
+        # use lines, not polygons
+        multiline = geometry
+
+        currentWidth = cutter_dia
+        allPaths  : List[shapely.geometry.LineString] = []
+        eachWidth = cutter_dia * (1 - overlap)
+
+        if is_inside :
             # because we always start from the outer ring -> we go "inside"
             current = ShapelyUtils.offsetMultiLine(multiline, cutter_dia /2, 'left')
             offset = ShapelyUtils.offsetMultiLine(multiline, width - cutter_dia / 2, 'left')
