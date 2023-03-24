@@ -108,9 +108,16 @@ class SvgViewer(QtWidgets.QGraphicsView):
         "fill-opacity-disabled": "0.3"
     }
 
-    GEOMETRY_PREVIEW =  {
+    GEOMETRY_PREVIEW_CLOSED_PATHS =  {
         "stroke": "#ff0000",
         "stroke-width": "0",
+        "fill": "#ff0000",
+        "fill-opacity": "1.0"
+    }
+
+    GEOMETRY_PREVIEW_OPENED_PATHS =  {
+        "stroke": "#ff0000",
+        "stroke-width": "1",
         "fill": "#ff0000",
         "fill-opacity": "1.0"
     }
@@ -177,13 +184,13 @@ class SvgViewer(QtWidgets.QGraphicsView):
     @classmethod
     def set_settings(cls, settings):
         cls.TABS = copy.deepcopy(settings["TABS"])
-        cls.GEOMETRY_PREVIEW = copy.deepcopy(settings["GEOMETRY_PREVIEW"])
+        cls.GEOMETRY_PREVIEW_CLOSED_PATHS = copy.deepcopy(settings["GEOMETRY_PREVIEW"])
         cls.TOOLPATHS = copy.deepcopy(settings["TOOLPATHS"])
 
     @classmethod
     def set_default_settings(cls):
         cls.TABS = copy.deepcopy(cls.DEFAULT_TABS)
-        cls.GEOMETRY_PREVIEW = copy.deepcopy(cls.DEFAULT_GEOMETRY_PREVIEW)
+        cls.GEOMETRY_PREVIEW_CLOSED_PATHS = copy.deepcopy(cls.DEFAULT_GEOMETRY_PREVIEW)
         cls.TOOLPATHS = copy.deepcopy(cls.DEFAULT_TOOLPATHS)
     
     def set_mainwindow(self, mainwindow):
@@ -490,10 +497,15 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         for cnc_op in cnc_ops:
             for geometry_svg_path in cnc_op.geometry_svg_paths:
-                geometry_svg_path.p_attrs['stroke'] = self.GEOMETRY_PREVIEW["stroke"]
-                geometry_svg_path.p_attrs['stroke-width'] = self.GEOMETRY_PREVIEW["stroke-width"]
-                geometry_svg_path.p_attrs['fill'] = self.GEOMETRY_PREVIEW["fill"]
-                geometry_svg_path.p_attrs['fill-opacity'] = self.GEOMETRY_PREVIEW["fill-opacity"]
+                geometry_svg_path.p_attrs['stroke'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke"]
+                geometry_svg_path.p_attrs['stroke-width'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-width"]
+                geometry_svg_path.p_attrs['fill'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"]
+                geometry_svg_path.p_attrs['fill-opacity'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill-opacity"]
+
+                if not geometry_svg_path.svg_path.closed:
+                    # lines
+                    geometry_svg_path.p_attrs['stroke-width'] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]
+                
 
             geometry_svg_paths += cnc_op.geometry_svg_paths
 

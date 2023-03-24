@@ -1,11 +1,15 @@
-# 1.0.0 (TODO)
+# 1.1.0 (TODO)
 
 Can process basic <text> elements without converting them before to <path> elements
-Can process defs/use and transformations in svg (ie resolve them)
+Can process defs/use and transformations in svg (ie resolve them) without converting them before
+
+# 1.0.0 (TODO)
+
+with shapely 2.0.1
 
 # 0.4.0 (TODO)
 
-with shapely 2.0.1
+process "opened" lines (not polygons)
 
 # 0.3.6
 

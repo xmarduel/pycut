@@ -193,14 +193,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.init_gui()
 
-        if options.load_job is not None:
-            if os.path.exists(options.load_job):
-                self.open_job(options.load_job)
+        if options.job is not None:
+            if os.path.exists(options.job):
+                self.open_job(options.job)
             else:
                 # alert
                 msgBox = QtWidgets.QMessageBox()
                 msgBox.setWindowTitle("PyCut")
-                msgBox.setText("Job File %s not found" % options.load_job)
+                msgBox.setText("Job File %s not found" % options.job)
                 msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
                 msgBox.exec()
 
@@ -1313,7 +1313,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="PyCut", description="PyCut CAM program - Read the doc!")
 
     # argument
-    parser.add_argument('-job', "--jobfile", dest="load_job", help="load job file")
+    parser.add_argument('job', nargs='?', default=None, help="load job file | empty")
 
     # version info
     parser.add_argument("--version", action='version', version='%s' % VERSION)

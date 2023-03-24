@@ -192,6 +192,25 @@ class cam:
             
         camPaths = [ CamPath(path, False)  for path in allPaths ]
         return camPaths
+    
+    @classmethod
+    def engrave_opened_paths(cls, geometry: shapely.geometry.MultiLineString, climb: bool) -> List[CamPath] :
+        '''
+        Compute paths for engrave operation on Shapely multiplinestring. 
+        
+        Returns array of CamPath.
+        '''
+        allPaths = []
+        for line in geometry.geoms:
+            coords = list(line.coords)  # JSCUT: path = paths.slice(0)
+            if not climb:
+                coords.reverse()
+        
+            #coords.append(coords[0])  # what's this ??
+            allPaths.append(shapely.geometry.LineString(coords))
+            
+        camPaths = [ CamPath(path, False)  for path in allPaths ]
+        return camPaths
 
     @classmethod
     def mergePaths(cls, _bounds: shapely.geometry.MultiPolygon, paths: List[shapely.geometry.LineString]) -> List[CamPath] :

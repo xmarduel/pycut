@@ -314,6 +314,23 @@ class CncOp:
 
             self.svg_paths.append(svg_path)
 
+    def is_closed_paths_op(self) -> bool :
+        '''
+        '''
+        return not self.is_opened_paths_op()
+    
+    def is_opened_paths_op(self) -> bool:
+        '''
+        '''
+        opened_paths_op = True
+
+        for svgpath in self.svg_paths:
+            if svgpath.svg_path.closed:
+                opened_paths_op = False
+                break
+
+        return opened_paths_op
+
     def combine(self) -> None:
         '''
         generate the combinaison of the selected paths
@@ -328,10 +345,6 @@ class CncOp:
             self.shapely_polygons += shapely_polygons
 
         if len(self.shapely_polygons) == 0:
-            # try import as line
-            shapely_lines = svg_path.import_as_lines_list()
-            self.shapely_lines += shapely_lines
-            # TODO: process lines only! no pocket op!
             return
         
         if len(self.shapely_polygons) == 1:
@@ -372,19 +385,72 @@ class CncOp:
                 fixed_polys.append(fixed_poly)
             self.geometry = shapely.geometry.MultiPolygon(fixed_polys)
 
+    def combine_opened_paths(self) -> None:
+        '''
+        generate the combinaison of the selected paths
+
+        the generated geometry is a MultiPolygon
+        '''
+        self.shapely_polygons : List[shapely.geometry.Polygon] = []
+        self.shapely_lines : List[shapely.geometry.LineString] = []
+
+        for svg_path in self.svg_paths:
+            shapely_lines = svg_path.import_as_lines_list()
+            self.shapely_lines += shapely_lines
+        
+        if len(self.shapely_lines) == 1:
+            self.geometry = shapely.geometry.MultiLineString(self.shapely_lines)
+            return
+
+        o = self.shapely_lines[0]
+        other = shapely.ops.unary_union(self.shapely_lines[1:])
+
+        if self.combinaison == "Union":
+            geometry = o.union(other)
+        if self.combinaison == "Intersection":
+            geometry = o.intersection(other)
+        if self.combinaison == "Difference":
+            geometry = o.difference(other)
+        if self.combinaison == "Xor":
+            geometry = o.symmetric_difference(other)
+        
+        self.geometry = geometry
+
     def calculate_geometry(self, toolModel: ToolModel):
         '''
         '''
-        self.combine()
+        if self.is_closed_paths_op():
 
-        if self.cam_op == "Pocket":
-            self.calculate_preview_geometry_pocket()
-        elif self.cam_op == "Inside":
-            self.calculate_preview_geometry_inside(toolModel)
-        elif self.cam_op == "Outside":
-            self.calculate_preview_geometry_outside(toolModel)
-        elif self.cam_op == "Engrave":
-            self.calculate_preview_geometry_engrave()
+            self.combine()
+
+            if self.cam_op == "Pocket":
+                self.calculate_preview_geometry_pocket()
+            elif self.cam_op == "Inside":
+                self.calculate_preview_geometry_inside(toolModel)
+            elif self.cam_op == "Outside":
+                self.calculate_preview_geometry_outside(toolModel)
+            elif self.cam_op == "Engrave":
+                self.calculate_preview_geometry_engrave()
+
+        if self.is_opened_paths_op():
+
+            self.combine_opened_paths()
+
+            if self.cam_op == "Engrave" or True:
+                self.calculate_opened_paths_preview_geometry_engrave()
+            '''
+            elif self.cam_op == "Inside":
+                self.calculate_opened_paths_preview_geometry_inside(toolModel)  # TODO
+            elif self.cam_op == "Outside":
+                self.calculate_opened_paths_preview_geometry_outside(toolModel) # TODO
+            '''
+
+    def calculate_opened_paths_preview_geometry_engrave(self):
+        '''
+        '''
+        for line in self.geometry.geoms:
+            svg_path = SvgPath.from_shapely_linestring("pycut_geometry_engrave", line, False)
+            self.geometry_svg_paths.append(svg_path)
 
     def calculate_preview_geometry_pocket(self):
         '''
@@ -507,19 +573,35 @@ class CncOp:
         #        # start from the inner ring and cam in the outside dir
         #        pass 
 
-        if cam_op != "Engrave" :
-            # 'left' for Inside OR pocket, 'right' for Outside
-            geometry = ShapelyUtils.offsetMultiPolygon(geometry, offset, 'right' if cam_op == 'Outside' else 'left', consider_interiors_offsets = True)
+        if self.geometry.geom_type == 'MultiPolygon':
 
-        if cam_op == "Pocket":
-            self.cam_paths = cam.pocket(geometry, toolData["diameterTool"], 1 - toolData["stepover"], direction == "Climb")
-        elif cam_op == "Inside" or cam_op == "Outside":
-            width = width.toMm()
-            if width < toolData["diameterTool"]:
-                width = toolData["diameterTool"]
-            self.cam_paths = cam.outline(geometry, toolData["diameterTool"], cam_op == "Inside", width, 1 - toolData["stepover"], direction == "Climb")
-        elif cam_op == "Engrave":
-            self.cam_paths = cam.engrave(geometry, direction == "Climb")
+            if cam_op != "Engrave" :
+                # 'left' for Inside OR pocket, 'right' for Outside
+                geometry = ShapelyUtils.offsetMultiPolygon(geometry, offset, 'right' if cam_op == 'Outside' else 'left', consider_interiors_offsets = True)
+
+            if cam_op == "Pocket":
+                self.cam_paths = cam.pocket(geometry, toolData["diameterTool"], 1 - toolData["stepover"], direction == "Climb")
+            elif cam_op == "Inside" or cam_op == "Outside":
+                width = width.toMm()
+                if width < toolData["diameterTool"]:
+                    width = toolData["diameterTool"]
+                self.cam_paths = cam.outline(geometry, toolData["diameterTool"], cam_op == "Inside", width, 1 - toolData["stepover"], direction == "Climb")
+            elif cam_op == "Engrave":
+                self.cam_paths = cam.engrave(geometry, direction == "Climb")
+
+        if self.geometry.geom_type == 'MultiLineString':
+
+            if cam_op == "Engrave":
+                self.cam_paths = cam.engrave_opened_paths(geometry, direction == "Climb")
+            '''
+            elif cam_op == "Inside" or cam_op == "Outside":
+                width = width.toMm()
+                if width < toolData["diameterTool"]:
+                    width = toolData["diameterTool"]
+                self.cam_paths = cam.outline_opened_paths(geometry, toolData["diameterTool"], cam_op == "Inside", width, 1 - toolData["stepover"], direction == "Climb")
+            '''
+
+        # -------------------------------------------------------------------------------------
 
         for cam_path in self.cam_paths:
             svg_path = SvgPath.from_shapely_linestring("pycut_toolpath", cam_path.path, cam_path.safeToClose)
