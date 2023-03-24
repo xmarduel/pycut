@@ -18,6 +18,6 @@
       <line id="line" stroke="blue" stroke-width="2" fill="rgb(121,0,121)"
          x1="150" y1="0" x2="150" y2="150" />
       <polyline id="polyline" stroke="cyan" stroke-width="2" fill="none"
-        points="0,100 50,25 50,75"  />
+        points="0,125 50,50 50,100 100,25"  />
    </g>
 </svg>
