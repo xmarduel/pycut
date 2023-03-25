@@ -13,7 +13,7 @@ USAGE: start the program from the installation folder
 
 > python pycut.py -h
 
-> python pycut.py -job <path_to_job>
+> python pycut.py [<path_to_job>]
 
 Dependencies: Python 3.10
 - PySide6-6.3.0
@@ -45,6 +45,7 @@ BUGS:
 MAIN IMPROVMENTS OVER JSCUT
 - tabs "on the fly" (no need to define them in the svg file)
 - flip X/Y in GCode (good for my machine - the "1419" one -)
+- can handle polygons as well as lines ("opened paths")
 
 TODO:
 - better settings
