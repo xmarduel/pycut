@@ -104,7 +104,6 @@ svg file, display it, and allow the user to define cnc operations on the
 
 <p>The shapes inside a svg file are the following:</p>
 <ul>
-  <li><span style="color:#0000ff">&lt;path&gt;</span></li>
   <li><span style="color:#0000ff">&lt;rect&gt;</span></li>
   <li><span style="color:#0000ff">&lt;circle&gt;</span></li>
   <li><span style="color:#0000ff">&lt;ellipse&gt;</span></li>
@@ -113,7 +112,15 @@ svg file, display it, and allow the user to define cnc operations on the
   <li><span style="color:#0000ff">&lt;polyline&gt;</span></li>
 </ul>
 
-<p>Moreover, the user will also want to process the strings written in the svg
+<p>The almighty</p>
+<ul>
+  <li><span style="color:#0000ff">&lt;path&gt;</span></li>
+</ul>
+
+<p>can define in a single path definition many closed or opened paths, not
+nrcessarely related with each others.</p>
+
+<p>Finally, the user will also want to process the strings written in the svg
 file:</p>
 <ul>
   <li><span style="color:#0000ff">&lt;text&gt;</span></li>
@@ -139,8 +146,8 @@ as a path can be composed of many subpaths (starting with
 right, and in case of closed paths will also try to import them as polygons
 "<strong>with holes</strong>" even if this concept does not really exist in
 SVG. Moreover <strong>PyCut</strong> will try to import a path as a valid
-MultiPolygon in the shapely sense, or as a list of valid Multipolygons if one
-single valid Multipolygon is not possible.</p>
+MultiPolygon in the shapely sense, or as a list of valid MultiPolygons if one
+single valid MultiPolygon is not possible.</p>
 
 <p>There is one exception: <strong>PyCut</strong> cannot process yet <span
 style="color:#0000ff">&lt;text&gt;</span> items. Fortunately, <span
@@ -162,8 +169,8 @@ style="color:#0000ff">&lt;tspan&gt;</span> tag at all is also possible (and
 simpler). <strong><span style="color:#8000ff">IN PROGRESS</span></strong>.</p>
 
 <p>All in all, if <strong>PyCut</strong> were to display text strings at the
-wrong positions, the user can always export the svg from Inkscape (and write
-<strong>PyCut</strong> a ticket).</p>
+wrong positions, the user can always export the svg from
+<strong>Inkscape</strong> (and write <strong>PyCut</strong> a ticket).</p>
 
 <h4>Transformations</h4>
 
@@ -184,14 +191,15 @@ Actually, this utility is found in the source code under the folder
 <h2 id="P-02">Svg Documents</h2>
 
 <p>Svg datas can be written with basic editors (vi, emacs etc..) or with real
-applications, as Inkscape. In both case, the svg datas should contains (and
-<strong>Inkscape</strong> does it automatically) a <strong>viewBox</strong>,
-and the svg attributes <strong>width</strong> and <strong>height.</strong>
-These 2 important attributes should be given with a unit, i.e
-"<strong>mm</strong>" or "<strong>in</strong>" as we are editing data in order
-to later generate gcode (with "mm" or "in" units). This will be used later when
-creating GCode with the <strong>PyCut</strong> option "Zero Lower Left of
-Material" as reference. This option needs the height of the material.</p>
+applications, as <strong>Inkscape</strong>. In both cases, the svg datas should
+contains (and <strong>Inkscape</strong> does it automatically) a
+<strong>viewBox</strong>, and the svg attributes <strong>width</strong> and
+<strong>height.</strong> These 2 important attributes should be given with a
+unit, i.e "<strong>mm</strong>" or "<strong>in</strong>" as we are editing data
+in order to later generate gcode (with "mm" or "in" units). This will be used
+later when creating GCode with the <strong>PyCut</strong> option "Zero Lower
+Left of Material" as reference. This option needs the height of the
+material.</p>
 
 <h4>Shapes "id"</h4>
 
@@ -289,7 +297,7 @@ named as the CAM operation name.</p>
 <h2 id="P-04">GUI Components</h2>
 
 <h3 id="P-04-01">Svg Settings</h3>
-<img src="pycut_svgsettings.png" width="310"> 
+<img src="pycut_svgsettings.png" width="310px"> 
 
 <h4>user units scale</h4>
 
@@ -487,7 +495,7 @@ is extracted form the svg file: the svg "height" attribute.</p>
 </ul>
 <img src="./pycut_gcode_generation.png" width="310px">
 <!-- ----------------------------------------------------------------------------------------------------------->
-<!-- -----------------------------------------------------------------------------------------------------------> 
+<!-- ----------------------------------------------------------------------------------------------------------->
 
 <p></p>
 
