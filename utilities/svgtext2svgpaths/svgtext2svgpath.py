@@ -225,7 +225,7 @@ class SvgText2SvgPathsConverter:
         element.attrib["fill-opacity"] = wpath.attribs.get("fill-opacity", "0.5")
 
         # svgpathtols fix
-        if wpath.path.closed:  # wpath.path.isclosed():
+        if wpath.path.isclosedac():
             element.attrib["d"] = wpath.path.d() + " Z"
         else: 
             element.attrib["d"] = wpath.path.d()
@@ -1024,7 +1024,11 @@ class Char2SvgPath:
             start = end + 1
 
         self.path = Path(*paths)
+
+        ## XM
+        r = path.isclosed()
         self.path.closed = True  # letters are closed polygons
+        r2 = path.isclosed()
 
         return self.path
 
@@ -1164,9 +1168,7 @@ class String2SvgPaths:
         self.paths.append(paths[0])
 
         for k, path in enumerate(paths[1:]):
-            is_closed = path.closed  # svgpathtools bug! closed props is lost by translated
             path = path.translated(shifts[k]  * fontsize / Char2SvgPath.CHAR_SIZE )
-            path.closed = is_closed
             self.paths.append(path)
 
         # svg positioning
@@ -1176,9 +1178,7 @@ class String2SvgPaths:
         translate_pos = self.pos[0] + self.pos[1] * 1j
         
         for k, path in enumerate(self.paths):
-            is_closed = path.closed  # svgpathtools bug! closed props is lost by translated
             path = path.translated(translate_pos)
-            path.closed = is_closed
             pos_paths.append(path)
 
         self.paths = pos_paths
@@ -1188,9 +1188,8 @@ class String2SvgPaths:
     def write_paths(self):
         paths = ""
         for path in self.paths:
-            is_closed = path.closed  # path.isclosed()
             d = ""
-            if is_closed:
+            if path.isclosedac():
                 # svgpathtools fix
                 d = path.d() + " Z"
             else:
@@ -1291,9 +1290,8 @@ if __name__ == '__main__':
 
             style = "fill:%s;fill-opacity:%s;" % (attribs.get("fill", "#000000"), attribs.get("fill-opacity", "1.0"))
 
-            is_closed = path.closed  # path.isclosed()
             d = ""
-            if is_closed:
+            if path.isclosedac():
                 d = path.d() + " Z"
             else:
                 d = path.d()

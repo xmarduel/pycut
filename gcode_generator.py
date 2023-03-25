@@ -325,7 +325,7 @@ class CncOp:
         opened_paths_op = True
 
         for svgpath in self.svg_paths:
-            if svgpath.svg_path.closed:
+            if svgpath.svg_path.isclosedac():
                 opened_paths_op = False
                 break
 
@@ -636,6 +636,8 @@ class CncOp:
             if cam_op == "Engrave":
                 self.cam_paths = cam.engrave_opened_paths(geometry, direction == "Climb")
             elif cam_op == "Inside" or cam_op == "Outside":
+                geometry = self.preview_geometry
+
                 width = width.toMm()
                 if width < toolData["diameterTool"]:
                     width = toolData["diameterTool"]

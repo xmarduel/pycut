@@ -183,8 +183,8 @@ class cam:
 
         if is_inside :
             # because we always start from the outer ring -> we go "inside"
-            current = ShapelyUtils.offsetMultiLine(multiline, cutter_dia /2, 'left')
-            offset = ShapelyUtils.offsetMultiLine(multiline, width - cutter_dia / 2, 'left')
+            current = ShapelyUtils.offsetMultiLine(multiline, 0.0, 'left')
+            offset = ShapelyUtils.offsetMultiLine(multiline, width - 0.0, 'left')
             #bounds = ShapelyUtils.diff(current, offset)
             bounds = current
             eachOffset = eachWidth
@@ -195,14 +195,14 @@ class cam:
 
             if direction == "inner2outer":
                 # because we always start from the inner ring -> we go "outside"
-                current = ShapelyUtils.offsetMultiLine(multiline, cutter_dia /2, 'right')
-                offset = ShapelyUtils.offsetMultiLine(multiline, width - cutter_dia / 2, 'right')
+                current = ShapelyUtils.offsetMultiLine(multiline, 0.0, 'right')
+                offset = ShapelyUtils.offsetMultiLine(multiline, width - 0.0, 'right')
                 #bounds = ShapelyUtils.diff(current, offset)
                 bounds = current
             else:
                 # because we always start from the outer ring -> we go "inside"
-                current = ShapelyUtils.offsetMultiLine(multiline, cutter_dia /2, 'left')
-                offset = ShapelyUtils.offsetMultiLine(multiline, width - cutter_dia / 2, 'left')
+                current = ShapelyUtils.offsetMultiLine(multiline, 0.0, 'left')
+                offset = ShapelyUtils.offsetMultiLine(multiline, width - 0.0, 'left')
                 #bounds = ShapelyUtils.diff(current, offset)
                 bounds = current
 
@@ -261,7 +261,6 @@ class cam:
             return []
 
         # mergePaths need MultiPolygon
-        bounds = ShapelyUtils.multiLineToMultiPoly(bounds)
         bounds = shapely.geometry.MultiPolygon()
 
         return cls.mergePaths(bounds, allPaths, closed_path=False)

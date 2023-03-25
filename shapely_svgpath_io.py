@@ -105,10 +105,10 @@ class SvgPath:
             
             # --------------------------------------------------------
             # >>> svgpathtools "problem" is closed / isclosed()
-            for path, attribs in zip(paths, attributes):
-                # for circle/ellipse, closed prop is wrong!
-                if 'cx' in attribs and 'cy' in attribs:
-                    path.closed = True
+            #for path, attribs in zip(paths, attributes):
+            #    # for circle/ellipse, closed prop is wrong!
+            #    if 'cx' in attribs and 'cy' in attribs:
+            #        path.closed = True
             # <<< svgpathtools "problem" is closed / isclosed()
             # --------------------------------------------------------
 

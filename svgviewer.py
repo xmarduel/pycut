@@ -349,7 +349,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
             self.svg_path_d[shape_id] = path.d()
 
             # FIXME: is the 'closed' property lost forever by path.d()? 
-            if path.closed:
+            if path.isclosedac():
                 self.svg_path_d[shape_id] += " Z"
 
             item = SvgItem(shape_id, self, self.renderer)
@@ -514,7 +514,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         for cnc_op in cnc_ops:
             for geometry_svg_path in cnc_op.geometry_svg_paths:
-                if geometry_svg_path.svg_path.closed:
+                if geometry_svg_path.svg_path.isclosedac():
                     #polygons
                     geometry_svg_path.p_attrs['stroke'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke"]
                     geometry_svg_path.p_attrs['stroke-width'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-width"]
