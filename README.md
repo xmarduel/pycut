@@ -17,7 +17,7 @@ USAGE: start the program from the installation folder
 
 Dependencies: Python 3.10
 - PySide6-6.3.0
-- svgpathtools 1.5.1 - pip installation bundled with numpy/scipy
+- svgpathtools 1.6.0 - pip installation bundled with numpy/scipy
 - svgelements (latest) - used in the svgresolver.py utility
 - freetype-py (latest) - used in svgtext2svpath.py utility
 - shapely (1.8.2) with PyOpenGL
