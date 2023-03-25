@@ -1,4 +1,5 @@
 [
+  "jobs/cnc_test_svgpathtools.json",
   "jobs/cnc_control_panel.json",
   "jobs/cnc_all_letters_tudor.json",
   "jobs/cnc_all_letters.json"

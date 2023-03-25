@@ -262,8 +262,9 @@ class cam:
 
         # mergePaths need MultiPolygon
         bounds = ShapelyUtils.multiLineToMultiPoly(bounds)
+        bounds = shapely.geometry.MultiPolygon()
 
-        return cls.mergePaths(bounds, allPaths)
+        return cls.mergePaths(bounds, allPaths, closed_path=False)
         
     @classmethod
     def engrave(cls, geometry: shapely.geometry.MultiPolygon, climb: bool) -> List[CamPath] :
@@ -314,7 +315,7 @@ class cam:
         return camPaths
 
     @classmethod
-    def mergePaths(cls, _bounds: shapely.geometry.MultiPolygon, paths: List[shapely.geometry.LineString]) -> List[CamPath] :
+    def mergePaths(cls, _bounds: shapely.geometry.MultiPolygon, paths: List[shapely.geometry.LineString], closed_path=True) -> List[CamPath] :
         '''
         Try to merge paths. A merged path doesn't cross outside of bounds AND the interior polygons
         '''
@@ -352,9 +353,10 @@ class cam:
         pathEndPoint = currentPath[-1]
         pathStartPoint = currentPath[0]
 
-        # close if start/end point not equal - why ? I could have simple lines!
-        if pathEndPoint[0] != pathStartPoint[0] or pathEndPoint[1] != pathStartPoint[1]:
-            currentPath = currentPath + [pathStartPoint]
+        # close if start/end points not equal - in case of closed_path geometry -
+        if closed_path == True:
+            if pathEndPoint[0] != pathStartPoint[0] or pathEndPoint[1] != pathStartPoint[1]:
+                currentPath = currentPath + [pathStartPoint]
         
         currentPoint = currentPath[-1]
         paths[0] = [] # empty
@@ -398,6 +400,10 @@ class cam:
         camPaths : List[CamPath] = []
         for path in mergedPaths:
             safeToClose = not ShapelyUtils.crosses(bounds, path[0], path[-1])
+            
+            if closed_path == False:
+                safeToClose = False
+            
             camPaths.append( CamPath( shapely.geometry.LineString(path), safeToClose) )
 
         return camPaths
