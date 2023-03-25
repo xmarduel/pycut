@@ -134,6 +134,13 @@ print("orientation of offset : right is-ccw ->", ls_o_right.is_ccw)
 # -------------------------------------------------------
 # -------------------------------------------------------
 
+print("")
+print("")
+print("")
+print("  ------- with point in the middle of a segment ")
+print("")
+print("")
+
 x0 = coords1[0][0]
 y0 = coords1[0][1]
 
