@@ -69,7 +69,7 @@
     <use href="#plate_2" />
     -->
 
-    <g id="motor_base" transform="translate(16 43.5)">
+    <g id="g_motor_base" transform="translate(16 43.5)">
       <rect id="motor_base" rx="4" ry="4" width="42" height="42" style="fill:rgb(0,0,0);opacity:0.4;stroke-width:0;stroke:rgb(0,0,0)" />
       
       <g id="motor_center" transform="translate(21 21)">
