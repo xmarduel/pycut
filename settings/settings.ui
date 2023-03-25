@@ -74,13 +74,6 @@ QGroupBox {
      <property name="leftMargin">
       <number>40</number>
      </property>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_Tabs_fill_opacity">
-       <property name="text">
-        <string>fill-opacity</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label_Tabs_fill">
        <property name="minimumSize">
@@ -94,6 +87,16 @@ QGroupBox {
        </property>
       </widget>
      </item>
+     <item row="0" column="1">
+      <widget class="ColorPicker" name="colorpicker_Tabs_fill" native="true"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_Tabs_fill_opacity">
+       <property name="text">
+        <string>fill-opacity</string>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="1">
       <widget class="QDoubleSpinBox" name="doubleSpinBox_Tabs_fill_opacity">
        <property name="maximum">
@@ -103,9 +106,6 @@ QGroupBox {
         <double>0.100000000000000</double>
        </property>
       </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="ColorPicker" name="colorpicker_Tabs_fill" native="true"/>
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_Tabs_fill_opacity_disabled">
@@ -150,9 +150,6 @@ QGroupBox {
      <property name="leftMargin">
       <number>40</number>
      </property>
-     <item row="1" column="1">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_Toolpath_stroke_width"/>
-     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label_fill">
        <property name="minimumSize">
@@ -175,6 +172,9 @@ QGroupBox {
         <string>stroke-width</string>
        </property>
       </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_Toolpath_stroke_width"/>
      </item>
     </layout>
    </item>
@@ -202,19 +202,6 @@ QGroupBox {
      <property name="leftMargin">
       <number>40</number>
      </property>
-     <item row="1" column="1">
-      <widget class="QDoubleSpinBox" name="doubleSpinBox_GeometryPreview_fill_opacity">
-       <property name="decimals">
-        <number>2</number>
-       </property>
-       <property name="maximum">
-        <double>1.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>0.100000000000000</double>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label_GeometryPreview_fill">
        <property name="minimumSize">
@@ -235,6 +222,55 @@ QGroupBox {
       <widget class="QLabel" name="label_GeometryPreview_fill_opacity">
        <property name="text">
         <string>fill-opacity</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_GeometryPreview_fill_opacity">
+       <property name="decimals">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <double>1.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.100000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_GeometryPreview_stroke">
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>stroke</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="ColorPicker" name="colorpicker_GeometryPreview_stroke" native="true"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_GeometryPreview_stroke_opacity">
+       <property name="text">
+        <string>stroke-opacity</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_GeometryPreview_stroke_opacity">
+       <property name="decimals">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <double>1.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.100000000000000</double>
        </property>
       </widget>
      </item>

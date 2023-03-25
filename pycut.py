@@ -286,6 +286,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             settings_dialog.colorpicker_GeometryPreview_fill.setColor(QtGui.QColor(svgviewer.SvgViewer.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"]))
             settings_dialog.doubleSpinBox_GeometryPreview_fill_opacity.setValue(float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_CLOSED_PATHS["fill-opacity"]))
+
+            settings_dialog.colorpicker_GeometryPreview_stroke.setColor(QtGui.QColor(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"]))
+            settings_dialog.doubleSpinBox_GeometryPreview_stroke_opacity.setValue(float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"]))
         
 
         def setDefaults():
@@ -301,11 +304,19 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                     "fill-opacity": str(settings_dialog.doubleSpinBox_Tabs_fill_opacity.value()),
                     "fill-opacity-disabled": str(settings_dialog.doubleSpinBox_Tabs_fill_opacity_disabled.value()),
                 },
-                "GEOMETRY_PREVIEW" : {
+                "GEOMETRY_PREVIEW_CLOSED_PATHS" : {
                     "stroke": "#ff0000",
                     "stroke-width": "0",
+                    "stroke-opacity": "1.0",
                     "fill": settings_dialog.colorpicker_GeometryPreview_fill.color().name(),
                     "fill-opacity": str(settings_dialog.doubleSpinBox_GeometryPreview_fill_opacity.value()),
+                },
+                "GEOMETRY_PREVIEW_OPENED_PATHS" : {
+                    "stroke": settings_dialog.colorpicker_GeometryPreview_stroke.color().name(),
+                    "stroke-opacity": str(settings_dialog.doubleSpinBox_GeometryPreview_stroke_opacity.value()),
+                    "stroke-width": "1",
+                    "fill": "none",
+                    "fill-opacity": "1.0"
                 },
                 "TOOLPATHS" : {
                     "stroke": settings_dialog.colorpicker_Toolpath_stroke.color().name(),

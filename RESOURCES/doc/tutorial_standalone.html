@@ -78,23 +78,29 @@ for (var i = 0; i < tree.length; i++){
 
 <h2 id="P-01">Introduction</h2>
 
-<p>Welcome to <strong>PyCut</strong>, a clone of <strong>jsCut</strong>, the excellent (at least for beginners) CAM,
-web-based programm, that takes as input <strong>SVG</strong> files and generates G-Code. So why this rewrite ?</p>
+<p>Welcome to <strong>PyCut</strong>, a clone of <strong>jsCut</strong>, the
+excellent (at least for beginners) CAM, web-based programm, that takes as input
+<strong>SVG</strong> files and generates G-Code. So why this rewrite ?</p>
 
-<p><strong>PyCut</strong> aims to offer all the (minimalistics) features found in jsCut, with some small improvements.
-Hopefully you will find <strong>PyCut</strong> usefull when learning CNC and producing your first GCode files.</p>
+<p><strong>PyCut</strong> aims to offer all the (minimalistics) features found
+in jsCut, with some small improvements. Hopefully you will find
+<strong>PyCut</strong> usefull when learning CNC and producing your first GCode
+files.</p>
 
-<p>Starting point of <strong>PyCut</strong> are <strong>SVG</strong> files, your designs. In the following, we will use
-<strong>Inkscape</strong> to produce <strong>SVG</strong> files and will shortly point out what has to be taken into
-consideration when creating "usable" <strong>SVG</strong> files for <strong>PyCut</strong>.</p>
+<p>Starting point of <strong>PyCut</strong> are <strong>SVG</strong> files,
+your designs. In the following, we will use <strong>Inkscape</strong> to
+produce <strong>SVG</strong> files and will shortly point out what has to be
+taken into consideration when creating "usable" <strong>SVG</strong> files for
+<strong>PyCut</strong>.</p>
 
 <h3>SVG</h3>
 
 <h4>Shapes</h4>
 
-<p>The SVG standard is large, and <strong>PyCut</strong> cannot simply read a svg file, display it, and allow the user
-to define cnc operations on the "shapes" defined inside the svg file. Of course, the goal of <strong>PyCut</strong> is
-to process as many svg data as possible.</p>
+<p>The SVG standard is large, and <strong>PyCut</strong> cannot simply read a
+svg file, display it, and allow the user to define cnc operations on the
+"shapes" defined inside the svg file. Of course, the goal of
+<strong>PyCut</strong> is to process as many svg data as possible.</p>
 
 <p>The shapes inside a svg file are the following:</p>
 <ul>
@@ -107,198 +113,276 @@ to process as many svg data as possible.</p>
   <li><span style="color:#0000ff">&lt;polyline&gt;</span></li>
 </ul>
 
-<p>Moreover, the user will also want to process the strings written in the svg file:</p>
+<p>Moreover, the user will also want to process the strings written in the svg
+file:</p>
 <ul>
   <li><span style="color:#0000ff">&lt;text&gt;</span></li>
 </ul>
 
-<p><strong>PyCut</strong> processes "paths" in order to calculate cnc paths, but thankfully it can read out of the box
-all kind of shapes, so there is <strong>no need</strong> to convert your svg file into "paths only" svg.</p>
+<p><strong>PyCut</strong> processes "paths" in order to calculate cnc paths,
+but thankfully it can read out of the box all kind of shapes, so there is
+<strong>no need</strong> to convert your svg file into "paths only" svg.</p>
 
-<p><strong>PyCut</strong> will import these shapes either as "polygon" (i.e. <strong>closed shape</strong>) or as
-"line" (i.e. <strong>opened shape</strong>). Of course, &lt;rect&gt;, &lt;circle&gt;, &lt;ellipse&gt; and
-&lt;polygon&gt; are closed shapes, while &lt;line&gt; and &lt;polyline&gt; are opened shapes. When importing a
-&lt;path&gt;, things are more complicated, as a path can be composed of many subpaths (starting with
-[<strong>Mm</strong>]) and every subpath can be closed or not (ending with [<strong>Zz</strong>]).
-<strong>PyCut</strong> will try to import these paths right, and in case of closed paths will also try to import them
-as polygons "<strong>with holes</strong>" even if this concept does not really exist in SVG. Moreover
-<strong>PyCut</strong> will try to import a path as a valid MultiPolygon in the shapely sense, or as a list of valid
-Multipolygons if one single valid Multipolygon is not possible.</p>
+<p><strong>PyCut</strong> will import these shapes either as "<span
+style="color:#0000ff">polygon</span>" (i.e. <strong>closed shape</strong>) or
+as "<span style="color:#0000ff">line</span>" (i.e. <strong>opened
+shape</strong>). Of course, <span style="color:#0000ff">&lt;rect&gt;</span>,
+<span style="color:#0000ff">&lt;circle&gt;</span>, <span
+style="color:#0000ff">&lt;ellipse&gt;</span> and <span
+style="color:#0000ff">&lt;polygon&gt;</span> are closed shapes, while <span
+style="color:#0000ff">&lt;line&gt;</span> and <span
+style="color:#0000ff">&lt;polyline&gt;</span> are opened shapes. When importing
+a <span style="color:#0000ff">&lt;path&gt;</span>, things are more complicated,
+as a path can be composed of many subpaths (starting with
+[<strong>Mm</strong>]) and every subpath can be closed or not (ending with
+[<strong>Zz</strong>]). <strong>PyCut</strong> will try to import these paths
+right, and in case of closed paths will also try to import them as polygons
+"<strong>with holes</strong>" even if this concept does not really exist in
+SVG. Moreover <strong>PyCut</strong> will try to import a path as a valid
+MultiPolygon in the shapely sense, or as a list of valid Multipolygons if one
+single valid Multipolygon is not possible.</p>
 
-<p>There is one exception: <strong>PyCut</strong> cannot process yet <code>&lt;text&gt;</code> items. Fortunately,
-<code>&lt;text&gt;</code> items can be converted into <code>&lt;path&gt;</code> items within <strong>Inkscape</strong>,
-sonce they will be ignored by <strong>PyCut</strong>. <strong>PyCut</strong> also comes with the utiilty
-<strong>svgtext2svgpath.py</strong> which will also convert your <code>&lt;text&gt;</code> items. How to use it? just
-call the <strong>svgtext2svgpath.py</strong> program which outputs in a new svg the &lt;text&gt; items as &lt;path&gt;
-items. Copy/paste the result of a <code>&lt;text&gt;</code> conversion into your own svg. A successfull conversion will
-only occurs if the <code>&lt;text&gt;</code> item is simple enough: the text "value" should not be splitted into
-several <code>&lt;tspan&gt;</code> items with different fonts. No <code>&lt;tspan&gt;</code> tag at all is also
-possible (and simpler). <strong><span style="color:#8000ff">IN PROGRESS</span></strong>.</p>
+<p>There is one exception: <strong>PyCut</strong> cannot process yet <span
+style="color:#0000ff">&lt;text&gt;</span> items. Fortunately, <span
+style="color:#0000ff">&lt;text&gt;</span> items can be converted into <span
+style="color:#0000ff">&lt;path&gt;</span> items within
+<strong>Inkscape</strong>, sonce they will be ignored by
+<strong>PyCut</strong>. <strong>PyCut</strong> also comes with the utiilty
+<strong>svgtext2svgpath.py</strong> which will also convert your <code><span
+style="color:#0000ff">&lt;text&gt;</span></code> items. How to use it? just
+call the <strong>svgtext2svgpath.py</strong> program which outputs in a new svg
+the <span style="color:#0000ff">&lt;text&gt;</span> items as <span
+style="color:#0000ff">&lt;path&gt;</span> items. Copy/paste the result of a
+<span style="color:#0000ff">&lt;text&gt;</span> conversion into your own svg. A
+successfull conversion will only occurs if the <span
+style="color:#0000ff">&lt;text&gt;</span> item is simple enough: the text
+"value" should not be splitted into several <span
+style="color:#0000ff">&lt;tspan&gt;</span> items with different fonts. No <span
+style="color:#0000ff">&lt;tspan&gt;</span> tag at all is also possible (and
+simpler). <strong><span style="color:#8000ff">IN PROGRESS</span></strong>.</p>
 
-<p>All in all, if <strong>PyCut</strong> were to display text strings at the wrong positions, the user can always
-export the svg from Inkscape (and write <strong>PyCut</strong> a ticket).</p>
+<p>All in all, if <strong>PyCut</strong> were to display text strings at the
+wrong positions, the user can always export the svg from Inkscape (and write
+<strong>PyCut</strong> a ticket).</p>
 
 <h4>Transformations</h4>
 
-<p><strong>PyCut</strong> cannot handle "out of the box" (yet) svg datas where shapes/paths are defined with
-"transform" operations (translate, rotate etc.).</p>
+<p><strong>PyCut</strong> cannot handle "out of the box" (yet) svg datas where
+shapes/paths are defined with "transform" operations (translate, rotate
+etc.).</p>
 
-<p>Nevertheless, it is possible to "resolve" the shapes transformations, as <strong>PyCut</strong> also comes with the
-utility <strong>svgresolver.py</strong>. The <strong>svgresolver.py</strong> program reads any svg data and outputs a
-new svg data with all transformations resolved, while keeping the<strong>"id"</strong>s right. <strong><span
-style="color:#8000ff">IN PROGRESS</span></strong>: this utility should be integrated into <strong>PyCut</strong> so
-that the user can spare this step. Actually, this utility is found in the source code under the folder
+<p>Nevertheless, it is possible to "resolve" the shapes transformations, as
+<strong>PyCut</strong> also comes with the utility
+<strong>svgresolver.py</strong>. The <strong>svgresolver.py</strong> program
+reads any svg data and outputs a new svg data with all transformations
+resolved, while keeping the<strong>"id"</strong>s right. <strong><span
+style="color:#8000ff">IN PROGRESS</span></strong>: this utility should be
+integrated into <strong>PyCut</strong> so that the user can spare this step.
+Actually, this utility is found in the source code under the folder
 "<strong>utilities/svgresolver</strong>".</p>
 
 <h2 id="P-02">Svg Documents</h2>
 
-<p>Svg datas can be written with basic editors (vi, emacs etc..) or with real applications, as Inkscape. In both case,
-the svg datas should contains (and <strong>Inkscape</strong> does it automatically) a <strong>viewBox</strong>, and the
-svg attributes <strong>width</strong> and <strong>height.</strong> These 2 important attributes should be given with a
-unit, i.e "<strong>mm</strong>" or "<strong>in</strong>" as we are editing data in order to later generate gcode (with
-"mm" or "in" units). This will be used later when creating GCode with the <strong>PyCut</strong> option "Zero Lower
-Left of Material" as reference. This option needs the height of the material.</p>
+<p>Svg datas can be written with basic editors (vi, emacs etc..) or with real
+applications, as Inkscape. In both case, the svg datas should contains (and
+<strong>Inkscape</strong> does it automatically) a <strong>viewBox</strong>,
+and the svg attributes <strong>width</strong> and <strong>height.</strong>
+These 2 important attributes should be given with a unit, i.e
+"<strong>mm</strong>" or "<strong>in</strong>" as we are editing data in order
+to later generate gcode (with "mm" or "in" units). This will be used later when
+creating GCode with the <strong>PyCut</strong> option "Zero Lower Left of
+Material" as reference. This option needs the height of the material.</p>
 
 <h4>Shapes "id"</h4>
 
-<p>In order to reference the shapes or paths, the shapes / paths must have their own <strong>"id"</strong>, hopefully
-unique inside the svg document.</p>
+<p>In order to reference the shapes, the shapes must have their own
+<strong>"id"</strong>, hopefully unique inside the svg document.</p>
 
-<p>If the user has edited the svg "per hand", then he should not forget to give all shapes an unique id. If the user
-has created the svg with <strong>Inkscape</strong>, then "id"s are automatically given, but maybe the user will want to
-edit them and give them meaningfull name.</p>
+<p>If the user has edited the svg "per hand", then he should not forget to give
+all shapes an unique id. If the user has created the svg with
+<strong>Inkscape</strong>, then "id"s are automatically given, but maybe the
+user will want to edit them and give them meaningfull name.</p>
 
 <h4>Writing Svg Files with Inkscape</h4>
 
-<p>With Inkscape, the first step is to specify the "Document size". Please choose as units "mm" or "in".</p>
+<p>With <strong>Inkscape</strong>, the first step is to specify the "Document
+size". Please choose as units "<strong>mm</strong>" or "<strong>in</strong>".
+<span style="color:#8000ff"><strong>You should also do this when creating a svg
+file with a text editor</strong></span>.</p>
 
 <h4>Writing Svg Files with a Text Editor</h4>
 
-<p>Sometimes it is easier to edit a svg file without a graphical app like Inkscape, but simply with a text editor.</p>
+<p>Sometimes it is easier to edit a svg file without a graphical app like
+Inkscape, but simply with a text editor.</p>
 
-<p>This way, it is easy for example to define shapes in the <strong>&lt;def&gt;</strong> paragraph and reuse theses
-shapes in the main body of the svg file with the help of the <strong>&lt;use&gt;</strong> tag and some transformations.
-The utility <strong>svgresolver.py</strong> will have to be used.</p>
+<p>This way, it is easy for example to define shapes in the
+<strong>&lt;def&gt;</strong> paragraph and reuse theses shapes in the main body
+of the svg file with the help of the <strong>&lt;use&gt;</strong> tag and some
+transformations. The utility <strong>svgresolver.py</strong> will have to be
+used.</p>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
 <h2 id="P-03">Basic example</h2>
 
+<h3>Opening the PyCut application</h3>
+
+<p>type in the console:</p>
+
+<p><code>&gt; python pycut.py -h</code></p>
+
+<p><code>&gt; python pycut.py [job]</code></p>
+
+<p>Without argument, pycut opens itself. With argument, a previously saved job
+is opened.</p>
+
+<p>For the very first time, start pycut without job.</p>
+
 <h3 id="P-03-01">Importing a SVG file</h3>
 
-<p>So import your svg into <strong>PyCut</strong>: The SVG content should be displayed in the central area. </p>
+<p>So import your svg into <strong>PyCut</strong>: The SVG content should be
+displayed in the central area. </p>
 
 <div class="info">
-<p><strong>Note:</strong> text is not displayed inside the <strong>PyCut</strong> svg viewer. It has to be converted as
-&lt;path&gt; in order to be further processed.</p>
+<p><strong>Note:</strong> text is not displayed inside the
+<strong>PyCut</strong> svg viewer. It has to be converted as &lt;path&gt; in
+order to be further processed.</p>
 </div>
 
 <h3 id="P-03-02">Creating a PyCut Job</h3>
 
-<p>Then create a new "job" : this is a kind of setting file that stores for a given svg file all the CAM operations
-that the users has created, together with all others settings relevant when generating g-code. It can be created, saved
+<p>Then create a new "job" : this is a kind of setting file that stores for a
+given svg file all the CAM operations that the users has created, together with
+all others settings relevant when generating g-code. It can be created, saved
 and loaded again and modified - quite practical.</p>
 
 <h3 id="P-03-03">Creating CAM operations</h3>
 
-<p>Once an empty job is created and a svg file loaded, it is time to create some CAM operations: select 1 or more items
-in SVG window (they should turn beige) and click the button "Create Operation": a new operation in the operation table
-should appear.</p>
+<p>Once an empty job is created and a svg file loaded, it is time to create
+some CAM operations: select 1 or more items in SVG window (they should turn
+beige) and click the button "Create Operation": a new operation in the
+operation table should appear.</p>
 
-<p>Define the properties of the operation: the main one is the CAM operation type: "<strong>Pocket</strong>",
-"<strong>Engrave</strong>", "<strong>Inside</strong>" or "<strong>Outside</strong>". The others options will be
-discussed later. Default values at this point should be Ok.</p>
+<p>Define the properties of the operation: the main one is the CAM operation
+type: "<strong>Pocket</strong>", "<strong>Engrave</strong>",
+"<strong>Inside</strong>" or "<strong>Outside</strong>". The others options
+will be discussed later. Default values at this point should be Ok.</p>
 
 <h3 id="P-03-04">Create the GCode</h3>
 
-<p>Select one or more CAM operations in the operations table: the "geometry" of the operation(s) should turn black in
-the SVG viewer: this is (are) the region(s) of the material that wil be affected when cutting the material.</p>
+<p>Select one or more CAM operations in the operations table: the "geometry" of
+the operation(s) should turn black in the SVG viewer: this is (are) the
+region(s) of the material that wil be affected when cutting the material.</p>
 
-<p>Then finish creating the G-Code by pressing one button "g code" in the operation table: the tool path(s) should
-appears in green in the black regions.</p>
+<p>Then finish creating the G-Code by pressing one button "g code" in the
+operation table: the tool path(s) should appears in green in the black
+regions.</p>
 
-<p>The produced G-Code can be inspected in the "G code viewer" and the "G code Simulator" display areas.</p>
+<p>The produced G-Code can be inspected in the "G code viewer" and the "G code
+Simulator" display areas.</p>
 
-<p>You just have to save the G-Code and you're done. The gcode file should be named as the CAM operation name.</p>
+<p>You just have to save the G-Code and you're done. The gcode file should be
+named as the CAM operation name.</p>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
 <h2 id="P-04">GUI Components</h2>
 
 <h3 id="P-04-01">Svg Settings</h3>
-
 <img src="pycut_svgsettings.png" width="310"> 
 
 <h4>user units scale</h4>
 
-<p>What is this? And why is it disabled and set to 1? Let's take an example: in <strong>Inkscape</strong>, the user
-would set the document's size to <strong>100x40 mm</strong>, supposedly the size of the material to work on. Inkscape
-automatically sets the <strong>user units scale </strong><strong>to 1</strong>. Note that the user units are not "px"
-or whatever. This means, <strong>1 "user unit" is equal to 1 mm (and the viewbox is "0 0 100 40" while width="100mm"
-and height="40mm")</strong></p>
+<p>What is this? And why is it disabled and set to 1? Let's take an example: in
+<strong>Inkscape</strong>, the user would set the document's size to
+<strong>100x40 mm</strong>, supposedly the size of the material to work on.
+Inkscape automatically sets the <strong>user units scale </strong><strong>to
+1</strong>. Note that the user units are not "px" or whatever. This means,
+<strong>1 "user unit" is equal to 1 mm (and the viewbox is "0 0 100 40" while
+width="100mm" and height="40mm")</strong></p>
 <img src="Inkscape_settings_mm.png" width="563px"> 
 
-<p>Of course when editing the svg (in Inkscape or in a text editor), <strong>the user is only concerned with the user
-units</strong> : he draws a rectangle of size 20x30 at the location 10x10. The users may simply even not be aware of
-this fact. When choosing mm, conversion from <strong>user units</strong> to <strong>mm</strong> is absolutely
-straightforward as, as said, the user units scale is 1 per default .</p>
+<p>Of course when editing the svg (in Inkscape or in a text editor),
+<strong>the user is only concerned with the user units</strong> : he draws a
+rectangle of size 20x30 at the location 10x10. The users may simply even not be
+aware of this fact. When choosing mm, conversion from <strong>user
+units</strong> to <strong>mm</strong> is absolutely straightforward as, as
+said, the user units scale is 1 per default .</p>
 
-<p>Let's consider now the case where the user switches to <strong>inches</strong> for the document size. The size of
-the document becomes then <strong>3,93701x1,57480 inches</strong> (yes, 100 / 25.4 is 3.93701). Note that
-<strong>Inkscape</strong> automatically change the <strong>user units scale to 25.4</strong>. Because of this, the
-<strong>view box remains at "0 0 100 40"</strong>. That way, a rectangle filling the full document size is still
+<p>Let's consider now the case where the user switches to
+<strong>inches</strong> for the document size. The size of the document becomes
+then <strong>3,93701x1,57480 inches</strong> (yes, 100 / 25.4 is 3.93701). Note
+that <strong>Inkscape</strong> automatically change the <strong>user units
+scale to 25.4</strong>. Because of this, the <strong>view box remains at "0 0
+100 40"</strong>. That way, a rectangle filling the full document size is still
 100x40.</p>
 <img src="Inkscape_settings_in.png" width="563px"> 
 
-<p>Filling a box half the size of the document is 50x20, right, but what are real physical dimensions of that box ? The
-user would have to steadily calculate from fancy user units (ex: 50x20) in inches</p>
+<p>Filling a box half the size of the document is 50x20, right, but what are
+real physical dimensions of that box ? The user would have to steadily
+calculate from fancy user units (ex: 50x20) in inches</p>
 
-<p>But why would a user use inches and work with user units scale factor 25.4 (leading infact to work in mm) ? The user
-can set the user units scale factor to 1. The effect of this is that now, in order to fill the whole document with a
-rectangle, the rectangle has to be of the size user unit size of 3.93701x1.57480. </p>
+<p>But why would a user use inches and work with user units scale factor 25.4
+(leading infact to work in mm) ? The user can set the user units scale factor
+to 1. The effect of this is that now, in order to fill the whole document with
+a rectangle, the rectangle has to be of the size user unit size of
+3.93701x1.57480. </p>
 
-<p>Of course the size of the material is certainly not 3.93701x1.57480 inches, but something like 5x3 inches: an human
-readable size. The user knows that he has to draw a rectangle inside the material of size let say 1.5x1.2 inches. And
-these dimensions are the ones that are effectively saved in the svg document. So the user units are exactly the same as
-the "physical units" when choosing a scale of 1.</p>
+<p>Of course the size of the material is certainly not 3.93701x1.57480 inches,
+but something like 5x3 inches: an human readable size. The user knows that he
+has to draw a rectangle inside the material of size let say 1.5x1.2 inches. And
+these dimensions are the ones that are effectively saved in the svg document.
+So the user units are exactly the same as the "physical units" when choosing a
+scale of 1.</p>
 
-<p>Now how can <strong>PyCut</strong> handles these settings? <strong>PyCut</strong> only works with the <strong>user
-units</strong>. <strong>PyCut</strong> will calculate toolpaths in the same order of magnitude of the user units values
-of the svg. If you choose "<strong>mm</strong>" for the gcode output, you would have set your svg document size in
-"<strong>mm</strong>", and the <strong>user unit scale to 1</strong>. Because of this, the gcode X,Y and Z values are
-the same as the one of the paths values.</p>
+<p>Now how can <strong>PyCut</strong> handles these settings?
+<strong>PyCut</strong> only works with the <strong>user units</strong>.
+<strong>PyCut</strong> will calculate toolpaths in the same order of magnitude
+of the user units values of the svg. If you choose "<strong>mm</strong>" for
+the gcode output, you would have set your svg document size in
+"<strong>mm</strong>", and the <strong>user unit scale to 1</strong>. Because
+of this, the gcode X,Y and Z values are the same as the one of the paths
+values.</p>
 
-<p>If you choose "<strong>in</strong>" for the gcode output, then certainly you have set your svg document size in
-"<strong>in</strong>", and the <strong>with user unit scale equals to 1</strong>,no conversion is either needed.</p>
+<p>If you choose "<strong>in</strong>" for the gcode output, then certainly you
+have set your svg document size in "<strong>in</strong>", and the <strong>with
+user unit scale equals to 1</strong>,no conversion is either needed.</p>
 
-<p>Note that this scale factor is not explicitely given in the svg file. It is calculated from the ratio viewbox /
-width. It is eventually the task of the user to know what is the user units scale value, and, theorically, to set it in
-<strong>PyCut</strong>. But my opinion is, working with a user unit scal of 1 is preferably.</p>
+<p>Note that this scale factor is not explicitely given in the svg file. It is
+calculated from the ratio viewbox / width. It is eventually the task of the
+user to know what is the user units scale value, and, theorically, to set it in
+<strong>PyCut</strong>. But my opinion is, working with a user unit scal of 1
+is preferably.</p>
 
-<p><strong><span style="color:#0000ff">I personnaly stick to svg document units in "mm" with user units scale factor of
-1, and output my gcode in mm. No confusion! </span></strong></p>
+<p><strong><span style="color:#0000ff">I personnaly stick to svg document units
+in "mm" with user units scale factor of 1, and output my gcode in mm. No
+confusion! </span></strong></p>
 
 <div class="warning">
-<p><strong>Warning</strong>: The user could use "mm", and set a scale factor of 10 or whatever, but it certainly makes
-no sense.</p>
+<p><strong>Warning</strong>: The user could use "mm", and set a scale factor of
+10 or whatever, but it certainly makes no sense.</p>
 </div>
 
-<p><strong style="color:#0000ff">I apologize for the ones who would like to work with user units scale not equals to
-1.</strong> </p>
+<p><strong style="color:#0000ff">I apologize for the ones who would like to
+work with user units scale not equals to 1.</strong> </p>
 
-<p>The further <strong>PyCut Gcode Units</strong> setting is not only a flag to set the code <strong>G20</strong>
-(inches) or <strong>G21</strong> (mm) inside the gcode file: it also allows the proper conversion of the tool diameter
+<p>The further <strong>PyCut Gcode Units</strong> setting is not only a flag to
+set the code <strong>G20</strong> (inches) or <strong>G21</strong> (mm) inside
+the gcode file: it also allows the proper conversion of the tool diameter
 physical size (inch or mm) in user units.</p>
 
 <p>The rule is:</p>
 <ul>
-  <li><strong>Gcode Units</strong> in "mm": tool diameter is transformed to mm - the same as the user units</li>
-  <li><strong>Gcode Units</strong> in "in": tool diameter is transformed to inch - the same as the user units</li>
+  <li><strong>Gcode Units</strong> in "mm": tool diameter is transformed to mm
+    - the same as the user units</li>
+  <li><strong>Gcode Units</strong> in "in": tool diameter is transformed to
+    inch - the same as the user units</li>
 </ul>
 
 <div class="warning">
-<p><strong>Warning</strong>: <strong>PyCut</strong> assumes that for "<strong>mm</strong>" or "<strong>in</strong>",
-the <strong>user unit scale factor is always 1</strong> .</p>
+<p><strong>Warning</strong>: <strong>PyCut</strong> assumes that for
+"<strong>mm</strong>" or "<strong>in</strong>", the <strong>user unit scale
+factor is always 1</strong> .</p>
 </div>
 
 <p></p>
@@ -308,23 +392,28 @@ the <strong>user unit scale factor is always 1</strong> .</p>
 
 <h3 id="P-04-03">Tabs</h3>
 
-<p>It's easy to define tabs with <strong>PyCut</strong>: just click the button "Create Tab" and a red circle is created
-in the svg viewer, of radius 5 and position (10,10). The user can drag 'n drop it fron the svg viewer, or set its
-size/postion in the tab table. Yes tabs, for simplicity, are circle. To be effective, the tabs have to be enabled and
-of course placed somewhere on the generated toolpaths. The height of the tab is shared by all tabs.</p>
+<p>It's easy to define tabs with <strong>PyCut</strong>: just click the button
+"Create Tab" and a red circle is created in the svg viewer, of radius 5 and
+position (10,10). The user can drag 'n drop it fron the svg viewer, or set its
+size/postion in the tab table. Yes tabs, for simplicity, are circle. To be
+effective, the tabs have to be enabled and of course placed somewhere on the
+generated toolpaths. The height of the tab is shared by all tabs.</p>
 <img src="./pycut_tabs.png" width="310px"> 
 
 <p></p>
 
 <div class="warning">
-<p><strong>Warning</strong>: Tabs shall not overlap with other tabs (at least the enabled ones).</p>
+<p><strong>Warning</strong>: Tabs shall not overlap with other tabs (at least
+the enabled ones).</p>
 </div>
 
-<p>You can check the Gcode generation in the viewer/simulator if everythings is Ok. </p>
+<p>You can check the Gcode generation in the viewer/simulator if everythings is
+Ok. </p>
 
 <h3 id="P-04-04">Material</h3>
 
-<p>The Operations "Cut Depth" should not be larger than the material thickness. </p>
+<p>The Operations "Cut Depth" should not be larger than the material thickness.
+</p>
 <img src="./pycut_material.png" width="310px"> 
 
 <p></p>
@@ -335,9 +424,11 @@ of course placed somewhere on the generated toolpaths. The height of the tab is 
 
 <h3 id="P-04-05">Curve to Line Conversion</h3>
 
-<p>If your design contain curves (svg "arcs" or "bezier" curves), they have to be discretized in small segments.</p>
+<p>If your design contain curves (svg "arcs" or "bezier" curves), they have to
+be discretized in small segments.</p>
 
-<p>The 2 following parameters allow to specified how fine the curve discretization will be</p>
+<p>The 2 following parameters allow to specified how fine the curve
+discretization will be</p>
 <ul>
   <li>Minimun number of segments</li>
   <li>Segment lenght</li>
@@ -345,12 +436,14 @@ of course placed somewhere on the generated toolpaths. The height of the tab is 
 
 <h3 id="P-04-06">GCode Conversion</h3>
 
-<p>The starting location of a milling operation is given by the initial location in the GCode. Per default, PyCut gives
-as starting point the (0,0) coordinates of the SVG file, which is located at the top-left of the material. The SVG
-conventions are opposite to GCode convention considering the Y direction.</p>
+<p>The starting location of a milling operation is given by the initial
+location in the GCode. Per default, PyCut gives as starting point the (0,0)
+coordinates of the SVG file, which is located at the top-left of the material.
+The SVG conventions are opposite to GCode convention considering the Y
+direction.</p>
 
-<p>So the GCode generation will have to invert the direction of the Y axis coordinates. But still the reference is the
-top-left postion.</p>
+<p>So the GCode generation will have to invert the direction of the Y axis
+coordinates. But still the reference is the top-left postion.</p>
 
 <p>It is possible to change the reference location of the generated GCode</p>
 <ul>
@@ -363,23 +456,26 @@ top-left postion.</p>
 
 <p>Note that these 4 buttons act as radio buttons.</p>
 
-<p>These four references points set the XOffset and YOffset of the GCode calculation. After a GCode generation, it is
-still possible to modify the XOffset and YOffset to fit at best how to user wants to have the origin be located with
-the help of the 2 spin boxes. </p>
+<p>These four references points set the XOffset and YOffset of the GCode
+calculation. After a GCode generation, it is still possible to modify the
+XOffset and YOffset to fit at best how to user wants to have the origin be
+located with the help of the 2 spin boxes. </p>
 
 <p>And further:</p>
 <ul>
   <li>Flip X/Y </li>
 </ul>
 
-<p>In the generated G Code, X and Y are switched.This can be helpfull, for example in the case your
-<strong>CNC</strong> is the "<strong>1419</strong>" model (mine!) which is not as large as deep. So this option allows
-to carve something like 16x10 cm without to -painfully- rotate all items in the source svg.</p>
+<p>In the generated G Code, X and Y are switched.This can be helpfull, for
+example in the case your <strong>CNC</strong> is the "<strong>1419</strong>"
+model (mine!) which is not as large as deep. So this option allows to carve
+something like 16x10 cm without to -painfully- rotate all items in the source
+svg.</p>
 
 <p></p>
 
-<p>In case of Bottom-Left location of the material, the Y size of the material is extracted form the svg file: the svg
-"height" attribute.</p>
+<p>In case of Bottom-Left location of the material, the Y size of the material
+is extracted form the svg file: the svg "height" attribute.</p>
 
 <h3 id="P-04-07">GCode Generation</h3>
 
@@ -397,12 +493,14 @@ to carve something like 16x10 cm without to -painfully- rotate all items in the 
 
 <h3>Create Operations</h3>
 
-<p>This is where the user defined its cam operations, thus this is where the action takes place.</p>
+<p>This is where the user defined its cam operations, thus this is where the
+action takes place.</p>
+<img src="./pycut_ops.png" width="1170px"> 
 
-<img src="./pycut_ops.png" width="1170px">
-
-<p>First one or more item(s) have to be selected in the svgviewer, click on "Create Operation" and a default operation
-is created. When more than one item has been selected, the user can perform logical operations on this set of item</p>
+<p>First one or more item(s) have to be selected in the svgviewer, click on
+"Create Operation" and a default operation is created. When more than one item
+has been selected, the user can perform logical operations on this set of
+item</p>
 <ul>
   <li>diff</li>
   <li>intersect</li>
@@ -410,10 +508,12 @@ is created. When more than one item has been selected, the user can perform logi
   <li>xor</li>
 </ul>
 
-<p>When "enabling" this op, the resulting geometry will be displayed ion the svgviewer</p>
+<p>When "enabling" this op, the resulting geometry will be displayed ion the
+svgviewer</p>
 
 <div class="info">
-  <p><strong>Note:</strong>the geometry is highlighted in red. the highlight color can be setup in the settings dialog.</p>
+<p><strong>Note:</strong>the geometry is highlighted in red. the highlight
+color can be setup in the settings dialog.</p>
 </div>
 
 <p>Then the cam operation can be chosen</p>
@@ -426,11 +526,13 @@ is created. When more than one item has been selected, the user can perform logi
 
 <p>For opened paths, the pocket operation is not available.</p>
 
-<p>In order to generate G code, enable one or many operations and click on "Generate G code". <strong>PyCut</strong>
-will try to do its best... The resulting G code is displayed in the G code viewer and G code simulator.</p>
+<p>In order to generate G code, enable one or many operations and click on
+"Generate G code". <strong>PyCut</strong> will try to do its best... The
+resulting G code is displayed in the G code viewer and G code simulator.</p>
 
-<p>Finally, clicking on "Save G code" will produce a valid G code file. <strong>Candle</strong> can be used 
-to send the G code to your machine. Have fun...</p>
+<p>Finally, clicking on "Save G code" will produce a valid G code file.
+<strong>Candle</strong> can be used to send the G code to your machine. Have
+fun...</p>
 </div>
 </body>
 </html>
