@@ -4,7 +4,7 @@
   height="110mm"
   viewBox="0 0 110 110"
   version="1.1"
-  id="horozontal-sides"
+  id="horizontal-sides"
   xmlns="http://www.w3.org/2000/svg"
   xmlns:svg="http://www.w3.org/2000/svg"
 >
@@ -57,11 +57,11 @@
      
     <path id="contour" style="fill:rgb(0,125,125);stroke:#0000ff;stroke-width:0.261315px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
       d="M 11,0          h 52  
-      a 4,4 0 0 1 4,4    v 27.5  
+      a 4,4 0 0 1 4,4             v 27.5  
       C 67 35.5 74 35.5  74 39.5  v 42
       a 4,4 0 0 1 -4,4   h -66
-      a 4,4 0 0 1 -4,-4  v -42
-      C 0 35.5 7 35.5  7 30  v -27.5
+      a 4,4 0 0 1 -4,-4           v -42
+      C 0 35.5 7 35.5  7 31.5     v -27.5
       a 4,4 0 0 1 4,-4   z" />
 
     <!--
@@ -75,13 +75,13 @@
       <g id="motor_center" transform="translate(21 21)">
         <use href="#motor_screw_3.0mm" transform="translate(15.5 15.5)" id="motor_screw_3.0mm_NW" />
         <use href="#motor_screw_3.0mm" transform="translate(15.5 -15.5)" id="motor_screw_3.0mm_NE" />
-        <use href="#motor_screw_3.0mm" transform="translate(-15.5 -15.5)" id="motor_screw_3.0mm_NW" />
-        <use href="#motor_screw_3.0mm" transform="translate(-15.5 15.5)" id="motor_screw_3.0mm_NE" />
+        <use href="#motor_screw_3.0mm" transform="translate(-15.5 -15.5)" id="motor_screw_3.0mm_SE" />
+        <use href="#motor_screw_3.0mm" transform="translate(-15.5 15.5)" id="motor_screw_3.0mm_SW" />
      
         <use href="#motor_screw_hole_4.0mm" transform="translate(15.5 15.5)" id="motor_screw_hole_4.0mm_NW" />
         <use href="#motor_screw_hole_4.0mm" transform="translate(15.5 -15.5)" id="motor_screw_hole_4.0mm_NE" />
-        <use href="#motor_screw_hole_4.0mm" transform="translate(-15.5 -15.5)" id="motor_screw_hole_4.0mm_NW" />
-        <use href="#motor_screw_hole_4.0mm" transform="translate(-15.5 15.5)" id="motor_screw_hole_4.0mm_NE" />
+        <use href="#motor_screw_hole_4.0mm" transform="translate(-15.5 -15.5)" id="motor_screw_hole_4.0mm_SE" />
+        <use href="#motor_screw_hole_4.0mm" transform="translate(-15.5 15.5)" id="motor_screw_hole_4.0mm_SW" />
        </g>
     </g>
 
@@ -90,15 +90,15 @@
     <use href="#spacer_hole" transform="translate(8  64.5)" id="spacer_hole_L" />
     <use href="#spacer_hole" transform="translate(66 64.5)" id="spacer_hole_R" />
 
-    <use href="#spacer_screw_hole_10.0mm" transform="translate(8  64.5)" id="#spacer_screw_hole_10.0mm_L1" />
-    <use href="#spacer_screw_hole_10.0mm" transform="translate(66 64.5)" id="#spacer_screw_hole_10.0mm_R1" />
+    <use href="#spacer_screw_hole_10.0mm" transform="translate(8  64.5)" id="spacer_screw_hole_10.0mm_L1" />
+    <use href="#spacer_screw_hole_10.0mm" transform="translate(66 64.5)" id="spacer_screw_hole_10.0mm_R1" />
       
     <use href="#spacer_screw_5.0mm" transform="translate(8  64.5)" id="spacer_screw_5.0mm_L1" />
     <use href="#spacer_screw_5.0mm" transform="translate(66 64.5)" id="spacer_screw_5.0mm_R1" />
 
     <!--   screws on vertical alu profile -->
-    <use href="#spacer_screw_hole_10.0mm" transform="translate(27  37.5)" id="#spacer_screw_hole_10.0mm_L2" />
-    <use href="#spacer_screw_hole_10.0mm" transform="translate(47  37.5)" id="#spacer_screw_hole_10.0mm_R2" />
+    <use href="#spacer_screw_hole_10.0mm" transform="translate(27  37.5)" id="spacer_screw_hole_10.0mm_L2" />
+    <use href="#spacer_screw_hole_10.0mm" transform="translate(47  37.5)" id="spacer_screw_hole_10.0mm_R2" />
 
     <use href="#spacer_screw_5.0mm" transform="translate(27 37.5)" id="spacer_screw_5.0mm_L2" />
     <use href="#spacer_screw_5.0mm" transform="translate(47 37.5)" id="spacer_screw_5.0mm_R2" />

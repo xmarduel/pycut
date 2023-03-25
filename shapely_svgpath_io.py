@@ -6,7 +6,7 @@ from typing import List
 from typing import Tuple
 from typing import Dict
 
-import tempfile
+import io
 
 import numpy as np
 import svgpathtools
@@ -93,28 +93,9 @@ class SvgPath:
         '''
         From a svg file content, read all paths and their attributes
         '''
-        # a tmp file
-        with tempfile.TemporaryDirectory() as tmpdir:
-            filename = os.path.join(tmpdir, 'temp_svg.svg')
-            
-            fp = open(filename, "w")
-            fp.write(svg_str)
-            fp.close()
+        data = io.StringIO(svg_str)
 
-            paths, attributes = svgpathtools.svg2paths(filename)
-            
-            # --------------------------------------------------------
-            # >>> svgpathtools "problem" is closed / isclosed()
-            #for path, attribs in zip(paths, attributes):
-            #    # for circle/ellipse, closed prop is wrong!
-            #    if 'cx' in attribs and 'cy' in attribs:
-            #        path.closed = True
-            # <<< svgpathtools "problem" is closed / isclosed()
-            # --------------------------------------------------------
-
-            return paths, attributes
-
-        return None, None
+        return svgpathtools.svg2paths(data)
 
     @classmethod
     def read_svg_shapes_as_paths(cls, svg_str: str) -> Dict[str, Tuple[svgpathtools.Path, Dict[str,str]]] :
@@ -704,16 +685,15 @@ class SvgPath:
         '''
         PyCut Tab import in svg viewer
         '''
-        # humm
-        svg_str = '''<?xml version='1.0' encoding='UTF-8'?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" width="110mm" height="110mm" viewBox="0 0 110 110" version="1.1" id="horozontal-sides">
-  <g id="main">
-    <circle id="tab" cx="%(cx)d" cy="%(cy)d" r="%(radius)d" />
-  </g>  
-</svg>''' % {"cx": center[0], "cy": center[1], "radius": radius}
+        svg = '''<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" 
+            version="1.1">
+            <g>
+                <circle cx="%(cx)d" cy="%(cy)d" r="%(radius)d" />
+            </g>  
+        </svg>''' % {"cx": center[0], "cy": center[1], "radius": radius}
 
 
-        paths, _ = cls.svg2paths_from_string(svg_str)
+        paths, _ = cls.svg2paths_from_string(svg)
 
         svg_path = paths[0]
 
