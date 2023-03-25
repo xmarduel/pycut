@@ -700,26 +700,24 @@ class SvgPath:
         return SvgPath(prefix, attribs) 
 
     @classmethod
-    def from_circle_def(cls, center:float, radius: float) -> 'SvgPath':
+    def from_circle_def(cls, center: List[float], radius: float) -> 'SvgPath':
         '''
         PyCut Tab import in svg viewer
         '''
-        NB_SEGMENTS = 12
-        angles = [ float(k * M_PI )/ (NB_SEGMENTS) for k in range(NB_SEGMENTS*2 +1)]
+        # humm
+        svg_str = '''<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" width="110mm" height="110mm" viewBox="0 0 110 110" version="1.1" id="horozontal-sides">
+  <g id="main">
+    <circle id="tab" cx="%(cx)d" cy="%(cy)d" r="%(radius)d" />
+  </g>  
+</svg>''' % {"cx": center[0], "cy": center[1], "radius": radius}
 
-        discretized_svg_path : List[complex] = [ complex( \
-                    center[0] + radius*math.cos(angle), 
-                    center[1] + radius*math.sin(angle) ) for angle in angles]
 
-        svg_path = svgpathtools.Path()
+        paths, _ = cls.svg2paths_from_string(svg_str)
 
-        for i in range(len(discretized_svg_path)-1):
-            start = discretized_svg_path[i]
-            end   = discretized_svg_path[i+1]
+        svg_path = paths[0]
 
-            svg_path.append(svgpathtools.Line(start, end))
-
-        return SvgPath("pycut_tab", {'d': svg_path.d()})
+        return SvgPath("pycut_tab", {'d': svg_path.d() + " Z"})
 
     @classmethod
     def fix_simple_polygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :
