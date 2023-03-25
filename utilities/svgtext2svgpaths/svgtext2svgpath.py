@@ -226,7 +226,7 @@ class SvgText2SvgPathsConverter:
 
         # svgpathtols fix
         if wpath.path.isclosedac():
-            element.attrib["d"] = wpath.path.d() + " Z"
+            element.attrib["d"] = wpath.path.d() + " Z"  # d(use_closed_attrib=True)
         else: 
             element.attrib["d"] = wpath.path.d()
         
@@ -1026,9 +1026,7 @@ class Char2SvgPath:
         self.path = Path(*paths)
 
         ## XM
-        r = path.isclosed()
         self.path.closed = True  # letters are closed polygons
-        r2 = path.isclosed()
 
         return self.path
 
@@ -1191,7 +1189,7 @@ class String2SvgPaths:
             d = ""
             if path.isclosedac():
                 # svgpathtools fix
-                d = path.d() + " Z"
+                d = path.d() + " Z"  # d(use_closed_attrib=True)
             else:
                 d = path.d()
 
@@ -1292,7 +1290,7 @@ if __name__ == '__main__':
 
             d = ""
             if path.isclosedac():
-                d = path.d() + " Z"
+                d = path.d() + " Z"  # d(suse_closed_attrib=True)
             else:
                 d = path.d()
 

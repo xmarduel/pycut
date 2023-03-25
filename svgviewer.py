@@ -346,11 +346,11 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
             path, _ = self.svg_shapes[shape_id]
 
-            self.svg_path_d[shape_id] = path.d()
-
             # FIXME: is the 'closed' property lost forever by path.d()? 
             if path.isclosedac():
-                self.svg_path_d[shape_id] += " Z"
+                self.svg_path_d[shape_id] = path.d() + " Z" # d(use_closed_attrib=True)
+            else:
+                self.svg_path_d[shape_id] = path.d()
 
             item = SvgItem(shape_id, self, self.renderer)
             self.scene.addItem(item)
