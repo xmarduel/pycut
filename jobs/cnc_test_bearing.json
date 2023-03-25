@@ -1,0 +1,132 @@
+{
+  "svg_file": "svg/test_bearing.resolved.svg",
+  "operations": [
+    {
+      "Name": "op",
+      "type": "Inside",
+      "Deep": 15.75,
+      "paths": [
+        "bearing_screw_4.5mm_SW_from_full"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 15.75,
+      "paths": [
+        "bearing_screw_4.5mm_SE_from_full"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 15.75,
+      "paths": [
+        "bearing_screw_4.5mm_NE_from_full"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 15.75,
+      "paths": [
+        "bearing_screw_4.5mm_NW_from_full"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 15.75,
+      "paths": [
+        "bearing_cylinder_from_full"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Inside",
+      "Deep": 15.75,
+      "paths": [
+        "bearing_cylinder_from_full"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    }
+  ],
+  "settings": {
+    "svg": {
+      "px_per_inch": 96
+    },
+    "Tabs": {
+      "units": "mm",
+      "height": 1.0,
+      "tabs": []
+    },
+    "Tool": {
+      "Units": "mm",
+      "Diameter": 2.4999999999999996,
+      "Angle": 180,
+      "PassDepth": 1.0,
+      "StepOver": 0.5,
+      "Rapid": 500,
+      "Plunge": 100,
+      "Cut": 250
+    },
+    "Material": {
+      "Units": "mm",
+      "Thickness": 15.0,
+      "ZOrigin": "Top",
+      "Clearance": 5.0
+    },
+    "CurveToLineConversion": {
+      "MinimumSegments": 5,
+      "MinimumSegmentsLength": 0.01
+    },
+    "GCodeConversion": {
+      "Units": "mm",
+      "FlipXY": false,
+      "XOffset": -66.0,
+      "YOffset": 16.0,
+      "XYReference": "ZERO_CENTER_OF_OP"
+    },
+    "GCodeGeneration": {
+      "ReturnToZeroAtEnd": true,
+      "SpindleControl": true,
+      "SpindleSpeed": 1000,
+      "ProgramEnd": true
+    }
+  }
+}
