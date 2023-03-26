@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="20mm"
+   height="10mm"
+   viewBox="0 0 40 20"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="coupler.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#cccccc"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="1"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="5.050206"
+     inkscape:cx="61.284629"
+     inkscape:cy="44.948662"
+     inkscape:window-width="1500"
+     inkscape:window-height="938"
+     inkscape:window-x="-6"
+     inkscape:window-y="-6"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     inkscape:lockguides="false" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <circle
+       style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.593678;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
+       id="path1122"
+       cx="10"
+       cy="10"
+       r="10" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.425276px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 28.40421,5.2126379 h 3.191577 v 3.1915737 h 3.191575 v 3.1915764 h -3.191575 v 3.191574 H 28.40421 V 11.595788 H 25.212637 V 8.4042116 h 3.191573 z"
+       id="path1576"
+       sodipodi:nodetypes="ccccccccccccc" />
+    <path
+       style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.999999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
+       id="path1652"
+       sodipodi:type="arc"
+       sodipodi:cx="10.41687"
+       sodipodi:cy="9.9465914"
+       sodipodi:rx="5"
+       sodipodi:ry="5"
+       sodipodi:start="0"
+       sodipodi:end="5.2490031"
+       sodipodi:arc-type="chord"
+       d="M 15.41687,9.9465914 A 5,5 0 0 1 11.695244,14.780406 5,5 0 0 1 6.0705657,12.41836 5,5 0 0 1 6.9160162,6.3767143 5,5 0 0 1 12.973015,5.6493686 Z"
+       sodipodi:open="true" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.529167"
+       x="5.8677478"
+       y="28.186144"
+       id="text2681"><tspan
+         sodipodi:role="line"
+         id="tspan2679"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.529167"
+         x="5.8677478"
+         y="28.186144">Diameter = 5mm</tspan><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.529167"
+         x="5.8677478"
+         y="31.713919"
+         id="tspan4137">Flat surface = 3mm</tspan></text>
+  </g>
+</svg>
