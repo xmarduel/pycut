@@ -3,16 +3,14 @@ __pycache__/
 *.py[co]
 *$py.class
 
-misc_private/text2path/fonts
-misc_private/text2path/ziafont
-
+gcode/
 misc_private/stl*
 #misc_private/cnc3018-frames-parts
 misc_private/cnc1419
+misc_private/cnc1310/backlash.mp4
 
 misc_private/mesh*
 misc_private/images/
-misc_private/numba/
 
 gcodeviewer/drawers/*h
 gcodeviewer/drawers/*cpp
