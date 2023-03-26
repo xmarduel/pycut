@@ -22,7 +22,7 @@ from val_with_unit import ValWithUnit
 # https://stackoverflow.com/questions/53288926/qgraphicssvgitem-event-propagation-interactive-svg-viewer
 
 class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
-    def __init__(self, id, view, renderer, parent=None):
+    def __init__(self, id:str, view: 'SvgViewer', renderer: QtSvg.QSvgRenderer, parent=None):
         super(SvgItem, self).__init__(parent)
         self.view = view
         self.setSharedRenderer(renderer)
@@ -31,7 +31,7 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
         #print("bounds on id=", bounds)
         #print("bounds  rect=", self.boundingRect())
         self.setPos(bounds.topLeft())
-        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
+        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True if id != "splash_screen" else False)
 
         self.selected_effect = None
         self.makeGraphicsEffect()
@@ -321,8 +321,29 @@ class SvgViewer(QtWidgets.QGraphicsView):
             "ellipse",
             "polygon",
             "line",
-            "polyline"
+            "polyline",
         ]
+
+        images_types = [
+            "image"
+        ]
+
+        images : List[etree.ElementTree] = []
+
+        for element in elements:
+            tag = element.tag.split("{http://www.w3.org/2000/svg}")[1]
+            
+            if tag in images_types:
+                images.append(element)
+
+        for image in images:
+            image_id = image.attrib.get('id', None)
+
+            item = SvgItem(image_id, self, self.renderer)
+            # does not work
+            self.scene.addItem(item)
+            self.items.append(item)
+
 
         shapes : List[etree.ElementTree] = []
         

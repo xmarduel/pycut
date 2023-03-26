@@ -2,106 +2,106 @@
   "svg_file": "svg/three_rects.svg",
   "operations": [
     {
-      "Name": "op1",
+      "name": "op1",
       "type": "Pocket",
-      "Deep": 6.299999999999995,
+      "cut_depth": 6.299999999999995,
       "paths": [
         "p1",
         "p2"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 4.000000000000007
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 4.000000000000007
     },
     {
-      "Name": "op2",
+      "name": "op2",
       "type": "Inside",
-      "Deep": 0.125,
+      "cut_depth": 0.125,
       "paths": [
         "p1",
         "p2"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op3",
+      "name": "op3",
       "type": "Engrave",
-      "Deep": 0.125,
+      "cut_depth": 0.125,
       "paths": [
         "p1",
         "p2"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op4",
+      "name": "op4",
       "type": "Engrave",
-      "Deep": 0.125,
+      "cut_depth": 0.125,
       "paths": [
         "p1",
         "p2"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "opx_p1",
+      "name": "opx_p1",
       "type": "Engrave",
-      "Deep": 11.0,
+      "cut_depth": 11.0,
       "paths": [
         "p1"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 5.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 5.0
     },
     {
-      "Name": "opx_p2",
+      "name": "opx_p2",
       "type": "Pocket",
-      "Deep": 0.125,
+      "cut_depth": 0.125,
       "paths": [
         "p2"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "opx_p3",
+      "name": "opx_p3",
       "type": "Inside",
-      "Deep": 5.0,
+      "cut_depth": 5.0,
       "paths": [
         "p3"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 5.0,
-      "Width": 5.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 5.0,
+      "width": 5.0
     }
   ],
   "settings": {
@@ -139,37 +139,37 @@
       ]
     },
     "Tool": {
-      "Units": "mm",
-      "Diameter": 3.175,
-      "Angle": 180,
-      "PassDepth": 2.0,
-      "StepOver": 0.4,
-      "Rapid": 1000,
-      "Plunge": 127,
-      "Cut": 1000
+      "units": "mm",
+      "diameter": 3.175,
+      "angle": 180,
+      "passdepth": 2.0,
+      "stepover": 0.4,
+      "rapid": 1000,
+      "plunge": 127,
+      "cut": 1000
     },
     "Material": {
-      "Units": "mm",
-      "Thickness": 20.0,
-      "ZOrigin": "Top",
-      "Clearance": 10.0
+      "units": "mm",
+      "thickness": 20.0,
+      "z_origin": "Top",
+      "clearance": 10.0
     },
     "CurveToLineConversion": {
-      "MinimumSegments": 5,
-      "MinimumSegmentsLength": 0.01
+      "minimum_segments": 5,
+      "minimum_segments_length": 0.01
     },
     "GCodeConversion": {
-      "Units": "mm",
-      "FlipXY": false,
-      "XOffset": 0.0,
-      "YOffset": 0.0,
-      "XYReference": "ZERO_TOP_LEFT_OF_MATERIAL"
+      "units": "mm",
+      "flip_xy": false,
+      "x_offset": 0.0,
+      "y_offset": 0.0,
+      "xy_reference": "ZERO_TOP_LEFT_OF_MATERIAL"
     },
     "GCodeGeneration": {
-      "ReturnToZeroAtEnd": true,
-      "SpindleControl": true,
-      "SpindleSpeed": 10000,
-      "ProgramEnd": true
+      "return_to_zero_at_end": true,
+      "spindle_control": true,
+      "spindle_speed": 10000,
+      "program_end": true
     }
   }
 }

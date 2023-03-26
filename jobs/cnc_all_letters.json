@@ -2,732 +2,732 @@
   "svg_file": "svg/all_letters_path.svg",
   "operations": [
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_a"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_b"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_c"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_d"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_e"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_f"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_g"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_h"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_i"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_j"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Climb",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Climb",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_k"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_l"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_m"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_n"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_o"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_p"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_q"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_r"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_s"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_t"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_u"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_v"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_w"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_x"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_y"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_z"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_A"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_B"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_C"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_D"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_E"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_F"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_G"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_H"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_I"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_J"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_K"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_L"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_M"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_N"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_O"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_P"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_Q"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_R"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_S"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_T"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_U"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_V"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_W"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_X"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_Y"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "path_Z"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     }
   ],
   "settings": {
@@ -740,37 +740,37 @@
       "tabs": []
     },
     "Tool": {
-      "Units": "mm",
-      "Diameter": 0.6,
-      "Angle": 180,
-      "PassDepth": 1.0,
-      "StepOver": 0.5,
-      "Rapid": 1000,
-      "Plunge": 127,
-      "Cut": 1000
+      "units": "mm",
+      "diameter": 0.6,
+      "angle": 180,
+      "passdepth": 1.0,
+      "stepover": 0.5,
+      "rapid": 1000,
+      "plunge": 127,
+      "cut": 1000
     },
     "Material": {
-      "Units": "inch",
-      "Thickness": 1.0,
-      "ZOrigin": "Top",
-      "Clearance": 0.1
+      "units": "inch",
+      "thickness": 1.0,
+      "z_origin": "Top",
+      "clearance": 0.1
     },
     "CurveToLineConversion": {
-      "MinimumSegments": 5,
-      "MinimumSegmentsLength": 0.01
+      "minimum_segments": 5,
+      "minimum_segments_length": 0.01
     },
     "GCodeConversion": {
-      "Units": "mm",
-      "FlipXY": false,
-      "XOffset": 0.0,
-      "YOffset": 100.0,
-      "XYReference": "ZERO_LOWER_LEFT_OF_OP"
+      "units": "mm",
+      "flip_xy": false,
+      "x_offset": 0.0,
+      "y_offset": 100.0,
+      "xy_reference": "ZERO_LOWER_LEFT_OF_OP"
     },
     "GCodeGeneration": {
-      "ReturnToZeroAtEnd": true,
-      "SpindleControl": true,
-      "SpindleSpeed": 12000,
-      "ProgramEnd": false
+      "return_to_zero_at_end": true,
+      "spindle_control": true,
+      "spindle_speed": 12000,
+      "program_end": false
     }
   }
 }

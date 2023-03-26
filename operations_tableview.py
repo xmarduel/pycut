@@ -9,16 +9,16 @@ from PySide6 import QtWidgets
 
 class OpItem:
     def __init__(self, data):
-        self.name = data.get("Name", "op")
+        self.name = data.get("name", "op")
         self.cam_op = data.get("type", "Pocket")
-        self.cutDepth = data.get("Deep", 3.175)
+        self.cut_depth = data.get("cut_depth", 3.175)
         self.paths = data.get("paths", [])      
-        self.ramp = data.get("RampPlunge", False)
-        self.combinaison = data.get("Combine", "Union")
-        self.direction = data.get("Direction", "Conventional")
-        self.units = data.get("Units", "mm")
-        self.margin = data.get("Margin", 0.0)
-        self.width = data.get("Width", 0.0)
+        self.ramp_plunge = data.get("ramp_plunge", False)
+        self.combinaison = data.get("combinaison", "Union")
+        self.direction = data.get("direction", "Conventional")
+        self.units = data.get("units", "mm")
+        self.margin = data.get("margin", 0.0)
+        self.width = data.get("width", 0.0)
 
         # not in the data
         self.enabled = False
@@ -31,22 +31,22 @@ class OpItem:
     def __str__(self):
         '''
         '''
-        return "op: %s %s [%f] %s %s %s %f" % (self.name, self.cam_op, self.cutDepth, self.ramp, self.enabled, self.combinaison, self.cutDepth)
+        return "op: %s %s [%f] %s %s %s %f" % (self.name, self.cam_op, self.cut_depth, self.ramp, self.enabled, self.combinaison, self.cut_depth)
 
     def to_dict(self) -> Dict[str, Any]:
         '''
         '''
         return {
-            "Name": self.name,
+            "name": self.name,
             "type": self.cam_op,
-            "Deep": self.cutDepth,
+            "cut_depth": self.cut_depth,
             "paths": self.paths,  
-            "RampPlunge": self.ramp ,
-            "Combine": self.combinaison,
-            "Direction": self.direction,
-            "Units": self.units,
-            "Margin": self.margin ,
-            "Width": self.width 
+            "ramp_plunge": self.ramp_plunge ,
+            "combinaison": self.combinaison,
+            "direction": self.direction,
+            "units": self.units,
+            "margin": self.margin ,
+            "width": self.width 
         }
 
 class PyCutDoubleSpinBox(QtWidgets.QDoubleSpinBox):
@@ -505,8 +505,8 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
             "enabled",                  # [2] checkbox
             "paths",                    # [3] str
             "units",
-            "cutDepth",                 # [5] float
-            "ramp",                     # [6] checkbox
+            "cut_depth",                # [5] float
+            "ramp_plunge",              # [6] checkbox
             "combinaison",
             "direction",
             "margin",                   # [9] float
@@ -553,7 +553,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
             self.openPersistentEditor(self.model().index(k, 1)) # cam_op
             self.openPersistentEditor(self.model().index(k, 2)) #   enabled
             self.openPersistentEditor(self.model().index(k, 4)) # units
-            self.openPersistentEditor(self.model().index(k, 5)) #       cutDepth
+            self.openPersistentEditor(self.model().index(k, 5)) #       cut_depth
             self.openPersistentEditor(self.model().index(k, 6)) #   ramp
             self.openPersistentEditor(self.model().index(k, 7)) # combinaison
             self.openPersistentEditor(self.model().index(k, 8)) # direction
@@ -657,8 +657,8 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
             "enabled",                  # [2] checkbox
             "paths",                    # [3] str
             "units",
-            "cutDepth",                 # [5] float
-            "ramp",                     # [6] checkbox
+            "cut_depth",                # [5] float
+            "ramp_plunge",              # [6] checkbox
             "combinaison",
             "direction",
             "margin",                   # [9] float
@@ -687,7 +687,7 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
         attrib = self.header[col]
 
         # update pycut GUI
-        if attrib in ["cam_op", "enabled", "paths", "units", "cutDepth", "ramp", "combinaison", "margin", "width"]:
+        if attrib in ["cam_op", "enabled", "paths", "units", "cut_depth", "ramp_plunge", "combinaison", "margin", "width"]:
             cnc_op = self.operations[row]
             setattr(cnc_op, attrib, value)
 

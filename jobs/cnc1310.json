@@ -2,113 +2,113 @@
   "svg_file": "misc_private/svg/cnc1310/svgelements/cnc1310-60-100mm.resolved.svg",
   "operations": [
     {
-      "Name": "op",
+      "name": "op",
       "type": "Inside",
-      "Deep": 8.0,
+      "cut_depth": 8.0,
       "paths": [
         "z_screw_central_holex"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Inside",
-      "Deep": 8.0,
+      "cut_depth": 8.0,
       "paths": [
         "bearing_cylinder_left"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Inside",
-      "Deep": 8.0,
+      "cut_depth": 8.0,
       "paths": [
         "bearing_cylinder_right"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 8.0,
+      "cut_depth": 8.0,
       "paths": [
         "abstand_screw_SW",
         "abstand_screw_SE",
         "abstand_screw_NE",
         "abstand_screw_NW"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Inside",
-      "Deep": 4.0,
+      "cut_depth": 4.0,
       "paths": [
         "abstand_SW",
         "abstand_SE",
         "abstand_NE",
         "abstand_NW"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Inside",
-      "Deep": 8.0,
+      "cut_depth": 8.0,
       "paths": [
         "spindle-hole"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Outside",
-      "Deep": 8.0,
+      "cut_depth": 8.0,
       "paths": [
         "contour"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 8.0,
+      "cut_depth": 8.0,
       "paths": [
         "bearing_screw_4.5mm_use28",
         "bearing_screw_4.5mm_use30",
@@ -119,12 +119,12 @@
         "bearing_screw_4.5mm_use40",
         "bearing_screw_4.5mm_use42"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     }
   ],
   "settings": {
@@ -137,37 +137,37 @@
       "tabs": []
     },
     "Tool": {
-      "Units": "mm",
-      "Diameter": 3.0,
-      "Angle": 180,
-      "PassDepth": 1.0,
-      "StepOver": 0.4,
-      "Rapid": 500,
-      "Plunge": 100,
-      "Cut": 200
+      "units": "mm",
+      "diameter": 3.0,
+      "angle": 180,
+      "passdepth": 1.0,
+      "stepover": 0.4,
+      "rapid": 500,
+      "plunge": 100,
+      "cut": 200
     },
     "Material": {
-      "Units": "mm",
-      "Thickness": 50.0,
-      "ZOrigin": "Top",
-      "Clearance": 10.0
+      "units": "mm",
+      "thickness": 50.0,
+      "z_origin": "Top",
+      "clearance": 10.0
     },
     "CurveToLineConversion": {
-      "MinimumSegments": 5,
-      "MinimumSegmentsLength": 0.1
+      "minimum_segments": 5,
+      "minimum_segments_length": 0.1
     },
     "GCodeConversion": {
-      "Units": "mm",
-      "FlipXY": false,
-      "XOffset": 0.0,
-      "YOffset": 0.0,
-      "XYReference": "ZERO_TOP_LEFT_OF_MATERIAL"
+      "units": "mm",
+      "flip_xy": false,
+      "x_offset": 0.0,
+      "y_offset": 0.0,
+      "xy_reference": "ZERO_TOP_LEFT_OF_MATERIAL"
     },
     "GCodeGeneration": {
-      "ReturnToZeroAtEnd": true,
-      "SpindleControl": true,
-      "SpindleSpeed": 10000,
-      "ProgramEnd": false
+      "return_to_zero_at_end": true,
+      "spindle_control": true,
+      "spindle_speed": 10000,
+      "program_end": false
     }
   }
 }

@@ -2,88 +2,88 @@
   "svg_file": "svg/test_bearing.resolved.svg",
   "operations": [
     {
-      "Name": "op",
+      "name": "op",
       "type": "Inside",
-      "Deep": 15.75,
+      "cut_depth": 15.75,
       "paths": [
         "bearing_screw_4.5mm_SW_from_full"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 15.75,
+      "cut_depth": 15.75,
       "paths": [
         "bearing_screw_4.5mm_SE_from_full"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 15.75,
+      "cut_depth": 15.75,
       "paths": [
         "bearing_screw_4.5mm_NE_from_full"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 15.75,
+      "cut_depth": 15.75,
       "paths": [
         "bearing_screw_4.5mm_NW_from_full"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 15.75,
+      "cut_depth": 15.75,
       "paths": [
         "bearing_cylinder_from_full"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Inside",
-      "Deep": 15.75,
+      "cut_depth": 15.75,
       "paths": [
         "bearing_cylinder_from_full"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     }
   ],
   "settings": {
@@ -96,37 +96,37 @@
       "tabs": []
     },
     "Tool": {
-      "Units": "mm",
-      "Diameter": 2.4999999999999996,
-      "Angle": 180,
-      "PassDepth": 1.0,
-      "StepOver": 0.5,
-      "Rapid": 500,
-      "Plunge": 100,
-      "Cut": 250
+      "units": "mm",
+      "diameter": 2.4999999999999996,
+      "angle": 180,
+      "passdepth": 1.0,
+      "stepover": 0.5,
+      "rapid": 500,
+      "plunge": 100,
+      "cut": 250
     },
     "Material": {
-      "Units": "mm",
-      "Thickness": 15.0,
-      "ZOrigin": "Top",
-      "Clearance": 5.0
+      "units": "mm",
+      "thickness": 15.0,
+      "z_origin": "Top",
+      "clearance": 5.0
     },
     "CurveToLineConversion": {
-      "MinimumSegments": 5,
-      "MinimumSegmentsLength": 0.01
+      "minimum_segments": 5,
+      "minimum_segments_length": 0.01
     },
     "GCodeConversion": {
-      "Units": "mm",
-      "FlipXY": false,
-      "XOffset": -66.0,
-      "YOffset": 16.0,
-      "XYReference": "ZERO_CENTER_OF_OP"
+      "units": "mm",
+      "flip_xy": false,
+      "x_offset": -66.0,
+      "y_offset": 16.0,
+      "xy_reference": "ZERO_CENTER_OF_OP"
     },
     "GCodeGeneration": {
-      "ReturnToZeroAtEnd": true,
-      "SpindleControl": true,
-      "SpindleSpeed": 1000,
-      "ProgramEnd": true
+      "return_to_zero_at_end": true,
+      "spindle_control": true,
+      "spindle_speed": 1000,
+      "program_end": true
     }
   }
 }

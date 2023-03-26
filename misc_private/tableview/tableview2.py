@@ -10,63 +10,63 @@ from PySide6 import QtWidgets
 
 operations = [
     {
-      "Name": "op1",
+      "name": "op1",
       "paths": ["p1", "p2"],
       "type": "Pocket",
-      "Deep": 0.125,       
-      "RampPlunge": True,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "inch",
-      "Margin": 0.0
+      "cut_depth": 0.125,       
+      "ramp_plunge": True,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "inch",
+      "margin": 0.0
     },
     {
-      "Name": "op2",
+      "name": "op2",
       "paths": ["p1", "p2"],
       "type": "Inside",
-      "Deep": 0.125,
-      "RampPlunge": True,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "inch",
-      "Margin": 0.0,
-      "Width": 0.0
+      "cut_depth": 0.125,
+      "ramp_plunge": True,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "inch",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op3",
+      "name": "op3",
       "paths": ["p1", "p2"],
       "type": "Outside",
-      "Deep": 0.125,
-      "RampPlunge": True,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "inch",
-      "Margin": 0.0,
-      "Width": 0.0
+      "cut_depth": 0.125,
+      "ramp_plunge": True,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "inch",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op4",
+      "name": "op4",
       "paths": ["p4"],
       "type": "Engrave",
-      "Deep": 1.125,
-      "RampPlunge": False,
-      "Combine": "Difference",
-      "Direction": "Climb",
-      "Units": "mm"
+      "cut_depth": 1.125,
+      "ramp_plunge": False,
+      "combinaison": "Difference",
+      "direction": "Climb",
+      "units": "mm"
     }
 ]
 
 class CncOp:
     def __init__(self, data):
-        self.name = data.get("Name", "op")
+        self.name = data.get("name", "op")
         self.cam_op = data.get("type", "Pocket")
-        self.cutDepth = data.get("Deep", 0.125)
+        self.cut_depth = data.get("cut_depth", 0.125)
         self.paths = data.get("paths", [])      
-        self.ramp = data.get("RampPlunge", False)
-        self.combinaison = data.get("Combine", "Union")
-        self.direction = data.get("Direction", "Conventional")
-        self.units = data.get("Units", "inch")
-        self.margin = data.get("Margin", 0.0)
+        self.ramp_plunge = data.get("ramp_plunge", False)
+        self.combinaison = data.get("combinaison", "Union")
+        self.direction = data.get("direction", "Conventional")
+        self.units = data.get("units", "inch")
+        self.margin = data.get("margin", 0.0)
 
         # not in the data
         self.enabled = False
@@ -79,7 +79,7 @@ class CncOp:
     def __str__(self):
         '''
         '''
-        return "op: %s %s [%f] %s %s %s %f" % (self.name, self.cam_op, self.cutDepth, self.ramp, self.enabled, self.combinaison, self.cutDepth)
+        return "op: %s %s [%f] %s %s %s %f" % (self.name, self.cam_op, self.cut_depth, self.ramp, self.enabled, self.combinaison, self.cut_depth)
 
 
 class PMFDoubleSpinBox(QtWidgets.QDoubleSpinBox):
@@ -641,8 +641,8 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
             "cam_op",
             "enabled",                  # [3] checkbox
             "paths",                    # [4] str
-            "cutDepth",                 # [5] float
-            "ramp",                     # [6] checkbox
+            "cut_depth",                # [5] float
+            "ramp_plunge",              # [6] checkbox
             "combinaison",
             "direction",
             "units",

@@ -2,102 +2,102 @@
   "svg_file": "svg/all_letters_slaine_paths.svg",
   "operations": [
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "text_a"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "text_b"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "text_c"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "text_d"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "text_e"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "text_f"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     },
     {
-      "Name": "op",
+      "name": "op",
       "type": "Pocket",
-      "Deep": 3.175,
+      "cut_depth": 3.175,
       "paths": [
         "text_g"
       ],
-      "RampPlunge": false,
-      "Combine": "Union",
-      "Direction": "Conventional",
-      "Units": "mm",
-      "Margin": 0.0,
-      "Width": 0.0
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     }
   ],
   "settings": {
@@ -110,37 +110,37 @@
       "tabs": []
     },
     "Tool": {
-      "Units": "mm",
-      "Diameter": 0.5000000000000001,
-      "Angle": 180,
-      "PassDepth": 3.0,
-      "StepOver": 0.5,
-      "Rapid": 500,
-      "Plunge": 100,
-      "Cut": 200
+      "units": "mm",
+      "diameter": 0.5000000000000001,
+      "angle": 180,
+      "passdepth": 3.0,
+      "stepover": 0.5,
+      "rapid": 500,
+      "plunge": 100,
+      "cut": 200
     },
     "Material": {
-      "Units": "mm",
-      "Thickness": 50.0,
-      "ZOrigin": "Top",
-      "Clearance": 10.0
+      "units": "mm",
+      "thickness": 50.0,
+      "z_origin": "Top",
+      "clearance": 10.0
     },
     "CurveToLineConversion": {
-      "MinimumSegments": 5,
-      "MinimumSegmentsLength": 0.01
+      "minimum_segments": 5,
+      "minimum_segments_length": 0.01
     },
     "GCodeConversion": {
-      "Units": "mm",
-      "FlipXY": false,
-      "XOffset": 0.0,
-      "YOffset": 0.0,
-      "XYReference": "ZERO_TOP_LEFT_OF_MATERIAL"
+      "units": "mm",
+      "flip_xy": false,
+      "x_offset": 0.0,
+      "y_offset": 0.0,
+      "xy_reference": "ZERO_TOP_LEFT_OF_MATERIAL"
     },
     "GCodeGeneration": {
-      "ReturnToZeroAtEnd": true,
-      "SpindleControl": true,
-      "SpindleSpeed": 1000,
-      "ProgramEnd": true
+      "return_to_zero_at_end": true,
+      "spindle_control": true,
+      "spindle_speed": 1000,
+      "program_end": true
     }
   }
 }

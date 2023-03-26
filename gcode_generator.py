@@ -260,24 +260,24 @@ class CncOp:
     '''
     '''
     def __init__(self, operation: Dict[str,Any]):
-        self.units = operation["Units"]
-        self.name = operation["Name"]
+        self.units = operation["units"]
+        self.name = operation["name"]
         self.paths = operation["paths"]
-        self.combinaison = operation["Combine"]
-        self.ramp = operation["RampPlunge"]
+        self.combinaison = operation["combinaison"]
+        self.ramp_plunge = operation["ramp_plunge"]
         self.cam_op = operation["type"]
-        self.direction = operation["Direction"]
-        self.cutDepth = ValWithUnit(operation["Deep"], self.units)
+        self.direction = operation["direction"]
+        self.cut_depth = ValWithUnit(operation["cut_depth"], self.units)
 
         self.enabled = operation.get("enabled", False)
 
-        if "Margin" in operation:
-            self.margin = ValWithUnit(operation["Margin"], self.units)
+        if "margin" in operation:
+            self.margin = ValWithUnit(operation["margin"], self.units)
         else:
             self.margin = None
 
-        if "Width" in operation:
-            self.width = ValWithUnit(operation["Width"], self.units)
+        if "width" in operation:
+            self.width = ValWithUnit(operation["width"], self.units)
         else:
             self.width = None
 
@@ -302,7 +302,7 @@ class CncOp:
     def __str__(self):
         '''
         '''
-        return "op: %s %s [%f] %s" % (self.name, self.cam_op, self.cutDepth, self.enabled)
+        return "op: %s %s [%f] %s" % (self.name, self.cam_op, self.cut_depth, self.enabled)
 
     def setup(self, svg_viewer: SvgViewer):
         '''
@@ -591,10 +591,10 @@ class CncOp:
         toolData = toolModel.getCamData()
 
         #name = self.name
-        #ramp = self.ramp
+        #ramp_plunge = self.ramp_plunge
         cam_op = self.cam_op
         direction = self.direction
-        #cutDepth = self.cutDepth
+        #cut_depth = self.cut_depth
         margin = self.margin
         width = self.width
 
@@ -867,9 +867,9 @@ class GcodeGenerator:
             gcode += f"M3 S{self.gcodeModel.spindleSpeed}\r\n"
 
         for idx, cnc_op in enumerate(cnc_ops):
-            cutDepth = self.unitConverter.fromMm(cnc_op.cutDepth.toMm())
-            botZ = ValWithUnit(topZ - cutDepth, self.units)
-            tabZ = self.unitConverter.fromMm(topZ.toMm() - cutDepth.toMm() + tabHeight.toMm())
+            cut_depth = self.unitConverter.fromMm(cnc_op.cut_depth.toMm())
+            botZ = ValWithUnit(topZ - cut_depth, self.units)
+            tabZ = self.unitConverter.fromMm(topZ.toMm() - cut_depth.toMm() + tabHeight.toMm())
 
             nb_paths = len(cnc_op.cam_paths)  # in use!
 
@@ -879,7 +879,7 @@ class GcodeGenerator:
             gcode += f"\r\n; Type:         {cnc_op.cam_op}"
             gcode += f"\r\n; Paths:        {nb_paths}"
             gcode += f"\r\n; Direction:    {cnc_op.direction}"
-            gcode += f"\r\n; Cut Depth:    {cutDepth}"
+            gcode += f"\r\n; Cut Depth:    {cut_depth}"
             gcode += f"\r\n; Pass Depth:   {passDepth}"
             gcode += f"\r\n; Plunge rate:  {plungeRate}"
             gcode += f"\r\n; Cut rate:     {cutRate}"
@@ -887,7 +887,7 @@ class GcodeGenerator:
 
             gcode += cam.getGcode({
                 "paths":          cnc_op.cam_paths,
-                "ramp":           cnc_op.ramp,
+                "ramp":           cnc_op.ramp_plunge,
                 "scale":          scale,
                 "offsetX":        self.offsetX,
                 "offsetY":        self.offsetY,

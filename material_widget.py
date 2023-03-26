@@ -9,7 +9,7 @@ from PySide6 import QtSvgWidgets
 
 class MaterialWidget(QtSvgWidgets.QSvgWidget):
     '''
-    Display as nice SVG picture the settings "Clearance" and "Thickness"
+    Display as nice SVG picture the settings "clearance" and "thickness"
 
     Unfortunately it does not scale "nicely" when using inches.
     So all values are in mm

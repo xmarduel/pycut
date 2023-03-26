@@ -62,37 +62,37 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "tabs"        : []
         },
         "Tool" : {
-            "Units"       : "mm",
-            "Diameter"    : 1.0,
-            "Angle"       : 180,
-            "PassDepth"   : 3.0,
-            "StepOver"    : 4.0,
-            "Rapid"       : 500,
-            "Plunge"      : 100,
-            "Cut"         : 200,
+            "units"       : "mm",
+            "diameter"    : 1.0,
+            "angle"       : 180,
+            "passdepth"   : 3.0,
+            "stepover"    : 4.0,
+            "rapid"       : 500,
+            "plunge"      : 100,
+            "cut"         : 200,
         },
         "Material" : {
-            "Units"       : "mm",
-            "Thickness"   : 50.0,
-            "ZOrigin"     : "Top",
-            "Clearance"   : 10.0,
+            "units"       : "mm",
+            "thickness"   : 50.0,
+            "z_origin"     : "Top",
+            "clearance"   : 10.0,
         },
         "CurveToLineConversion" : {
-            "MinimumSegments"       : 5,
-            "MinimumSegmentsLength" : 0.01,
+            "minimum_segments"        : 5,
+            "minimum_segments_length" : 0.01,
         },
         "GCodeConversion" : {
-            "Units"         : "mm",
-            "FlipXY"        : False,
-            "XOffset"       : 0.0,
-            "YOffset"       : 0.0,
-            "XYReference"   : "ZERO_TOP_LEFT_OF_MATERIAL"
+            "units"         : "mm",
+            "flip_xy"       : False,
+            "x_offset"      : 0.0,
+            "y_offset"      : 0.0,
+            "xy_reference"  : "ZERO_TOP_LEFT_OF_MATERIAL"
         },
         "GCodeGeneration" : {
-            "ReturnToZeroAtEnd" : True,
-            "SpindleControl"    : True,
-            "SpindleSpeed"      : 1000,
-            "ProgramEnd"        : True 
+            "return_to_zero_at_end" : True,
+            "spindle_control"       : True,
+            "spindle_speed"         : 1000,
+            "program_end"           : True 
         }
     }
     
@@ -470,37 +470,37 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "tabs"       : self.tabs
             },
             "Tool" : {
-                "Units"      : self.ui.comboBox_Tool_Units.currentText(),
-                "Diameter"   : self.ui.doubleSpinBox_Tool_Diameter.value(),
-                "Angle"      : self.ui.spinBox_Tool_Angle.value(),
-                "PassDepth"  : self.ui.doubleSpinBox_Tool_PassDepth.value(),
-                "StepOver"   : self.ui.doubleSpinBox_Tool_StepOver.value(),
-                "Rapid"      : self.ui.spinBox_Tool_Rapid.value(),
-                "Plunge"     : self.ui.spinBox_Tool_Plunge.value(),
-                "Cut"        : self.ui.spinBox_Tool_Cut.value()
+                "units"      : self.ui.comboBox_Tool_Units.currentText(),
+                "diameter"   : self.ui.doubleSpinBox_Tool_Diameter.value(),
+                "angle"      : self.ui.spinBox_Tool_Angle.value(),
+                "passdepth"  : self.ui.doubleSpinBox_Tool_PassDepth.value(),
+                "stepover"   : self.ui.doubleSpinBox_Tool_StepOver.value(),
+                "rapid"      : self.ui.spinBox_Tool_Rapid.value(),
+                "plunge"     : self.ui.spinBox_Tool_Plunge.value(),
+                "cut"        : self.ui.spinBox_Tool_Cut.value()
             },
             "Material" : {
-                "Units"      : self.ui.comboBox_Material_Units.currentText(),
-                "Thickness"  : self.ui.doubleSpinBox_Material_Thickness.value(),
-                "ZOrigin"    : self.ui.comboBox_Material_ZOrigin.currentText(),
-                "Clearance"  : self.ui.doubleSpinBox_Material_Clearance.value(),
+                "units"      : self.ui.comboBox_Material_Units.currentText(),
+                "thickness"  : self.ui.doubleSpinBox_Material_Thickness.value(),
+                "z_origin"    : self.ui.comboBox_Material_ZOrigin.currentText(),
+                "clearance"  : self.ui.doubleSpinBox_Material_Clearance.value(),
             },
             "CurveToLineConversion" : {
-                "MinimumSegments"       : self.ui.spinBox_CurveToLineConversion_MinimumNbSegments.value(),
-                "MinimumSegmentsLength" : self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.value(),
+                "minimum_segments"       : self.ui.spinBox_CurveToLineConversion_MinimumNbSegments.value(),
+                "minimum_segments_length" : self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.value(),
             },
             "GCodeConversion" : {
-                "Units"           : self.ui.comboBox_GCodeConversion_Units.currentText(),
-                "FlipXY"          : self.ui.checkBox_GCodeConversion_FlipXY.isChecked(),
-                "XOffset"         : self.ui.doubleSpinBox_GCodeConversion_XOffset.value(),
-                "YOffset"         : self.ui.doubleSpinBox_GCodeConversion_YOffset.value(),
-                "XYReference"     : GcodeModel.XYRef[self.ui.buttonGroup_GCodeConversion.checkedId()]
+                "units"            : self.ui.comboBox_GCodeConversion_Units.currentText(),
+                "flip_xy"          : self.ui.checkBox_GCodeConversion_FlipXY.isChecked(),
+                "x_offset"         : self.ui.doubleSpinBox_GCodeConversion_XOffset.value(),
+                "y_offset"         : self.ui.doubleSpinBox_GCodeConversion_YOffset.value(),
+                "xy_reference"     : GcodeModel.XYRef[self.ui.buttonGroup_GCodeConversion.checkedId()]
             },
             "GCodeGeneration" : {
-                "ReturnToZeroAtEnd" : self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.isChecked(),
-                "SpindleControl"    : self.ui.checkBox_GCodeGeneration_SpindleControl.isChecked(),
-                "SpindleSpeed"      : self.ui.spinBox_GCodeGeneration_SpindleSpeed.value(),
-                "ProgramEnd"        : self.ui.checkBox_GCodeGeneration_ProgramEnd.isChecked(),
+                "return_to_zero_at_end" : self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.isChecked(),
+                "spindle_control"    : self.ui.checkBox_GCodeGeneration_SpindleControl.isChecked(),
+                "spindle_speed"      : self.ui.spinBox_GCodeGeneration_SpindleSpeed.value(),
+                "program_end"        : self.ui.checkBox_GCodeGeneration_ProgramEnd.isChecked(),
             }
         }
         
@@ -514,45 +514,45 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.doubleSpinBox_Tabs_Height.setValue(settings["Tabs"]["height"])
             
         # Tool
-        self.ui.comboBox_Tool_Units.setCurrentText(settings["Tool"]["Units"])
-        self.ui.doubleSpinBox_Tool_Diameter.setValue(settings["Tool"]["Diameter"])
-        self.ui.spinBox_Tool_Angle.setValue(settings["Tool"]["Angle"])
-        self.ui.doubleSpinBox_Tool_PassDepth.setValue(settings["Tool"]["PassDepth"])
-        self.ui.doubleSpinBox_Tool_StepOver.setValue(settings["Tool"]["StepOver"])
-        self.ui.spinBox_Tool_Rapid.setValue(settings["Tool"]["Rapid"])
-        self.ui.spinBox_Tool_Plunge.setValue(settings["Tool"]["Plunge"])
-        self.ui.spinBox_Tool_Cut.setValue(settings["Tool"]["Cut"])
+        self.ui.comboBox_Tool_Units.setCurrentText(settings["Tool"]["units"])
+        self.ui.doubleSpinBox_Tool_Diameter.setValue(settings["Tool"]["diameter"])
+        self.ui.spinBox_Tool_Angle.setValue(settings["Tool"]["angle"])
+        self.ui.doubleSpinBox_Tool_PassDepth.setValue(settings["Tool"]["passdepth"])
+        self.ui.doubleSpinBox_Tool_StepOver.setValue(settings["Tool"]["stepover"])
+        self.ui.spinBox_Tool_Rapid.setValue(settings["Tool"]["rapid"])
+        self.ui.spinBox_Tool_Plunge.setValue(settings["Tool"]["plunge"])
+        self.ui.spinBox_Tool_Cut.setValue(settings["Tool"]["cut"])
         
         # Material
-        self.ui.comboBox_Material_Units.setCurrentText(settings["Material"]["Units"])
-        self.ui.doubleSpinBox_Material_Thickness.setValue(settings["Material"]["Thickness"])
-        self.ui.comboBox_Material_ZOrigin.setCurrentText(settings["Material"]["ZOrigin"])
-        self.ui.doubleSpinBox_Material_Clearance.setValue(settings["Material"]["Clearance"])
+        self.ui.comboBox_Material_Units.setCurrentText(settings["Material"]["units"])
+        self.ui.doubleSpinBox_Material_Thickness.setValue(settings["Material"]["thickness"])
+        self.ui.comboBox_Material_ZOrigin.setCurrentText(settings["Material"]["z_origin"])
+        self.ui.doubleSpinBox_Material_Clearance.setValue(settings["Material"]["clearance"])
             
         # CurveToLineConversion 
-        self.ui.spinBox_CurveToLineConversion_MinimumNbSegments.setValue(settings["CurveToLineConversion"]["MinimumSegments"]),
-        self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.setValue(settings["CurveToLineConversion"]["MinimumSegmentsLength"]),
+        self.ui.spinBox_CurveToLineConversion_MinimumNbSegments.setValue(settings["CurveToLineConversion"]["minimum_segments"]),
+        self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.setValue(settings["CurveToLineConversion"]["minimum_segments_length"]),
             
         # GCodeConversion
-        self.ui.comboBox_GCodeConversion_Units.setCurrentText(settings["GCodeConversion"]["Units"])
-        self.ui.checkBox_GCodeConversion_FlipXY.setChecked(settings["GCodeConversion"]["FlipXY"])
-        self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue(settings["GCodeConversion"]["XOffset"])
-        self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(settings["GCodeConversion"]["YOffset"])
+        self.ui.comboBox_GCodeConversion_Units.setCurrentText(settings["GCodeConversion"]["units"])
+        self.ui.checkBox_GCodeConversion_FlipXY.setChecked(settings["GCodeConversion"]["flip_xy"])
+        self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue(settings["GCodeConversion"]["x_offset"])
+        self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(settings["GCodeConversion"]["y_offset"])
             
-        if settings["GCodeConversion"]["XYReference"] == "ZERO_TOP_LEFT_OF_MATERIAL":
+        if settings["GCodeConversion"]["xy_reference"] == "ZERO_TOP_LEFT_OF_MATERIAL":
             self.ui.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setChecked(True)
-        elif settings["GCodeConversion"]["XYReference"] == "ZERO_LOWER_LEFT_OF_MATERIAL":
+        elif settings["GCodeConversion"]["xy_reference"] == "ZERO_LOWER_LEFT_OF_MATERIAL":
             self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setChecked(True)
-        elif settings["GCodeConversion"]["XYReference"] == "ZERO_LOWER_LEFT_OF_OP":
+        elif settings["GCodeConversion"]["xy_reference"] == "ZERO_LOWER_LEFT_OF_OP":
             self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfOp.setChecked(True)
-        elif settings["GCodeConversion"]["XYReference"] == "ZERO_CENTER_OF_OP":
+        elif settings["GCodeConversion"]["xy_reference"] == "ZERO_CENTER_OF_OP":
             self.ui.pushButton_GCodeConversion_ZeroCenterOfOp.setChecked(True)
 
         # GCodeGeneration 
-        self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setChecked(settings["GCodeGeneration"]["ReturnToZeroAtEnd"])
-        self.ui.checkBox_GCodeGeneration_SpindleControl.setChecked(settings["GCodeGeneration"]["SpindleControl"])
-        self.ui.spinBox_GCodeGeneration_SpindleSpeed.setValue(settings["GCodeGeneration"]["SpindleSpeed"])
-        self.ui.checkBox_GCodeGeneration_ProgramEnd.setChecked(settings["GCodeGeneration"]["ProgramEnd"])
+        self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setChecked(settings["GCodeGeneration"]["return_to_zero_at_end"])
+        self.ui.checkBox_GCodeGeneration_SpindleControl.setChecked(settings["GCodeGeneration"]["spindle_control"])
+        self.ui.spinBox_GCodeGeneration_SpindleSpeed.setValue(settings["GCodeGeneration"]["spindle_speed"])
+        self.ui.checkBox_GCodeGeneration_ProgramEnd.setChecked(settings["GCodeGeneration"]["program_end"])
 
     def cb_open_svg(self):
         '''
@@ -633,7 +633,27 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             job = json.load(f)
         
-            self.svg_file = job["svg_file"]
+            svg_file = job["svg_file"] # relativ to job or absolute
+            
+            if os.path.isabs(svg_file):
+                self.svg_file = svg_file
+            else:
+                if os.path.isabs(jobfilename):
+                    jobdir = os.path.dirname(jobfilename)
+                    self.svg_file = os.path.join(jobdir, svg_file)
+                else:
+                    abs_jobfilename = os.path.abspath(jobfilename)
+                    abs_jobdir = os.path.dirname(abs_jobfilename)
+                    self.svg_file = os.path.join(abs_jobdir, svg_file)
+
+            if not os.path.exists(self.svg_file):
+                msgBox = QtWidgets.QMessageBox()
+                msgBox.setWindowTitle("PyCut")
+                msgBox.setText("Svg File %s not found" % self.svg_file)
+                msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
+                msgBox.exec()
+                return 
+
             self.operations = job["operations"]
             self.tabs = job["settings"]["Tabs"].get("tabs", [])
         
@@ -892,12 +912,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         if svg_file is None:
             
             svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
-                width="100mm"
-                height="100mm"
-                viewBox="0 0 100 100"
+                
+                viewBox="0 0 1091 490"
                 version="1.1">
-                <g id="text" style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583">
-        </g>
+                <g><image href="logo.png" id="splash_screen"/></g>
              </svg>'''
             self.svg_viewer.set_svg(svg)
         else:
@@ -960,14 +978,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         settings = self.get_current_settings()
 
         toolModel = ToolModel() 
-        toolModel.units = settings["Tool"]["Units"]
-        toolModel.diameter = ValWithUnit(settings["Tool"]["Diameter"], toolModel.units)
-        toolModel.angle = settings["Tool"]["Angle"]
-        toolModel.passDepth = ValWithUnit(settings["Tool"]["PassDepth"], toolModel.units)
-        toolModel.stepover = settings["Tool"]["StepOver"]
-        toolModel.rapidRate = ValWithUnit(settings["Tool"]["Rapid"], toolModel.units)
-        toolModel.plungeRate = ValWithUnit(settings["Tool"]["Plunge"], toolModel.units)
-        toolModel.cutRate = ValWithUnit(settings["Tool"]["Cut"], toolModel.units)
+        toolModel.units = settings["Tool"]["units"]
+        toolModel.diameter = ValWithUnit(settings["Tool"]["diameter"], toolModel.units)
+        toolModel.angle = settings["Tool"]["angle"]
+        toolModel.passDepth = ValWithUnit(settings["Tool"]["passdepth"], toolModel.units)
+        toolModel.stepover = settings["Tool"]["stepover"]
+        toolModel.rapidRate = ValWithUnit(settings["Tool"]["rapid"], toolModel.units)
+        toolModel.plungeRate = ValWithUnit(settings["Tool"]["plunge"], toolModel.units)
+        toolModel.cutRate = ValWithUnit(settings["Tool"]["cut"], toolModel.units)
 
         cnc_ops = []
 
@@ -977,16 +995,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             cnc_op = CncOp(
             {
-                "Units": op_model.units,
-                "Name": op_model.name,
+                "units": op_model.units,
+                "name": op_model.name,
                 "paths": op_model.paths,
-                "Combine": op_model.combinaison,
-                "RampPlunge": op_model.ramp,
+                "combinaison": op_model.combinaison,
+                "ramp_plunge": op_model.ramp_plunge,
                 "type": op_model.cam_op,
-                "Direction": op_model.direction,
-                "Deep": op_model.cutDepth,
-                "Margin": op_model.margin,
-                "Width": op_model.width,
+                "direction": op_model.direction,
+                "cut_depth": op_model.cut_depth,
+                "margin": op_model.margin,
+                "width": op_model.width,
 
                 "enabled": op_model.enabled
             })
@@ -1012,16 +1030,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             cnc_op = CncOp(
             {
-                "Units": op_model.units,
-                "Name": op_model.name,
+                "units": op_model.units,
+                "name": op_model.name,
                 "paths": op_model.paths,
-                "Combine": op_model.combinaison,
-                "RampPlunge": op_model.ramp,
+                "combinaison": op_model.combinaison,
+                "ramp_plunge": op_model.ramp_plunge,
                 "type": op_model.cam_op,
-                "Direction": op_model.direction,
-                "Deep": op_model.cutDepth,
-                "Margin": op_model.margin,
-                "Width": op_model.width,
+                "direction": op_model.direction,
+                "cut_depth": op_model.cut_depth,
+                "margin": op_model.margin,
+                "width": op_model.width,
 
                 "enabled": op_model.enabled
             })
@@ -1038,37 +1056,37 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         svgModel = SvgModel()
         svgModel.pxPerInch = 96
         materialModel = MaterialModel()
-        materialModel.matUnits = settings["Material"]["Units"]
-        materialModel.matThickness = ValWithUnit(settings["Material"]["Thickness"], materialModel.matUnits)
-        materialModel.matZOrigin = settings["Material"]["ZOrigin"]
-        materialModel.matClearance = ValWithUnit(settings["Material"]["Clearance"], materialModel.matUnits)
+        materialModel.matUnits = settings["Material"]["units"]
+        materialModel.matThickness = ValWithUnit(settings["Material"]["thickness"], materialModel.matUnits)
+        materialModel.matZOrigin = settings["Material"]["z_origin"]
+        materialModel.matClearance = ValWithUnit(settings["Material"]["clearance"], materialModel.matUnits)
         # the SVG dimensions
         materialModel.setMaterialSizeX(self.svg_viewer.get_svg_size_x())
         materialModel.setMaterialSizeY(self.svg_viewer.get_svg_size_y())
 
         toolModel = ToolModel()
-        toolModel.units = settings["Tool"]["Units"]
-        toolModel.diameter = ValWithUnit(settings["Tool"]["Diameter"], toolModel.units)
-        toolModel.angle = settings["Tool"]["Angle"]
-        toolModel.passDepth = ValWithUnit(settings["Tool"]["PassDepth"], toolModel.units)
-        toolModel.stepover = settings["Tool"]["StepOver"]
-        toolModel.rapidRate = ValWithUnit(settings["Tool"]["Rapid"], toolModel.units)
-        toolModel.plungeRate = ValWithUnit(settings["Tool"]["Plunge"], toolModel.units)
-        toolModel.cutRate = ValWithUnit(settings["Tool"]["Cut"], toolModel.units)
+        toolModel.units = settings["Tool"]["units"]
+        toolModel.diameter = ValWithUnit(settings["Tool"]["diameter"], toolModel.units)
+        toolModel.angle = settings["Tool"]["angle"]
+        toolModel.passDepth = ValWithUnit(settings["Tool"]["passdepth"], toolModel.units)
+        toolModel.stepover = settings["Tool"]["stepover"]
+        toolModel.rapidRate = ValWithUnit(settings["Tool"]["rapid"], toolModel.units)
+        toolModel.plungeRate = ValWithUnit(settings["Tool"]["plunge"], toolModel.units)
+        toolModel.cutRate = ValWithUnit(settings["Tool"]["cut"], toolModel.units)
         
         tabsmodel = TabsModel([tab for tab in self.tabs if tab["enabled"] == True])
         tabsmodel.units = settings["Tabs"]["units"]
         tabsmodel.height = ValWithUnit(settings["Tabs"]["height"], tabsmodel.units)
 
         gcodeModel = GcodeModel()
-        gcodeModel.units = settings["GCodeConversion"]["Units"]
-        gcodeModel.flipXY = settings["GCodeConversion"]["FlipXY"]
-        gcodeModel.XOffset = settings["GCodeConversion"]["XOffset"]
-        gcodeModel.YOffset = settings["GCodeConversion"]["YOffset"]
-        gcodeModel.returnTo00 = settings["GCodeGeneration"]["ReturnToZeroAtEnd"]
-        gcodeModel.spindleControl = settings["GCodeGeneration"]["SpindleControl"]
-        gcodeModel.spindleSpeed = settings["GCodeGeneration"]["SpindleSpeed"]
-        gcodeModel.programEnd = settings["GCodeGeneration"]["ProgramEnd"]
+        gcodeModel.units = settings["GCodeConversion"]["units"]
+        gcodeModel.flipXY = settings["GCodeConversion"]["flip_xy"]
+        gcodeModel.XOffset = settings["GCodeConversion"]["x_offset"]
+        gcodeModel.YOffset = settings["GCodeConversion"]["y_offset"]
+        gcodeModel.returnTo00 = settings["GCodeGeneration"]["return_to_zero_at_end"]
+        gcodeModel.spindleControl = settings["GCodeGeneration"]["spindle_control"]
+        gcodeModel.spindleSpeed = settings["GCodeGeneration"]["spindle_speed"]
+        gcodeModel.programEnd = settings["GCodeGeneration"]["program_end"]
         
         gcodeModel.gcodeZero = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
         if self.ui.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.isChecked():
