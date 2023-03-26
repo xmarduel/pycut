@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" id="svg" width="100cm" height="200cm" viewBox="0 0 100 200">
+  <defs>
+    <circle id="my_circle" cx="0" cy="0" r="2.25" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-width:0.5;stroke-opacity:0.5"/>
+    <rect id="my_rect" x="0" y="0" width="10" height="20" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-width:0.5;"/>
+  </defs>
+  <g id="layer1">
+    <g id="layer_circle">
+      <circle id="circle_left" cx="100.000" cy="100.000" r="22.500" style="opacity:0.5;fill:#880088;stroke:#00ffff;stroke-width:0.5;stroke-opacity:0.25"/>
+      <circle id="circle_right" cx="100.000" cy="150.000" r="22.500" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-width:0.5;stroke-opacity:0.5"/>
+    </g>
+    <g id="layer_rect">
+      <rect id="rect_1" width="100.000" height="200.000" x="300.000" y="100.000" rx="0.000" ry="0.000" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-width:0.5;"/>
+      <rect id="rect_2" width="100.000" height="200.000" x="500.000" y="100.000" rx="0.000" ry="0.000" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-width:0.5;"/>
+    </g>
+  </g>
+</svg>

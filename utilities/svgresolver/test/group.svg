@@ -1,0 +1,14 @@
+<g id="layer2">
+	<g href="#my_circle" id="circle_left" opacity="0.5" transform="matrix(1.000001, 0.000000, 0.000000, 1.000001, 10.000005, 10.000005)">
+		<circle id="my_circle" cx="10.000005400000001" cy="10.000005400000001" r="2.250001215" opacity="1" stroke-width="0.200000108" stroke="none" fill="#080080" />
+	</g>
+	<g href="#my_circle" x="10" y="15" transform="matrix(1.000001, 0.000000, 0.000000, 1.000001, 10.000005, 15.000008)">
+		<circle id="my_circle" cx="10.000005400000001" cy="15.0000081" r="2.250001215" opacity="1" stroke-width="0.200000108" stroke="none" fill="#080080" />
+	</g>
+	<g href="#my_rect" x="30" y="10" id="rect_1" transform="matrix(1.000001, 0.000000, 0.000000, 1.000001, 30.000016, 10.000005)">
+		<rect id="my_rect" x="30.0000162" y="10.000005400000001" width="10.000005400000001" height="20.000010800000002" opacity="1" stroke-width="0.200000108" stroke="none" fill="#800080" />
+	</g>
+	<g href="#my_rect" id="rect_2" transform="matrix(1.000001, 0.000000, 0.000000, 1.000001, 50.000027, 10.000005)">
+		<rect id="my_rect" x="50.000027" y="10.000005400000001" width="10.000005400000001" height="20.000010800000002" opacity="1" stroke-width="0.200000108" stroke="none" fill="#800080" />
+	</g>
+</g>

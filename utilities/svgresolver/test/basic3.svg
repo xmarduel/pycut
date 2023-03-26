@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="svg" width="100mm" height="200mm" viewBox="0 0 100 200" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+	<defs id="defs">
+		<circle id="my_circle" cx="0" cy="0" r="2.25" style="opacity:1;fill:#080080;stroke-width:0.2" />
+		<rect id="my_rect" x="0" y="0" width="10" height="20" style="opacity:1;fill:#800080;stroke-width:0.2;" />
+	</defs>
+	<g id="layer1">
+		<use href="#my_rect" x="30" y="10" id="rect_1" />
+		<use href="#my_rect" transform="translate(50,10)" id="rect_2" />
+		<g id="layer2" transform="translate(33.333333,33.33333333)">
+			<rect id="rect_3" x="0" y="0" width="10" height="20" transform="translate(66.666666,66.666666)" />
+		</g>
+	</g>
+</svg>

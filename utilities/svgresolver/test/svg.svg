@@ -1,0 +1,18 @@
+<svg id="svg" width="100.00005399999999" height="200.00010799999998" viewBox="0 0 100 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<g id="layer1">
+		<g id="layer2">
+			<g href="#my_circle" id="circle_left" opacity="0.5" transform="matrix(1.000000, 0.000000, 0.000000, 1.000000, 10.000000, 10.000000)">
+				<circle id="my_circle" cx="10.000005400000001" cy="10.000005400000001" r="2.250001215" opacity="1" stroke-width="0.200000108" transform="matrix(0.999999, 0.000000, 0.000000, 0.999999, 0.000000, 0.000000)" stroke="none" fill="#080080" />
+			</g>
+			<g href="#my_circle" x="10" y="15" transform="matrix(1.000000, 0.000000, 0.000000, 1.000000, 10.000000, 15.000000)">
+				<circle id="my_circle" cx="10.000005400000001" cy="15.0000081" r="2.250001215" opacity="1" stroke-width="0.200000108" transform="matrix(0.999999, 0.000000, 0.000000, 0.999999, 0.000000, 0.000000)" stroke="none" fill="#080080" />
+			</g>
+			<g href="#my_rect" x="30" y="10" id="rect_1" transform="matrix(1.000000, 0.000000, 0.000000, 1.000000, 30.000000, 10.000000)">
+				<rect id="my_rect" x="30.0000162" y="10.000005400000001" width="10.000005400000001" height="20.000010800000002" opacity="1" stroke-width="0.200000108" transform="matrix(0.999999, 0.000000, 0.000000, 0.999999, 0.000000, 0.000000)" stroke="none" fill="#800080" />
+			</g>
+			<g href="#my_rect" id="rect_2" transform="matrix(1.000000, 0.000000, 0.000000, 1.000000, 50.000000, 10.000000)">
+				<rect id="my_rect" x="50.000027" y="10.000005400000001" width="10.000005400000001" height="20.000010800000002" opacity="1" stroke-width="0.200000108" transform="matrix(0.999999, 0.000000, 0.000000, 0.999999, 0.000000, 0.000000)" stroke="none" fill="#800080" />
+			</g>
+		</g>
+	</g>
+</svg>
