@@ -1,0 +1,261 @@
+{
+  "svg_file": "svg/cnc1310-sides-horizontal.resolved.svg",
+  "operations": [
+    {
+      "Name": "op",
+      "type": "Inside",
+      "Deep": 12.0,
+      "paths": [
+        "motor_base_hole_24mm"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Inside",
+      "Deep": 12.0,
+      "paths": [
+        "spacer_screw_5.0mm_L2"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Inside",
+      "Deep": 12.0,
+      "paths": [
+        "spacer_screw_5.0mm_R2"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Inside",
+      "Deep": 12.0,
+      "paths": [
+        "spacer_screw_5.0mm_R1"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Inside",
+      "Deep": 12.0,
+      "paths": [
+        "spacer_screw_5.0mm_L1"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 2.1,
+      "paths": [
+        "spacer_screw_5.0mm_hole_11.0mm_R1"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 2.1,
+      "paths": [
+        "spacer_screw_5.0mm_hole_11.0mm_L1"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 2.1,
+      "paths": [
+        "spacer_screw_5.0mm_hole_11.0mm_L2"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 2.1,
+      "paths": [
+        "spacer_screw_5.0mm_hole_11.0mm_R2"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 12.0,
+      "paths": [
+        "motor_screw_3.0mm_NE"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 12.0,
+      "paths": [
+        "motor_screw_3.0mm_NW"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 12.0,
+      "paths": [
+        "motor_screw_3.0mm_SE"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Pocket",
+      "Deep": 12.0,
+      "paths": [
+        "motor_screw_3.0mm_SW"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    },
+    {
+      "Name": "op",
+      "type": "Outside",
+      "Deep": 12.0,
+      "paths": [
+        "contour"
+      ],
+      "RampPlunge": false,
+      "Combine": "Union",
+      "Direction": "Conventional",
+      "Units": "mm",
+      "Margin": 0.0,
+      "Width": 0.0
+    }
+  ],
+  "settings": {
+    "svg": {
+      "px_per_inch": 96
+    },
+    "Tabs": {
+      "units": "mm",
+      "height": 1.0,
+      "tabs": [
+        {
+          "center": [
+            37.0,
+            102.0
+          ],
+          "radius": 4.0,
+          "enabled": true
+        },
+        {
+          "center": [
+            37.0,
+            14.0
+          ],
+          "radius": 5,
+          "enabled": true
+        }
+      ]
+    },
+    "Tool": {
+      "Units": "mm",
+      "Diameter": 3.0,
+      "Angle": 180,
+      "PassDepth": 1.0,
+      "StepOver": 1.0,
+      "Rapid": 500,
+      "Plunge": 100,
+      "Cut": 200
+    },
+    "Material": {
+      "Units": "mm",
+      "Thickness": 12.0,
+      "ZOrigin": "Top",
+      "Clearance": 5.0
+    },
+    "CurveToLineConversion": {
+      "MinimumSegments": 5,
+      "MinimumSegmentsLength": 0.01
+    },
+    "GCodeConversion": {
+      "Units": "mm",
+      "FlipXY": false,
+      "XOffset": -37.0,
+      "YOffset": 58.25,
+      "XYReference": "ZERO_CENTER_OF_OP"
+    },
+    "GCodeGeneration": {
+      "ReturnToZeroAtEnd": true,
+      "SpindleControl": true,
+      "SpindleSpeed": 1000,
+      "ProgramEnd": true
+    }
+  }
+}

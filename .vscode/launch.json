@@ -6,6 +6,17 @@
     "configurations": [
 
 
+
+
+
+
+
+
+
+
+
+
+
         {
             "name": "OPENGL DEMO1",
             "type": "python",
@@ -46,7 +57,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["-job", "./jobs/cnc_control_panel.json"]
+            "args": ["./jobs/cnc_control_panel.json"]
         },
         {
             "name": "PYCUT EMPTY",
@@ -58,13 +69,40 @@
             "args": []
         },
         {
+            "name": "PYCUT JOB OPENED PATH",
+            "type": "python",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_test_svgpathtools.json"]
+        },
+        {
             "name": "PYCUT JOB",
             "type": "python",
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["-job", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_three_rects_with_circle.json"]
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_control_panel.json"]
+        },
+        {
+            "name": "PYCUT CNC1310 HORI PLATE",
+            "type": "python",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc1310_horizontal_plate.json"]
+        },
+        {
+            "name": "PYCUT BEARING TEST",
+            "type": "python",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_test_bearing.json"]
         },
         {
             "name": "PYCUT JOB ALL LETTERS",
@@ -73,7 +111,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["-job", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_all_letters.json"]
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_all_letters.json"]
         },
         {
             "name": "PYCUT JOB ALL LETTERS TUDORS",
@@ -82,7 +120,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["-job", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_all_letters_tudor.json"]
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_all_letters_tudor.json"]
         },
         {
             "name": "PYCUT GEAR 40",
@@ -91,10 +129,10 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["-job", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\svg\\hobbymat\\hobbymat_gear_40.json"]
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\svg\\hobbymat\\hobbymat_gear_40.json"]
         },
         {
-            "name": "PYCUT SVGTEXT_2_SVGPATH",
+            "name": "PYCUT SVGTEXT_2_SVGPATH SLAINE",
             "type": "python",
             "request": "launch",
             "program": "svgtext2svgpath.py",
@@ -130,13 +168,31 @@
             "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver\\test_basic2.svg"]
         },
         {
+            "name": "PYCUT RESOLVER TEST_BASIC3",
+            "type": "python",
+            "request": "launch",
+            "program": "svgresolver.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver\\test_basic3.svg"]
+        },
+        {
             "name": "PYCUT RESOLVER TEST_BEARING",
             "type": "python",
             "request": "launch",
             "program": "svgresolver.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver\\test_bearing.svg"]
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\svg\\test_bearing.svg"]
+        },
+        {
+            "name": "PYCUT RESOLVER CNC 1310 SIDES HORIZONTAL",
+            "type": "python",
+            "request": "launch",
+            "program": "svgresolver.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver\\cnc1310-sides-horizontal.svg"]
         },
         {
             "name": "TABLEVIEW",
