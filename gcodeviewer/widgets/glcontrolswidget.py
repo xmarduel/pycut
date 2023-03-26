@@ -109,9 +109,15 @@ class GCodeControlsWidget(QtWidgets.QWidget):
         '''
         '''
         value = self.slider.value()
-        self.slider.setValue(value-1)
 
-        self.tblProgram.selectRow(value-1)
+        new_value = value - 1
+        
+        if new_value < 0:
+            new_value = self.slider.maximum()
+
+        self.slider.setValue(new_value)
+
+        self.tblProgram.selectRow(new_value)
 
     def do_backward(self):
         '''
@@ -155,9 +161,20 @@ class GCodeControlsWidget(QtWidgets.QWidget):
         '''
         '''
         value = self.slider.value()
-        self.slider.setValue(value+1)
 
-        self.tblProgram.selectRow(value+1)
+        #print("======================================================")
+        #print("do_step_forward: curr pos = ", value)
+        
+        if value >= self.slider.maximum()-2:
+            new_value = 0
+        else:
+            new_value = value + 1
+
+        #print("do_step_forward: new pos = ", new_value , "(max=", self.slider.maximum(), ")")
+            
+        self.slider.setValue(new_value)
+
+        self.tblProgram.selectRow(new_value)
 
     def do_to_end(self):
         '''
