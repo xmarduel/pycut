@@ -105,6 +105,15 @@
             "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_test_bearing.json"]
         },
         {
+            "name": "PYCUT BACKLASH TEST",
+            "type": "python",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc1310_backlash_test.json"]
+        },
+        {
             "name": "PYCUT JOB ALL LETTERS",
             "type": "python",
             "request": "launch",
