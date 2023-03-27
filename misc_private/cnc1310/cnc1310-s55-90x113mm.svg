@@ -53,7 +53,7 @@
 	       
         <use href="#bearing_screw_4.5mm" transform="rotate( 45) translate(16 0)" id="bearing_1_screw_4.5mm_SE" />
         <use href="#bearing_screw_4.5mm" transform="rotate(135) translate(16 0)" id="bearing_1_screw_4.5mm_SW" />
-        <use href="#bearing_screw_4.5mm" transform="rotate(225) translate(16 0)" id="bearing_1_crew_4.5mm_NW" />
+        <use href="#bearing_screw_4.5mm" transform="rotate(225) translate(16 0)" id="bearing_1_screw_4.5mm_NW" />
         <use href="#bearing_screw_4.5mm" transform="rotate(315) translate(16 0)" id="bearing_1_screw_4.5mm_NE" />
       </g>
     </g>
@@ -68,7 +68,7 @@
         <use href="#bearing_screw_4.5mm" transform="rotate( 45) translate(16 0)" id="bearing_2_screw_4.5mm_SE" />
         <use href="#bearing_screw_4.5mm" transform="rotate(135) translate(16 0)" id="bearing_2_screw_4.5mm_SW" />
         <use href="#bearing_screw_4.5mm" transform="rotate(225) translate(16 0)" id="bearing_2_screw_4.5mm_NW" />
-        <use href="#bearing_screw_4.5mm" transform="rotate(315) translate(16 0)" id="bearing_2_crew_4.5mm_NE" />
+        <use href="#bearing_screw_4.5mm" transform="rotate(315) translate(16 0)" id="bearing_2_screw_4.5mm_NE" />
       </g>
     </g>
 

@@ -178,7 +178,6 @@ class SvgResolver:
             self.make_xml_group(item, group)
 
         if item.tag == "{http://www.w3.org/2000/svg}g":
-            item.tail = "\n"
             if "transform" in item.attrib:
                 del item.attrib["transform"]
 
@@ -201,6 +200,17 @@ class SvgResolver:
                 pretty_print=True, 
                 xml_declaration=True, 
                 encoding='utf-8')
+        
+        # maybe an extra formatter - needs xmllint  
+        tree = etree.parse(self.resolved_filename)
+        tree_str = etree.tostring(tree, pretty_print=True)
+        f = open(self.resolved_filename, "w")
+        f.write(tree_str.decode('utf-8'))
+        f.close()
+
+        #formatted = self.resolved_filename + ".x"
+        #os.system("xmllint --format %s > %s" % (self.resolved_filename, formatted))
+        #shutil.move(formatted, self.resolved_filename)
 
     def resolve_id(self, shape: svgelements.Shape) -> str|None:
         '''
@@ -328,7 +338,6 @@ class SvgResolver:
         print("Circle!")
 
         c = etree.Element("circle")
-        c.tail = "\n"
 
         the_id = self.resolve_id(shape)
         the_style = self.resolve_style(shape)
@@ -360,7 +369,6 @@ class SvgResolver:
         print("Rect!")
 
         r = etree.Element("rect")
-        r.tail = "\n"
 
         the_id = self.resolve_id(shape)
         the_style = self.resolve_style(shape)
@@ -392,7 +400,6 @@ class SvgResolver:
         print("Ellipse!")
 
         e = etree.Element("ellipse")
-        e.tail = "\n"
 
         the_id = self.resolve_id(shape)
         the_style = self.resolve_style(shape)
@@ -419,7 +426,6 @@ class SvgResolver:
         print("Polygon!")
 
         p = etree.Element("polygon")
-        p.tail = "\n"
 
         the_id = self.resolve_id(shape)
         the_style = self.resolve_style(shape)
@@ -446,7 +452,6 @@ class SvgResolver:
 
         
         l = etree.Element("line")
-        l.tail = "\n"
 
         the_id = self.resolve_id(shape)
         the_style = self.resolve_style(shape)
@@ -473,7 +478,6 @@ class SvgResolver:
         print("Polyline!")
 
         p = etree.Element("polyline")
-        p.tail = "\n"
 
         the_id = self.resolve_id(shape)
         the_style = self.resolve_style(shape)
@@ -497,7 +501,6 @@ class SvgResolver:
         print("Path!")
 
         p = etree.Element("path")
-        p.tail = "\n"
 
         the_id = self.resolve_id(shape)
         the_style = self.resolve_style(shape)
@@ -522,7 +525,6 @@ class SvgResolver:
         print("Text!")
 
         t = etree.SubElement(item.getparent(), "text")
-        t.tail = "\n"
 
         the_id = self.resolve_id(shape)
         the_style = self.resolve_style(shape)
