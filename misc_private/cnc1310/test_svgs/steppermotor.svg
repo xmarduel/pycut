@@ -10,8 +10,18 @@
 >
   <defs id="defs">
     <rect id="motor_base" rx="4" ry="4" width="42" height="42" style="fill:rgb(0,0,0);opacity:0.4;stroke-width:0;stroke:rgb(0,0,0)" />
-    <rect id="motor_support" rx="4" ry="4" width="52" height="52" style="fill:rgb(155,77,0);opacity:0.5;stroke-width:0;stroke:rgb(0,0,0)" />
-      
+    
+    <circle id="motor_base_hole_24mm_ref"
+            style="font-variation-settings:normal;vector-effect:none;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke-width:0.352776;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+            cx="0"
+            cy="0"
+            r="12" /> 
+     <circle id="motor_base_hole_16mm_ref"
+      style="font-variation-settings:normal;vector-effect:none;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.352776;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+      cx="0"
+      cy="0"
+      r="8" />
+
     <!-- screws are 3mm diameter 9mm long-->
     <circle id="motor_screw_3.0mm"
       style="font-variation-settings:normal;vector-effect:none;fill:#00ffff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.314309;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
@@ -31,11 +41,14 @@
     <!-- so that the motor is centered on [40;40] -->
     
     <use href="#motor_base" /> <!-- just as indicator , no ops -->
-    <use href="#motor_support" transform="translate(-5 -5)" />
+    
   </g>
 
   <g id="layer_screws_and_holes" transform="translate(40,40)">  
     <!-- cut through material -->
+    <use href="#motor_base_hole_24mm_ref" id="motor_base_hole_24mm" />
+    <use href="#motor_base_hole_16mm_ref" id="motor_base_hole_16mm" />
+
     <!--
     <use href="#motor_screw_3.0mm" transform="rotate(45)  translate(24 0)" id="motor_screw_3.0mm_NW" />
     <use href="#motor_screw_3.0mm" transform="rotate(135) translate(24 0)" id="motor_screw_3.0mm_NE" />
