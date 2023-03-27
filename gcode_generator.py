@@ -19,6 +19,8 @@ from typing import List
 from typing import Dict
 from typing import Any
 
+import copy
+
 import shapely
 import shapely.geometry
 import shapely.ops
@@ -310,7 +312,12 @@ class CncOp:
         for svg_path_id in self.paths:
 
             svg_path_d = svg_viewer.get_svg_path_d(svg_path_id)
-            svg_path = SvgPath(svg_path_id, {'d': svg_path_d})
+            svg_path_attrs = svg_viewer.get_svg_path_attrs(svg_path_id)
+
+            attrs = copy.deepcopy(svg_path_attrs)
+            attrs['d'] = svg_path_d
+
+            svg_path = SvgPath(svg_path_id, attrs)
 
             self.svg_paths.append(svg_path)
 
@@ -325,7 +332,7 @@ class CncOp:
         opened_paths_op = True
 
         for svgpath in self.svg_paths:
-            if svgpath.svg_path.closed or svgpath.svg_path.isclosedac():
+            if svgpath.svg_path.closed or svgpath.svg_path.isclosedac() or 'cx' in svgpath.p_attrs:
                 opened_paths_op = False
                 break
 

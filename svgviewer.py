@@ -184,6 +184,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         # when loading a svg with shapes that are not <path>
         self.svg_shapes = {} # path id -> svgpathtools.Path from svg circle, ellipse, rect, polygon, etc
+        self.svg_shapes_attrs = {} # path id -> svg attributes  ro recognite circle rect ect to know if it is closed or not <<< SVGPATHTOOLS BUG
 
         # the graphical items in the view
         self.items : List[SvgItem] = []
@@ -265,6 +266,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         self.svg_path_d = {}
         self.svg_shapes = {}
+        self.svg_shapes_attrs = {}
 
         self.items : List[SvgItem] = []
         self.selected_items : List[SvgItem] = []
@@ -365,13 +367,15 @@ class SvgViewer(QtWidgets.QGraphicsView):
                 print("    -> ignoring")
                 continue
 
-            path, _ = self.svg_shapes[shape_id]
+            path, svg_attribs = self.svg_shapes[shape_id]
 
             # FIXME: is the 'closed' property lost forever by path.d()? 
-            if path.closed or path.isclosedac():
+            if path.closed or path.isclosedac() or 'cx' in svg_attribs or 'rx' in svg_attribs:
                 self.svg_path_d[shape_id] = path.d() + " Z" # d(use_closed_attrib=True)
+                self.svg_shapes_attrs[shape_id] = svg_attribs
             else:
                 self.svg_path_d[shape_id] = path.d()
+                self.svg_shapes_attrs[shape_id] = svg_attribs
 
             item = SvgItem(shape_id, self, self.renderer)
             self.scene.addItem(item)
@@ -398,6 +402,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
     def get_svg_path_d(self, p_id: str) -> str:
         return self.svg_path_d[p_id]
+    
+    def get_svg_path_attrs(self, p_id: str) -> str:
+        return self.svg_shapes_attrs[p_id]
 
     def mousePressEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
         self.in_dnd = True
