@@ -111,7 +111,10 @@ class SvgPath:
             attribs = attributes[k]
 
             path_id = attribs.get('id', None)
+            print("================================================================")
             print("============= svg : path %s =================" % path_id)
+            print("============= svg : path  isclosed()  = %d =================" % path.isclosedac())
+            print("============= svg : attribs %s =================" % attribs)
 
             # ignore paths without id
             if path_id is None:
@@ -451,9 +454,12 @@ class SvgPath:
             if not subpath:
                 continue
             p_id = self.p_id + "___sub_%d" % k 
+            
             p_attrs = copy.deepcopy(self.p_attrs)
             p_attrs["d"] = "M " + subpath + " Z"  # FIXME: how to know ??
+            
             o = SvgPath(p_id, p_attrs)
+            
             svgpaths.append(o)
         
         return svgpaths
@@ -693,11 +699,14 @@ class SvgPath:
         </svg>''' % {"cx": center[0], "cy": center[1], "radius": radius}
 
 
-        paths, _ = cls.svg2paths_from_string(svg)
-
+        paths, attribs = cls.svg2paths_from_string(svg)
+      
         svg_path = paths[0]
 
-        return SvgPath("pycut_tab", {'d': svg_path.d() + " Z"})
+        p_attrs = copy.deepcopy(attribs)
+        p_attrs["d"] = svg_path.d() + " Z"  # FIXME: how to know ??
+
+        return SvgPath("pycut_tab", p_attrs)
 
     @classmethod
     def fix_simple_polygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :

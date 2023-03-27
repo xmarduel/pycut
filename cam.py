@@ -813,12 +813,12 @@ class pocket_calculator:
         # use polygons exteriors lines - offset them and and diff with the offseted interiors if any
         multipoly = ShapelyUtils.orientMultiPolygon(self.multipoly)
         
-        MatplotLibUtils.MatplotlibDisplay("multipoly pocket init", self.multipoly)
+        #MatplotLibUtils.MatplotlibDisplay("multipoly pocket init", self.multipoly, force=True)
         
         # the exterior
         current = self.offsetMultiPolygon(multipoly, self.cutter_dia / 2, 'left', consider_interiors_offsets=True)
         
-        MatplotLibUtils.MatplotlibDisplay("multipoly pocket first offset", current, force=False)
+        #MatplotLibUtils.MatplotlibDisplay("multipoly pocket first offset", current, force=True)
 
         if len(current.geoms) == 0:
             # cannot offset ! maybe geometry too narrow for the cutter
@@ -835,6 +835,16 @@ class pocket_calculator:
             #if climb:
             #    for line in current:
             #        line.reverse()
+
+            # FIX when the remaining is to small -> of offset that could spread out
+            rest_area = current .area
+            cutter_area = self.cutter_dia * 3.14
+
+            if rest_area < cutter_area / 2:
+                # go in the middle and END / go on the path and END
+                exteriors = ShapelyUtils.multiPolyToMultiLine(current)
+                self.collectPaths(exteriors)
+                break
 
             exteriors = ShapelyUtils.multiPolyToMultiLine(current)
 
