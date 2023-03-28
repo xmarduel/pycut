@@ -333,7 +333,13 @@ class SvgViewer(QtWidgets.QGraphicsView):
         images : List[etree.ElementTree] = []
 
         for element in elements:
-            tag = element.tag.split("{http://www.w3.org/2000/svg}")[1]
+            tag = element.tag
+
+            if not tag.startswith("{http://www.w3.org/2000/svg}"):
+                # ignore non svg elements
+                continue
+            
+            tag = tag.split("{http://www.w3.org/2000/svg}")[1]
             
             if tag in images_types:
                 images.append(element)

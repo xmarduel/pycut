@@ -837,18 +837,34 @@ class pocket_calculator:
             #        line.reverse()
 
             # FIX when the remaining is to small -> of offset that could spread out
-            rest_area = current .area
-            cutter_area = self.cutter_dia * 3.14
+            '''
+            break when the material has been fully removed
+            example:
+            - circle r = 1.75
+            - cutter dia = 3.0 => r = 1.5
+            - stepover = 0.5
+            => first path in the "small circle" rr = 0.25 , not that the material then has been fully remove
+            => but offset of rr = 0.25 amount 1.5 = cuttter_dia *(1 - stepover)  => overflow outside the small circle !!
 
-            if rest_area < cutter_area / 2:
-                # go in the middle and END / go on the path and END
-                exteriors = ShapelyUtils.multiPolyToMultiLine(current)
-                self.collectPaths(exteriors)
-                break
+            CONDITION TO BREAK: the remaining small circle in fully into the "material cut"
 
+            cuts = [ shapely.geometry.Point(xi,yi).buffer(cutter_dia / 2.0) for (xi,yi) in exteriors.coords ] 
+            material_cut = shapely.ops.unary_union([cuts])
+            remaining_poly = current   : current.covered_by(material_cut)
+            '''
             exteriors = ShapelyUtils.multiPolyToMultiLine(current)
 
             self.collectPaths(exteriors)
+
+            #-------------------------------------------- break ?
+            if True:
+                cuts = []
+                for poly in current.geoms:
+                    cuts += [ shapely.geometry.Point(xi,yi).buffer(self.cutter_dia / 2.0) for (xi,yi) in poly.exterior.coords ] 
+                material_cut = shapely.ops.unary_union(cuts)
+                if current.covered_by(material_cut):
+                    break
+            # ------------------------------------------- break ?
 
             current = self.offsetMultiPolygon(current, self.cutter_dia * (1 - self.overlap), 'left', consider_interiors_offsets=False)
             
