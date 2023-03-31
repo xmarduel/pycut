@@ -1,6 +1,48 @@
 {
-  "svg_file": "misc_private/qkg38/clamp.svg",
+  "svg_file": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\qkg38\\clamp.svg",
   "operations": [
+    {
+      "name": "op",
+      "type": "Inside",
+      "cut_depth": 11.7,
+      "paths": [
+        "part2_screw1"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
+    },
+    {
+      "name": "op",
+      "type": "Inside",
+      "cut_depth": 11.7,
+      "paths": [
+        "part2_screw2"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
+    },
+    {
+      "name": "op",
+      "type": "Outside",
+      "cut_depth": 11.7,
+      "paths": [
+        "part2"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
+    },
     {
       "name": "op",
       "type": "Inside",
@@ -20,7 +62,7 @@
       "type": "Inside",
       "cut_depth": 12.0,
       "paths": [
-        "part2_screw1"
+        "part1_screw1"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -34,7 +76,7 @@
       "type": "Inside",
       "cut_depth": 12.0,
       "paths": [
-        "part2_screw2"
+        "part1_screw2"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -56,20 +98,6 @@
       "units": "mm",
       "margin": 0.0,
       "width": 0.0
-    },
-    {
-      "name": "op",
-      "type": "Pocket",
-      "cut_depth": 12.0,
-      "paths": [
-        "part2"
-      ],
-      "ramp_plunge": false,
-      "combinaison": "Union",
-      "direction": "Conventional",
-      "units": "mm",
-      "margin": 0.0,
-      "width": 0.0
     }
   ],
   "settings": {
@@ -78,8 +106,33 @@
     },
     "Tabs": {
       "units": "mm",
-      "height": 1.0,
-      "tabs": []
+      "height": 0.5,
+      "tabs": [
+        {
+          "center": [
+            20.0,
+            25.0
+          ],
+          "radius": 4.0,
+          "enabled": true
+        },
+        {
+          "center": [
+            20.0,
+            0.0
+          ],
+          "radius": 4.0,
+          "enabled": true
+        },
+        {
+          "center": [
+            35.0,
+            12.0
+          ],
+          "radius": 4.0,
+          "enabled": true
+        }
+      ]
     },
     "Tool": {
       "units": "mm",
@@ -89,7 +142,7 @@
       "stepover": 0.5,
       "rapid": 500,
       "plunge": 100,
-      "cut": 200
+      "cut": 250
     },
     "Material": {
       "units": "mm",
@@ -104,8 +157,8 @@
     "GCodeConversion": {
       "units": "mm",
       "flip_xy": false,
-      "x_offset": -33.75,
-      "y_offset": 31.0,
+      "x_offset": -25.5,
+      "y_offset": 12.0,
       "xy_reference": "ZERO_CENTER_OF_OP"
     },
     "GCodeGeneration": {

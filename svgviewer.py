@@ -528,7 +528,8 @@ class SvgViewer(QtWidgets.QGraphicsView):
             if show == False:
                 continue
 
-            tab_svg_path = Tab(tab).make_svg_path()
+            o_tab =  Tab(tab)
+            tab_svg_path = o_tab.make_svg_path()
             tab_svg_path.p_attrs['stroke'] = self.TABS["stroke"]
             tab_svg_path.p_attrs['stroke-width'] = self.TABS["stroke-width"]
             tab_svg_path.p_attrs['fill'] = self.TABS["fill"]

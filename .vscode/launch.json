@@ -17,6 +17,7 @@
 
 
 
+
         {
             "name": "OPENGL DEMO1",
             "type": "python",
@@ -85,6 +86,15 @@
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
             "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_control_panel.json"]
+        },
+        {
+            "name": "PYCUT JOB CLAMP PARTS",
+            "type": "python",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\qkg38\\qkg38.json"]
         },
         {
             "name": "PYCUT CNC1310 HORI PLATE",

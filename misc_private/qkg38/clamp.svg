@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg id="qkg38-clamps" width="60mm" height="60mm" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
-	<g id="main">
+	<g id="main" transform="translate(0,0)">
 		<!-- part 1 : height will be 8mm -->
 		<g id="part1">
-			<path id="part1" d="M 20 20 h 30 v 22 h -30    q -5 -11  0 -22 Z" style="fill:#555555;fill-opacity:0.5" />
-			<circle id="part1_screw1" cx="42.5" cy="27" r="2.0" fill="red" />
-			<circle id="part1_screw2" cx="42.5" cy="35" r="2.0" fill="red" />
-			<rect id="part1_schlitz" x="22" y="29" rx="2" ry="2" width="10" height="4" fill="red" />
+			<path id="part1" d="M 0 0 h 34 v 24 h -34   q -5 -11  0 -24 Z" style="fill:#555555;fill-opacity:0.5" />
+			<circle id="part1_screw1" cx="26" cy="7"  r="2.0" fill="red" />
+			<circle id="part1_screw2" cx="26" cy="17" r="2.0" fill="red" />
+			<rect id="part1_schlitz" x="2" y="10" rx="2.0" ry="2.0" width="10" height="4" fill="red" />
 		</g>
 		<!-- part 2 : height will be 6mm -->
 		<g id="part2">
-			<rect id="part2" x="35" y="14" rx="1" ry="1" width="15" height="36" style="fill:#999999;fill-opacity:0.8" />
-			<circle id="part2_screw1" cx="42.5" cy="27" r="2.0" fill="red" />
-			<circle id="part2_screw2" cx="42.5" cy="35" r="2.0" fill="red" />
+			<rect id="part2" x="17" y="-6" rx="3" ry="3" width="17" height="36" style="fill:#999999;fill-opacity:0.8" />
+			<circle id="part2_screw1" cx="26" cy="7"  r="2.0" fill="red" />
+			<circle id="part2_screw2" cx="26" cy="17" r="2.0" fill="red" />
 		</g>
 	</g>
 </svg>

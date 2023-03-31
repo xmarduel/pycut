@@ -703,7 +703,7 @@ class SvgPath:
       
         svg_path = paths[0]
 
-        p_attrs = copy.deepcopy(attribs)
+        p_attrs = copy.deepcopy(attribs[0])
         p_attrs["d"] = svg_path.d() + " Z"  # FIXME: how to know ??
 
         return SvgPath("pycut_tab", p_attrs)
