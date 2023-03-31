@@ -467,6 +467,10 @@ class cam:
         # <<< XAM
 
         shapely_paths = [shapely.geometry.LineString(path) for path in paths]
+
+        #mlines = shapely.geometry.MultiLineString(shapely_paths)
+        #cnt = MatplotLibUtils.MatplotlibDisplay("separated paths", mlines, force=True)
+
         return shapely_paths
 
     @classmethod
@@ -523,6 +527,9 @@ class cam:
 
         if len(paths) <= 1:
             return paths
+        
+        #mlines = shapely.geometry.MultiLineString(paths)
+        #cnt = MatplotLibUtils.MatplotlibDisplay("offset - as LineString|MultiLineString (from linestring)", mlines, force=True)
 
         compatibility_table = buildPathsCompatibilityTable(paths)
 
@@ -623,7 +630,7 @@ class cam:
 
             return result
 
-        # tabs are globals - bau maybe with path does not hits tabs
+        # tabs are globals - but maybe thid path does not hits tabs
         has_active_tabs = len(tabs) > 0
         # --> has_active_tabs will be fixed later
 
@@ -633,11 +640,10 @@ class cam:
                 continue
 
             # split the path to cut into many partials paths to avoid tabs eraas
-            #separatedPaths = cls.separateTabs(origPath, tabs)
             separatedPaths = cls.separateTabs(origPath, tabs)
 
             # tabs are globals and may not hit the origPath -> no "active tabs"
-            if len(separatedPaths) == 1:
+            if len(separatedPaths) == 1:  # BUG ! there can be only 1 Tab an 1 resulting separated path! FIXME
                 has_active_tabs = False
             else:
                 has_active_tabs = True
