@@ -332,7 +332,7 @@ class CncOp:
         opened_paths_op = True
 
         for svgpath in self.svg_paths:
-            if svgpath.svg_path.closed or svgpath.svg_path.isclosedac() or 'cx' in svgpath.p_attrs:
+            if svgpath.is_closed():
                 opened_paths_op = False
                 break
 

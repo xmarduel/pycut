@@ -98,7 +98,7 @@ class SvgPath:
         return svgpathtools.svg2paths(data)
 
     @classmethod
-    def read_svg_shapes_as_paths(cls, svg_str: str) -> Dict[str, Tuple[svgpathtools.Path, Dict[str,str]]] :
+    def read_svg_shapes_as_paths(cls, svg_str: str) -> Dict[str, 'SvgPath'] :
         '''
         From a svg file content, read all paths and their attributes
         and organize them as dictionary with key <path_id>, value (path, attribs)
@@ -120,17 +120,42 @@ class SvgPath:
             if path_id is None:
                 continue
 
-            svg_shapes[path_id] = (path, attribs)
+            svg_shapes[path_id] = SvgPath.from_svg_path_def(path_id, attribs, path)
 
         return svg_shapes
+    
+
+    @classmethod
+    def from_svg_path_def(cls, p_id: str, p_attrs: Dict[str,str], svg_path: svgpathtools.Path):
+        '''
+        Create a SvgPath (wrapper aound svgpattools Path object) 
+        from an aleady evaluated svg_path
+
+        the attribute 'd' is set with 'zZ' or not, depending on the svg_path isclosedac value
+        '''
+        if svg_path.isclosedac():
+            p_attrs['d'] = svg_path.d() + ' z'
+        else:
+            p_attrs['d'] = svg_path.d()
+        
+        svgpath =  SvgPath(p_id, p_attrs)
+        svgpath.svg_path = svg_path
+        svgpath.path_closed = svg_path.isclosedac()
+
+
+        return svgpath
 
     def __init__(self, p_id: str, p_attrs: Dict[str,str]):
         '''
+        Create a SvgPath (wrapper aound svgpattools Path object) 
+        from the d definition of the <path> xml definition
         '''
         # the 'id' of a svg <path> definition
         self.p_id = p_id
         # the attributes of the <path> definition
         self.p_attrs = p_attrs
+        # new: because I do not trust svgpathtools 'isclosedac' method
+        self.path_closed = True
 
         # svgpathtools: the svgpath as instance of type 'svgpathtools.Path' extracted from the string p_attrs["d"]
         if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
@@ -141,9 +166,22 @@ class SvgPath:
         else:
             self.svg_path = None
 
+        # the 'path_closed' attrribute
+        d_def = self.p_attrs['d'].strip()
+        if d_def.endswith('Z') or d_def.endswith('z'):
+            self.path_closed = True
+        else: 
+            self.path_closed = False
+
         # the result of the import
         self.lines : List[shapely.geometry.LineString] = []
         self.polys : List[shapely.geometry.Polygon] = []
+
+    def is_closed(self):
+        '''
+        '''
+        return self.path_closed
+        return self.svg_path.closed or self.svg_path.isclosedac()
 
     def discretize_closed_path(self) -> np.array :
         '''
@@ -456,7 +494,12 @@ class SvgPath:
             p_id = self.p_id + "___sub_%d" % k 
             
             p_attrs = copy.deepcopy(self.p_attrs)
-            p_attrs["d"] = "M " + subpath + " Z"  # FIXME: how to know ??
+
+            if subpath.endswith('Z') or subpath.endswith('z'):
+                pass
+            else:
+                # force close ?
+                p_attrs["d"] = "M " + subpath + " Z"  # FIXME: how to know ??
             
             o = SvgPath(p_id, p_attrs)
             
@@ -701,12 +744,7 @@ class SvgPath:
 
         paths, attribs = cls.svg2paths_from_string(svg)
       
-        svg_path = paths[0]
-
-        p_attrs = copy.deepcopy(attribs[0])
-        p_attrs["d"] = svg_path.d() + " Z"  # FIXME: how to know ??
-
-        return SvgPath("pycut_tab", p_attrs)
+        return cls.from_svg_path_def("pycut_tab", attribs[0], paths[0])
 
     @classmethod
     def fix_simple_polygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :

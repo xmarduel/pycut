@@ -174,17 +174,16 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # a "state" I would like to avoid, between mouse "down" and mouse "up"
         self.in_dnd = False
 
-        # the content of the svf file as string
+        # the content of the svg file as string
         self.svg = None
         # and the extra tabs contained in the job description
         self.tabs = []
 
-        # dictionnay path id -> path d (string) def for all path definition in the svg
+        # dictionnay path id -> path d (string) def for all shapes in the svg
         self.svg_path_d : Dict[str,str] = {} 
 
-        # when loading a svg with shapes that are not <path>
-        self.svg_shapes = {} # path id -> svgpathtools.Path from svg circle, ellipse, rect, polygon, etc
-        self.svg_shapes_attrs = {} # path id -> svg attributes  ro recognite circle rect ect to know if it is closed or not <<< SVGPATHTOOLS BUG
+        # when loading a svg with shapes
+        self.svg_shapes = {} # path id -> SvgPath 
 
         # the graphical items in the view
         self.items : List[SvgItem] = []
@@ -266,7 +265,6 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         self.svg_path_d = {}
         self.svg_shapes = {}
-        self.svg_shapes_attrs = {}
 
         self.items : List[SvgItem] = []
         self.selected_items : List[SvgItem] = []
@@ -373,15 +371,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
                 print("    -> ignoring")
                 continue
 
-            path, svg_attribs = self.svg_shapes[shape_id]
+            svgpath = self.svg_shapes[shape_id]
 
-            # FIXME: is the 'closed' property lost forever by path.d()? 
-            if path.closed or path.isclosedac() or 'cx' in svg_attribs or 'rx' in svg_attribs:
-                self.svg_path_d[shape_id] = path.d() + " Z" # d(use_closed_attrib=True)
-                self.svg_shapes_attrs[shape_id] = svg_attribs
+            svg_path = svgpath.svg_path
+
+            if svgpath.is_closed():
+                self.svg_path_d[shape_id] = svg_path.d() + " Z" # d(use_closed_attrib=True)
             else:
-                self.svg_path_d[shape_id] = path.d()
-                self.svg_shapes_attrs[shape_id] = svg_attribs
+                self.svg_path_d[shape_id] = svg_path.d()
 
             item = SvgItem(shape_id, self, self.renderer)
             self.scene.addItem(item)
@@ -410,7 +407,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         return self.svg_path_d[p_id]
     
     def get_svg_path_attrs(self, p_id: str) -> str:
-        return self.svg_shapes_attrs[p_id]
+        return self.svg_shapes[p_id].p_attrs
 
     def mousePressEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
         self.in_dnd = True
@@ -549,7 +546,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         for cnc_op in cnc_ops:
             for geometry_svg_path in cnc_op.geometry_svg_paths:
-                if geometry_svg_path.svg_path.closed or geometry_svg_path.svg_path.isclosedac():
+                if geometry_svg_path.is_closed():
                     #polygons
                     geometry_svg_path.p_attrs['stroke'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke"]
                     geometry_svg_path.p_attrs['stroke-width'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-width"]
