@@ -133,14 +133,14 @@ class SvgPath:
 
         the attribute 'd' is set with 'zZ' or not, depending on the svg_path isclosedac value
         '''
-        if svg_path.isclosedac():
+        if svg_path.isclosedac() or svg_path.closed:
             p_attrs['d'] = svg_path.d() + ' z'
         else:
             p_attrs['d'] = svg_path.d()
         
         svgpath =  SvgPath(p_id, p_attrs)
         svgpath.svg_path = svg_path
-        svgpath.path_closed = svg_path.isclosedac()
+        svgpath.path_closed = svg_path.isclosedac() or svg_path.closed
 
 
         return svgpath
