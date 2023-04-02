@@ -4,20 +4,6 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         {
             "name": "OPENGL DEMO1",
             "type": "python",
@@ -95,6 +81,15 @@
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
             "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\qkg38\\qkg38.json"]
+        },
+        {
+            "name": "PYCUT JOB BACKLASH",
+            "type": "python",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc1310_backlash_test.json"]
         },
         {
             "name": "PYCUT CNC1310 HORI PLATE",

@@ -407,142 +407,6 @@ class cam:
 
         return camPaths
 
-    @classmethod
-    def separateTabs(cls, origPath: shapely.geometry.LineString, tabs: List['Tab']) -> List[shapely.geometry.LineString]:
-        '''
-        from a "normal" tool path, split this path into a list of "partial" paths
-        avoiding the tabs areas
-        '''
-        from gcode_generator import Tab
-
-        if len(tabs) == 0:
-            return [origPath]
-
-        pts = list(origPath.coords)
-
-        shapely_openpath = shapely.geometry.LineString(pts)
-
-        #print("origPath", origPath)
-        #print("origPath", shapely_openpath)
-         
-        shapely_tabs_ = []
-        # 1. from the tabs, build shapely tab polygons
-        for tab_data in tabs:
-            tab = Tab(tab_data)
-            shapely_tabs = tab.svg_path.import_as_polygons_list()
-            shapely_tabs_ += shapely_tabs
-
-        # hey, multipolygons are good...
-        shapely_tabs = shapely.ops.unary_union(shapely_tabs_)
-        if shapely_tabs.geom_type == 'Polygon':
-            shapely_tabs = shapely.geometry.MultiPolygon([shapely_tabs])
-        if shapely_tabs.geom_type == 'GeometryCollection':
-            for geom in shapely_tabs.geoms:
-                if geom.geom_type == 'MultiPolygon':
-                    shapely_tabs = geom
-                if geom.geom_type == 'Polygon':
-                    shapely_tabs = geom
-
-
-        # 2. then "diff" the origin path with the tabs paths
-        shapely_splitted_paths = shapely_openpath.difference(shapely_tabs)
-
-        # 3. that's it
-        #print("splitted_paths", shapely_splitted_paths)
-
-        if shapely_splitted_paths.geom_type == 'LineString':
-            shapely_splitted_paths = shapely.geometry.MultiLineString([shapely_splitted_paths])
-
-        # back to shapely...
-        paths : List[shapely.geometry.LineString] = []
-        for shapely_splitted_path in shapely_splitted_paths.geoms:
-            intpt_vector = []
-            xy = shapely_splitted_path.xy
-            for ptX, ptY in zip(xy[0], xy[1]):
-                intpt_vector.append((ptX, ptY))
-            paths.append(intpt_vector)
-        
-        # >>> XAM merge some paths when possible
-        paths = cls.mergeCompatiblePaths(paths)
-        # <<< XAM
-
-        shapely_paths = [shapely.geometry.LineString(path) for path in paths]
-
-        #mlines = shapely.geometry.MultiLineString(shapely_paths)
-        #cnt = MatplotLibUtils.MatplotlibDisplay("separated paths", mlines, force=True)
-
-        return shapely_paths
-
-    @classmethod
-    def mergeCompatiblePaths(cls, paths: List[shapely.geometry.LineString]) -> List[shapely.geometry.LineString]:
-        '''
-        This is a post-processing step to clipper-6.4.2 where found separated paths can be merged together,
-        leading to less separated paths
-        '''
-        # ------------------------------------------------------------------------------------------------
-        def pathsAreCompatible(path1: shapely.geometry.LineString, path2: shapely.geometry.LineString) -> bool:
-            '''
-            test if the 2 paths have their end point/start point compatible (the same)
-            '''
-            endPoint = path1[-1]
-            startPoint = path2[0]
-
-            if endPoint[0] == startPoint[0] and endPoint[1] == startPoint[1]:
-                # can merge
-                return True
-
-            return False
-
-        def mergePathIntoPath(path1: shapely.geometry.LineString, path2: shapely.geometry.LineString) -> bool:
-            '''
-            merge the 2 paths if their end point/start point are compatible (ie the same)
-            '''
-            endPoint = path1[-1]
-            startPoint = path2[0]
-
-            if endPoint[0] == startPoint[0]and endPoint[1] == startPoint[1]:
-                # can merge
-                path1 += path2[1:]
-                return True
-
-        def buildPathsCompatibilityTable(paths: List[shapely.geometry.LineString]) -> Dict[List,int]:
-            '''
-            for all paths in the list of paths, check first which ones can be merged
-            '''
-            compatibility_table = {}
-
-            for i, path in enumerate(paths):
-                for j, other_path in enumerate(paths):
-                    if i == j:
-                       continue
-                    rc = pathsAreCompatible(path, other_path)
-                    if rc:
-                        if i in compatibility_table:
-                            compatibility_table[i].append(j)
-                        else: 
-                            compatibility_table[i] = [j]
-        
-            return compatibility_table
-        # ------------------------------------------------------------------------------------------------
-
-        if len(paths) <= 1:
-            return paths
-        
-        #mlines = shapely.geometry.MultiLineString(paths)
-        #cnt = MatplotLibUtils.MatplotlibDisplay("offset - as LineString|MultiLineString (from linestring)", mlines, force=True)
-
-        compatibility_table = buildPathsCompatibilityTable(paths)
-
-        while len(compatibility_table) > 0:
-            i = list(compatibility_table.keys())[0]
-            path = paths[i]
-            j = compatibility_table[i][0]
-            path_to_be_merged = paths.pop(j)
-            mergePathIntoPath(path, path_to_be_merged)
-            compatibility_table = buildPathsCompatibilityTable(paths)
-
-        return paths
-
     @staticmethod
     def dist(x1: float, y1: float, x2: float, y2: float) -> float :
         dx = x2 - x1
@@ -630,23 +494,21 @@ class cam:
 
             return result
 
-        # tabs are globals - but maybe thid path does not hits tabs
-        has_active_tabs = len(tabs) > 0
-        # --> has_active_tabs will be fixed later
+        # tabs are globals - but maybe this path does not hits any tabs
+        crosses_tabs = False
+        # --> crosses_tabs will be fixed later
 
         for pathIndex, path in enumerate(paths):
             origPath = path.path
             if len(origPath.coords) == 0:
                 continue
 
-            # split the path to cut into many partials paths to avoid tabs eraas
-            separatedPaths = cls.separateTabs(origPath, tabs)
+            # split the path to cut into many partials paths to avoid tabs areas
+            tab_separator = TabsSeparator(tabs)
+            tab_separator.separate(origPath)
 
-            # tabs are globals and may not hit the origPath -> no "active tabs"
-            if len(separatedPaths) == 1:  # BUG ! there can be only 1 Tab an 1 resulting separated path! FIXME
-                has_active_tabs = False
-            else:
-                has_active_tabs = True
+            separated_paths = tab_separator.separated_paths
+            crosses_tabs = tab_separator.crosses_tabs
 
             gcode += \
                 f'\r\n' + \
@@ -661,7 +523,7 @@ class cam:
             while finishedZ > botZ:
                 nextZ = max(finishedZ - passDepth, botZ)
 
-                if has_active_tabs:
+                if crosses_tabs:
                     if nextZ == tabZ:
                         exactTabZLevelDone = True
                     elif nextZ < tabZ:
@@ -671,7 +533,7 @@ class cam:
                             exactTabZLevelDone = True
 
 
-                if (currentZ <= tabZ and ((not path.safeToClose) or has_active_tabs)) :
+                if (currentZ <= tabZ and ((not path.safeToClose) or crosses_tabs)) :
                     gcode += retractGcode
                     currentZ = safeZ
                 elif (currentZ < safeZ and (not path.safeToClose)) :
@@ -679,7 +541,7 @@ class cam:
                     currentZ = safeZ
 
                 # check this - what does it mean ???
-                if not has_active_tabs:
+                if not crosses_tabs:
                     currentZ = finishedZ
                 else:
                     currentZ = max(finishedZ, tabZ)
@@ -689,7 +551,7 @@ class cam:
 
                 inTabsHeight = False
                 
-                if not has_active_tabs:
+                if not crosses_tabs:
                     inTabsHeight = False
                     selectedPaths = [origPath]
                     gcode += 'G1 Z' + ValWithUnit(currentZ, "-").toFixed(decimal) + '\r\n'
@@ -700,7 +562,7 @@ class cam:
                         gcode += 'G1 Z' + ValWithUnit(currentZ, "-").toFixed(decimal) + '\r\n'
                     else:
                         inTabsHeight = True
-                        selectedPaths = separatedPaths
+                        selectedPaths = separated_paths
 
                 for selectedPath in selectedPaths:
                     if selectedPath.is_empty:
@@ -773,7 +635,7 @@ class cam:
                             gcode += '\r\n'
                     
                     if inTabsHeight:
-                        # retract to safeZ before processing next separatedPath
+                        # retract to safeZ before processing next separated_paths item
                         gcode += retractGcode
 
                 finishedZ = nextZ
@@ -783,7 +645,146 @@ class cam:
         return gcode
     
 
+class TabsSeparator:
+    '''
+    '''
+    def __init__(self, tabs: List['Tab']):
+        self.tabs = tabs
 
+        self.separated_paths : List[shapely.geometry.LineString] = []
+        self.crosses_tabs = False  # init 
+
+    def separate(self, path: shapely.geometry.LineString):
+        '''
+        from a "normal" tool path, split this path into a list of "partial" paths
+        avoiding the tabs areas
+        '''
+        from gcode_generator import Tab
+
+        if len(self.tabs) == 0:
+            self.separated_paths = [path]
+            return
+
+        pts = list(path.coords)
+
+        shapely_openpath = shapely.geometry.LineString(pts)
+
+        #print("origPath", origPath)
+        #print("origPath", shapely_openpath)
+         
+        shapely_tabs_ = []
+        # 1. from the tabs, build shapely tab polygons
+        for tab_data in self.tabs:
+            tab = Tab(tab_data)
+            shapely_tabs = tab.svg_path.import_as_polygons_list()
+            shapely_tabs_ += shapely_tabs
+
+        # hey, multipolygons are good...
+        shapely_tabs = shapely.ops.unary_union(shapely_tabs_)
+        if shapely_tabs.geom_type == 'Polygon':
+            shapely_tabs = shapely.geometry.MultiPolygon([shapely_tabs])
+        if shapely_tabs.geom_type == 'GeometryCollection':
+            for geom in shapely_tabs.geoms:
+                if geom.geom_type == 'MultiPolygon':
+                    shapely_tabs = geom
+                if geom.geom_type == 'Polygon':
+                    shapely_tabs = geom
+
+
+        if not shapely_openpath.intersects(shapely_tabs):
+            self.separated_paths = [path]
+            return
+            
+        self.crosses_tabs = True
+
+        # 2. then "diff" the origin path with the tabs paths
+        shapely_splitted_paths = shapely_openpath.difference(shapely_tabs)
+
+        # 3. that's it
+        #print("splitted_paths", shapely_splitted_paths)
+
+        if shapely_splitted_paths.geom_type == 'LineString':
+            shapely_splitted_paths = shapely.geometry.MultiLineString([shapely_splitted_paths])
+
+        paths : List[shapely.geometry.LineString] = list(shapely_splitted_paths.geoms)
+        
+        # >>> XAM merge some paths when possible
+        paths = self.mergeCompatiblePaths(paths)
+        # <<< XAM
+
+        self.separated_paths = paths
+
+    def mergeCompatiblePaths(self, paths: List[shapely.geometry.LineString] ) -> List[shapely.geometry.LineString] :
+        '''
+        This is a post-processing step to shapely where calculated separated paths can be merged together,
+        leading to less separated paths
+        '''
+        # ------------------------------------------------------------------------------------------------
+        def pathsAreCompatible(path1: shapely.geometry.LineString, path2: shapely.geometry.LineString) -> bool:
+            '''
+            test if the 2 paths have their end point/start point compatible (the same)
+            '''
+            endPoint = path1.boundary[1]
+            startPoint = path2.boundary[0]
+
+            return  endPoint == startPoint
+
+        def mergePathIntoPath(path1: shapely.geometry.LineString, path2: shapely.geometry.LineString) -> Tuple[bool, shapely.geometry.LineString]:
+            '''
+            merge the 2 paths if their end point/start point are compatible (ie the same)
+            '''
+            if pathsAreCompatible(path1, path2):
+                # can merge
+                path1 = shapely.ops.linemerge([path1, path2])
+                return True, path1
+            
+            return False, path1
+
+        def buildPathsCompatibilityTable(paths: List[shapely.geometry.LineString]) -> Dict[List,int]:
+            '''
+            for all paths in the list of paths, check first which ones can be merged
+            '''
+            compatibility_table = {}
+
+            for i, path in enumerate(paths):
+                for j, other_path in enumerate(paths):
+                    if i == j:
+                       continue
+                    rc = pathsAreCompatible(path, other_path)
+                    if rc:
+                        if i in compatibility_table:
+                            compatibility_table[i].append(j)
+                        else: 
+                            compatibility_table[i] = [j]
+        
+            return compatibility_table
+        # ------------------------------------------------------------------------------------------------
+
+        if len(paths) <= 1:
+            return paths
+        
+        #mlines = shapely.geometry.MultiLineString(paths)
+        #cnt = MatplotLibUtils.MatplotlibDisplay("offset - as LineString|MultiLineString (from linestring)", mlines, force=True)
+
+        compatibility_table = buildPathsCompatibilityTable(paths)
+
+        while len(compatibility_table) > 0:
+            i = list(compatibility_table.keys())[0]
+            j = compatibility_table[i][0]
+
+            if i < j:
+                path_to_be_merged = paths.pop(j)
+                path = paths.pop(i)
+            else:
+                path = paths.pop(i)
+                path_to_be_merged = paths.pop(j)
+                
+            _, merged_path = mergePathIntoPath(path, path_to_be_merged)
+
+            paths.append(merged_path)
+            compatibility_table = buildPathsCompatibilityTable(paths)
+
+        return paths
 
 
 
