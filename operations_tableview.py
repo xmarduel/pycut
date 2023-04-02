@@ -314,7 +314,7 @@ class PyCutComboBoxDelegate(QtWidgets.QStyledItemDelegate):
 
         self.items = []
         if col == 1:
-            self.items = ["Pocket", "Inside", "Outside", "Engrave"]
+            self.items = ["Pocket", "Inside", "Outside", "Engrave", "Drill", "Peck"]
         if col == 4:
             self.items = ["inch", "mm"]
         if col == 7:
@@ -630,8 +630,8 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         self.setup_persistent_editors()  # to show the editors on a new item
 
     def enable_disable_cells(self):
-        margin = {'Pocket': True, 'Inside': True, 'Outside': True, 'Engrave': False} 
-        width = {'Pocket': False, 'Inside': True, 'Outside': True, 'Engrave': False} 
+        margin = {'Pocket': True, 'Inside': True, 'Outside': True, 'Engrave': False, 'Drill': False, 'Peck': False} 
+        width = {'Pocket': False, 'Inside': True, 'Outside': True, 'Engrave': False, 'Drill': False, 'Peck': False} 
 
         for row in range(self.model().rowCount(None)):
             cam_op = self.model().operations[row].cam_op

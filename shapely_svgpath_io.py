@@ -176,12 +176,12 @@ class SvgPath:
         # the result of the import
         self.lines : List[shapely.geometry.LineString] = []
         self.polys : List[shapely.geometry.Polygon] = []
+        self.points : List[shapely.geometry.Point] = []
 
     def is_closed(self):
         '''
         '''
         return self.path_closed
-        return self.svg_path.closed or self.svg_path.isclosedac()
 
     def discretize_closed_path(self) -> np.array :
         '''
@@ -535,6 +535,17 @@ class SvgPath:
         self.import_svgpath()
 
         return self.lines
+    
+    def import_as_point(self) -> List[shapely.geometry.Point]:
+        '''
+        only for circle shapes
+        '''
+        cx = float(self.p_attrs['cx'])
+        cy = float(self.p_attrs['cy'])
+
+        center = (cx, cy)
+
+        return shapely.geometry.Point(center)
 
     def import_as_polygons_list(self) -> List[shapely.geometry.Polygon]:
         '''
@@ -737,7 +748,7 @@ class SvgPath:
         svg = '''<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" 
             version="1.1">
             <g>
-                <circle cx="%(cx)d" cy="%(cy)d" r="%(radius)d" />
+                <circle cx="%(cx)f" cy="%(cy)f" r="%(radius)f" />
             </g>  
         </svg>''' % {"cx": center[0], "cy": center[1], "radius": radius}
 

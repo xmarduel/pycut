@@ -4,15 +4,15 @@
 		<!-- part 1 : height will be 8mm -->
 		<g id="part1">
 			<path id="part1" d="M 0 0 h 34 v 24 h -34   q -5 -11  0 -24 Z" style="fill:#555555;fill-opacity:0.5" />
-			<circle id="part1_screw1" cx="26" cy="7"  r="2.0" fill="red" />
-			<circle id="part1_screw2" cx="26" cy="17" r="2.0" fill="red" />
-			<rect id="part1_schlitz" x="2" y="10" rx="2.0" ry="2.0" width="10" height="4" fill="red" />
+			<circle id="part1_screw1" cx="26" cy="7"  r="2.0" fill="green" />
+			<circle id="part1_screw2" cx="26" cy="17" r="2.0" fill="green" />
+			<rect id="part1_schlitz" x="2" y="10" rx="2.0" ry="2.0" width="10" height="4" fill="green" />
 		</g>
 		<!-- part 2 : height will be 6mm -->
 		<g id="part2">
 			<rect id="part2" x="17" y="-6" rx="3" ry="3" width="17" height="36" style="fill:#999999;fill-opacity:0.8" />
-			<circle id="part2_screw1" cx="26" cy="7"  r="2.0" fill="red" />
-			<circle id="part2_screw2" cx="26" cy="17" r="2.0" fill="red" />
+			<circle id="part2_screw1" cx="26" cy="7"  r="2.0" fill="green" />
+			<circle id="part2_screw2" cx="26" cy="17" r="2.0" fill="green" />
 		</g>
 	</g>
 </svg>

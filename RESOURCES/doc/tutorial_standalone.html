@@ -495,7 +495,7 @@ is extracted form the svg file: the svg "height" attribute.</p>
 </ul>
 <img src="./pycut_gcode_generation.png" width="310px">
 <!-- ----------------------------------------------------------------------------------------------------------->
-<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- -----------------------------------------------------------------------------------------------------------> 
 
 <p></p>
 
@@ -530,9 +530,26 @@ color can be setup in the settings dialog.</p>
   <li>inside</li>
   <li>outside</li>
   <li>engrave</li>
+  <li>drill <strong><span style="color:#0000ff">ONLY</span> <span
+    style="color:#0000ff">for circle shapes</span></strong></li>
+  <li>peck <strong><span style="color:#0000ff">ONLY for circle
+    shape</span></strong></li>
 </ul>
 
-<p>For opened paths, the pocket operation is not available.</p>
+<p>For opened paths, the pocket/drill/peck operations are not available.</p>
+
+<p><strong><span style="color:#8000ff">NEW</span></strong>: for
+<strong>circles</strong>, "<span
+style="color:#8000ff"><strong>drill</strong></span>" and "<strong><span
+style="color:#8000ff">peck</span></strong>" operations are available. Infact,
+for a pocket operation with a circle of diameter smaller than the cutter
+diameter, no tool path would be generated.<strong>In case of the</strong>
+<strong>circle diameter is smaller or equal than the cutter diameter</strong>,
+in order to have toolpath, "<strong><span
+style="color:#8000ff">drill</span></strong>" or "<strong><span
+style="color:#8000ff">peck</span></strong>" is the way to go. </p>
+
+<p></p>
 
 <p>In order to generate G code, enable one or many operations and click on
 "Generate G code". <strong>PyCut</strong> will try to do its best... The

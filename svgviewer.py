@@ -598,10 +598,10 @@ class SvgViewer(QtWidgets.QGraphicsView):
         The resulting geometries will the displayed in black together with the original svg and tabs
         '''
         # display preview geometries
-        geometry_svg_paths = self.make_cnc_ops_preview_geometry_svg_paths(cnc_ops)
+        preview_geometry_svg_paths = self.make_cnc_ops_preview_geometry_svg_paths(cnc_ops)
         
         transformer = SvgTransformer(self.svg)
-        augmented_svg = transformer.augment(geometry_svg_paths)
+        augmented_svg = transformer.augment(preview_geometry_svg_paths)
 
         # then the tabs
         tabs_svg_paths = self.make_tabs_svg_paths(self.tabs)
@@ -618,10 +618,10 @@ class SvgViewer(QtWidgets.QGraphicsView):
         The resulting svg_paths will the displayed in green together with the original svg, tabs and preview geometries
         '''
         # display preview geometries
-        geometry_svg_paths = self.make_cnc_ops_preview_geometry_svg_paths(cnc_ops)
+        preview_geometry_svg_paths = self.make_cnc_ops_preview_geometry_svg_paths(cnc_ops)
 
         transformer = SvgTransformer(self.svg)
-        augmented_svg = transformer.augment(geometry_svg_paths)
+        augmented_svg = transformer.augment(preview_geometry_svg_paths)
 
         # then the tabs
         tabs_svg_paths = self.make_tabs_svg_paths(self.tabs)

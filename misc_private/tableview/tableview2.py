@@ -314,7 +314,7 @@ class PMFComboBoxDelegate(QtWidgets.QItemDelegate):
 
         self.items = []
         if col == 2:
-            self.items = ["Pocket", "Inside", "Outside", "Engrave"]
+            self.items = ["Pocket", "Inside", "Outside", "Engrave", "Drill", "Peck"]
         if col == 7:
             self.items = ["Union", "Intersection", "Difference", "Xor"]
         if col == 8:

@@ -50,6 +50,36 @@ class cam:
     '''
     '''
     @classmethod
+    def drill(cls, multipoint: shapely.geometry.MultiPoint, cutter_dia: float) -> List[CamPath] :
+        '''
+        Compute paths for drill operation on Shapely multipoint
+        '''
+        camPaths = []
+        
+        for point in multipoint.geoms:
+            pt = point.coords[0]
+            # HACK LineString with 2 identical point? not future proof...
+            camPath = CamPath(shapely.geometry.LineString([pt, pt]), True)
+            camPaths.append(camPath)
+
+        return  camPaths
+    
+    @classmethod
+    def peck(cls, multipoint: shapely.geometry.MultiPoint, cutter_dia: float) -> List[CamPath] :
+        '''
+        Compute paths for peck operation on Shapely multipoint
+        '''
+        camPaths = []
+        
+        for point in multipoint.geoms:
+            pt = point.coords[0]
+            # HACK LineString with 2 identical point? not future proof...
+            camPath = CamPath(shapely.geometry.LineString([pt, pt]), False)
+            camPaths.append(camPath)
+
+        return  camPaths
+
+    @classmethod
     def pocket(cls, multipoly: shapely.geometry.MultiPolygon, cutter_dia: float, overlap: float, climb: bool) -> List[CamPath] :
         '''
         Compute paths for pocket operation on Shapely multipolygon. 

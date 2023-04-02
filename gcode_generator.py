@@ -288,8 +288,8 @@ class CncOp:
         # and the resulting svg paths from the combinaison, to be displayed in the svg viewer
         self.geometry_svg_paths : List[SvgPath] = []
         
-        # the resulting paths from the op combinaison setting + enabled svg paths
-        self.geometry : shapely.geometry.MultiPolygon = None
+        # the resulting paths from the op type & combinaison setting + enabled svg paths
+        self.geometry : shapely.geometry.MultiPolygon | shapely.geometry.MultiLineString | shapely.geometry.MultiPoint = None
         
         # the resulting tool paths
         self.cam_paths : List[CamPath] = []
@@ -324,19 +324,37 @@ class CncOp:
     def is_closed_paths_op(self) -> bool :
         '''
         '''
-        return not self.is_opened_paths_op()
+        for svgpath in self.svg_paths:
+            if not svgpath.is_closed():
+                return False
+        
+        return True
     
     def is_opened_paths_op(self) -> bool:
         '''
         '''
-        opened_paths_op = True
-
         for svgpath in self.svg_paths:
             if svgpath.is_closed():
-                opened_paths_op = False
-                break
+                return False
 
-        return opened_paths_op
+        return True
+
+    def combine_as_drill_or_peck(self):
+        '''
+        generate the combinaison of the selected paths
+
+        the generated geometry is a MultiPoint
+        '''
+        shapely_points : List[shapely.geometry.Point] = []
+
+        for svgpath in self.svg_paths:
+            attrs = svgpath.p_attrs
+            # consider only circles
+            if 'cx' in attrs and 'cy' in attrs:
+                shapely_point = svgpath.import_as_point()
+                shapely_points.append(shapely_point)
+        
+        self.geometry = shapely.geometry.MultiPoint(shapely_points)
 
     def combine(self) -> None:
         '''
@@ -428,7 +446,10 @@ class CncOp:
         '''
         if self.is_closed_paths_op():
 
-            self.combine()
+            if self.cam_op == "Pocket" or self.cam_op == "Inside" or self.cam_op == "Outside" or self.cam_op == "Engrave" :
+                self.combine()
+            if self.cam_op == "Drill" or self.cam_op == "Peck":
+                self.combine_as_drill_or_peck()
 
             if self.cam_op == "Pocket":
                 self.calculate_preview_geometry_pocket()
@@ -438,6 +459,8 @@ class CncOp:
                 self.calculate_preview_geometry_outside(toolModel)
             elif self.cam_op == "Engrave":
                 self.calculate_preview_geometry_engrave()
+            elif self.cam_op == "Drill" or self.cam_op == "Peck":
+                self.calculate_preview_geometry_drill(toolModel)
 
         if self.is_opened_paths_op():
 
@@ -446,9 +469,9 @@ class CncOp:
             if self.cam_op == "Engrave":
                 self.calculate_opened_paths_preview_geometry_engrave()
             elif self.cam_op == "Inside":
-                self.calculate_opened_paths_preview_geometry_inside(toolModel)  # TODO
+                self.calculate_opened_paths_preview_geometry_inside(toolModel)
             elif self.cam_op == "Outside":
-                self.calculate_opened_paths_preview_geometry_outside(toolModel) # TODO
+                self.calculate_opened_paths_preview_geometry_outside(toolModel)
 
     def calculate_opened_paths_preview_geometry_engrave(self):
         '''
@@ -499,7 +522,25 @@ class CncOp:
             geometry_svg_path = SvgPath.from_shapely_linestring("pycut_geometry_outside", line, False)
             self.geometry_svg_paths.append(geometry_svg_path)
 
+    def calculate_preview_geometry_drill(self, toolModel: ToolModel):
+        '''
+        as a pocket of diameter exactly cutter_dia
+        '''
+        if self.geometry is not None:
+            shapely_polygons : List[shapely.geometry.Polygon] = []
+            for pt in self.geometry.geoms:
+                center = pt.coords[0]
+                radius = toolModel.diameter / 2.0
 
+                svgpath =  SvgPath.from_circle_def(center, radius)
+                shapely_polygons += svgpath.import_as_polygons_list()
+            
+            self.preview_geometry = shapely.geometry.MultiPolygon(shapely_polygons)
+
+
+            for poly in self.preview_geometry.geoms:
+                geometry_svg_path = SvgPath.from_shapely_polygon("pycut_geometry_drill", poly)
+                self.geometry_svg_paths.append(geometry_svg_path)
 
     def calculate_preview_geometry_pocket(self):
         '''
@@ -622,6 +663,13 @@ class CncOp:
         #        # start from the inner ring and cam in the outside dir
         #        pass 
 
+        if self.geometry.geom_type == 'MultiPoint':
+
+            if cam_op == "Drill":
+                self.cam_paths = cam.drill(geometry, toolData["diameterTool"])
+            elif cam_op == "Peck": 
+                self.cam_paths = cam.peck(geometry, toolData["diameterTool"])
+        
         if self.geometry.geom_type == 'MultiPolygon':
 
             if cam_op != "Engrave" :
