@@ -639,6 +639,17 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
             self.delegate_col_margin.xeditors[(row, 9)].setEnabled(margin[cam_op]) 
             self.delegate_col_width.xeditors[(row, 10)].setEnabled(width[cam_op]) 
 
+    # HOW to do that : "Drill" and "Peck" only for "circle" shapes
+    # HOW to do that : "Pocket" not for "line" and "polyline" shapes
+    def enable_disable_drill_and_peck_ops(self):
+        '''
+        '''
+        for row in range(self.model().rowCount(None)):
+            paths_id = self.model().operations[row].paths
+            for path_id in paths_id:
+                pass
+                # no p_id -> shape type mapping
+
 
 class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
     '''

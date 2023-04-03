@@ -129,7 +129,7 @@ class SvgPath:
     def from_svg_path_def(cls, p_id: str, p_attrs: Dict[str,str], svg_path: svgpathtools.Path):
         '''
         Create a SvgPath (wrapper aound svgpattools Path object) 
-        from an aleady evaluated svg_path
+        from an already evaluated svg_path (got from 'svgpathtools.svg2paths')
 
         the attribute 'd' is set with 'zZ' or not, depending on the svg_path isclosedac value
         '''
