@@ -1,6 +1,6 @@
 # This Python file uses the following encoding: utf-8
 
-VERSION = "0_4_0_RC2"
+VERSION = "0_4_0_RC3"
 
 import sys
 import os
@@ -74,7 +74,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         "Material" : {
             "units"       : "mm",
             "thickness"   : 50.0,
-            "z_origin"     : "Top",
+            "z_origin"    : "Top",
             "clearance"   : 10.0,
         },
         "CurveToLineConversion" : {

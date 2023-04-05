@@ -12,6 +12,8 @@ import numpy as np
 import svgpathtools
 import svgelements
 
+import xml.etree.ElementTree as etree
+
 import shapely.geometry
 import shapely.validation
 from shapely.validation import make_valid
@@ -103,6 +105,10 @@ class SvgPath:
         From a svg file content, read all paths and their attributes
         and organize them as dictionary with key <path_id>, value (path, attribs)
         '''
+        # for the mapping id -> element (tag)
+        #root = etree.fromstring(bytes(svg_str, encoding='utf-8'))  # lxml
+        root = etree.fromstring(svg_str)
+
         svg_shapes = {}
 
         paths, attributes = cls.svg2paths_from_string(svg_str)
@@ -114,19 +120,38 @@ class SvgPath:
             print("================================================================")
             print("============= svg : path %s =================" % path_id)
             print("============= svg : path  isclosed()  = %d =================" % path.isclosedac())
-            print("============= svg : attribs %s =================" % attribs)
+            #print("============= svg : attribs %s =================" % attribs)
 
             # ignore paths without id
             if path_id is None:
                 continue
 
-            svg_shapes[path_id] = SvgPath.from_svg_path_def(path_id, attribs, path)
+            # get the tag of this 'src' element for this id
+            elt_tag = None
+
+            #elements = root.xpath("//*[@id = '%s']" % path_id)  # lxml
+            elements = root.findall(".//*[@id = '%s']" % path_id)
+
+            if len(elements) == 0:
+                print("WARNING: id" , path_id, "not found")
+                elt_tag = "???"
+            elif len(elements) == 1:
+                elt_tag = elements[0].tag
+                elt_tag = elt_tag.split("{http://www.w3.org/2000/svg}")[1]
+                print("============= svg : tag %s =================" % elt_tag)
+            else:
+                print("WARNING: id" , path_id, "duplicated")
+                elt_tag = elements[0].tag
+                elt_tag = elt_tag.split("{http://www.w3.org/2000/svg}")[1]
+                print("============= svg : tag %s =================" % elt_tag)
+            
+            svg_shapes[path_id] = SvgPath.from_svg_path_def(path_id, elt_tag, attribs, path)
 
         return svg_shapes
     
 
     @classmethod
-    def from_svg_path_def(cls, p_id: str, p_attrs: Dict[str,str], svg_path: svgpathtools.Path):
+    def from_svg_path_def(cls, p_id: str, p_tag: str, p_attrs: Dict[str,str], svg_path: svgpathtools.Path):
         '''
         Create a SvgPath (wrapper aound svgpattools Path object) 
         from an already evaluated svg_path (got from 'svgpathtools.svg2paths')
@@ -138,14 +163,14 @@ class SvgPath:
         else:
             p_attrs['d'] = svg_path.d()
         
-        svgpath =  SvgPath(p_id, p_attrs)
+        svgpath =  SvgPath(p_id, p_tag, p_attrs)
         svgpath.svg_path = svg_path
         svgpath.path_closed = svg_path.isclosedac() or svg_path.closed
 
 
         return svgpath
 
-    def __init__(self, p_id: str, p_attrs: Dict[str,str]):
+    def __init__(self, p_id: str, p_tag: str, p_attrs: Dict[str,str]):
         '''
         Create a SvgPath (wrapper aound svgpattools Path object) 
         from the d definition of the <path> xml definition
@@ -156,6 +181,8 @@ class SvgPath:
         self.p_attrs = p_attrs
         # new: because I do not trust svgpathtools 'isclosedac' method
         self.path_closed = True
+        # new: the tag of the 'src' element for this svgpathtool.Path path
+        self.tag = p_tag
 
         # svgpathtools: the svgpath as instance of type 'svgpathtools.Path' extracted from the string p_attrs["d"]
         if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
@@ -501,7 +528,7 @@ class SvgPath:
                 # force close ?
                 p_attrs["d"] = "M " + subpath + " Z"  # FIXME: how to know ??
             
-            o = SvgPath(p_id, p_attrs)
+            o = SvgPath(p_id, "path", p_attrs)
             
             svgpaths.append(o)
         
@@ -719,7 +746,7 @@ class SvgPath:
 
         svg_path.append(svgpathtools.Line(start, end))
 
-        return SvgPath(prefix, {'d': svg_path.d()})
+        return SvgPath(prefix, "path", {'d': svg_path.d()})
 
     @classmethod
     def from_shapely_polygon(cls, prefix: str, polygon: shapely.geometry.Polygon) -> 'SvgPath':
@@ -734,11 +761,11 @@ class SvgPath:
             </g> 
         </svg>''' % path_str
 
-        paths, attributes = cls.svg2paths_from_string(svg)
+        paths, attribs = cls.svg2paths_from_string(svg)
 
-        attribs = attributes[0]
+        attrs = attribs[0]
 
-        return SvgPath(prefix, attribs) 
+        return SvgPath(prefix, "polygon", attrs) 
 
     @classmethod
     def from_circle_def(cls, center: List[float], radius: float) -> 'SvgPath':
@@ -755,7 +782,7 @@ class SvgPath:
 
         paths, attribs = cls.svg2paths_from_string(svg)
       
-        return cls.from_svg_path_def("pycut_tab", attribs[0], paths[0])
+        return cls.from_svg_path_def("pycut_tab", "circle", attribs[0], paths[0])
 
     @classmethod
     def fix_simple_polygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :

@@ -31,7 +31,7 @@ class OpItem:
     def __str__(self):
         '''
         '''
-        return "op: %s %s [%f] %s %s %s %f" % (self.name, self.cam_op, self.cut_depth, self.ramp, self.enabled, self.combinaison, self.cut_depth)
+        return "op: %s %s [%f] %s %s %s %f" % (self.name, self.cam_op, self.cut_depth, self.ramp_plunge, self.enabled, self.combinaison, self.cut_depth)
 
     def to_dict(self) -> Dict[str, Any]:
         '''
@@ -309,6 +309,10 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
         editor.setGeometry(option.rect)
 
 class PyCutComboBoxDelegate(QtWidgets.QStyledItemDelegate):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.xeditors = {}
+
     def createEditor(self, parent, option, index: QtCore.QModelIndex):
         col = index.column()
 
@@ -334,6 +338,8 @@ class PyCutComboBoxDelegate(QtWidgets.QStyledItemDelegate):
 
         # to flush a "setModelData" in place - it works! but model still has old value -
         editor.currentIndexChanged.connect(self.onEditorCurrentIndexChanged)
+
+        self.xeditors[(index.row(), index.column())] = editor
 
         return editor
 
@@ -408,7 +414,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
         self.svg_viewer = svg_viewer
         self.mainwindow = svg_viewer.mainwindow
 
-    def set_operations(self, operations):
+    def set_operations(self, operations: List[Dict[str,str]]):
         '''
         '''
         cnc_ops = []
@@ -477,7 +483,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
 class PyCutSimpleTableView(QtWidgets.QTableView):
     '''
     '''
-    def __init__(self, parent=None):
+    def __init__(self, parent: PyCutOperationsTableViewManager):
         '''
         '''
         super().__init__(parent)
@@ -516,7 +522,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
             "down",                     # [13] button
         ]
         '''
-        delegate = PyCutComboBoxDelegate(self)
+        self.delegate_col_op = delegate = PyCutComboBoxDelegate(self)
         self.setItemDelegateForColumn(1, delegate)
 
         delegate = PyCutCheckBoxDelegate(self)
@@ -588,6 +594,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         self.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
 
         self.enable_disable_cells()
+        self.enable_disable_drill_and_peck_ops()
 
     def cb_delete_op(self):
         index = self.currentIndex()
@@ -634,7 +641,8 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         width = {'Pocket': False, 'Inside': True, 'Outside': True, 'Engrave': False, 'Drill': False, 'Peck': False} 
 
         for row in range(self.model().rowCount(None)):
-            cam_op = self.model().operations[row].cam_op
+            op = self.model().operations[row]
+            cam_op = op.cam_op
             
             self.delegate_col_margin.xeditors[(row, 9)].setEnabled(margin[cam_op]) 
             self.delegate_col_width.xeditors[(row, 10)].setEnabled(width[cam_op]) 
@@ -645,17 +653,41 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         '''
         '''
         for row in range(self.model().rowCount(None)):
-            paths_id = self.model().operations[row].paths
-            for path_id in paths_id:
-                pass
-                # no p_id -> shape type mapping
+            op = self.model().operations[row]
+            paths = op.paths
+
+            for path_id in paths:
+                manager = self.parent
+                tag = manager.svg_viewer.get_svg_path_elt_tag(path_id)
+                
+                comboxbox = self.delegate_col_op.xeditors[(row, 1)]
+                model = comboxbox.model()
+                
+                item_pocket = model.item(0)
+                #item_inside = model.item(1)
+                #item_outside = model.item(2)
+                #item_engrave = model.item(3)
+                item_drill = model.item(4)
+                item_peck = model.item(5)
+
+                if tag == "circle":
+                    item_drill.setEnabled(True)
+                    item_peck.setEnabled(True)
+                else:
+                    item_drill.setEnabled(False)
+                    item_peck.setEnabled(False)
+
+                if tag == "line" or tag == "polyline":
+                    item_pocket.setEnabled(False)
+                else:
+                    item_pocket.setEnabled(True)
 
 
 class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
     '''
     model for the table view
     '''
-    def __init__(self, operations: List[Any], mainwindow):
+    def __init__(self, operations: List[OpItem], mainwindow):
         super().__init__()
         
         self.operations = operations
@@ -706,6 +738,7 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
 
         if self.view is not None:
             self.view.enable_disable_cells()
+            self.view.enable_disable_drill_and_peck_ops()
 
     def __str__(self):
         self.cnt += 1

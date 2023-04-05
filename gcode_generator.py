@@ -312,12 +312,13 @@ class CncOp:
         for svg_path_id in self.paths:
 
             svg_path_d = svg_viewer.get_svg_path_d(svg_path_id)
+            svg_path_elt_tag = svg_viewer.get_svg_path_elt_tag(svg_path_id)
             svg_path_attrs = svg_viewer.get_svg_path_attrs(svg_path_id)
 
             attrs = copy.deepcopy(svg_path_attrs)
             attrs['d'] = svg_path_d
 
-            svg_path = SvgPath(svg_path_id, attrs)
+            svg_path = SvgPath(svg_path_id, svg_path_elt_tag, attrs)
 
             self.svg_paths.append(svg_path)
 

@@ -408,6 +408,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
     
     def get_svg_path_attrs(self, p_id: str) -> str:
         return self.svg_shapes[p_id].p_attrs
+    
+    def get_svg_path_elt_tag(self, p_id: str) -> str:
+        return self.svg_shapes[p_id].tag
 
     def mousePressEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
         self.in_dnd = True
