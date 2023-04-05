@@ -337,73 +337,40 @@ class ShapelyUtils:
     @classmethod
     def reorder_poly_points(cls, poly: shapely.geometry.Polygon) -> shapely.geometry.Polygon:
         '''
-        Problem: shapely bug when outsiding a polygon where the stating point
-        in a convex corner: at that point, the offset line 'outside' is uncorrect.
+        Problem: shapely bug when outsiding a polygon where the starting point
+        is a convex corner: at that point, the offset line 'outside' is uncorrect.
 
         Solution: start the list of points at a point in the middle of a segment
         (if there is one)  
         '''
         if not poly.geom_type == 'Polygon':
             return poly
-            
-        pts = list(poly.exterior.coords)
-
-        # ----------------------------------------------------
-        def is_inside_segment(pt, pt_left, pt_right):
-            ab = (pt[0] - pt_left[0], pt[1], pt_left[1])
-            ac = (pt[0] - pt_right[0], pt[1], pt_right[1])
-
-            if (ab[0]*ab[0] + ab[1]*ab[1]) < 0.00001:
-                return False
-            if (ac[0]*ac[0] + ac[1]*ac[1]) < 0.00001:
-                return False
-
-            s1 = ab[0]
-            s1 = ab[1]
-
-            s2 = ac[0]
-            s2 = ac[1]
-            
-            # a segment ?
-            if math.fabs(s1*s2 - s2*s1) > 0.00001:
-                return False
-
-            # inside the segment ?
-            x = pt[0]
-            x1 = pt_left[0]
-            x2 = pt_right[0]
-
-            #y = pt[1]
-            #y1 = pt_left[1]
-            #y2 = pt_right[1]
-
-            if math.fabs(x2-x1) < 0.00001:
-                return False
-
-            alpha = (x-x1)/(x2-x1)
-
-            return alpha > 0
-        # -----------------------------------------------------
-
-        k_ok = None
         
-        for k, pt in enumerate(pts):
-            pt_prev = pts[k-1] 
-            if k < len(pts) -1:
-                pt_next = pts[k+1]
-            else: 
-                pt_next = pts[0]
+        # ----------------------------------------------------- 
+        def make_no_edges(pts):
+            pt1 = pts[0]
+            pt2 = pts[1]
+            
+            mx = (pt1[0] + pt2[0]) / 2.0
+            my = (pt1[1] + pt2[1]) / 2.0
 
-            if is_inside_segment(pt, pt_prev, pt_next):
-                k_ok = k
-                break
+            middle_pt0_pt1 = (mx, my)
 
-        # k_ok is the right start!
+            return [middle_pt0_pt1] + pts[1:] + [pts[0]]
+        # ----------------------------------------------------- 
 
-        if k is not None:
-            pts = pts[k_ok:] + pts[:k_ok]
+        pts_e = list(poly.exterior.coords)
+        pts = make_no_edges(pts_e)
 
-            return shapely.geometry.Polygon(pts)
+        holes = []
+
+        for interiors in poly.interiors:
+            pts_i = list(interiors.coords)
+            pts_ii = make_no_edges(pts_i)
+
+            holes.append(shapely.geometry.LineString(pts_ii))
+
+        return shapely.geometry.Polygon(pts, holes=holes)
 
         return poly
 
