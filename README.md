@@ -39,7 +39,7 @@ Features
    + inside   YES
    + engrave  YES
    + vPocket   NO  (will never be implemented - I do not need this -)
-   + drill or peck (for circle of radius smaller than the cutter radius)
+   + drill or peck YES (for circle of radius smaller than the cutter radius)
 - svg items selection and new op with combinaison Union/Diff/Inter/Xor (geometry calculated)
 - preview geom displayed in svg viewer
 - tabs
