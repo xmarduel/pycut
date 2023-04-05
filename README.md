@@ -23,11 +23,12 @@ Dependencies
 ------------
 - Python 3.10
 - PySide6-6.3.0
-- svgpathtools 1.6.0 - pip installation bundled with numpy/scipy
+- svgpathtools (latest) - pip installation bundled with numpy/scipy
 - svgelements (latest) - used in the svgresolver.py utility
 - freetype-py (latest) - used in svgtext2svpath.py utility
-- shapely (1.8.2) with PyOpenGL
+- shapely (1.8.4) with PyOpenGL
 - matplotlib (to debug/view shapely offsets ops)
+- lxml (latest)
 
 Features
 --------
