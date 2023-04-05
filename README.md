@@ -46,10 +46,6 @@ Features
 - gcode viewer (as in Candle)
 - gcode simulator (as in jsCut)
 
-Bugs
-----
-- and all the rest!
-
 Main Improvments over JsCut
 ---------------------------
 - tabs "on the fly" (no need to define them in the svg file)
