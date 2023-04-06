@@ -22,12 +22,12 @@ start the program from the installation folder
 Dependencies
 ------------
 - Python 3.10
-- PySide6-6.3.0
+- PySide6 6.4.3
 - svgpathtools (latest) - pip installation bundled with numpy/scipy
 - svgelements (latest) - used in the svgresolver.py utility
 - freetype-py (latest) - used in svgtext2svpath.py utility
-- shapely (1.8.4) with PyOpenGL
-- matplotlib (to debug/view shapely offsets ops)
+- shapely 1.8.4 with PyOpenGL
+- matplotlib 3.6.2 (to debug/view shapely offsets ops)
 - lxml (latest)
 
 Features
@@ -54,10 +54,6 @@ Main Improvments over JsCut
 - flip X/Y in GCode (good for my machine - the "1419" one -)
 - can handle polygons as well as lines ("opened paths")
 
-ToDo
-----
-- better settings
-- what else ??
 
 See the Wiki page for more.
 
