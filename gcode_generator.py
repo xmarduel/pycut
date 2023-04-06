@@ -702,7 +702,7 @@ class CncOp:
         # -------------------------------------------------------------------------------------
 
         for cam_path in self.cam_paths:
-            svg_path = SvgPath.from_shapely_linestring("pycut_toolpath", cam_path.path, cam_path.safeToClose)
+            svg_path = SvgPath.from_shapely_linestring("pycut_toolpath", cam_path.path, cam_path.safe_to_close)
             self.cam_paths_svg_paths.append(svg_path)
 
 class JobModel:

@@ -36,14 +36,14 @@ class CamPath:
     '''
     CamPath has this format: {
       path:               Shapely LineString
-      safeToClose:        Is it safe to close the path without retracting?
+      safe_to_close:      Is it safe to close the path without retracting?
     }
     '''
-    def __init__(self, path: shapely.geometry.LineString, safeToClose: bool = True):
+    def __init__(self, path: shapely.geometry.LineString, safe_to_close: bool = True):
         # shapely linestring
         self.path = path
         # is it safe to close the path without retracting?
-        self.safeToClose = safeToClose
+        self.safe_to_close = safe_to_close
 
 
 class cam:
@@ -428,12 +428,12 @@ class cam:
 
         camPaths : List[CamPath] = []
         for path in mergedPaths:
-            safeToClose = not ShapelyUtils.crosses(bounds, path[0], path[-1])
+            safe_to_close = not ShapelyUtils.crosses(bounds, path[0], path[-1])
             
             if closed_path == False:
-                safeToClose = False
+                safe_to_close = False
             
-            camPaths.append( CamPath( shapely.geometry.LineString(path), safeToClose) )
+            camPaths.append( CamPath( shapely.geometry.LineString(path), safe_to_close) )
 
         return camPaths
 
@@ -445,7 +445,9 @@ class cam:
     
     @staticmethod
     def distP(p1:Tuple[int,int], p2:Tuple[int,int]) -> float :
-        return cam.dist(p1[0], p1[1], p2[0], p2[1])
+        dx = p2[0] -  p1[0]
+        dy = p2[1] -  p1[1]
+        return dx * dx + dy * dy
     
     @classmethod
     def getGcode(cls, args):
@@ -563,10 +565,10 @@ class cam:
                             exactTabZLevelDone = True
 
 
-                if (currentZ <= tabZ and ((not path.safeToClose) or crosses_tabs)) :
+                if (currentZ <= tabZ and ((not path.safe_to_close) or crosses_tabs)) :
                     gcode += retractGcode
                     currentZ = safeZ
-                elif (currentZ < safeZ and (not path.safeToClose)) :
+                elif (currentZ < safeZ and (not path.safe_to_close)) :
                     gcode += retractGcode
                     currentZ = safeZ
 
@@ -1023,18 +1025,14 @@ class PocketCalculator:
 
         cam_paths : List[CamPath] = []
         for path in mergedPaths:
-            safeToClose = not ShapelyUtils.crosses(bounds, path[0], path[-1])
-            cam_paths.append( CamPath( shapely.geometry.LineString(path), safeToClose) )
+            safe_to_close = not ShapelyUtils.crosses(bounds, path[0], path[-1])
+            cam_paths.append( CamPath( shapely.geometry.LineString(path), safe_to_close) )
 
         self.cam_paths = cam_paths
-
-    @staticmethod
-    def dist(x1: float, y1: float, x2: float, y2: float) -> float :
-        dx = x2 - x1
-        dy = y2 - y1
-        return dx * dx + dy * dy
     
     @staticmethod
     def distP(p1:Tuple[int,int], p2:Tuple[int,int]) -> float :
-        return PocketCalculator.dist(p1[0], p1[1], p2[0], p2[1])
+        dx = p2[0] -  p1[0]
+        dy = p2[1] -  p1[1]
+        return dx * dx + dy * dy
    
