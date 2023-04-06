@@ -89,7 +89,7 @@ class cam:
         cutter_dia is in "UserUnit" units. 
         overlap is in the range [0, 1).
         '''
-        pc = pocket_calculator(multipoly, cutter_dia, overlap, climb)
+        pc = PocketCalculator(multipoly, cutter_dia, overlap, climb)
         pc.pocket()
         return pc.cam_paths
 
@@ -189,10 +189,10 @@ class cam:
             # no possible paths! TODO . inform user
             return []
 
-        # mergePaths need MultiPolygon
+        # merge_paths need MultiPolygon
         bounds = ShapelyUtils.multiLineToMultiPoly(bounds)
 
-        return cls.mergePaths(bounds, allPaths)
+        return cls.merge_paths(bounds, allPaths)
 
     @classmethod
     def outline_opened_paths(cls, geometry: shapely.geometry.MultiLineString, cutter_dia: float, is_inside: bool, width: float, overlap: float, climb: bool) -> List[CamPath] :
@@ -290,10 +290,10 @@ class cam:
             # no possible paths! TODO . inform user
             return []
 
-        # mergePaths need MultiPolygon
+        # merge_paths need MultiPolygon
         bounds = shapely.geometry.MultiPolygon()
 
-        return cls.mergePaths(bounds, allPaths, closed_path=False)
+        return cls.merge_paths(bounds, allPaths, closed_path=False)
         
     @classmethod
     def engrave(cls, geometry: shapely.geometry.MultiPolygon, climb: bool) -> List[CamPath] :
@@ -344,7 +344,7 @@ class cam:
         return camPaths
 
     @classmethod
-    def mergePaths(cls, _bounds: shapely.geometry.MultiPolygon, paths: List[shapely.geometry.LineString], closed_path=True) -> List[CamPath] :
+    def merge_paths(cls, _bounds: shapely.geometry.MultiPolygon, paths: List[shapely.geometry.LineString], closed_path=True) -> List[CamPath] :
         '''
         Try to merge paths. A merged path doesn't cross outside of bounds AND the interior polygons
         '''
@@ -818,7 +818,7 @@ class TabsSeparator:
 
 
 
-class pocket_calculator:
+class PocketCalculator:
     '''
     '''
     def __init__(self, multipoly: shapely.geometry.MultiPolygon, cutter_dia: float, overlap: float, climb: bool):
@@ -918,7 +918,7 @@ class pocket_calculator:
         self.collectPaths(interiors_offsets)
         # - done !
 
-        self.mergePaths(bounds, self.all_paths)
+        self.merge_paths(bounds, self.all_paths)
  
     def offsetMultiPolygon(self, multipoly: shapely.geometry.MultiPolygon, amount: float, side: str, consider_interiors_offsets=False) -> shapely.geometry.MultiPolygon:
         '''
@@ -945,7 +945,7 @@ class pocket_calculator:
 
         self.all_paths = lines_ok + self.all_paths
   
-    def mergePaths(self, _bounds: shapely.geometry.MultiPolygon, paths: List[shapely.geometry.LineString]) -> List[CamPath] :
+    def merge_paths(self, _bounds: shapely.geometry.MultiPolygon, paths: List[shapely.geometry.LineString]) -> List[CamPath] :
         '''
         Try to merge paths. A merged path doesn't cross outside of bounds AND the interior polygons
         '''
@@ -994,7 +994,7 @@ class pocket_calculator:
             closestPointDist = sys.maxsize
             for pathIndex, path in enumerate(paths):
                 for pointIndex, point in enumerate(path):
-                    dist = pocket_calculator.distP(currentPoint, point)
+                    dist = PocketCalculator.distP(currentPoint, point)
                     if dist < closestPointDist:
                         closestPathIndex = pathIndex
                         closestPointIndex = pointIndex
@@ -1036,5 +1036,5 @@ class pocket_calculator:
     
     @staticmethod
     def distP(p1:Tuple[int,int], p2:Tuple[int,int]) -> float :
-        return pocket_calculator.dist(p1[0], p1[1], p2[0], p2[1])
+        return PocketCalculator.dist(p1[0], p1[1], p2[0], p2[1])
    

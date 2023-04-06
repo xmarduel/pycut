@@ -5,16 +5,16 @@ class ValWithUnit(float):
     
     >>> x = ValWithUnit(22, "mm")
     >>> x
-    >>> x.toInch()
+    >>> x.to_inch()
     >>> x.toMm()
-    >>> x.toInch().toFixed(5)
+    >>> x.to_inch().toFixed(5)
 
     Unfortunately, cannot say
     >>>  x.set_units("inch")
     so that the x value then changes..
 
     So do this
-    >>> x = x.toInch("inch")
+    >>> x = x.to_inch("inch")
     
     '''
     def __new__(cls, value, units):
@@ -25,7 +25,7 @@ class ValWithUnit(float):
         self.value = value
         self.units = units
         
-    def toInch(self):
+    def to_inch(self):
         if self.units == "inch":
             return ValWithUnit(self, "inch")
         else:

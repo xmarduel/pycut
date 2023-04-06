@@ -45,7 +45,7 @@ class UnitConverter:
         '''
         self.units = units
 
-    def toInch(self, x: float):
+    def to_inch(self, x: float):
         '''
         Convert x from the current unit to inch
         '''
@@ -54,7 +54,7 @@ class UnitConverter:
         else:
             return x / 25.4
 
-    def fromInch(self, x: float):
+    def from_inch(self, x: float):
         '''
         Convert x from inch to the current unit
         '''
@@ -63,7 +63,7 @@ class UnitConverter:
         else:
             return ValWithUnit(x * 25.4, "mm")
 
-    def fromMm(self, x: float):
+    def from_mm(self, x: float):
         '''
         Convert x from mm to the current unit
         '''
@@ -128,7 +128,7 @@ class ToolModel:
         self.plungeRate = ValWithUnit(5, self.units)
         self.cutRate = ValWithUnit(40, self.units)
 
-    def getCamData(self):
+    def get_cam_data(self):
         ''' 
         convert to the gcode units FIXME actual per default mm 
         '''
@@ -153,10 +153,10 @@ class MaterialModel:
         self.sizeX = ValWithUnit(SvgModel.sizeX, "mm") # default
         self.sizeY = ValWithUnit(SvgModel.sizeX, "mm") # default
 
-    def setMaterialSizeX(self, x: ValWithUnit):
+    def set_material_size_x(self, x: ValWithUnit):
         self.sizeX = x.toMm()
 
-    def setMaterialSizeY(self, y: ValWithUnit):
+    def set_material_size_y(self, y: ValWithUnit):
         self.sizeY = y.toMm()
 
     @property
@@ -211,7 +211,7 @@ class Tab:
 
         return path
 
-    def posInsideTab(self, x: float, y: float, z: float, op_cut_depth: float):
+    def pos_inside_tab(self, x: float, y: float, z: float, op_cut_depth: float):
         '''
         ---------------------- 0
 
@@ -248,12 +248,12 @@ class TabsModel:
 
         Tab.set_height(self.height)
 
-    def hasTabs(self):
+    def has_tabs(self):
         return len(self.tabs) > 0
 
-    def posInTab(self, x: float, y: float, z: float, op_cut_depth: float):
+    def pos_in_tab(self, x: float, y: float, z: float, op_cut_depth: float):
         for tab in self.tabs:
-            if tab.posInsideTab(x, y, z, op_cut_depth):
+            if tab.pos_inside_tab(x, y, z, op_cut_depth):
                 return True
 
         return False
@@ -568,7 +568,7 @@ class CncOp:
     def calculate_preview_geometry_inside(self, toolModel: ToolModel):
         '''
         '''
-        toolData = toolModel.getCamData()
+        toolData = toolModel.get_cam_data()
 
         if self.geometry is not None:
             margin = self.margin.toMm()
@@ -600,7 +600,7 @@ class CncOp:
         '''
         '''
         # shapely: first the outer, then the inner hole
-        toolData = toolModel.getCamData()
+        toolData = toolModel.get_cam_data()
 
         if self.geometry is not None:
             width = self.width.toMm()
@@ -637,7 +637,7 @@ class CncOp:
     def calculate_toolpaths(self, svgModel: SvgModel, toolModel: ToolModel, materialModel: MaterialModel):
         '''
         '''
-        toolData = toolModel.getCamData()
+        toolData = toolModel.get_cam_data()
 
         #name = self.name
         #ramp_plunge = self.ramp_plunge
@@ -733,7 +733,7 @@ class JobModel:
         self.maxY = 0
 
         self.calculate_operation_cam_paths()
-        self.findMinMax()
+        self.find_min_max()
 
         self.gcode = ""
 
@@ -744,7 +744,7 @@ class JobModel:
                 op.calculate_geometry(self.toolModel)
                 op.calculate_toolpaths(self.svgModel, self.toolModel, self.materialModel)
 
-    def findMinMax(self):
+    def find_min_max(self):
         minX = 0
         maxX = 0
         minY = 0
@@ -803,10 +803,10 @@ class GcodeGenerator:
         '''
         if self.flipXY == False:
             # normal case
-            return self.unitConverter.fromMm(self.job.minX) + self.offsetX
+            return self.unitConverter.from_mm(self.job.minX) + self.offsetX
         else:
             # as flipped: is -maxY when "no flip"
-            return self.unitConverter.fromMm(self.job.minY) - self.offsetY
+            return self.unitConverter.from_mm(self.job.minY) - self.offsetY
 
     @property
     def maxX(self):
@@ -815,10 +815,10 @@ class GcodeGenerator:
         '''
         if self.flipXY == False:
             # normal case
-            return self.unitConverter.fromMm(self.job.maxX) + self.offsetX
+            return self.unitConverter.from_mm(self.job.maxX) + self.offsetX
         else:
             # as flipped: is -minY when "no flip"
-            return self.unitConverter.fromMm(self.job.maxY) - self.offsetY
+            return self.unitConverter.from_mm(self.job.maxY) - self.offsetY
 
     @property
     def minY(self):
@@ -827,10 +827,10 @@ class GcodeGenerator:
         '''
         if self.flipXY == False:
             # normal case
-            return  -self.unitConverter.fromMm(self.job.maxY) + self.offsetY
+            return  -self.unitConverter.from_mm(self.job.maxY) + self.offsetY
         else:
             # as flipped: is minX when "no flip"
-            return self.unitConverter.fromMm(self.job.minX) + self.offsetX
+            return self.unitConverter.from_mm(self.job.minX) + self.offsetX
 
     @property
     def maxY(self):
@@ -839,10 +839,10 @@ class GcodeGenerator:
         '''
         if self.flipXY == False:
             # normal case
-            return  -self.unitConverter.fromMm(self.job.minY) + self.offsetY
+            return  -self.unitConverter.from_mm(self.job.minY) + self.offsetY
         else:
             # as flipped: is maxX when "no flip"
-            return self.unitConverter.fromMm(self.job.maxX) + self.offsetX
+            return self.unitConverter.from_mm(self.job.maxX) + self.offsetX
 
     def generateGcode(self):
         if self.gcodeModel.gcodeZero == GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL:
@@ -855,23 +855,23 @@ class GcodeGenerator:
             self.generateGcode_zeroCenterOfOp()
 
     def generateGcode_zeroTopLeftOfMaterial(self):
-        self.offsetX = self.unitConverter.fromMm(0)
-        self.offsetY = self.unitConverter.fromMm(0)
+        self.offsetX = self.unitConverter.from_mm(0)
+        self.offsetY = self.unitConverter.from_mm(0)
         self.generateGcodeAction()
 
     def generateGcode_zeroLowerLeftOfMaterial(self):
-        self.offsetX = self.unitConverter.fromMm(0)
-        self.offsetY = self.unitConverter.fromMm(self.materialModel.sizeY)
+        self.offsetX = self.unitConverter.from_mm(0)
+        self.offsetY = self.unitConverter.from_mm(self.materialModel.sizeY)
         self.generateGcodeAction()
 
     def generateGcode_zeroLowerLeftOfOp(self):
-        self.offsetX = - self.unitConverter.fromMm(self.job.minX)
-        self.offsetY = - self.unitConverter.fromMm(-self.job.maxY)
+        self.offsetX = - self.unitConverter.from_mm(self.job.minX)
+        self.offsetY = - self.unitConverter.from_mm(-self.job.maxY)
         self.generateGcodeAction()
 
     def generateGcode_zeroCenterOfOp(self):
-        self.offsetX = - self.unitConverter.fromMm((self.job.minX + self.job.maxX) / 2)
-        self.offsetY = - self.unitConverter.fromMm(-(self.job.minY + self.job.maxY) / 2)
+        self.offsetX = - self.unitConverter.from_mm((self.job.minX + self.job.maxX) / 2)
+        self.offsetY = - self.unitConverter.from_mm(-(self.job.minY + self.job.maxY) / 2)
         self.generateGcodeAction()
 
     def setXOffset(self, value: float):
@@ -896,13 +896,13 @@ class GcodeGenerator:
         if len(cnc_ops) == 0:
             return
 
-        safeZ = self.unitConverter.fromMm(self.materialModel.matZSafeMove.toMm())
-        rapidRate = int(self.unitConverter.fromMm(self.toolModel.rapidRate.toMm()))
-        plungeRate = int(self.unitConverter.fromMm(self.toolModel.plungeRate.toMm()))
-        cutRate = int(self.unitConverter.fromMm(self.toolModel.cutRate.toMm()))
-        passDepth = self.unitConverter.fromMm(self.toolModel.passDepth.toMm())
-        topZ = self.unitConverter.fromMm(self.materialModel.matTopZ.toMm())
-        tabHeight = self.unitConverter.fromMm(self.tabsModel.height.toMm())
+        safeZ = self.unitConverter.from_mm(self.materialModel.matZSafeMove.toMm())
+        rapidRate = int(self.unitConverter.from_mm(self.toolModel.rapidRate.toMm()))
+        plungeRate = int(self.unitConverter.from_mm(self.toolModel.plungeRate.toMm()))
+        cutRate = int(self.unitConverter.from_mm(self.toolModel.cutRate.toMm()))
+        passDepth = self.unitConverter.from_mm(self.toolModel.passDepth.toMm())
+        topZ = self.unitConverter.from_mm(self.materialModel.matTopZ.toMm())
+        tabHeight = self.unitConverter.from_mm(self.tabsModel.height.toMm())
 
         #if self.units == "inch":
         #    scale = 1.0
@@ -923,9 +923,9 @@ class GcodeGenerator:
             gcode += f"M3 S{self.gcodeModel.spindleSpeed}\r\n"
 
         for idx, cnc_op in enumerate(cnc_ops):
-            cut_depth = self.unitConverter.fromMm(cnc_op.cut_depth.toMm())
+            cut_depth = self.unitConverter.from_mm(cnc_op.cut_depth.toMm())
             botZ = ValWithUnit(topZ - cut_depth, self.units)
-            tabZ = self.unitConverter.fromMm(topZ.toMm() - cut_depth.toMm() + tabHeight.toMm())
+            tabZ = self.unitConverter.from_mm(topZ.toMm() - cut_depth.toMm() + tabHeight.toMm())
 
             nb_paths = len(cnc_op.cam_paths)  # in use!
 

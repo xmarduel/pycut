@@ -207,19 +207,19 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.layoutToggleLeftSideAction = QtGui.QAction(QtGui.QIcon(":/images/left-area.png"), "hide/show",
                 self, shortcut=QtGui.QKeySequence.Back,
-                statusTip="Show/Hide Left Side", triggered=self.toggleLeftSide)
+                statusTip="Show/Hide Left Side", triggered=self.toggle_left_side)
         self.layoutToggleLeftSideAction.setCheckable(True)
         self.layoutToggleLeftSideAction.setToolTip("Show/Hide Left Side View") # still not shown
 
         self.layoutToggleMiddleAreaAction = QtGui.QAction(QtGui.QIcon(":/images/bellow-area.png"), "hide/show",
                 self, shortcut=QtGui.QKeySequence.Forward,
-                statusTip="Show/Hide Op. Table", triggered=self.toggleMiddleArea)
+                statusTip="Show/Hide Op. Table", triggered=self.toggle_middle_area)
         self.layoutToggleMiddleAreaAction.setCheckable(True)
         self.layoutToggleMiddleAreaAction.setToolTip("Show/Hide Op. Table View") # still not shown
 
         self.layoutToggleRightSideAction = QtGui.QAction(QtGui.QIcon(":/images/right-area.png"), "hide/show",
                 self, shortcut=QtGui.QKeySequence.Forward,
-                statusTip="Show/Hide Right Side", triggered=self.toggleRightSide)
+                statusTip="Show/Hide Right Side", triggered=self.toggle_right_side)
         self.layoutToggleRightSideAction.setCheckable(True)
         self.layoutToggleRightSideAction.setToolTip("Show/Hide Right Side View") # still not shown
 
@@ -247,7 +247,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.setWindowState(QtCore.Qt.WindowMaximized)
 
-    def toggleLeftSide(self):
+    def toggle_left_side(self):
         '''
         '''
         if self.layoutToggleLeftSideAction.isChecked():
@@ -255,7 +255,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         else:
             self.ui.scrollArea_left.show()
 
-    def toggleMiddleArea(self):
+    def toggle_middle_area(self):
         '''
         '''
         if self.layoutToggleMiddleAreaAction.isChecked():
@@ -263,7 +263,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         else:
             self.ui.operationsview_manager.show()
 
-    def toggleRightSide(self):
+    def toggle_right_side(self):
         '''
         '''
         if self.layoutToggleRightSideAction.isChecked():
@@ -1061,8 +1061,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         materialModel.matZOrigin = settings["Material"]["z_origin"]
         materialModel.matClearance = ValWithUnit(settings["Material"]["clearance"], materialModel.matUnits)
         # the SVG dimensions
-        materialModel.setMaterialSizeX(self.svg_viewer.get_svg_size_x())
-        materialModel.setMaterialSizeY(self.svg_viewer.get_svg_size_y())
+        materialModel.set_material_size_x(self.svg_viewer.get_svg_size_x())
+        materialModel.set_material_size_y(self.svg_viewer.get_svg_size_y())
 
         toolModel = ToolModel()
         toolModel.units = settings["Tool"]["units"]
