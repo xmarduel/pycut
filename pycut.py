@@ -291,11 +291,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             settings_dialog.doubleSpinBox_GeometryPreview_stroke_opacity.setValue(float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"]))
             settings_dialog.doubleSpinBox_GeometryPreview_stroke_width.setValue(float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]))
 
-        def setDefaults():
+        def set_defaults():
             self.svg_viewer.set_default_settings()
             fill_dialog()
 
-        def setOK():
+        def set_ok():
             settings = {
                 "TABS" : {
                     "stroke": "#aa4488",
@@ -326,7 +326,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.svg_viewer.set_settings(settings)
             settings_dialog.close()
 
-        def setCancel():
+        def set_cancel():
             settings_dialog.close()
 
         loader = QUiLoader(None)
@@ -334,9 +334,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         settings_dialog = loader.load("./settings/settings.ui")
         fill_dialog()
-        settings_dialog.cmdDefaults.clicked.connect(setDefaults)
-        settings_dialog.cmdOK.clicked.connect(setOK)
-        settings_dialog.cmdCancel.clicked.connect(setCancel)
+        settings_dialog.cmdDefaults.clicked.connect(set_defaults)
+        settings_dialog.cmdOK.clicked.connect(set_ok)
+        settings_dialog.cmdCancel.clicked.connect(set_cancel)
 
         settings_dialog.exec()
 
@@ -633,23 +633,23 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             job = json.load(f)
         
-            svg_file = job["svg_file"] # relativ to job or absolute
+            self.svg_file = job["svg_file"] # relativ to job or absolute
             
-            if os.path.isabs(svg_file):
-                self.svg_file = svg_file
+            if os.path.isabs(self.svg_file):
+                svg_file = self.svg_file
             else:
                 if os.path.isabs(jobfilename):
                     jobdir = os.path.dirname(jobfilename)
-                    self.svg_file = os.path.join(jobdir, svg_file)
+                    svg_file = os.path.join(jobdir, self.svg_file)
                 else:
                     abs_jobfilename = os.path.abspath(jobfilename)
                     abs_jobdir = os.path.dirname(abs_jobfilename)
-                    self.svg_file = os.path.join(abs_jobdir, svg_file)
+                    svg_file = os.path.join(abs_jobdir, self.svg_file)
 
-            if not os.path.exists(self.svg_file):
+            if not os.path.exists(svg_file):
                 msgBox = QtWidgets.QMessageBox()
                 msgBox.setWindowTitle("PyCut")
-                msgBox.setText("Svg File %s not found" % self.svg_file)
+                msgBox.setText("Svg File %s not found" % svg_file)
                 msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
                 msgBox.exec()
                 return 
@@ -658,7 +658,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.tabs = job["settings"]["Tabs"].get("tabs", [])
         
             # display
-            self.display_svg(self.svg_file)
+            self.display_svg(svg_file)
             
             # and fill the whole gui
             self.apply_settings(job["settings"])
