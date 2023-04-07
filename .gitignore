@@ -4,13 +4,12 @@ __pycache__/
 *$py.class
 
 gcode/
-misc_private/stl*
-#misc_private/cnc3018-frames-parts
-misc_private/cnc1419
-misc_private/cnc1310/backlash.mp4
 
-misc_private/mesh*
-misc_private/images/
+misc_private/cnc1310/backlash.mp4
+misc_private/cnc1419
+#misc_private/cnc3018-frames-parts
+#misc_private/others_stuff
+misc_private/images
 
 gcodeviewer/drawers/*h
 gcodeviewer/drawers/*cpp

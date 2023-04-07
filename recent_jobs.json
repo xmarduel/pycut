@@ -1,6 +1,7 @@
 [
+  "misc_private/others_stuff/small_kasten.json",
+  "misc_private/others_stuff/kasten.json",
   "misc_private/qkg38/qkg38.json",
   "jobs/cnc_test_svgpathtools.json",
-  "jobs/cnc_control_panel.json",
-  "jobs/cnc_all_letters_tudor.json"
+  "jobs/cnc_control_panel.json"
 ]

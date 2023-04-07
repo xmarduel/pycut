@@ -883,7 +883,7 @@ class PocketCalculator:
             - cutter dia = 3.0 => r = 1.5
             - stepover = 0.5
             => first path in the "small circle" rr = 0.25 , not that the material then has been fully remove
-            => but offset of rr = 0.25 amount 1.5 = cuttter_dia *(1 - stepover)  => overflow outside the small circle !!
+            => but offset of rr = 0.25 amount 1.5 = cuttter_dia *(1 - overlap)  => overflow outside the small circle !!
 
             CONDITION TO BREAK: the remaining small circle in fully into the "material cut"
 
@@ -907,6 +907,20 @@ class PocketCalculator:
 
             current = self.offsetMultiPolygon(current, self.cutter_dia * (1 - self.overlap), 'left', consider_interiors_offsets=False)
             
+            '''
+            BUG: it can be that the offset return "empty" event if the whole material is not fully cut!
+
+            ex: cutter on rectangle [10 , 3.3] x [20 , 6,7]    (y middle = 5)
+
+            with an amount of 1.8 ( cutter_dia = 3 , step_over = 0.6 => amount = 1.8) the offset is really empty
+            (because the cutter goes from the left to 3.3+1.8 = 5.1 and from the right to 6.7-1.8 = 4.9)  
+            
+            To avoid this, we should check if the material has been fully cut: 
+            1. get the polygon defined by the exteriors
+            2. are there some points outside the reach of the cutter ? 
+            3. xxx ??? yyy
+            '''
+
             if not current:
                 break
             current = ShapelyUtils.simplifyMultiPoly(current, 0.001)

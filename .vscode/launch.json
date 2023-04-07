@@ -4,6 +4,8 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
+
         {
             "name": "OPENGL DEMO1",
             "type": "python",
@@ -80,7 +82,16 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\svg\\kasten.json"]
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\others_stuff\\kasten.json"]
+        },
+        {
+            "name": "PYCUT JOB SMALL KASTEN",
+            "type": "python",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\others_stuff\\small_kasten.json"]
         },
         {
             "name": "PYCUT JOB CLAMP PARTS",

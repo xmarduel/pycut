@@ -7,7 +7,7 @@ class toto:
 
     @singledispatchmethod
     def test(self, arg):
-        raise NotImplementedError("Cannot test with", a)
+        raise NotImplementedError("Cannot call toto::test with", arg)
 
     @test.register
     def _(self, arg: int):
@@ -16,3 +16,7 @@ class toto:
     @test.register
     def _(self, arg: float):
         print("test - float", arg)
+
+    @test.register
+    def _(self, arg: bool):
+        print("test - bool", arg)
