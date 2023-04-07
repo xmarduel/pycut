@@ -107,15 +107,48 @@
     },
     "Tabs": {
       "units": "mm",
-      "height": 1.0,
-      "tabs": []
+      "height": 0.5,
+      "tabs": [
+        {
+          "center": [
+            10,
+            112.0
+          ],
+          "radius": 5,
+          "enabled": true
+        },
+        {
+          "center": [
+            109.0,
+            110.0
+          ],
+          "radius": 5,
+          "enabled": true
+        },
+        {
+          "center": [
+            10,
+            42.0
+          ],
+          "radius": 5,
+          "enabled": true
+        },
+        {
+          "center": [
+            112.0,
+            43.0
+          ],
+          "radius": 5,
+          "enabled": true
+        }
+      ]
     },
     "Tool": {
       "units": "mm",
       "diameter": 3.0,
       "angle": 180,
       "passdepth": 3.0,
-      "overlap": 0.4,
+      "overlap": 0.5,
       "rapid": 500,
       "plunge": 100,
       "cut": 200
