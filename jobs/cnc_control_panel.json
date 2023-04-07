@@ -171,7 +171,7 @@
       "diameter": 2.3,
       "angle": 180,
       "passdepth": 0.5,
-      "stepover": 0.4,
+      "overlap": 0.6,
       "rapid": 1000,
       "plunge": 127,
       "cut": 1000

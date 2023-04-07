@@ -122,8 +122,8 @@ class ToolModel:
         self.units = "inch"
         self.diameter = ValWithUnit(0.125, self.units)
         self.angle = 180
-        self.passDepth = ValWithUnit(0.125, self.units)
-        self.stepover = 0.4
+        self.passdepth = ValWithUnit(0.125, self.units)
+        self.overlap = 0.5
         self.rapidRate = ValWithUnit(100, self.units)
         self.plungeRate = ValWithUnit(5, self.units)
         self.cutRate = ValWithUnit(40, self.units)
@@ -134,8 +134,8 @@ class ToolModel:
         '''
         result = {
             "diameterTool": self.diameter.toMm(),
-            "passDepthTool": self.passDepth.toMm(),
-            "stepover": self.stepover
+            "passdepth": self.passdepth.toMm(),
+            "overlap": self.overlap
         }
 
         return result
@@ -678,12 +678,12 @@ class CncOp:
                 geometry = ShapelyUtils.offsetMultiPolygon(geometry, offset, 'right' if cam_op == 'Outside' else 'left', consider_interiors_offsets = True)
 
             if cam_op == "Pocket":
-                self.cam_paths = cam.pocket(geometry, toolData["diameterTool"], 1 - toolData["stepover"], direction == "Climb")
+                self.cam_paths = cam.pocket(geometry, toolData["diameterTool"], toolData["overlap"], direction == "Climb")
             elif cam_op == "Inside" or cam_op == "Outside":
                 width = width.toMm()
                 if width < toolData["diameterTool"]:
                     width = toolData["diameterTool"]
-                self.cam_paths = cam.outline(geometry, toolData["diameterTool"], cam_op == "Inside", width, 1 - toolData["stepover"], direction == "Climb")
+                self.cam_paths = cam.outline(geometry, toolData["diameterTool"], cam_op == "Inside", width, toolData["overlap"], direction == "Climb")
             elif cam_op == "Engrave":
                 self.cam_paths = cam.engrave(geometry, direction == "Climb")
 
@@ -697,7 +697,7 @@ class CncOp:
                 width = width.toMm()
                 if width < toolData["diameterTool"]:
                     width = toolData["diameterTool"]
-                self.cam_paths = cam.outline_opened_paths(geometry, toolData["diameterTool"], cam_op == "Inside", width, 1 - toolData["stepover"], direction == "Climb")
+                self.cam_paths = cam.outline_opened_paths(geometry, toolData["diameterTool"], cam_op == "Inside", width, toolData["overlap"], direction == "Climb")
 
         # -------------------------------------------------------------------------------------
 
@@ -900,7 +900,7 @@ class GcodeGenerator:
         rapidRate = int(self.unitConverter.from_mm(self.toolModel.rapidRate.toMm()))
         plungeRate = int(self.unitConverter.from_mm(self.toolModel.plungeRate.toMm()))
         cutRate = int(self.unitConverter.from_mm(self.toolModel.cutRate.toMm()))
-        passDepth = self.unitConverter.from_mm(self.toolModel.passDepth.toMm())
+        passdepth = self.unitConverter.from_mm(self.toolModel.passdepth.toMm())
         topZ = self.unitConverter.from_mm(self.materialModel.matTopZ.toMm())
         tabHeight = self.unitConverter.from_mm(self.tabsModel.height.toMm())
 
@@ -936,7 +936,7 @@ class GcodeGenerator:
             gcode += f"\r\n; Paths:        {nb_paths}"
             gcode += f"\r\n; Direction:    {cnc_op.direction}"
             gcode += f"\r\n; Cut Depth:    {cut_depth}"
-            gcode += f"\r\n; Pass Depth:   {passDepth}"
+            gcode += f"\r\n; Pass Depth:   {passdepth}"
             gcode += f"\r\n; Plunge rate:  {plungeRate}"
             gcode += f"\r\n; Cut rate:     {cutRate}"
             gcode += f"\r\n;\r\n"
@@ -951,7 +951,7 @@ class GcodeGenerator:
                 "topZ":           topZ,
                 "botZ":           botZ,
                 "safeZ":          safeZ,
-                "passDepth":      passDepth,
+                "passdepth":      passdepth,
                 "plungeFeed":     plungeRate,
                 "retractFeed":    rapidRate,
                 "cutFeed":        cutRate,

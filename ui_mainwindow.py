@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.3.0
+## Created by: Qt User Interface Compiler version 6.4.3
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -162,11 +162,11 @@ class Ui_mainwindow(object):
 
         self.gridLayout_Tool.addWidget(self.label_Tool_Diameter_UnitsDescr, 1, 1, 1, 1)
 
-        self.label_Tool_StepOver = QLabel(self.scrollAreaWidgetContents)
-        self.label_Tool_StepOver.setObjectName(u"label_Tool_StepOver")
-        self.label_Tool_StepOver.setFont(font1)
+        self.label_Tool_Overlap = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_Overlap.setObjectName(u"label_Tool_Overlap")
+        self.label_Tool_Overlap.setFont(font1)
 
-        self.gridLayout_Tool.addWidget(self.label_Tool_StepOver, 4, 0, 1, 1)
+        self.gridLayout_Tool.addWidget(self.label_Tool_Overlap, 4, 0, 1, 1)
 
         self.spinBox_Tool_Rapid = QSpinBox(self.scrollAreaWidgetContents)
         self.spinBox_Tool_Rapid.setObjectName(u"spinBox_Tool_Rapid")
@@ -227,10 +227,10 @@ class Ui_mainwindow(object):
 
         self.gridLayout_Tool.addWidget(self.spinBox_Tool_Angle, 2, 2, 1, 1)
 
-        self.label_Tool_StepOver_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
-        self.label_Tool_StepOver_UnitsDescr.setObjectName(u"label_Tool_StepOver_UnitsDescr")
+        self.label_Tool_Overlap_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_Overlap_UnitsDescr.setObjectName(u"label_Tool_Overlap_UnitsDescr")
 
-        self.gridLayout_Tool.addWidget(self.label_Tool_StepOver_UnitsDescr, 4, 1, 1, 1)
+        self.gridLayout_Tool.addWidget(self.label_Tool_Overlap_UnitsDescr, 4, 1, 1, 1)
 
         self.doubleSpinBox_Tool_Diameter = QDoubleSpinBox(self.scrollAreaWidgetContents)
         self.doubleSpinBox_Tool_Diameter.setObjectName(u"doubleSpinBox_Tool_Diameter")
@@ -265,14 +265,14 @@ class Ui_mainwindow(object):
 
         self.gridLayout_Tool.addWidget(self.label_Tool_Cut, 7, 0, 1, 1)
 
-        self.doubleSpinBox_Tool_StepOver = QDoubleSpinBox(self.scrollAreaWidgetContents)
-        self.doubleSpinBox_Tool_StepOver.setObjectName(u"doubleSpinBox_Tool_StepOver")
-        self.doubleSpinBox_Tool_StepOver.setDecimals(3)
-        self.doubleSpinBox_Tool_StepOver.setMaximum(1.000000000000000)
-        self.doubleSpinBox_Tool_StepOver.setSingleStep(0.010000000000000)
-        self.doubleSpinBox_Tool_StepOver.setValue(0.400000000000000)
+        self.doubleSpinBox_Tool_Overlap = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.doubleSpinBox_Tool_Overlap.setObjectName(u"doubleSpinBox_Tool_Overlap")
+        self.doubleSpinBox_Tool_Overlap.setDecimals(3)
+        self.doubleSpinBox_Tool_Overlap.setMaximum(1.000000000000000)
+        self.doubleSpinBox_Tool_Overlap.setSingleStep(0.010000000000000)
+        self.doubleSpinBox_Tool_Overlap.setValue(0.400000000000000)
 
-        self.gridLayout_Tool.addWidget(self.doubleSpinBox_Tool_StepOver, 4, 2, 1, 1)
+        self.gridLayout_Tool.addWidget(self.doubleSpinBox_Tool_Overlap, 4, 2, 1, 1)
 
         self.comboBox_Tool_Units = QComboBox(self.scrollAreaWidgetContents)
         self.comboBox_Tool_Units.addItem("")
@@ -753,7 +753,7 @@ class Ui_mainwindow(object):
             icon = QIcon.fromTheme(iconThemeName)
         else:
             icon.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
-        
+
         self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setIcon(icon)
         self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setCheckable(True)
         self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setChecked(True)
@@ -933,7 +933,7 @@ class Ui_mainwindow(object):
         self.label_Tool.setText(QCoreApplication.translate("mainwindow", u" Tool (shared for all operations)", None))
         self.label_Tool_Plunge_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_Tool_Diameter_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
-        self.label_Tool_StepOver.setText(QCoreApplication.translate("mainwindow", u"Step Over", None))
+        self.label_Tool_Overlap.setText(QCoreApplication.translate("mainwindow", u"Overlap", None))
 #if QT_CONFIG(tooltip)
         self.spinBox_Tool_Rapid.setToolTip(QCoreApplication.translate("mainwindow", u"The speed the tool moves while not cutting", None))
 #endif // QT_CONFIG(tooltip)
@@ -945,7 +945,7 @@ class Ui_mainwindow(object):
         self.label_Tool_Cut_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_Tool_Angle.setText(QCoreApplication.translate("mainwindow", u"Angle", None))
         self.label_Tool_Rapid.setText(QCoreApplication.translate("mainwindow", u"Rapid", None))
-        self.label_Tool_StepOver_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
+        self.label_Tool_Overlap_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_Tool_Diameter.setText(QCoreApplication.translate("mainwindow", u"Diameter", None))
 #if QT_CONFIG(tooltip)
         self.spinBox_Tool_Plunge.setToolTip(QCoreApplication.translate("mainwindow", u"The speed the tool plunges downwards into the material", None))

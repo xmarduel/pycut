@@ -464,7 +464,7 @@ class cam:
           topZ:           Top of area to cut (gcode units)
           botZ:           Bottom of area to cut (gcode units)
           safeZ:          Z position to safely move over uncut areas (gcode units)
-          passDepth:      Cut depth for each pass (gcode units)
+          passdepth:      Cut depth for each pass (gcode units)
           plungeFeed:     Feedrate to plunge cutter (gcode units)
           retractFeed:    Feedrate to retract cutter (gcode units)
           cutFeed:        Feedrate for horizontal cuts (gcode units)
@@ -482,7 +482,7 @@ class cam:
         topZ = args["topZ"]
         botZ = args["botZ"]
         safeZ = args["safeZ"]
-        passDepth = args["passDepth"]
+        passdepth = args["passdepth"]
         
         plungeFeedGcode = ' F%d' % args["plungeFeed"]
         retractFeedGcode = ' F%d' % args["retractFeed"]
@@ -553,7 +553,7 @@ class cam:
             exactTabZLevelDone = False
 
             while finishedZ > botZ:
-                nextZ = max(finishedZ - passDepth, botZ)
+                nextZ = max(finishedZ - passdepth, botZ)
 
                 if crosses_tabs:
                     if nextZ == tabZ:
@@ -881,7 +881,7 @@ class PocketCalculator:
             example:
             - circle r = 1.75
             - cutter dia = 3.0 => r = 1.5
-            - stepover = 0.5
+            - overlap = 0.5
             => first path in the "small circle" rr = 0.25 , not that the material then has been fully remove
             => but offset of rr = 0.25 amount 1.5 = cuttter_dia *(1 - overlap)  => overflow outside the small circle !!
 
@@ -919,6 +919,8 @@ class PocketCalculator:
             1. get the polygon defined by the exteriors
             2. are there some points outside the reach of the cutter ? 
             3. xxx ??? yyy
+
+            PS: JsCut suffers from the same bug!
             '''
 
             if not current:

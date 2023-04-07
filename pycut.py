@@ -66,7 +66,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "diameter"    : 1.0,
             "angle"       : 180,
             "passdepth"   : 3.0,
-            "stepover"    : 4.0,
+            "overlap"     : 0.4,
             "rapid"       : 500,
             "plunge"      : 100,
             "cut"         : 200,
@@ -474,7 +474,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "diameter"   : self.ui.doubleSpinBox_Tool_Diameter.value(),
                 "angle"      : self.ui.spinBox_Tool_Angle.value(),
                 "passdepth"  : self.ui.doubleSpinBox_Tool_PassDepth.value(),
-                "stepover"   : self.ui.doubleSpinBox_Tool_StepOver.value(),
+                "overlap"    : self.ui.doubleSpinBox_Tool_Overlap.value(),
                 "rapid"      : self.ui.spinBox_Tool_Rapid.value(),
                 "plunge"     : self.ui.spinBox_Tool_Plunge.value(),
                 "cut"        : self.ui.spinBox_Tool_Cut.value()
@@ -518,7 +518,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.doubleSpinBox_Tool_Diameter.setValue(settings["Tool"]["diameter"])
         self.ui.spinBox_Tool_Angle.setValue(settings["Tool"]["angle"])
         self.ui.doubleSpinBox_Tool_PassDepth.setValue(settings["Tool"]["passdepth"])
-        self.ui.doubleSpinBox_Tool_StepOver.setValue(settings["Tool"]["stepover"])
+        self.ui.doubleSpinBox_Tool_Overlap.setValue(settings["Tool"]["overlap"])
         self.ui.spinBox_Tool_Rapid.setValue(settings["Tool"]["rapid"])
         self.ui.spinBox_Tool_Plunge.setValue(settings["Tool"]["plunge"])
         self.ui.spinBox_Tool_Cut.setValue(settings["Tool"]["cut"])
@@ -745,7 +745,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.label_Tool_Diameter_UnitsDescr.setText("inch")
             self.ui.label_Tool_Angle_UnitsDescr.setText("degrees")
             self.ui.label_Tool_PassDepth_UnitsDescr.setText("inch")
-            self.ui.label_Tool_StepOver_UnitsDescr.setText("]0:1]")
+            self.ui.label_Tool_Overlap_UnitsDescr.setText("[0:1[")
             self.ui.label_Tool_Rapid_UnitsDescr.setText("inch/min")
             self.ui.label_Tool_Plunge_UnitsDescr.setText("inch/min")
             self.ui.label_Tool_Cut_UnitsDescr.setText("inch/min")
@@ -760,7 +760,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.label_Tool_Diameter_UnitsDescr.setText("mm")
             self.ui.label_Tool_Angle_UnitsDescr.setText("degrees")
             self.ui.label_Tool_PassDepth_UnitsDescr.setText("mm")
-            self.ui.label_Tool_StepOver_UnitsDescr.setText("]0:1]")
+            self.ui.label_Tool_Overlap_UnitsDescr.setText("[0:1[")
             self.ui.label_Tool_Rapid_UnitsDescr.setText("mm/min")
             self.ui.label_Tool_Plunge_UnitsDescr.setText("mm/min")
             self.ui.label_Tool_Cut_UnitsDescr.setText("mm/min")
@@ -981,8 +981,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         toolModel.units = settings["Tool"]["units"]
         toolModel.diameter = ValWithUnit(settings["Tool"]["diameter"], toolModel.units)
         toolModel.angle = settings["Tool"]["angle"]
-        toolModel.passDepth = ValWithUnit(settings["Tool"]["passdepth"], toolModel.units)
-        toolModel.stepover = settings["Tool"]["stepover"]
+        toolModel.passdepth = ValWithUnit(settings["Tool"]["passdepth"], toolModel.units)
+        toolModel.overlap = settings["Tool"]["overlap"]
         toolModel.rapidRate = ValWithUnit(settings["Tool"]["rapid"], toolModel.units)
         toolModel.plungeRate = ValWithUnit(settings["Tool"]["plunge"], toolModel.units)
         toolModel.cutRate = ValWithUnit(settings["Tool"]["cut"], toolModel.units)
@@ -1068,8 +1068,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         toolModel.units = settings["Tool"]["units"]
         toolModel.diameter = ValWithUnit(settings["Tool"]["diameter"], toolModel.units)
         toolModel.angle = settings["Tool"]["angle"]
-        toolModel.passDepth = ValWithUnit(settings["Tool"]["passdepth"], toolModel.units)
-        toolModel.stepover = settings["Tool"]["stepover"]
+        toolModel.passdepth = ValWithUnit(settings["Tool"]["passdepth"], toolModel.units)
+        toolModel.overlap = settings["Tool"]["overlap"]
         toolModel.rapidRate = ValWithUnit(settings["Tool"]["rapid"], toolModel.units)
         toolModel.plungeRate = ValWithUnit(settings["Tool"]["plunge"], toolModel.units)
         toolModel.cutRate = ValWithUnit(settings["Tool"]["cut"], toolModel.units)
