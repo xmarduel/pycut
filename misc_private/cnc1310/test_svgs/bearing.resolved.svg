@@ -1,18 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg
-  xmlns="http://www.w3.org/2000/svg" 
-  xmlns:svg="http://www.w3.org/2000/svg" 
-  width="150mm" 
-  height="50mm" 
-  viewBox="0 0 150 50" 
-  version="1.1" 
-  id="bearing">
-  <g id="layer_bearing2">
-    <rect id="bearing_base_from_full" width="32.000" height="32.000" x="50.000" y="0.000" rx="1.000" ry="1.000" style="fill:#000080;fill-opacity:0.2;stroke:#f70000;stroke-width:0"/>
-    <circle id="bearing_cylinder_from_full" cx="66.00003564000001" cy="16.00000864" r="10.500" style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.388054;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
-    <circle id="bearing_screw_4.5mm_SE_from_full" cx="77.31375024838735" cy="27.31372324838735" r="2.250" style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
-    <circle id="bearing_screw_4.5mm_SW_from_full" cx="54.68632103161266" cy="27.31372324838735" r="2.250" style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
-    <circle id="bearing_screw_4.5mm_NW_from_full" cx="54.68632103161266" cy="4.686294031612652" r="2.250" style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
-    <circle id="bearing_screw_4.5mm_NE_from_full" cx="77.31375024838735" cy="4.686294031612649" r="2.250" style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
+<!--  test the bearing cut 
+
+1- central cylinder is completety cut out
+2- base of the bearing with pocket 5mm (if plate 15mm) or without pocket (if plate 10mm)
+3- 4 screws
+
+DIMENSIONS LMK12UU:
+  H = L = 32
+  dr = 12 (klar)  not used
+  Dp = 32  der Kreis auf welche die Schrauben sich befinden -> r = 16 transformation
+
+  cylinder D = 21 outer diameter -> r = 10.5
+
+  4 screws diameter = 4.5
+-->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" width="52mm" height="52mm" viewBox="0 0 52 52" version="1.1" id="bearing">
+  <defs id="defs">
+    <rect id="bearing_base_o" style="fill:#000080;fill-opacity:0.2;stroke:#f70000;stroke-width:0" width="32" height="32" x="0" y="0" rx="2" ry="2"/>
+    <circle id="bearing_cylinder_o" style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.388054;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1" cx="0" cy="0" r="10.5"/>
+    <circle id="bearing_screw_4.5mm_o" style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1" cx="0" cy="0" r="2.25"/>
+  </defs>
+  <g id="layer">
+    <rect id="BACKGROUND" width="52.000" height="52.000" x="0.000" y="0.000" rx="0.000" ry="0.000" style="fill:rgb(0,125,125);stroke-width:0;stroke:rgb(0,0,0)"/>
+    <g id="root">
+      <rect id="bearing_base" width="32.000" height="32.000" x="10.000" y="10.000" rx="2.000" ry="2.000" style="fill:#000080;fill-opacity:0.2;stroke:#f70000;stroke-width:0"/>
+      <!-- reference is the center of the bearing base rect -->
+      <g id="items">
+        <circle id="bearing_cylinder" cx="26.000" cy="26.000" r="10.500" style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.388054;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
+        <circle id="bearing_screw_4.5mm_SE" cx="37.314" cy="37.314" r="2.250" style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
+        <circle id="bearing_screw_4.5mm_SW" cx="14.686" cy="37.314" r="2.250" style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
+        <circle id="bearing_screw_4.5mm_NW" cx="14.686" cy="14.686" r="2.250" style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
+        <circle id="bearing_screw_4.5mm_NE" cx="37.314" cy="14.686" r="2.250" style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
+      </g>
+    </g>
   </g>
 </svg>

@@ -16,26 +16,27 @@ This in to test the spindle holder
   xmlns:svg="http://www.w3.org/2000/svg">
   <defs id="defs">
     <circle id="spindle-hole"
-      style="font-variation-settings:normal;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.970135;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+      style="font-variation-settings:normal;vector-effect:none;fill:#ff0000;fill-opacity:1;"
       cx="0"
       cy="0"
       r="19" />
 
     <circle id="spindle-pocket"
-      style="font-variation-settings:normal;vector-effect:none;fill:#ff00ff;fill-opacity:0.2;fill-rule:evenodd;stroke-width:0.970137;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+      style="font-variation-settings:normal;vector-effect:none;fill:#ff00ff;fill-opacity:0.2;"
       cx="0"
       cy="0"
       r="27.5" />
 
     <circle id="spindle-screw"
-      style="font-variation-settings:normal;vector-effect:none;fill:#000000;fill-opacity:0.5;fill-rule:evenodd;stroke-width:0.970137;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+      style="font-variation-settings:normal;vector-effect:none;fill:#000000;fill-opacity:0.5;"
       cx="0"
       cy="0"
-      r="1.0" />
+      r="1.25" />
    </defs>
 
   <g id="root_layer" >
-    <rect id="PLATE" x="0" y="0" rx="1" ry="1" width="80" height="80" style="fill:rgb(0,125,125);stroke-width:0;stroke:rgb(0,0,0)" />
+    <rect id="PLATE"  style="fill:rgb(0,125,125);stroke-width:0;stroke:rgb(0,0,0)" 
+	   x="0" y="0" rx="1" ry="1" width="80" height="80"/>
  
     <g transform="translate(40,40)">
       <!-- cut throught material -->

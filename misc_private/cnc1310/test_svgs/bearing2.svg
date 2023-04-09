@@ -30,8 +30,8 @@ DIMENSIONS LMK12UU:
       height="32"
       x="0"
       y="0"
-      rx="2"
-      ry="2" />
+      rx="1"
+      ry="1" />
     <circle id="bearing_cylinder_o"
 	   style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.388054;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
       cx="0"
@@ -42,23 +42,31 @@ DIMENSIONS LMK12UU:
       cx="0"
       cy="0"
       r="2.25" />
+
+    <!-- the full object -->
+    <g id="bearing_o" transform="translate(-16 -16)">
+	    <!-- centered at origin -->
+      <use href="#bearing_base_o"  id="bering_base_from_full" />
+
+      <!-- reference is the center of the bearing item -->
+      <g id="layer" transform="translate(16 16)">
+  	    <use href="#bearing_cylinder_o" id="bearing_cylinder_from_full" />
+	       
+        <use href="#bearing_screw_4.5mm_o" transform="rotate( 45) translate(16 0)" id="bearing_screw_4.5mm_SE_from_full" />
+        <use href="#bearing_screw_4.5mm_o" transform="rotate(135) translate(16 0)" id="bearing_screw_4.5mm_SW_from_full" />
+        <use href="#bearing_screw_4.5mm_o" transform="rotate(225) translate(16 0)" id="bearing_screw_4.5mm_NW_from_full" />
+        <use href="#bearing_screw_4.5mm_o" transform="rotate(315) translate(16 0)" id="bearing_screw_4.5mm_NE_from_full" />
+      </g>
+    </g>
+    <!-- the full object -->
   </defs>
 
   <g id="layer" >
     <rect id="BACKGROUND" x="0" y="0" width="52" height="52" style="fill:rgb(0,125,125);stroke-width:0;stroke:rgb(0,0,0)" />
-      
-    <g id="root" transform="translate(10 10)">
-	   <use href="#bearing_base_o" id="bearing_base" />
 
-      <!-- reference is the center of the bearing base rect -->
-      <g id="items" transform="translate(16 16)">
-  	    <use href="#bearing_cylinder_o" id="bearing_cylinder" />
-	       
-        <use href="#bearing_screw_4.5mm_o" transform="rotate( 45) translate(16 0)" id="bearing_screw_4.5mm_SE" />
-        <use href="#bearing_screw_4.5mm_o" transform="rotate(135) translate(16 0)" id="bearing_screw_4.5mm_SW" />
-        <use href="#bearing_screw_4.5mm_o" transform="rotate(225) translate(16 0)" id="bearing_screw_4.5mm_NW" />
-        <use href="#bearing_screw_4.5mm_o" transform="rotate(315) translate(16 0)" id="bearing_screw_4.5mm_NE" />
-      </g>
+	<g id="root" transform="translate(26 26)">
+	  <!-- Actually cannot be resolved with our resolver -->
+      <use href="#bearing_o" id="bearing" />
     </g>
     
   </g>

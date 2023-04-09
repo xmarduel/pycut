@@ -588,6 +588,8 @@ class TalkyTalky(QtCore.QObject):
         '''
         set the sim time from the outside into js (from the gcode file browser per example)
         '''
+        #print("TalkyTalky::set_simtime", simtine)
+
         self.send_simtime_js_side.emit(simtine)
 
     @QtCore.Slot(float) 
@@ -595,5 +597,7 @@ class TalkyTalky(QtCore.QObject):
         '''
         get the sim time from the js and send it to "listeners" (to the gcode file browser per example)
         '''
+        #print("TalkyTalky::js_inform_python_for_simtime", simtime)
+
         # inform listeners
         self.widget.received_simtime_from_js_side(simtime)

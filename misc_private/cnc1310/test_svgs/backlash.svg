@@ -9,21 +9,21 @@
   xmlns:svg="http://www.w3.org/2000/svg">
   <defs id="defs">
     <circle id="backlash_item_22mm" 
-      style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.352776"
+      style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2"
       cx="0"
       cy="0"
       r="11" />
 
     <!-- 10mm or 10.3 mm ??  -->
     <circle id="backlash_item_hole_10mm" 
-      style="fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.352776;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+      style="fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.2;"
       cx="0"
       cy="0"
       r="5.15" />
 
     <!-- 2.0mm or 3.5 mm ??  -->
     <circle id="backlash_item_screw_3.5mm"
-      style="fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
+      style="fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.12"
       cx="0"
       cy="0"
       r="1.75" />
@@ -34,12 +34,12 @@
     <use href="#backlash_item_22mm"  id="backlash_item" />
     
     <!-- cut through -->
-	  <use href="#backlash_item_hole_10mm"  id="backlash_item_hole" />
+	<use href="#backlash_item_hole_10mm"  id="backlash_item_hole" />
 
     <!-- cut through -->
     <use href="#backlash_item_screw_3.5mm" transform="rotate(0)   translate(8,0)"  id="backlash_item_screw_3.5mm_E" />
-	  <use href="#backlash_item_screw_3.5mm" transform="rotate(90)  translate(8,0)"  id="backlash_item_screw_3.5mm_S" />
-	  <use href="#backlash_item_screw_3.5mm" transform="rotate(180) translate(8,0)"  id="backlash_item_screw_3.5mm_W" />
-	  <use href="#backlash_item_screw_3.5mm" transform="rotate(270) translate(8,0)"  id="backlash_item_screw_3.5mm_N" />
+	<use href="#backlash_item_screw_3.5mm" transform="rotate(90)  translate(8,0)"  id="backlash_item_screw_3.5mm_S" />
+	<use href="#backlash_item_screw_3.5mm" transform="rotate(180) translate(8,0)"  id="backlash_item_screw_3.5mm_W" />
+	<use href="#backlash_item_screw_3.5mm" transform="rotate(270) translate(8,0)"  id="backlash_item_screw_3.5mm_N" />
   </g>
 </svg>

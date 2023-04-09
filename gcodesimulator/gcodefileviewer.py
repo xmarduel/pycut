@@ -120,6 +120,8 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
                     self.curr_line_no -= 1
 
                 # from the python "miniparser"
-                simtime = self.miniparser.line_no_time_map[self.curr_line_no]
-
-                self.webgl_viewer.set_simtime(simtime)
+                try:
+                    simtime = self.miniparser.line_no_time_map[self.curr_line_no]
+                    self.webgl_viewer.set_simtime(simtime)
+                except Exception as e:
+                    pass
