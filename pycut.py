@@ -924,27 +924,27 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             fp.close()
 
             # extract dimension of material as global variables in the SvgModel
-            sizeXstr, sizeYstr = svgviewer.extract_svg_dimensions(svg)
+            size_xstr, size_ystr = svgviewer.extract_svg_dimensions(svg)
 
             suffix = ""
             
-            if "mm" in sizeXstr:
+            if "mm" in size_xstr:
                 suffix = "mm"
-                sizeX, sizeY = float(sizeXstr.split("mm")[0]), float(sizeYstr.split("mm")[0])
-            elif "in" in sizeXstr:
+                size_x, size_y = float(size_xstr.split("mm")[0]), float(size_ystr.split("mm")[0])
+            elif "in" in size_xstr:
                 suffix = "in"
-                sizeX, sizeY = float(sizeXstr.split("in")[0]), float(sizeYstr.split("in")[0])
+                size_x, size_y = float(size_xstr.split("in")[0]), float(size_ystr.split("in")[0])
             else:
-                sizeX, sizeY = float(sizeXstr), float(sizeYstr)
+                size_x, size_y = float(size_xstr), float(size_ystr)
 
-            self.ui.doubleSpinBox_SvgModelWidth.setValue(sizeX)
-            self.ui.doubleSpinBox_SvgModelHeight.setValue(sizeY)
+            self.ui.doubleSpinBox_SvgModelWidth.setValue(size_x)
+            self.ui.doubleSpinBox_SvgModelHeight.setValue(size_y)
 
             self.ui.doubleSpinBox_SvgModelWidth.setSuffix(suffix)
             self.ui.doubleSpinBox_SvgModelHeight.setSuffix(suffix)
 
-            SvgModel.sizeX = sizeX
-            SvgModel.sizeY = sizeY
+            SvgModel.size_x = size_x
+            SvgModel.size_y = size_y
 
             self.svg_viewer.set_svg(svg)
             # and the tabs if any
@@ -977,15 +977,15 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         settings = self.get_current_settings()
 
-        toolModel = ToolModel() 
-        toolModel.units = settings["Tool"]["units"]
-        toolModel.diameter = ValWithUnit(settings["Tool"]["diameter"], toolModel.units)
-        toolModel.angle = settings["Tool"]["angle"]
-        toolModel.passdepth = ValWithUnit(settings["Tool"]["passdepth"], toolModel.units)
-        toolModel.overlap = settings["Tool"]["overlap"]
-        toolModel.rapidRate = ValWithUnit(settings["Tool"]["rapid"], toolModel.units)
-        toolModel.plungeRate = ValWithUnit(settings["Tool"]["plunge"], toolModel.units)
-        toolModel.cutRate = ValWithUnit(settings["Tool"]["cut"], toolModel.units)
+        tool_model = ToolModel() 
+        tool_model.units = settings["Tool"]["units"]
+        tool_model.diameter = ValWithUnit(settings["Tool"]["diameter"], tool_model.units)
+        tool_model.angle = settings["Tool"]["angle"]
+        tool_model.passdepth = ValWithUnit(settings["Tool"]["passdepth"], tool_model.units)
+        tool_model.overlap = settings["Tool"]["overlap"]
+        tool_model.rapidRate = ValWithUnit(settings["Tool"]["rapid"], tool_model.units)
+        tool_model.plungeRate = ValWithUnit(settings["Tool"]["plunge"], tool_model.units)
+        tool_model.cutRate = ValWithUnit(settings["Tool"]["cut"], tool_model.units)
 
         cnc_ops = []
 
@@ -1014,7 +1014,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         
         for cnc_op in cnc_ops:
             cnc_op.setup(self.svg_viewer)
-            cnc_op.calculate_geometry(toolModel)
+            cnc_op.calculate_geometry(tool_model)
 
         self.svg_viewer.reinit()
         self.svg_viewer.display_job_geometry(cnc_ops)
@@ -1053,54 +1053,54 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         '''
         settings = self.get_current_settings()
 
-        svgModel = SvgModel()
-        svgModel.pxPerInch = 96
-        materialModel = MaterialModel()
-        materialModel.matUnits = settings["Material"]["units"]
-        materialModel.matThickness = ValWithUnit(settings["Material"]["thickness"], materialModel.matUnits)
-        materialModel.matZOrigin = settings["Material"]["z_origin"]
-        materialModel.matClearance = ValWithUnit(settings["Material"]["clearance"], materialModel.matUnits)
+        svg_model = SvgModel()
+        svg_model.pxPerInch = 96
+        material_model = MaterialModel()
+        material_model.mat_units = settings["Material"]["units"]
+        material_model.mat_thickness = ValWithUnit(settings["Material"]["thickness"], material_model.mat_units)
+        material_model.mat_z_origin = settings["Material"]["z_origin"]
+        material_model.mat_clearance = ValWithUnit(settings["Material"]["clearance"], material_model.mat_units)
         # the SVG dimensions
-        materialModel.set_material_size_x(self.svg_viewer.get_svg_size_x())
-        materialModel.set_material_size_y(self.svg_viewer.get_svg_size_y())
+        material_model.set_material_size_x(self.svg_viewer.get_svg_size_x())
+        material_model.set_material_size_y(self.svg_viewer.get_svg_size_y())
 
-        toolModel = ToolModel()
-        toolModel.units = settings["Tool"]["units"]
-        toolModel.diameter = ValWithUnit(settings["Tool"]["diameter"], toolModel.units)
-        toolModel.angle = settings["Tool"]["angle"]
-        toolModel.passdepth = ValWithUnit(settings["Tool"]["passdepth"], toolModel.units)
-        toolModel.overlap = settings["Tool"]["overlap"]
-        toolModel.rapidRate = ValWithUnit(settings["Tool"]["rapid"], toolModel.units)
-        toolModel.plungeRate = ValWithUnit(settings["Tool"]["plunge"], toolModel.units)
-        toolModel.cutRate = ValWithUnit(settings["Tool"]["cut"], toolModel.units)
+        tool_model = ToolModel()
+        tool_model.units = settings["Tool"]["units"]
+        tool_model.diameter = ValWithUnit(settings["Tool"]["diameter"], tool_model.units)
+        tool_model.angle = settings["Tool"]["angle"]
+        tool_model.passdepth = ValWithUnit(settings["Tool"]["passdepth"], tool_model.units)
+        tool_model.overlap = settings["Tool"]["overlap"]
+        tool_model.rapidRate = ValWithUnit(settings["Tool"]["rapid"], tool_model.units)
+        tool_model.plungeRate = ValWithUnit(settings["Tool"]["plunge"], tool_model.units)
+        tool_model.cutRate = ValWithUnit(settings["Tool"]["cut"], tool_model.units)
         
         tabsmodel = TabsModel([tab for tab in self.tabs if tab["enabled"] == True])
         tabsmodel.units = settings["Tabs"]["units"]
         tabsmodel.height = ValWithUnit(settings["Tabs"]["height"], tabsmodel.units)
 
-        gcodeModel = GcodeModel()
-        gcodeModel.units = settings["GCodeConversion"]["units"]
-        gcodeModel.flipXY = settings["GCodeConversion"]["flip_xy"]
-        gcodeModel.XOffset = settings["GCodeConversion"]["x_offset"]
-        gcodeModel.YOffset = settings["GCodeConversion"]["y_offset"]
-        gcodeModel.returnTo00 = settings["GCodeGeneration"]["return_to_zero_at_end"]
-        gcodeModel.spindleControl = settings["GCodeGeneration"]["spindle_control"]
-        gcodeModel.spindleSpeed = settings["GCodeGeneration"]["spindle_speed"]
-        gcodeModel.programEnd = settings["GCodeGeneration"]["program_end"]
+        gcode_model = GcodeModel()
+        gcode_model.units = settings["GCodeConversion"]["units"]
+        gcode_model.flipXY = settings["GCodeConversion"]["flip_xy"]
+        gcode_model.XOffset = settings["GCodeConversion"]["x_offset"]
+        gcode_model.YOffset = settings["GCodeConversion"]["y_offset"]
+        gcode_model.returnTo00 = settings["GCodeGeneration"]["return_to_zero_at_end"]
+        gcode_model.spindleControl = settings["GCodeGeneration"]["spindle_control"]
+        gcode_model.spindleSpeed = settings["GCodeGeneration"]["spindle_speed"]
+        gcode_model.programEnd = settings["GCodeGeneration"]["program_end"]
         
-        gcodeModel.gcodeZero = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
+        gcode_model.gcodeZero = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
         if self.ui.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.isChecked():
-            gcodeModel.gcodeZero = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
+            gcode_model.gcodeZero = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
         if self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.isChecked():
-            gcodeModel.gcodeZero = GcodeModel.ZERO_LOWER_LEFT_OF_MATERIAL
+            gcode_model.gcodeZero = GcodeModel.ZERO_LOWER_LEFT_OF_MATERIAL
         if self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfOp.isChecked():
-            gcodeModel.gcodeZero = GcodeModel.ZERO_LOWER_LEFT_OF_OP
+            gcode_model.gcodeZero = GcodeModel.ZERO_LOWER_LEFT_OF_OP
         if self.ui.pushButton_GCodeConversion_ZeroCenterOfOp.isChecked():
-            gcodeModel.gcodeZero = GcodeModel.ZERO_CENTER_OF_OP
+            gcode_model.gcodeZero = GcodeModel.ZERO_CENTER_OF_OP
 
         cnc_ops = self.get_jobmodel_operations()
 
-        job = JobModel(self.svg_viewer, cnc_ops, materialModel, svgModel, toolModel, tabsmodel, gcodeModel)
+        job = JobModel(self.svg_viewer, cnc_ops, material_model, svg_model, tool_model, tabsmodel, gcode_model)
 
         return job  
 

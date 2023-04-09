@@ -501,11 +501,11 @@ class cam:
 
         gcode = ""
 
-        retractGcode = '; Retract\r\n' + \
-            f'G1 Z' + safeZ.toFixed(decimal) + f'{rapidFeedGcode}\r\n'
+        retractGcode = '; Retract\n' + \
+            f'G1 Z' + safeZ.toFixed(decimal) + f'{rapidFeedGcode}\n'
 
-        retractForTabGcode = '; Retract for tab\r\n' + \
-            f'G1 Z' + tabZ.toFixed(decimal) + f'{rapidFeedGcode}\r\n'
+        retractForTabGcode = '; Retract for tab\n' + \
+            f'G1 Z' + tabZ.toFixed(decimal) + f'{rapidFeedGcode}\n'
 
         def getX(p: Tuple[int,int]) :
             return p[0] * scale + offsetX
@@ -543,8 +543,8 @@ class cam:
             crosses_tabs = tab_separator.crosses_tabs
 
             gcode += \
-                f'\r\n' + \
-                f'; Path {pathIndex+1}\r\n'
+                f'\n' + \
+                f'; Path {pathIndex+1}\n'
 
             currentZ = safeZ
             finishedZ = topZ
@@ -578,20 +578,20 @@ class cam:
                 else:
                     currentZ = max(finishedZ, tabZ)
                 
-                gcode += '; Rapid to initial position\r\n' + \
-                    'G1' + convertPoint(list(origPath.coords)[0]) + rapidFeedGcode + '\r\n'
+                gcode += '; Rapid to initial position\n' + \
+                    'G1' + convertPoint(list(origPath.coords)[0]) + rapidFeedGcode + '\n'
 
                 inTabsHeight = False
                 
                 if not crosses_tabs:
                     inTabsHeight = False
                     selectedPaths = [origPath]
-                    gcode += 'G1 Z' + ValWithUnit(currentZ, "-").toFixed(decimal) + '\r\n'
+                    gcode += 'G1 Z' + ValWithUnit(currentZ, "-").toFixed(decimal) + '\n'
                 else:
                     if nextZ >= tabZ:
                         inTabsHeight = False
                         selectedPaths = [origPath]
-                        gcode += 'G1 Z' + ValWithUnit(currentZ, "-").toFixed(decimal) + '\r\n'
+                        gcode += 'G1 Z' + ValWithUnit(currentZ, "-").toFixed(decimal) + '\n'
                     else:
                         inTabsHeight = True
                         selectedPaths = separated_paths
@@ -615,7 +615,7 @@ class cam:
                             totalDist += 2 * cam.dist(getX(pt1), getY(pt1), getX(pt2), getY(pt2))
                                 
                         if totalDist > 0:
-                            gcode += '; ramp\r\n'
+                            gcode += '; ramp\n'
                             executedRamp = True
                                     
                             #rampPath = selectedPath.slice(0, end)
@@ -633,27 +633,27 @@ class cam:
                                 newZ = currentZ + distTravelled / totalDist * (nextZ - currentZ)
                                 gcode += 'G1' + convertPoint(rampPath[i]) + ' Z' + ValWithUnit(newZ, "-").toFixed(decimal)
                                 if i == 1:
-                                    gcode += ' F' + ValWithUnit(min(totalDist / minPlungeTime, cutFeed), "-").toFixed(decimal) + '\r\n'
+                                    gcode += ' F' + ValWithUnit(min(totalDist / minPlungeTime, cutFeed), "-").toFixed(decimal) + '\n'
                                 else:
-                                    gcode += '\r\n' 
+                                    gcode += '\n' 
 
                     if not inTabsHeight:
                         if not executedRamp:
                             gcode += \
-                                '; plunge\r\n' + \
-                                'G1 Z' + ValWithUnit(nextZ, "-").toFixed(decimal) + plungeFeedGcode + '\r\n'
+                                '; plunge\n' + \
+                                'G1 Z' + ValWithUnit(nextZ, "-").toFixed(decimal) + plungeFeedGcode + '\n'
 
                     if inTabsHeight:
                         # move to initial point of partial path
-                        gcode += '; Tab: move to first point of partial path at safe height \r\n'
-                        gcode += 'G1' + convertPoint(list(selectedPath.coords)[0]) + '\r\n'
+                        gcode += '; Tab: move to first point of partial path at safe height \n'
+                        gcode += 'G1' + convertPoint(list(selectedPath.coords)[0]) + '\n'
                         gcode += \
-                            '; plunge\r\n' + \
-                            'G1 Z' + ValWithUnit(nextZ, "-").toFixed(decimal) + plungeFeedGcode + '\r\n'
+                            '; plunge\n' + \
+                            'G1 Z' + ValWithUnit(nextZ, "-").toFixed(decimal) + plungeFeedGcode + '\n'
 
                     currentZ = nextZ
 
-                    gcode += '; cut\r\n'
+                    gcode += '; cut\n'
 
                     # on a given height, generate series of G1
                     for i, pt in enumerate(selectedPath.coords):
@@ -662,9 +662,9 @@ class cam:
                         
                         gcode += 'G1' + convertPoint(pt)
                         if i == 1:
-                            gcode += cutFeedGcode + '\r\n'
+                            gcode += cutFeedGcode + '\n'
                         else:
-                            gcode += '\r\n'
+                            gcode += '\n'
                     
                     if inTabsHeight:
                         # retract to safeZ before processing next separated_paths item

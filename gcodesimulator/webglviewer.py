@@ -480,8 +480,8 @@ class GCodeSimulator {
         const simtime_slider = document.getElementById('simtime_slider');
         simtime_slider.min = 0;
         if ( self.maxTimeRounded > 0 ) {
-          simtime_slider.max = self.maxTimeRounded + 2;
-          simtime_slider.value = self.maxTimeRounded + 2;
+          simtime_slider.max = self.maxTimeRounded;
+          simtime_slider.value = self.maxTimeRounded;
           
           if (self.simulation_strategy == "with_number_of_steps") {
             // set the number of steps, step size is calculated from this

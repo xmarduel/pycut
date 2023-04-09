@@ -145,13 +145,13 @@ class SvgPath:
                 elt_tag = elt_tag.split("{http://www.w3.org/2000/svg}")[1]
                 print("============= svg : tag %s =================" % elt_tag)
             
-            svg_shapes[path_id] = SvgPath.from_svg_path_def(path_id, elt_tag, attribs, path)
+            svg_shapes[path_id] = SvgPath.from_svg_path_def(path, path_id, elt_tag, attribs)
 
         return svg_shapes
     
 
     @classmethod
-    def from_svg_path_def(cls, p_id: str, p_tag: str, p_attrs: Dict[str,str], svg_path: svgpathtools.Path):
+    def from_svg_path_def(cls, svg_path: svgpathtools.Path, p_id: str, p_tag: str, p_attrs: Dict[str,str]):
         '''
         Create a SvgPath (wrapper aound svgpattools Path object) 
         from an already evaluated svg_path (got from 'svgpathtools.svg2paths')
@@ -163,18 +163,20 @@ class SvgPath:
         else:
             p_attrs['d'] = svg_path.d()
         
-        svgpath =  SvgPath(p_id, p_tag, p_attrs)
+        svgpath =  SvgPath(p_attrs['d'], p_id, p_tag, p_attrs)
         svgpath.svg_path = svg_path
         svgpath.path_closed = svg_path.isclosedac() or svg_path.closed
 
 
         return svgpath
 
-    def __init__(self, p_id: str, p_tag: str, p_attrs: Dict[str,str]):
+    def __init__(self, p_d: str, p_id: str, p_tag: str, p_attrs: Dict[str,str]):
         '''
-        Create a SvgPath (wrapper aound svgpattools Path object) 
+        Create a SvgPath (wrapper aound svgpathtools Path object) 
         from the d definition of the <path> xml definition
         '''
+        # the 'd' of a svg <path>
+        self.p_d = p_d
         # the 'id' of a svg <path> definition
         self.p_id = p_id
         # the attributes of the <path> definition
@@ -186,15 +188,18 @@ class SvgPath:
 
         # svgpathtools: the svgpath as instance of type 'svgpathtools.Path' extracted from the string p_attrs["d"]
         if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
-            self.svg_path : svgpathtools.Path = svgpathtools.parse_path(self.p_attrs['d']) 
+            self.svg_path : svgpathtools.Path = svgpathtools.parse_path(self.p_d) 
         # svgelements
         elif self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
-            self.svg_path : svgelements.Path = svgelements.Path(self.p_attrs['d'])
+            self.svg_path : svgelements.Path = svgelements.Path(self.p_d)
         else:
             self.svg_path = None
 
+        # 'd' also in the attributes
+        p_attrs['d'] = p_d
+
         # the 'path_closed' attrribute
-        d_def = self.p_attrs['d'].strip()
+        d_def = self.p_d.strip()
         if d_def.endswith('Z') or d_def.endswith('z'):
             self.path_closed = True
         else: 
@@ -528,7 +533,7 @@ class SvgPath:
                 # force close ?
                 p_attrs["d"] = "M " + subpath + " Z"  # FIXME: how to know ??
             
-            o = SvgPath(p_id, "path", p_attrs)
+            o = SvgPath(p_attrs["d"], p_id, "path", p_attrs)
             
             svgpaths.append(o)
         
@@ -744,9 +749,16 @@ class SvgPath:
             start = discretized_svg_path[-1]
             end   = discretized_svg_path[0]
 
-        svg_path.append(svgpathtools.Line(start, end))
+            svg_path.append(svgpathtools.Line(start, end))
 
-        return SvgPath(prefix, "path", {'d': svg_path.d()})
+        d_def = svg_path.d().strip()
+
+        if safe_to_close:
+            if not d_def.endswith('z') or d_def.endswith('Z'):
+                d_def = d_def + " z"
+
+
+        return SvgPath(d_def, prefix, "path", {})
 
     @classmethod
     def from_shapely_polygon(cls, prefix: str, polygon: shapely.geometry.Polygon) -> 'SvgPath':
@@ -765,7 +777,7 @@ class SvgPath:
 
         attrs = attribs[0]
 
-        return SvgPath(prefix, "polygon", attrs) 
+        return SvgPath(attrs['d'], prefix, "polygon", attrs) 
 
     @classmethod
     def from_circle_def(cls, center: List[float], radius: float) -> 'SvgPath':
@@ -782,7 +794,7 @@ class SvgPath:
 
         paths, attribs = cls.svg2paths_from_string(svg)
       
-        return cls.from_svg_path_def("pycut_tab", "circle", attribs[0], paths[0])
+        return cls.from_svg_path_def(paths[0], "pycut_tab", "circle", attribs[0])
 
     @classmethod
     def fix_simple_polygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :
