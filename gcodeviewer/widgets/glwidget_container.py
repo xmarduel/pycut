@@ -149,7 +149,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.loadData(gcode)
 
     def loadData(self, gcode: str):
-        data = gcode.split("\r\n")
+        data = gcode.split("\n")
 
         time = QElapsedTimer()
         time.start()

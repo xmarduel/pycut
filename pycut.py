@@ -397,7 +397,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             filename = "pycut_%s_%s.nc" % (jobname, opname)
 
             gcode = self.job.gcode
-            gcode = gcode.replace('\r\n', '\n')
 
             if os.path.exists(filename):
                 k = 1

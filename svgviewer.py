@@ -705,7 +705,7 @@ class SvgTransformer:
             for key, value in shape.attrib.items():
                 svg_attrs += ' %s="%s"' % (key, value)
 
-            all_paths += '<%s %s/>\r\n' % (tag, svg_attrs)
+            all_paths += '<%s %s/>\n' % (tag, svg_attrs)
 
         for k, svg_path in enumerate(svg_paths):
             p_id = svg_path.p_id
@@ -730,7 +730,7 @@ class SvgTransformer:
                 'd_def': d_def
             }
 
-            all_paths += path + '\r\n'
+            all_paths += path + '\n'
         
         root = etree.fromstring(self.svg)
         root_attrib = root.attrib
