@@ -37,8 +37,8 @@ from lxml import etree
 import numpy as np
 
 import freetype
-
-from svgelements import Line, QuadraticBezier, Path, Move, Close, Matrix
+import svgpathtools
+from svgpathtools import wsvg, Line, QuadraticBezier, Path, parse_path
 
 #import ziafont
 import gpos
@@ -224,7 +224,11 @@ class SvgText2SvgPathsConverter:
         element.attrib["fill"] = wpath.attribs.get("fill", "#ff0000")
         element.attrib["fill-opacity"] = wpath.attribs.get("fill-opacity", "0.5")
 
-        element.attrib["d"] = wpath.path.d()
+        # svgpathtols fix
+        if wpath.path.isclosedac():
+            element.attrib["d"] = wpath.path.d() + " Z"  # d(use_closed_attrib=True)
+        else: 
+            element.attrib["d"] = wpath.path.d()
         
         #formatting...
         #element.tail = wpath.elt.tail
@@ -948,17 +952,8 @@ class Char2SvgPath:
             '''
             Then convert the segments to lines. 
             '''
-
-            start_contour_idx = -1
-
             for k, segment in enumerate(segments):
                 #print("segment (len=%d)" % len(segment))
-                
-                if k == 0:
-                    start_contour_idx = len(path_segments)
-                else:
-                    pass
-
                 if len(segment) == 2:
                     path_segments.append(Line(start=tuple2complex(segment[0]), end=tuple2complex(segment[1])))
 
@@ -1027,13 +1022,10 @@ class Char2SvgPath:
             '''
             start = end + 1
 
-            # letters are closed polygons
-            astart = path_segments[start_contour_idx].start
-            path_segments.insert(start_contour_idx, Move(end=astart))
-            path_segments.append(Close())
+        self.path = Path(*paths)
 
-        
-        self.path = Path(*path_segments)
+        ## XM
+        self.path.closed = True  # letters are closed polygons
 
         return self.path
 
@@ -1062,7 +1054,7 @@ class Char2SvgPath:
         path_str = " ".join(ctx)
 
         # build a Path instance
-        path = Path(path_str)
+        path = parse_path(path_str)
 
         # this path is not at the right position - it has to be scaled, shifted and flipped
         yflip = self.yflip_value
@@ -1085,14 +1077,11 @@ class Char2SvgPath:
         tf = np.identity(3)
         tf[1][1] = -1
         for seg in path:
-            mm = Matrix().skew(1, -1)
-            aseg = seg * mm
-
+            aseg = svgpathtools.path.transform(seg, tf)
             apath.append(aseg)
         
         # and the companion translation
-        mm = Matrix().translate_y(yflip)
-        path = apath * mm
+        path = apath.translated(yflip * 1j)
 
         # finally
         path = path.scaled(scaling, scaling)
@@ -1103,18 +1092,8 @@ class Char2SvgPath:
 
     def write_path(self, prefix=""):
         print("path %s: %s" % (prefix, self.path.d()))
+        wsvg(self.path, filename="char2path_%s_%s_convert.svg" % (self.char, prefix))
 
-        data = self.path.string_xml()
-        fp = open("char2path_%s_%s_convert.svg" % (self.char, prefix))
-        fp.write('''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="100mm" height="100mm" viewBox="0 0 100 100" version="1.1" id="test"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <g id="layer1">
-    %d
-  </g>
-</svg>''' % data)
-        fp.close()
 
 class String2SvgPaths:
     '''
@@ -1186,11 +1165,8 @@ class String2SvgPaths:
         self.paths.append(paths[0])
 
         for k, path in enumerate(paths[1:]):
-            tr_x = shifts[k]  * fontsize / Char2SvgPath.CHAR_SIZE 
-            mm = Matrix().translate_x(tr_x)
-            apath = path * mm 
-            #apath.reify()
-            self.paths.append(apath)
+            path = path.translated(shifts[k]  * fontsize / Char2SvgPath.CHAR_SIZE )
+            self.paths.append(path)
 
         # svg positioning
         self.calc_string_position(fontsize, position)
@@ -1199,10 +1175,8 @@ class String2SvgPaths:
         translate_pos = self.pos[0] + self.pos[1] * 1j
         
         for k, path in enumerate(self.paths):
-            mm = Matrix().translate(self.pos[0] , self.pos[1])
-            apath = path * mm 
-            #apath.reify()
-            pos_paths.append(apath)
+            path = path.translated(translate_pos)
+            pos_paths.append(path)
 
         self.paths = pos_paths
 
@@ -1211,7 +1185,14 @@ class String2SvgPaths:
     def write_paths(self):
         paths = ""
         for path in self.paths:
-            paths += '        <path d="%s" />\n' % path.d()
+            d = ""
+            if path.isclosedac():
+                # svgpathtools fix
+                d = path.d() + " Z"  # d(use_closed_attrib=True)
+            else:
+                d = path.d()
+
+            paths += '        <path d="%s" />\n' % d
 
         fp = open("text2paths_%s_convert.svg" % self.text, "w")
 
@@ -1306,7 +1287,13 @@ if __name__ == '__main__':
 
             style = "fill:%s;fill-opacity:%s;" % (attribs.get("fill", "#000000"), attribs.get("fill-opacity", "1.0"))
 
-            print('<path id="%s_%d" style=\"%s\" d="%s" />' % (elt_id, p, style, path.d()))
+            d = ""
+            if path.isclosedac():
+                d = path.d() + " Z"  # d(suse_closed_attrib=True)
+            else:
+                d = path.d()
+
+            print('<path id="%s_%d" style=\"%s\" d="%s" />' % (elt_id, p, style, d))
 
 
     # or the full svg with the paths
@@ -1315,7 +1302,7 @@ if __name__ == '__main__':
     print("---------------------------------- SVG   --------------------------------------")
     print("-------------------------------------------------------------------------------")
     print(svg)
-    svg_name = os.path.splitext(options.svg)[0] + ".paths.svg"
+    svg_name = os.path.basename(options.svg) + ".paths.svg"
 
     doc = etree.ElementTree(converter.tree.getroot())
     doc.write(svg_name, 

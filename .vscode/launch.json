@@ -6,6 +6,7 @@
     "configurations": [
 
 
+
         {
             "name": "OPENGL DEMO1",
             "type": "python",
@@ -173,6 +174,15 @@
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgtext2svgpaths",
             "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgtext2svgpaths\\examples\\all_letters_slaine.svg"]
+        },
+        {
+            "name": "PYCUT SVGTEXT_2_SVGPATH SMALL SLAINE",
+            "type": "python",
+            "request": "launch",
+            "program": "svgtext2svgpath.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgtext2svgpaths",
+            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgtext2svgpaths\\examples\\slaine.svg"]
         },
         {
             "name": "PYCUT RESOLVER",
