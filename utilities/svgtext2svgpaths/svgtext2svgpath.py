@@ -37,8 +37,8 @@ from lxml import etree
 import numpy as np
 
 import freetype
+import svgpathtools
 from svgpathtools import wsvg, Line, QuadraticBezier, Path, parse_path
-from svgpathtools import path as xxpath
 
 #import ziafont
 import gpos
@@ -1078,7 +1078,7 @@ class Char2SvgPath:
         tf = np.identity(3)
         tf[1][1] = -1
         for seg in path:
-            aseg = xxpath.transform(seg, tf)
+            aseg = svgpathtools.path.transform(seg, tf)
             apath.append(aseg)
         
         # and the companion translation

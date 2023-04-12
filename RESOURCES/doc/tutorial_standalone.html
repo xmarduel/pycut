@@ -43,6 +43,7 @@
       <li><a href="#P-04-07">GCode Generation</a></li>
     </ul>
   </li>
+  <li><a href="#P-05">Appendix-1: SVG Editors</a> 
 </ul>
 <script type="text/javascript">
 var tree = document.querySelectorAll('ul.tree a:not(:last-child)');
@@ -558,6 +559,107 @@ resulting G code is displayed in the G code viewer and G code simulator.</p>
 <p>Finally, clicking on "Save G code" will produce a valid G code file.
 <strong>Candle</strong> can be used to send the G code to your machine. Have
 fun...</p>
+
+<p></p>
+<p></p>
+<p></p>
+
+<h3 id="P-05">Appendix-1: SVG Editors</h3>
+
+<p>It seems there are plenty of free SVG editors around there. Well, let me
+share my opinion about a few of them...</p>
+
+<h4>Inkscape</h4>
+
+<p>To me much too complicated. I "hate" the fact that the
+circles are given from their "bounding box", not from the center with radius
+(ok it is possible, but I have always to figure out how). <strong>Editing paths
+is far to complicated</strong> (to me) and thus too difficult. The saved SVG data is
+full of <strong>inkscape/sodipodi namespaces</strong> stuff, which I dislike a
+lot in a SVG file. I would rather prefer a raw SVG with only the minimal and
+certainly not all these extra namespace stuff. Removing per hand these extra stuff
+destroy the Inkscape project settings. </p>
+
+<p>Yeappy! To obtain a SVG data free of sodipodi/inkscape namespace stuff, you have to "export" 
+your SVG data as SVG!</p>
+
+<p>Editing points coordinates "per hand" is nearly impossible as the coordinates are only 
+accessible from the "d" string, which is not really human readable. Here is an example of a polyline with 8 points:</p>
+
+<code><pre>M 5.9999998,35.999999 10,33 l 5,2.999999 -1,-4 h 7 V 41 H 12 L 8.9999999,38.999998</pre></code>
+
+<p>Note how absolute and relative keywords are given in the path. Question: what are the coordinates of the fifth point?</p>
+
+<p>Concatening segments to form a single path doesn't even work as expected. 
+The simple task consisting of concatenating a polyline and a bezier curve -in this order- 
+(which are joined) seems not to work! There is the "combine" command,
+but the result is a single path (ok... ) containing 2 subpaths (with "M"), which is not Ok, 
+the first one beeing the bezier curve and the second one beeing the polyline, 
+this means in reversed order. Sure, with "M"s everywhere, the ordering is not that important, is it!
+<strong>A very desapointing implementation from Inkscape I would say</strong>.
+Conclusion: <strong>unusable if you want to generate complex paths.</strong></p>
+
+<p>PS: There is the "Draw Bezier and straight line tool" with mode "Create regular Bezier path" 
+but after many many hours of trial I did not succeed to use it properly. Is it just me ? With it
+you cannot anyway mix your path with an arc curve.</p>
+
+<h4>QCAD</h4>
+
+<p>It reads/writes <strong>dxf</strong> files, can export them as SVG.
+Unfortunately the <strong>SVG export</strong> comes with extra rubbish for the
+trial version (nice!). Forget the free version. Editing polylines is possible,
+as well as Arcs and Cubic Bezier curves (but Quadratic Bezier curves are not supported).
+These Cubic Bezier curves are exported right in the SVG export. Unfortunately (again),
+when concatening lines/polylines with these cubic bezier curves in order to
+form a whole path, they are transformed into Arcs (why ?), and so the SVG
+export. Conclusion: .<strong>unusable if you need Bezier curves in
+paths.</strong> </p>
+
+<h4>LibreCAD</h4>
+
+<p>It is (was) a fork of QCAD (2011), but the authors did not manage a lot,
+except porting it (as QCAD did) to Qt-5 and polishing the UI with their own taste.
+It looks a lot like QCAD, but at first sight the user interface seems (to me) a little bit better.
+At the time of the fork there was no Bezier curves I guess, and still there are no. The export is
+anyway not that bad. There is minimal extra librecad namespace stuff in the output. 
+Do not know yet how to assign ids to the entities.</p>
+<p>Editing polylines/arcs and concatenate them together is excellent. Snap stuff is perfect.</p>
+<strong><p>So this is a real pity that LibreCAD does not support Bezier Curves.</strong>
+Conclusion: <strong>unusable if you need Bezier curves</strong></p> 
+
+<h4>XFig</h4>
+
+<p>My beloved drawing editor during my youth! Completely outdated, but still
+the best! Unfortunately the SVG export is deficient. There are Bezier curves (really?)
+i.e. splines with control points (it looks like Bezier) but the SVG outputs them as 
+polylines. <strong>Conclusion: unusable</strong></p>
+
+<h4>What else?</h4>
+
+<p>It is cumbersome to try to find a decent SVG editor, or at least a CAD
+program with ease of use and decent SVG export. LibreCAD would be simply perfect if it would
+support Bezier curves (keeping dxf as input data alongside svg as export data would not be a problem). 
+Does anyone knows one? (I mean, if he/she **really** tried it and can recommand it). </p>
+
+<h4>Online editors</h4>
+
+<p>There are plenty of them, but I do not like online tools... They also seems
+to be meant for painting, not for CAD. Please correct me if I am wrong.</p>
+
+<h4><span style="color:#0000ff">Per hand</span></h4>
+
+<p>Finally my prefered method! Per hand you can also write items in the
+<code>&lt;def&gt;</code> section, and use these items repeatidly with
+transformations with the <code>&lt;use&gt;</code> tag. My utility
+<strong>svgresolver.py</strong> then transforms this svg file into another one,
+usable for <strong>PyCut. Not the perfect toolchain I admit, but well my svgs
+are not that complicated</strong>. You have to understand how to write an
+arc/bezier curve per hand, it is not that difficult. And yours svgs are then
+"<strong>clean</strong>".</p>
+
+<p></p>
+<p></p>
+
 </div>
 </body>
 </html>

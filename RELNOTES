@@ -7,7 +7,15 @@ Can process defs/use and transformations in svg (ie resolve them) without conver
 
 with shapely 2.0.1
 
-# 0.4.0 (TODO)
+# 0.6.0 (TODO)
+
+use QOpenGLWidget for gcode simulation, get rid of the WebGL stuff
+
+# 0.5.0 (TODO)
+
+use only svgelements, get rid of svgpathtools
+
+# 0.4.0 
 
 process "opened" lines (not polygons)
 

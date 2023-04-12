@@ -264,6 +264,15 @@
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\svgtext2svgpaths",
             "args": []
+        },
+        {
+            "name": "TEST SVGELEMENTS",
+            "type": "python",
+            "request": "launch",
+            "program": "test.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\svgelements_svgpathtools",
+            "args": []
         }
     ]
 }
