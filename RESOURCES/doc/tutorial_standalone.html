@@ -569,6 +569,9 @@ fun...</p>
 <p>It seems there are plenty of free SVG editors around there. Well, let me
 share my opinion about a few of them...</p>
 
+<p>I will simply try to edit and save a closed path composed of lines, arcs and bezier curves
+similar to what I 've edited per hand: about 20 segments representing my workpiece.</p>
+
 <h4>Inkscape</h4>
 
 <p>To me much too complicated. I "hate" the fact that the
@@ -600,8 +603,8 @@ this means in reversed order. Sure, with "M"s everywhere, the ordering is not th
 Conclusion: <strong>unusable if you want to generate complex paths.</strong></p>
 
 <p>PS: There is the "Draw Bezier and straight line tool" with mode "Create regular Bezier path" 
-but after many many hours of trial I did not succeed to use it properly. Is it just me ? With it
-you cannot anyway mix your path with an arc curve.</p>
+but after many many hours of trial (despize YouTube tutorials)I did not succeed to use it properly. 
+Is it just me ? With it you cannot anyway mix your path with an arc curve.</p>
 
 <h4>QCAD</h4>
 
@@ -612,20 +615,29 @@ as well as Arcs and Cubic Bezier curves (but Quadratic Bezier curves are not sup
 These Cubic Bezier curves are exported right in the SVG export. Unfortunately (again),
 when concatening lines/polylines with these cubic bezier curves in order to
 form a whole path, they are transformed into Arcs (why ?), and so the SVG
-export. Conclusion: .<strong>unusable if you need Bezier curves in
-paths.</strong> </p>
+export. Conclusion: <strong>unusable if you need Bezier curves in paths.</strong></p>
 
-<h4>LibreCAD</h4>
+<h4>LibreCAD   **BEST**</h4>
 
 <p>It is (was) a fork of QCAD (2011), but the authors did not manage a lot,
 except porting it (as QCAD did) to Qt-5 and polishing the UI with their own taste.
 It looks a lot like QCAD, but at first sight the user interface seems (to me) a little bit better.
-At the time of the fork there was no Bezier curves I guess, and still there are no. The export is
-anyway not that bad. There is minimal extra librecad namespace stuff in the output. 
-Do not know yet how to assign ids to the entities.</p>
-<p>Editing polylines/arcs and concatenate them together is excellent. Snap stuff is perfect.</p>
-<strong><p>So this is a real pity that LibreCAD does not support Bezier Curves.</strong>
-Conclusion: <strong>unusable if you need Bezier curves</strong></p> 
+The SVG export is exactly what one expects. There is minimal extra librecad namespace stuff in the output.
+Do not know yet how to assign ids to the entities.
+You only have to take care that in SVG y = 0 is the top of the drawing, so coordinates in the SVG are somehow
+inverted from coordinates in the app. y = 0 correspond to the highest coordinates of your items in the canvas.</p>
+
+<p> Splines through 3 points correspond to bezier quadratic curves.
+In the GUI, the middle point of the curve is entered, not the "control point". 
+There is btw infortunately no cubic bezier curves.</p>
+
+<p>Editing polylines/arcs/quad bezier and concatenate them together ("create polyline from existing segments") is excellent,
+even if there is here a bug: one cannot concatenate polylines/arcs with the quad bezier curves. </p>
+
+<p>Snap stuff is perfect.</p>
+
+<strong><p>So this is a real pity that LibreCAD does not support Cubic Bezier Curves (and the minor bug).</strong>
+Conclusion: <strong>The best SVG generator/editor so far.</strong></p> 
 
 <h4>XFig</h4>
 
@@ -633,6 +645,21 @@ Conclusion: <strong>unusable if you need Bezier curves</strong></p>
 the best! Unfortunately the SVG export is deficient. There are Bezier curves (really?)
 i.e. splines with control points (it looks like Bezier) but the SVG outputs them as 
 polylines. <strong>Conclusion: unusable</strong></p>
+
+<h4>DesignCAD</h4>
+<p>The free version has the same capabilities as the full version, excepted the exports to other formats.
+Thank you and see you next time!</p>
+
+<h4>TurboCAD</h4>
+<p>15 Days trial version - TODO</p>
+
+<h4>Solid Edge 2D Drafting (Siemens)</h4>
+<p>The 3.8 GB big app from Siemens is free of charge. It seems there is no SVG export at all. "Schade".</p>
+
+<h4>Draftsight 2D (Dassault)</h4>
+<p>Only a 30 day trial. TO SEE. Oh my God! there is this "Power Tool" named "2D G-Code generator"! 
+Forget this tool!!
+</p>
 
 <h4>What else?</h4>
 
@@ -645,6 +672,14 @@ Does anyone knows one? (I mean, if he/she **really** tried it and can recommand 
 
 <p>There are plenty of them, but I do not like online tools... They also seems
 to be meant for painting, not for CAD. Please correct me if I am wrong.</p>
+
+<h4>Conclusion</h4>
+<p> The fact that it is so difficult to find an acceptable SVG path "writer" program can only be 
+due to the SVG format itself, which is completely "user" or "app" un-friendly. The path definition 
+is too complicated. What is the point of allowing paths with sub-paths? 
+maybe because the SVG format completely ignores the concept of "multiline"/"multipolygon" etc. 
+Polygons have no "interiors" so they must be defined as such in a path composed of 2 subpaths for this purpose.</p>
+<p><strong>All in all very desapointing!</strong></p>
 
 <h4><span style="color:#0000ff">Per hand</span></h4>
 
