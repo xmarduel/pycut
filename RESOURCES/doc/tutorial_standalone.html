@@ -445,7 +445,6 @@ Ok. </p>
 
 <p>If your design contain curves (svg "arcs" or "bezier" curves), they have to
 be discretized in small segments.</p>
-
 <img src="./pycut_curve_to_line_conversion.png" width="300px"> 
 
 <p>The 2 following parameters allow to specified how fine the curve
@@ -644,36 +643,50 @@ really testing it before buying is possible but not very practicable.</p>
 
 <h4>LibreCAD <span style="color:#008000">****BEST****</span></h4>
 
-<p>It is (was) a fork of QCAD (2011), but the authors did not manage a lot (at
-first sight), except porting it (as QCAD did) to Qt-5 and polishing the UI with
-their own taste. It looks a lot like QCAD, but the first feeling is that the
-user interface seems (to me) better. <strong>The SVG export is exactly what one
-expects</strong>. There is minimal extra LibreCAD namespace stuff in the
-output. Do not know yet how to assign ids to the entities. You only have to
-take care that in the SVG format y = 0 is the top of the drawing, so
-coordinates in the SVG file are inverted from coordinates in the app (which is
-normal). The y = 0 correspond to the highest coordinate of your items in the
-canvas.</p>
+<p>It is (was) a fork of QCAD (2011). It looks a lot like QCAD, but the (my)
+first feeling is that the user interface seems better. <strong>The SVG export
+is exactly what one would expect (well , nearly)</strong>. There is minimal
+extra LibreCAD namespace stuff in the output. Do not know yet how to assign ids
+to the entities (bad). You only have to take care that in the SVG format y = 0
+is the top of the drawing, so coordinates in the SVG file are inverted from
+coordinates in the app (which is normal). The y = 0 correspond to the highest
+coordinate of your items in the canvas (Note: in <strong>QCAD</strong> the
+coordinates are the same and there is a global svg transform="scale(1,-1)". The
+viewBox is calculated accordingly. It would be nice to have this option in
+<strong>LibreCAD</strong>).</p>
 
-<p>Splines through 3 points correspond to bezier quadratic curves. In the GUI,
-the middle point of the curve is entered, not the "bezier control point". It
-would be nice if one could enter the quadratic bezier curve with its start/end
-points and its control point. There is btw unfortunately no cubic bezier
-curves.</p>
+<p><strong>Splines</strong> <strong>through</strong> <strong>3 points
+correspond to bezier quadratic curves</strong>, while <strong>splines through 4
+or more points are not cubic bezier curves but only sequence of quadratic
+curves</strong> (it seems possible! is it ? they really look to be smooth of
+order 3!).</p>
+
+<p>In the GUI, the middle point of the curve is entered, not the "bezier
+control point". <strong>It would be nice if one could enter the quadratic
+bezier curve with its start/end points and its control point</strong>. There is
+unfortunately no cubic bezier curves. <strong>It would be nice if one could
+enter the cubic bezier curve with its start/end points and its two control
+points</strong></p>
+
+<p><strong>Yeaahh! There is another splines button (strange!) where it is
+possible to indicate which degree (1, 2 or 3) the spline has to be. And for 2
+and 3 these are bezier quadratic or cubic curves with control points entered
+from the UI.</strong> Setting for the degree is in the main menu bar (this is
+LibreCAD concept, but not so straight to be seen if one not knows).</p>
 
 <p>Editing polylines/arcs/quad bezier and concatenate them together
-("<strong>create polyline from existing segments</strong>") is excellent, but
-there is here a bug: one cannot concatenate polylines/arcs with the quadratic
-bezier curves. </p>
+("<strong>create polyline from existing segments</strong>") is excellent,
+(<strong>SVG output is a single &lt;path&gt; entity</strong>) but there is here
+a bug: one cannot concatenate polylines/arcs with beziers/splines. </p>
 
-<p>Snap stuff is perfect.</p>
+<p>Snap stuff is perfect, with many snap options.</p>
 
-<p><strong>So this is a real pity that LibreCAD does not support Cubic Bezier
-Curves (and the minor quadratic bezier curve bug, but it is fixable per hand in
-the output).</strong></p>
+<p><strong>So this is a real pity that LibreCAD does not perform the
+concatenation of lines/arcs with beziers/splines into a single SVG path, but it
+is fixable per hand in the output.</strong></p>
 
-<p>Conclusion: <strong><span style="color:#008000">The best SVG
-generator/editor I have found so far.</span></strong></p>
+<p>Conclusion: <strong><span style="color:#008000">The best SVG "path"
+generator I have found so far.</span></strong></p>
 
 <h4>XFig</h4>
 
@@ -719,8 +732,8 @@ because I gave up in the meanwhile looking for SVG editor...</p>
 <p>It is cumbersome to try to find a decent SVG editor, or at least a CAD
 program with ease of use and decent SVG export. LibreCAD would be simply
 perfect if it would support Bezier curves (keeping dxf as input data alongside
-svg as export data is not a problem). Does anyone knows one? (I mean, if he/she
-**really** tried it and can recommand it). </p>
+svg as export data is not a problem). Does anyone knows one? (I mean, if
+he/s<strong></strong>he **really** tried it and can recommand it). </p>
 
 <h3>Conclusion</h3>
 
@@ -732,8 +745,10 @@ the concept of "multiline"/"multipolygon" etc. Polygons have no "interiors" so
 they must be defined as such in a path composed of 2 subpaths for this
 purpose.</p>
 
-<p><strong>All in all very desapointing, <span style="color:#008000">excepted
-LibreCAD</span>!</strong></p>
+<p><strong>All in all very desapointing, <span
+style="color:#008000"></span></strong><span
+style="color:#008000"><strong>except</strong></span><strong><span
+style="color:#008000"> LibreCAD</span>!</strong></p>
 
 <h4><span style="color:#0000ff">Per hand</span></h4>
 
