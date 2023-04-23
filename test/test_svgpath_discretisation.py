@@ -4,10 +4,11 @@ import sys
 import io
 
 import unittest
-from misc_private.svgelements_svgpathtools.discretisation import SvgPath_SvgPathTools, SvgPath_SvgElements
+from discretisation import SvgPath_SvgPathTools, SvgPath_SvgElements
 import xmlrunner
 
 import matplotlib.pyplot as plt
+
 
 svg_rect = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg version="1.1" id="test_rectangle" width="100mm" height="100mm" viewBox="0 0 100 100"
@@ -65,14 +66,21 @@ svg_polygon2 = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
   </g>
 </svg>"""
 
-
+svg_path = """<?xml version='1.0' encoding='UTF-8'?>
+<svg version="1.1" id="spindle-D55-holder-with-clamp"
+  xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" width="140mm" height="113mm" viewBox="0 0 140 113">
+  <g id="layer">
+    <path id="contour" d="M 21.00001134,0 l 88.00004752,0 a 1,1 0 0,1 1.00000054,1.00000054 l 0,48.00002592 a 1,1 0 0,0 1.00000054,1.00000054 l 12.00000648,0 a 1,1 0 0,1 1.00000054,1.00000054 l 0,38.00002052 a 1,1 0 0,1 -1.00000054,1.00000054 l -18.700010098,0 A 45,45 0 0,1 25.700013878,90.0000486 l -18.700010098,0 a 1,1 0 0,1 -1.00000054,-1.00000054 l 0,-38.00002052 a 1,1 0 0,1 1.00000054,-1.00000054 l 12.00000648,0 a 1,1 0 0,0 1.00000054,-1.00000054 l 0,-48.00002592 a 1,1 0 0,1 1.00000054,-1.00000054 z" style="fill:none;stroke:#0000ff;stroke-width:0.5px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"/>
+  </g>
+</svg>
+"""
 
 def plot(pts, title):
     plt.figure()
     plt.title(title)
         
     xx = [ pt.real for pt in pts ]
-    yy = [pt.imag for pt in pts ]
+    yy = [ pt.imag for pt in pts ]
 
     plt.plot(xx, yy, 'ro-')
       
@@ -135,7 +143,7 @@ class SvgPathToolsTests(unittest.TestCase):
 
         pts = path.discretize_closed_path()
 
-        plot(pts, "circle SvgPathTools")
+        # plot(pts, "circle SvgPathTools")
 
         self.assertTrue(len(pts) == 315)
 
@@ -245,6 +253,45 @@ class SvgPathToolsTests(unittest.TestCase):
         '''
         self.assertTrue(len(pts) == 4)  
         
+    def test_discretise_path(self):
+        """
+        no end point == start point
+        """
+        paths = SvgPath_SvgPathTools.read_paths_from_file(io.StringIO(svg_path))
+
+        self.assertTrue(len(paths) == 1)
+
+        path = paths[0]
+
+        self.assertTrue(path.p_id == "contour")
+        self.assertTrue(path.path_closed == True)
+
+        self.assertTrue(len(path.svg_path) == 19)
+        self.assertTrue(path.svg_path[0].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[1].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[2].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[3].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[4].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[5].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[6].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[7].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[8].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[9].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[10].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[11].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[12].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[13].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[14].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[15].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[16].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[17].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[18].__class__.__name__ == "Line")
+
+
+        pts = path.discretize_closed_path()
+        self.assertTrue(len(pts) == 1085)  
+        
+
 
 class SvgElementsTests(unittest.TestCase):
     """
@@ -307,7 +354,8 @@ class SvgElementsTests(unittest.TestCase):
 
         pts = path.discretize_closed_path()
 
-        plot(pts, "circle SvgElements")
+        # not the same #pts as in svgpathtools because 4 arcs and rounding stuff
+        # plot(pts, "circle SvgElements")
 
         self.assertTrue(len(pts) == 313)
 
@@ -431,6 +479,44 @@ class SvgElementsTests(unittest.TestCase):
         expecting 4 points (not 3) because of the shapely fix
         '''
         self.assertTrue(len(pts) == 4)
+
+    def test_discretise_path(self):
+        """
+        no end point == start point
+        """
+        paths = SvgPath_SvgElements.read_paths_from_file(io.StringIO(svg_path))
+
+        self.assertTrue(len(paths) == 1)
+
+        path = paths[0]
+
+        self.assertTrue(path.p_id == "contour")
+        self.assertTrue(path.path_closed == True)
+
+        self.assertTrue(len(path.svg_path.segments()) == 20)
+        self.assertTrue(path.svg_path[0].__class__.__name__ == "Move")
+        self.assertTrue(path.svg_path[1].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[2].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[3].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[4].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[5].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[6].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[7].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[8].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[9].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[10].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[11].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[12].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[13].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[14].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[15].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[16].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[17].__class__.__name__ == "Line")
+        self.assertTrue(path.svg_path[18].__class__.__name__ == "Arc")
+        self.assertTrue(path.svg_path[19].__class__.__name__ == "Close")
+
+        pts = path.discretize_closed_path()
+        self.assertTrue(len(pts) == 1085)  
 
 
 def get_suite():
