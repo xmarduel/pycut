@@ -283,6 +283,15 @@
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\svgelements_svgpathtools",
             "args": []
-        }
+        },
+        {
+            "name": "PYCUT UNITTEST SVGPATHS",
+            "type": "python",
+            "request": "launch",
+            "program": "test_svgpath_discretisation.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\test",
+            "args": []
+        },
     ]
 }

@@ -394,16 +394,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             opname = self.job.operations[0].name
 
-            filename = "pycut_%s_%s.nc" % (jobname, opname)
+            filename = "%s_%s.nc" % (jobname, opname)
 
             gcode = self.job.gcode
 
             if os.path.exists(filename):
                 k = 1
-                filename = "pycut_%s_%s_%d.nc" % (jobname, opname, k)
+                filename = "%s_%s_%d.nc" % (jobname, opname, k)
                 while os.path.exists(filename):
                     k += 1
-                    filename = "pycut_%s_%s_%d.nc" % (jobname, opname, k)
+                    filename = "%s_%s_%d.nc" % (jobname, opname, k)
 
             fp = open(filename, "w")
             fp.write(gcode)
