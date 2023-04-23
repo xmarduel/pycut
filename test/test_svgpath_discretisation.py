@@ -4,7 +4,8 @@ import sys
 import io
 
 import unittest
-from discretisation import SvgPath_SvgPathTools, SvgPath_SvgElements
+from svgpath_svgpathtools import SvgPath_SvgPathTools
+from svgpath_svgelements import SvgPath_SvgElements
 import xmlrunner
 
 import matplotlib.pyplot as plt
@@ -517,6 +518,8 @@ class SvgElementsTests(unittest.TestCase):
 
         pts = path.discretize_closed_path()
         self.assertTrue(len(pts) == 1085)  
+
+        #plot(pts, "path SvgElements")
 
 
 def get_suite():
