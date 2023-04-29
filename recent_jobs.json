@@ -1,5 +1,6 @@
 [
+  "jobs/cnc_all_letters_slaine.json",
+  "jobs/cnc_all_letters_tudor.json",
   "misc_private/svg/waste_plate_screw.json",
-  "misc_private/others_stuff/small_kasten.json",
-  "misc_private/others_stuff/kasten.json"
+  "misc_private/others_stuff/small_kasten.json"
 ]

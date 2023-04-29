@@ -9,9 +9,8 @@ from typing import Dict
 import io
 
 import numpy as np
-import svgpathtools
-import svgelements
 
+import svgelements
 import xml.etree.ElementTree as etree
 
 import shapely.geometry
@@ -62,21 +61,18 @@ class SvgPath:
     '''
     Transform svgpathtools 'Path' into a 'Shapely Polygon' object(s)
 
-    - svgpathtools 'Path' are list of 'Segment(s)' and
+    - svgelement 'Path' are list of 'Segment(s)' and
     each segment has a list of points, given in format 'complex type' (a+bj)
 
     - a svg path can describe 1 or more Polygons, Polygons may have holes
 
     Convention:
-    - a path from svgpathtools is noted: svg_path
-    - a svg <path> definition is noted: svg_path_d
-    - the discretization of a svg_path results in a numpy array, noted: np_svg_path
+    - a (instance) path from svgelements is noted: svg_path
+    - a (string) svg <path> definition is noted: svg_path_d
+
     '''
     PYCUT_SAMPLE_LEN_COEFF = 10 # 10 points per "svg unit" ie arc of len 10 -> 100 pts discretization
     PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5 # is in jsCut 1
-
-    DISCRETIZATION_USE_MODULE = 'SVGPATHTOOLS'
-    #DISCRETIZATION_USE_MODULE = 'SVGELEMENTS'
 
     @classmethod
     def set_arc_precision(cls, arc_precision: float):
@@ -91,129 +87,133 @@ class SvgPath:
         cls.PYCUT_SAMPLE_MIN_NB_SEGMENTS = arc_min_nb_segments
 
     @classmethod
-    def svg2paths_from_string(cls, svg_str: str) -> Tuple[List[svgpathtools.Path], List[Dict[str,str]]]:
+    def svg_paths_from_svg_string(cls, svg_str: str) -> List['SvgPath']:
         '''
-        From a svg file content, read all paths and their attributes
+        From a svg file content, read all paths (and those from the std svg shapes)
         '''
         data = io.StringIO(svg_str)
 
-        return svgpathtools.svg2paths(data)
+        svg = svgelements.SVG.parse(data,
+              reify=True,
+              ppi=25.4)  # so that there is no "scaling" : 1 inch = 25.4 mm
+    
+        paths = []
+    
+        for element in svg.elements():
+            try:
+                if element.values['visibility'] == 'hidden':
+                    continue
+            except (KeyError, AttributeError):
+                pass
+            if isinstance(element, svgelements.SVGText):
+                pass # elements.append(element)
+            elif isinstance(element, svgelements.Path):
+                if len(element) != 0:
+                    paths.append(element)
+            elif isinstance(element, svgelements.Shape):
+                e = svgelements.Path(element)
+                e.reify()  # In some cases the shape could not have reified, the path must.
+                if len(e) != 0:
+                    paths.append(e)
+            elif isinstance(element, svgelements.SVGImage):
+                pass
+
+        return [ SvgPath(path, orig_svg_str=svg_str) for path in paths ]
 
     @classmethod
     def read_svg_shapes_as_paths(cls, svg_str: str) -> Dict[str, 'SvgPath'] :
         '''
         From a svg file content, read all paths and their attributes
-        and organize them as dictionary with key <path_id>, value (path, attribs)
+        and organize them as dictionary with key <path_id>, value SvgPath object
         '''
         # for the mapping id -> element (tag)
         #root = etree.fromstring(bytes(svg_str, encoding='utf-8'))  # lxml
         root = etree.fromstring(svg_str)
 
-        svg_shapes = {}
+        paths_map = {}
 
-        paths, attributes = cls.svg2paths_from_string(svg_str)
+        paths = cls.svg_paths_from_svg_string(svg_str)
 
-        for k, path in enumerate(paths):
-            attribs = attributes[k]
-
-            path_id = attribs.get('id', None)
-            print("================================================================")
-            print("============= svg : path %s =================" % path_id)
-            print("============= svg : path  isclosed()  = %d =================" % path.isclosedac())
-            #print("============= svg : attribs %s =================" % attribs)
+        for path in paths:
+            #print("=======================================================")
+            #print("============= svg : path %s =================" % path.p_id)
+            #print("============= svg : path isclosed = %d ======" % path.closed)
+            #print("============= svg : path attribs %s =========" % path.p_attrs)
 
             # ignore paths without id
-            if path_id is None:
+            if path.p_id is None:
                 continue
 
-            # get the tag of this 'src' element for this id
-            elt_tag = None
+            paths_map[path.p_id] = path
 
-            #elements = root.xpath("//*[@id = '%s']" % path_id)  # lxml
-            elements = root.findall(".//*[@id = '%s']" % path_id)
-
-            if len(elements) == 0:
-                print("WARNING: id" , path_id, "not found")
-                elt_tag = "???"
-            elif len(elements) == 1:
-                elt_tag = elements[0].tag
-                elt_tag = elt_tag.split("{http://www.w3.org/2000/svg}")[1]
-                print("============= svg : tag %s =================" % elt_tag)
-            else:
-                print("WARNING: id" , path_id, "duplicated")
-                elt_tag = elements[0].tag
-                elt_tag = elt_tag.split("{http://www.w3.org/2000/svg}")[1]
-                print("============= svg : tag %s =================" % elt_tag)
-            
-            svg_shapes[path_id] = SvgPath.from_svg_path_def(path, path_id, elt_tag, attribs)
-
-        return svg_shapes
-    
+        return paths_map
 
     @classmethod
-    def from_svg_path_def(cls, svg_path: svgpathtools.Path, p_id: str, p_tag: str, p_attrs: Dict[str,str]):
+    def from_svg_path_def(cls, d_def: str, p_id: str, p_tag: str, p_attrs: Dict[str,str]) -> 'SvgPath':
         '''
-        Create a SvgPath (wrapper aound svgpattools Path object) 
-        from an already evaluated svg_path (got from 'svgpathtools.svg2paths')
+        Create a SvgPath
+        '''
+        path_data = ''
+        for key in p_attrs:
+            path_data += ' %(key)s="%(value)s"' % {"key": key, "value": p_attrs[key]}
 
-        the attribute 'd' is set with 'zZ' or not, depending on the svg_path isclosedac value
-        '''
-        if svg_path.isclosedac() or svg_path.closed:
-            p_attrs['d'] = svg_path.d() + ' z'
-        else:
-            p_attrs['d'] = svg_path.d()
+        svg_str = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg version="1.1" width="1000mm" height="1000mm" viewBox="0 0 1000 1000"
+   xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+  <g id="layer">
+    <path %(path_data)s/>
+  </g>
+</svg> """ % {"path_data": path_data }
+
+        paths = cls.svg_paths_from_svg_string(svg_str)
         
-        svgpath =  SvgPath(p_attrs['d'], p_id, p_tag, p_attrs)
-        svgpath.svg_path = svg_path
-        svgpath.path_closed = svg_path.isclosedac() or svg_path.closed
+        path = paths[0]
+        path.tag = p_tag
 
+        return path
 
-        return svgpath
-
-    def __init__(self, p_d: str, p_id: str, p_tag: str, p_attrs: Dict[str,str]):
+    def __init__(self, svg_path: svgelements.Path, orig_svg_str=None):
         '''
-        Create a SvgPath (wrapper aound svgpathtools Path object) 
-        from the d definition of the <path> xml definition
         '''
-        # the 'd' of a svg <path>
-        self.p_d = p_d
-        # the 'id' of a svg <path> definition
-        self.p_id = p_id
-        # the attributes of the <path> definition
-        self.p_attrs = p_attrs
-        # new: because I do not trust svgpathtools 'isclosedac' method
-        self.path_closed = True
-        # new: the tag of the 'src' element for this svgpathtool.Path path
-        self.tag = p_tag
+        self.svg_path = svg_path
 
-        # svgpathtools: the svgpath as instance of type 'svgpathtools.Path' extracted from the string p_attrs["d"]
-        if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
-            self.svg_path : svgpathtools.Path = svgpathtools.parse_path(self.p_d) 
-        # svgelements
-        elif self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
-            self.svg_path : svgelements.Path = svgelements.Path(self.p_d)
-        else:
-            self.svg_path = None
+        self.p_d = svg_path.d()
+        self.p_id = svg_path.values.get('id', "?")
+        self.tag = svg_path.values["tag"]
+        self.closed = self.eval_closed()
 
-        # 'd' also in the attributes
-        p_attrs['d'] = p_d
+        # I do not quite understand how the 'real' attributes are got from
+        # They are **not** the xml attributes in all cases...
+        
+        self.p_attrs = copy.deepcopy(svg_path.values["attributes"])
+  
+        if "tag" in   self.p_attrs:
+            del self.p_attrs["tag"]
 
-        # the 'path_closed' attrribute
-        d_def = self.p_d.strip()
-        if d_def.endswith('Z') or d_def.endswith('z'):
-            self.path_closed = True
-        else: 
-            self.path_closed = False
+        if orig_svg_str is not None:
+            # read xml and get the **real** attribute
+            root = etree.fromstring(orig_svg_str)
+
+            #elements = root.xpath("//*[@id = '%s']" % self.p_id)  # lxml
+            elements = root.findall(".//*[@id = '%s']" % self.p_id)
+
+            if len(elements) == 1:
+                elt = elements[0]
+                attrib = elt.attrib
+                #print("============= svg : attrib %s =================" % attrib)
+                self.p_attrs = attrib
+            else:
+                a = 1
 
         # the result of the import
         self.lines : List[shapely.geometry.LineString] = []
         self.polys : List[shapely.geometry.Polygon] = []
         self.points : List[shapely.geometry.Point] = []
 
-    def is_closed(self):
+    def eval_closed(self):
         '''
         '''
-        return self.path_closed
+        return self.svg_path.segments()[-1].__class__.__name__ == "Close"
 
     def discretize_closed_path(self) -> np.array :
         '''
@@ -259,37 +259,28 @@ class SvgPath:
         # ------------------------------------------------------------------
         points = np.array([], dtype=np.complex128)
 
-        first_pt = None
+        first_seg = True
         
         for k, segment in enumerate(self.svg_path):
 
+            if segment.__class__.__name__ == 'Move':
+                continue
+            if segment.__class__.__name__ == 'Close':
+                continue
+            
             ## ---------------------------------------
             if ignore_segment(k, segment) == True:
                 continue
             ## ---------------------------------------
-            
-            if k == 0:
-                # shapely fix : global initial pt
-                first_pt = segment.point(0)
 
             if segment.__class__.__name__ == 'Line':
                 # start and end points
-                if len(self.svg_path) == 1:
-                    if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
-                        pts = segment.points([0,1])
-                    #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
-                    #    pts = [segment.point(0.0), segment.point(1.0)]
+                if first_seg :
+                    _pts = [segment.point(0.0), segment.point(1.0)]
                 else:
-                    if k == 0:
-                        if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
-                            pts = segment.points([0.5, 1]) # shapely fix!
-                        #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
-                        #    pts = [segment.point(0.5), segment.point(1.0)] # shapely fix!
-                    else:
-                        if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
-                            pts = segment.points([1])
-                        #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
-                        #    pts = [segment.point(1.0)] # shapely fix!
+                    _pts = [segment.point(1.0)] 
+
+                pts = [ complex(_pt.x,+ _pt.y) for _pt in _pts]
                     
             elif segment.__class__.__name__ == 'Arc':
                 # no 'points' method for 'Arc'!
@@ -299,7 +290,7 @@ class SvgPath:
                 nb_samples = max(nb_samples, self.PYCUT_SAMPLE_MIN_NB_SEGMENTS)
                 
                 _pts = []
-                if k == 0:
+                if first_seg:
                     for p in range(0, nb_samples+1):
                         _pts.append(segment.point(float(p)/float(nb_samples)))
                 else:
@@ -307,6 +298,7 @@ class SvgPath:
                     for p in range(1, nb_samples+1):
                         _pts.append(segment.point(float(p)/float(nb_samples)))
 
+                _pts = [ complex(_pt.x,+ _pt.y) for _pt in _pts ]
                 pts = np.array(_pts, dtype=np.complex128)
 
             else:  # 'QuadraticBezier', 'CubicBezier'
@@ -314,61 +306,42 @@ class SvgPath:
 
                 _pts = []
 
-                ### SVGPATHTOOLS BUG !!!
-                if seg_length == math.inf:  # WTF!
-
-                    p1 = segment.start
-                    p2 = segment.end
-
-                    if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
-                        line = svgpathtools.Line(p1, p2)
-                    #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
-                    #    line = svgelements.Line(p1, p2)
-
-                    # start and end points
-                    if len(self.svg_path) == 1:
-                        _pts = line.points([0,1])
-                    else:
-                        if k == 0:
-                            _pts = line.points([0.5, 1]) # shapely fix!
-                        else:
-                            _pts = line.points([1])
-
-                else:
-
-                    nb_samples = int(seg_length * self.PYCUT_SAMPLE_LEN_COEFF)
-                    nb_samples = max(nb_samples, self.PYCUT_SAMPLE_MIN_NB_SEGMENTS)
+                nb_samples = int(seg_length * self.PYCUT_SAMPLE_LEN_COEFF)
+                nb_samples = max(nb_samples, self.PYCUT_SAMPLE_MIN_NB_SEGMENTS)
                 
+                if first_seg:
+                    for p in range(0, nb_samples+1):
+                        _pts.append(segment.point(float(p)/float(nb_samples)))
+                else:
                     # not the first one
                     for p in range(1, nb_samples+1):
                         _pts.append(segment.point(float(p)/float(nb_samples)))
 
+                _pts = [ complex(_pt.x,+ _pt.y) for _pt in _pts ]
                 pts = np.array(_pts, dtype=np.complex128)
 
             points = np.concatenate((points, pts))
 
-        # shapely fix : add as last point the "virtual" first one, the first "middle one" is already the "new" first
 
-        # distance between the last pt and and stored first pt
+            first_seg = False
 
-        if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
-            line = svgpathtools.Line(points[-1], first_pt)
-        #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
-        #    line = svgelements.Line(points[-1], first_pt)
+        # for closed path, avoid first pt == last_point -- before shapely trick --
+        def dist(pt0, pt1) :
+            dx = (pt0.real - pt1.real)
+            dy = (pt0.imag - pt1.imag)
+            return dx * dx + dy * dy
+            
+        if dist(points[0], points[-1]) < 1.0e-5:
+            points = points[0:-1]
+              
+        # shapely fix:
+        extra_middle_point = (points[0] + points[1]) / 2.0
 
-        # test it
-        ignore = ignore_segment(-1, line)
-
-        if ignore == True:
-            pass
-        else:
-            points = np.concatenate((points, [first_pt]))
-
-        #print(points)
+        points = np.concatenate(([extra_middle_point], points[1:], [points[0]]))
 
         return points
 
-    def discretize_opened_path(self) -> np.array :
+    def discretize_open_path(self) -> np.array :
         '''
         Transform the svg_path (a list of svgpathtools Segments) into a list of 'complex' points
         - Line: only 2 points
@@ -409,7 +382,14 @@ class SvgPath:
         # ------------------------------------------------------------------
         points = np.array([], dtype=np.complex128)
         
+        first_seg = True
+
         for k, segment in enumerate(self.svg_path):
+
+            if segment.__class__.__name__ == 'Move':
+                continue
+            if segment.__class__.__name__ == 'Close':
+                continue
 
             ## ---------------------------------------
             if ignore_segment(k, segment) == True:
@@ -418,16 +398,13 @@ class SvgPath:
 
             if segment.__class__.__name__ == 'Line':
                 # start and end points
-                if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
-                    pts = segment.points([0, 1])
-                #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
-                #    pts = [segment.point(0.0), segment.point(1.0)] 
+                if first_seg:
+                    _pts = [segment.point(0.0), segment.point(1.0)] 
                 else:
-                    if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
-                        pts = segment.points([1])
-                    #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
-                    #    pts = [segment.point(1.0)] 
-                    
+                    _pts = [segment.point(1.0)] 
+
+                pts = [ complex(_pt.x,+ _pt.y) for _pt in _pts ]
+
             elif segment.__class__.__name__ == 'Arc':
                 # no 'points' method for 'Arc'!
                 seg_length = segment.length()
@@ -436,7 +413,8 @@ class SvgPath:
                 nb_samples = max(nb_samples, self.PYCUT_SAMPLE_MIN_NB_SEGMENTS)
                 
                 _pts = []
-                if k == 0:
+
+                if first_seg:
                     for p in range(0, nb_samples+1):
                         _pts.append(segment.point(float(p)/float(nb_samples)))
                 else:
@@ -444,45 +422,31 @@ class SvgPath:
                     for p in range(1, nb_samples+1):
                         _pts.append(segment.point(float(p)/float(nb_samples)))
 
+                _pts = [ complex(_pt.x,+ _pt.y) for _pt in _pts ]
                 pts = np.array(_pts, dtype=np.complex128)
 
             else:  # 'QuadraticBezier', 'CubicBezier'
                 seg_length = segment.length()
 
+                nb_samples = int(seg_length * self.PYCUT_SAMPLE_LEN_COEFF)
+                nb_samples = max(nb_samples, self.PYCUT_SAMPLE_MIN_NB_SEGMENTS)
+                
                 _pts = []
 
-                ### SVGPATHTOOLS BUG !!!
-                if seg_length == math.inf:  # WTF!
-
-                    p1 = segment.start
-                    p2 = segment.end
-
-                    if self.DISCRETIZATION_USE_MODULE == 'SVGPATHTOOLS':
-                        line = svgpathtools.Line(p1, p2)
-                    #if self.DISCRETIZATION_USE_MODULE == 'SVGELEMENTS':
-                    #    line = svgelements.Line(p1, p2)
-
-                    # start and end points
-                    if len(self.svg_path) == 1:
-                        _pts = line.points([0,1])
-                    else:
-                        if k == 0:
-                            _pts = line.points([0, 1])
-                        else:
-                            _pts = line.points([1])
-
+                if first_seg:
+                    for p in range(0, nb_samples+1):
+                        _pts.append(segment.point(float(p)/float(nb_samples)))
                 else:
-
-                    nb_samples = int(seg_length * self.PYCUT_SAMPLE_LEN_COEFF)
-                    nb_samples = max(nb_samples, self.PYCUT_SAMPLE_MIN_NB_SEGMENTS)
-                
                     # not the first one
                     for p in range(1, nb_samples+1):
                         _pts.append(segment.point(float(p)/float(nb_samples)))
 
+                _pts = [ complex(_pt.x,+ _pt.y) for _pt in _pts ]
                 pts = np.array(_pts, dtype=np.complex128)
 
             points = np.concatenate((points, pts))
+
+            first_seg = False
 
         return points
 
@@ -513,7 +477,7 @@ class SvgPath:
         where all subpaths of the object list are a 'simple' paths 
         '''
         # make all "m" -> "M" for the subpaths
-        path_abs = self.svg_path.d()    # thanks svgpathtools! ... but closing "Z" is/are missing!                          
+        path_abs = self.svg_path.d(relative=False)    # thanks svgelements!                          
 
         # it's easy now
         subpaths = path_abs.split("M")
@@ -526,14 +490,10 @@ class SvgPath:
             p_id = self.p_id + "___sub_%d" % k 
             
             p_attrs = copy.deepcopy(self.p_attrs)
+            p_attrs["d"] = "M" + subpath
+            p_attrs["id"] = p_id
 
-            if subpath.endswith('Z') or subpath.endswith('z'):
-                pass
-            else:
-                # force close ?
-                p_attrs["d"] = "M " + subpath + " Z"  # FIXME: how to know ??
-            
-            o = SvgPath(p_attrs["d"], p_id, "path", p_attrs)
+            o = SvgPath.from_svg_path_def(p_attrs["d"], p_id, "path", p_attrs)
             
             svgpaths.append(o)
         
@@ -542,7 +502,7 @@ class SvgPath:
     def import_subpath_as_linestring(self) -> shapely.geometry.LineString:
         '''
         '''
-        pts = self.discretize_opened_path()
+        pts = self.discretize_open_path()
 
         coordinates = [ (complex_pt.real, complex_pt.imag)  for complex_pt in pts ]
 
@@ -729,42 +689,15 @@ class SvgPath:
                 self.polys.append(poly)
 
     @classmethod
-    def from_shapely_linestring(cls, prefix: str, shapely_path: shapely.geometry.LineString, safe_to_close: bool) -> 'SvgPath':
+    def from_shapely_linestring(cls, prefix: str, linestring: shapely.geometry.LineString, safe_to_close: bool) -> 'SvgPath':
         '''
         '''
-        pts = list(shapely_path.coords)
-
-        discretized_svg_path : List[complex] = [ complex(pt[0], pt[1]) for pt in pts]
-
-        svg_path = svgpathtools.Path()
-
-        for i in range(len(discretized_svg_path)-1):
-            start = discretized_svg_path[i]
-            end   = discretized_svg_path[i+1]
-
-            svg_path.append(svgpathtools.Line(start, end))
-
-        # last one : from end point to start point
-        if safe_to_close:
-            start = discretized_svg_path[-1]
-            end   = discretized_svg_path[0]
-
-            svg_path.append(svgpathtools.Line(start, end))
-
-        d_def = svg_path.d().strip()
+        path_str = linestring.svg(scale_factor=0.1)
+        # gives an id
+        path_str = path_str.replace('/>', ' id="%s" />' % prefix)
 
         if safe_to_close:
-            if not d_def.endswith('z') or d_def.endswith('Z'):
-                d_def = d_def + " z"
-
-
-        return SvgPath(d_def, prefix, "path", {})
-
-    @classmethod
-    def from_shapely_polygon(cls, prefix: str, polygon: shapely.geometry.Polygon) -> 'SvgPath':
-        '''
-        '''
-        path_str = polygon.svg(scale_factor=0.1)
+            path_str += " Z"
 
         svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
             version="1.1">
@@ -773,11 +706,30 @@ class SvgPath:
             </g> 
         </svg>''' % path_str
 
-        paths, attribs = cls.svg2paths_from_string(svg)
+        paths = cls.svg_paths_from_svg_string(svg)
+        path = paths[0]
+        
+        return path
 
-        attrs = attribs[0]
+    @classmethod
+    def from_shapely_polygon(cls, prefix: str, polygon: shapely.geometry.Polygon) -> 'SvgPath':
+        '''
+        '''
+        path_str = polygon.svg(scale_factor=0.1)
+        # gives an id
+        path_str = path_str.replace('/>', ' id="%s" />' % prefix)
 
-        return SvgPath(attrs['d'], prefix, "polygon", attrs) 
+        svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+            version="1.1">
+            <g>
+            %s
+            </g> 
+        </svg>''' % path_str
+
+        paths = cls.svg_paths_from_svg_string(svg)
+        path = paths[0]
+
+        return path
 
     @classmethod
     def from_circle_def(cls, center: List[float], radius: float) -> 'SvgPath':
@@ -787,14 +739,14 @@ class SvgPath:
         svg = '''<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" 
             version="1.1">
             <g>
-                <circle cx="%(cx)f" cy="%(cy)f" r="%(radius)f" />
+                <circle id="pycut_tab" cx="%(cx)f" cy="%(cy)f" r="%(radius)f" />
             </g>  
         </svg>''' % {"cx": center[0], "cy": center[1], "radius": radius}
 
-
-        paths, attribs = cls.svg2paths_from_string(svg)
-      
-        return cls.from_svg_path_def(paths[0], "pycut_tab", "circle", attribs[0])
+        paths = cls.svg_paths_from_svg_string(svg)
+        path = paths[0]
+        
+        return path
 
     @classmethod
     def fix_simple_polygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon :

@@ -317,7 +317,7 @@ class CncOp:
 
             attrs = copy.deepcopy(svg_path_attrs)
 
-            svg_path = SvgPath(svg_path_d, svg_path_id, svg_path_elt_tag, attrs)
+            svg_path = SvgPath.from_svg_path_def(svg_path_d, svg_path_id, svg_path_elt_tag, attrs)
 
             self.svg_paths.append(svg_path)
 
@@ -325,7 +325,7 @@ class CncOp:
         '''
         '''
         for svgpath in self.svg_paths:
-            if not svgpath.is_closed():
+            if not svgpath.closed:
                 return False
         
         return True
@@ -334,7 +334,7 @@ class CncOp:
         '''
         '''
         for svgpath in self.svg_paths:
-            if svgpath.is_closed():
+            if svgpath.closed:
                 return False
 
         return True

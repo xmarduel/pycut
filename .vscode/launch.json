@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
 
-
+    
 
         {
             "name": "OPENGL DEMO1",
@@ -276,12 +276,12 @@
             "args": []
         },
         {
-            "name": "TEST SVGELEMENTS",
+            "name": "TEST SVGELEMENTS DISCRETIZATION",
             "type": "python",
             "request": "launch",
-            "program": "test.py",
+            "program": "test_svgpath_discretisation.py",
             "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\svgelements_svgpathtools",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\test",
             "args": []
         },
         {

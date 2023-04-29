@@ -17,18 +17,13 @@ class SvgPath_SvgElements:
 
     def __init__(self, svg_path: svgelements.Path):
         self.svg_path = svg_path
-        self.attribs = copy.deepcopy(svg_path.values)
+        self.attribs = copy.deepcopy(svg_path.values.get("attributes", {}))
         self.tag = svg_path.values["tag"]
         self.p_id = svg_path.values['id']
         self.p_d = svg_path.d()
-        self.path_closed = self.is_closed()
+        self.closed = self.eval_closed()
 
         # not so happy with this
-        del self.attribs[""]
-        del self.attribs["svg"]
-        del self.attribs["width"]
-        del self.attribs["height"]
-        del self.attribs["version"]
         del self.attribs["tag"]
     
 
@@ -65,7 +60,7 @@ class SvgPath_SvgElements:
         for seg in self.svg_path.segments():
             print(seg)
 
-    def is_closed(self) -> bool :
+    def eval_closed(self) -> bool :
         return self.svg_path.segments()[-1].__class__.__name__ == "Close"
      
     def discretize_closed_path(self) -> np.array :
@@ -321,7 +316,7 @@ def main():
 
     for k in range(len(paths)):       
         paths[k].dump()
-        print("is closed ? ", paths[k].is_closed())
+        print("is closed ? ", paths[k].closed)
         print("---------------------------------------------------")
 
         print("\n\n")

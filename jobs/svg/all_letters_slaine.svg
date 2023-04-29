@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    width="460mm"
    height="80mm"
@@ -11,13 +10,11 @@
    xmlns:svg="http://www.w3.org/2000/svg">
   <g id="layer1" style="opacity:0.5">
     <text
-       xml:space="preserve"
        style="font-size:22.5778px;line-height:1.25;font-family:Sláine;-inkscape-font-specification:'Sláine, Normal';font-variant-ligatures:none;stroke-width:0.264583"
        x="10"
        y="25"
        id="text_lowercase"><tspan>abcdefghijklmnopqrstuvwxyz</tspan></text>
     <text
-       xml:space="preserve"
        style="font-size:22.5778px;line-height:1.25;font-family:Sláine;-inkscape-font-specification:'Sláine, Normal';font-variant-ligatures:none;stroke-width:0.264583"
        x="10"
        y="60"

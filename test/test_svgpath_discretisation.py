@@ -109,7 +109,7 @@ class SvgPathToolsTests(unittest.TestCase):
 
         self.assertTrue(path.tag == "?")
         self.assertTrue(path.p_id == "rect")
-        self.assertTrue(path.path_closed == True)
+        self.assertTrue(path.closed == True)
         self.assertTrue(len(path.svg_path) == 8)
         self.assertTrue(path.svg_path[0].__class__.__name__ == "Line")
         self.assertTrue(path.svg_path[1].__class__.__name__ == "Arc")
@@ -120,7 +120,7 @@ class SvgPathToolsTests(unittest.TestCase):
         self.assertTrue(path.svg_path[6].__class__.__name__ == "Line")
         self.assertTrue(path.svg_path[7].__class__.__name__ == "Arc")
 
-        self.assertTrue(path.path_closed == True)
+        self.assertTrue(path.closed == True)
 
         pts = path.discretize_closed_path()
 
@@ -135,7 +135,7 @@ class SvgPathToolsTests(unittest.TestCase):
 
         path = paths[0]
 
-        self.assertTrue(path.path_closed == True)
+        self.assertTrue(path.closed == True)
 
         # svgpathtools makes of if 2 arcs
         self.assertTrue(len(path.svg_path) == 2)
@@ -157,7 +157,7 @@ class SvgPathToolsTests(unittest.TestCase):
 
         path = paths[0]
 
-        self.assertTrue(path.path_closed == True)
+        self.assertTrue(path.closed == True)
 
         self.assertTrue(len(path.svg_path) == 2)
         self.assertTrue(path.svg_path[0].__class__.__name__ == "Arc")
@@ -177,7 +177,7 @@ class SvgPathToolsTests(unittest.TestCase):
         path = paths[0]
 
         self.assertTrue(path.p_id == "line")
-        self.assertTrue(path.path_closed == False)
+        self.assertTrue(path.closed == False)
 
         self.assertTrue(len(path.svg_path) == 1)
         self.assertTrue(path.svg_path[0].__class__.__name__ == "Line")
@@ -195,7 +195,7 @@ class SvgPathToolsTests(unittest.TestCase):
 
         path = paths[0]
 
-        self.assertTrue(path.path_closed == False)
+        self.assertTrue(path.closed == False)
 
         self.assertTrue(len(path.svg_path) == 3)
         self.assertTrue(path.svg_path[0].__class__.__name__ == "Line")
@@ -216,7 +216,7 @@ class SvgPathToolsTests(unittest.TestCase):
         path = paths[0]
 
         self.assertTrue(path.p_id == "polygon1")
-        self.assertTrue(path.path_closed == True)
+        self.assertTrue(path.closed == True)
 
         self.assertTrue(len(path.svg_path) == 4) # svpathtools: this is **bad**
         self.assertTrue(path.svg_path[0].__class__.__name__ == "Line")
@@ -241,7 +241,7 @@ class SvgPathToolsTests(unittest.TestCase):
         path = paths[0]
 
         self.assertTrue(path.p_id == "polygon2")
-        self.assertTrue(path.path_closed == True)
+        self.assertTrue(path.closed == True)
 
         self.assertTrue(len(path.svg_path) == 3)
         self.assertTrue(path.svg_path[0].__class__.__name__ == "Line")
@@ -265,7 +265,7 @@ class SvgPathToolsTests(unittest.TestCase):
         path = paths[0]
 
         self.assertTrue(path.p_id == "contour")
-        self.assertTrue(path.path_closed == True)
+        self.assertTrue(path.closed == True)
 
         self.assertTrue(len(path.svg_path) == 19)
         self.assertTrue(path.svg_path[0].__class__.__name__ == "Line")
@@ -314,7 +314,7 @@ class SvgElementsTests(unittest.TestCase):
 
         self.assertTrue(path.tag == "rect")
         self.assertTrue(path.p_id == "rect")
-        self.assertTrue(path.path_closed == True)
+        self.assertTrue(path.closed == True)
 
         self.assertTrue(len(path.svg_path.segments()) == 10)
         self.assertTrue(path.svg_path.segments()[0].__class__.__name__ == "Move")
@@ -343,7 +343,7 @@ class SvgElementsTests(unittest.TestCase):
 
         self.assertTrue(path.tag == "circle")
         self.assertTrue(path.p_id == "circle")
-        self.assertTrue(path.path_closed == True)
+        self.assertTrue(path.closed == True)
 
         self.assertTrue(len(path.svg_path.segments()) == 6)
         self.assertTrue(path.svg_path.segments()[0].__class__.__name__ == "Move")
@@ -371,7 +371,7 @@ class SvgElementsTests(unittest.TestCase):
 
         self.assertTrue(path.tag == "ellipse")
         self.assertTrue(path.p_id == "ellipse")
-        self.assertTrue(path.path_closed == True)
+        self.assertTrue(path.closed == True)
 
         self.assertTrue(len(path.svg_path.segments()) == 6)
         self.assertTrue(path.svg_path.segments()[0].__class__.__name__ == "Move")
@@ -396,7 +396,7 @@ class SvgElementsTests(unittest.TestCase):
         
         self.assertTrue(path.tag == "line")
         self.assertTrue(path.p_id == "line")
-        self.assertTrue(path.path_closed == False)
+        self.assertTrue(path.closed == False)
 
         self.assertTrue(len(path.svg_path.segments()) == 2)
         self.assertTrue(path.svg_path.segments()[0].__class__.__name__ == "Move")
@@ -417,7 +417,7 @@ class SvgElementsTests(unittest.TestCase):
 
         self.assertTrue(path.tag == "polyline")
         self.assertTrue(path.p_id == "polyline")
-        self.assertTrue(path.path_closed == False)
+        self.assertTrue(path.closed == False)
 
         self.assertTrue(len(path.svg_path.segments()) == 4)
         self.assertTrue(path.svg_path.segments()[0].__class__.__name__ == "Move")
@@ -440,7 +440,7 @@ class SvgElementsTests(unittest.TestCase):
 
         self.assertTrue(path.tag == "polygon")
         self.assertTrue(path.p_id == "polygon1")
-        self.assertTrue(path.path_closed == True)
+        self.assertTrue(path.closed == True)
         
         self.assertTrue(len(path.svg_path.segments()) == 5)
         self.assertTrue(path.svg_path.segments()[0].__class__.__name__ == "Move")
@@ -466,7 +466,7 @@ class SvgElementsTests(unittest.TestCase):
 
         self.assertTrue(path.tag == "polygon")
         self.assertTrue(path.p_id == "polygon2")
-        self.assertTrue(path.path_closed == True)
+        self.assertTrue(path.closed == True)
         
         self.assertTrue(len(path.svg_path.segments()) == 4)
         # yes , only 2 lines, hopefully the discretisation is ok...
@@ -492,7 +492,7 @@ class SvgElementsTests(unittest.TestCase):
         path = paths[0]
 
         self.assertTrue(path.p_id == "contour")
-        self.assertTrue(path.path_closed == True)
+        self.assertTrue(path.closed == True)
 
         self.assertTrue(len(path.svg_path.segments()) == 20)
         self.assertTrue(path.svg_path[0].__class__.__name__ == "Move")

@@ -43,6 +43,7 @@
       <li><a href="#P-04-07">GCode Generation</a></li>
     </ul>
   </li>
+  <li><a href="#P-05">Appendix-1: SVG Editors</a></li>
 </ul>
 <script type="text/javascript">
 var tree = document.querySelectorAll('ul.tree a:not(:last-child)');
@@ -95,7 +96,7 @@ taken into consideration when creating "usable" <strong>SVG</strong> files for
 
 <h3>SVG</h3>
 
-<h4>Shapes</h4>
+<h4>Shapes and Paths</h4>
 
 <p>The SVG standard is large, and <strong>PyCut</strong> cannot simply read a
 svg file, display it, and allow the user to define cnc operations on the
@@ -118,7 +119,7 @@ svg file, display it, and allow the user to define cnc operations on the
 </ul>
 
 <p>can define in a single path definition many closed or opened paths, not
-nrcessarely related with each others.</p>
+necessarely related with each others.</p>
 
 <p>Finally, the user will also want to process the strings written in the svg
 file:</p>
@@ -126,32 +127,39 @@ file:</p>
   <li><span style="color:#0000ff">&lt;text&gt;</span></li>
 </ul>
 
-<p><strong>PyCut</strong> processes "paths" in order to calculate cnc paths,
-but thankfully it can read out of the box all kind of shapes, so there is
-<strong>no need</strong> to convert your svg file into "paths only" svg.</p>
+<p><strong>PyCut</strong> processes "paths" in order to calculate cnc tool
+paths, but thankfully it can read out of the box all kind of shapes and paths,
+so there is <strong>no need</strong> to convert your svg files into "paths
+only" svgs.</p>
 
-<p><strong>PyCut</strong> will import these shapes either as "<span
-style="color:#0000ff">polygon</span>" (i.e. <strong>closed shape</strong>) or
-as "<span style="color:#0000ff">line</span>" (i.e. <strong>opened
-shape</strong>). Of course, <span style="color:#0000ff">&lt;rect&gt;</span>,
-<span style="color:#0000ff">&lt;circle&gt;</span>, <span
+<p><strong>PyCut</strong> will import these shapes/paths either as (shapely)
+"<span style="color:#0000ff">polygon</span>" (i.e. <strong>closed
+items</strong>) or as (shapely) "<span style="color:#0000ff">line</span>" (i.e.
+<strong>opened items</strong>). Of course, svg <span
+style="color:#0000ff">&lt;rect&gt;</span>, <span
+style="color:#0000ff">&lt;circle&gt;</span>, <span
 style="color:#0000ff">&lt;ellipse&gt;</span> and <span
-style="color:#0000ff">&lt;polygon&gt;</span> are closed shapes, while <span
+style="color:#0000ff">&lt;polygon&gt;</span> are closed items, while <span
 style="color:#0000ff">&lt;line&gt;</span> and <span
-style="color:#0000ff">&lt;polyline&gt;</span> are opened shapes. When importing
+style="color:#0000ff">&lt;polyline&gt;</span> are opened items. When importing
 a <span style="color:#0000ff">&lt;path&gt;</span>, things are more complicated,
 as a path can be composed of many subpaths (starting with
 [<strong>Mm</strong>]) and every subpath can be closed or not (ending with
 [<strong>Zz</strong>]). <strong>PyCut</strong> will try to import these paths
-right, and in case of closed paths will also try to import them as polygons
-"<strong>with holes</strong>" even if this concept does not really exist in
-SVG. Moreover <strong>PyCut</strong> will try to import a path as a valid
-MultiPolygon in the shapely sense, or as a list of valid MultiPolygons if one
-single valid MultiPolygon is not possible.</p>
+definitions right, and in case of closed paths will also try to import them as
+shapely polygons "<strong>with holes</strong>" even if this concept does not
+really exist in SVG. Moreover <strong>PyCut</strong> will try to import a svg
+path as a valid MultiPolygon in the shapely sense, or as a list of valid
+MultiPolygons if one single valid MultiPolygon is not possible. For example,
+the letters "i" or "j" are defined with a single svg path, defining two
+separates polygons, and it makes sense to consider these paths as a single
+shapely MultiPolygon entity. The letter "a" is a polygon with one hole, the
+letter "g" is a polygon with two holes. In the freetype vocabulary, "a" is
+formed by 2 "contours", "g" by three contours.</p>
 
 <p>There is one exception: <strong>PyCut</strong> cannot process yet <span
 style="color:#0000ff">&lt;text&gt;</span> items. Fortunately, <span
-style="color:#0000ff">&lt;text&gt;</span> items can be converted into <span
+style="color:#0000ff">&lt;text&gt;</span> items have to be converted into <span
 style="color:#0000ff">&lt;path&gt;</span> items within
 <strong>Inkscape</strong>, sonce they will be ignored by
 <strong>PyCut</strong>. <strong>PyCut</strong> also comes with the utiilty
@@ -201,9 +209,9 @@ later when creating GCode with the <strong>PyCut</strong> option "Zero Lower
 Left of Material" as reference. This option needs the height of the
 material.</p>
 
-<h4>Shapes "id"</h4>
+<h4>Shapes and Paths"id"</h4>
 
-<p>In order to reference the shapes, the shapes must have their own
+<p>In order to reference the shapes, the shapes/paths must have their own
 <strong>"id"</strong>, hopefully unique inside the svg document.</p>
 
 <p>If the user has edited the svg "per hand", then he should not forget to give
@@ -273,8 +281,11 @@ operation table should appear.</p>
 
 <p>Define the properties of the operation: the main one is the CAM operation
 type: "<strong>Pocket</strong>", "<strong>Engrave</strong>",
-"<strong>Inside</strong>" or "<strong>Outside</strong>". The others options
-will be discussed later. Default values at this point should be Ok.</p>
+"<strong>Inside</strong>" or "<strong>Outside</strong>". There are also the
+"<strong>Drill</strong>" and "<strong>Peck</strong>" operations, for the <span
+style="color:#0000ff">&lt;circle&gt;</span> shapes whose diameter smaller or
+equals to the tool diameter. The others options will be discussed later.
+Default values at this point should be Ok.</p>
 
 <h3 id="P-03-04">Create the GCode</h3>
 
@@ -413,7 +424,7 @@ factor is always 1</strong> .</p>
 position (10,10). The user can drag 'n drop it fron the svg viewer, or set its
 size/postion in the tab table. Yes tabs, for simplicity, are circle. To be
 effective, the tabs have to be enabled and of course placed somewhere on the
-generated toolpaths. The height of the tab is shared by all tabs.</p>
+generated toolpaths. The height of the tabs is shared by all tabs.</p>
 
 <div>
 <img src="pycut_tabs.png" width="310"> </div>
@@ -448,10 +459,10 @@ Ok. </p>
 be discretized in small segments.</p>
 
 <p>The 2 following parameters allow to specified how fine the curve
-discretization will be</p>
+discretization will be:</p>
 <ul>
   <li>Minimun number of segments</li>
-  <li>Segment lenght</li>
+  <li>Segment segments length</li>
 </ul>
 
 <h3 id="P-04-06">GCode Conversion</h3>
@@ -491,7 +502,7 @@ located with the help of the 2 spin boxes. </p>
 <p>In the generated G Code, X and Y are switched.This can be helpfull, for
 example in the case your <strong>CNC</strong> is the "<strong>1419</strong>"
 model (mine!) which is not as large as deep. So this option allows to carve
-something like 16x10 cm without to -painfully- rotate all items in the source
+something like 16x10 cm without -painfully- rotating all items in the source
 svg.</p>
 
 <p></p>
@@ -520,7 +531,7 @@ is extracted form the svg file: the svg "height" attribute.</p>
 <p>This is where the user defined its cam operations, thus this is where the
 action takes place.</p>
 
-<div><img src="./pycut_ops.png" width="1170px"> </div>
+<div><img src="pycut_ops.png" width="1170"> </div>
 
 <p>First one or more item(s) have to be selected in the svgviewer, click on
 "Create Operation" and a default operation is created. When more than one item
@@ -547,9 +558,24 @@ color can be setup in the settings dialog.</p>
   <li>inside</li>
   <li>outside</li>
   <li>engrave</li>
+  <li>drill <strong><span style="color:#0000ff">ONLY</span> <span
+    style="color:#0000ff">for circle shapes</span></strong></li>
+  <li>peck <strong><span style="color:#0000ff">ONLY for circle
+    shape</span></strong></li>
 </ul>
 
-<p>For opened paths, the pocket operation is not available.</p>
+<p>For opened paths, the pocket/drill/peck operations are not available.</p>
+
+<p><strong><span style="color:#8000ff">NEW</span></strong>: for
+<strong>circles</strong>, "<span
+style="color:#8000ff"><strong>drill</strong></span>" and "<strong><span
+style="color:#8000ff">peck</span></strong>" operations are available. Infact,
+for a pocket operation with a circle of diameter smaller than the cutter
+diameter, no tool path would be generated.<strong>In case of the</strong>
+<strong>circle diameter is smaller or equal than the cutter diameter</strong>,
+in order to have toolpath, "<strong><span
+style="color:#8000ff">drill</span></strong>" or "<strong><span
+style="color:#8000ff">peck</span></strong>" is the way to go. </p>
 
 <p>In order to generate G code, enable one or many operations and click on
 "Generate G code". <strong>PyCut</strong> will try to do its best... The
@@ -558,6 +584,202 @@ resulting G code is displayed in the G code viewer and G code simulator.</p>
 <p>Finally, clicking on "Save G code" will produce a valid G code file.
 <strong>Candle</strong> can be used to send the G code to your machine. Have
 fun...</p>
+
+<p></p>
+
+<h3 id="P-05">Appendix-1: SVG Editors</h3>
+
+<p>It seems there are plenty of free SVG editors around there. Well, let me
+share my opinion about a few of them...</p>
+
+<p>I will simply try <strong>to edit and save a closed path</strong> composed
+of lines, arcs and bezier curves similar to what I've edited per hand: about 20
+segments representing my workpiece, with mixed straight lines, arcs and bezier
+curves.</p>
+
+<p><strong>I know that every app has its own learning curve</strong>, but I try
+use the apps without investing to much time. This means, I act as a very basic
+user. If I do not succeed, this is due in part to my inexperience, but also in
+part to the difficulty of use of the app.</p>
+
+<h3>Free software</h3>
+
+<h4>Inkscape</h4>
+
+<p>To me much too complicated. I "hate" the fact that the circles are given
+from their "bounding box", not from the center with radius (ok it is possible,
+but I have always to figure out how). <strong>Editing paths is far to
+complicated</strong> (to me) and thus too difficult. The saved SVG data is full
+of <strong>inkscape/sodipodi namespaces</strong> stuff, which I dislike a lot
+in a SVG file. I would rather prefer a raw SVG with only the minimal and
+certainly not all these extra namespace stuff. Removing per hand these extra
+stuff destroy the Inkscape project settings. </p>
+
+<p><strong>Yeappy</strong>! To obtain a SVG data free of sodipodi/inkscape
+namespace stuff, you have to "export" your SVG data as SVG!</p>
+
+<p>Editing points coordinates "per hand" is nearly impossible as the
+coordinates are only accessible from the "d" string, which is not really human
+readable. Here is an example of a polyline with 8 points:</p>
+<pre><code>M 5.9999998,35.999999 10,33 l 5,2.999999 -1,-4 h 7 V 41 H 12 L 8.9999999,38.999998</code></pre>
+
+<p>Note how absolute and relative keywords are given in the path. Question:
+what are the coordinates of the fifth point?</p>
+
+<p>Concatening segments to form a single path doesn't even work as expected.
+The simple task consisting of concatenating a polyline and a bezier curve -in
+this order- (which are joined) seems not to work! There is the
+"<strong>combine</strong>" command, but the result is a single path (ok... )
+containing 2 subpaths (with "M"), which is not Ok, the first one beeing the
+bezier curve and the second one beeing the polyline, this means in reversed
+order. Sure, with "M"s everywhere, the ordering is not that important, is it!
+<strong>A very desapointing implementation from Inkscape I would say</strong>.
+Conclusion: <strong>unusable if you want to generate complex paths.</strong></p>
+
+<p>PS: There is the "Draw Bezier and straight line tool" with mode "Create
+regular Bezier path" but after many many hours of trial (despite YouTube
+tutorials) I did not succeed to use it properly. Is it just me ? With it you
+cannot anyway mix your path with an arc curve.</p>
+
+<h4>QCAD</h4>
+
+<p>It reads/writes <strong>dxf</strong> files, can export them as SVG.
+Unfortunately the <strong>SVG export</strong> comes with extra rubbish for the
+trial version (nice!). Forget the free version. <strong>Trial version allows
+you to test it about 15 min, then it closes itself</strong> (you can restart).
+So in fifteen minutes I could observe that editing polylines is possible, as
+well as Arcs and Cubic Bezier curves (did not find quadratic bezier curves).
+These Cubic Bezier curves are exported right in the SVG export. Unfortunately
+(again), when concatening lines/polylines with these cubic bezier curves in
+order to form a whole path, they are transformed into Arcs (why ?) or Lines
+(why?), and so the SVG export. Conclusion: <strong>unusable and very unfriendly
+for users willing to test the quality of QCAD. </strong>Well,
+<strong>QDAC</strong> costs only <strong>38€</strong>, not that much, but
+really testing it before buying is possible but not very practicable.</p>
+
+<h4>LibreCAD <span style="color:#008000">****BEST****</span></h4>
+
+<p>It is (was) a fork of QCAD (2011). It looks a lot like QCAD, but the (my)
+first feeling is that the user interface seems better. <strong>The SVG export
+is exactly what one would expect (well , nearly)</strong>. There is minimal
+extra LibreCAD namespace stuff in the output. Do not know yet how to assign ids
+to the entities (bad). You only have to take care that in the SVG format y = 0
+is the top of the drawing, so coordinates in the SVG file are inverted from
+coordinates in the app (which is normal). The y = 0 correspond to the highest
+coordinate of your items in the canvas (Note: in <strong>QCAD</strong> the
+coordinates are the same and there is a global svg transform="scale(1,-1)". The
+viewBox is calculated accordingly. It would be nice to have this option in
+<strong>LibreCAD</strong>).</p>
+
+<p><strong>Splines</strong> <strong>through</strong> <strong>3 points
+correspond to bezier quadratic curves</strong>, while <strong>splines through 4
+or more points are not cubic bezier curves but only sequence of quadratic
+curves</strong> (it seems possible! is it ? they really look to be smooth of
+order 3!).</p>
+
+<p>In the GUI, the middle point of the curve is entered, not the "bezier
+control point". <strong>It would be nice if one could enter the quadratic
+bezier curve with its start/end points and its control point</strong>. There is
+unfortunately no cubic bezier curves. <strong>It would be nice if one could
+enter the cubic bezier curve with its start/end points and its two control
+points</strong></p>
+
+<p><strong>Yeaahh! There is another splines button (strange!) where it is
+possible to indicate which degree (1, 2 or 3) the spline has to be. And for 2
+and 3 these are bezier quadratic or cubic curves with control points entered
+from the UI.</strong> Setting for the degree is in the main menu bar (this is
+LibreCAD concept, but not so straight to be seen if one not knows).</p>
+
+<p>Editing polylines/arcs/quad bezier and concatenate them together
+("<strong>create polyline from existing segments</strong>") is excellent,
+(<strong>SVG output is a single &lt;path&gt; entity</strong>) but there is here
+a bug: one cannot concatenate polylines/arcs with beziers/splines. </p>
+
+<p>Snap stuff is perfect, with many snap options.</p>
+
+<p><strong>So this is a real pity that LibreCAD does not perform the
+concatenation of lines/arcs with beziers/splines into a single SVG path, but it
+is fixable per hand in the output.</strong></p>
+
+<p>Conclusion: <strong><span style="color:#008000">The best SVG "path"
+generator I have found so far.</span></strong></p>
+
+<h4>XFig</h4>
+
+<p>My beloved drawing editor during my youth! Completely outdated, but still
+the best! Unfortunately the SVG export is deficient. There are Bezier curves
+(really?) i.e. splines with control points (it looks like Bezier) but the SVG
+export outputs them as polylines. <strong>Conclusion: unusable</strong></p>
+
+<p><strong>Online editors:</strong></p>
+
+<p>There are plenty of them, but they all seem to be meant for painting, not
+for CAD (a little like Inkscape). Please correct me if I am wrong.</p>
+
+<h3>Non-free software</h3>
+
+<h4>DesignCAD</h4>
+
+<p>The free version has the same capabilities as the full version, excepted the
+exports to other formats. Bad!</p>
+
+<h4>TurboCAD</h4>
+
+<p>Only a 15 days trial version - TO SEE</p>
+
+<h4>Solid Edge 2D Drafting (Siemens)</h4>
+
+<p>The 3.8 GB big app from Siemens is <strong>free of charge</strong>. It is
+incredible software. But It seems there is no SVG export at all. "Schade".</p>
+
+<h4>Draftsight 2D (Dassault)</h4>
+
+<p>Only a 30 days trial version - TO SEE. Oh my God! There is this "Power Tool"
+named "2D G-Code generator"! Forget PyCutl! (or not) . SVG export seems to be
+more meant as a picture for display only purpose.</p>
+
+<h4>Fusion 360</h4>
+
+<p>The free version is also incredible. But I did not try the SVG export,
+because I gave up in the meanwhile looking for SVG editor...</p>
+
+<h4>What else?</h4>
+
+<p>It is cumbersome to try to find a decent SVG editor, or at least a CAD
+program with ease of use and decent SVG export. LibreCAD would be simply
+perfect if it would support Bezier curves (keeping dxf as input data alongside
+svg as export data is not a problem). Does anyone knows one? (I mean, if
+he/s<strong></strong>he **really** tried it and can recommand it). </p>
+
+<h3>Conclusion</h3>
+
+<p>The fact that it is so difficult to find an acceptable SVG path "writer"
+program can only be due to the SVG format itself, which is completely "user" or
+"app" un-friendly. The path definition is too complicated. What is the point of
+allowing paths with sub-paths? maybe because the SVG format completely ignores
+the concept of "multiline"/"multipolygon" etc. Polygons have no "interiors" so
+they must be defined as such in a path composed of 2 subpaths for this
+purpose.</p>
+
+<p><strong>All in all very desapointing, <span
+style="color:#008000"></span></strong><span
+style="color:#008000"><strong>except</strong></span><strong><span
+style="color:#008000"> LibreCAD</span>!</strong></p>
+
+<h4><span style="color:#0000ff">Per hand</span></h4>
+
+<p>Finally my prefered method! Per hand you can also write items in the
+<code>&lt;def&gt;</code> section, and use these items repeatidly with
+transformations with the <code>&lt;use&gt;</code> tag. My utility
+<strong>svgresolver.py</strong> then transforms this svg file into another one,
+usable for <strong>PyCut. Not the perfect toolchain I admit, but well my svgs
+are not that complicated</strong>. You have to understand how to write an
+arc/bezier curve per hand, it is not that difficult. And yours svgs are then
+"<strong>clean</strong>".</p>
+
+<p></p>
+
+<p></p>
 </div>
 </body>
 </html>

@@ -911,7 +911,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         if svg_file is None:
             
             svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
-                
+                width="1091" height="490"
                 viewBox="0 0 1091 490"
                 version="1.1">
                 <g><image href="logo.png" id="splash_screen"/></g>
@@ -1265,7 +1265,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         return apath
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(prog="PyCut", description="PyCut CAM program - Read the doc!")
 
     # argument
@@ -1282,3 +1282,35 @@ if __name__ == "__main__":
     mainwindow = PyCutMainWindow(options)
     mainwindow.show()
     sys.exit(app.exec())
+
+def main_profiled():
+    """
+    """
+    import profile
+    import pstats
+
+    outfile = 'prof_pycut.bin'
+
+    profile.run("main()", filename=outfile)
+    p = pstats.Stats(outfile)
+
+    # 1.
+    p.sort_stats('cumulative')
+    p.print_stats(100) # p.print_stats(50)
+
+    # 2.
+    p.sort_stats('time')
+    p.print_stats(100) # p.print_stats(50)
+
+    # 3.
+    p.sort_stats('time', 'cumulative').print_stats(.5) # (.5, 'init')
+
+
+if __name__ =='__main__':
+    '''
+    python -m cProfile -o test_parser.prof test_parser.py
+    '''
+    filename = "pycut_cnc_all_letters_op.nc"
+
+    main()
+    #main_profiled()

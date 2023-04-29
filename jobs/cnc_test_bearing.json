@@ -1,5 +1,5 @@
 {
-  "svg_file": "svg/test_bearing.resolved.svg",
+  "svg_file": "..\\misc_private\\cnc1310\\test_svgs\\bearing.resolved.svg",
   "operations": [
     {
       "name": "op",

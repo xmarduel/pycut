@@ -365,7 +365,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         for shape in shapes:
             shape_id = shape.attrib.get('id', None)
 
-            print("svg : found shape %s : id='%s'" % (shape.tag, shape_id))
+            #print("svg : found shape %s : id='%s'" % (shape.tag, shape_id))
 
             if shape_id is None:
                 print("    -> ignoring")
@@ -375,10 +375,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
             svg_path = svgpath.svg_path
 
-            if svgpath.is_closed():
-                self.svg_path_d[shape_id] = svg_path.d() + " Z" # d(use_closed_attrib=True)
-            else:
-                self.svg_path_d[shape_id] = svg_path.d()
+            self.svg_path_d[shape_id] = svg_path.d()
 
             item = SvgItem(shape_id, self, self.renderer)
             self.scene.addItem(item)
@@ -416,30 +413,52 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.in_dnd = True
 
         print('SvgViewer - mousePressEvent()')
-        super().mousePressEvent(event)
+
+        # is there a modifier ?
+        modifiers = QtWidgets.QApplication.keyboardModifiers()
+        print("    --> Modifiers  : ", modifiers.name)
+
+        if modifiers.name == "ControlModifier":
+            do_reset_selection = False
+        else:
+            do_reset_selection = True
+
         print("    --> List of selected items")
         for item in self.items:
             print("    item %s -> %s" % (item.elementId(), item.isSelected()))
             item.colorizeWhenSelected()
 
-        self.update_selected_items_list()
+        self.update_selected_items_list(do_reset_selection)
 
     def mouseReleaseEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
         print('SvgViewer - mouseReleaseEvent()')
         super().mouseReleaseEvent(event)
+
+        # is there a modifier ?
+        modifiers = QtWidgets.QApplication.keyboardModifiers()
+        print("    --> Modifiers  : ", modifiers.name)
+
+        if modifiers.name == "ControlModifier":
+            do_reset_selection = False
+        else:
+            do_reset_selection = True
+
         print("    --> List of selected items")
         for item in self.items:
             print("    item %s -> %s" % (item.elementId(), item.isSelected()))
             item.colorizeWhenSelected()
 
-        self.update_selected_items_list()
+        self.update_selected_items_list(do_reset_selection)
 
         self.in_dnd = False
 
-    def update_selected_items_list(self):
+    def update_selected_items_list(self, do_reset_selection: bool):
         '''
         by comparing the current one with the new evaluation of
         the selected items
+
+        when *not** reseting the selection (with modifier), 
+        the selection ordering has to be preserved
         '''
         selected_items = []
         for item in self.items:
@@ -448,27 +467,32 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         if len(selected_items) == 0:
             self.selected_items = []
-        else:
-            # compare old/new
-            oldLen = len(self.selected_items)
-            newLen = len(selected_items)
+            return
+            
+        if do_reset_selection:
+            self.selected_items = selected_items
+            return 
+    
+        # no reseting -> compare old/new to preserve ordering of selections
+        oldLen = len(self.selected_items)
+        newLen = len(selected_items)
 
-            if newLen < oldLen:
-                # remove lost items
-                items_to_remove = []
-                for item in self.selected_items:
-                    if not item in selected_items:
-                        items_to_remove.append(item)
-                # finally
-                for item in items_to_remove:
-                    if item in self.selected_items:
-                        self.selected_items.remove(item)
+        if newLen < oldLen:
+            # remove lost items
+            items_to_remove = []
+            for item in self.selected_items:
+                if not item in selected_items:
+                    items_to_remove.append(item)
+            # finally
+            for item in items_to_remove:
+                if item in self.selected_items:
+                    self.selected_items.remove(item)
 
-            if newLen > oldLen:
-                # append the new items
-                for item in selected_items:
-                    if not item in self.selected_items:
-                        self.selected_items.append(item)
+        if newLen > oldLen:
+            # append the new items
+            for item in selected_items:
+                if not item in self.selected_items:
+                    self.selected_items.append(item)
 
         print("    ---> List ordered selected item:")
         for item in self.selected_items:
@@ -549,7 +573,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         for cnc_op in cnc_ops:
             for geometry_svg_path in cnc_op.geometry_svg_paths:
-                if geometry_svg_path.is_closed():
+                if geometry_svg_path.eval_closed():
                     #polygons
                     geometry_svg_path.p_attrs['stroke'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke"]
                     geometry_svg_path.p_attrs['stroke-width'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-width"]
@@ -694,7 +718,7 @@ class SvgTransformer:
         for shape in shapes:
             shape_id = shape.attrib.get('id', None)
 
-            print("svg : found shape %s : %s" % (shape.tag, shape_id))
+            #print("svg : found shape %s : %s" % (shape.tag, shape_id))
 
             if shape_id is None:
                 print("      -> ignoring")
@@ -709,7 +733,7 @@ class SvgTransformer:
 
         for k, svg_path in enumerate(svg_paths):
             p_id = svg_path.p_id
-            d_def = svg_path.p_attrs['d']
+            d_def = svg_path.p_d
 
             # defaults
             stroke = svg_path.p_attrs.get("stroke", '#00ff00')

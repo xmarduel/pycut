@@ -22,7 +22,7 @@ class SvgPath_SvgPathTools:
         self.tag = "?"
         self.p_id = attribs['id']
         self.p_d = svg_path.d()
-        self.path_closed = svg_path.isclosedac() or svg_path.closed
+        self.closed = self.eval_closed()
 
     @classmethod
     def read_paths_from_file(cls, svgfilename) -> List['SvgPath_SvgPathTools']:
@@ -40,6 +40,9 @@ class SvgPath_SvgPathTools:
     def dump(self):
         for seg in self.svg_path:
             print(seg)
+
+    def eval_closed(self):
+        return self.svg_path.isclosedac() or self.svg_path.closed
 
     def is_closed(self) -> bool :
         return self.svg_path.isclosedac()
@@ -315,7 +318,7 @@ def main():
 
     for k in range(len(paths)):
         paths[k].dump()
-        print("is closed ? ", paths[k].is_closed())
+        print("is closed ? ", paths[k].closed)
         print("---------------------------------------------------")
 
         print("\n\n")
