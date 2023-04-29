@@ -108,6 +108,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
         "fill-opacity-disabled": "0.3"
     }
 
+    DEFAULT_TABS =  {
+        "stroke": "#aa4488",
+        "stroke-width": "0",
+        "fill": "#aa4488",
+        "fill-opacity": "1.0",
+        "fill-opacity-disabled": "0.3"
+    }
+
     # --------------------------------------------------
      
     GEOMETRY_PREVIEW_CLOSED_PATHS_DEFAULTS =  {
@@ -147,14 +155,6 @@ class SvgViewer(QtWidgets.QGraphicsView):
     TOOLPATHS =  {
         "stroke": "#00ff00",
         "stroke-width": "0.2"
-    }
-
-    DEFAULT_TABS =  {
-        "stroke": "#aa4488",
-        "stroke-width": "0",
-        "fill": "#aa4488",
-        "fill-opacity": "1.0",
-        "fill-opacity-disabled": "0.3"
     }
 
     DEFAULT_TOOLPATHS =  {
@@ -305,8 +305,8 @@ class SvgViewer(QtWidgets.QGraphicsView):
         '''
         self.clean()
 
-        # read all shapes with svgpathtools : when not only <path>(s) in the svg
-        self.svg_shapes = SvgPath.read_svg_shapes_as_paths(svg)
+        # read all shapes/paths with svgelement as "paths"
+        self.svg_shapes = SvgPath.read_svg_shapes_and_paths(svg)
 
         self.renderer.load(bytes(svg, 'utf-8'))
 
@@ -404,19 +404,22 @@ class SvgViewer(QtWidgets.QGraphicsView):
         return self.svg_path_d[p_id]
     
     def get_svg_path_attrs(self, p_id: str) -> str:
-        return self.svg_shapes[p_id].p_attrs
+        return self.svg_shapes[p_id].shape_attrs
     
     def get_svg_path_elt_tag(self, p_id: str) -> str:
-        return self.svg_shapes[p_id].tag
+        return self.svg_shapes[p_id].shape_tag
 
     def mousePressEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
         self.in_dnd = True
 
         print('SvgViewer - mousePressEvent()')
+        super().mousePressEvent(event)
 
         # is there a modifier ?
         modifiers = QtWidgets.QApplication.keyboardModifiers()
         print("    --> Modifiers  : ", modifiers.name)
+
+        do_reset_selection = False
 
         if modifiers.name == "ControlModifier":
             do_reset_selection = False
@@ -553,16 +556,16 @@ class SvgViewer(QtWidgets.QGraphicsView):
                 continue
 
             o_tab =  Tab(tab)
-            tab_svg_path = o_tab.make_svg_path()
-            tab_svg_path.p_attrs['stroke'] = self.TABS["stroke"]
-            tab_svg_path.p_attrs['stroke-width'] = self.TABS["stroke-width"]
-            tab_svg_path.p_attrs['fill'] = self.TABS["fill"]
-            tab_svg_path.p_attrs['fill-opacity'] = self.TABS["fill-opacity"]
+
+            o_tab.svg_path.shape_attrs['stroke'] = self.TABS["stroke"]
+            o_tab.svg_path.shape_attrs['stroke-width'] = self.TABS["stroke-width"]
+            o_tab.svg_path.shape_attrs['fill'] = self.TABS["fill"]
+            o_tab.svg_path.shape_attrs['fill-opacity'] = self.TABS["fill-opacity"]
 
             if tab["enabled"] == False:
-                tab_svg_path.p_attrs['fill-opacity'] = self.TABS["fill-opacity-disabled"]
+                o_tab.svg_path.shape_attrs['fill-opacity'] = self.TABS["fill-opacity-disabled"]
             
-            tabs_svg_paths.append(tab_svg_path)
+            tabs_svg_paths.append(o_tab.svg_path)
 
         return tabs_svg_paths
     
@@ -575,18 +578,18 @@ class SvgViewer(QtWidgets.QGraphicsView):
             for geometry_svg_path in cnc_op.geometry_svg_paths:
                 if geometry_svg_path.eval_closed():
                     #polygons
-                    geometry_svg_path.p_attrs['stroke'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke"]
-                    geometry_svg_path.p_attrs['stroke-width'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-width"]
-                    geometry_svg_path.p_attrs['stroke-opacity'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-opacity"]
-                    geometry_svg_path.p_attrs['fill'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"]
-                    geometry_svg_path.p_attrs['fill-opacity'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill-opacity"]
+                    geometry_svg_path.shape_attrs['stroke'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke"]
+                    geometry_svg_path.shape_attrs['stroke-width'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-width"]
+                    geometry_svg_path.shape_attrs['stroke-opacity'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-opacity"]
+                    geometry_svg_path.shape_attrs['fill'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"]
+                    geometry_svg_path.shape_attrs['fill-opacity'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill-opacity"]
                 else:
                     # lines
-                    geometry_svg_path.p_attrs['stroke'] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"]
-                    geometry_svg_path.p_attrs['stroke-width'] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]
-                    geometry_svg_path.p_attrs['stroke-opacity'] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"]
-                    geometry_svg_path.p_attrs['fill'] = "none"
-                    geometry_svg_path.p_attrs['fill-opacity'] = self.GEOMETRY_PREVIEW_OPENED_PATHS["fill-opacity"]
+                    geometry_svg_path.shape_attrs['stroke'] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"]
+                    geometry_svg_path.shape_attrs['stroke-width'] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]
+                    geometry_svg_path.shape_attrs['stroke-opacity'] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"]
+                    geometry_svg_path.shape_attrs['fill'] = "none"
+                    geometry_svg_path.shape_attrs['fill-opacity'] = self.GEOMETRY_PREVIEW_OPENED_PATHS["fill-opacity"]
 
             geometry_svg_paths += cnc_op.geometry_svg_paths
 
@@ -599,9 +602,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
         
         for cnc_op in cnc_ops:
             for cam_svg_path in cnc_op.cam_paths_svg_paths:
-                cam_svg_path.p_attrs['stroke'] = self.TOOLPATHS["stroke"]
-                cam_svg_path.p_attrs['stroke-width'] = self.TOOLPATHS["stroke-width"]
-                cam_svg_path.p_attrs['fill'] = 'none'
+                cam_svg_path.shape_attrs['stroke'] = self.TOOLPATHS["stroke"]
+                cam_svg_path.shape_attrs['stroke-width'] = self.TOOLPATHS["stroke-width"]
+                cam_svg_path.shape_attrs['fill'] = 'none'
 
             cam_paths_svg_paths += cnc_op.cam_paths_svg_paths
 
@@ -708,12 +711,14 @@ class SvgTransformer:
 
         return shapes
         
-    def augment(self, svg_paths: List[SvgPath]) -> str:
+    def augment(self, augm_svg_paths: List[SvgPath]) -> str:
         '''
         '''
         all_paths = ""
 
         shapes = self.collect_shapes()
+
+        paths_str = []
 
         for shape in shapes:
             shape_id = shape.attrib.get('id', None)
@@ -729,20 +734,21 @@ class SvgTransformer:
             for key, value in shape.attrib.items():
                 svg_attrs += ' %s="%s"' % (key, value)
 
-            all_paths += '<%s %s/>\n' % (tag, svg_attrs)
+            paths_str.append('<%s %s/>' % (tag, svg_attrs))
 
-        for k, svg_path in enumerate(svg_paths):
+        for k, svg_path in enumerate(augm_svg_paths):
             p_id = svg_path.p_id
             d_def = svg_path.p_d
 
             # defaults
-            stroke = svg_path.p_attrs.get("stroke", '#00ff00')
-            stroke_width = svg_path.p_attrs.get("stroke-width", '0')
-            fill = svg_path.p_attrs.get("fill", "#111111")
-            fill_opacity = svg_path.p_attrs.get("fill-opacity", "1.0")
-            fill_rule = svg_path.p_attrs.get("fill-rule", "nonzero")
+            stroke = svg_path.shape_attrs.get("stroke", '#00ff00')
+            stroke_width = svg_path.shape_attrs.get("stroke-width", '0')
+            fill = svg_path.shape_attrs.get("fill", "#111111")
+            fill_opacity = svg_path.shape_attrs.get("fill-opacity", "1.0")
+            fill_rule = svg_path.shape_attrs.get("fill-rule", "nonzero")
 
-            path = '<path id="%(id)s_%(counter)d" style="stroke:%(stroke)s;stroke-width:%(stroke_width)s;fill:%(fill)s;fill-opacity:%(fill_opacity)s;fill-rule:%(fill_rule)s;" \
+            # here we append to the default "id" the counter 
+            path_str = '<path id="%(id)s_%(counter)d" style="stroke:%(stroke)s;stroke-width:%(stroke_width)s;fill:%(fill)s;fill-opacity:%(fill_opacity)s;fill-rule:%(fill_rule)s;" \
               d="%(d_def)s" />' % {
                 'id': p_id, 
                 'counter': k, 
@@ -754,7 +760,7 @@ class SvgTransformer:
                 'd_def': d_def
             }
 
-            all_paths += path + '\n'
+            paths_str.append(path_str)
         
         root = etree.fromstring(self.svg)
         root_attrib = root.attrib
@@ -767,7 +773,7 @@ class SvgTransformer:
                 <g>
                   %s
                 </g> 
-             </svg>''' % (root_attrib["width"], root_attrib["height"], root_attrib["viewBox"], all_paths)
+             </svg>''' % (root_attrib["width"], root_attrib["height"], root_attrib["viewBox"], "\n".join(paths_str))
         
         return svg
 

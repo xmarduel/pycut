@@ -5,37 +5,8 @@
    viewBox="0 0 190 140"
    version="1.1"
    id="svg8"
-   sodipodi:docname="control_panel.svg"
-   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs887" />
-  <sodipodi:namedview
-     id="namedview885"
-     pagecolor="#ffffff"
-     bordercolor="#cccccc"
-     borderopacity="1"
-     inkscape:pageshadow="0"
-     inkscape:pageopacity="1"
-     inkscape:pagecheckerboard="0"
-     inkscape:document-units="mm"
-     showgrid="false"
-     inkscape:zoom="1.0308586"
-     inkscape:cx="376.87031"
-     inkscape:cy="293.92974"
-     inkscape:window-width="1500"
-     inkscape:window-height="938"
-     inkscape:window-x="-6"
-     inkscape:window-y="-6"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="layer1">
-    <inkscape:grid
-       type="xygrid"
-       id="grid946" />
-  </sodipodi:namedview>
   <g
      id="layer1">
     <rect
@@ -102,7 +73,6 @@
        x="102.1519"
        y="79.822205"
        id="text2939"><tspan
-         sodipodi:role="line"
          id="tspan2937"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
          x="102.1519"

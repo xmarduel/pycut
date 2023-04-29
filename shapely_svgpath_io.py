@@ -121,7 +121,7 @@ class SvgPath:
         return [ SvgPath(path, orig_svg_str=svg_str) for path in paths ]
 
     @classmethod
-    def read_svg_shapes_as_paths(cls, svg_str: str) -> Dict[str, 'SvgPath'] :
+    def read_svg_shapes_and_paths(cls, svg_str: str) -> Dict[str, 'SvgPath'] :
         '''
         From a svg file content, read all paths and their attributes
         and organize them as dictionary with key <path_id>, value SvgPath object
@@ -136,9 +136,9 @@ class SvgPath:
 
         for path in paths:
             #print("=======================================================")
-            #print("============= svg : path %s =================" % path.p_id)
+            print("============= svg : path %s =================" % path.p_id)
             #print("============= svg : path isclosed = %d ======" % path.closed)
-            #print("============= svg : path attribs %s =========" % path.p_attrs)
+            #print("============= svg : path attribs %s =========" % path.shape_attrs)
 
             # ignore paths without id
             if path.p_id is None:
@@ -149,13 +149,17 @@ class SvgPath:
         return paths_map
 
     @classmethod
-    def from_svg_path_def(cls, d_def: str, p_id: str, p_tag: str, p_attrs: Dict[str,str]) -> 'SvgPath':
+    def from_svg_path_def(cls, d_def: str, p_id: str, shape_tag: str, shape_attrs: Dict[str,str]) -> 'SvgPath':
         '''
         Create a SvgPath
         '''
-        path_data = ''
-        for key in p_attrs:
-            path_data += ' %(key)s="%(value)s"' % {"key": key, "value": p_attrs[key]}
+        path_data = ' d="%(value)s"' % { "value": d_def }
+        path_data += ' id="%(value)s"' % { "value": p_id }
+
+
+        for key in shape_attrs:
+            if not (key == "d" or key == "id"):
+                path_data += ' %(key)s="%(value)s"' % {"key": key, "value": shape_attrs[key]}
 
         svg_str = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg version="1.1" width="1000mm" height="1000mm" viewBox="0 0 1000 1000"
@@ -168,7 +172,7 @@ class SvgPath:
         paths = cls.svg_paths_from_svg_string(svg_str)
         
         path = paths[0]
-        path.tag = p_tag
+        path.shape_tag = shape_tag
 
         return path
 
@@ -179,16 +183,17 @@ class SvgPath:
 
         self.p_d = svg_path.d()
         self.p_id = svg_path.values.get('id', "?")
-        self.tag = svg_path.values["tag"]
         self.closed = self.eval_closed()
+
+        self.shape_tag = svg_path.values["tag"]
 
         # I do not quite understand how the 'real' attributes are got from
         # They are **not** the xml attributes in all cases...
         
-        self.p_attrs = copy.deepcopy(svg_path.values["attributes"])
+        self.shape_attrs = copy.deepcopy(svg_path.values["attributes"])
   
-        if "tag" in   self.p_attrs:
-            del self.p_attrs["tag"]
+        if "tag" in self.shape_attrs:
+            del self.shape_attrs["tag"]
 
         if orig_svg_str is not None:
             # read xml and get the **real** attribute
@@ -201,9 +206,9 @@ class SvgPath:
                 elt = elements[0]
                 attrib = elt.attrib
                 #print("============= svg : attrib %s =================" % attrib)
-                self.p_attrs = attrib
+                self.shape_attrs = attrib
             else:
-                a = 1
+                pass
 
         # the result of the import
         self.lines : List[shapely.geometry.LineString] = []
@@ -455,7 +460,7 @@ class SvgPath:
         check if path is a 'simple' one or a 'complex' one -
         in the sense there is no "jump" in the path (svg [mM]) excepted the initial one
         '''
-        d_def = self.p_attrs["d"]
+        d_def = self.p_d
 
         nb_separate_paths = d_def.count("M") + d_def.count("m")
 
@@ -465,7 +470,7 @@ class SvgPath:
         '''
         check if a subpath is "closed"
         '''
-        d_def = self.p_attrs["d"]
+        d_def = self.p_d
 
         nb_z = d_def.count("Z") + d_def.count("z") # one or zero
 
@@ -489,11 +494,9 @@ class SvgPath:
                 continue
             p_id = self.p_id + "___sub_%d" % k 
             
-            p_attrs = copy.deepcopy(self.p_attrs)
-            p_attrs["d"] = "M" + subpath
-            p_attrs["id"] = p_id
+            shape_attrs = copy.deepcopy(self.shape_attrs)
 
-            o = SvgPath.from_svg_path_def(p_attrs["d"], p_id, "path", p_attrs)
+            o = SvgPath.from_svg_path_def("M" + subpath, p_id, "path", shape_attrs)
             
             svgpaths.append(o)
         
@@ -532,8 +535,8 @@ class SvgPath:
         '''
         only for circle shapes
         '''
-        cx = float(self.p_attrs['cx'])
-        cy = float(self.p_attrs['cy'])
+        cx = float(self.shape_attrs['cx'])
+        cy = float(self.shape_attrs['cy'])
 
         center = (cx, cy)
 

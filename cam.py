@@ -756,6 +756,15 @@ class TabsSeparator:
             '''
             test if the 2 paths have their end point/start point compatible (the same)
             '''
+            boundary1_len = len(list(path1.boundary))
+            boundary2_len = len(list(path2.boundary))
+
+            #print("boundary1_len =", boundary1_len)
+            #print("boundary2_len =", boundary2_len)
+            
+            if boundary1_len == 0 or boundary2_len == 0:
+                return False 
+
             endPoint = path1.boundary[1]
             startPoint = path2.boundary[0]
 

@@ -118,7 +118,7 @@
             19.0
           ],
           "radius": 8.0,
-          "enabled": false
+          "enabled": true
         },
         {
           "center": [
@@ -126,7 +126,7 @@
             93.0
           ],
           "radius": 5.0,
-          "enabled": false
+          "enabled": true
         },
         {
           "center": [
@@ -134,7 +134,15 @@
             67.0
           ],
           "radius": 5.0,
-          "enabled": false
+          "enabled": true
+        },
+        {
+          "center": [
+            10,
+            14.0
+          ],
+          "radius": 5,
+          "enabled": true
         }
       ]
     },

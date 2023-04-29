@@ -195,7 +195,7 @@ class Tab:
 
         self.enabled = tab["enabled"]
 
-        self.svg_path = self.make_svg_path()
+        self.svg_path = SvgPath.from_circle_def(self.center, self.radius)
 
     @classmethod
     def set_height(cls, heigth: float, units: str):
@@ -203,13 +203,6 @@ class Tab:
         from the TabsModel, common for all the tabs
         '''
         cls.height = ValWithUnit(heigth, units)
-
-    def make_svg_path(self):
-        '''
-        '''
-        path = SvgPath.from_circle_def(self.center, self.radius)
-
-        return path
 
     def pos_inside_tab(self, x: float, y: float, z: float, op_cut_depth: float):
         '''
@@ -348,9 +341,8 @@ class CncOp:
         shapely_points : List[shapely.geometry.Point] = []
 
         for svgpath in self.svg_paths:
-            attrs = svgpath.p_attrs
             # consider only circles
-            if 'cx' in attrs and 'cy' in attrs:
+            if svgpath.shape_tag == 'circle':
                 shapely_point = svgpath.import_as_point()
                 shapely_points.append(shapely_point)
         
