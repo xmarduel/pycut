@@ -255,10 +255,10 @@ class CncOp:
     '''
     '''
     def __init__(self, operation: Dict[str,Any]):
-        self.units = operation["units"]
-        self.name = operation["name"]
-        self.paths = operation["paths"]
-        self.combinaison = operation["combinaison"]
+        self.units : str = operation["units"]
+        self.name : List[str] = operation["name"]
+        self.paths : List[str] = operation["paths"]
+        self.combinaison : str = operation["combinaison"]
         self.ramp_plunge = operation["ramp_plunge"]
         self.cam_op = operation["type"]
         self.direction = operation["direction"]
@@ -302,17 +302,7 @@ class CncOp:
     def setup(self, svg_viewer: SvgViewer):
         '''
         '''
-        for svg_path_id in self.paths:
-
-            svg_path_d = svg_viewer.get_svg_path_d(svg_path_id)
-            svg_path_elt_tag = svg_viewer.get_svg_path_elt_tag(svg_path_id)
-            svg_path_attrs = svg_viewer.get_svg_path_attrs(svg_path_id)
-
-            attrs = copy.deepcopy(svg_path_attrs)
-
-            svg_path = SvgPath.from_svg_path_def(svg_path_d, svg_path_id, svg_path_elt_tag, attrs)
-
-            self.svg_paths.append(svg_path)
+        self.svg_paths = [ svg_viewer.svg_shapes[svg_path_id] for svg_path_id in self.paths ]
 
     def is_closed_paths_op(self) -> bool :
         '''

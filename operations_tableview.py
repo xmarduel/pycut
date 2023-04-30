@@ -6,6 +6,8 @@ from PySide6 import QtCore
 from PySide6 import QtGui
 from PySide6 import QtWidgets
 
+from svgviewer import SvgViewer
+
 
 class OpItem:
     def __init__(self, data):
@@ -367,7 +369,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
         super().__init__(parent)
 
         self.mainwindow = None
-        self.svg_viewer = None
+        self.svg_viewer : SvgViewer = None
 
         self.model = None
 
@@ -408,7 +410,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
         # set layout on the window
         self.setLayout(vbox)
 
-    def set_svg_viewer(self, svg_viewer):
+    def set_svg_viewer(self, svg_viewer: SvgViewer):
         '''
         '''
         self.svg_viewer = svg_viewer
@@ -488,7 +490,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         '''
         super().__init__(parent)
 
-        self.parent = parent
+        self.manager = parent
 
         # Fixes the width of columns and the height of rows.
         try:
@@ -657,8 +659,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
             paths = op.paths
 
             for path_id in paths:
-                manager = self.parent
-                tag = manager.svg_viewer.get_svg_path_elt_tag(path_id)
+                tag = self.manager.svg_viewer.svg_shapes[path_id].shape_tag
                 
                 comboxbox = self.delegate_col_op.xeditors[(row, 1)]
                 model = comboxbox.model()

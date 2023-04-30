@@ -1024,7 +1024,7 @@ class Char2SvgPath:
 
             '''
             Set the start location to the end location and continue. 
-            You can use the svgpathtools Path to merge the paths:
+            You can use the svgelement Path to merge the paths:
             '''
             start = end + 1
 

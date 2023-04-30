@@ -91,8 +91,6 @@ class SvgViewer(QtWidgets.QGraphicsView):
     So when augmenting the view, we have to pass all cnc operations
     and build a custom svg file on its own with all these new paths.
 
-    This is possible with the help of the svgpathtools.
-
     Note that still only the paths from the original svg are selectable.
     '''
     zoomChanged = QtCore.Signal()
@@ -179,9 +177,6 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # and the extra tabs contained in the job description
         self.tabs = []
 
-        # dictionnay path id -> path d (string) def for all shapes in the svg
-        self.svg_path_d : Dict[str,str] = {} 
-
         # when loading a svg with shapes
         self.svg_shapes = {} # path id -> SvgPath 
 
@@ -263,7 +258,6 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.scene.clear()
         self.resetTransform()
 
-        self.svg_path_d = {}
         self.svg_shapes = {}
 
         self.items : List[SvgItem] = []
@@ -371,12 +365,6 @@ class SvgViewer(QtWidgets.QGraphicsView):
                 print("    -> ignoring")
                 continue
 
-            svgpath = self.svg_shapes[shape_id]
-
-            svg_path = svgpath.svg_path
-
-            self.svg_path_d[shape_id] = svg_path.d()
-
             item = SvgItem(shape_id, self, self.renderer)
             self.scene.addItem(item)
 
@@ -399,15 +387,6 @@ class SvgViewer(QtWidgets.QGraphicsView):
         if not self.in_dnd:
             self.tabs = tabs
             self.display_tabs(self.tabs)
-
-    def get_svg_path_d(self, p_id: str) -> str:
-        return self.svg_path_d[p_id]
-    
-    def get_svg_path_attrs(self, p_id: str) -> str:
-        return self.svg_shapes[p_id].shape_attrs
-    
-    def get_svg_path_elt_tag(self, p_id: str) -> str:
-        return self.svg_shapes[p_id].shape_tag
 
     def mousePressEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
         self.in_dnd = True

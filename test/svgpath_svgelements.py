@@ -65,7 +65,7 @@ class SvgPath_SvgElements:
      
     def discretize_closed_path(self) -> np.array :
         '''
-        Transform the svg_path (a list of svgpathtools Segments) into a list of 'complex' points
+        Transform the svg_path (a list of svgelement Path Segments) into a list of 'complex' points
         - Line: only 2 points
         - Arc: discretize per hand
         - QuadraticBezier, CubicBezier: discretize per hand
@@ -193,7 +193,7 @@ class SvgPath_SvgElements:
 
     def discretize_open_path(self) -> np.array :
         '''
-        Transform the svg_path (a list of svgpathtools Segments) into a list of 'complex' points
+        Transform the svg_path (a list of svgelement Path Segments) into a list of 'complex' points
         - Line: only 2 points
         - Arc: discretize per hand
         - QuadraticBezier, CubicBezier: discretize per hand
