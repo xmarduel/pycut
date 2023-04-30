@@ -6,8 +6,8 @@
     "configurations": [
 
 
-    
 
+    
         {
             "name": "OPENGL DEMO1",
             "type": "python",
@@ -66,7 +66,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_test_svgpathtools.json"]
+            "args": ["jobs\\cnc_test_svgpathtools.json"]
         },
         {
             "name": "PYCUT JOB CONTROL PANEL",
@@ -75,7 +75,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_control_panel.json"]
+            "args": ["jobs\\cnc_control_panel.json"]
         },
         {
             "name": "PYCUT JOB KASTEN",
@@ -84,7 +84,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\others_stuff\\kasten.json"]
+            "args": ["misc_private\\others_stuff\\kasten.json"]
         },
         {
             "name": "PYCUT JOB SMALL KASTEN",
@@ -93,7 +93,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\others_stuff\\small_kasten.json"]
+            "args": ["misc_private\\others_stuff\\small_kasten.json"]
         },
         {
             "name": "PYCUT JOB CLAMP PARTS",
@@ -102,16 +102,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\qkg38\\qkg38.json"]
-        },
-        {
-            "name": "PYCUT JOB BACKLASH",
-            "type": "python",
-            "request": "launch",
-            "program": "pycut.py",
-            "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc1310_backlash_test.json"]
+            "args": ["misc_private\\qkg38\\qkg38.json"]
         },
         {
             "name": "PYCUT CNC1310 HORI PLATE",
@@ -120,7 +111,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc1310_horizontal_plate.json"]
+            "args": ["jobs\\cnc1310_horizontal_plate.json"]
         },
         {
             "name": "PYCUT BEARING TEST",
@@ -129,7 +120,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_test_bearing.json"]
+            "args": ["jobs\\cnc_test_bearing.json"]
         },
         {
             "name": "PYCUT BACKLASH TEST",
@@ -138,7 +129,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc1310_backlash_test.json"]
+            "args": ["jobs\\cnc1310_backlash_test.json"]
         },
         {
             "name": "PYCUT JOB ALL LETTERS",
@@ -147,7 +138,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_all_letters.json"]
+            "args": ["jobs\\cnc_all_letters.json"]
         },
         {
             "name": "PYCUT JOB ALL LETTERS TUDORS",
@@ -156,7 +147,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\jobs\\cnc_all_letters_tudor.json"]
+            "args": ["jobs\\cnc_all_letters_tudor.json"]
         },
         {
             "name": "PYCUT GEAR 40",
@@ -165,7 +156,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\svg\\hobbymat\\hobbymat_gear_40.json"]
+            "args": ["misc_private\\svg\\hobbymat\\hobbymat_gear_40.json"]
         },
         {
             "name": "PYCUT SVGTEXT_2_SVGPATH SLAINE",

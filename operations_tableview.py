@@ -385,7 +385,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
         # create the button, and hook it up to the slot below.
         self._button_add = QtWidgets.QPushButton("Create Operation")
         self._button_add.clicked.connect(self.add_item)
-        self._button_add.setIcon(QtGui.QIcon(':/images/milling-machine-op.png'))
+        self._button_add.setIcon(QtGui.QIcon(":/images/tango/22x22/categories/applications-system.png"))
 
         hbox_add.addWidget(self._button_add)
 
@@ -394,7 +394,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
 
         self._button_gen = QtWidgets.QPushButton("Generate GCode")
         self._button_gen.clicked.connect(self.gen_gcode)
-        self._button_gen.setIcon(QtGui.QIcon(":/images/tango/22x22/actions/view-refresh.png"))
+        self._button_gen.setIcon(QtGui.QIcon(":/images/milling-machine-op.png"))
 
         hbox_gen.addWidget(self._button_gen)
 

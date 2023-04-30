@@ -8,6 +8,9 @@ import json
 import argparse
 import pathlib
 
+import posixpath
+import ntpath
+
 from typing import List
 
 from PySide6 import QtCore
@@ -619,16 +622,21 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.checkBox_GCodeConversion_FlipXY.clicked.disconnect(self.cb_generate_gcode)
 
         self.open_job(jobfilename)
-
-        self.prepend_recent_jobs(jobfilename)
         
         self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
         self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode_y_offset)
         self.ui.checkBox_GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
 
     def open_job(self, jobfilename: str):
+        cwd = os.getcwd()
+
+        common_prefix = [os.path.commonprefix([cwd, jobfilename])]
+        jobfilename = os.path.relpath(jobfilename, common_prefix[0])
+
         with open(jobfilename) as f:
             self.jobfilename = jobfilename
+
+            self.prepend_recent_jobs(jobfilename)
 
             job = json.load(f)
         
@@ -1235,7 +1243,21 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def prepend_recent_jobs(self, jobfile):
         '''
         '''
-        self.recent_jobs.insert(0, jobfile)
+        # consider unix style if not absolute
+        if not os.path.isabs(jobfile):
+            jobfile_unix = jobfile.replace(ntpath.sep, posixpath.sep)
+        else:
+            jobfile_unix = jobfile
+
+        if jobfile_unix.startswith("./"):
+            jobfile_unix = jobfile_unix[2:]
+
+        # remove duplicated
+        if jobfile_unix in self.recent_jobs:
+            self.recent_jobs.remove(jobfile_unix)
+
+        self.recent_jobs.insert(0, jobfile_unix)
+
         self.recent_jobs = self.recent_jobs[:5]
 
     def closeEvent(self, event):
