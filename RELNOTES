@@ -24,7 +24,7 @@ use only svgelements, get rid of svgpathtools
 
 # 0.4.0 
 
-process "opened" lines (not polygons)
+process "opened" paths as well as closed paths
 
 # 0.3.6
 
