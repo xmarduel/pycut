@@ -1,0 +1,62 @@
+{
+  "svg_file": "svg/polyline.svg",
+  "operations": [
+    {
+      "name": "op",
+      "type": "Inside",
+      "cut_depth": 5.0,
+      "paths": [
+        "polyline"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 3.1000000000000014,
+      "width": 0.0
+    }
+  ],
+  "settings": {
+    "svg": {
+      "px_per_inch": 96
+    },
+    "Tabs": {
+      "units": "mm",
+      "height": 2.0,
+      "tabs": []
+    },
+    "Tool": {
+      "units": "mm",
+      "diameter": 3.175,
+      "angle": 180,
+      "passdepth": 1.0,
+      "overlap": 0.6,
+      "rapid": 1000,
+      "plunge": 127,
+      "cut": 1000
+    },
+    "Material": {
+      "units": "mm",
+      "thickness": 20.0,
+      "z_origin": "Top",
+      "clearance": 10.0
+    },
+    "CurveToLineConversion": {
+      "minimum_segments": 5,
+      "minimum_segments_length": 0.01
+    },
+    "GCodeConversion": {
+      "units": "mm",
+      "flip_xy": false,
+      "x_offset": 0.0,
+      "y_offset": 0.0,
+      "xy_reference": "ZERO_TOP_LEFT_OF_MATERIAL"
+    },
+    "GCodeGeneration": {
+      "return_to_zero_at_end": true,
+      "spindle_control": true,
+      "spindle_speed": 10000,
+      "program_end": true
+    }
+  }
+}

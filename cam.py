@@ -455,6 +455,7 @@ class cam:
         Convert paths to gcode. getGcode() assumes that the current Z position is at safeZ.
         getGcode()'s gcode returns Z to this position at the end.
         args must have:
+          optype:         Type of Op. 
           paths:          Array of CamPath
           ramp:           Ramp these paths?
           scale:          Factor to convert Clipper units to gcode units
@@ -471,8 +472,10 @@ class cam:
           rapidFeed:      Feedrate for rapid moves (gcode units)
           tabs:           List of tabs
           tabZ:           Level below which tabs are to be processed
+          peckZ:          Level to retract when pecking
           flipXY          toggle X with Y
         '''
+        optype = args["optype"]
         paths : List[CamPath] = args["paths"]
         ramp = args["ramp"]
         scale = args["scale"]
@@ -497,6 +500,8 @@ class cam:
         tabs = args["tabs"]
         tabZ = args["tabZ"]
 
+        peckZ = args["peckZ"]
+
         flipXY = args["flipXY"]
 
         gcode = ""
@@ -506,6 +511,9 @@ class cam:
 
         retractForTabGcode = '; Retract for tab\n' + \
             f'G1 Z' + tabZ.toFixed(decimal) + f'{rapidFeedGcode}\n'
+        
+        retractForPeck = '; Retract for peck\n' + \
+            f'G1 Z' + peckZ.toFixed(decimal) + f'{rapidFeedGcode}\n'
 
         def getX(p: Tuple[int,int]) :
             return p[0] * scale + offsetX
@@ -566,11 +574,19 @@ class cam:
 
 
                 if (currentZ <= tabZ and ((not path.safe_to_close) or crosses_tabs)) :
-                    gcode += retractGcode
-                    currentZ = safeZ
+                    if optype == "Peck":
+                        gcode += retractForPeck
+                        currentZ = peckZ
+                    else:
+                        gcode += retractGcode
+                        currentZ = safeZ
                 elif (currentZ < safeZ and (not path.safe_to_close)) :
-                    gcode += retractGcode
-                    currentZ = safeZ
+                    if optype == "Peck":
+                        gcode += retractForPeck
+                        currentZ = peckZ
+                    else:
+                        gcode += retractGcode
+                        currentZ = safeZ
 
                 # check this - what does it mean ???
                 if not crosses_tabs:

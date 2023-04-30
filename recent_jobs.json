@@ -1,7 +1,7 @@
 [
+  "jobs/cnc_circle.json",
+  "jobs/cnc_polyline.json",
   "jobs/cnc_all_letters_slaine.json",
   "jobs/cnc_all_letters_tudor.json",
-  "jobs/cnc_control_panel.json",
-  "misc_private/svg/waste_plate_screw.json",
-  "misc_private/others_stuff/small_kasten.json"
+  "jobs/cnc_control_panel.json"
 ]

@@ -894,6 +894,7 @@ class GcodeGenerator:
         passdepth = self.unit_converter.from_mm(self.tool_model.passdepth.toMm())
         topZ = self.unit_converter.from_mm(self.material_model.matTopZ.toMm())
         tabHeight = self.unit_converter.from_mm(self.tabs_model.height.toMm())
+        peckZ = self.unit_converter.from_mm(1.0)
 
         #if self.units == "inch":
         #    scale = 1.0
@@ -933,6 +934,7 @@ class GcodeGenerator:
             gcode += f"\n;\n"
 
             gcode += cam.getGcode({
+                "optype":         cnc_op.cam_op,
                 "paths":          cnc_op.cam_paths,
                 "ramp":           cnc_op.ramp_plunge,
                 "scale":          scale,
@@ -949,6 +951,7 @@ class GcodeGenerator:
                 "rapidFeed":      rapidRate,
                 "tabs":           self.tabs_model.tabs,
                 "tabZ":           tabZ,
+                "peckZ":          peckZ,
                 "flipXY":         self.flipXY
             })
 
