@@ -7,4 +7,5 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
    <polyline id="polyline" points="100,100 150,25 150,75 200,0" fill="none" stroke="black" />
+   <line id="line" x1="50" y1="50" x2="100" y2="50" stroke="black" />
 </svg>

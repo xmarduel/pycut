@@ -14,6 +14,20 @@
       "units": "mm",
       "margin": 3.1000000000000014,
       "width": 0.0
+    },
+    {
+      "name": "op",
+      "type": "Outside",
+      "cut_depth": 5.0,
+      "paths": [
+        "line"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 2.0000000000000004,
+      "width": 0.0
     }
   ],
   "settings": {
@@ -27,7 +41,7 @@
     },
     "Tool": {
       "units": "mm",
-      "diameter": 3.175,
+      "diameter": 3.0,
       "angle": 180,
       "passdepth": 1.0,
       "overlap": 0.6,
