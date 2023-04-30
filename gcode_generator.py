@@ -184,6 +184,10 @@ class Tab:
     '''
     a Tab is defined by a circle with position (x,y)
     and height from the buttom of the material
+
+    it's svg_path will be intersected with the toolpaths 
+    in case of 'Inside','Outside' and 'Engrave' - but ignored
+    for 'Pocket'
     '''
     height = ValWithUnit(2.0, "mm")
 
@@ -923,6 +927,12 @@ class GcodeGenerator:
             gcode += f"\n; Cut rate:     {cutRate}"
             gcode += f"\n;\n"
 
+            tabs = self.tabs_model.tabs
+
+            if cnc_op.cam_op == 'Pocket':
+                # ignore tabs in pocket op
+                tabs = []
+
             gcode += cam.getGcode({
                 "optype":         cnc_op.cam_op,
                 "paths":          cnc_op.cam_paths,
@@ -939,7 +949,7 @@ class GcodeGenerator:
                 "retractFeed":    rapidRate,
                 "cutFeed":        cutRate,
                 "rapidFeed":      rapidRate,
-                "tabs":           self.tabs_model.tabs,
+                "tabs":           tabs,
                 "tabZ":           tabZ,
                 "peckZ":          peckZ,
                 "flipXY":         self.flipXY

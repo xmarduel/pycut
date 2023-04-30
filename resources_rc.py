@@ -11006,7 +11006,7 @@ o\x91G\x00\x00\x94\x9e\x9b~8[\x1e\xb9I\x95\xa0\
 \x00\x00t\x90\xa0\x00\x00\xe8 A\x01\x00\xc8\x5cY\xd9\
 \xff\x07\x81J\xd7\xd2'\xc3\x16\xe9\x00\x00\x00\x00IE\
 ND\xaeB`\x82\
-\x00\x00\x88\x00\
+\x00\x00\x8c\xed\
 <\
 html>\x0a<head>\x0a  <\
 meta http-equiv=\
@@ -12230,7 +12230,7 @@ n the svg viewer\
 d\x0aposition (10,1\
 0). The user can\
  drag 'n drop it\
- fron the svg vi\
+ from the svg vi\
 ewer, or set its\
 \x0asize/postion in\
  the tab table. \
@@ -12245,945 +12245,1024 @@ e on the\x0agenerat\
 ed toolpaths. Th\
 e height of the \
 tabs is shared b\
-y all tabs.</p>\x0a\
-\x0a<div>\x0a<img src=\
-\x22pycut_tabs.png\x22\
- width=\x22310\x22> </\
-div>\x0a\x0a<p></p>\x0a\x0a<\
-div class=\x22warni\
-ng\x22>\x0a<p><strong>\
-Warning</strong>\
-: Tabs shall not\
- overlap with ot\
-her tabs (at lea\
-st\x0athe enabled o\
-nes).</p>\x0a</div>\
-\x0a\x0a<p>You can che\
-ck the Gcode gen\
-eration in the v\
-iewer/simulator \
-if everythings i\
-s\x0aOk. </p>\x0a\x0a<h3 \
-id=\x22P-04-04\x22>Mat\
-erial</h3>\x0a\x0a<p>T\
-he Operations \x22C\
-ut Depth\x22 should\
- not be larger t\
-han the material\
- thickness.\x0a</p>\
-\x0a\x0a<div>\x0a<img src\
-=\x22pycut_material\
-.png\x22 width=\x22310\
-\x22> </div>\x0a\x0a<p></\
-p>\x0a\x0a<div class=\x22\
-warning\x22>\x0a<p><st\
-rong>Warning</st\
-rong>: Actually \
-no check is perf\
-ormed.</p>\x0a</div\
->\x0a\x0a<h3 id=\x22P-04-\
-05\x22>Curve to Lin\
-e Conversion</h3\
->\x0a\x0a<p>If your de\
-sign contain cur\
-ves (svg \x22arcs\x22 \
-or \x22bezier\x22 curv\
-es), they have t\
-o\x0abe discretized\
- in small segmen\
-ts.</p>\x0a\x0a<p>The \
-2 following para\
-meters allow to \
-specified how fi\
-ne the curve\x0adis\
-cretization will\
- be:</p>\x0a<ul>\x0a  \
-<li>Minimun numb\
-er of segments</\
-li>\x0a  <li>Segmen\
-t segments lengt\
-h</li>\x0a</ul>\x0a\x0a<h\
-3 id=\x22P-04-06\x22>G\
-Code Conversion<\
-/h3>\x0a\x0a<p>The sta\
-rting location o\
-f a milling oper\
-ation is given b\
-y the initial\x0alo\
-cation in the GC\
-ode. Per default\
-, PyCut gives as\
- starting point \
-the (0,0)\x0acoordi\
-nates of the SVG\
- file, which is \
-located at the t\
-op-left of the m\
-aterial.\x0aThe SVG\
- conventions are\
- opposite to GCo\
-de convention co\
-nsidering the Y\x0a\
-direction.</p>\x0a\x0a\
-<p>So the GCode \
-generation will \
-have to invert t\
-he direction of \
-the Y axis\x0acoord\
-inates. But stil\
-l the reference \
-is the top-left \
-postion.</p>\x0a\x0a<p\
->It is possible \
-to change the re\
-ference location\
- of the generate\
-d GCode</p>\x0a<ul>\
-\x0a  <li>Top-Left \
-location of the \
-material</li>\x0a  \
-<li>Bottom-Left \
-location of the \
-material</li>\x0a  \
-<li>Bottom-Left \
-location of the \
-Gcode area</li>\x0a\
-  <li>Center of \
-the Gcode area</\
-li>\x0a</ul>\x0a\x0a<div>\
+y all tabs. <str\
+ong>They\x0aare ign\
+ored for Pocket \
+operations</stro\
+ng>.</p>\x0a\x0a<div>\x0a\
+<img src=\x22pycut_\
+tabs.png\x22 width=\
+\x22310\x22> </div>\x0a\x0a<\
+p></p>\x0a\x0a<div cla\
+ss=\x22warning\x22>\x0a<p\
+><strong>Warning\
+</strong>: Tabs \
+shall not overla\
+p with other tab\
+s (at least\x0athe \
+enabled ones).</\
+p>\x0a</div>\x0a\x0a<p>Yo\
+u can check the \
+Gcode generation\
+ in the viewer/s\
+imulator if ever\
+ythings is\x0aOk. <\
+/p>\x0a\x0a<h3 id=\x22P-0\
+4-04\x22>Material</\
+h3>\x0a\x0a<p>The Oper\
+ations \x22Cut Dept\
+h\x22 should not be\
+ larger than the\
+ material thickn\
+ess.\x0a</p>\x0a\x0a<div>\
 \x0a<img src=\x22pycut\
-_gcode_conversio\
-n.png\x22 width=\x2231\
-0\x22> </div>\x0a\x0a<p>N\
-ote that these 4\
- buttons act as \
-radio buttons.</\
-p>\x0a\x0a<p>These fou\
-r references poi\
-nts set the XOff\
-set and YOffset \
-of the GCode\x0acal\
-culation. After \
-a GCode generati\
-on, it is still \
-possible to modi\
-fy the\x0aXOffset a\
-nd YOffset to fi\
-t at best how to\
- user wants to h\
-ave the origin b\
-e\x0alocated with t\
-he help of the 2\
- spin boxes. </p\
->\x0a\x0a<p>And furthe\
-r:</p>\x0a<ul>\x0a  <l\
-i>Flip X/Y </li>\
-\x0a</ul>\x0a\x0a<p>In th\
-e generated G Co\
-de, X and Y are \
-switched.This ca\
-n be helpfull, f\
-or\x0aexample in th\
-e case your <str\
-ong>CNC</strong>\
- is the \x22<strong\
->1419</strong>\x22\x0a\
-model (mine!) wh\
-ich is not as la\
-rge as deep. So \
-this option allo\
-ws to carve\x0asome\
-thing like 16x10\
- cm without -pai\
-nfully- rotating\
- all items in th\
-e source\x0asvg.</p\
->\x0a\x0a<p></p>\x0a\x0a<p>I\
-n case of Bottom\
--Left location o\
-f the material, \
-the Y size of th\
-e material\x0ais ex\
-tracted form the\
- svg file: the s\
-vg \x22height\x22 attr\
-ibute.</p>\x0a\x0a<h3 \
-id=\x22P-04-07\x22>GCo\
-de Generation</h\
-3>\x0a\x0a<p>Some usef\
-ul options can b\
-e set up:</p>\x0a<u\
-l>\x0a  <li>Return \
-at initial locat\
-ion at end of th\
-e Job</li>\x0a  <li\
->Spindle Start/S\
-top (<strong>M3<\
-/strong>/<strong\
->M5</strong> cod\
-es)</li>\x0a  <li><\
-strong>M2</stron\
-g> code</li>\x0a</u\
+_material.png\x22 w\
+idth=\x22310\x22> </di\
+v>\x0a\x0a<p></p>\x0a\x0a<di\
+v class=\x22warning\
+\x22>\x0a<p><strong>Wa\
+rning</strong>: \
+Actually no chec\
+k is performed.<\
+/p>\x0a</div>\x0a\x0a<h3 \
+id=\x22P-04-05\x22>Cur\
+ve to Line Conve\
+rsion</h3>\x0a\x0a<p>I\
+f your design co\
+ntain curves (sv\
+g \x22arcs\x22 or \x22bez\
+ier\x22 curves), th\
+ey have to\x0abe di\
+scretized in sma\
+ll segments.</p>\
+\x0a\x0a<p>The 2 follo\
+wing parameters \
+allow to specifi\
+ed how fine the \
+curve\x0adiscretiza\
+tion will be:</p\
+>\x0a<ul>\x0a  <li>Min\
+imun number of s\
+egments</li>\x0a  <\
+li>Minimum Segme\
+nts length</li>\x0a\
+</ul>\x0a\x0a<h3 id=\x22P\
+-04-06\x22>GCode Co\
+nversion</h3>\x0a\x0a<\
+p>The starting l\
+ocation of a mil\
+ling operation i\
+s given by the i\
+nitial\x0alocation \
+in the GCode. Pe\
+r default, PyCut\
+ gives as starti\
+ng point the (0,\
+0)\x0acoordinates o\
+f the SVG file, \
+which is located\
+ at the top-left\
+ of the material\
+.\x0aThe SVG conven\
+tions are opposi\
+te to GCode conv\
+ention consideri\
+ng the Y\x0adirecti\
+on.</p>\x0a\x0a<p>So t\
+he GCode generat\
+ion will have to\
+ invert the dire\
+ction of the Y a\
+xis\x0acoordinates.\
+ But still the r\
+eference is the \
+top-left postion\
+.</p>\x0a\x0a<p>It is \
+possible to chan\
+ge the reference\
+ location of the\
+ generated GCode\
+</p>\x0a<ul>\x0a  <li>\
+Top-Left locatio\
+n of the materia\
+l</li>\x0a  <li>Bot\
+tom-Left locatio\
+n of the materia\
+l</li>\x0a  <li>Bot\
+tom-Left locatio\
+n of the Gcode a\
+rea</li>\x0a  <li>C\
+enter of the Gco\
+de area</li>\x0a</u\
 l>\x0a\x0a<div>\x0a<img s\
 rc=\x22pycut_gcode_\
-generation.png\x22 \
+conversion.png\x22 \
 width=\x22310\x22> </d\
-iv>\x0a<!-- -------\
+iv>\x0a\x0a<p>Note tha\
+t these 4 button\
+s act as radio b\
+uttons.</p>\x0a\x0a<p>\
+These four refer\
+ences points set\
+ the XOffset and\
+ YOffset of the \
+GCode\x0acalculatio\
+n. After a GCode\
+ generation, it \
+is still possibl\
+e to modify the\x0a\
+XOffset and YOff\
+set to fit at be\
+st how to user w\
+ants to have the\
+ origin be\x0alocat\
+ed with the help\
+ of the 2 spin b\
+oxes. </p>\x0a\x0a<p>A\
+nd further:</p>\x0a\
+<ul>\x0a  <li>Flip \
+X/Y </li>\x0a</ul>\x0a\
+\x0a<p>In the gener\
+ated G Code, X a\
+nd Y are switche\
+d.This can be he\
+lpfull, for\x0aexam\
+ple in the case \
+your <strong>CNC\
+</strong> is the\
+ \x22<strong>1419</\
+strong>\x22\x0amodel (\
+mine!) which is \
+not as large as \
+deep. So this op\
+tion allows to c\
+arve\x0asomething l\
+ike 16x10 cm wit\
+hout -painfully-\
+ rotating all it\
+ems in the sourc\
+e\x0asvg.</p>\x0a\x0a<p><\
+/p>\x0a\x0a<p>In case \
+of Bottom-Left l\
+ocation of the m\
+aterial, the Y s\
+ize of the mater\
+ial\x0ais extracted\
+ form the svg fi\
+le: the svg \x22hei\
+ght\x22 attribute.<\
+/p>\x0a\x0a<h3 id=\x22P-0\
+4-07\x22>GCode Gene\
+ration</h3>\x0a\x0a<p>\
+Some useful opti\
+ons can be set u\
+p:</p>\x0a<ul>\x0a  <l\
+i>Return at init\
+ial location at \
+end of the Job</\
+li>\x0a  <li>Spindl\
+e Start/Stop (<s\
+trong>M3</strong\
+>/<strong>M5</st\
+rong> codes)</li\
+>\x0a  <li><strong>\
+M2</strong> code\
+</li>\x0a</ul>\x0a\x0a<di\
+v>\x0a<img src=\x22pyc\
+ut_gcode_generat\
+ion.png\x22 width=\x22\
+310\x22> </div>\x0a<!-\
+- --------------\
 ----------------\
 ----------------\
 ----------------\
 ----------------\
 ----------------\
-----------------\
----->\x0a<!-- -----\
-----------------\
-----------------\
+------------->\x0a<\
+!-- ------------\
 ----------------\
 ----------------\
 ----------------\
 ----------------\
------->\x0a\x0a<p></p>\
-\x0a\x0a<h3>Create Ope\
-rations</h3>\x0a\x0a<p\
->This is where t\
-he user defined \
-its cam operatio\
-ns, thus this is\
- where the\x0aactio\
-n takes place.</\
-p>\x0a\x0a<div><img sr\
-c=\x22pycut_ops.png\
-\x22 width=\x221170\x22> \
-</div>\x0a\x0a<p>First\
- one or more ite\
-m(s) have to be \
-selected in the \
-svgviewer, click\
- on\x0a\x22Create Oper\
-ation\x22 and a def\
-ault operation i\
-s created. When \
-more than one it\
-em\x0ahas been sele\
-cted, the user c\
-an perform logic\
-al operations on\
- this set of\x0aite\
-m</p>\x0a<ul>\x0a  <li\
->diff</li>\x0a  <li\
->intersect</li>\x0a\
-  <li>union</li>\
-\x0a  <li>xor</li>\x0a\
-</ul>\x0a\x0a<p>When \x22\
-enabling\x22 this o\
-p, the resulting\
- geometry will b\
-e displayed ion \
-the\x0asvgviewer</p\
->\x0a\x0a<div class=\x22i\
-nfo\x22>\x0a<p><strong\
->Note:</strong>t\
-he geometry is h\
-ighlighted in re\
-d. the highlight\
-\x0acolor can be se\
-tup in the setti\
-ngs dialog.</p>\x0a\
-</div>\x0a\x0a<p>Then \
-the cam operatio\
-n can be chosen<\
-/p>\x0a<ul>\x0a  <li>p\
-ocket - only for\
- closed shapes</\
-li>\x0a  <li>inside\
-</li>\x0a  <li>outs\
-ide</li>\x0a  <li>e\
-ngrave</li>\x0a  <l\
-i>drill <strong>\
-<span style=\x22col\
-or:#0000ff\x22>ONLY\
-</span> <span\x0a  \
-  style=\x22color:#\
-0000ff\x22>for circ\
-le shapes</span>\
-</strong></li>\x0a \
- <li>peck <stron\
-g><span style=\x22c\
-olor:#0000ff\x22>ON\
-LY for circle\x0a  \
-  shape</span></\
-strong></li>\x0a</u\
-l>\x0a\x0a<p>For opene\
-d paths, the poc\
-ket/drill/peck o\
-perations are no\
-t available.</p>\
-\x0a\x0a<p><strong><sp\
-an style=\x22color:\
-#8000ff\x22>NEW</sp\
-an></strong>: fo\
-r\x0a<strong>circle\
-s</strong>, \x22<sp\
-an\x0astyle=\x22color:\
-#8000ff\x22><strong\
->drill</strong><\
-/span>\x22 and \x22<st\
-rong><span\x0astyle\
-=\x22color:#8000ff\x22\
->peck</span></st\
-rong>\x22 operation\
-s are available.\
- Infact,\x0afor a p\
-ocket operation \
-with a circle of\
- diameter smalle\
-r than the cutte\
-r\x0adiameter, no t\
-ool path would b\
-e generated.<str\
-ong>In case of t\
-he</strong>\x0a<str\
-ong>circle diame\
-ter is smaller o\
-r equal than the\
- cutter diameter\
-</strong>,\x0ain or\
-der to have tool\
-path, \x22<strong><\
-span\x0astyle=\x22colo\
-r:#8000ff\x22>drill\
+----------------\
+--------------->\
+\x0a\x0a<p></p>\x0a\x0a<h3>C\
+reate Operations\
+</h3>\x0a\x0a<p>This i\
+s where the user\
+ defined its cam\
+ operations, thu\
+s this is where \
+the\x0aaction takes\
+ place.</p>\x0a\x0a<di\
+v><img src=\x22pycu\
+t_ops.png\x22 width\
+=\x221170\x22> </div>\x0a\
+\x0a<p>First one or\
+ more item(s) ha\
+ve to be selecte\
+d in the svgview\
+er, click on\x0a\x22Cr\
+eate Operation\x22 \
+and a default op\
+eration is creat\
+ed. When more th\
+an one item\x0ahas \
+been selected, t\
+he user can perf\
+orm logical oper\
+ations on this s\
+et of\x0aitem</p>\x0a<\
+ul>\x0a  <li>diff</\
+li>\x0a  <li>inters\
+ect</li>\x0a  <li>u\
+nion</li>\x0a  <li>\
+xor</li>\x0a</ul>\x0a\x0a\
+<p>When \x22enablin\
+g\x22 this op, the \
+resulting geomet\
+ry will be displ\
+ayed ion the\x0asvg\
+viewer</p>\x0a\x0a<div\
+ class=\x22info\x22>\x0a<\
+p><strong>Note:<\
+/strong>the geom\
+etry is highligh\
+ted in red. the \
+highlight\x0acolor \
+can be setup in \
+the settings dia\
+log.</p>\x0a</div>\x0a\
+\x0a<p>Then the cam\
+ operation can b\
+e chosen</p>\x0a<ul\
+>\x0a  <li>pocket -\
+ only for closed\
+ shapes</li>\x0a  <\
+li>inside</li>\x0a \
+ <li>outside</li\
+>\x0a  <li>engrave<\
+/li>\x0a  <li>drill\
+ <strong><span s\
+tyle=\x22color:#000\
+0ff\x22>ONLY</span>\
+ <span\x0a    style\
+=\x22color:#0000ff\x22\
+>for circle shap\
+es</span></stron\
+g></li>\x0a  <li>pe\
+ck <strong><span\
+ style=\x22color:#0\
+000ff\x22>ONLY for \
+circle\x0a    shape\
 </span></strong>\
-\x22 or \x22<strong><s\
+</li>\x0a</ul>\x0a\x0a<p>\
+For opened paths\
+, the pocket/dri\
+ll/peck operatio\
+ns are not avail\
+able.</p>\x0a\x0a<p><s\
+trong><span styl\
+e=\x22color:#8000ff\
+\x22>NEW</span></st\
+rong>: for\x0a<stro\
+ng>circles</stro\
+ng>, \x22<span\x0astyl\
+e=\x22color:#8000ff\
+\x22><strong>drill<\
+/strong></span>\x22\
+ and \x22<strong><s\
 pan\x0astyle=\x22color\
 :#8000ff\x22>peck</\
 span></strong>\x22 \
-is the way to go\
-. </p>\x0a\x0a<p>In or\
-der to generate \
-G code, enable o\
-ne or many opera\
-tions and click \
-on\x0a\x22Generate G c\
-ode\x22. <strong>Py\
-Cut</strong> wil\
-l try to do its \
-best... The\x0aresu\
-lting G code is \
-displayed in the\
- G code viewer a\
-nd G code simula\
-tor.</p>\x0a\x0a<p>Fin\
-ally, clicking o\
-n \x22Save G code\x22 \
-will produce a v\
-alid G code file\
-.\x0a<strong>Candle\
-</strong> can be\
- used to send th\
-e G code to your\
- machine. Have\x0af\
-un...</p>\x0a\x0a<p></\
-p>\x0a\x0a<h3 id=\x22P-05\
-\x22>Appendix-1: SV\
-G Editors</h3>\x0a\x0a\
-<p>It seems ther\
-e are plenty of \
-free SVG editors\
- around there. W\
-ell, let me\x0ashar\
-e my opinion abo\
-ut a few of them\
-...</p>\x0a\x0a<p>I wi\
-ll simply try <s\
-trong>to edit an\
-d save a closed \
-path</strong> co\
-mposed\x0aof lines,\
- arcs and bezier\
- curves similar \
-to what I've edi\
-ted per hand: ab\
-out 20\x0asegments \
-representing my \
-workpiece, with \
-mixed straight l\
-ines, arcs and b\
-ezier\x0acurves.</p\
->\x0a\x0a<p><strong>I \
-know that every \
-app has its own \
-learning curve</\
-strong>, but I t\
-ry\x0ause the apps \
-without investin\
-g to much time. \
-This means, I ac\
-t as a very basi\
-c\x0auser. If I do \
-not succeed, thi\
-s is due in part\
- to my inexperie\
-nce, but also in\
-\x0apart to the dif\
-ficulty of use o\
-f the app.</p>\x0a\x0a\
-<h3>Free softwar\
-e</h3>\x0a\x0a<h4>Inks\
-cape</h4>\x0a\x0a<p>To\
- me much too com\
-plicated. I \x22hat\
-e\x22 the fact that\
- the circles are\
- given\x0afrom thei\
-r \x22bounding box\x22\
-, not from the c\
-enter with radiu\
-s (ok it is poss\
-ible,\x0abut I have\
- always to figur\
-e out how). <str\
-ong>Editing path\
-s is far to\x0acomp\
-licated</strong>\
- (to me) and thu\
-s too difficult.\
- The saved SVG d\
-ata is full\x0aof <\
-strong>inkscape/\
-sodipodi namespa\
-ces</strong> stu\
-ff, which I disl\
-ike a lot\x0ain a S\
-VG file. I would\
- rather prefer a\
- raw SVG with on\
-ly the minimal a\
-nd\x0acertainly not\
- all these extra\
- namespace stuff\
-. Removing per h\
-and these extra\x0a\
-stuff destroy th\
-e Inkscape proje\
-ct settings. </p\
->\x0a\x0a<p><strong>Ye\
-appy</strong>! T\
-o obtain a SVG d\
-ata free of sodi\
-podi/inkscape\x0ana\
-mespace stuff, y\
-ou have to \x22expo\
-rt\x22 your SVG dat\
-a as SVG!</p>\x0a\x0a<\
-p>Editing points\
- coordinates \x22pe\
-r hand\x22 is nearl\
-y impossible as \
-the\x0acoordinates \
-are only accessi\
-ble from the \x22d\x22\
- string, which i\
-s not really hum\
-an\x0areadable. Her\
-e is an example \
-of a polyline wi\
-th 8 points:</p>\
-\x0a<pre><code>M 5.\
-9999998,35.99999\
-9 10,33 l 5,2.99\
-9999 -1,-4 h 7 V\
- 41 H 12 L 8.999\
-9999,38.999998</\
-code></pre>\x0a\x0a<p>\
-Note how absolut\
-e and relative k\
-eywords are give\
-n in the path. Q\
-uestion:\x0awhat ar\
-e the coordinate\
-s of the fifth p\
-oint?</p>\x0a\x0a<p>Co\
-ncatening segmen\
-ts to form a sin\
-gle path doesn't\
- even work as ex\
-pected.\x0aThe simp\
-le task consisti\
-ng of concatenat\
-ing a polyline a\
-nd a bezier curv\
-e -in\x0athis order\
-- (which are joi\
-ned) seems not t\
-o work! There is\
- the\x0a\x22<strong>co\
-mbine</strong>\x22 \
-command, but the\
- result is a sin\
-gle path (ok... \
-)\x0acontaining 2 s\
-ubpaths (with \x22M\
-\x22), which is not\
- Ok, the first o\
-ne beeing the\x0abe\
-zier curve and t\
-he second one be\
-eing the polylin\
-e, this means in\
- reversed\x0aorder.\
- Sure, with \x22M\x22s\
- everywhere, the\
- ordering is not\
- that important,\
- is it!\x0a<strong>\
-A very desapoint\
-ing implementati\
-on from Inkscape\
- I would say</st\
-rong>.\x0aConclusio\
+operations are a\
+vailable. Infact\
+,\x0afor a pocket o\
+peration with a \
+circle of diamet\
+er smaller than \
+the cutter\x0adiame\
+ter, no tool pat\
+h would be gener\
+ated.<strong>In \
+case of the</str\
+ong>\x0a<strong>cir\
+cle diameter is \
+smaller or equal\
+ than the cutter\
+ diameter</stron\
+g>,\x0ain order to \
+have toolpath, \x22\
+<strong><span\x0ast\
+yle=\x22color:#8000\
+ff\x22>drill</span>\
+</strong>\x22 or \x22<\
+strong><span\x0asty\
+le=\x22color:#8000f\
+f\x22>peck</span></\
+strong>\x22 is the \
+way to go. </p>\x0a\
+\x0a<p>In order to \
+generate G code,\
+ enable one or m\
+any operations a\
+nd click on\x0a\x22Gen\
+erate G code\x22. <\
+strong>PyCut</st\
+rong> will try t\
+o do its best...\
+ The\x0aresulting G\
+ code is display\
+ed in the G code\
+ viewer and G co\
+de simulator.</p\
+>\x0a\x0a<p>Finally, c\
+licking on \x22Save\
+ G code\x22 will pr\
+oduce a valid G \
+code file.\x0a<stro\
+ng>Candle</stron\
+g> can be used t\
+o send the G cod\
+e to your machin\
+e. Have\x0afun...</\
+p>\x0a\x0a<p></p>\x0a\x0a<h3\
+ id=\x22P-05\x22>Appen\
+dix-1: SVG Edito\
+rs</h3>\x0a\x0a<p>It s\
+eems there are p\
+lenty of free SV\
+G editors around\
+ there. Well, le\
+t me\x0ashare my op\
+inion about a fe\
+w of them...</p>\
+\x0a\x0a<p>I will simp\
+ly try <strong>t\
+o edit and save \
+a closed path</s\
+trong> composed\x0a\
+of lines, arcs a\
+nd bezier curves\
+ similar to what\
+ I've edited per\
+ hand: about 20\x0a\
+segments represe\
+nting my workpie\
+ce, with mixed s\
+traight lines, a\
+rcs and bezier\x0ac\
+urves.</p>\x0a\x0a<p><\
+strong>I know th\
+at every app has\
+ its own learnin\
+g curve</strong>\
+, but I try\x0ause \
+the apps without\
+ investing to mu\
+ch time. This me\
+ans, I act as a \
+very basic\x0auser.\
+ If I do not suc\
+ceed, this is du\
+e in part to my \
+inexperience, bu\
+t also in\x0apart t\
+o the difficulty\
+ of use of the a\
+pp.</p>\x0a\x0a<h3>Fre\
+e software</h3>\x0a\
+\x0a<h4>Inkscape</h\
+4>\x0a\x0a<p>To me muc\
+h too complicate\
+d. I \x22hate\x22 the \
+fact that the ci\
+rcles are given\x0a\
+from their \x22boun\
+ding box\x22, not f\
+rom the center w\
+ith radius (ok i\
+t is possible,\x0ab\
+ut I have always\
+ to figure out h\
+ow). <strong>Edi\
+ting paths is fa\
+r to\x0acomplicated\
+</strong> (to me\
+) and thus too d\
+ifficult. The sa\
+ved SVG data is \
+full\x0aof <strong>\
+inkscape/sodipod\
+i namespaces</st\
+rong> stuff, whi\
+ch I dislike a l\
+ot\x0ain a SVG file\
+. I would rather\
+ prefer a raw SV\
+G with only the \
+minimal and\x0acert\
+ainly not all th\
+ese extra namesp\
+ace stuff. Remov\
+ing per hand the\
+se extra\x0astuff d\
+estroy the Inksc\
+ape project sett\
+ings. </p>\x0a\x0a<p><\
+strong>Yeappy</s\
+trong>! To obtai\
+n a SVG data fre\
+e of sodipodi/in\
+kscape\x0anamespace\
+ stuff, you have\
+ to \x22export\x22 you\
+r SVG data as SV\
+G!</p>\x0a\x0a<p>Editi\
+ng points coordi\
+nates \x22per hand\x22\
+ is nearly impos\
+sible as the\x0acoo\
+rdinates are onl\
+y accessible fro\
+m the \x22d\x22 string\
+, which is not r\
+eally human\x0aread\
+able. Here is an\
+ example of a po\
+lyline with 8 po\
+ints:</p>\x0a<pre><\
+code>M 5.9999998\
+,35.999999 10,33\
+ l 5,2.999999 -1\
+,-4 h 7 V 41 H 1\
+2 L 8.9999999,38\
+.999998</code></\
+pre>\x0a\x0a<p>Note ho\
+w absolute and r\
+elative keywords\
+ are given in th\
+e path. Question\
+:\x0awhat are the c\
+oordinates of th\
+e fifth point?</\
+p>\x0a\x0a<p>Concateni\
+ng segments to f\
+orm a single pat\
+h doesn't even w\
+ork as expected.\
+\x0aThe simple task\
+ consisting of c\
+oncatenating a p\
+olyline and a be\
+zier curve -in\x0at\
+his order- (whic\
+h are joined) se\
+ems not to work!\
+ There is the\x0a\x22<\
+strong>combine</\
+strong>\x22 command\
+, but the result\
+ is a single pat\
+h (ok... )\x0aconta\
+ining 2 subpaths\
+ (with \x22M\x22), whi\
+ch is not Ok, th\
+e first one beei\
+ng the\x0abezier cu\
+rve and the seco\
+nd one beeing th\
+e polyline, this\
+ means in revers\
+ed\x0aorder. Sure, \
+with \x22M\x22s everyw\
+here, the orderi\
+ng is not that i\
+mportant, is it!\
+\x0a<strong>A very \
+desapointing imp\
+lementation from\
+ Inkscape I woul\
+d say</strong>.\x0a\
+Conclusion: <str\
+ong>unusable if \
+you want to gene\
+rate complex pat\
+hs.</strong></p>\
+\x0a\x0a<p>PS: There i\
+s the \x22Draw Bezi\
+er and straight \
+line tool\x22 with \
+mode \x22Create\x0areg\
+ular Bezier path\
+\x22 but after many\
+ many hours of t\
+rial (despite Yo\
+uTube\x0atutorials)\
+ I did not succe\
+ed to use it pro\
+perly. Is it jus\
+t me ? With it y\
+ou\x0acannot anyway\
+ mix your path w\
+ith an arc curve\
+.</p>\x0a\x0a<h4>QCAD<\
+/h4>\x0a\x0a<p>It read\
+s/writes <strong\
+>dxf</strong> fi\
+les, can export \
+them as SVG.\x0aUnf\
+ortunately the <\
+strong>SVG expor\
+t</strong> comes\
+ with extra rubb\
+ish for the\x0atria\
+l version (nice!\
+). Forget the fr\
+ee version. <str\
+ong>Trial versio\
+n allows\x0ayou to \
+test it about 15\
+ min, then it cl\
+oses itself</str\
+ong> (you can re\
+start).\x0aSo in fi\
+fteen minutes I \
+could observe th\
+at editing polyl\
+ines is possible\
+, as\x0awell as Arc\
+s and Cubic Bezi\
+er curves (did n\
+ot find quadrati\
+c bezier curves)\
+.\x0aThese Cubic Be\
+zier curves are \
+exported right i\
+n the SVG export\
+. Unfortunately\x0a\
+(again), when co\
+ncatening lines/\
+polylines with t\
+hese cubic bezie\
+r curves in\x0aorde\
+r to form a whol\
+e path, they are\
+ transformed int\
+o Arcs (why ?) o\
+r Lines\x0a(why?), \
+and so the SVG e\
+xport. Conclusio\
 n: <strong>unusa\
-ble if you want \
-to generate comp\
-lex paths.</stro\
-ng></p>\x0a\x0a<p>PS: \
-There is the \x22Dr\
-aw Bezier and st\
-raight line tool\
-\x22 with mode \x22Cre\
-ate\x0aregular Bezi\
-er path\x22 but aft\
-er many many hou\
-rs of trial (des\
-pite YouTube\x0atut\
-orials) I did no\
-t succeed to use\
- it properly. Is\
- it just me ? Wi\
-th it you\x0acannot\
- anyway mix your\
- path with an ar\
-c curve.</p>\x0a\x0a<h\
-4>QCAD</h4>\x0a\x0a<p>\
-It reads/writes \
-<strong>dxf</str\
-ong> files, can \
-export them as S\
-VG.\x0aUnfortunatel\
-y the <strong>SV\
-G export</strong\
-> comes with ext\
-ra rubbish for t\
-he\x0atrial version\
- (nice!). Forget\
- the free versio\
-n. <strong>Trial\
- version allows\x0a\
-you to test it a\
-bout 15 min, the\
-n it closes itse\
-lf</strong> (you\
- can restart).\x0aS\
-o in fifteen min\
-utes I could obs\
-erve that editin\
-g polylines is p\
-ossible, as\x0awell\
- as Arcs and Cub\
-ic Bezier curves\
- (did not find q\
-uadratic bezier \
-curves).\x0aThese C\
-ubic Bezier curv\
-es are exported \
-right in the SVG\
- export. Unfortu\
-nately\x0a(again), \
-when concatening\
- lines/polylines\
- with these cubi\
-c bezier curves \
-in\x0aorder to form\
- a whole path, t\
-hey are transfor\
-med into Arcs (w\
-hy ?) or Lines\x0a(\
-why?), and so th\
-e SVG export. Co\
-nclusion: <stron\
-g>unusable and v\
-ery unfriendly\x0af\
-or users willing\
- to test the qua\
-lity of QCAD. </\
-strong>Well,\x0a<st\
-rong>QDAC</stron\
-g> costs only <s\
-trong>38\xe2\x82\xac</str\
-ong>, not that m\
-uch, but\x0areally \
-testing it befor\
-e buying is poss\
-ible but not ver\
-y practicable.</\
-p>\x0a\x0a<h4>LibreCAD\
- <span style=\x22co\
-lor:#008000\x22>***\
-*BEST****</span>\
-</h4>\x0a\x0a<p>It is \
-(was) a fork of \
-QCAD (2011). It \
-looks a lot like\
- QCAD, but the (\
-my)\x0afirst feelin\
-g is that the us\
-er interface see\
-ms better. <stro\
-ng>The SVG expor\
-t\x0ais exactly wha\
-t one would expe\
-ct (well , nearl\
-y)</strong>. The\
-re is minimal\x0aex\
-tra LibreCAD nam\
-espace stuff in \
-the output. Do n\
-ot know yet how \
-to assign ids\x0ato\
- the entities (b\
-ad). You only ha\
-ve to take care \
-that in the SVG \
-format y = 0\x0ais \
-the top of the d\
-rawing, so coord\
-inates in the SV\
-G file are inver\
-ted from\x0acoordin\
-ates in the app \
-(which is normal\
-). The y = 0 cor\
-respond to the h\
-ighest\x0acoordinat\
-e of your items \
-in the canvas (N\
-ote: in <strong>\
-QCAD</strong> th\
-e\x0acoordinates ar\
-e the same and t\
-here is a global\
- svg transform=\x22\
-scale(1,-1)\x22. Th\
-e\x0aviewBox is cal\
-culated accordin\
-gly. It would be\
- nice to have th\
-is option in\x0a<st\
-rong>LibreCAD</s\
-trong>).</p>\x0a\x0a<p\
-><strong>Splines\
-</strong> <stron\
-g>through</stron\
-g> <strong>3 poi\
-nts\x0acorrespond t\
-o bezier quadrat\
-ic curves</stron\
-g>, while <stron\
-g>splines throug\
-h 4\x0aor more poin\
-ts are not cubic\
- bezier curves b\
-ut only sequence\
- of quadratic\x0acu\
-rves</strong> (i\
-t seems possible\
-! is it ? they r\
-eally look to be\
- smooth of\x0aorder\
- 3!).</p>\x0a\x0a<p>In\
- the GUI, the mi\
-ddle point of th\
-e curve is enter\
-ed, not the \x22bez\
-ier\x0acontrol poin\
-t\x22. <strong>It w\
-ould be nice if \
-one could enter \
-the quadratic\x0abe\
-zier curve with \
-its start/end po\
-ints and its con\
-trol point</stro\
-ng>. There is\x0aun\
-fortunately no c\
-ubic bezier curv\
-es. <strong>It w\
-ould be nice if \
-one could\x0aenter \
-the cubic bezier\
- curve with its \
-start/end points\
- and its two con\
-trol\x0apoints</str\
+ble and very unf\
+riendly\x0afor user\
+s willing to tes\
+t the quality of\
+ QCAD. </strong>\
+Well,\x0a<strong>QD\
+AC</strong> cost\
+s only <strong>3\
+8\xe2\x82\xac</strong>, n\
+ot that much, bu\
+t\x0areally testing\
+ it before buyin\
+g is possible bu\
+t not very pract\
+icable.</p>\x0a\x0a<h4\
+>LibreCAD <span \
+style=\x22color:#00\
+8000\x22>****BEST**\
+**</span></h4>\x0a\x0a\
+<p>It is (was) a\
+ fork of QCAD (2\
+011). It looks a\
+ lot like QCAD, \
+but the (my)\x0afir\
+st feeling is th\
+at the user inte\
+rface seems bett\
+er. <strong>The \
+SVG export\x0ais ex\
+actly what one w\
+ould expect (wel\
+l , nearly)</str\
+ong>. There is m\
+inimal\x0aextra Lib\
+reCAD namespace \
+stuff in the out\
+put. Do not know\
+ yet how to assi\
+gn ids\x0ato the en\
+tities (bad). Yo\
+u only have to t\
+ake care that in\
+ the SVG format \
+y = 0\x0ais the top\
+ of the drawing,\
+ so coordinates \
+in the SVG file \
+are inverted fro\
+m\x0acoordinates in\
+ the app (which \
+is normal). The \
+y = 0 correspond\
+ to the highest\x0a\
+coordinate of yo\
+ur items in the \
+canvas (Note: in\
+ <strong>QCAD</s\
+trong> the\x0acoord\
+inates are the s\
+ame and there is\
+ a global svg tr\
+ansform=\x22scale(1\
+,-1)\x22. The\x0aviewB\
+ox is calculated\
+ accordingly. It\
+ would be nice t\
+o have this opti\
+on in\x0a<strong>Li\
+breCAD</strong>)\
+.</p>\x0a\x0a<p><stron\
+g>Splines</stron\
+g> <strong>throu\
+gh</strong> <str\
+ong>3 points\x0acor\
+respond to bezie\
+r quadratic curv\
+es</strong>, whi\
+le <strong>splin\
+es through 4\x0aor \
+more points are \
+not cubic bezier\
+ curves but only\
+ sequence of qua\
+dratic\x0acurves</s\
+trong> (it seems\
+ possible! is it\
+ ? they really l\
+ook to be smooth\
+ of\x0aorder 3!).</\
+p>\x0a\x0a<p>In the GU\
+I, the middle po\
+int of the curve\
+ is entered, not\
+ the \x22bezier\x0acon\
+trol point\x22. <st\
+rong>It would be\
+ nice if one cou\
+ld enter the qua\
+dratic\x0abezier cu\
+rve with its sta\
+rt/end points an\
+d its control po\
+int</strong>. Th\
+ere is\x0aunfortuna\
+tely no cubic be\
+zier curves. <st\
+rong>It would be\
+ nice if one cou\
+ld\x0aenter the cub\
+ic bezier curve \
+with its start/e\
+nd points and it\
+s two control\x0apo\
+ints</strong></p\
+>\x0a\x0a<p><strong>Ye\
+aahh! There is a\
+nother splines b\
+utton (strange!)\
+ where it is\x0apos\
+sible to indicat\
+e which degree (\
+1, 2 or 3) the s\
+pline has to be.\
+ And for 2\x0aand 3\
+ these are bezie\
+r quadratic or c\
+ubic curves with\
+ control points \
+entered\x0afrom the\
+ UI.</strong> Se\
+tting for the de\
+gree is in the m\
+ain menu bar (th\
+is is\x0aLibreCAD c\
+oncept, but not \
+so straight to b\
+e seen if one no\
+t knows).</p>\x0a\x0a<\
+p>Editing polyli\
+nes/arcs/quad be\
+zier and concate\
+nate them togeth\
+er\x0a(\x22<strong>cre\
+ate polyline fro\
+m existing segme\
+nts</strong>\x22) i\
+s excellent,\x0a(<s\
+trong>SVG output\
+ is a single &lt\
+;path&gt; entity\
+</strong>) but t\
+here is here\x0aa b\
+ug: one cannot c\
+oncatenate polyl\
+ines/arcs with b\
+eziers/splines. \
+</p>\x0a\x0a<p>Snap st\
+uff is perfect, \
+with many snap o\
+ptions.</p>\x0a\x0a<p>\
+<strong>So this \
+is a real pity t\
+hat LibreCAD doe\
+s not perform th\
+e\x0aconcatenation \
+of lines/arcs wi\
+th beziers/splin\
+es into a single\
+ SVG path, but i\
+t\x0ais fixable per\
+ hand in the out\
+put.</strong></p\
+>\x0a\x0a<p>Conclusion\
+: <strong><span \
+style=\x22color:#00\
+8000\x22>The best S\
+VG \x22path\x22\x0agenera\
+tor I have found\
+ so far.</span><\
+/strong></p>\x0a\x0a<h\
+4>SolveSpace <sp\
+an style=\x22color:\
+#ff00ff\x22><span s\
+tyle=\x22color:#008\
+000\x22><span\x0astyle\
+=\x22color:#ff00ff\x22\
+>*<strong>*** VE\
+RY BEST\x0a****</st\
+rong></span></sp\
+an></span></h4>\x0a\
+\x0a<p>Ever heard o\
+f it? A parametr\
+ic system as kno\
+wn from the 3D m\
+odellers.\x0a<stron\
+g>Incredible!</s\
+trong> The GUI l\
+ooks like from t\
+he beginning of \
+the '80s,\x0abut <s\
+trong><span styl\
+e=\x22color:#008000\
+\x22>usability/feat\
+ures more than\x0at\
+op</span></stron\
+g>.</p>\x0a\x0a<p><str\
+ong style=\x22color\
+:#008000\x22>SVG ex\
+port perfect (we\
+ll, nearly\x0aperfe\
+ct)</strong> . T\
+he construction \
+constraints can \
+also be exported\
+, so there\x0aare a\
+ lot of \x22paths\x22 \
+in the svg expor\
+t, even if you h\
+ave only drawn 1\
+ path.\x0aUnfortuna\
+tely, you cannot\
+ give your paths\
+ some ids. It wo\
+uld be nice if t\
+hese\x0a\x22contraints\
+\x22 paths could be\
+ grouped into th\
+eir own group in\
+ order to isolat\
+ed\x0athem from the\
+ real paths.</p>\
+\x0a\x0a<p>Infact the \
+<strong>SolveSpa\
+ce</strong> app \
+is meant as demo\
+ for their\x0aparam\
+etric engine whi\
+ch can be used i\
+n other CAD appl\
+ications (exampl\
+e: the new\x0a-2023\
+- 2D Sketcher of\
+ Blender). Shoul\
+d I write my own\
+ CAD app (a mixt\
+ure of\x0aLibreCAD \
+and SolveSpace, \
+just for 2D para\
+metric stuff and\
+ SVG export) ? N\
+o!</p>\x0a\x0a<p>Concl\
+usion: <strong s\
+tyle=\x22color:#008\
+000\x22>The best SV\
+G \x22path\x22 generat\
+or I\x0ahave found \
+so far. Sorry Li\
+breCAD</strong>.\
+</p>\x0a\x0a<h4>XFig</\
+h4>\x0a\x0a<p>My belov\
+ed drawing edito\
+r during my yout\
+h! Completely ou\
+tdated, but stil\
+l\x0athe best! Unfo\
+rtunately the SV\
+G export is defi\
+cient. There are\
+ Bezier curves\x0a(\
+really?) i.e. sp\
+lines with contr\
+ol points (it lo\
+oks like Bezier)\
+ but the SVG\x0aexp\
+ort outputs them\
+ as polylines. <\
+strong>Conclusio\
+n: unusable</str\
 ong></p>\x0a\x0a<p><st\
-rong>Yeaahh! The\
-re is another sp\
-lines button (st\
-range!) where it\
- is\x0apossible to \
-indicate which d\
-egree (1, 2 or 3\
-) the spline has\
- to be. And for \
-2\x0aand 3 these ar\
-e bezier quadrat\
-ic or cubic curv\
-es with control \
-points entered\x0af\
-rom the UI.</str\
-ong> Setting for\
- the degree is i\
-n the main menu \
-bar (this is\x0aLib\
-reCAD concept, b\
-ut not so straig\
-ht to be seen if\
- one not knows).\
-</p>\x0a\x0a<p>Editing\
- polylines/arcs/\
-quad bezier and \
-concatenate them\
- together\x0a(\x22<str\
-ong>create polyl\
-ine from existin\
-g segments</stro\
-ng>\x22) is excelle\
-nt,\x0a(<strong>SVG\
- output is a sin\
-gle &lt;path&gt;\
- entity</strong>\
-) but there is h\
-ere\x0aa bug: one c\
-annot concatenat\
-e polylines/arcs\
- with beziers/sp\
-lines. </p>\x0a\x0a<p>\
-Snap stuff is pe\
-rfect, with many\
- snap options.</\
-p>\x0a\x0a<p><strong>S\
-o this is a real\
- pity that Libre\
-CAD does not per\
-form the\x0aconcate\
-nation of lines/\
-arcs with bezier\
-s/splines into a\
- single SVG path\
-, but it\x0ais fixa\
-ble per hand in \
-the output.</str\
-ong></p>\x0a\x0a<p>Con\
-clusion: <strong\
-><span style=\x22co\
-lor:#008000\x22>The\
- best SVG \x22path\x22\
-\x0agenerator I hav\
-e found so far.<\
-/span></strong><\
-/p>\x0a\x0a<h4>XFig</h\
-4>\x0a\x0a<p>My belove\
-d drawing editor\
- during my youth\
-! Completely out\
-dated, but still\
-\x0athe best! Unfor\
-tunately the SVG\
- export is defic\
-ient. There are \
-Bezier curves\x0a(r\
-eally?) i.e. spl\
-ines with contro\
-l points (it loo\
-ks like Bezier) \
-but the SVG\x0aexpo\
-rt outputs them \
-as polylines. <s\
-trong>Conclusion\
-: unusable</stro\
-ng></p>\x0a\x0a<p><str\
-ong>Online edito\
-rs:</strong></p>\
-\x0a\x0a<p>There are p\
-lenty of them, b\
-ut they all seem\
- to be meant for\
- painting, not\x0af\
-or CAD (a little\
- like Inkscape).\
- Please correct \
-me if I am wrong\
-.</p>\x0a\x0a<h3>Non-f\
-ree software</h3\
->\x0a\x0a<h4>DesignCAD\
-</h4>\x0a\x0a<p>The fr\
-ee version has t\
-he same capabili\
-ties as the full\
- version, except\
-ed the\x0aexports t\
-o other formats.\
- Bad!</p>\x0a\x0a<h4>T\
-urboCAD</h4>\x0a\x0a<p\
->Only a 15 days \
-trial version - \
-TO SEE</p>\x0a\x0a<h4>\
-Solid Edge 2D Dr\
-afting (Siemens)\
-</h4>\x0a\x0a<p>The 3.\
-8 GB big app fro\
-m Siemens is <st\
-rong>free of cha\
-rge</strong>. It\
- is\x0aincredible s\
-oftware. But It \
-seems there is n\
-o SVG export at \
-all. \x22Schade\x22.</\
-p>\x0a\x0a<h4>Draftsig\
-ht 2D (Dassault)\
-</h4>\x0a\x0a<p>Only a\
- 30 days trial v\
-ersion - TO SEE.\
- Oh my God! Ther\
-e is this \x22Power\
- Tool\x22\x0anamed \x222D\
- G-Code generato\
-r\x22! Forget PyCut\
-l! (or not) . SV\
-G export seems t\
-o be\x0amore meant \
-as a picture for\
- display only pu\
-rpose.</p>\x0a\x0a<h4>\
-Fusion 360</h4>\x0a\
-\x0a<p>The free ver\
-sion is also inc\
-redible. But I d\
-id not try the S\
-VG export,\x0abecau\
-se I gave up in \
-the meanwhile lo\
-oking for SVG ed\
-itor...</p>\x0a\x0a<h4\
->What else?</h4>\
-\x0a\x0a<p>It is cumbe\
-rsome to try to \
-find a decent SV\
-G editor, or at \
-least a CAD\x0aprog\
-ram with ease of\
- use and decent \
-SVG export. Libr\
-eCAD would be si\
-mply\x0aperfect if \
-it would support\
- Bezier curves (\
-keeping dxf as i\
-nput data alongs\
-ide\x0asvg as expor\
-t data is not a \
-problem). Does a\
-nyone knows one?\
- (I mean, if\x0ahe/\
-s<strong></stron\
-g>he **really** \
-tried it and can\
- recommand it). \
-</p>\x0a\x0a<h3>Conclu\
-sion</h3>\x0a\x0a<p>Th\
-e fact that it i\
-s so difficult t\
-o find an accept\
-able SVG path \x22w\
-riter\x22\x0aprogram c\
-an only be due t\
-o the SVG format\
- itself, which i\
-s completely \x22us\
-er\x22 or\x0a\x22app\x22 un-\
-friendly. The pa\
-th definition is\
- too complicated\
-. What is the po\
-int of\x0aallowing \
-paths with sub-p\
-aths? maybe beca\
-use the SVG form\
-at completely ig\
-nores\x0athe concep\
-t of \x22multiline\x22\
-/\x22multipolygon\x22 \
-etc. Polygons ha\
-ve no \x22interiors\
-\x22 so\x0athey must b\
-e defined as suc\
-h in a path comp\
-osed of 2 subpat\
-hs for this\x0apurp\
-ose.</p>\x0a\x0a<p><st\
-rong>All in all \
-very desapointin\
-g, <span\x0astyle=\x22\
-color:#008000\x22><\
-/span></strong><\
-span\x0astyle=\x22colo\
-r:#008000\x22><stro\
-ng>except</stron\
-g></span><strong\
-><span\x0astyle=\x22co\
-lor:#008000\x22> Li\
-breCAD</span>!</\
-strong></p>\x0a\x0a<h4\
-><span style=\x22co\
-lor:#0000ff\x22>Per\
- hand</span></h4\
->\x0a\x0a<p>Finally my\
- prefered method\
-! Per hand you c\
-an also write it\
-ems in the\x0a<code\
->&lt;def&gt;</co\
-de> section, and\
- use these items\
- repeatidly with\
-\x0atransformations\
- with the <code>\
-&lt;use&gt;</cod\
-e> tag. My utili\
-ty\x0a<strong>svgre\
-solver.py</stron\
-g> then transfor\
-ms this svg file\
- into another on\
-e,\x0ausable for <s\
-trong>PyCut. Not\
- the perfect too\
-lchain I admit, \
-but well my svgs\
-\x0aare not that co\
-mplicated</stron\
-g>. You have to \
-understand how t\
-o write an\x0aarc/b\
-ezier curve per \
-hand, it is not \
-that difficult. \
-And yours svgs a\
-re then\x0a\x22<strong\
->clean</strong>\x22\
-.</p>\x0a\x0a<p></p>\x0a\x0a\
-<p></p>\x0a</div>\x0a<\
-/body>\x0a</html>\x0a\
+rong>Online edit\
+ors:</strong></p\
+>\x0a\x0a<p>There are \
+plenty of them, \
+but they all see\
+m to be meant fo\
+r painting, not\x0a\
+for CAD (a littl\
+e like Inkscape)\
+. Please correct\
+ me if I am wron\
+g.</p>\x0a\x0a<h3>Non-\
+free software</h\
+3>\x0a\x0a<h4>DesignCA\
+D</h4>\x0a\x0a<p>The f\
+ree version has \
+the same capabil\
+ities as the ful\
+l version, excep\
+ted the\x0aexports \
+to other formats\
+. Bad!</p>\x0a\x0a<h4>\
+TurboCAD</h4>\x0a\x0a<\
+p>Only a 15 days\
+ trial version -\
+ TO SEE</p>\x0a\x0a<h4\
+>Solid Edge 2D D\
+rafting (Siemens\
+)</h4>\x0a\x0a<p>The 3\
+.8 GB big app fr\
+om Siemens is <s\
+trong>free of ch\
+arge</strong>. I\
+t is\x0aincredible \
+software. But It\
+ seems there is \
+no SVG export at\
+ all. \x22Schade\x22.<\
+/p>\x0a\x0a<h4>Draftsi\
+ght 2D (Dassault\
+)</h4>\x0a\x0a<p>Only \
+a 30 days trial \
+version - TO SEE\
+. Oh my God! The\
+re is this \x22Powe\
+r Tool\x22\x0anamed \x222\
+D G-Code generat\
+or\x22! Forget PyCu\
+tl! (or not) . S\
+VG export seems \
+to be\x0amore meant\
+ as a picture fo\
+r display only p\
+urpose.</p>\x0a\x0a<h4\
+>Fusion 360</h4>\
+\x0a\x0a<p>The free ve\
+rsion is also in\
+credible. But I \
+did not try the \
+SVG export,\x0abeca\
+use I gave up in\
+ the meanwhile l\
+ooking for SVG e\
+ditor...</p>\x0a\x0a<h\
+4>What else?</h4\
+>\x0a\x0a<p>It is cumb\
+ersome to try to\
+ find a decent S\
+VG editor, or at\
+ least a CAD\x0apro\
+gram with ease o\
+f use and decent\
+ SVG export. Lib\
+reCAD would be s\
+imply\x0aperfect if\
+ it would suppor\
+t Bezier curves \
+(keeping dxf as \
+input data along\
+side\x0asvg as expo\
+rt data is not a\
+ problem). Does \
+anyone knows one\
+? (I mean, if\x0ahe\
+/s<strong></stro\
+ng>he **really**\
+ tried it and ca\
+n recommand it).\
+ </p>\x0a\x0a<h3>Concl\
+usion</h3>\x0a\x0a<p>T\
+he fact that it \
+is so difficult \
+to find an accep\
+table SVG path \x22\
+writer\x22\x0aprogram \
+can only be due \
+to the SVG forma\
+t itself, which \
+is completely \x22u\
+ser\x22 or\x0a\x22app\x22 un\
+-friendly. The p\
+ath definition i\
+s too complicate\
+d. What is the p\
+oint of\x0aallowing\
+ paths with sub-\
+paths? maybe bec\
+ause the SVG for\
+mat completely i\
+gnores\x0athe conce\
+pt of \x22multiline\
+\x22/\x22multipolygon\x22\
+ etc. Polygons h\
+ave no \x22interior\
+s\x22 so\x0athey must \
+be defined as su\
+ch in a path com\
+posed of 2 subpa\
+ths for this\x0apur\
+pose.</p>\x0a\x0a<p><s\
+trong>All in all\
+ very desapointi\
+ng, excepted <sp\
+an\x0astyle=\x22color:\
+#008000\x22>LibreCA\
+D</span> and <sp\
+an\x0astyle=\x22color:\
+#008000\x22>SolveSp\
+ace!</span></str\
+ong></p>\x0a\x0a<h4><s\
+pan style=\x22color\
+:#0000ff\x22>Per ha\
+nd</span></h4>\x0a\x0a\
+<p>Finally my pr\
+efered method! P\
+er hand you can \
+also write items\
+ in the\x0a<code>&l\
+t;def&gt;</code>\
+ section, and us\
+e these items re\
+peatidly with\x0atr\
+ansformations wi\
+th the <code>&lt\
+;use&gt;</code> \
+tag. My utility\x0a\
+<strong>svgresol\
+ver.py</strong> \
+then transforms \
+this svg file in\
+to another one,\x0a\
+usable for <stro\
+ng>PyCut. Not th\
+e perfect toolch\
+ain I admit, but\
+ well my svgs\x0aar\
+e not that compl\
+icated</strong>.\
+ You have to und\
+erstand how to w\
+rite an\x0aarc/bezi\
+er curve per han\
+d, it is not tha\
+t difficult. And\
+ yours svgs are \
+then\x0a\x22<strong>cl\
+ean</strong>\x22.</\
+p>\x0a\x0a<p></p>\x0a\x0a<p>\
+</p>\x0a</div>\x0a</bo\
+dy>\x0a</html>\x0a\
 \x00\x00g\xca\
 \x89\
 PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x0dIHDR\x00\
@@ -15713,36 +15792,64 @@ z\xb3m\x00\xc8\x18\x80`\x90\xb1p\x99\xe93\xbd\x19\
 \x88\x911\x00@\x88\x1412\x06\x00\x08\x91\x22F\xc6\
 \x00\x00!R\xc4\xfe\xef\xff\xfe?\xf4*`\xd6\xa9\xc3\
 \xff\xb4\x00\x00\x00\x00IEND\xaeB`\x82\
-\x00\x00\x01\xb8\
+\x00\x00\x03z\
 <\
 h3>PyCut version\
-: 0.3.4</h3>\x0d\x0a\x0d\x0a\
-<ul>\x0d\x0a    <li><s\
-trong>svgpathtoo\
-ls version: late\
-st</strong></li>\
- \x0d\x0a    <li><stro\
-ng>shapely versi\
-on: 1.8.0</stron\
-g></li> \x0d\x0a    <l\
-i><strong>matplo\
-tlib version: la\
+: 0.5.0_RC2</h3>\
+\x0d\x0a\x0d\x0a<ul>\x0d\x0a    <l\
+i><strong>shapel\
+y version: 1.8.<\
+/strong></li> \x0d\x0a\
+    <li><strong>\
+svgelement versi\
+on: latest</stro\
+ng></li> \x0d\x0a    <\
+li><strong>lxml \
+version: latest<\
+/strong></li>\x0d\x0a \
+   <li><strong>m\
+atplotlib versio\
+n: 3.6.2</strong\
+></li> \x0d\x0a    <li\
+><strong>freetyp\
+e-py version: la\
 test</strong></l\
 i> \x0d\x0a</ul>\x0d\x0a\x0d\x0a\x0d\x0a\
-<pre>\x0d\x0a\x0d\x0a0.3.4\x0d\x0a\
-=====\x0d\x0a    \x0d\x0aLin\
-k gcode browser \
-&lt;-&gt; gcode \
-simulator\x0d\x0a    \x0d\
-\x0a0.3.2\x0d\x0a=====\x0d\x0a \
-   \x0d\x0aAnimated Gc\
-ode Simulator\x0d\x0a\x0d\
-\x0a0.3.1\x0d\x0a=====\x0d\x0a\x0d\
-\x0aSmall Settings \
-Dialog\x0d\x0a\x0d\x0a\x0d\x0a0.3.\
-0\x0d\x0a=====\x0d\x0a\x0d\x0aMigr\
-ated to Shapely\x0d\
-\x0a</pre>\
+<pre>\x0d\x0a\x0d\x0a# 0.5.0\
+\x0d\x0a\x0d\x0ause only svg\
+elements, get ri\
+d of svgpathtool\
+s\x0d\x0a    \x0d\x0a# 0.4.0\
+ \x0d\x0a    \x0d\x0aprocess\
+ \x22opened\x22 lines \
+(not polygons)\x0d\x0a\
+    \x0d\x0a# 0.3.6\x0d\x0a \
+   \x0d\x0aFix generat\
+ion of shapely p\
+olygons from SVG\
+\x0d\x0a(svgpathtools \
+bug workaround)\x0d\
+\x0a    \x0d\x0a# 0.3.5\x0d\x0a\
+    \x0d\x0aFix genera\
+tion of shapely \
+polygons from SV\
+G\x0d\x0a(no duplicate\
+d points leading\
+ to \x22unvalid\x22 po\
+lygons)\x0d\x0a\x0d\x0a0.3.4\
+\x0d\x0a=====\x0d\x0a    \x0d\x0aL\
+ink gcode browse\
+r &lt;-&gt; gcod\
+e simulator\x0d\x0a   \
+ \x0d\x0a0.3.2\x0d\x0a=====\x0d\
+\x0a    \x0d\x0aAnimated \
+Gcode Simulator\x0d\
+\x0a\x0d\x0a0.3.1\x0d\x0a=====\x0d\
+\x0a\x0d\x0aSmall Setting\
+s Dialog\x0d\x0a\x0d\x0a\x0d\x0a0.\
+3.0\x0d\x0a=====\x0d\x0a\x0d\x0aMi\
+grated to Shapel\
+y\x0d\x0a</pre>\
 \x00\x00B\x8d\
 \x89\
 PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x0dIHDR\x00\
@@ -50611,45 +50718,45 @@ qt_resource_struct = b"\
 \x00\x00\x01}\x1b=\x82K\
 \x00\x00\x04*\x00\x00\x00\x00\x00\x01\x00\x00O\x03\
 \x00\x00\x01}\x1b=\x82[\
-\x00\x00\x09\x9a\x00\x01\x00\x00\x00\x01\x00\x0c(\xea\
+\x00\x00\x09\x9a\x00\x01\x00\x00\x00\x01\x00\x0c/\x99\
 \x00\x00\x01n\xe0\x1e\xf6\xe0\
 \x00\x00\x04\xa0\x00\x02\x00\x00\x00\x01\x00\x00\x00H\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x08\xb6\x00\x02\x00\x00\x00\x06\x00\x00\x00B\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x07Z\x00\x00\x00\x00\x00\x01\x00\x02\xaa+\
-\x00\x00\x01\x87\xb5\x13\x5c\x08\
-\x00\x00\x07z\x00\x00\x00\x00\x00\x01\x00\x032/\
+\x00\x00\x01\x87\xd3\x0e\x82E\
+\x00\x00\x07z\x00\x00\x00\x00\x00\x01\x00\x037\x1c\
 \x00\x00\x01\x7f\x9eT\x0c\xa0\
-\x00\x00\x08\x86\x00\x00\x00\x00\x00\x01\x00\x04\x9c\xbf\
+\x00\x00\x08\x86\x00\x00\x00\x00\x00\x01\x00\x04\xa3n\
 \x00\x00\x01\x7f\x18\xb9\x9eN\
-\x00\x00\x07\xb4\x00\x00\x00\x00\x00\x01\x00\x03\x99\xfd\
+\x00\x00\x07\xb4\x00\x00\x00\x00\x00\x01\x00\x03\x9e\xea\
 \x00\x00\x01\x7f\x0el\xd4r\
 \x00\x00\x078\x00\x00\x00\x00\x00\x01\x00\x02Wp\
 \x00\x00\x01\x7f\x0el\xd4r\
-\x00\x00\x08\x1a\x00\x00\x00\x00\x00\x01\x00\x04\x14M\
+\x00\x00\x08\x1a\x00\x00\x00\x00\x00\x01\x00\x04\x1a\xfc\
 \x00\x00\x01\x7f\x0el\xd4m\
-\x00\x00\x07\xde\x00\x00\x00\x00\x00\x01\x00\x03\xd0\x00\
-\x00\x00\x01\x80<\xfa\xa8\x02\
-\x00\x00\x08P\x00\x00\x00\x00\x00\x01\x00\x04X\xa6\
+\x00\x00\x07\xde\x00\x00\x00\x00\x00\x01\x00\x03\xd4\xed\
+\x00\x00\x01\x87\xd3\x10\xfb\xb4\
+\x00\x00\x08P\x00\x00\x00\x00\x00\x01\x00\x04_U\
 \x00\x00\x01\x7f\x0el\xd4n\
 \x00\x00\x06\xfe\x00\x00\x00\x00\x00\x01\x00\x022\x0e\
 \x00\x00\x01\x7f\x0el\xd4r\
-\x00\x00\x07\xf8\x00\x00\x00\x00\x00\x01\x00\x03\xd1\xbc\
+\x00\x00\x07\xf8\x00\x00\x00\x00\x00\x01\x00\x03\xd8k\
 \x00\x00\x01\x7f\x0el\xd4s\
-\x00\x00\x09J\x00\x00\x00\x00\x00\x01\x00\x04\xc6s\
+\x00\x00\x09J\x00\x00\x00\x00\x00\x01\x00\x04\xcd\x22\
 \x00\x00\x01x\x92\x0f\xed\x09\
-\x00\x00\x09$\x00\x00\x00\x00\x00\x01\x00\x04\xc3\xc1\
+\x00\x00\x09$\x00\x00\x00\x00\x00\x01\x00\x04\xcap\
 \x00\x00\x01{\xd9\xc1Q(\
-\x00\x00\x08\xfc\x00\x00\x00\x00\x00\x01\x00\x04\xc1\x1d\
+\x00\x00\x08\xfc\x00\x00\x00\x00\x00\x01\x00\x04\xc7\xcc\
 \x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x08\xda\x00\x00\x00\x00\x00\x01\x00\x04\xbe\xb0\
+\x00\x00\x08\xda\x00\x00\x00\x00\x00\x01\x00\x04\xc5_\
 \x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x09b\x00\x00\x00\x00\x00\x01\x00\x04\xd6\xee\
+\x00\x00\x09b\x00\x00\x00\x00\x00\x01\x00\x04\xdd\x9d\
 \x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x08\xc2\x00\x00\x00\x00\x00\x01\x00\x04\xb7\xfa\
+\x00\x00\x08\xc2\x00\x00\x00\x00\x00\x01\x00\x04\xbe\xa9\
 \x00\x00\x01~ \xc4\x8a\x80\
-\x00\x00\x09\x84\x00\x00\x00\x00\x00\x01\x00\x04\xd9m\
+\x00\x00\x09\x84\x00\x00\x00\x00\x00\x01\x00\x04\xe0\x1c\
 \x00\x00\x01x\x92\x0f\xed\x12\
 "
 
