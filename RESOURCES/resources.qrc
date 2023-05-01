@@ -39,11 +39,13 @@
         <file>qtwebchannel/qwebchannel.js</file>
         <file>doc/Inkscape_settings_in.png</file>
         <file>doc/Inkscape_settings_mm.png</file>
+        <file>doc/pycut_curve_to_line_conversion.png</file>
         <file>doc/pycut_gcode_conversion.png</file>
         <file>doc/pycut_gcode_generation.png</file>
         <file>doc/pycut_material.png</file>
         <file>doc/pycut_tabs.png</file>
         <file>doc/pycut_tool.png</file>
+        <file>doc/pycut_ops.png</file>
         <file>doc/pycut_svgsettings.png</file>
         <file>doc/js/prism.js</file>
         <file>doc/css/prism.css</file>

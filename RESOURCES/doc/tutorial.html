@@ -2,10 +2,10 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>PYCUT TUTORIAL</title>
-  <link href="css/prism.css" rel="stylesheet">
-  <link href="css/pycut.css" rel="stylesheet">
-  <link href="css/simpletree.css" rel="stylesheet">
-  <script type="text/javascript" src="js/prism.js">
+  <link href="qrc:/doc/css/prism.css" rel="stylesheet">
+  <link href="qrc:/doc/css/pycut.css" rel="stylesheet">
+  <link href="qrc:/doc/css/simpletree.css" rel="stylesheet">
+  <script type="text/javascript" src="qrc:doc/js/prism.js">
  </script>
 </head>
 
@@ -20,7 +20,7 @@
 <ul class="tree">
   <li><a href="#P-01">Introduction</a> 
     <ul>
-      <li><a href="#P-01-01">Inkscape SVG files</a></li>
+      <li><a href="#P-01-01">SVG Shapes and Paths</a></li>
     </ul>
   </li>
   <li><a href="#P-02">SVG Documents</a> </li>
@@ -94,9 +94,7 @@ produce <strong>SVG</strong> files and will shortly point out what has to be
 taken into consideration when creating "usable" <strong>SVG</strong> files for
 <strong>PyCut</strong>.</p>
 
-<h3>SVG</h3>
-
-<h4>Shapes and Paths</h4>
+<h3 id="P-01-01">SVG Shapes and Paths</h3>
 
 <p>The SVG standard is large, and <strong>PyCut</strong> cannot simply read a
 svg file, display it, and allow the user to define cnc operations on the
@@ -310,7 +308,7 @@ named as the CAM operation name.</p>
 <h3 id="P-04-01">Svg Settings</h3>
 
 <div>
-<img src="pycut_svgsettings.png" width="310"> </div>
+<img src="qrc:/doc/pycut_svgsettings.png" width="310"> </div>
 
 <h4>user units scale</h4>
 
@@ -323,7 +321,7 @@ Inkscape automatically sets the <strong>user units scale </strong><strong>to
 width="100mm" and height="40mm")</strong></p>
 
 <div>
-<img src="Inkscape_settings_mm.png" width="563"> </div>
+<img src="qrc:/doc/Inkscape_settings_mm.png" width="563"> </div>
 
 <p>Of course when editing the svg (in Inkscape or in a text editor),
 <strong>the user is only concerned with the user units</strong> : he draws a
@@ -341,7 +339,7 @@ scale to 25.4</strong>. Because of this, the <strong>view box remains at "0 0
 100x40.</p>
 
 <div>
-<img src="Inkscape_settings_in.png" width="563"> </div>
+<img src="qrc:/doc/Inkscape_settings_in.png" width="563"> </div>
 
 <p>Filling a box half the size of the document is 50x20, right, but what are
 real physical dimensions of that box ? The user would have to steadily
@@ -415,7 +413,7 @@ factor is always 1</strong> .</p>
 <h3 id="P-04-02">Tool</h3>
 
 <div>
-<img src="pycut_tool.png" width="310"> </div>
+<img src="qrc:/doc/pycut_tool.png" width="310"> </div>
 
 <h3 id="P-04-03">Tabs</h3>
 
@@ -428,7 +426,7 @@ generated toolpaths. The height of the tabs is shared by all tabs. <strong>They
 are ignored for Pocket operations</strong>.</p>
 
 <div>
-<img src="pycut_tabs.png" width="310"> </div>
+<img src="qrc:/doc/pycut_tabs.png" width="310"> </div>
 
 <p></p>
 
@@ -446,7 +444,7 @@ Ok. </p>
 </p>
 
 <div>
-<img src="pycut_material.png" width="310"> </div>
+<img src="qrc:/doc/pycut_material.png" width="310"> </div>
 
 <p></p>
 
@@ -458,6 +456,7 @@ Ok. </p>
 
 <p>If your design contain curves (svg "arcs" or "bezier" curves), they have to
 be discretized in small segments.</p>
+<img src="qrc:/doc/pycut_curve_to_line_conversion.png" width="300"> 
 
 <p>The 2 following parameters allow to specified how fine the curve
 discretization will be:</p>
@@ -486,7 +485,7 @@ coordinates. But still the reference is the top-left postion.</p>
 </ul>
 
 <div>
-<img src="pycut_gcode_conversion.png" width="310"> </div>
+<img src="qrc:/doc/pycut_gcode_conversion.png" width="310"> </div>
 
 <p>Note that these 4 buttons act as radio buttons.</p>
 
@@ -521,7 +520,7 @@ is extracted form the svg file: the svg "height" attribute.</p>
 </ul>
 
 <div>
-<img src="pycut_gcode_generation.png" width="310"> </div>
+<img src="qrc:/doc/pycut_gcode_generation.png" width="310"> </div>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
@@ -532,7 +531,7 @@ is extracted form the svg file: the svg "height" attribute.</p>
 <p>This is where the user defined its cam operations, thus this is where the
 action takes place.</p>
 
-<div><img src="pycut_ops.png" width="1170"> </div>
+<div><img src="qrc:/doc/pycut_ops.png" width="1170"> </div>
 
 <p>First one or more item(s) have to be selected in the svgviewer, click on
 "Create Operation" and a default operation is created. When more than one item

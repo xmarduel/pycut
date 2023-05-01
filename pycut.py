@@ -17,6 +17,8 @@ from PySide6 import QtCore
 from PySide6 import QtGui
 from PySide6 import QtWidgets
 
+from PySide6 import QtWebEngineWidgets
+
 from PySide6.QtUiTools import QUiLoader
 
 # TEST simulator with python
@@ -341,6 +343,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         settings_dialog.exec()
 
+    '''
     def cb_show_tutorial(self):
         dlg = QtWidgets.QDialog(self)
 
@@ -361,16 +364,17 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             view.setHtml(self.notfound % {'message':str(msg)})
 
         dlg.show()
+    '''
 
-    def cb_show_tutorial_NEW(self):
+    def cb_show_tutorial(self):
         '''
         in test
         '''
         dlg = QtWidgets.QDialog(self)
 
-        '''
+
         htmlView = QtWebEngineWidgets.QWebEngineView(dlg)
-        htmlView.setMinimumSize(1000,600)
+        htmlView.setMinimumSize(1100,600)
 
         mainLayout = QtWidgets.QVBoxLayout()
         mainLayout.addWidget(htmlView)
@@ -379,24 +383,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         dlg.setWindowTitle("PyCut Tutorial")
         dlg.setModal(True)
 
-        try:
-            fileName = ":/doc/tutorial_standalone.html"
-            file = QtCore.QFile(fileName)
-            if file.open(QtCore.QIODevice.ReadOnly):
-                data = str(file.readAll(), 'utf-8') # explicit encoding
-            else:
-                data = "xxx"
+        fileName = ":/doc/tutorial.html"
+        file = QtCore.QFile(fileName)
+        if file.open(QtCore.QIODevice.ReadOnly):
+            data = str(file.readAll(), 'utf-8') # explicit encoding
+        else:
+            data = "ERROR"
 
-            file.close()
+        file.close()
 
-            #url = QtCore.QUrl.fromLocalFile(":/doc/tutorial_standalone.html")
-            #htmlView.load(url)
-
-            htmlView.setHtml(data)
-
-        except Exception as msg:
-            htmlView.setHtml(data)
-        '''
+        htmlView.setHtml(data)
 
         dlg.show()
 
