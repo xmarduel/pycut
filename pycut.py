@@ -12,6 +12,7 @@ import posixpath
 import ntpath
 
 from typing import List
+from typing import Dict
 
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -117,7 +118,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.build_recent_jobs_submenu()
 
         self.operations = []
-        self.tabs = []
+        self.tabs : List[Dict[str,any]] = []
 
         # a job to keep the generated gcode in memory (and save it)
         self.job = None
@@ -253,7 +254,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def toggle_left_side(self):
         '''
         '''
-        if self.layoutToggleLeftSideAction.isChecked():
+        if self.menubarToggleLeftSideButton.isChecked():
             self.ui.scrollArea_left.hide()
         else:
             self.ui.scrollArea_left.show()
@@ -261,7 +262,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def toggle_middle_area(self):
         '''
         '''
-        if self.layoutToggleMiddleAreaAction.isChecked():
+        if self.menubarToggleMiddleAreaButton.isChecked():
             self.ui.operationsview_manager.hide()
         else:
             self.ui.operationsview_manager.show()
@@ -269,7 +270,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def toggle_right_side(self):
         '''
         '''
-        if self.layoutToggleRightSideAction.isChecked():
+        if self.menubarToggleRightSideButton.isChecked():
             self.ui.scrollArea_right.hide()
         else:
             self.ui.scrollArea_right.show()

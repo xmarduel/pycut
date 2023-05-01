@@ -701,7 +701,9 @@ perfect)</strong> . The construction constraints can also be exported, so there
 are a lot of "paths" in the svg export, even if you have only drawn 1 path.
 Unfortunately, you cannot give your paths some ids. It would be nice if these
 "contraints" paths could be grouped into their own group in order to isolated
-them from the real paths.</p>
+them from the real paths. There are only cubic bezier curves, and they are
+always "paired", this means one cannot have a single "C" curve in the middle of
+two lines. So quadratic bezier curves are unfortunately missing.</p>
 
 <p>Infact the <strong>SolveSpace</strong> app is meant as demo for their
 parametric engine which can be used in other CAD applications (example: the new

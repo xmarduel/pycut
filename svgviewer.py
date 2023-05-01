@@ -381,7 +381,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # zoom with the initial zoom factor
         self.scale(self.currentZoom, self.currentZoom)
 
-    def set_tabs(self, tabs: List['Tab']):
+    def set_tabs(self, tabs: List[Dict[str,any]]):
         '''
         '''
         if not self.in_dnd:
@@ -517,7 +517,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.fill_svg_viewer(self.svg)
         self.display_tabs(self.tabs)
 
-    def make_tabs_svg_paths(self, tabs: List['Tab']) -> List[any]:
+    def make_tabs_svg_paths(self, tabs: List[Dict[str,any]]) -> List[SvgPath]:
         '''
         '''
         from gcode_generator import Tab
@@ -541,7 +541,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
             o_tab.svg_path.shape_attrs['fill'] = self.TABS["fill"]
             o_tab.svg_path.shape_attrs['fill-opacity'] = self.TABS["fill-opacity"]
 
-            if tab["enabled"] == False:
+            if not tab["enabled"]:
                 o_tab.svg_path.shape_attrs['fill-opacity'] = self.TABS["fill-opacity-disabled"]
             
             tabs_svg_paths.append(o_tab.svg_path)
@@ -589,7 +589,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         return cam_paths_svg_paths
     
-    def display_tabs(self, tabs: List['Tab']):
+    def display_tabs(self, tabs: List[Dict[str,any]]):
         '''
         '''
         # the tabs

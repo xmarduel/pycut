@@ -230,9 +230,9 @@ class Tab:
 class TabsModel:
     '''
     '''
-    def __init__(self, tabs: List[Tab]):
+    def __init__(self, tabs: List[Dict[str, any]]):
 
-        self.tabs: List[Tab] = tabs
+        self.tabs: List[Dict[str, any]] = tabs
 
         self.units = "mm"  # default
         self.height = ValWithUnit(2.0, self.units) # default

@@ -696,7 +696,7 @@ class cam:
 class TabsSeparator:
     '''
     '''
-    def __init__(self, tabs: List['Tab']):
+    def __init__(self, tabs: List[Dict[str,any]]):
         self.tabs = tabs
 
         self.separated_paths : List[shapely.geometry.LineString] = []
@@ -722,8 +722,8 @@ class TabsSeparator:
          
         shapely_tabs_ = []
         # 1. from the tabs, build shapely tab polygons
-        for tab_data in self.tabs:
-            tab = Tab(tab_data)
+        for tab_def in self.tabs:
+            tab = Tab(tab_def)
             shapely_tabs = tab.svg_path.import_as_polygons_list()
             shapely_tabs_ += shapely_tabs
 

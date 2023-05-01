@@ -36,8 +36,25 @@
     },
     "Tabs": {
       "units": "mm",
-      "height": 2.0,
-      "tabs": []
+      "height": 0.5,
+      "tabs": [
+        {
+          "center": [
+            77.0,
+            55.0
+          ],
+          "radius": 13.0,
+          "enabled": true
+        },
+        {
+          "center": [
+            67.0,
+            54.0
+          ],
+          "radius": 9.0,
+          "enabled": true
+        }
+      ]
     },
     "Tool": {
       "units": "mm",
@@ -62,9 +79,9 @@
     "GCodeConversion": {
       "units": "mm",
       "flip_xy": false,
-      "x_offset": 0.0,
-      "y_offset": 0.0,
-      "xy_reference": "ZERO_TOP_LEFT_OF_MATERIAL"
+      "x_offset": -75.0,
+      "y_offset": 48.0,
+      "xy_reference": "ZERO_CENTER_OF_OP"
     },
     "GCodeGeneration": {
       "return_to_zero_at_end": true,
