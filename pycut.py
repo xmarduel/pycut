@@ -208,39 +208,37 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 msgBox.exec()
 
 
-        self.layoutToggleLeftSideAction = QtGui.QAction(QtGui.QIcon(":/images/left-area.png"), "hide/show",
+        self.menubarToggleLeftSideButton = QtGui.QAction(QtGui.QIcon(":/images/left-area.png"), "hide/show",
                 self, shortcut=QtGui.QKeySequence.Back,
                 statusTip="Show/Hide Left Side", triggered=self.toggle_left_side)
-        self.layoutToggleLeftSideAction.setCheckable(True)
-        self.layoutToggleLeftSideAction.setToolTip("Show/Hide Left Side View") # still not shown
+        self.menubarToggleLeftSideButton.setCheckable(True)
+        self.menubarToggleLeftSideButton.setToolTip("Show/Hide Left Side View") # still not shown
 
-        self.layoutToggleMiddleAreaAction = QtGui.QAction(QtGui.QIcon(":/images/bellow-area.png"), "hide/show",
+        self.menubarToggleMiddleAreaButton = QtGui.QAction(QtGui.QIcon(":/images/bellow-area.png"), "hide/show",
                 self, shortcut=QtGui.QKeySequence.Forward,
                 statusTip="Show/Hide Op. Table", triggered=self.toggle_middle_area)
-        self.layoutToggleMiddleAreaAction.setCheckable(True)
-        self.layoutToggleMiddleAreaAction.setToolTip("Show/Hide Op. Table View") # still not shown
+        self.menubarToggleMiddleAreaButton.setCheckable(True)
+        self.menubarToggleMiddleAreaButton.setToolTip("Show/Hide Op. Table View") # still not shown
 
-        self.layoutToggleRightSideAction = QtGui.QAction(QtGui.QIcon(":/images/right-area.png"), "hide/show",
+        self.menubarToggleRightSideButton = QtGui.QAction(QtGui.QIcon(":/images/right-area.png"), "hide/show",
                 self, shortcut=QtGui.QKeySequence.Forward,
                 statusTip="Show/Hide Right Side", triggered=self.toggle_right_side)
-        self.layoutToggleRightSideAction.setCheckable(True)
-        self.layoutToggleRightSideAction.setToolTip("Show/Hide Right Side View") # still not shown
+        self.menubarToggleRightSideButton.setCheckable(True)
+        self.menubarToggleRightSideButton.setToolTip("Show/Hide Right Side View") # still not shown
 
-        self.menuBar().addAction(self.layoutToggleLeftSideAction)
-        self.menuBar().addAction(self.layoutToggleMiddleAreaAction)
-        self.menuBar().addAction(self.layoutToggleRightSideAction)
+        self.menuBar().addAction(self.menubarToggleLeftSideButton)
+        self.menuBar().addAction(self.menubarToggleMiddleAreaButton)
+        self.menuBar().addAction(self.menubarToggleRightSideButton)
         
+        # how set add a combobox to the menu bar ??
+        # self.comboBoxGeomPreviewColor = QtWidgets.QComboBox(self.menuBar())
+        # self.comboBoxGeomPreviewColor.setItemData(0, QtGui.QColor.red, QtGui.Qt.DecorationRole)
+        # self.comboBoxGeomPreviewColor.setItemData(1, QtGui.QColor.blue, QtGui.Qt.DecorationRole)
+        # self.comboBoxGeomPreviewColor.setItemData(1, QtGui.QColor.green, QtGui.Qt.DecorationRole)
+        # self.menubarChangeGeomPreviewColorAction = QtWidgets.QWidgetAction(self.menuBar())
+        # self.menubarChangeGeomPreviewColorAction.setDefaultWidget(self.comboBoxGeomPreviewColor)
+        # self.menuBar().addAction(self.menubarChangeGeomPreviewColorAction)
 
-        #job_no = 4 # DEBUGGING SHORTCUT
-        
-        #if job_no == 1:
-        #    self.open_job("./jobs/cnc_three_rects.json")
-        #elif job_no == 2:
-        #    self.open_job("./jobs/cnc_three_rects_with_circle.json")
-        #elif job_no == 3:
-        #    self.open_job("./jobs/cnc_all_letters.json")
-        #elif job_no == 4:
-        #    self.open_job("./jobs/cnc_control_panel.json")
 
         # these callbacks only after have loading a job
         self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
@@ -361,6 +359,44 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             view.setSource(QtCore.QUrl.fromLocalFile(":/doc/tutorial.html"))
         except Exception as msg:
             view.setHtml(self.notfound % {'message':str(msg)})
+
+        dlg.show()
+
+    def cb_show_tutorial_NEW(self):
+        '''
+        in test
+        '''
+        dlg = QtWidgets.QDialog(self)
+
+        '''
+        htmlView = QtWebEngineWidgets.QWebEngineView(dlg)
+        htmlView.setMinimumSize(1000,600)
+
+        mainLayout = QtWidgets.QVBoxLayout()
+        mainLayout.addWidget(htmlView)
+
+        dlg.setLayout(mainLayout)
+        dlg.setWindowTitle("PyCut Tutorial")
+        dlg.setModal(True)
+
+        try:
+            fileName = ":/doc/tutorial_standalone.html"
+            file = QtCore.QFile(fileName)
+            if file.open(QtCore.QIODevice.ReadOnly):
+                data = str(file.readAll(), 'utf-8') # explicit encoding
+            else:
+                data = "xxx"
+
+            file.close()
+
+            #url = QtCore.QUrl.fromLocalFile(":/doc/tutorial_standalone.html")
+            #htmlView.load(url)
+
+            htmlView.setHtml(data)
+
+        except Exception as msg:
+            htmlView.setHtml(data)
+        '''
 
         dlg.show()
 

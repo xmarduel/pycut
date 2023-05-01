@@ -15792,65 +15792,2370 @@ z\xb3m\x00\xc8\x18\x80`\x90\xb1p\x99\xe93\xbd\x19\
 \x88\x911\x00@\x88\x1412\x06\x00\x08\x91\x22F\xc6\
 \x00\x00!R\xc4\xfe\xef\xff\xfe?\xf4*`\xd6\xa9\xc3\
 \xff\xb4\x00\x00\x00\x00IEND\xaeB`\x82\
-\x00\x00\x03\x83\
+\x00\x00\x8f\xee\
+<\
+html>\x0d\x0a<head>\x0d\x0a \
+ <meta http-equi\
+v=\x22content-type\x22\
+ content=\x22text/h\
+tml; charset=UTF\
+-8\x22>\x0d\x0a  <title>P\
+YCUT TUTORIAL</t\
+itle>\x0d\x0a  <link h\
+ref=\x22css/prism.c\
+ss\x22 rel=\x22stylesh\
+eet\x22>\x0d\x0a  <link h\
+ref=\x22css/pycut.c\
+ss\x22 rel=\x22stylesh\
+eet\x22>\x0d\x0a  <link h\
+ref=\x22css/simplet\
+ree.css\x22 rel=\x22st\
+ylesheet\x22>\x0d\x0a  <s\
+cript type=\x22text\
+/javascript\x22 src\
+=\x22js/prism.js\x22>\x0d\
+\x0a </script>\x0d\x0a</h\
+ead>\x0d\x0a\x0d\x0a<body>\x0d\x0a\
+<!-- -----------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+>\x0d\x0a<!-- --------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+--->\x0d\x0a<!-- -----\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+------>\x0d\x0a<!-- --\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+--------->\x0d\x0a\x0d\x0a<d\
+iv class=\x22sidena\
+v\x22>\x0d\x0a<h3 class=\x22\
+title_sidenav\x22>C\
+ontents</h3>\x0d\x0a<u\
+l class=\x22tree\x22>\x0d\
+\x0a  <li><a href=\x22\
+#P-01\x22>Introduct\
+ion</a> \x0d\x0a    <u\
+l>\x0d\x0a      <li><a\
+ href=\x22#P-01-01\x22\
+>Inkscape SVG fi\
+les</a></li>\x0d\x0a  \
+  </ul>\x0d\x0a  </li>\
+\x0d\x0a  <li><a href=\
+\x22#P-02\x22>SVG Docu\
+ments</a> </li>\x0d\
+\x0a  <li><a href=\x22\
+#P-03\x22>Basic exa\
+mple</a> \x0d\x0a    <\
+ul>\x0d\x0a      <li><\
+a href=\x22#P-03-01\
+\x22>Importing a SV\
+G file</a></li>\x0d\
+\x0a      <li><a hr\
+ef=\x22#P-03-02\x22>Cr\
+eating a PyCut J\
+ob</a></li>\x0d\x0a   \
+   <li><a href=\x22\
+#P-03-03\x22>Creati\
+ng CAM operation\
+s</a></li>\x0d\x0a    \
+  <li><a href=\x22#\
+P-03-04\x22>Create \
+the GCode</a></l\
+i>\x0d\x0a    </ul>\x0d\x0a \
+ </li>\x0d\x0a  <li><a\
+ href=\x22#P-04\x22>GU\
+I Components</a>\
+ \x0d\x0a    <ul>\x0d\x0a   \
+   <li><a href=\x22\
+#P-04-01\x22>Svg Se\
+ttings</a></li>\x0d\
+\x0a      <li><a hr\
+ef=\x22#P-04-02\x22>To\
+ol (shared by al\
+l Operations)</a\
+></li>\x0d\x0a      <l\
+i><a href=\x22#P-04\
+-03\x22>Tabs</a></l\
+i>\x0d\x0a      <li><a\
+ href=\x22#P-04-04\x22\
+>Material</a></l\
+i>\x0d\x0a      <li><a\
+ href=\x22#P-04-05\x22\
+>Curve to Line C\
+onversion</a></l\
+i>\x0d\x0a      <li><a\
+ href=\x22#P-04-06\x22\
+>GCode Conversio\
+n</a></li>\x0d\x0a    \
+  <li><a href=\x22#\
+P-04-07\x22>GCode G\
+eneration</a></l\
+i>\x0d\x0a    </ul>\x0d\x0a \
+ </li>\x0d\x0a  <li><a\
+ href=\x22#P-05\x22>Ap\
+pendix-1: SVG Ed\
+itors</a></li>\x0d\x0a\
+</ul>\x0d\x0a<script t\
+ype=\x22text/javasc\
+ript\x22>\x0d\x0avar tree\
+ = document.quer\
+ySelectorAll('ul\
+.tree a:not(:las\
+t-child)');\x0d\x0afor\
+ (var i = 0; i <\
+ tree.length; i+\
++){\x0d\x0a    tree[i]\
+.addEventListene\
+r('click', funct\
+ion(e) {\x0d\x0a      \
+  var parent = e\
+.target.parentEl\
+ement;\x0d\x0a        \
+var classList = \
+parent.classList\
+;\x0d\x0a        if (c\
+lassList.contain\
+s(\x22open\x22)) {\x0d\x0a  \
+          classL\
+ist.remove('open\
+');\x0d\x0a           \
+ var opensubs = \
+parent.querySele\
+ctorAll(':scope \
+.open');\x0d\x0a      \
+      for (var i\
+ = 0; i < opensu\
+bs.length; i++) \
+{\x0d\x0a             \
+   opensubs[i].c\
+lassList.remove(\
+'open');\x0d\x0a      \
+      }\x0d\x0a       \
+ } else {\x0d\x0a     \
+       classList\
+.add('open');\x0d\x0a \
+       }\x0d\x0a      \
+  if (classList.\
+contains(\x22open\x22)\
+) {\x0d\x0a           \
+ //e.preventDefa\
+ult(); // on ope\
+n -> jump (defau\
+lt)\x0d\x0a          \x0d\
+\x0a        } else \
+{\x0d\x0a            e\
+.preventDefault(\
+); // on close\x0d\x0a\
+        }\x0d\x0a    }\
+);\x0d\x0a}</script>\x0d\x0a\
+</div>\x0d\x0a<!-- ---\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+-------->\x0d\x0a<!-- \
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------->\x0d\x0a<!\
+-- -------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+-------------->\x0d\
+\x0a<!-- ----------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+->\x0d\x0a\x0d\x0a<div class\
+=\x22main\x22>\x0d\x0a<h1 cl\
+ass=\x22etitle\x22>PyC\
+ut Tutorial</h1>\
+\x0d\x0a\x0d\x0a<h2 id=\x22P-01\
+\x22>Introduction</\
+h2>\x0d\x0a\x0d\x0a<p>Welcom\
+e to <strong>PyC\
+ut</strong>, a c\
+lone of <strong>\
+jsCut</strong>, \
+the\x0d\x0aexcellent (\
+at least for beg\
+inners) CAM, web\
+-based programm,\
+ that takes as i\
+nput\x0d\x0a<strong>SV\
+G</strong> files\
+ and generates G\
+-Code. So why th\
+is rewrite ?</p>\
+\x0d\x0a\x0d\x0a<p><strong>P\
+yCut</strong> ai\
+ms to offer all \
+the (minimalisti\
+cs) features fou\
+nd\x0d\x0ain jsCut, wi\
+th some small im\
+provements. Hope\
+fully you will f\
+ind\x0d\x0a<strong>PyC\
+ut</strong> usef\
+ull when learnin\
+g CNC and produc\
+ing your first G\
+Code\x0d\x0afiles.</p>\
+\x0d\x0a\x0d\x0a<p>Starting \
+point of <strong\
+>PyCut</strong> \
+are <strong>SVG<\
+/strong> files,\x0d\
+\x0ayour designs. I\
+n the following,\
+ we will use <st\
+rong>Inkscape</s\
+trong> to\x0d\x0aprodu\
+ce <strong>SVG</\
+strong> files an\
+d will shortly p\
+oint out what ha\
+s to be\x0d\x0ataken i\
+nto consideratio\
+n when creating \
+\x22usable\x22 <strong\
+>SVG</strong> fi\
+les for\x0d\x0a<strong\
+>PyCut</strong>.\
+</p>\x0d\x0a\x0d\x0a<h3>SVG<\
+/h3>\x0d\x0a\x0d\x0a<h4>Shap\
+es and Paths</h4\
+>\x0d\x0a\x0d\x0a<p>The SVG \
+standard is larg\
+e, and <strong>P\
+yCut</strong> ca\
+nnot simply read\
+ a\x0d\x0asvg file, di\
+splay it, and al\
+low the user to \
+define cnc opera\
+tions on the\x0d\x0a\x22s\
+hapes\x22 defined i\
+nside the svg fi\
+le. Of course, t\
+he goal of\x0d\x0a<str\
+ong>PyCut</stron\
+g> is to process\
+ as many svg dat\
+a as possible.</\
+p>\x0d\x0a\x0d\x0a<p>The sha\
+pes inside a svg\
+ file are the fo\
+llowing:</p>\x0d\x0a<u\
+l>\x0d\x0a  <li><span \
+style=\x22color:#00\
+00ff\x22>&lt;rect&g\
+t;</span></li>\x0d\x0a\
+  <li><span styl\
+e=\x22color:#0000ff\
+\x22>&lt;circle&gt;\
+</span></li>\x0d\x0a  \
+<li><span style=\
+\x22color:#0000ff\x22>\
+&lt;ellipse&gt;<\
+/span></li>\x0d\x0a  <\
+li><span style=\x22\
+color:#0000ff\x22>&\
+lt;polygon&gt;</\
+span></li>\x0d\x0a  <l\
+i><span style=\x22c\
+olor:#0000ff\x22>&l\
+t;line&gt;</span\
+></li>\x0d\x0a  <li><s\
+pan style=\x22color\
+:#0000ff\x22>&lt;po\
+lyline&gt;</span\
+></li>\x0d\x0a</ul>\x0d\x0a\x0d\
+\x0a<p>The almighty\
+</p>\x0d\x0a<ul>\x0d\x0a  <l\
+i><span style=\x22c\
+olor:#0000ff\x22>&l\
+t;path&gt;</span\
+></li>\x0d\x0a</ul>\x0d\x0a\x0d\
+\x0a<p>can define i\
+n a single path \
+definition many \
+closed or opened\
+ paths, not\x0d\x0anec\
+essarely related\
+ with each other\
+s.</p>\x0d\x0a\x0d\x0a<p>Fin\
+ally, the user w\
+ill also want to\
+ process the str\
+ings written in \
+the svg\x0d\x0afile:</\
+p>\x0d\x0a<ul>\x0d\x0a  <li>\
+<span style=\x22col\
+or:#0000ff\x22>&lt;\
+text&gt;</span><\
+/li>\x0d\x0a</ul>\x0d\x0a\x0d\x0a<\
+p><strong>PyCut<\
+/strong> process\
+es \x22paths\x22 in or\
+der to calculate\
+ cnc tool\x0d\x0apaths\
+, but thankfully\
+ it can read out\
+ of the box all \
+kind of shapes a\
+nd paths,\x0d\x0aso th\
+ere is <strong>n\
+o need</strong> \
+to convert your \
+svg files into \x22\
+paths\x0d\x0aonly\x22 svg\
+s.</p>\x0d\x0a\x0d\x0a<p><st\
+rong>PyCut</stro\
+ng> will import \
+these shapes/pat\
+hs either as (sh\
+apely)\x0d\x0a\x22<span s\
+tyle=\x22color:#000\
+0ff\x22>polygon</sp\
+an>\x22 (i.e. <stro\
+ng>closed\x0d\x0aitems\
+</strong>) or as\
+ (shapely) \x22<spa\
+n style=\x22color:#\
+0000ff\x22>line</sp\
+an>\x22 (i.e.\x0d\x0a<str\
+ong>opened items\
+</strong>). Of c\
+ourse, svg <span\
+\x0d\x0astyle=\x22color:#\
+0000ff\x22>&lt;rect\
+&gt;</span>, <sp\
+an\x0d\x0astyle=\x22color\
+:#0000ff\x22>&lt;ci\
+rcle&gt;</span>,\
+ <span\x0d\x0astyle=\x22c\
+olor:#0000ff\x22>&l\
+t;ellipse&gt;</s\
+pan> and <span\x0d\x0a\
+style=\x22color:#00\
+00ff\x22>&lt;polygo\
+n&gt;</span> are\
+ closed items, w\
+hile <span\x0d\x0astyl\
+e=\x22color:#0000ff\
+\x22>&lt;line&gt;</\
+span> and <span\x0d\
+\x0astyle=\x22color:#0\
+000ff\x22>&lt;polyl\
+ine&gt;</span> a\
+re opened items.\
+ When importing\x0d\
+\x0aa <span style=\x22\
+color:#0000ff\x22>&\
+lt;path&gt;</spa\
+n>, things are m\
+ore complicated,\
+\x0d\x0aas a path can \
+be composed of m\
+any subpaths (st\
+arting with\x0d\x0a[<s\
+trong>Mm</strong\
+>]) and every su\
+bpath can be clo\
+sed or not (endi\
+ng with\x0d\x0a[<stron\
+g>Zz</strong>]).\
+ <strong>PyCut</\
+strong> will try\
+ to import these\
+ paths\x0d\x0adefiniti\
+ons right, and i\
+n case of closed\
+ paths will also\
+ try to import t\
+hem as\x0d\x0ashapely \
+polygons \x22<stron\
+g>with holes</st\
+rong>\x22 even if t\
+his concept does\
+ not\x0d\x0areally exi\
+st in SVG. Moreo\
+ver <strong>PyCu\
+t</strong> will \
+try to import a \
+svg\x0d\x0apath as a v\
+alid MultiPolygo\
+n in the shapely\
+ sense, or as a \
+list of valid\x0d\x0aM\
+ultiPolygons if \
+one single valid\
+ MultiPolygon is\
+ not possible. F\
+or example,\x0d\x0athe\
+ letters \x22i\x22 or \
+\x22j\x22 are defined \
+with a single sv\
+g path, defining\
+ two\x0d\x0aseparates \
+polygons, and it\
+ makes sense to \
+consider these p\
+aths as a single\
+\x0d\x0ashapely MultiP\
+olygon entity. T\
+he letter \x22a\x22 is\
+ a polygon with \
+one hole, the\x0d\x0al\
+etter \x22g\x22 is a p\
+olygon with two \
+holes. In the fr\
+eetype vocabular\
+y, \x22a\x22 is\x0d\x0aforme\
+d by 2 \x22contours\
+\x22, \x22g\x22 by three \
+contours.</p>\x0d\x0a\x0d\
+\x0a<p>There is one\
+ exception: <str\
+ong>PyCut</stron\
+g> cannot proces\
+s yet <span\x0d\x0asty\
+le=\x22color:#0000f\
+f\x22>&lt;text&gt;<\
+/span> items. Fo\
+rtunately, <span\
+\x0d\x0astyle=\x22color:#\
+0000ff\x22>&lt;text\
+&gt;</span> item\
+s have to be con\
+verted into <spa\
+n\x0d\x0astyle=\x22color:\
+#0000ff\x22>&lt;pat\
+h&gt;</span> ite\
+ms within\x0d\x0a<stro\
+ng>Inkscape</str\
+ong>, sonce they\
+ will be ignored\
+ by\x0d\x0a<strong>PyC\
+ut</strong>. <st\
+rong>PyCut</stro\
+ng> also comes w\
+ith the utiilty\x0d\
+\x0a<strong>svgtext\
+2svgpath.py</str\
+ong> which will \
+also convert you\
+r <code><span\x0d\x0as\
+tyle=\x22color:#000\
+0ff\x22>&lt;text&gt\
+;</span></code> \
+items. How to us\
+e it? just\x0d\x0acall\
+ the <strong>svg\
+text2svgpath.py<\
+/strong> program\
+ which outputs i\
+n a new svg\x0d\x0athe\
+ <span style=\x22co\
+lor:#0000ff\x22>&lt\
+;text&gt;</span>\
+ items as <span\x0d\
+\x0astyle=\x22color:#0\
+000ff\x22>&lt;path&\
+gt;</span> items\
+. Copy/paste the\
+ result of a\x0d\x0a<s\
+pan style=\x22color\
+:#0000ff\x22>&lt;te\
+xt&gt;</span> co\
+nversion into yo\
+ur own svg. A\x0d\x0as\
+uccessfull conve\
+rsion will only \
+occurs if the <s\
+pan\x0d\x0astyle=\x22colo\
+r:#0000ff\x22>&lt;t\
+ext&gt;</span> i\
+tem is simple en\
+ough: the text\x0d\x0a\
+\x22value\x22 should n\
+ot be splitted i\
+nto several <spa\
+n\x0d\x0astyle=\x22color:\
+#0000ff\x22>&lt;tsp\
+an&gt;</span> it\
+ems with differe\
+nt fonts. No <sp\
+an\x0d\x0astyle=\x22color\
+:#0000ff\x22>&lt;ts\
+pan&gt;</span> t\
+ag at all is als\
+o possible (and\x0d\
+\x0asimpler). <stro\
+ng><span style=\x22\
+color:#8000ff\x22>I\
+N PROGRESS</span\
+></strong>.</p>\x0d\
+\x0a\x0d\x0a<p>All in all\
+, if <strong>PyC\
+ut</strong> were\
+ to display text\
+ strings at the\x0d\
+\x0awrong positions\
+, the user can a\
+lways export the\
+ svg from\x0d\x0a<stro\
+ng>Inkscape</str\
+ong> (and write \
+<strong>PyCut</s\
+trong> a ticket)\
+.</p>\x0d\x0a\x0d\x0a<h4>Tra\
+nsformations</h4\
+>\x0d\x0a\x0d\x0a<p><strong>\
+PyCut</strong> c\
+annot handle \x22ou\
+t of the box\x22 (y\
+et) svg datas wh\
+ere\x0d\x0ashapes/path\
+s are defined wi\
+th \x22transform\x22 o\
+perations (trans\
+late, rotate\x0d\x0aet\
+c.).</p>\x0d\x0a\x0d\x0a<p>N\
+evertheless, it \
+is possible to \x22\
+resolve\x22 the sha\
+pes transformati\
+ons, as\x0d\x0a<strong\
+>PyCut</strong> \
+also comes with \
+the utility\x0d\x0a<st\
+rong>svgresolver\
+.py</strong>. Th\
+e <strong>svgres\
+olver.py</strong\
+> program\x0d\x0areads\
+ any svg data an\
+d outputs a new \
+svg data with al\
+l transformation\
+s\x0d\x0aresolved, whi\
+le keeping the<s\
+trong>\x22id\x22</stro\
+ng>s right. <str\
+ong><span\x0d\x0astyle\
+=\x22color:#8000ff\x22\
+>IN PROGRESS</sp\
+an></strong>: th\
+is utility shoul\
+d be\x0d\x0aintegrated\
+ into <strong>Py\
+Cut</strong> so \
+that the user ca\
+n spare this ste\
+p.\x0d\x0aActually, th\
+is utility is fo\
+und in the sourc\
+e code under the\
+ folder\x0d\x0a\x22<stron\
+g>utilities/svgr\
+esolver</strong>\
+\x22.</p>\x0d\x0a\x0d\x0a<h2 id\
+=\x22P-02\x22>Svg Docu\
+ments</h2>\x0d\x0a\x0d\x0a<p\
+>Svg datas can b\
+e written with b\
+asic editors (vi\
+, emacs etc..) o\
+r with real\x0d\x0aapp\
+lications, as <s\
+trong>Inkscape</\
+strong>. In both\
+ cases, the svg \
+datas should\x0d\x0aco\
+ntains (and <str\
+ong>Inkscape</st\
+rong> does it au\
+tomatically) a\x0d\x0a\
+<strong>viewBox<\
+/strong>, and th\
+e svg attributes\
+ <strong>width</\
+strong> and\x0d\x0a<st\
+rong>height.</st\
+rong> These 2 im\
+portant attribut\
+es should be giv\
+en with a\x0d\x0aunit,\
+ i.e \x22<strong>mm\
+</strong>\x22 or \x22<\
+strong>in</stron\
+g>\x22 as we are ed\
+iting data\x0d\x0ain o\
+rder to later ge\
+nerate gcode (wi\
+th \x22mm\x22 or \x22in\x22 \
+units). This wil\
+l be used\x0d\x0alater\
+ when creating G\
+Code with the <s\
+trong>PyCut</str\
+ong> option \x22Zer\
+o Lower\x0d\x0aLeft of\
+ Material\x22 as re\
+ference. This op\
+tion needs the h\
+eight of the\x0d\x0ama\
+terial.</p>\x0d\x0a\x0d\x0a<\
+h4>Shapes and Pa\
+ths\x22id\x22</h4>\x0d\x0a\x0d\x0a\
+<p>In order to r\
+eference the sha\
+pes, the shapes/\
+paths must have \
+their own\x0d\x0a<stro\
+ng>\x22id\x22</strong>\
+, hopefully uniq\
+ue inside the sv\
+g document.</p>\x0d\
+\x0a\x0d\x0a<p>If the use\
+r has edited the\
+ svg \x22per hand\x22,\
+ then he should \
+not forget to gi\
+ve\x0d\x0aall shapes a\
+n unique id. If \
+the user has cre\
+ated the svg wit\
+h\x0d\x0a<strong>Inksc\
+ape</strong>, th\
+en \x22id\x22s are aut\
+omatically given\
+, but maybe the\x0d\
+\x0auser will want \
+to edit them and\
+ give them meani\
+ngfull name.</p>\
+\x0d\x0a\x0d\x0a<h4>Writing \
+Svg Files with I\
+nkscape</h4>\x0d\x0a\x0d\x0a\
+<p>With <strong>\
+Inkscape</strong\
+>, the first ste\
+p is to specify \
+the \x22Document\x0d\x0as\
+ize\x22. Please cho\
+ose as units \x22<s\
+trong>mm</strong\
+>\x22 or \x22<strong>i\
+n</strong>\x22.\x0d\x0a<s\
+pan style=\x22color\
+:#8000ff\x22><stron\
+g>You should als\
+o do this when c\
+reating a svg\x0d\x0af\
+ile with a text \
+editor</strong><\
+/span>.</p>\x0d\x0a\x0d\x0a<\
+h4>Writing Svg F\
+iles with a Text\
+ Editor</h4>\x0d\x0a\x0d\x0a\
+<p>Sometimes it \
+is easier to edi\
+t a svg file wit\
+hout a graphical\
+ app like\x0d\x0aInksc\
+ape, but simply \
+with a text edit\
+or.</p>\x0d\x0a\x0d\x0a<p>Th\
+is way, it is ea\
+sy for example t\
+o define shapes \
+in the\x0d\x0a<strong>\
+&lt;def&gt;</str\
+ong> paragraph a\
+nd reuse theses \
+shapes in the ma\
+in body\x0d\x0aof the \
+svg file with th\
+e help of the <s\
+trong>&lt;use&gt\
+;</strong> tag a\
+nd some\x0d\x0atransfo\
+rmations. The ut\
+ility <strong>sv\
+gresolver.py</st\
+rong> will have \
+to be\x0d\x0aused.</p>\
+\x0d\x0a<!-- ---------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+-->\x0d\x0a<!-- ------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----->\x0d\x0a\x0d\x0a<h2 id\
+=\x22P-03\x22>Basic ex\
+ample</h2>\x0d\x0a\x0d\x0a<h\
+3>Opening the Py\
+Cut application<\
+/h3>\x0d\x0a\x0d\x0a<p>type \
+in the console:<\
+/p>\x0d\x0a\x0d\x0a<p><code>\
+&gt; python pycu\
+t.py -h</code></\
+p>\x0d\x0a\x0d\x0a<p><code>&\
+gt; python pycut\
+.py [job]</code>\
+</p>\x0d\x0a\x0d\x0a<p>Witho\
+ut argument, pyc\
+ut opens itself.\
+ With argument, \
+a previously sav\
+ed job\x0d\x0ais opene\
+d.</p>\x0d\x0a\x0d\x0a<p>For\
+ the very first \
+time, start pycu\
+t without job.</\
+p>\x0d\x0a\x0d\x0a<h3 id=\x22P-\
+03-01\x22>Importing\
+ a SVG file</h3>\
+\x0d\x0a\x0d\x0a<p>So import\
+ your svg into <\
+strong>PyCut</st\
+rong>: The SVG c\
+ontent should be\
+\x0d\x0adisplayed in t\
+he central area.\
+ </p>\x0d\x0a\x0d\x0a<div cl\
+ass=\x22info\x22>\x0d\x0a<p>\
+<strong>Note:</s\
+trong> text is n\
+ot displayed ins\
+ide the\x0d\x0a<strong\
+>PyCut</strong> \
+svg viewer. It h\
+as to be convert\
+ed as &lt;path&g\
+t; in\x0d\x0aorder to \
+be further proce\
+ssed.</p>\x0d\x0a</div\
+>\x0d\x0a\x0d\x0a<h3 id=\x22P-0\
+3-02\x22>Creating a\
+ PyCut Job</h3>\x0d\
+\x0a\x0d\x0a<p>Then creat\
+e a new \x22job\x22 : \
+this is a kind o\
+f setting file t\
+hat stores for a\
+\x0d\x0agiven svg file\
+ all the CAM ope\
+rations that the\
+ users has creat\
+ed, together wit\
+h\x0d\x0aall others se\
+ttings relevant \
+when generating \
+g-code. It can b\
+e created, saved\
+\x0d\x0aand loaded aga\
+in and modified \
+- quite practica\
+l.</p>\x0d\x0a\x0d\x0a<h3 id\
+=\x22P-03-03\x22>Creat\
+ing CAM operatio\
+ns</h3>\x0d\x0a\x0d\x0a<p>On\
+ce an empty job \
+is created and a\
+ svg file loaded\
+, it is time to \
+create\x0d\x0asome CAM\
+ operations: sel\
+ect 1 or more it\
+ems in SVG windo\
+w (they should t\
+urn\x0d\x0abeige) and \
+click the button\
+ \x22Create Operati\
+on\x22: a new opera\
+tion in the\x0d\x0aope\
+ration table sho\
+uld appear.</p>\x0d\
+\x0a\x0d\x0a<p>Define the\
+ properties of t\
+he operation: th\
+e main one is th\
+e CAM operation\x0d\
+\x0atype: \x22<strong>\
+Pocket</strong>\x22\
+, \x22<strong>Engra\
+ve</strong>\x22,\x0d\x0a\x22\
+<strong>Inside</\
+strong>\x22 or \x22<st\
+rong>Outside</st\
+rong>\x22. There ar\
+e also the\x0d\x0a\x22<st\
+rong>Drill</stro\
+ng>\x22 and \x22<stron\
+g>Peck</strong>\x22\
+ operations, for\
+ the <span\x0d\x0astyl\
+e=\x22color:#0000ff\
+\x22>&lt;circle&gt;\
+</span> shapes w\
+hose diameter sm\
+aller or\x0d\x0aequals\
+ to the tool dia\
+meter. The other\
+s options will b\
+e discussed late\
+r.\x0d\x0aDefault valu\
+es at this point\
+ should be Ok.</\
+p>\x0d\x0a\x0d\x0a<h3 id=\x22P-\
+03-04\x22>Create th\
+e GCode</h3>\x0d\x0a\x0d\x0a\
+<p>Select one or\
+ more CAM operat\
+ions in the oper\
+ations table: th\
+e \x22geometry\x22 of\x0d\
+\x0athe operation(s\
+) should turn bl\
+ack in the SVG v\
+iewer: this is (\
+are) the\x0d\x0aregion\
+(s) of the mater\
+ial that wil be \
+affected when cu\
+tting the materi\
+al.</p>\x0d\x0a\x0d\x0a<p>Th\
+en finish creati\
+ng the G-Code by\
+ pressing one bu\
+tton \x22g code\x22 in\
+ the\x0d\x0aoperation \
+table: the tool \
+path(s) should a\
+ppears in green \
+in the black\x0d\x0are\
+gions.</p>\x0d\x0a\x0d\x0a<p\
+>The produced G-\
+Code can be insp\
+ected in the \x22G \
+code viewer\x22 and\
+ the \x22G code\x0d\x0aSi\
+mulator\x22 display\
+ areas.</p>\x0d\x0a\x0d\x0a<\
+p>You just have \
+to save the G-Co\
+de and you're do\
+ne. The gcode fi\
+le should be\x0d\x0ana\
+med as the CAM o\
+peration name.</\
+p>\x0d\x0a<!-- -------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+---->\x0d\x0a<!-- ----\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+------->\x0d\x0a\x0d\x0a<h2 \
+id=\x22P-04\x22>GUI Co\
+mponents</h2>\x0d\x0a\x0d\
+\x0a<h3 id=\x22P-04-01\
+\x22>Svg Settings</\
+h3>\x0d\x0a<img src=\x22p\
+ycut_svgsettings\
+.png\x22 width=\x22310\
+px\x22> \x0d\x0a\x0d\x0a<h4>use\
+r units scale</h\
+4>\x0d\x0a\x0d\x0a<p>What is\
+ this? And why i\
+s it disabled an\
+d set to 1? Let'\
+s take an exampl\
+e: in\x0d\x0a<strong>I\
+nkscape</strong>\
+, the user would\
+ set the documen\
+t's size to\x0d\x0a<st\
+rong>100x40 mm</\
+strong>, suppose\
+dly the size of \
+the material to \
+work on.\x0d\x0aInksca\
+pe automatically\
+ sets the <stron\
+g>user units sca\
+le </strong><str\
+ong>to\x0d\x0a1</stron\
+g>. Note that th\
+e user units are\
+ not \x22px\x22 or wha\
+tever. This mean\
+s,\x0d\x0a<strong>1 \x22u\
+ser unit\x22 is equ\
+al to 1 mm (and \
+the viewbox is \x22\
+0 0 100 40\x22 whil\
+e\x0d\x0awidth=\x22100mm\x22\
+ and height=\x2240m\
+m\x22)</strong></p>\
+\x0d\x0a<img src=\x22Inks\
+cape_settings_mm\
+.png\x22 width=\x22563\
+px\x22> \x0d\x0a\x0d\x0a<p>Of c\
+ourse when editi\
+ng the svg (in I\
+nkscape or in a \
+text editor),\x0d\x0a<\
+strong>the user \
+is only concerne\
+d with the user \
+units</strong> :\
+ he draws a\x0d\x0arec\
+tangle of size 2\
+0x30 at the loca\
+tion 10x10. The \
+users may simply\
+ even not be\x0d\x0aaw\
+are of this fact\
+. When choosing \
+mm, conversion f\
+rom <strong>user\
+\x0d\x0aunits</strong>\
+ to <strong>mm</\
+strong> is absol\
+utely straightfo\
+rward as, as\x0d\x0asa\
+id, the user uni\
+ts scale is 1 pe\
+r default .</p>\x0d\
+\x0a\x0d\x0a<p>Let's cons\
+ider now the cas\
+e where the user\
+ switches to\x0d\x0a<s\
+trong>inches</st\
+rong> for the do\
+cument size. The\
+ size of the doc\
+ument becomes\x0d\x0at\
+hen <strong>3,93\
+701x1,57480 inch\
+es</strong> (yes\
+, 100 / 25.4 is \
+3.93701). Note\x0d\x0a\
+that <strong>Ink\
+scape</strong> a\
+utomatically cha\
+nge the <strong>\
+user units\x0d\x0ascal\
+e to 25.4</stron\
+g>. Because of t\
+his, the <strong\
+>view box remain\
+s at \x220 0\x0d\x0a100 4\
+0\x22</strong>. Tha\
+t way, a rectang\
+le filling the f\
+ull document siz\
+e is still\x0d\x0a100x\
+40.</p>\x0d\x0a<img sr\
+c=\x22Inkscape_sett\
+ings_in.png\x22 wid\
+th=\x22563px\x22> \x0d\x0a\x0d\x0a\
+<p>Filling a box\
+ half the size o\
+f the document i\
+s 50x20, right, \
+but what are\x0d\x0are\
+al physical dime\
+nsions of that b\
+ox ? The user wo\
+uld have to stea\
+dily\x0d\x0acalculate \
+from fancy user \
+units (ex: 50x20\
+) in inches</p>\x0d\
+\x0a\x0d\x0a<p>But why wo\
+uld a user use i\
+nches and work w\
+ith user units s\
+cale factor 25.4\
+\x0d\x0a(leading infac\
+t to work in mm)\
+ ? The user can \
+set the user uni\
+ts scale factor\x0d\
+\x0ato 1. The effec\
+t of this is tha\
+t now, in order \
+to fill the whol\
+e document with\x0d\
+\x0aa rectangle, th\
+e rectangle has \
+to be of the siz\
+e user unit size\
+ of\x0d\x0a3.93701x1.5\
+7480. </p>\x0d\x0a\x0d\x0a<p\
+>Of course the s\
+ize of the mater\
+ial is certainly\
+ not 3.93701x1.5\
+7480 inches,\x0d\x0abu\
+t something like\
+ 5x3 inches: an \
+human readable s\
+ize. The user kn\
+ows that he\x0d\x0ahas\
+ to draw a recta\
+ngle inside the \
+material of size\
+ let say 1.5x1.2\
+ inches. And\x0d\x0ath\
+ese dimensions a\
+re the ones that\
+ are effectively\
+ saved in the sv\
+g document.\x0d\x0aSo \
+the user units a\
+re exactly the s\
+ame as the \x22phys\
+ical units\x22 when\
+ choosing a\x0d\x0asca\
+le of 1.</p>\x0d\x0a\x0d\x0a\
+<p>Now how can <\
+strong>PyCut</st\
+rong> handles th\
+ese settings?\x0d\x0a<\
+strong>PyCut</st\
+rong> only works\
+ with the <stron\
+g>user units</st\
+rong>.\x0d\x0a<strong>\
+PyCut</strong> w\
+ill calculate to\
+olpaths in the s\
+ame order of mag\
+nitude\x0d\x0aof the u\
+ser units values\
+ of the svg. If \
+you choose \x22<str\
+ong>mm</strong>\x22\
+ for\x0d\x0athe gcode \
+output, you woul\
+d have set your \
+svg document siz\
+e in\x0d\x0a\x22<strong>m\
+m</strong>\x22, and\
+ the <strong>use\
+r unit scale to \
+1</strong>. Beca\
+use\x0d\x0aof this, th\
+e gcode X,Y and \
+Z values are the\
+ same as the one\
+ of the paths\x0d\x0av\
+alues.</p>\x0d\x0a\x0d\x0a<p\
+>If you choose \x22\
+<strong>in</stro\
+ng>\x22 for the gco\
+de output, then \
+certainly you\x0d\x0ah\
+ave set your svg\
+ document size i\
+n \x22<strong>in</s\
+trong>\x22, and the\
+ <strong>with\x0d\x0au\
+ser unit scale e\
+quals to 1</stro\
+ng>,no conversio\
+n is either need\
+ed.</p>\x0d\x0a\x0d\x0a<p>No\
+te that this sca\
+le factor is not\
+ explicitely giv\
+en in the svg fi\
+le. It is\x0d\x0acalcu\
+lated from the r\
+atio viewbox / w\
+idth. It is even\
+tually the task \
+of the\x0d\x0auser to \
+know what is the\
+ user units scal\
+e value, and, th\
+eorically, to se\
+t it in\x0d\x0a<strong\
+>PyCut</strong>.\
+ But my opinion \
+is, working with\
+ a user unit sca\
+l of 1\x0d\x0ais prefe\
+rably.</p>\x0d\x0a\x0d\x0a<p\
+><strong><span s\
+tyle=\x22color:#000\
+0ff\x22>I personnal\
+y stick to svg d\
+ocument units\x0d\x0ai\
+n \x22mm\x22 with user\
+ units scale fac\
+tor of 1, and ou\
+tput my gcode in\
+ mm. No\x0d\x0aconfusi\
+on! </span></str\
+ong></p>\x0d\x0a\x0d\x0a<div\
+ class=\x22warning\x22\
+>\x0d\x0a<p><strong>Wa\
+rning</strong>: \
+The user could u\
+se \x22mm\x22, and set\
+ a scale factor \
+of\x0d\x0a10 or whatev\
+er, but it certa\
+inly makes no se\
+nse.</p>\x0d\x0a</div>\
+\x0d\x0a\x0d\x0a<p><strong s\
+tyle=\x22color:#000\
+0ff\x22>I apologize\
+ for the ones wh\
+o would like to\x0d\
+\x0awork with user \
+units scale not \
+equals to 1.</st\
+rong> </p>\x0d\x0a\x0d\x0a<p\
+>The further <st\
+rong>PyCut Gcode\
+ Units</strong> \
+setting is not o\
+nly a flag to\x0d\x0as\
+et the code <str\
+ong>G20</strong>\
+ (inches) or <st\
+rong>G21</strong\
+> (mm) inside\x0d\x0at\
+he gcode file: i\
+t also allows th\
+e proper convers\
+ion of the tool \
+diameter\x0d\x0aphysic\
+al size (inch or\
+ mm) in user uni\
+ts.</p>\x0d\x0a\x0d\x0a<p>Th\
+e rule is:</p>\x0d\x0a\
+<ul>\x0d\x0a  <li><str\
+ong>Gcode Units<\
+/strong> in \x22mm\x22\
+: tool diameter \
+is transformed t\
+o mm\x0d\x0a    - the \
+same as the user\
+ units</li>\x0d\x0a  <\
+li><strong>Gcode\
+ Units</strong> \
+in \x22in\x22: tool di\
+ameter is transf\
+ormed to\x0d\x0a    in\
+ch - the same as\
+ the user units<\
+/li>\x0d\x0a</ul>\x0d\x0a\x0d\x0a<\
+div class=\x22warni\
+ng\x22>\x0d\x0a<p><strong\
+>Warning</strong\
+>: <strong>PyCut\
+</strong> assume\
+s that for\x0d\x0a\x22<st\
+rong>mm</strong>\
+\x22 or \x22<strong>in\
+</strong>\x22, the \
+<strong>user uni\
+t scale\x0d\x0afactor \
+is always 1</str\
+ong> .</p>\x0d\x0a</di\
+v>\x0d\x0a\x0d\x0a<p></p>\x0d\x0a\x0d\
+\x0a<h3 id=\x22P-04-02\
+\x22>Tool</h3>\x0d\x0a<im\
+g src=\x22pycut_too\
+l.png\x22 width=\x2231\
+0px\x22> \x0d\x0a\x0d\x0a<h3 id\
+=\x22P-04-03\x22>Tabs<\
+/h3>\x0d\x0a\x0d\x0a<p>It's \
+easy to define t\
+abs with <strong\
+>PyCut</strong>:\
+ just click the \
+button\x0d\x0a\x22Create \
+Tab\x22 and a red c\
+ircle is created\
+ in the svg view\
+er, of radius 5 \
+and\x0d\x0aposition (1\
+0,10). The user \
+can drag 'n drop\
+ it from the svg\
+ viewer, or set \
+its\x0d\x0asize/postio\
+n in the tab tab\
+le. Yes tabs, fo\
+r simplicity, ar\
+e circle. To be\x0d\
+\x0aeffective, the \
+tabs have to be \
+enabled and of c\
+ourse placed som\
+ewhere on the\x0d\x0ag\
+enerated toolpat\
+hs. The height o\
+f the tabs is sh\
+ared by all tabs\
+. <strong>They\x0d\x0a\
+are ignored for \
+Pocket operation\
+s</strong>.</p>\x0d\
+\x0a<img src=\x22./pyc\
+ut_tabs.png\x22 wid\
+th=\x22310px\x22> \x0d\x0a\x0d\x0a\
+<p></p>\x0d\x0a\x0d\x0a<div \
+class=\x22warning\x22>\
+\x0d\x0a<p><strong>War\
+ning</strong>: T\
+abs shall not ov\
+erlap with other\
+ tabs (at least\x0d\
+\x0athe enabled one\
+s).</p>\x0d\x0a</div>\x0d\
+\x0a\x0d\x0a<p>You can ch\
+eck the Gcode ge\
+neration in the \
+viewer/simulator\
+ if everythings \
+is\x0d\x0aOk. </p>\x0d\x0a\x0d\x0a\
+<h3 id=\x22P-04-04\x22\
+>Material</h3>\x0d\x0a\
+\x0d\x0a<p>The Operati\
+ons \x22Cut Depth\x22 \
+should not be la\
+rger than the ma\
+terial thickness\
+.\x0d\x0a</p>\x0d\x0a<img sr\
+c=\x22./pycut_mater\
+ial.png\x22 width=\x22\
+310px\x22> \x0d\x0a\x0d\x0a<p><\
+/p>\x0d\x0a\x0d\x0a<div clas\
+s=\x22warning\x22>\x0d\x0a<p\
+><strong>Warning\
+</strong>: Actua\
+lly no check is \
+performed.</p>\x0d\x0a\
+</div>\x0d\x0a\x0d\x0a<h3 id\
+=\x22P-04-05\x22>Curve\
+ to Line Convers\
+ion</h3>\x0d\x0a\x0d\x0a<p>I\
+f your design co\
+ntain curves (sv\
+g \x22arcs\x22 or \x22bez\
+ier\x22 curves), th\
+ey have to\x0d\x0abe d\
+iscretized in sm\
+all segments.</p\
+>\x0d\x0a<img src=\x22./p\
+ycut_curve_to_li\
+ne_conversion.pn\
+g\x22 width=\x22300px\x22\
+> \x0d\x0a\x0d\x0a<p>The 2 f\
+ollowing paramet\
+ers allow to spe\
+cified how fine \
+the curve\x0d\x0adiscr\
+etization will b\
+e:</p>\x0d\x0a<ul>\x0d\x0a  \
+<li>Minimun numb\
+er of segments</\
+li>\x0d\x0a  <li>Minim\
+um Segments leng\
+th</li>\x0d\x0a</ul>\x0d\x0a\
+\x0d\x0a<h3 id=\x22P-04-0\
+6\x22>GCode Convers\
+ion</h3>\x0d\x0a\x0d\x0a<p>T\
+he starting loca\
+tion of a millin\
+g operation is g\
+iven by the init\
+ial\x0d\x0alocation in\
+ the GCode. Per \
+default, PyCut g\
+ives as starting\
+ point the (0,0)\
+\x0d\x0acoordinates of\
+ the SVG file, w\
+hich is located \
+at the top-left \
+of the material.\
+\x0d\x0aThe SVG conven\
+tions are opposi\
+te to GCode conv\
+ention consideri\
+ng the Y\x0d\x0adirect\
+ion.</p>\x0d\x0a\x0d\x0a<p>S\
+o the GCode gene\
+ration will have\
+ to invert the d\
+irection of the \
+Y axis\x0d\x0acoordina\
+tes. But still t\
+he reference is \
+the top-left pos\
+tion.</p>\x0d\x0a\x0d\x0a<p>\
+It is possible t\
+o change the ref\
+erence location \
+of the generated\
+ GCode</p>\x0d\x0a<ul>\
+\x0d\x0a  <li>Top-Left\
+ location of the\
+ material</li>\x0d\x0a\
+  <li>Bottom-Lef\
+t location of th\
+e material</li>\x0d\
+\x0a  <li>Bottom-Le\
+ft location of t\
+he Gcode area</l\
+i>\x0d\x0a  <li>Center\
+ of the Gcode ar\
+ea</li>\x0d\x0a</ul>\x0d\x0a\
+<img src=\x22./pycu\
+t_gcode_conversi\
+on.png\x22 width=\x223\
+10px\x22> \x0d\x0a\x0d\x0a<p>No\
+te that these 4 \
+buttons act as r\
+adio buttons.</p\
+>\x0d\x0a\x0d\x0a<p>These fo\
+ur references po\
+ints set the XOf\
+fset and YOffset\
+ of the GCode\x0d\x0ac\
+alculation. Afte\
+r a GCode genera\
+tion, it is stil\
+l possible to mo\
+dify the\x0d\x0aXOffse\
+t and YOffset to\
+ fit at best how\
+ to user wants t\
+o have the origi\
+n be\x0d\x0alocated wi\
+th the help of t\
+he 2 spin boxes.\
+ </p>\x0d\x0a\x0d\x0a<p>And \
+further:</p>\x0d\x0a<u\
+l>\x0d\x0a  <li>Flip X\
+/Y </li>\x0d\x0a</ul>\x0d\
+\x0a\x0d\x0a<p>In the gen\
+erated G Code, X\
+ and Y are switc\
+hed.This can be \
+helpfull, for\x0d\x0ae\
+xample in the ca\
+se your <strong>\
+CNC</strong> is \
+the \x22<strong>141\
+9</strong>\x22\x0d\x0amod\
+el (mine!) which\
+ is not as large\
+ as deep. So thi\
+s option allows \
+to carve\x0d\x0asometh\
+ing like 16x10 c\
+m without -painf\
+ully- rotating a\
+ll items in the \
+source\x0d\x0asvg.</p>\
+\x0d\x0a\x0d\x0a<p></p>\x0d\x0a\x0d\x0a<\
+p>In case of Bot\
+tom-Left locatio\
+n of the materia\
+l, the Y size of\
+ the material\x0d\x0ai\
+s extracted form\
+ the svg file: t\
+he svg \x22height\x22 \
+attribute.</p>\x0d\x0a\
+\x0d\x0a<h3 id=\x22P-04-0\
+7\x22>GCode Generat\
+ion</h3>\x0d\x0a\x0d\x0a<p>S\
+ome useful optio\
+ns can be set up\
+:</p>\x0d\x0a<ul>\x0d\x0a  <\
+li>Return at ini\
+tial location at\
+ end of the Job<\
+/li>\x0d\x0a  <li>Spin\
+dle Start/Stop (\
+<strong>M3</stro\
+ng>/<strong>M5</\
+strong> codes)</\
+li>\x0d\x0a  <li><stro\
+ng>M2</strong> c\
+ode</li>\x0d\x0a</ul>\x0d\
+\x0a<img src=\x22./pyc\
+ut_gcode_generat\
+ion.png\x22 width=\x22\
+310px\x22>\x0d\x0a<!-- --\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+--------->\x0d\x0a<!--\
+ ---------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+------------> \x0d\x0a\
+\x0d\x0a<p></p>\x0d\x0a\x0d\x0a<h3\
+>Create Operatio\
+ns</h3>\x0d\x0a\x0d\x0a<p>Th\
+is is where the \
+user defined its\
+ cam operations,\
+ thus this is wh\
+ere the\x0d\x0aaction \
+takes place.</p>\
+\x0d\x0a<img src=\x22./py\
+cut_ops.png\x22 wid\
+th=\x221170px\x22> \x0d\x0a\x0d\
+\x0a<p>First one or\
+ more item(s) ha\
+ve to be selecte\
+d in the svgview\
+er, click on\x0d\x0a\x22C\
+reate Operation\x22\
+ and a default o\
+peration is crea\
+ted. When more t\
+han one item\x0d\x0aha\
+s been selected,\
+ the user can pe\
+rform logical op\
+erations on this\
+ set of\x0d\x0aitem</p\
+>\x0d\x0a<ul>\x0d\x0a  <li>d\
+iff</li>\x0d\x0a  <li>\
+intersect</li>\x0d\x0a\
+  <li>union</li>\
+\x0d\x0a  <li>xor</li>\
+\x0d\x0a</ul>\x0d\x0a\x0d\x0a<p>Wh\
+en \x22enabling\x22 th\
+is op, the resul\
+ting geometry wi\
+ll be displayed \
+ion the\x0d\x0asvgview\
+er</p>\x0d\x0a\x0d\x0a<div c\
+lass=\x22info\x22>\x0d\x0a<p\
+><strong>Note:</\
+strong>the geome\
+try is highlight\
+ed in red. the h\
+ighlight\x0d\x0acolor \
+can be setup in \
+the settings dia\
+log.</p>\x0d\x0a</div>\
+\x0d\x0a\x0d\x0a<p>Then the \
+cam operation ca\
+n be chosen</p>\x0d\
+\x0a<ul>\x0d\x0a  <li>poc\
+ket - only for c\
+losed shapes</li\
+>\x0d\x0a  <li>inside<\
+/li>\x0d\x0a  <li>outs\
+ide</li>\x0d\x0a  <li>\
+engrave</li>\x0d\x0a  \
+<li>drill <stron\
+g><span style=\x22c\
+olor:#0000ff\x22>ON\
+LY</span> <span\x0d\
+\x0a    style=\x22colo\
+r:#0000ff\x22>for c\
+ircle shapes</sp\
+an></strong></li\
+>\x0d\x0a  <li>peck <s\
+trong><span styl\
+e=\x22color:#0000ff\
+\x22>ONLY for circl\
+e\x0d\x0a    shape</sp\
+an></strong></li\
+>\x0d\x0a</ul>\x0d\x0a\x0d\x0a<p>F\
+or opened paths,\
+ the pocket/dril\
+l/peck operation\
+s are not availa\
+ble.</p>\x0d\x0a\x0d\x0a<p><\
+strong><span sty\
+le=\x22color:#8000f\
+f\x22>NEW</span></s\
+trong>: for\x0d\x0a<st\
+rong>circles</st\
+rong>, \x22<span\x0d\x0as\
+tyle=\x22color:#800\
+0ff\x22><strong>dri\
+ll</strong></spa\
+n>\x22 and \x22<strong\
+><span\x0d\x0astyle=\x22c\
+olor:#8000ff\x22>pe\
+ck</span></stron\
+g>\x22 operations a\
+re available. In\
+fact,\x0d\x0afor a poc\
+ket operation wi\
+th a circle of d\
+iameter smaller \
+than the cutter\x0d\
+\x0adiameter, no to\
+ol path would be\
+ generated.<stro\
+ng>In case of th\
+e</strong>\x0d\x0a<str\
+ong>circle diame\
+ter is smaller o\
+r equal than the\
+ cutter diameter\
+</strong>,\x0d\x0ain o\
+rder to have too\
+lpath, \x22<strong>\
+<span\x0d\x0astyle=\x22co\
+lor:#8000ff\x22>dri\
+ll</span></stron\
+g>\x22 or \x22<strong>\
+<span\x0d\x0astyle=\x22co\
+lor:#8000ff\x22>pec\
+k</span></strong\
+>\x22 is the way to\
+ go. </p>\x0d\x0a\x0d\x0a<p>\
+In order to gene\
+rate G code, ena\
+ble one or many \
+operations and c\
+lick on\x0d\x0a\x22Genera\
+te G code\x22. <str\
+ong>PyCut</stron\
+g> will try to d\
+o its best... Th\
+e\x0d\x0aresulting G c\
+ode is displayed\
+ in the G code v\
+iewer and G code\
+ simulator.</p>\x0d\
+\x0a\x0d\x0a<p>Finally, c\
+licking on \x22Save\
+ G code\x22 will pr\
+oduce a valid G \
+code file.\x0d\x0a<str\
+ong>Candle</stro\
+ng> can be used \
+to send the G co\
+de to your machi\
+ne. Have\x0d\x0afun...\
+</p>\x0d\x0a\x0d\x0a<p></p>\x0d\
+\x0a\x0d\x0a<h3 id=\x22P-05\x22\
+>Appendix-1: SVG\
+ Editors</h3>\x0d\x0a\x0d\
+\x0a<p>It seems the\
+re are plenty of\
+ free SVG editor\
+s around there. \
+Well, let me\x0d\x0ash\
+are my opinion a\
+bout a few of th\
+em...</p>\x0d\x0a\x0d\x0a<p>\
+I will simply tr\
+y <strong>to edi\
+t and save a clo\
+sed path</strong\
+> composed\x0d\x0aof l\
+ines, arcs and b\
+ezier curves sim\
+ilar to what I'v\
+e edited per han\
+d: about 20\x0d\x0aseg\
+ments representi\
+ng my workpiece,\
+ with mixed stra\
+ight lines, arcs\
+ and bezier\x0d\x0acur\
+ves.</p>\x0d\x0a\x0d\x0a<p><\
+strong>I know th\
+at every app has\
+ its own learnin\
+g curve</strong>\
+, but I try\x0d\x0ause\
+ the apps withou\
+t investing to m\
+uch time. This m\
+eans, I act as a\
+ very basic\x0d\x0ause\
+r. If I do not s\
+ucceed, this is \
+due in part to m\
+y inexperience, \
+but also in\x0d\x0apar\
+t to the difficu\
+lty of use of th\
+e app.</p>\x0d\x0a\x0d\x0a<h\
+3>Free software<\
+/h3>\x0d\x0a\x0d\x0a<h4>Inks\
+cape</h4>\x0d\x0a\x0d\x0a<p>\
+To me much too c\
+omplicated. I \x22h\
+ate\x22 the fact th\
+at the circles a\
+re given\x0d\x0afrom t\
+heir \x22bounding b\
+ox\x22, not from th\
+e center with ra\
+dius (ok it is p\
+ossible,\x0d\x0abut I \
+have always to f\
+igure out how). \
+<strong>Editing \
+paths is far to\x0d\
+\x0acomplicated</st\
+rong> (to me) an\
+d thus too diffi\
+cult. The saved \
+SVG data is full\
+\x0d\x0aof <strong>ink\
+scape/sodipodi n\
+amespaces</stron\
+g> stuff, which \
+I dislike a lot\x0d\
+\x0ain a SVG file. \
+I would rather p\
+refer a raw SVG \
+with only the mi\
+nimal and\x0d\x0acerta\
+inly not all the\
+se extra namespa\
+ce stuff. Removi\
+ng per hand thes\
+e extra\x0d\x0astuff d\
+estroy the Inksc\
+ape project sett\
+ings. </p>\x0d\x0a\x0d\x0a<p\
+><strong>Yeappy<\
+/strong>! To obt\
+ain a SVG data f\
+ree of sodipodi/\
+inkscape\x0d\x0anamesp\
+ace stuff, you h\
+ave to \x22export\x22 \
+your SVG data as\
+ SVG!</p>\x0d\x0a\x0d\x0a<p>\
+Editing points c\
+oordinates \x22per \
+hand\x22 is nearly \
+impossible as th\
+e\x0d\x0acoordinates a\
+re only accessib\
+le from the \x22d\x22 \
+string, which is\
+ not really huma\
+n\x0d\x0areadable. Her\
+e is an example \
+of a polyline wi\
+th 8 points:</p>\
+\x0d\x0a<pre><code>M 5\
+.9999998,35.9999\
+99 10,33 l 5,2.9\
+99999 -1,-4 h 7 \
+V 41 H 12 L 8.99\
+99999,38.999998<\
+/code></pre>\x0d\x0a\x0d\x0a\
+<p>Note how abso\
+lute and relativ\
+e keywords are g\
+iven in the path\
+. Question:\x0d\x0awha\
+t are the coordi\
+nates of the fif\
+th point?</p>\x0d\x0a\x0d\
+\x0a<p>Concatening \
+segments to form\
+ a single path d\
+oesn't even work\
+ as expected.\x0d\x0aT\
+he simple task c\
+onsisting of con\
+catenating a pol\
+yline and a bezi\
+er curve -in\x0d\x0ath\
+is order- (which\
+ are joined) see\
+ms not to work! \
+There is the\x0d\x0a\x22<\
+strong>combine</\
+strong>\x22 command\
+, but the result\
+ is a single pat\
+h (ok... )\x0d\x0acont\
+aining 2 subpath\
+s (with \x22M\x22), wh\
+ich is not Ok, t\
+he first one bee\
+ing the\x0d\x0abezier \
+curve and the se\
+cond one beeing \
+the polyline, th\
+is means in reve\
+rsed\x0d\x0aorder. Sur\
+e, with \x22M\x22s eve\
+rywhere, the ord\
+ering is not tha\
+t important, is \
+it!\x0d\x0a<strong>A v\
+ery desapointing\
+ implementation \
+from Inkscape I \
+would say</stron\
+g>.\x0d\x0aConclusion:\
+ <strong>unusabl\
+e if you want to\
+ generate comple\
+x paths.</strong\
+></p>\x0d\x0a\x0d\x0a<p>PS: \
+There is the \x22Dr\
+aw Bezier and st\
+raight line tool\
+\x22 with mode \x22Cre\
+ate\x0d\x0aregular Bez\
+ier path\x22 but af\
+ter many many ho\
+urs of trial (de\
+spite YouTube\x0d\x0at\
+utorials) I did \
+not succeed to u\
+se it properly. \
+Is it just me ? \
+With it you\x0d\x0acan\
+not anyway mix y\
+our path with an\
+ arc curve.</p>\x0d\
+\x0a\x0d\x0a<h4>QCAD</h4>\
+\x0d\x0a\x0d\x0a<p>It reads/\
+writes <strong>d\
+xf</strong> file\
+s, can export th\
+em as SVG.\x0d\x0aUnfo\
+rtunately the <s\
+trong>SVG export\
+</strong> comes \
+with extra rubbi\
+sh for the\x0d\x0atria\
+l version (nice!\
+). Forget the fr\
+ee version. <str\
+ong>Trial versio\
+n allows\x0d\x0ayou to\
+ test it about 1\
+5 min, then it c\
+loses itself</st\
+rong> (you can r\
+estart).\x0d\x0aSo in \
+fifteen minutes \
+I could observe \
+that editing pol\
+ylines is possib\
+le, as\x0d\x0awell as \
+Arcs and Cubic B\
+ezier curves (di\
+d not find quadr\
+atic bezier curv\
+es).\x0d\x0aThese Cubi\
+c Bezier curves \
+are exported rig\
+ht in the SVG ex\
+port. Unfortunat\
+ely\x0d\x0a(again), wh\
+en concatening l\
+ines/polylines w\
+ith these cubic \
+bezier curves in\
+\x0d\x0aorder to form \
+a whole path, th\
+ey are transform\
+ed into Arcs (wh\
+y ?) or Lines\x0d\x0a(\
+why?), and so th\
+e SVG export. Co\
+nclusion: <stron\
+g>unusable and v\
+ery unfriendly\x0d\x0a\
+for users willin\
+g to test the qu\
+ality of QCAD. <\
+/strong>Well,\x0d\x0a<\
+strong>QDAC</str\
+ong> costs only \
+<strong>38\xe2\x82\xac</s\
+trong>, not that\
+ much, but\x0d\x0areal\
+ly testing it be\
+fore buying is p\
+ossible but not \
+very practicable\
+.</p>\x0d\x0a\x0d\x0a<h4>Lib\
+reCAD <span styl\
+e=\x22color:#008000\
+\x22>****BEST****</\
+span></h4>\x0d\x0a\x0d\x0a<p\
+>It is (was) a f\
+ork of QCAD (201\
+1). It looks a l\
+ot like QCAD, bu\
+t the (my)\x0d\x0afirs\
+t feeling is tha\
+t the user inter\
+face seems bette\
+r. <strong>The S\
+VG export\x0d\x0ais ex\
+actly what one w\
+ould expect (wel\
+l , nearly)</str\
+ong>. There is m\
+inimal\x0d\x0aextra Li\
+breCAD namespace\
+ stuff in the ou\
+tput. Do not kno\
+w yet how to ass\
+ign ids\x0d\x0ato the \
+entities (bad). \
+You only have to\
+ take care that \
+in the SVG forma\
+t y = 0\x0d\x0ais the \
+top of the drawi\
+ng, so coordinat\
+es in the SVG fi\
+le are inverted \
+from\x0d\x0acoordinate\
+s in the app (wh\
+ich is normal). \
+The y = 0 corres\
+pond to the high\
+est\x0d\x0acoordinate \
+of your items in\
+ the canvas (Not\
+e: in <strong>QC\
+AD</strong> the\x0d\
+\x0acoordinates are\
+ the same and th\
+ere is a global \
+svg transform=\x22s\
+cale(1,-1)\x22. The\
+\x0d\x0aviewBox is cal\
+culated accordin\
+gly. It would be\
+ nice to have th\
+is option in\x0d\x0a<s\
+trong>LibreCAD</\
+strong>).</p>\x0d\x0a\x0d\
+\x0a<p><strong>Spli\
+nes</strong> <st\
+rong>through</st\
+rong> <strong>3 \
+points\x0d\x0acorrespo\
+nd to bezier qua\
+dratic curves</s\
+trong>, while <s\
+trong>splines th\
+rough 4\x0d\x0aor more\
+ points are not \
+cubic bezier cur\
+ves but only seq\
+uence of quadrat\
+ic\x0d\x0acurves</stro\
+ng> (it seems po\
+ssible! is it ? \
+they really look\
+ to be smooth of\
+\x0d\x0aorder 3!).</p>\
+\x0d\x0a\x0d\x0a<p>In the GU\
+I, the middle po\
+int of the curve\
+ is entered, not\
+ the \x22bezier\x0d\x0aco\
+ntrol point\x22. <s\
+trong>It would b\
+e nice if one co\
+uld enter the qu\
+adratic\x0d\x0abezier \
+curve with its s\
+tart/end points \
+and its control \
+point</strong>. \
+There is\x0d\x0aunfort\
+unately no cubic\
+ bezier curves. \
+<strong>It would\
+ be nice if one \
+could\x0d\x0aenter the\
+ cubic bezier cu\
+rve with its sta\
+rt/end points an\
+d its two contro\
+l\x0d\x0apoints</stron\
+g></p>\x0d\x0a\x0d\x0a<p><st\
+rong>Yeaahh! The\
+re is another sp\
+lines button (st\
+range!) where it\
+ is\x0d\x0apossible to\
+ indicate which \
+degree (1, 2 or \
+3) the spline ha\
+s to be. And for\
+ 2\x0d\x0aand 3 these \
+are bezier quadr\
+atic or cubic cu\
+rves with contro\
+l points entered\
+\x0d\x0afrom the UI.</\
+strong> Setting \
+for the degree i\
+s in the main me\
+nu bar (this is\x0d\
+\x0aLibreCAD concep\
+t, but not so st\
+raight to be see\
+n if one not kno\
+ws).</p>\x0d\x0a\x0d\x0a<p>E\
+diting polylines\
+/arcs/quad bezie\
+r and concatenat\
+e them together\x0d\
+\x0a(\x22<strong>creat\
+e polyline from \
+existing segment\
+s</strong>\x22) is \
+excellent,\x0d\x0a(<st\
+rong>SVG output \
+is a single &lt;\
+path&gt; entity<\
+/strong>) but th\
+ere is here\x0d\x0aa b\
+ug: one cannot c\
+oncatenate polyl\
+ines/arcs with b\
+eziers/splines. \
+</p>\x0d\x0a\x0d\x0a<p>Snap \
+stuff is perfect\
+, with many snap\
+ options.</p>\x0d\x0a\x0d\
+\x0a<p><strong>So t\
+his is a real pi\
+ty that LibreCAD\
+ does not perfor\
+m the\x0d\x0aconcatena\
+tion of lines/ar\
+cs with beziers/\
+splines into a s\
+ingle SVG path, \
+but it\x0d\x0ais fixab\
+le per hand in t\
+he output.</stro\
+ng></p>\x0d\x0a\x0d\x0a<p>Co\
+nclusion: <stron\
+g><span style=\x22c\
+olor:#008000\x22>Th\
+e best SVG \x22path\
+\x22\x0d\x0agenerator I h\
+ave found so far\
+.</span></strong\
+></p>\x0d\x0a\x0d\x0a<h4>Sol\
+veSpace <span st\
+yle=\x22color:#ff00\
+ff\x22><span style=\
+\x22color:#008000\x22>\
+<span\x0d\x0astyle=\x22co\
+lor:#ff00ff\x22>*<s\
+trong>*** VERY B\
+EST\x0d\x0a****</stron\
+g></span></span>\
+</span></h4>\x0d\x0a\x0d\x0a\
+<p>Ever heard of\
+ it? A parametri\
+c system as know\
+n from the 3D mo\
+dellers.\x0d\x0a<stron\
+g>Incredible!</s\
+trong> The GUI l\
+ooks like from t\
+he beginning of \
+the '80s,\x0d\x0abut <\
+strong><span sty\
+le=\x22color:#00800\
+0\x22>usability/fea\
+tures more than\x0d\
+\x0atop</span></str\
+ong>.</p>\x0d\x0a\x0d\x0a<p>\
+<strong style=\x22c\
+olor:#008000\x22>SV\
+G export perfect\
+ (well, nearly\x0d\x0a\
+perfect)</strong\
+> . The construc\
+tion constraints\
+ can also be exp\
+orted, so there\x0d\
+\x0aare a lot of \x22p\
+aths\x22 in the svg\
+ export, even if\
+ you have only d\
+rawn 1 path.\x0d\x0aUn\
+fortunately, you\
+ cannot give you\
+r paths some ids\
+. It would be ni\
+ce if these\x0d\x0a\x22co\
+ntraints\x22 paths \
+could be grouped\
+ into their own \
+group in order t\
+o isolated\x0d\x0athem\
+ from the real p\
+aths.</p>\x0d\x0a\x0d\x0a<p>\
+Infact the <stro\
+ng>SolveSpace</s\
+trong> app is me\
+ant as demo for \
+their\x0d\x0aparametri\
+c engine which c\
+an be used in ot\
+her CAD applicat\
+ions (example: t\
+he new\x0d\x0a-2023- 2\
+D Sketcher of Bl\
+ender). Should I\
+ write my own CA\
+D app (a mixture\
+ of\x0d\x0aLibreCAD an\
+d SolveSpace, ju\
+st for 2D parame\
+tric stuff and S\
+VG export) ? No!\
+</p>\x0d\x0a\x0d\x0a<p>Concl\
+usion: <strong s\
+tyle=\x22color:#008\
+000\x22>The best SV\
+G \x22path\x22 generat\
+or I\x0d\x0ahave found\
+ so far. Sorry L\
+ibreCAD</strong>\
+.</p>\x0d\x0a\x0d\x0a<h4>XFi\
+g</h4>\x0d\x0a\x0d\x0a<p>My \
+beloved drawing \
+editor during my\
+ youth! Complete\
+ly outdated, but\
+ still\x0d\x0athe best\
+! Unfortunately \
+the SVG export i\
+s deficient. The\
+re are Bezier cu\
+rves\x0d\x0a(really?) \
+i.e. splines wit\
+h control points\
+ (it looks like \
+Bezier) but the \
+SVG\x0d\x0aexport outp\
+uts them as poly\
+lines. <strong>C\
+onclusion: unusa\
+ble</strong></p>\
+\x0d\x0a\x0d\x0a<p><strong>O\
+nline editors:</\
+strong></p>\x0d\x0a\x0d\x0a<\
+p>There are plen\
+ty of them, but \
+they all seem to\
+ be meant for pa\
+inting, not\x0d\x0afor\
+ CAD (a little l\
+ike Inkscape). P\
+lease correct me\
+ if I am wrong.<\
+/p>\x0d\x0a\x0d\x0a<h3>Non-f\
+ree software</h3\
+>\x0d\x0a\x0d\x0a<h4>DesignC\
+AD</h4>\x0d\x0a\x0d\x0a<p>Th\
+e free version h\
+as the same capa\
+bilities as the \
+full version, ex\
+cepted the\x0d\x0aexpo\
+rts to other for\
+mats. Bad!</p>\x0d\x0a\
+\x0d\x0a<h4>TurboCAD</\
+h4>\x0d\x0a\x0d\x0a<p>Only a\
+ 15 days trial v\
+ersion - TO SEE<\
+/p>\x0d\x0a\x0d\x0a<h4>Solid\
+ Edge 2D Draftin\
+g (Siemens)</h4>\
+\x0d\x0a\x0d\x0a<p>The 3.8 G\
+B big app from S\
+iemens is <stron\
+g>free of charge\
+</strong>. It is\
+\x0d\x0aincredible sof\
+tware. But It se\
+ems there is no \
+SVG export at al\
+l. \x22Schade\x22.</p>\
+\x0d\x0a\x0d\x0a<h4>Draftsig\
+ht 2D (Dassault)\
+</h4>\x0d\x0a\x0d\x0a<p>Only\
+ a 30 days trial\
+ version - TO SE\
+E. Oh my God! Th\
+ere is this \x22Pow\
+er Tool\x22\x0d\x0anamed \
+\x222D G-Code gener\
+ator\x22! Forget Py\
+Cutl! (or not) .\
+ SVG export seem\
+s to be\x0d\x0amore me\
+ant as a picture\
+ for display onl\
+y purpose.</p>\x0d\x0a\
+\x0d\x0a<h4>Fusion 360\
+</h4>\x0d\x0a\x0d\x0a<p>The \
+free version is \
+also incredible.\
+ But I did not t\
+ry the SVG expor\
+t,\x0d\x0abecause I ga\
+ve up in the mea\
+nwhile looking f\
+or SVG editor...\
+</p>\x0d\x0a\x0d\x0a<h4>What\
+ else?</h4>\x0d\x0a\x0d\x0a<\
+p>It is cumberso\
+me to try to fin\
+d a decent SVG e\
+ditor, or at lea\
+st a CAD\x0d\x0aprogra\
+m with ease of u\
+se and decent SV\
+G export. LibreC\
+AD would be simp\
+ly\x0d\x0aperfect if i\
+t would support \
+Bezier curves (k\
+eeping dxf as in\
+put data alongsi\
+de\x0d\x0asvg as expor\
+t data is not a \
+problem). Does a\
+nyone knows one?\
+ (I mean, if\x0d\x0ahe\
+/s<strong></stro\
+ng>he **really**\
+ tried it and ca\
+n recommand it).\
+ </p>\x0d\x0a\x0d\x0a<h3>Con\
+clusion</h3>\x0d\x0a\x0d\x0a\
+<p>The fact that\
+ it is so diffic\
+ult to find an a\
+cceptable SVG pa\
+th \x22writer\x22\x0d\x0apro\
+gram can only be\
+ due to the SVG \
+format itself, w\
+hich is complete\
+ly \x22user\x22 or\x0d\x0a\x22a\
+pp\x22 un-friendly.\
+ The path defini\
+tion is too comp\
+licated. What is\
+ the point of\x0d\x0aa\
+llowing paths wi\
+th sub-paths? ma\
+ybe because the \
+SVG format compl\
+etely ignores\x0d\x0at\
+he concept of \x22m\
+ultiline\x22/\x22multi\
+polygon\x22 etc. Po\
+lygons have no \x22\
+interiors\x22 so\x0d\x0at\
+hey must be defi\
+ned as such in a\
+ path composed o\
+f 2 subpaths for\
+ this\x0d\x0apurpose.<\
+/p>\x0d\x0a\x0d\x0a<p><stron\
+g>All in all ver\
+y desapointing, \
+excepted <span\x0d\x0a\
+style=\x22color:#00\
+8000\x22>LibreCAD</\
+span> and <span\x0d\
+\x0astyle=\x22color:#0\
+08000\x22>SolveSpac\
+e!</span></stron\
+g></p>\x0d\x0a\x0d\x0a<h4><s\
+pan style=\x22color\
+:#0000ff\x22>Per ha\
+nd</span></h4>\x0d\x0a\
+\x0d\x0a<p>Finally my \
+prefered method!\
+ Per hand you ca\
+n also write ite\
+ms in the\x0d\x0a<code\
+>&lt;def&gt;</co\
+de> section, and\
+ use these items\
+ repeatidly with\
+\x0d\x0atransformation\
+s with the <code\
+>&lt;use&gt;</co\
+de> tag. My util\
+ity\x0d\x0a<strong>svg\
+resolver.py</str\
+ong> then transf\
+orms this svg fi\
+le into another \
+one,\x0d\x0ausable for\
+ <strong>PyCut. \
+Not the perfect \
+toolchain I admi\
+t, but well my s\
+vgs\x0d\x0aare not tha\
+t complicated</s\
+trong>. You have\
+ to understand h\
+ow to write an\x0d\x0a\
+arc/bezier curve\
+ per hand, it is\
+ not that diffic\
+ult. And yours s\
+vgs are then\x0d\x0a\x22<\
+strong>clean</st\
+rong>\x22.</p>\x0d\x0a\x0d\x0a<\
+p></p>\x0d\x0a\x0d\x0a<p></p\
+>\x0d\x0a</div>\x0d\x0a</bod\
+y>\x0d\x0a</html>\x0d\x0a\
+\x00\x00\x03\x84\
 <\
 h3>PyCut version\
 : 0.5.0_RC2</h3>\
 \x0d\x0a\x0d\x0a<ul>\x0d\x0a    <l\
 i><strong>shapel\
-y version: 1.8.<\
-/strong></li> \x0d\x0a\
+y version: 1.8.4\
+</strong></li> \x0d\
+\x0a    <li><strong\
+>svgelement vers\
+ion: latest</str\
+ong></li> \x0d\x0a    \
+<li><strong>lxml\
+ version: latest\
+</strong></li>\x0d\x0a\
     <li><strong>\
-svgelement versi\
-on: latest</stro\
-ng></li> \x0d\x0a    <\
-li><strong>lxml \
-version: latest<\
-/strong></li>\x0d\x0a \
-   <li><strong>m\
-atplotlib versio\
-n: 3.6.2</strong\
-></li> \x0d\x0a    <li\
-><strong>freetyp\
-e-py version: la\
-test</strong></l\
-i> \x0d\x0a</ul>\x0d\x0a\x0d\x0a\x0d\x0a\
-<pre>\x0d\x0a\x0d\x0a# 0.5.0\
-\x0d\x0a\x0d\x0ause only svg\
-elements, get ri\
-d of svgpathtool\
-s\x0d\x0a    \x0d\x0a# 0.4.0\
- \x0d\x0a    \x0d\x0aprocess\
- \x22opened\x22 paths \
-as well as close\
-d paths\x0d\x0a    \x0d\x0a#\
- 0.3.6\x0d\x0a    \x0d\x0aFi\
-x generation of \
-shapely polygons\
- from SVG\x0d\x0a(svgp\
-athtools bug wor\
-karound)\x0d\x0a    \x0d\x0a\
-# 0.3.5\x0d\x0a    \x0d\x0aF\
+matplotlib versi\
+on: 3.6.2</stron\
+g></li> \x0d\x0a    <l\
+i><strong>freety\
+pe-py version: l\
+atest</strong></\
+li> \x0d\x0a</ul>\x0d\x0a\x0d\x0a\x0d\
+\x0a<pre>\x0d\x0a\x0d\x0a# 0.5.\
+0\x0d\x0a\x0d\x0areplaced sv\
+gpathtools with \
+svgelement packa\
+ge\x0d\x0a    \x0d\x0a# 0.4.\
+0 \x0d\x0a    \x0d\x0aproces\
+s \x22opened\x22 paths\
+ as well as clos\
+ed paths\x0d\x0a    \x0d\x0a\
+# 0.3.6\x0d\x0a    \x0d\x0aF\
 ix generation of\
  shapely polygon\
-s from SVG\x0d\x0a(no \
-duplicated point\
-s leading to \x22un\
-valid\x22 polygons)\
-\x0d\x0a\x0d\x0a0.3.4\x0d\x0a=====\
-\x0d\x0a    \x0d\x0aLink gco\
-de browser &lt;-\
-&gt; gcode simul\
-ator\x0d\x0a    \x0d\x0a0.3.\
-2\x0d\x0a=====\x0d\x0a    \x0d\x0a\
-Animated Gcode S\
-imulator\x0d\x0a\x0d\x0a0.3.\
-1\x0d\x0a=====\x0d\x0a\x0d\x0aSmal\
-l Settings Dialo\
-g\x0d\x0a\x0d\x0a\x0d\x0a0.3.0\x0d\x0a==\
-===\x0d\x0a\x0d\x0aMigrated \
-to Shapely\x0d\x0a</pr\
-e>\
+s from SVG\x0d\x0a(svg\
+pathtools bug wo\
+rkaround)\x0d\x0a    \x0d\
+\x0a# 0.3.5\x0d\x0a    \x0d\x0a\
+Fix generation o\
+f shapely polygo\
+ns from SVG\x0d\x0a(no\
+ duplicated poin\
+ts leading to \x22u\
+nvalid\x22 polygons\
+)\x0d\x0a\x0d\x0a0.3.4\x0d\x0a====\
+=\x0d\x0a    \x0d\x0aLink gc\
+ode browser &lt;\
+-&gt; gcode simu\
+lator\x0d\x0a    \x0d\x0a0.3\
+.2\x0d\x0a=====\x0d\x0a    \x0d\
+\x0aAnimated Gcode \
+Simulator\x0d\x0a\x0d\x0a0.3\
+.1\x0d\x0a=====\x0d\x0a\x0d\x0aSma\
+ll Settings Dial\
+og\x0d\x0a\x0d\x0a\x0d\x0a0.3.0\x0d\x0a=\
+====\x0d\x0a\x0d\x0aMigrated\
+ to Shapely\x0d\x0a</p\
+re>\
 \x00\x00B\x8d\
 \x89\
 PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x0dIHDR\x00\
@@ -50550,6 +52855,11 @@ qt_resource_name = b"\
 \x00p\
 \x00y\x00c\x00u\x00t\x00_\x00m\x00a\x00t\x00e\x00r\x00i\x00a\x00l\x00.\x00p\x00n\
 \x00g\
+\x00\x18\
+\x04=\xe3\x5c\
+\x00t\
+\x00u\x00t\x00o\x00r\x00i\x00a\x00l\x00_\x00s\x00t\x00a\x00n\x00d\x00a\x00l\x00o\
+\x00n\x00e\x00.\x00h\x00t\x00m\x00l\
 \x00\x0a\
 \x0cx\x09\xfc\
 \x00a\
@@ -50615,7 +52925,7 @@ qt_resource_name = b"\
 qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x02\x00\x00\x00\x04\x00\x00\x00\x01\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x00\x1e\x00\x02\x00\x00\x00\x0c\x00\x00\x006\
+\x00\x00\x00\x1e\x00\x02\x00\x00\x00\x0d\x00\x00\x006\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00\x00\x00\x02\x00\x00\x00\x01\x00\x00\x005\
 \x00\x00\x00\x00\x00\x00\x00\x00\
@@ -50719,45 +53029,47 @@ qt_resource_struct = b"\
 \x00\x00\x01}\x1b=\x82K\
 \x00\x00\x04*\x00\x00\x00\x00\x00\x01\x00\x00O\x03\
 \x00\x00\x01}\x1b=\x82[\
-\x00\x00\x09\x9a\x00\x01\x00\x00\x00\x01\x00\x0c/\xa2\
+\x00\x00\x09\xd0\x00\x01\x00\x00\x00\x01\x00\x0c\xbf\x95\
 \x00\x00\x01n\xe0\x1e\xf6\xe0\
-\x00\x00\x04\xa0\x00\x02\x00\x00\x00\x01\x00\x00\x00H\
+\x00\x00\x04\xa0\x00\x02\x00\x00\x00\x01\x00\x00\x00I\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x08\xb6\x00\x02\x00\x00\x00\x06\x00\x00\x00B\
+\x00\x00\x08\xec\x00\x02\x00\x00\x00\x06\x00\x00\x00C\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x07Z\x00\x00\x00\x00\x00\x01\x00\x02\xaa+\
 \x00\x00\x01\x87\xd3\x0e\x82E\
 \x00\x00\x07z\x00\x00\x00\x00\x00\x01\x00\x037\x1c\
 \x00\x00\x01\x7f\x9eT\x0c\xa0\
-\x00\x00\x08\x86\x00\x00\x00\x00\x00\x01\x00\x04\xa3w\
+\x00\x00\x08\xbc\x00\x00\x00\x00\x00\x01\x00\x053j\
 \x00\x00\x01\x7f\x18\xb9\x9eN\
+\x00\x00\x07\xde\x00\x00\x00\x00\x00\x01\x00\x03\xd4\xed\
+\x00\x00\x01\x87\xd6\xcf\x85W\
 \x00\x00\x07\xb4\x00\x00\x00\x00\x00\x01\x00\x03\x9e\xea\
 \x00\x00\x01\x7f\x0el\xd4r\
 \x00\x00\x078\x00\x00\x00\x00\x00\x01\x00\x02Wp\
 \x00\x00\x01\x7f\x0el\xd4r\
-\x00\x00\x08\x1a\x00\x00\x00\x00\x00\x01\x00\x04\x1b\x05\
+\x00\x00\x08P\x00\x00\x00\x00\x00\x01\x00\x04\xaa\xf8\
 \x00\x00\x01\x7f\x0el\xd4m\
-\x00\x00\x07\xde\x00\x00\x00\x00\x00\x01\x00\x03\xd4\xed\
-\x00\x00\x01\x87\xd3\x12\xb4\x99\
-\x00\x00\x08P\x00\x00\x00\x00\x00\x01\x00\x04_^\
+\x00\x00\x08\x14\x00\x00\x00\x00\x00\x01\x00\x04d\xdf\
+\x00\x00\x01\x87\xd6\xa4\xdcu\
+\x00\x00\x08\x86\x00\x00\x00\x00\x00\x01\x00\x04\xefQ\
 \x00\x00\x01\x7f\x0el\xd4n\
 \x00\x00\x06\xfe\x00\x00\x00\x00\x00\x01\x00\x022\x0e\
 \x00\x00\x01\x7f\x0el\xd4r\
-\x00\x00\x07\xf8\x00\x00\x00\x00\x00\x01\x00\x03\xd8t\
+\x00\x00\x08.\x00\x00\x00\x00\x00\x01\x00\x04hg\
 \x00\x00\x01\x7f\x0el\xd4s\
-\x00\x00\x09J\x00\x00\x00\x00\x00\x01\x00\x04\xcd+\
+\x00\x00\x09\x80\x00\x00\x00\x00\x00\x01\x00\x05]\x1e\
 \x00\x00\x01x\x92\x0f\xed\x09\
-\x00\x00\x09$\x00\x00\x00\x00\x00\x01\x00\x04\xcay\
+\x00\x00\x09Z\x00\x00\x00\x00\x00\x01\x00\x05Zl\
 \x00\x00\x01{\xd9\xc1Q(\
-\x00\x00\x08\xfc\x00\x00\x00\x00\x00\x01\x00\x04\xc7\xd5\
+\x00\x00\x092\x00\x00\x00\x00\x00\x01\x00\x05W\xc8\
 \x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x08\xda\x00\x00\x00\x00\x00\x01\x00\x04\xc5h\
+\x00\x00\x09\x10\x00\x00\x00\x00\x00\x01\x00\x05U[\
 \x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x09b\x00\x00\x00\x00\x00\x01\x00\x04\xdd\xa6\
+\x00\x00\x09\x98\x00\x00\x00\x00\x00\x01\x00\x05m\x99\
 \x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x08\xc2\x00\x00\x00\x00\x00\x01\x00\x04\xbe\xb2\
+\x00\x00\x08\xf8\x00\x00\x00\x00\x00\x01\x00\x05N\xa5\
 \x00\x00\x01~ \xc4\x8a\x80\
-\x00\x00\x09\x84\x00\x00\x00\x00\x00\x01\x00\x04\xe0%\
+\x00\x00\x09\xba\x00\x00\x00\x00\x00\x01\x00\x05p\x18\
 \x00\x00\x01x\x92\x0f\xed\x12\
 "
 
