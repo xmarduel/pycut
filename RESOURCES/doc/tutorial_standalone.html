@@ -152,12 +152,12 @@ MultiPolygons if one single valid MultiPolygon is not possible. For example,
 the letters "i" or "j" are defined with a single svg path, defining two
 separates polygons, and it makes sense to consider these paths as a single
 shapely MultiPolygon entity. The letter "a" is a polygon with one hole, the
-letter "g" is a polygon with two holes. In the freetype vocabulary, "a" is
-formed by 2 "contours", "g" by three contours.</p>
+letter "g" is a polygon with two holes (for some fonts). In the freetype
+vocabulary, "a" is formed by 2 "contours", "g" by three contours.</p>
 
 <p>There is one exception: <strong>PyCut</strong> cannot process yet <span
 style="color:#0000ff">&lt;text&gt;</span> items. Fortunately, <span
-style="color:#0000ff">&lt;text&gt;</span> items have to be converted into <span
+style="color:#0000ff">&lt;text&gt;</span> items can to be converted into <span
 style="color:#0000ff">&lt;path&gt;</span> items within
 <strong>Inkscape</strong>, sonce they will be ignored by
 <strong>PyCut</strong>. <strong>PyCut</strong> also comes with the utiilty
@@ -177,6 +177,22 @@ simpler). <strong><span style="color:#8000ff">IN PROGRESS</span></strong>.</p>
 <p>All in all, if <strong>PyCut</strong> were to display text strings at the
 wrong positions, the user can always export the svg from
 <strong>Inkscape</strong> (and write <strong>PyCut</strong> a ticket).</p>
+
+<h4>Closed and opened paths</h4>
+
+<p>A path can be closed or not. A closed path or subpath contains the
+annotation <strong>"Z"</strong> or <strong>"z"</strong> at its end. Even if the
+first point of the path is equal to its last point, the path is only considered
+as closed with the ending "Z/z".</p>
+
+<div class="warning">
+<p><strong>Warning:</strong> PyCut strongly relies on this annotation to decide
+if the path is closed or not. When not closed, "Pocket" operations for example
+will not be allowed for this path.</p>
+</div>
+
+<p>PyCut imports closed paths as shapely "Polygon" (infact "MultiPolygon"),
+while opened paths are imported as "LineString" (infact "MultiLineString").</p>
 
 <h4>Transformations</h4>
 
@@ -640,7 +656,7 @@ for users willing to test the quality of QCAD. </strong>Well,
 <strong>QDAC</strong> costs only <strong>38€</strong>, not that much, but
 really testing it before buying is possible but not very practicable.</p>
 
-<h4>LibreCAD <span style="color:#008000">****BEST****</span></h4>
+<h4>LibreCAD <span style="color:#008000">****GOOD****</span></h4>
 
 <p>It is (was) a fork of QCAD (2011). It looks a lot like QCAD, but the (my)
 first feeling is that the user interface seems better. <strong>The SVG export
@@ -684,12 +700,11 @@ a bug: one cannot concatenate polylines/arcs with beziers/splines. </p>
 concatenation of lines/arcs with beziers/splines into a single SVG path, but it
 is fixable per hand in the output.</strong></p>
 
-<p>Conclusion: <strong><span style="color:#008000">The best SVG "path"
-generator I have found so far.</span></strong></p>
+<p>Conclusion: <strong><span style="color:#008000">A good SVG "path" generator
+that is unfortunately not completely finished.</span></strong></p>
 
 <h4>SolveSpace <span style="color:#ff00ff"><span style="color:#008000"><span
-style="color:#ff00ff">*<strong>*** VERY BEST
-****</strong></span></span></span></h4>
+style="color:#ff00ff">*<strong>***BEST****</strong></span></span></span></h4>
 
 <p>Ever heard of it? A parametric system as known from the 3D modellers.
 <strong>Incredible!</strong> The GUI looks like from the beginning of the '80s,
@@ -698,14 +713,15 @@ top</span></strong>.</p>
 
 <p><strong style="color:#008000">SVG export perfect (well, nearly
 perfect)</strong> . The construction constraints can also be exported, so there
-are a lot of "paths" in the svg export, even if you have only drawn 1 path.
+are a lot of "paths" in the svg export, even if you have drawn only 1 path.
 Unfortunately, you cannot give your paths some ids. It would be nice if these
 "contraints" paths could be grouped into their own group in order to isolated
 them from the real paths. There are only cubic bezier curves, quadratic bezier
-curves are unfortunately missing. The SVG closed path "Z" is also missing.</p>
+curves are unfortunately missing (not sure). The SVG closed path "Z" is also
+missing (should submit a patch!).</p>
 
 <p>Conclusion: <strong style="color:#008000">The best SVG "path" generator (and
-path "constructor") I have found so far. Sorry LibreCAD</strong>.</p>
+path "constructor") I have found so far.</strong></p>
 
 <h4>XFig</h4>
 
@@ -749,10 +765,13 @@ because I gave up in the meanwhile looking for SVG editor...</p>
 <h4>What else?</h4>
 
 <p>It is cumbersome to try to find a decent SVG editor, or at least a CAD
-program with ease of use and decent SVG export. LibreCAD would be simply
-perfect if it would support Bezier curves (keeping dxf as input data alongside
-svg as export data is not a problem). Does anyone knows one? (I mean, if
-he/s<strong></strong>he **really** tried it and can recommand it). </p>
+program with ease of use and decent SVG export. <strong><span
+style="color:#008000">LibreCAD</span></strong> would be simply very good if it
+could support spline "concatenation" into a path (keeping dxf as input data
+alongside svg as export data is not a problem). Does anyone knows one? (I mean,
+if he/s<strong></strong>he **really** tried it and can recommand it).
+<strong><span style="color:#008000">Finally discovered SolveSpace which is
+simply great.</span></strong></p>
 
 <h3>Conclusion</h3>
 
@@ -761,8 +780,8 @@ program can only be due to the SVG format itself, which is completely "user" or
 "app" un-friendly. The path definition is too complicated. What is the point of
 allowing paths with sub-paths? maybe because the SVG format completely ignores
 the concept of "multiline"/"multipolygon" etc. Polygons have no "interiors" so
-they must be defined as such in a path composed of 2 subpaths for this
-purpose.</p>
+they must be defined as such in a path composed with 2 or more subpaths for
+this purpose.</p>
 
 <p><strong>All in all very desapointing, excepted <span
 style="color:#008000">LibreCAD</span> and <span
