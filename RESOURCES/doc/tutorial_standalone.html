@@ -20,7 +20,7 @@
 <ul class="tree">
   <li><a href="#P-01">Introduction</a> 
     <ul>
-      <li><a href="#P-01-01">Inkscape SVG files</a></li>
+      <li><a href="#P-01-01">SVG Shapes and Paths</a></li>
     </ul>
   </li>
   <li><a href="#P-02">SVG Documents</a> </li>
@@ -322,6 +322,7 @@ named as the CAM operation name.</p>
 <h2 id="P-04">GUI Components</h2>
 
 <h3 id="P-04-01">Svg Settings</h3>
+
 <img src="pycut_svgsettings.png" width="310px"> 
 
 <h4>user units scale</h4>
@@ -333,6 +334,7 @@ Inkscape automatically sets the <strong>user units scale </strong><strong>to
 1</strong>. Note that the user units are not "px" or whatever. This means,
 <strong>1 "user unit" is equal to 1 mm (and the viewbox is "0 0 100 40" while
 width="100mm" and height="40mm")</strong></p>
+
 <img src="Inkscape_settings_mm.png" width="563px"> 
 
 <p>Of course when editing the svg (in Inkscape or in a text editor),
@@ -349,6 +351,7 @@ that <strong>Inkscape</strong> automatically change the <strong>user units
 scale to 25.4</strong>. Because of this, the <strong>view box remains at "0 0
 100 40"</strong>. That way, a rectangle filling the full document size is still
 100x40.</p>
+
 <img src="Inkscape_settings_in.png" width="563px"> 
 
 <p>Filling a box half the size of the document is 50x20, right, but what are
@@ -421,6 +424,7 @@ factor is always 1</strong> .</p>
 <p></p>
 
 <h3 id="P-04-02">Tool</h3>
+
 <img src="pycut_tool.png" width="310px"> 
 
 <h3 id="P-04-03">Tabs</h3>
@@ -432,6 +436,7 @@ size/postion in the tab table. Yes tabs, for simplicity, are circle. To be
 effective, the tabs have to be enabled and of course placed somewhere on the
 generated toolpaths. The height of the tabs is shared by all tabs. <strong>They
 are ignored for Pocket operations</strong>.</p>
+
 <img src="./pycut_tabs.png" width="310px"> 
 
 <p></p>
@@ -448,6 +453,7 @@ Ok. </p>
 
 <p>The Operations "Cut Depth" should not be larger than the material thickness.
 </p>
+
 <img src="./pycut_material.png" width="310px"> 
 
 <p></p>
@@ -460,6 +466,7 @@ Ok. </p>
 
 <p>If your design contain curves (svg "arcs" or "bezier" curves), they have to
 be discretized in small segments.</p>
+
 <img src="./pycut_curve_to_line_conversion.png" width="300px"> 
 
 <p>The 2 following parameters allow to specified how fine the curve
@@ -520,9 +527,11 @@ is extracted form the svg file: the svg "height" attribute.</p>
   <li>Spindle Start/Stop (<strong>M3</strong>/<strong>M5</strong> codes)</li>
   <li><strong>M2</strong> code</li>
 </ul>
+
 <img src="./pycut_gcode_generation.png" width="310px">
+
 <!-- ----------------------------------------------------------------------------------------------------------->
-<!-- -----------------------------------------------------------------------------------------------------------> 
+<!-- ----------------------------------------------------------------------------------------------------------->
 
 <p></p>
 
@@ -530,6 +539,7 @@ is extracted form the svg file: the svg "height" attribute.</p>
 
 <p>This is where the user defined its cam operations, thus this is where the
 action takes place.</p>
+
 <img src="./pycut_ops.png" width="1170px"> 
 
 <p>First one or more item(s) have to be selected in the svgviewer, click on
@@ -700,11 +710,10 @@ a bug: one cannot concatenate polylines/arcs with beziers/splines. </p>
 concatenation of lines/arcs with beziers/splines into a single SVG path, but it
 is fixable per hand in the output.</strong></p>
 
-<p>Conclusion: <strong><span style="color:#008000">A good SVG "path" generator
+<p>Conclusion: <strong><span style="color:#008000">A good SVG "path" generator/exporter
 that is unfortunately not completely finished.</span></strong></p>
 
-<h4>SolveSpace <span style="color:#ff00ff"><span style="color:#008000"><span
-style="color:#ff00ff">*<strong>***BEST****</strong></span></span></span></h4>
+<h4>SolveSpace <span style="color:#ff00ff">****BEST****</strong></span></h4>
 
 <p>Ever heard of it? A parametric system as known from the 3D modellers.
 <strong>Incredible!</strong> The GUI looks like from the beginning of the '80s,
