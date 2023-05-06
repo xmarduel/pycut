@@ -11,7 +11,3 @@ with shapely 2.1.0
 
 use QOpenGLWidget for gcode simulation, get rid of the jscut WebGL stuff
 
-# 0.5.1 (TODO)
-
-do not "full reset" and fill anew the svgviewer on select operation with geometry preview (speed-up)
-(is it possible with QtSvgViewer ?)
