@@ -1506,16 +1506,16 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
+   <widget class="QMenu" name="menuSvg">
     <property name="title">
-     <string>File</string>
+     <string>SVG</string>
     </property>
     <addaction name="actionOpenSvg"/>
     <addaction name="separator"/>
    </widget>
-   <widget class="QMenu" name="menuJobs">
+   <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>Jobs</string>
+     <string>File</string>
     </property>
     <widget class="QMenu" name="menuOpen_Recent_Jobs">
      <property name="title">
@@ -1543,13 +1543,13 @@
     <addaction name="actionSettings"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuJobs"/>
+   <addaction name="menuSvg"/>
    <addaction name="menuSettings"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionOpenSvg">
    <property name="text">
-    <string>Open SVG</string>
+    <string>Load SVG</string>
    </property>
   </action>
   <action name="actionNewJob">

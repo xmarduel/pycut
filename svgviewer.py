@@ -132,6 +132,15 @@ class SvgViewer(QtWidgets.QGraphicsView):
         "fill-opacity": "1.0"
     }
 
+    # to overwrite temporarely the settings
+    GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM =  {
+        "stroke": "",
+        "stroke-width": "",
+        "stroke-opacity": "",
+        "fill": "",
+        "fill-opacity": ""
+    }
+
     # --------------------------------------------------
     
     GEOMETRY_PREVIEW_OPENED_PATHS_DEFAULTS =  {
@@ -190,6 +199,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         # keep zoom factor (used when reloading augmented svg: zoom should be kept)
         self.currentZoom = self.zoomFactor()
+
+    @classmethod
+    def set_settings_geometry_preview_custom_color(cls, color: str):
+        cls.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM[ "fill"] = color
+
+    @classmethod
+    def set_settings_geometry_preview_custom_color_reset(cls):
+        cls.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM[ "fill"] = ""
 
     @classmethod
     def set_settings(cls, settings):
@@ -556,11 +573,16 @@ class SvgViewer(QtWidgets.QGraphicsView):
         for cnc_op in cnc_ops:
             for geometry_svg_path in cnc_op.geometry_svg_paths:
                 if geometry_svg_path.eval_closed():
-                    #polygons
+                    # polygons
                     geometry_svg_path.shape_attrs['stroke'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke"]
                     geometry_svg_path.shape_attrs['stroke-width'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-width"]
                     geometry_svg_path.shape_attrs['stroke-opacity'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-opacity"]
-                    geometry_svg_path.shape_attrs['fill'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"]
+
+                    if self.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM["fill"] != "":
+                        geometry_svg_path.shape_attrs['fill'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM["fill"]
+                    else:
+                        geometry_svg_path.shape_attrs['fill'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"]
+                    
                     geometry_svg_path.shape_attrs['fill-opacity'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill-opacity"]
                 else:
                     # lines

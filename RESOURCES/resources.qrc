@@ -13,6 +13,12 @@
         <file>images/tango/22x22/actions/media-skip-backward.png</file>
         <file>images/tango/22x22/actions/media-seek-forward.png</file>
         <file>images/tango/22x22/actions/media-seek-backward.png</file>
+        <file>images/media-record-red.png</file>
+        <file>images/media-record-red-dark.png</file>
+        <file>images/media-record-green.png</file>
+        <file>images/media-record-green-dark.png</file>
+        <file>images/media-record-blue.png</file>
+        <file>images/media-record-blue-dark.png</file>
         <file>images/media-playback-back.png</file>
         <file>images/milling-machine-op.png</file>
         <file>images/milling-machine-action.png</file>
