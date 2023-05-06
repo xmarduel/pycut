@@ -711,10 +711,11 @@ a bug: one cannot concatenate polylines/arcs with beziers/splines. </p>
 concatenation of lines/arcs with beziers/splines into a single SVG path, but it
 is fixable per hand in the output.</strong></p>
 
-<p>Conclusion: <strong><span style="color:#008000">A good SVG "path" generator/exporter
-that is unfortunately not completely finished.</span></strong></p>
+<p>Conclusion: <strong><span style="color:#008000">A good SVG "path"
+generator/exporter that is unfortunately not completely
+finished.</span></strong></p>
 
-<h4>SolveSpace <span style="color:#ff00ff">****BEST****</strong></span></h4>
+<h4>SolveSpace <span style="color:#ff00ff">****BEST****</span></h4>
 
 <p>Ever heard of it? A parametric system as known from the 3D modellers.
 <strong>Incredible!</strong> The GUI looks like from the beginning of the '80s,
@@ -786,12 +787,19 @@ simply great.</span></strong></p>
 <h3>Conclusion</h3>
 
 <p>The fact that it is so difficult to find an acceptable SVG path "writer"
-program can only be due to the SVG format itself, which is completely "user" or
-"app" un-friendly. The path definition is too complicated. What is the point of
-allowing paths with sub-paths? maybe because the SVG format completely ignores
-the concept of "multiline"/"multipolygon" etc. Polygons have no "interiors" so
-they must be defined as such in a path composed with 2 or more subpaths for
-this purpose.</p>
+program let me wonder why it is the case. And why does only
+<strong>SolveSpace</strong> perform the task correctly? Why such a capable App
+like <strong>LibreCAD</strong> fails for this task? Well in case of LibreCAD,
+it cannot concatenate splines with lines, so does the export. Maybe because the
+svg path definition is too complicated, "nobody" want to parse it, and thus in
+return is interested in exporting it right. And the apps which theorytically
+could use the SVG path as import (as SolveSpace could -let's write a patch!-)
+export them then correctly too. But who else would want to import svg paths?
+What do all these SVG apps? I cannot test them all! Concerning svg paths, what
+is the point of allowing paths with sub-paths? maybe because the SVG format
+completely ignores the concept of "multiline"/"multipolygon" etc. Polygons have
+no "interiors" so they must be defined as such in a path composed of 2 or more
+subpaths for this purpose.</p>
 
 <p><strong>All in all very desapointing, excepted <span
 style="color:#008000">LibreCAD</span> and <span
