@@ -43,7 +43,8 @@
       <li><a href="#P-04-07">GCode Generation</a></li>
     </ul>
   </li>
-  <li><a href="#P-05">Appendix-1: SVG Editors</a></li>
+  <li><a href="#P-05">GCode DressUp</a> </li>
+  <li><a href="#P-06">Appendix-1: SVG Editors</a></li>
 </ul>
 <script type="text/javascript">
 var tree = document.querySelectorAll('ul.tree a:not(:last-child)');
@@ -596,8 +597,218 @@ resulting G code is displayed in the G code viewer and G code simulator.</p>
 fun...</p>
 
 <p></p>
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
 
-<h3 id="P-05">Appendix-1: SVG Editors</h3>
+<h2 id="P-05">GCode DressUp (TODO)</h2>
+
+<h3>DogBones</h3>
+
+<div class="warning">
+<p><strong>Warning:</strong> I am a CAM beginner, so for sure my solution is
+sub-optimal.</p>
+</div>
+
+<p>When milling a pocket or a contour, the cutter is not able to mill into
+concaves angles (yes the cutter is round). </p>
+<svg width="200mm" height="80mm" viewBox="0 0 200 80" version="1.1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <g id="layer1">
+     <polyline points="10,70 10,10 100,10 100,70" stroke-width="0.5"  fill="none" stroke="black"/>
+     <polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="20px" stroke-opacity="0.2"/>
+
+     <polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8"/>
+
+     <circle cx="20" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+	 <circle cx="90" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+      
+  </g>
+</svg>
+
+<p>To remedy to this, you can</p>
+<ul>
+  <li>modify your design</li>
+  <li>fix the resulting GCode so that the angles are milled as you wish</li>
+  <li>I do not know yer another method (I'm a beginner)</li>
+</ul>
+
+<p>The first option seems to me to be unacceptable, because you end up
+modifying your design (in function of the cutter diameter).</p>
+
+<p>The second one means you have to modify "per hand" the produced GCode. But
+how allowing to modify the Gcode "per hand" in a repeatable manner? here is my
+proposed method:</p>
+<ol>
+  <li>Generate the Gcode first.</li>
+  <li>Identify the locations(s) of the Gcode where the problem occurs.</li>
+  <li>Write "fixup" GCode "blocks" that will be inserted into the generated
+    GCode at the right places</li>
+</ol>
+
+<p>Sure, if there are 1000 corners, it will be unpracticable.</p>
+
+<p>Example (strategy "1" on the left, strategy "2" on the right):</p>
+
+<svg width="200mm" height="80mm" viewBox="0 0 200 80" version="1.1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <g id="layer1">
+     <polyline points="10,70 10,10 100,10 100,70" stroke-width="0.5"  fill="none" stroke="black"/>
+     <polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="20px" stroke-opacity="0.2"/>
+
+     <polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8"/>
+
+
+     <circle cx="20" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+      
+ <!-- 
+ D = sqrt(10*10 + 10*10) = 14.14
+ d = 14.14 -10 = 4.14
+ 
+ dx = dy =  d / sqrt(2) = 2.93
+ 
+ -->
+      <polyline id="dog-bone-path1" points="20,20 17.07,17.07" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="0.3" stroke-opacity="0.2"/>
+      <circle  id="dog-bone-path1-material" cx="17.07" cy="17.07" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+
+      <!--  other bone type -->
+      <polyline id="dog-bone-path2" points="90,20 90,10" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="0.3" stroke-opacity="0.2"/>
+      <circle  id="cutter2" cx="90" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+      <circle  id="dog-bone-path2-material" cx="90" cy="10" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+  </g>
+</svg>
+
+<p>We see that the strategy "1" removes far less material than the strategy "2".
+
+<p>At a given GCode "instruction" which is exactly at a corner (there are
+certainly more than one line with such a pattern if the total cut depth is
+higher than the pass depth)</p>
+<pre><code class="language-gcode">G1 X10.0000 Y20.0000 </code></pre>
+
+<p>we want to insert a GCode block</p>
+<pre><code class="language-gcode">G1 X09.0000 Y21.0000 ; goes 1mm top left
+G1 X11.0000 Y20.0000 ; and back</code></pre>
+
+<p></p>
+
+<p>Of course we need to inform the Gcode generator that he has to take into
+account this fixup, thus inserting the "block" each time a line wwith such a
+pattern is produced. It is up to the user to give the right fixups. For each
+"problem zone" (corner) one block. </p>
+
+<p>Of course this fixup has to be saved in the project, and to be applied only
+for the desired operations. In the job file at the operation definition:</p>
+<pre><code class="language-json">{
+   "name": "op_contour",
+   "type": "outside",
+   "cut_depth": 3.175,
+   "paths": [
+     "contour"
+   ],
+   "ramp_plunge": false,
+   "combinaison": "Union",
+   "direction": "Conventional",
+   "units": "mm",
+   "margin": 0.0,
+   "width": 0.0,
+   "gcode-fixups":[
+       {"G1 X10.0000 Y20.0000" : [ 
+           "; start fixup", 
+           "G1 X11.0000 Y19.0000 ; goes 1mm top left" , 
+           "G1 X11.0000 Y20.0000 ; and back",
+           "; end fixup""]
+       },
+       {"G1 X15.0000 Y20.0000" : [ 
+           "; start fixup", 
+           "G1 X16.0000 Y21.0000 ; goes 1mm top right",
+           "G1 X15.0000 Y20.0000 ; and back",
+           "; end fixup"
+           ]
+       }
+    }
+}</code></pre>
+
+<p>Note that the GCode generation is function, among others, of the
+"GCodeConversion" settings and cutter diameter.</p>
+<pre><code class="language-json">"GCodeConversion": {
+   "units": "mm",
+   "flip_xy": false,
+   "x_offset": -10.08,
+   "y_offset": 29.66,
+   "xy_reference": "ZERO_LOWER_LEFT_OF_OP"
+},</code></pre>
+
+<p>so changing the <code>xy_reference</code> or other parameters that influence
+the GCode generation makes the fixups completely obsolete.</p>
+
+<p></p>
+
+<p><strong>Example-1</strong>: with a cutter of diameter 3mm (radius 1.5 mm) a
+corner at [8.5, 21.5] is not milled as right corner. The cutter goes to
+<code>[10.0, 20.0]</code> from the bottom right and thus there is a gap of </p>
+
+<p><code>offset = sqrt(1.5*1.5 + 1.5*1.5) - 1.5 = 0.622</code></p>
+<p><code>dx = dy = offset / sqrt(2) = 0.44</code></p>
+
+<p>until the corner.</p>
+<pre><code class="language-gcode">G1 X10.0000 Y20.0000</code></pre>
+
+<p>So we write the fixup </p>
+<pre><code class="language-gcode">G1 X09.5600 Y20.4400 ; goes 0.44 mm top left
+; it could be: G1 X10.0000 Y21.5000 ; goes 1.5mm top
+; it could be: G1 X08.5000 Y20.0000 ; goes 1.5mm left
+G1 X10.0000 Y20.0000 ; and back</code></pre>
+
+<p><strong>Example-2</strong>: with a cutter of diameter 3mm (radius 1.5 mm) a
+corner at [16.5, 21.5] is not milled as right corner. The cutter goes to
+<code>[15.0, 20.0]</code> from the bottom left and thus there is a gap of </p>
+
+<p><code>offset = sqrt(1.5*1.5 + 1.5*1.5) - 1.5 = 0.622</code></p>
+<p><code>dx = dy = offset / sqrt(2) = 0.44</code></p>
+
+<p>until the corner.</p>
+<pre><code class="language-gcode">G1 X15.0000 Y20.0000</code></pre>
+
+<p>So we write the fixup </p>
+<pre><code class="language-gcode">G1 X15.4400 Y20.4400 ; goes 0.44 mm top right
+; it could be: G1 X15.0000 Y21.5000 ; goes 1.5 mm top 
+; it could be: G1 X16.5000 Y20.0000 ; goes 1.5 mm right
+G1 X15.0000 Y20.0000 ; and back</code></pre>
+
+<p>Easy!</p>
+<p>We see: the fixup dx and dy = 0.44 mm are a little less than a third of the cutter diameter 1.5 mm.</p>
+
+<p><strong>PyCut GCode Dressup GUI</strong></p>
+
+<p>In the GCode Viewer/GCode simulator, lines corresponding to fixups
+(comprised between the comment lines "; start fixup" and "; end fixup") will
+have a blue background.</p>
+
+<p>In the operations table, the icon "fixups" will have following
+background:</p>
+<ul>
+  <li>no background:no fixups given at all</li>
+  <li>blue: no GCode yet produced, so not able to determine if the given fixups
+    are effective or not</li>
+  <li>green: fixups are given and "effective" (all given patterns are found in
+    the GCode)</li>
+  <li>orange: some fixups are "effective", other are not effective</li>
+  <li>red: all fixups seem to be obsolete</li>
+</ul>
+
+<p>And clicking on the icon opens a JSON editor to edit the fixups. In this
+editor, there will be some "wizards" to help writing the fixup, so that no math
+will be asked for the user (especially usefull if the corner is not a right
+corner, as the direction as well as the length of the G1 instruction have to be
+determined).</p>
+
+<p>After having edited the fixups, re-run the GCode generation and observe in
+the GCode Viewer/GCode simulator if the fixups have been taken into account.</p>
+
+<p></p>
+
+<h3 id="P-06">Appendix-1: SVG Editors</h3>
 
 <p>It seems there are plenty of free SVG editors around there. Well, let me
 share my opinion about a few of them...</p>
