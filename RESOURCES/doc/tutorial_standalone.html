@@ -600,6 +600,7 @@ sub-optimal.</p>
 
 <p>When milling a pocket or a contour, the cutter is not able to mill into
 concaves angles (yes the cutter is round). </p>
+
 <svg width="200mm" height="80mm" viewBox="0 0 200 80" version="1.1"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
@@ -738,7 +739,11 @@ corner at [8.5, 21.5] is not milled as right corner. The cutter goes to
 <code>[10.0, 20.0]</code> from the bottom right and thus there is a gap of </p>
 
 <p><code>offset = sqrt(1.5*1.5 + 1.5*1.5) - 1.5 = 0.622</code></p>
-<p><code>dx = dy = offset / sqrt(2) = 0.44</code></p>
+
+<p>The direction of the fixup is in these case "NE" so the orientation of the corner "a" is 3Pi/4.</p>
+
+<p><code>dx = offset * cos(a) = -0.44</code></p>
+<p><code>dy = offset * sin(a) = 0.44</code></p>
 
 <p>until the corner.</p>
 <pre><code class="language-gcode">G1 X10.0000 Y20.0000</code></pre>
@@ -754,7 +759,11 @@ corner at [16.5, 21.5] is not milled as right corner. The cutter goes to
 <code>[15.0, 20.0]</code> from the bottom left and thus there is a gap of </p>
 
 <p><code>offset = sqrt(1.5*1.5 + 1.5*1.5) - 1.5 = 0.622</code></p>
-<p><code>dx = dy = offset / sqrt(2) = 0.44</code></p>
+
+<p>The direction of the fixup is in these case "NW" so the orientation of the corner "a" is Pi/4.</p>
+
+<p><code>dx = offset * cos(a) = 0.44</code></p>
+<p><code>dy = offset * sin(a) = 0.44</code></p>
 
 <p>until the corner.</p>
 <pre><code class="language-gcode">G1 X15.0000 Y20.0000</code></pre>
@@ -767,6 +776,58 @@ G1 X15.0000 Y20.0000 ; and back</code></pre>
 
 <p>Easy!</p>
 <p>We see: the fixup dx and dy = 0.44 mm are a little less than a third of the cutter diameter 1.5 mm.</p>
+
+<h4>General case / automatic fixups</h4>
+
+<p>The angle (size of the corner) that the toolpath makes at each point is calculated with</p>
+
+<p>TODO</p>
+
+<p>and the direction of the corner is</p>
+
+<p>TODO</p>
+
+<p>So we can calculate the offset as well as the orientation "a" of the corner. Theorically a fixup is needed
+  as soon as a path "angle" is smaller than 180 degrees. It is up the the user to decide at which threshold
+  fixups shouls be performed. Value of Pi/2 seems acceptable, or maybe Pi/4. 
+  So fixups will be perform only for angles smaller than this threshold.</p>
+
+  <svg width="200mm" height="80mm" viewBox="0 0 200 80" version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg">
+ <g id="layer1">
+    <polyline points="10,10 70,10 113,53" stroke-width="0.5"  fill="none" stroke="black"/>
+    <polyline points="10,20 66.2,20 106.2,60" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="20px" stroke-opacity="0.2"/>
+
+    <polyline points="10,20 66.2,20 106.2,60" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8"/>
+
+    <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+    <!--
+    <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+    -->
+
+    <circle cx="66.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+ 
+     
+ </g>
+</svg>
+
+<svg width="200mm" height="80mm" viewBox="0 0 200 80" version="1.1"
+xmlns="http://www.w3.org/2000/svg"
+xmlns:svg="http://www.w3.org/2000/svg">
+<g id="layer1">
+  <polyline points="10,10 110,10 60,60" stroke-width="0.5"  fill="none" stroke="black"/>
+  <polyline points="10,20  86,20 46,60" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="20px" stroke-opacity="0.2"/>
+
+  <polyline points="10,20  86,20 46,60" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8"/>
+
+  
+  
+  <circle cx="86" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+
+   
+</g>
+</svg>
 
 <p><strong>PyCut GCode Dressup GUI</strong></p>
 
@@ -826,14 +887,14 @@ certainly not all these extra namespace stuff. Removing per hand these extra
 stuff destroy the Inkscape project settings. </p>
 
 <p><strong>Yeappy</strong>! To obtain a SVG data free of sodipodi/inkscape
-namespace stuff, you have to "export" your SVG data as SVG!</p>
+namespace stuff, you have to "export" your SVG data (your "project" file) as SVG!</p>
 
 <p>Editing points coordinates "per hand" is nearly impossible as the
 coordinates are only accessible from the "d" string, which is not really human
 readable. Here is an example of a polyline with 8 points:</p>
 <pre><code>M 5.9999998,35.999999 10,33 l 5,2.999999 -1,-4 h 7 V 41 H 12 L 8.9999999,38.999998</code></pre>
 
-<p>Note how absolute and relative keywords are given in the path. Question:
+<p>BTW, note how absolute and relative keywords are given in the path. Question:
 what are the coordinates of the fifth point?</p>
 
 <p>Concatening segments to form a single path doesn't even work as expected.
@@ -862,10 +923,7 @@ well as Arcs and Cubic Bezier curves (did not find quadratic bezier curves).
 These Cubic Bezier curves are exported right in the SVG export. Unfortunately
 (again), when concatening lines/polylines with these cubic bezier curves in
 order to form a whole path, they are transformed into Arcs (why ?) or Lines
-(why?), and so the SVG export. Conclusion: <strong>unusable and very unfriendly
-for users willing to test the quality of QCAD. </strong>Well,
-<strong>QDAC</strong> costs only <strong>38€</strong>, not that much, but
-really testing it before buying is possible but not very practicable.</p>
+(why?), and so the SVG export. Conclusion: <strong>completely unusable</strong>.</p>
 
 <h4>LibreCAD <span style="color:#008000">****GOOD****</span></h4>
 
@@ -905,7 +963,7 @@ LibreCAD concept, but not so straight to be seen if one not knows).</p>
 (<strong>SVG output is a single &lt;path&gt; entity</strong>) but there is here
 a bug: one cannot concatenate polylines/arcs with beziers/splines. </p>
 
-<p>Snap stuff is perfect, with many snap options.</p>
+<p>Snap stuff is perfect, with many clear and practical snap options.</p>
 
 <p><strong>So this is a real pity that LibreCAD does not perform the
 concatenation of lines/arcs with beziers/splines into a single SVG path, but it
