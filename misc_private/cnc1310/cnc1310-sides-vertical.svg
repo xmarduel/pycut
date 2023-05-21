@@ -14,20 +14,23 @@
       cx="0"
       cy="0"
       r="11" />
-	  <circle id="h_screw_backlash_item_hole"
+	  <circle id="screw_backlash_item_hole"
       style="font-variation-settings:normal;vector-effect:none;fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.352776;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
       cx="0"
       cy="0"
-      r="5" />
-	  <circle id="h_screw_backlash_item_screw_2.0mm"
-      style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
+      r="5.15" />
+	 <!-- 2.0mm or 3.5 mm ??  -->
+    <circle id="backlash_item_screw_3.5mm"
+      style="fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.12"
       cx="0"
       cy="0"
-      r="1.0" />
+      r="1.75" />
     <rect id="bearing_base"
       style="fill:#000080;fill-opacity:0.2;stroke:#f70000;stroke-width:0"
       width="32"
       height="32"
+	  rx="2"
+      ry="2" 
       x="0"
       y="0" />
     <circle id="bearing_cylinder"
@@ -56,10 +59,10 @@
       
     <use href="#h_screw_central_hole" x="50"  y="16"  id="screw_central_hole" />
 
-	  <use href="#bearing_base"        x="0"  y="0"  id="LEFT_bearing_base" />
+    <use href="#bearing_base"        x="0"  y="0"  id="LEFT_bearing_base" />
     <use href="#bearing_cylinder"    x="16" y="16" id="LEFT_bearing_cylinder" />
-	  <use href="#bearing_base"        x="68" y="0"  id="IIGHT_bearing_base" />
-	  <use href="#bearing_cylinder"    x="84" y="16" id="RIGHT_bearing_cylinder" />
+	<use href="#bearing_base"        x="68" y="0"  id="IIGHT_bearing_base" />
+	<use href="#bearing_cylinder"    x="84" y="16" id="RIGHT_bearing_cylinder" />
 
     <use href="#bearing_screw_4.5mm" x="4.680"  y="4.680" id="LEFT_bearing_screw_4.5mm_SE" />
     <use href="#bearing_screw_4.5mm" x="27.32"  y="4.680" id="LEFT_bearing_screw_4.5mm_SW" />
@@ -77,12 +80,12 @@
     <use href="#spacer_screw_5.0mm" x="87.5"  y="37.5" />
    
 
-    <use href="#h_screw_backlash_item_hole" x="50"  y="16"  id="screw_backlash_item_hole" />
+    <use href="#screw_backlash_item_hole" x="50"  y="16"  id="screw_backlash_item_hole" />
 
-    <use href="#h_screw_backlash_item_screw_2.0mm" x="50"  y="9"   id="z_screw_backlash_item_screw_2.0mm_1" />
-	  <use href="#h_screw_backlash_item_screw_2.0mm" x="50"  y="23"  id="z_screw_backlash_item_screw_2.0mm_2" />
-	  <use href="#h_screw_backlash_item_screw_2.0mm" x="43"  y="16"  id="z_screw_backlash_item_screw_2.0mm_3" />
-	  <use href="#h_screw_backlash_item_screw_2.0mm" x="57"  y="16"  id="z_screw_backlash_item_screw_2.0mm_4" />
+    <use href="#backlash_item_screw_3.5mm" x="50"  y="8"   id="backlash_item_screw_3.5mm_1" />
+    <use href="#backlash_item_screw_3.5mm" x="50"  y="24"  id="backlash_item_screw_3.5mm_2" />
+	<use href="#backlash_item_screw_3.5mm" x="42"  y="16"  id="backlash_item_screw_3.5mm_3" />
+	<use href="#backlash_item_screw_3.5mm" x="58"  y="16"  id="backlash_item_screw_3.5mm_4" />
 
     <!-- guides -->
 

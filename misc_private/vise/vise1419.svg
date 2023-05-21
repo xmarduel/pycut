@@ -1,0 +1,82 @@
+<?xml version="1.0" standalone="no"?>
+<svg id="cnc1319-vise" width="210mm" height="260mm" viewBox="0 0 210 260" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+	<defs>
+	  <circle id="plate_screw_pocket" x="0" y="0" r="5.0" fill="red" />
+	  <circle id="plate_screw"        x="0" y="0" r="2.5" fill="black" />
+	  
+	  <circle id="lead_screw_jaw_screw" x="0" y="0" r="2.5" fill="cyan" />
+	  
+	</defs>
+	
+	
+	<!-- part 1 : z-height will be 8mm -->  
+	<g id="plate_layer">
+		<rect id="plate" x="0" y="0" rx="1.0" ry="1.0" width="200" height="200" fill="#dddddd" />
+			
+		<use href="#plate_screw_pocket" id="plate_screw_pocket_1" x="20" y="40" />
+		<use href="#plate_screw" id="plate_screw_1" x="20" y="40" />
+			
+		<use href="#plate_screw_pocket" id="plate_screw_pocket_2" x="20" y="160" />
+		<use href="#plate_screw" id="plate_screw_2" x="20" y="160" />
+			
+			
+		<use href="#plate_screw_pocket" id="plate_screw_pocket_3" x="180" y="160" />
+		<use href="#plate_screw" id="plate_screw_3" x="180" y="160" />
+			
+		<use href="#plate_screw_pocket" id="plate_screw_pocket_4" x="180" y="40" />
+		<use href="#plate_screw" id="plate_screw_4" x="180" y="40" />
+	</g>
+	<g id="bars">
+	  <rect id="bar_front" x="0" y="0"   rx="1.0" ry="1.0" width="200" height="20" fill="black" />
+	  <rect id="bar_back"  x="0" y="180" rx="1.0" ry="1.0" width="200" height="20" fill="black" />
+		  
+	  <rect id="lead_screw_blocker"  x="89" y="200" rx="0" ry="0" width="22" height="3" fill="blue" />	
+		   
+	  <use href="#plate_screw_pocket" id="bar_screw_pocket_11" x="20" y="10" />
+	  <use href="#plate_screw" id="bar_screw_11" x="20" y="10" />
+		  
+	  <use href="#plate_screw_pocket" id="bar_screw_pocket_12" x="180" y="10" />
+	  <use href="#plate_screw" id="bar_screw_12" x="180" y="10" />
+		  
+	  <use href="#plate_screw_pocket" id="bare_screw_pocket_13" x="80" y="10" />
+	  <use href="#plate_screw" id="bar_screw_13" x="80" y="10" />
+		  
+	  <use href="#plate_screw_pocket" id="plate_screw_pocket_14" x="120" y="10" />
+	  <use href="#plate_screw" id="plate_screw_14" x="120" y="10" />
+		  
+		  
+		  
+	  <use href="#plate_screw_pocket" id="bar_screw_pocket_21" x="20" y="190" />
+	  <use href="#plate_screw" id="bar_screw_21" x="20" y="190" />
+		  
+	  <use href="#plate_screw_pocket" id="bar_screw_pocket_22" x="180" y="190" />
+	  <use href="#plate_screw" id="bar_screw_22" x="180" y="190" />
+		  
+	  <use href="#plate_screw_pocket" id="bare_screw_pocket_23" x="80" y="190" />
+	  <use href="#plate_screw" id="bar_screw_23" x="80" y="190" />
+		  
+	  <use href="#plate_screw_pocket" id="plate_screw_pocket_24" x="120" y="190" />
+	  <use href="#plate_screw" id="plate_screw_24" x="120" y="190" />
+	</g> 
+		
+	<g id="shafts">
+	  <line id="shaft_left"  x1="10"  y1="0" x2="10"  y2="200" style="stroke:rgb(160, 160, 160);stroke-width:6" />
+	  <line id="shaft_right" x1="190" y1="0" x2="190" y2="200" style="stroke:rgb(160, 160, 160);stroke-width:6" />
+	</g>
+		
+	<g>
+	   <rect id="jaw"       x="0" y="50" rx="1.0" ry="1.0" width="200" height="40" fill="red" />
+       <rect id="jwa_hole"  x="93" y="68" rx="0" ry="0" width="14" height="22" fill="black" />			   
+	   <line id="lead_screw"  x1="100"  y1="70" x2="100"  y2="260" style="stroke:rgb(100, 100, 100);stroke-width:8" />
+	   <rect id="lead_screw_blocker1_in_jaw"  x="93" y="69" rx="0" ry="0" width="14" height="11" fill="blue" />	
+	  
+	    <path id="lead_screw_blocker_in_jaw"  d="M 93,80 h 14 v 1 l-4,4 l 4,4 v 1 h -14 v -1  l4,-4 l -4,-4 v-1 z" fill="green" />
+    </g>
+
+    <g id="layer1">
+        <use href="#lead_screw_jaw_screw"      x="93" y="85"  />
+		<use href="#lead_screw_jaw_screw"      x="107" y="85"  />
+    
+    </g>	
+	
+</svg>

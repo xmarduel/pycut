@@ -24,24 +24,22 @@ DIMENSIONS LMK12UU:
   xmlns:svg="http://www.w3.org/2000/svg"
 >
   <defs id="defs">
-    <rect id="bearing_base_o"
-      style="fill:#000080;fill-opacity:0.2;stroke:#f70000;stroke-width:0"
+    <rect id="bearing_base_o" style="fill:#000080;fill-opacity:0.2;stroke:#f70000;stroke-width:0"
       width="32"
       height="32"
       x="0"
       y="0"
       rx="2"
       ry="2" />
-    <circle id="bearing_cylinder_o"
-	   style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.388054;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
+    <circle id="bearing_cylinder_o" style="opacity:1;fill:#ff0000;fill-opacity:1;stroke-width:0.388054"
       cx="0"
       cy="0"
       r="10.5" />
-    <circle id="bearing_screw_4.5mm_o"
-      style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
+	<!-- new bearings - not sure of thr diameter of the screws CHECK-ME -->
+	<circle id="bearing_screw_5.0mm_o" style="opacity:1;fill:#000080;fill-opacity:1;stroke-width:0.159609"
       cx="0"
       cy="0"
-      r="2.25" />
+      r="2.50" />
   </defs>
 
   <g id="layer" >
@@ -58,6 +56,11 @@ DIMENSIONS LMK12UU:
         <use href="#bearing_screw_4.5mm_o" transform="rotate(135) translate(16 0)" id="bearing_screw_4.5mm_SW" />
         <use href="#bearing_screw_4.5mm_o" transform="rotate(225) translate(16 0)" id="bearing_screw_4.5mm_NW" />
         <use href="#bearing_screw_4.5mm_o" transform="rotate(315) translate(16 0)" id="bearing_screw_4.5mm_NE" />
+		
+		<use href="#bearing_screw_5.0mm_o" transform="rotate( 45) translate(16 0)" id="bearing_screw_5.0mm_SE" />
+        <use href="#bearing_screw_5.0mm_o" transform="rotate(135) translate(16 0)" id="bearing_screw_5.0mm_SW" />
+        <use href="#bearing_screw_5.0mm_o" transform="rotate(225) translate(16 0)" id="bearing_screw_5.0mm_NW" />
+        <use href="#bearing_screw_5.0mm_o" transform="rotate(315) translate(16 0)" id="bearing_screw_5.0mm_NE" />
       </g>
     </g>
     

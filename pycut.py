@@ -809,6 +809,17 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         if jobfilename:
             jobfilename = self.minify_path(jobfilename)
 
+            '''
+            get the svg file path relativ to the job file
+            if both paths start from the cwd
+            '''
+            if not os.path.isabs(jobfilename) and not os.path.isabs(self.svg_file) :
+                svg_file_fix =  self.get_relpath_relativ_to_the_other(self.svg_file, jobfilename)
+            else:
+                svg_file_fix = self.svg_file
+
+            job["svg_file"] = svg_file_fix
+
             with open(jobfilename, 'w') as json_file:
                 json.dump(job, json_file, indent=2)
 
@@ -1386,6 +1397,34 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         return apath
 
+    def get_relpath_relativ_to_the_other(self, p1, p2):
+        '''
+        Both paths are relativ to cwd
+
+        ex: 
+          p1 = 'misc_private/cnc1310/test_svgs/backlash.svg'
+          p2 = 'jobs/jj.json'
+
+          => pp1 = '../misc_private/cnc1310/test_svgs/backlash.svg'
+
+        ex:
+          p1 = 'misc_private/cnc1310/test_svgs/backlash.svg'
+          p2 = 'misc_private/jobs/jj.json'
+
+          => pp1 = '../cnc1310/test_svgs/backlash.svg'
+        '''
+        common_prefix = os.path.commonprefix([p1, p2])
+       
+        p1_from_common_prefix = os.path.relpath(p1, common_prefix)
+        p2_from_common_prefix = os.path.relpath(p2, common_prefix)
+
+        p1_from_common_prefix = pathlib.PurePath(p1_from_common_prefix).as_posix()
+        p2_from_common_prefix = pathlib.PurePath(p2_from_common_prefix).as_posix()
+        
+        p2_nb_slashes = p2_from_common_prefix.count('/')
+        relative_p1 = "/".join(p2_nb_slashes*[".."]) + "/" + p1_from_common_prefix
+
+        return relative_p1
 
 def main():
     parser = argparse.ArgumentParser(prog="PyCut", description="PyCut CAM program - Read the doc!")
