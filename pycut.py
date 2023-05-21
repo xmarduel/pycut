@@ -69,19 +69,19 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         },
         "Tool" : {
             "units"       : "mm",
-            "diameter"    : 1.0,
+            "diameter"    : 3.0,
             "angle"       : 180,
-            "passdepth"   : 3.0,
+            "passdepth"   : 1.0,
             "overlap"     : 0.4,
             "rapid"       : 500,
             "plunge"      : 100,
-            "cut"         : 200,
+            "cut"         : 250,
         },
         "Material" : {
             "units"       : "mm",
-            "thickness"   : 50.0,
+            "thickness"   : 10.0,
             "z_origin"    : "Top",
-            "clearance"   : 10.0,
+            "clearance"   : 2.5
         },
         "CurveToLineConversion" : {
             "minimum_segments"        : 5,
@@ -149,7 +149,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.ui.actionSettings.triggered.connect(self.cb_open_settings_dialog)
 
-        self.ui.actionTutorial.triggered.connect(self.cb_show_tutorial)
+        self.ui.actionTutorial.triggered.connect(self.cb_show_tutorial_qt)
         self.ui.actionAboutQt.triggered.connect(self.cb_show_about_qt)
         self.ui.actionAboutPyCut.triggered.connect(self.cb_show_about_pycut)
 
@@ -412,7 +412,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         settings_dialog.exec()
 
     '''
-    def cb_show_tutorial(self):
+    def cb_show_tutorial_qt(self):
         dlg = QtWidgets.QDialog(self)
 
         view = QtWidgets.QTextBrowser(dlg)
@@ -434,12 +434,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         dlg.show()
     '''
 
-    def cb_show_tutorial(self):
+    def cb_show_tutorial_qt(self):
         '''
         in test
         '''
         dlg = QtWidgets.QDialog(self)
-
 
         htmlView = QtWebEngineWidgets.QWebEngineView(dlg)
         htmlView.setMinimumSize(1100,600)
@@ -451,7 +450,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         dlg.setWindowTitle("PyCut Tutorial")
         dlg.setModal(True)
 
-        fileName = ":/doc/tutorial.html"
+        fileName = ":/doc/tutorial_qt.html"
         file = QtCore.QFile(fileName)
         if file.open(QtCore.QIODevice.ReadOnly):
             data = str(file.readAll(), 'utf-8') # explicit encoding

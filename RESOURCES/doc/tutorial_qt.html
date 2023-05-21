@@ -2,10 +2,10 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>PYCUT TUTORIAL</title>
-  <link href="css/prism.css" rel="stylesheet">
-  <link href="css/pycut.css" rel="stylesheet">
-  <link href="css/simpletree.css" rel="stylesheet">
-  <script type="text/javascript" src="js/prism.js">
+  <link href="qrc:/doc/css/prism.css" rel="stylesheet">
+  <link href="qrc:/doc/css/pycut.css" rel="stylesheet">
+  <link href="qrc:/doc/css/simpletree.css" rel="stylesheet">
+  <script type="text/javascript" src="qrc:doc/js/prism.js">
  </script>
 </head>
 
@@ -26,7 +26,7 @@
   <li><a href="#P-02">SVG Documents</a> </li>
   <li><a href="#P-03">Basic example</a> 
     <ul>
-      <li><a href="#P-03-01">Importing a SVG file</a></li>
+      <li><a href="#P-03-01">Loading a SVG file</a></li>
       <li><a href="#P-03-02">Creating a PyCut Job</a></li>
       <li><a href="#P-03-03">Creating CAM operations</a></li>
       <li><a href="#P-03-04">Create the GCode</a></li>
@@ -91,7 +91,7 @@ files.</p>
 
 <p>Starting point of <strong>PyCut</strong> are <strong>SVG</strong> files,
 your designs. In the following, we will use <strong>Inkscape</strong> to
-produce <strong>SVG</strong> files and will shortly point out what has to be
+produce/explain <strong>SVG</strong> files and will shortly point out what has to be
 taken into consideration when creating "usable" <strong>SVG</strong> files for
 <strong>PyCut</strong>.</p>
 
@@ -127,13 +127,13 @@ file:</p>
 </ul>
 
 <p><strong>PyCut</strong> processes "paths" in order to calculate cnc tool
-paths, but thankfully it can read out of the box all kind of shapes and paths,
+paths, but thankfully it can read out of the box all kind of shapes,
 so there is <strong>no need</strong> to convert your svg files into "paths
 only" svgs.</p>
 
 <p><strong>PyCut</strong> will import these shapes/paths either as (shapely)
-"<span style="color:#0000ff">polygon</span>" (i.e. <strong>closed
-items</strong>) or as (shapely) "<span style="color:#0000ff">line</span>" (i.e.
+"<span style="color:#0000ff">Polygon</span>" (i.e. <strong>closed
+items</strong>) or as (shapely) "<span style="color:#0000ff">LineString</span>" (i.e.
 <strong>opened items</strong>). Of course, svg <span
 style="color:#0000ff">&lt;rect&gt;</span>, <span
 style="color:#0000ff">&lt;circle&gt;</span>, <span
@@ -148,13 +148,13 @@ as a path can be composed of many subpaths (starting with
 definitions right, and in case of closed paths will also try to import them as
 shapely polygons "<strong>with holes</strong>" even if this concept does not
 really exist in SVG. Moreover <strong>PyCut</strong> will try to import a svg
-path as a valid MultiPolygon in the shapely sense, or as a list of valid
+path as a valid (shapely) <span style="color:#0000ff">MultiPolygon </span> in the shapely sense, or as a list of valid
 MultiPolygons if one single valid MultiPolygon is not possible. For example,
 the letters "i" or "j" are defined with a single svg path, defining two
 separates polygons, and it makes sense to consider these paths as a single
 shapely MultiPolygon entity. The letter "a" is a polygon with one hole, the
 letter "g" is a polygon with two holes (for some fonts). In the freetype
-vocabulary, "a" is formed by 2 "contours", "g" by three contours.</p>
+vocabulary, "a" is formed by 2 "contours", "g" by three "contours".</p>
 
 <p>There is one exception: <strong>PyCut</strong> cannot process yet <span
 style="color:#0000ff">&lt;text&gt;</span> items. Fortunately, <span
@@ -181,23 +181,23 @@ wrong positions, the user can always export the svg from
 
 <h4>Closed and opened paths</h4>
 
-<p>A path can be closed or not. A closed path or subpath contains the
-annotation <strong>"Z"</strong> or <strong>"z"</strong> at its end. Even if the
-first point of the path is equal to its last point, the path is only considered
+<p>A path can be closed or not. This is not a matter if the first point is equal the the last point.
+A closed path or subpath contains the annotation <strong>"Z"</strong> or <strong>"z"</strong> at its end. 
+Even if the first point of the path is equal to its last point, the path is only considered
 as closed with the ending "Z/z".</p>
 
 <div class="warning">
 <p><strong>Warning:</strong> PyCut strongly relies on this annotation to decide
-if the path is closed or not. When not closed, "Pocket" operations for example
-will not be allowed for this path.</p>
+if the path is closed or not. When not closed, "Pocket" operations will not be 
+allowed for this path.</p>
 </div>
 
-<p>PyCut imports closed paths as shapely "Polygon" (infact "MultiPolygon"),
+<p><strong>PyCut</strong> imports closed paths as shapely "Polygon" (infact "MultiPolygon"),
 while opened paths are imported as "LineString" (infact "MultiLineString").</p>
 
 <h4>Transformations</h4>
 
-<p><strong>PyCut</strong> cannot handle "out of the box" (yet) svg datas where
+<p><strong>PyCut</strong> cannot handle "out of the box" svg datas where
 shapes/paths are defined with "transform" operations (translate, rotate
 etc.).</p>
 
@@ -214,19 +214,18 @@ Actually, this utility is found in the source code under the folder
 <h2 id="P-02">Svg Documents</h2>
 
 <p>Svg datas can be written with basic editors (vi, emacs etc..) or with real
-applications, as <strong>Inkscape</strong>. In both cases, the svg datas should
+applications, like <strong>Inkscape</strong>. In both cases, the svg datas should
 contains (and <strong>Inkscape</strong> does it automatically) a
-<strong>viewBox</strong>, and the svg attributes <strong>width</strong> and
-<strong>height.</strong> These 2 important attributes should be given with a
-unit, i.e "<strong>mm</strong>" or "<strong>in</strong>" as we are editing data
-in order to later generate gcode (with "mm" or "in" units). This will be used
-later when creating GCode with the <strong>PyCut</strong> option "Zero Lower
-Left of Material" as reference. This option needs the height of the
-material.</p>
+<strong>viewBox</strong> as well as a <strong>width</strong> and an <strong>height</strong>.
+These 2 important attributes should be given with a unit, i.e "<strong>mm</strong>" 
+or "<strong>in</strong>" as we are editing data
+in order to later generate gcode (with "mm" or "in" units). The <strong>height</strong>
+will be used later when creating GCode with the <strong>PyCut</strong> option "Zero Lower
+Left of Material" as reference.</p>
 
 <h4>Shapes and Paths"id"</h4>
 
-<p>In order to reference the shapes, the shapes/paths must have their own
+<p>In order to reference the shapes or paths, the shapes/paths must have their own
 <strong>"id"</strong>, hopefully unique inside the svg document.</p>
 
 <p>If the user has edited the svg "per hand", then he should not forget to give
@@ -269,7 +268,7 @@ is opened.</p>
 
 <p>For the very first time, start pycut without job.</p>
 
-<h3 id="P-03-01">Importing a SVG file</h3>
+<h3 id="P-03-01">Loading a SVG file</h3>
 
 <p>So import your svg into <strong>PyCut</strong>: The SVG content should be
 displayed in the central area. </p>
@@ -282,7 +281,7 @@ order to be further processed.</p>
 
 <h3 id="P-03-02">Creating a PyCut Job</h3>
 
-<p>Then create a new "job" : this is a kind of setting file that stores for a
+<p>Then create a new "job" : this is a kind of project file that stores for a
 given svg file all the CAM operations that the users has created, together with
 all others settings relevant when generating g-code. It can be created, saved
 and loaded again and modified - quite practical.</p>
@@ -298,32 +297,35 @@ operation table should appear.</p>
 type: "<strong>Pocket</strong>", "<strong>Engrave</strong>",
 "<strong>Inside</strong>" or "<strong>Outside</strong>". There are also the
 "<strong>Drill</strong>" and "<strong>Peck</strong>" operations, for the <span
-style="color:#0000ff">&lt;circle&gt;</span> shapes whose diameter smaller or
+style="color:#0000ff">&lt;circle&gt;</span> shapes whose diameter is smaller or
 equals to the tool diameter. The others options will be discussed later.
 Default values at this point should be Ok.</p>
 
 <h3 id="P-03-04">Create the GCode</h3>
 
-<p>Select one or more CAM operations in the operations table: the "geometry" of
+<p>Select (enable) one or more CAM operations in the operations table: the "geometry" of
 the operation(s) should turn black in the SVG viewer: this is (are) the
 region(s) of the material that wil be affected when cutting the material.</p>
 
-<p>Then finish creating the G-Code by pressing one button "g code" in the
-operation table: the tool path(s) should appears in green in the black
+<p>Then finish creating the G-Code by pressing the button "Generate GCode" above the
+operation table: the tool path(s) should appear(s) in green in the black
 regions.</p>
 
 <p>The produced G-Code can be inspected in the "G code viewer" and the "G code
 Simulator" display areas.</p>
 
 <p>You just have to save the G-Code and you're done. The gcode file should be
-named as the CAM operation name.</p>
+named as the CAM operation name, or, in case of multiple operations enabled,
+as the project name, with ending "nc".</p>
+
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
 <h2 id="P-04">GUI Components</h2>
 
 <h3 id="P-04-01">Svg Settings</h3>
-<img src="pycut_svgsettings.png" width="310px"> 
+
+<div><img src="qrc:/doc/pycut_svgsettings.png" width="310"> </div>
 
 <h4>user units scale</h4>
 
@@ -334,7 +336,8 @@ Inkscape automatically sets the <strong>user units scale </strong><strong>to
 1</strong>. Note that the user units are not "px" or whatever. This means,
 <strong>1 "user unit" is equal to 1 mm (and the viewbox is "0 0 100 40" while
 width="100mm" and height="40mm")</strong></p>
-<img src="Inkscape_settings_mm.png" width="563px"> 
+
+<div><img src="qrc:/doc/Inkscape_settings_mm.png" width="563"> </div>
 
 <p>Of course when editing the svg (in Inkscape or in a text editor),
 <strong>the user is only concerned with the user units</strong> : he draws a
@@ -350,7 +353,8 @@ that <strong>Inkscape</strong> automatically change the <strong>user units
 scale to 25.4</strong>. Because of this, the <strong>view box remains at "0 0
 100 40"</strong>. That way, a rectangle filling the full document size is still
 100x40.</p>
-<img src="Inkscape_settings_in.png" width="563px"> 
+
+<div><img src="qrc:/doc/Inkscape_settings_in.png" width="563"> </div>
 
 <p>Filling a box half the size of the document is 50x20, right, but what are
 real physical dimensions of that box ? The user would have to steadily
@@ -422,7 +426,8 @@ factor is always 1</strong> .</p>
 <p></p>
 
 <h3 id="P-04-02">Tool</h3>
-<img src="pycut_tool.png" width="310px"> 
+
+<div><img src="qrc:/doc/pycut_tool.png" width="310"> </div>
 
 <h3 id="P-04-03">Tabs</h3>
 
@@ -433,7 +438,8 @@ size/postion in the tab table. Yes tabs, for simplicity, are circle. To be
 effective, the tabs have to be enabled and of course placed somewhere on the
 generated toolpaths. The height of the tabs is shared by all tabs. <strong>They
 are ignored for Pocket operations</strong>.</p>
-<img src="./pycut_tabs.png" width="310px"> 
+
+<div><img src="qrc:/doc/pycut_tabs.png" width="310"> </div>
 
 <p></p>
 
@@ -449,19 +455,29 @@ Ok. </p>
 
 <p>The Operations "Cut Depth" should not be larger than the material thickness.
 </p>
-<img src="./pycut_material.png" width="310px"> 
+
+<div><img src="qrc:/doc/pycut_material.png" width="310"> </div>
 
 <p></p>
 
 <div class="warning">
-<p><strong>Warning</strong>: Actually no check is performed.</p>
+<p><strong>Warning</strong>: Actually no check is performed on the values given here. 
+The depth cut of the operations should not exceed this thickness, 
+or only exceeding it with a minimal value, only to be sure to cut through..</p>
+</div>
+
+<div class="warning">
+<p><strong>Warning</strong>: The clearance is written in the produced g-code.
+Thus the user should be sure it does not exceed the physical possibilities of 
+the machine when travelling in the z-axis, especially for small machine like the 1419 or 1310.</p>
 </div>
 
 <h3 id="P-04-05">Curve to Line Conversion</h3>
 
 <p>If your design contain curves (svg "arcs" or "bezier" curves), they have to
 be discretized in small segments.</p>
-<img src="./pycut_curve_to_line_conversion.png" width="300px"> 
+
+<div><img src="qrc:/doc/pycut_curve_to_line_conversion.png" width="300"></div> 
 
 <p>The 2 following parameters allow to specified how fine the curve
 discretization will be:</p>
@@ -488,7 +504,8 @@ coordinates. But still the reference is the top-left postion.</p>
   <li>Bottom-Left location of the Gcode area</li>
   <li>Center of the Gcode area</li>
 </ul>
-<img src="./pycut_gcode_conversion.png" width="310px"> 
+
+<div><img src="qrc:/doc/pycut_gcode_conversion.png" width="310"> </div>
 
 <p>Note that these 4 buttons act as radio buttons.</p>
 
@@ -521,9 +538,11 @@ is extracted form the svg file: the svg "height" attribute.</p>
   <li>Spindle Start/Stop (<strong>M3</strong>/<strong>M5</strong> codes)</li>
   <li><strong>M2</strong> code</li>
 </ul>
-<img src="./pycut_gcode_generation.png" width="310px">
+
+<div><img src="qrc:/doc/pycut_gcode_generation.png" width="310"> </div>
+
 <!-- ----------------------------------------------------------------------------------------------------------->
-<!-- -----------------------------------------------------------------------------------------------------------> 
+<!-- ----------------------------------------------------------------------------------------------------------->
 
 <p></p>
 
@@ -531,7 +550,8 @@ is extracted form the svg file: the svg "height" attribute.</p>
 
 <p>This is where the user defined its cam operations, thus this is where the
 action takes place.</p>
-<img src="./pycut_ops.png" width="1170px"> 
+
+<div><img src="qrc:/doc/pycut_ops.png" width="1170"> </div>
 
 <p>First one or more item(s) have to be selected in the svgviewer, click on
 "Create Operation" and a default operation is created. When more than one item
@@ -548,8 +568,9 @@ item</p>
 svgviewer</p>
 
 <div class="info">
-<p><strong>Note:</strong>the geometry is highlighted in red. the highlight
-color can be setup in the settings dialog.</p>
+<p><strong>Note:</strong> The geometry is highlighted in red. The highlight
+color can be setup in the settings dialog, or from the menu bar (these 3 strangle colored buttons).
+It is useful when the color of a svg path is already red.</p>
 </div>
 
 <p>Then the cam operation can be chosen</p>
@@ -600,21 +621,21 @@ sub-optimal.</p>
 
 <p>When milling a pocket or a contour, the cutter is not able to mill into
 concaves angles (yes the cutter is round). </p>
-<svg:svg xmlns:svg="http://www.w3.org/2000/svg" width="200mm" height="80mm"
-     viewBox="0 0 200 80" version="1.1">
-  <svg:g id="layer1">
-    <svg:polyline points="10,70 10,10 100,10 100,70" stroke-width="0.5"
-              fill="none" stroke="black"/>
-    <svg:polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="blue"
-              stroke-linejoin="round" stroke-width="20px" stroke-opacity="0.2"/>
-    <svg:polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="black"
-              stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8"/>
-    <svg:circle cx="20" cy="20" r="10px" fill="red" stroke-width="0.2"
-            fill-opacity="0.2" stroke-opacity="0.1"/>
-    <svg:circle cx="90" cy="20" r="10px" fill="red" stroke-width="0.2"
-            fill-opacity="0.2" stroke-opacity="0.1"/>
-  </svg:g>
-</svg:svg>
+
+<svg width="200mm" height="80mm" viewBox="0 0 200 80" version="1.1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <g id="layer1">
+     <polyline points="10,70 10,10 100,10 100,70" stroke-width="0.5"  fill="none" stroke="black"/>
+     <polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="20px" stroke-opacity="0.2"/>
+
+     <polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8"/>
+
+     <circle cx="20" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+	 <circle cx="90" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+      
+  </g>
+</svg>
 
 <p>To remedy to this, you can</p>
 <ul>
@@ -639,40 +660,35 @@ proposed method:</p>
 <p>Sure, if there are 1000 corners, it will be unpracticable.</p>
 
 <p>Example (strategy "1" on the left, strategy "2" on the right):</p>
-<svg:svg xmlns:svg="http://www.w3.org/2000/svg" width="200mm" height="80mm"
-     viewBox="0 0 200 80" version="1.1">
-  <svg:g id="layer1">
-    <svg:polyline points="10,70 10,10 100,10 100,70" stroke-width="0.5"
-              fill="none" stroke="black"/>
-    <svg:polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="blue"
-              stroke-linejoin="round" stroke-width="20px" stroke-opacity="0.2"/>
-    <svg:polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="black"
-              stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8"/>
-    <svg:circle cx="20" cy="20" r="10px" fill="red" stroke-width="0.2"
-            fill-opacity="0.2" stroke-opacity="0.1"/>
-    <!-- 
-             D = sqrt(10*10 + 10*10) = 14.14
-             d = 14.14 -10 = 4.14
-             
-             dx = dy =  d / sqrt(2) = 2.93
-             
-             -->
-    <svg:polyline id="dog-bone-path1" points="20,20 17.07,17.07" fill="none"
-              stroke="blue" stroke-linejoin="round" stroke-width="0.3"
-              stroke-opacity="0.2"/>
-    <svg:circle id="dog-bone-path1-material" cx="17.07" cy="17.07" r="10"
-            fill="red" stroke-width="0.2" fill-opacity="0.2"
-            stroke-opacity="0.1"/>
-    <!--  other bone type -->
-    <svg:polyline id="dog-bone-path2" points="90,20 90,10" fill="none"
-              stroke="blue" stroke-linejoin="round" stroke-width="0.3"
-              stroke-opacity="0.2"/>
-    <svg:circle id="cutter2" cx="90" cy="20" r="10" fill="red"
-            stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
-    <svg:circle id="dog-bone-path2-material" cx="90" cy="10" r="10" fill="red"
-            stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
-  </svg:g>
-</svg:svg>
+
+<svg width="200mm" height="80mm" viewBox="0 0 200 80" version="1.1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <g id="layer1">
+     <polyline points="10,70 10,10 100,10 100,70" stroke-width="0.5"  fill="none" stroke="black"/>
+     <polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="20px" stroke-opacity="0.2"/>
+
+     <polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8"/>
+
+
+     <circle cx="20" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+      
+ <!-- 
+ D = sqrt(10*10 + 10*10) = 14.14
+ d = 14.14 -10 = 4.14
+ 
+ dx = dy =  d / sqrt(2) = 2.93
+ 
+ -->
+      <polyline id="dog-bone-path1" points="20,20 17.07,17.07" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="0.3" stroke-opacity="0.2"/>
+      <circle  id="dog-bone-path1-material" cx="17.07" cy="17.07" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+
+      <!--  other bone type -->
+      <polyline id="dog-bone-path2" points="90,20 90,10" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="0.3" stroke-opacity="0.2"/>
+      <circle  id="cutter2" cx="90" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+      <circle  id="dog-bone-path2-material" cx="90" cy="10" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+  </g>
+</svg>
 
 <p>We see that the strategy "1" removes far less material than the strategy
 "2". </p>
@@ -805,44 +821,54 @@ Theorically a fixup is needed as soon as a path "angle" is smaller than 180
 degrees. It is up the the user to decide at which threshold fixups shouls be
 performed. Value of Pi/2 seems acceptable, or maybe Pi/4. So fixups will be
 perform only for angles smaller than this threshold.</p>
-<svg:svg xmlns:svg="http://www.w3.org/2000/svg" width="200mm" height="80mm"
-     viewBox="0 0 200 80" version="1.1">
-  <svg:g id="layer1">
-    <svg:polyline points="10,10 70,10 113,53" stroke-width="0.5" fill="none"
-              stroke="black"/>
-    <svg:polyline points="10,20 66.2,20 106.2,60" fill="none" stroke="blue"
-              stroke-linejoin="round" stroke-width="20px" stroke-opacity="0.2"/>
-    <svg:polyline points="10,20 66.2,20 106.2,60" fill="none" stroke="black"
-              stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8"/>
-    <svg:polyline points="10,30 80,30" fill="none" stroke="black"
-              stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8"
-              stroke-dasharray="0 1 0"/>
+
+  <svg width="200mm" height="80mm" viewBox="0 0 200 80" version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg">
+ <g id="layer1">
+    <polyline points="10,10 70,10 113,53" stroke-width="0.5"  fill="none" stroke="black"/>
+    <polyline points="10,20 66.2,20 106.2,60" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="20px" stroke-opacity="0.2"/>
+
+    <polyline points="10,20 66.2,20 106.2,60" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8"/>
+
+    <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                -->
-    <svg:circle cx="66.2" cy="20" r="10" fill="red" stroke-width="0.2"
-            fill-opacity="0.2" stroke-opacity="0.1"/>
-  </svg:g>
-</svg:svg>
-<svg:svg xmlns:svg="http://www.w3.org/2000/svg" width="200mm" height="80mm"
-     viewBox="0 0 200 80" version="1.1">
-  <svg:g id="layer1">
-    <svg:polyline points="10,10 110,10 60,60" stroke-width="0.5" fill="none"
-              stroke="black"/>
-    <svg:polyline points="10,20  86,20 46,60" fill="none" stroke="blue"
-              stroke-linejoin="round" stroke-width="20px" stroke-opacity="0.2"/>
-    <svg:polyline points="10,20  86,20 46,60" fill="none" stroke="black"
-              stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8"/>
-    <svg:circle cx="86" cy="20" r="10" fill="red" stroke-width="0.2"
-            fill-opacity="0.2" stroke-opacity="0.1"/>
-  </svg:g>
-</svg:svg>
+    <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+    -->
+
+    <circle cx="66.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+ 
+     
+ </g>
+</svg>
+
+<svg width="200mm" height="80mm" viewBox="0 0 200 80" version="1.1"
+xmlns="http://www.w3.org/2000/svg"
+xmlns:svg="http://www.w3.org/2000/svg">
+<g id="layer1">
+  <polyline points="10,10 110,10 60,60" stroke-width="0.5"  fill="none" stroke="black"/>
+  <polyline points="10,20  86,20 46,60" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="20px" stroke-opacity="0.2"/>
+
+  <polyline points="10,20  86,20 46,60" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8"/>
+
+  
+  
+  <circle cx="86" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+
+   
+</g>
+</svg>
 
 <p><strong>PyCut GCode Dressup GUI</strong></p>
 
 <p>In the GCode Viewer/GCode simulator, lines corresponding to fixups
-(comprised between the comment lines "; start fixup" and "; end fixup") will
-have a blue background.</p>
+(comprised between the comment lines 
+<pre><code class="language-gcode">; start fixup</code></pre>
+
+<p>and </p>
+<pre><code class="language-gcode">; end fixup</code></pre>
+
+<p> will have a blue background.</p>
 
 <p>In the operations table, the icon "fixups" will have following
 background:</p>
@@ -964,8 +990,8 @@ concept, but not so straight to be seen if one not knows).</p>
 
 <p>Editing polylines/arcs/quad bezier and concatenate them together
 ("<strong>create polyline from existing segments</strong>") works "half",
-(<strong>SVG output is a single &lt;path&gt; entity</strong>) but there is here
-a bug: one cannot concatenate polylines/arcs with beziers/splines. </p>
+(<strong>SVG output is a single &lt;path&gt; entity</strong>) but here there is
+a bug or let's say a missing feature: one cannot concatenate polylines/arcs with beziers/splines. </p>
 
 <p>Snap stuff is perfect, with many clear and practical snap options
 (correction: nearly perfect: cannot snap on bezier curves)</p>

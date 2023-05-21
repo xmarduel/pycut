@@ -2,10 +2,10 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>PYCUT TUTORIAL</title>
-  <link href="qrc:/doc/css/prism.css" rel="stylesheet">
-  <link href="qrc:/doc/css/pycut.css" rel="stylesheet">
-  <link href="qrc:/doc/css/simpletree.css" rel="stylesheet">
-  <script type="text/javascript" src="qrc:doc/js/prism.js">
+  <link href="css/prism.css" rel="stylesheet">
+  <link href="css/pycut.css" rel="stylesheet">
+  <link href="css/simpletree.css" rel="stylesheet">
+  <script type="text/javascript" src="js/prism.js">
  </script>
 </head>
 
@@ -26,7 +26,7 @@
   <li><a href="#P-02">SVG Documents</a> </li>
   <li><a href="#P-03">Basic example</a> 
     <ul>
-      <li><a href="#P-03-01">Importing a SVG file</a></li>
+      <li><a href="#P-03-01">Loading a SVG file</a></li>
       <li><a href="#P-03-02">Creating a PyCut Job</a></li>
       <li><a href="#P-03-03">Creating CAM operations</a></li>
       <li><a href="#P-03-04">Create the GCode</a></li>
@@ -91,7 +91,7 @@ files.</p>
 
 <p>Starting point of <strong>PyCut</strong> are <strong>SVG</strong> files,
 your designs. In the following, we will use <strong>Inkscape</strong> to
-produce <strong>SVG</strong> files and will shortly point out what has to be
+produce/explain <strong>SVG</strong> files and will shortly point out what has to be
 taken into consideration when creating "usable" <strong>SVG</strong> files for
 <strong>PyCut</strong>.</p>
 
@@ -127,13 +127,13 @@ file:</p>
 </ul>
 
 <p><strong>PyCut</strong> processes "paths" in order to calculate cnc tool
-paths, but thankfully it can read out of the box all kind of shapes and paths,
+paths, but thankfully it can read out of the box all kind of shapes,
 so there is <strong>no need</strong> to convert your svg files into "paths
 only" svgs.</p>
 
 <p><strong>PyCut</strong> will import these shapes/paths either as (shapely)
-"<span style="color:#0000ff">polygon</span>" (i.e. <strong>closed
-items</strong>) or as (shapely) "<span style="color:#0000ff">line</span>" (i.e.
+"<span style="color:#0000ff">Polygon</span>" (i.e. <strong>closed
+items</strong>) or as (shapely) "<span style="color:#0000ff">LineString</span>" (i.e.
 <strong>opened items</strong>). Of course, svg <span
 style="color:#0000ff">&lt;rect&gt;</span>, <span
 style="color:#0000ff">&lt;circle&gt;</span>, <span
@@ -148,13 +148,13 @@ as a path can be composed of many subpaths (starting with
 definitions right, and in case of closed paths will also try to import them as
 shapely polygons "<strong>with holes</strong>" even if this concept does not
 really exist in SVG. Moreover <strong>PyCut</strong> will try to import a svg
-path as a valid MultiPolygon in the shapely sense, or as a list of valid
+path as a valid (shapely) <span style="color:#0000ff">MultiPolygon </span> in the shapely sense, or as a list of valid
 MultiPolygons if one single valid MultiPolygon is not possible. For example,
 the letters "i" or "j" are defined with a single svg path, defining two
 separates polygons, and it makes sense to consider these paths as a single
 shapely MultiPolygon entity. The letter "a" is a polygon with one hole, the
 letter "g" is a polygon with two holes (for some fonts). In the freetype
-vocabulary, "a" is formed by 2 "contours", "g" by three contours.</p>
+vocabulary, "a" is formed by 2 "contours", "g" by three "contours".</p>
 
 <p>There is one exception: <strong>PyCut</strong> cannot process yet <span
 style="color:#0000ff">&lt;text&gt;</span> items. Fortunately, <span
@@ -181,23 +181,23 @@ wrong positions, the user can always export the svg from
 
 <h4>Closed and opened paths</h4>
 
-<p>A path can be closed or not. A closed path or subpath contains the
-annotation <strong>"Z"</strong> or <strong>"z"</strong> at its end. Even if the
-first point of the path is equal to its last point, the path is only considered
+<p>A path can be closed or not. This is not a matter if the first point is equal the the last point.
+A closed path or subpath contains the annotation <strong>"Z"</strong> or <strong>"z"</strong> at its end. 
+Even if the first point of the path is equal to its last point, the path is only considered
 as closed with the ending "Z/z".</p>
 
 <div class="warning">
 <p><strong>Warning:</strong> PyCut strongly relies on this annotation to decide
-if the path is closed or not. When not closed, "Pocket" operations for example
-will not be allowed for this path.</p>
+if the path is closed or not. When not closed, "Pocket" operations will not be 
+allowed for this path.</p>
 </div>
 
-<p>PyCut imports closed paths as shapely "Polygon" (infact "MultiPolygon"),
+<p><strong>PyCut</strong> imports closed paths as shapely "Polygon" (infact "MultiPolygon"),
 while opened paths are imported as "LineString" (infact "MultiLineString").</p>
 
 <h4>Transformations</h4>
 
-<p><strong>PyCut</strong> cannot handle "out of the box" (yet) svg datas where
+<p><strong>PyCut</strong> cannot handle "out of the box" svg datas where
 shapes/paths are defined with "transform" operations (translate, rotate
 etc.).</p>
 
@@ -214,19 +214,18 @@ Actually, this utility is found in the source code under the folder
 <h2 id="P-02">Svg Documents</h2>
 
 <p>Svg datas can be written with basic editors (vi, emacs etc..) or with real
-applications, as <strong>Inkscape</strong>. In both cases, the svg datas should
+applications, like <strong>Inkscape</strong>. In both cases, the svg datas should
 contains (and <strong>Inkscape</strong> does it automatically) a
-<strong>viewBox</strong>, and the svg attributes <strong>width</strong> and
-<strong>height.</strong> These 2 important attributes should be given with a
-unit, i.e "<strong>mm</strong>" or "<strong>in</strong>" as we are editing data
-in order to later generate gcode (with "mm" or "in" units). This will be used
-later when creating GCode with the <strong>PyCut</strong> option "Zero Lower
-Left of Material" as reference. This option needs the height of the
-material.</p>
+<strong>viewBox</strong> as well as a <strong>width</strong> and an <strong>height</strong>.
+These 2 important attributes should be given with a unit, i.e "<strong>mm</strong>" 
+or "<strong>in</strong>" as we are editing data
+in order to later generate gcode (with "mm" or "in" units). The <strong>height</strong>
+will be used later when creating GCode with the <strong>PyCut</strong> option "Zero Lower
+Left of Material" as reference.</p>
 
 <h4>Shapes and Paths"id"</h4>
 
-<p>In order to reference the shapes, the shapes/paths must have their own
+<p>In order to reference the shapes or paths, the shapes/paths must have their own
 <strong>"id"</strong>, hopefully unique inside the svg document.</p>
 
 <p>If the user has edited the svg "per hand", then he should not forget to give
@@ -269,7 +268,7 @@ is opened.</p>
 
 <p>For the very first time, start pycut without job.</p>
 
-<h3 id="P-03-01">Importing a SVG file</h3>
+<h3 id="P-03-01">Loading a SVG file</h3>
 
 <p>So import your svg into <strong>PyCut</strong>: The SVG content should be
 displayed in the central area. </p>
@@ -282,7 +281,7 @@ order to be further processed.</p>
 
 <h3 id="P-03-02">Creating a PyCut Job</h3>
 
-<p>Then create a new "job" : this is a kind of setting file that stores for a
+<p>Then create a new "job" : this is a kind of project file that stores for a
 given svg file all the CAM operations that the users has created, together with
 all others settings relevant when generating g-code. It can be created, saved
 and loaded again and modified - quite practical.</p>
@@ -298,33 +297,34 @@ operation table should appear.</p>
 type: "<strong>Pocket</strong>", "<strong>Engrave</strong>",
 "<strong>Inside</strong>" or "<strong>Outside</strong>". There are also the
 "<strong>Drill</strong>" and "<strong>Peck</strong>" operations, for the <span
-style="color:#0000ff">&lt;circle&gt;</span> shapes whose diameter smaller or
+style="color:#0000ff">&lt;circle&gt;</span> shapes whose diameter is smaller or
 equals to the tool diameter. The others options will be discussed later.
 Default values at this point should be Ok.</p>
 
 <h3 id="P-03-04">Create the GCode</h3>
 
-<p>Select one or more CAM operations in the operations table: the "geometry" of
+<p>Select (enable) one or more CAM operations in the operations table: the "geometry" of
 the operation(s) should turn black in the SVG viewer: this is (are) the
 region(s) of the material that wil be affected when cutting the material.</p>
 
-<p>Then finish creating the G-Code by pressing one button "g code" in the
-operation table: the tool path(s) should appears in green in the black
+<p>Then finish creating the G-Code by pressing the button "Generate GCode" above the
+operation table: the tool path(s) should appear(s) in green in the black
 regions.</p>
 
 <p>The produced G-Code can be inspected in the "G code viewer" and the "G code
 Simulator" display areas.</p>
 
 <p>You just have to save the G-Code and you're done. The gcode file should be
-named as the CAM operation name.</p>
+named as the CAM operation name, or, in case of multiple operations enabled,
+as the project name, with ending "nc".</p>
+
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
 <h2 id="P-04">GUI Components</h2>
 
 <h3 id="P-04-01">Svg Settings</h3>
-
-<div><img src="qrc:/doc/pycut_svgsettings.png" width="310"> </div>
+<img src="pycut_svgsettings.png" width="310px"> 
 
 <h4>user units scale</h4>
 
@@ -335,8 +335,7 @@ Inkscape automatically sets the <strong>user units scale </strong><strong>to
 1</strong>. Note that the user units are not "px" or whatever. This means,
 <strong>1 "user unit" is equal to 1 mm (and the viewbox is "0 0 100 40" while
 width="100mm" and height="40mm")</strong></p>
-
-<div><img src="qrc:/doc/Inkscape_settings_mm.png" width="563"> </div>
+<img src="Inkscape_settings_mm.png" width="563px"> 
 
 <p>Of course when editing the svg (in Inkscape or in a text editor),
 <strong>the user is only concerned with the user units</strong> : he draws a
@@ -352,8 +351,7 @@ that <strong>Inkscape</strong> automatically change the <strong>user units
 scale to 25.4</strong>. Because of this, the <strong>view box remains at "0 0
 100 40"</strong>. That way, a rectangle filling the full document size is still
 100x40.</p>
-
-<div><img src="qrc:/doc/Inkscape_settings_in.png" width="563"> </div>
+<img src="Inkscape_settings_in.png" width="563px"> 
 
 <p>Filling a box half the size of the document is 50x20, right, but what are
 real physical dimensions of that box ? The user would have to steadily
@@ -425,8 +423,7 @@ factor is always 1</strong> .</p>
 <p></p>
 
 <h3 id="P-04-02">Tool</h3>
-
-<div><img src="qrc:/doc/pycut_tool.png" width="310"> </div>
+<img src="pycut_tool.png" width="310px"> 
 
 <h3 id="P-04-03">Tabs</h3>
 
@@ -437,8 +434,7 @@ size/postion in the tab table. Yes tabs, for simplicity, are circle. To be
 effective, the tabs have to be enabled and of course placed somewhere on the
 generated toolpaths. The height of the tabs is shared by all tabs. <strong>They
 are ignored for Pocket operations</strong>.</p>
-
-<div><img src="qrc:/doc/pycut_tabs.png" width="310"> </div>
+<img src="./pycut_tabs.png" width="310px"> 
 
 <p></p>
 
@@ -454,21 +450,27 @@ Ok. </p>
 
 <p>The Operations "Cut Depth" should not be larger than the material thickness.
 </p>
-
-<div><img src="qrc:/doc/pycut_material.png" width="310"> </div>
+<img src="./pycut_material.png" width="310px"> 
 
 <p></p>
 
 <div class="warning">
-<p><strong>Warning</strong>: Actually no check is performed.</p>
+<p><strong>Warning</strong>: Actually no check is performed on the values given here. 
+The depth cut of the operations should not exceed this thickness, 
+or only exceeding it with a minimal value, only to be sure to cut through..</p>
+</div>
+
+<div class="warning">
+<p><strong>Warning</strong>: The clearance is written in the produced g-code.
+Thus the user should be sure it does not exceed the physical possibilities of 
+the machine when travelling in the z-axis, especially for small machine like the 1419 or 1310.</p>
 </div>
 
 <h3 id="P-04-05">Curve to Line Conversion</h3>
 
 <p>If your design contain curves (svg "arcs" or "bezier" curves), they have to
 be discretized in small segments.</p>
-
-<div><img src="qrc:/doc/pycut_curve_to_line_conversion.png" width="300"></div> 
+<img src="./pycut_curve_to_line_conversion.png" width="300px"> 
 
 <p>The 2 following parameters allow to specified how fine the curve
 discretization will be:</p>
@@ -495,8 +497,7 @@ coordinates. But still the reference is the top-left postion.</p>
   <li>Bottom-Left location of the Gcode area</li>
   <li>Center of the Gcode area</li>
 </ul>
-
-<div><img src="qrc:/doc/pycut_gcode_conversion.png" width="310"> </div>
+<img src="./pycut_gcode_conversion.png" width="310px"> 
 
 <p>Note that these 4 buttons act as radio buttons.</p>
 
@@ -529,11 +530,9 @@ is extracted form the svg file: the svg "height" attribute.</p>
   <li>Spindle Start/Stop (<strong>M3</strong>/<strong>M5</strong> codes)</li>
   <li><strong>M2</strong> code</li>
 </ul>
-
-<div><img src="qrc:/doc/pycut_gcode_generation.png" width="310"> </div>
-
+<img src="./pycut_gcode_generation.png" width="310px">
 <!-- ----------------------------------------------------------------------------------------------------------->
-<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- -----------------------------------------------------------------------------------------------------------> 
 
 <p></p>
 
@@ -541,8 +540,7 @@ is extracted form the svg file: the svg "height" attribute.</p>
 
 <p>This is where the user defined its cam operations, thus this is where the
 action takes place.</p>
-
-<div><img src="qrc:/doc/pycut_ops.png" width="1170"> </div>
+<img src="./pycut_ops.png" width="1170px"> 
 
 <p>First one or more item(s) have to be selected in the svgviewer, click on
 "Create Operation" and a default operation is created. When more than one item
@@ -559,8 +557,9 @@ item</p>
 svgviewer</p>
 
 <div class="info">
-<p><strong>Note:</strong>the geometry is highlighted in red. the highlight
-color can be setup in the settings dialog.</p>
+<p><strong>Note:</strong> The geometry is highlighted in red. The highlight
+color can be setup in the settings dialog, or from the menu bar (these 3 strangle colored buttons).
+It is useful when the color of a svg path is already red.</p>
 </div>
 
 <p>Then the cam operation can be chosen</p>
@@ -611,6 +610,7 @@ sub-optimal.</p>
 
 <p>When milling a pocket or a contour, the cutter is not able to mill into
 concaves angles (yes the cutter is round). </p>
+
 <svg width="200mm" height="80mm" viewBox="0 0 200 80" version="1.1"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
@@ -679,7 +679,8 @@ proposed method:</p>
   </g>
 </svg>
 
-<p>We see that the strategy "1" removes far less material than the strategy "2".
+<p>We see that the strategy "1" removes far less material than the strategy
+"2". </p>
 
 <p>At a given GCode "instruction" which is exactly at a corner (there are
 certainly more than one line with such a pattern if the total cut depth is
@@ -750,9 +751,11 @@ corner at [8.5, 21.5] is not milled as right corner. The cutter goes to
 
 <p><code>offset = sqrt(1.5*1.5 + 1.5*1.5) - 1.5 = 0.622</code></p>
 
-<p>The direction of the fixup is in these case "NE" so the orientation of the corner "a" is 3Pi/4.</p>
+<p>The direction of the fixup is in these case "NE" so the orientation of the
+corner "a" is 3Pi/4.</p>
 
 <p><code>dx = offset * cos(a) = -0.44</code></p>
+
 <p><code>dy = offset * sin(a) = 0.44</code></p>
 
 <p>until the corner.</p>
@@ -770,9 +773,11 @@ corner at [16.5, 21.5] is not milled as right corner. The cutter goes to
 
 <p><code>offset = sqrt(1.5*1.5 + 1.5*1.5) - 1.5 = 0.622</code></p>
 
-<p>The direction of the fixup is in these case "NW" so the orientation of the corner "a" is Pi/4.</p>
+<p>The direction of the fixup is in these case "NW" so the orientation of the
+corner "a" is Pi/4.</p>
 
 <p><code>dx = offset * cos(a) = 0.44</code></p>
+
 <p><code>dy = offset * sin(a) = 0.44</code></p>
 
 <p>until the corner.</p>
@@ -785,11 +790,14 @@ corner at [16.5, 21.5] is not milled as right corner. The cutter goes to
 G1 X15.0000 Y20.0000 ; and back</code></pre>
 
 <p>Easy!</p>
-<p>We see: the fixup dx and dy = 0.44 mm are a little less than a third of the cutter diameter 1.5 mm.</p>
+
+<p>We see: the fixup dx and dy = 0.44 mm are a little less than a third of the
+cutter diameter 1.5 mm.</p>
 
 <h4>General case / automatic fixups</h4>
 
-<p>The angle (size of the corner) that the toolpath makes at each point is calculated with</p>
+<p>The angle (size of the corner) that the toolpath makes at each point is
+calculated with</p>
 
 <p>TODO</p>
 
@@ -797,10 +805,11 @@ G1 X15.0000 Y20.0000 ; and back</code></pre>
 
 <p>TODO</p>
 
-<p>So we can calculate the offset as well as the orientation "a" of the corner. Theorically a fixup is needed
-  as soon as a path "angle" is smaller than 180 degrees. It is up the the user to decide at which threshold
-  fixups shouls be performed. Value of Pi/2 seems acceptable, or maybe Pi/4. 
-  So fixups will be perform only for angles smaller than this threshold.</p>
+<p>So we can calculate the offset as well as the orientation "a" of the corner.
+Theorically a fixup is needed as soon as a path "angle" is smaller than 180
+degrees. It is up the the user to decide at which threshold fixups shouls be
+performed. Value of Pi/2 seems acceptable, or maybe Pi/4. So fixups will be
+perform only for angles smaller than this threshold.</p>
 
   <svg width="200mm" height="80mm" viewBox="0 0 200 80" version="1.1"
   xmlns="http://www.w3.org/2000/svg"
@@ -842,8 +851,13 @@ xmlns:svg="http://www.w3.org/2000/svg">
 <p><strong>PyCut GCode Dressup GUI</strong></p>
 
 <p>In the GCode Viewer/GCode simulator, lines corresponding to fixups
-(comprised between the comment lines "; start fixup" and "; end fixup") will
-have a blue background.</p>
+(comprised between the comment lines 
+<pre><code class="language-gcode">; start fixup</code></pre>
+
+<p>and </p>
+<pre><code class="language-gcode">; end fixup</code></pre>
+
+<p> will have a blue background.</p>
 
 <p>In the operations table, the icon "fixups" will have following
 background:</p>
@@ -897,15 +911,16 @@ certainly not all these extra namespace stuff. Removing per hand these extra
 stuff destroy the Inkscape project settings. </p>
 
 <p><strong>Yeappy</strong>! To obtain a SVG data free of sodipodi/inkscape
-namespace stuff, you have to "export" your SVG data (your "project" file) as SVG!</p>
+namespace stuff, you have to "export" your SVG data (your "project" file) as
+SVG!</p>
 
 <p>Editing points coordinates "per hand" is nearly impossible as the
 coordinates are only accessible from the "d" string, which is not really human
 readable. Here is an example of a polyline with 8 points:</p>
 <pre><code>M 5.9999998,35.999999 10,33 l 5,2.999999 -1,-4 h 7 V 41 H 12 L 8.9999999,38.999998</code></pre>
 
-<p>BTW, note how absolute and relative keywords are given in the path. Question:
-what are the coordinates of the fifth point?</p>
+<p>BTW, note how absolute and relative keywords are given in the path.
+Question: what are the coordinates of the fifth point?</p>
 
 <p>Concatening segments to form a single path doesn't even work as expected.
 The simple task consisting of concatenating a polyline and a bezier curve -in
@@ -933,9 +948,10 @@ well as Arcs and Cubic Bezier curves (did not find quadratic bezier curves).
 These Cubic Bezier curves are exported right in the SVG export. Unfortunately
 (again), when concatening lines/polylines with these cubic bezier curves in
 order to form a whole path, they are transformed into Arcs (why ?) or Lines
-(why?), and so the SVG export. Conclusion: <strong>completely unusable</strong>.</p>
+(why?), and so the SVG export. Conclusion: <strong>completely
+unusable</strong>.</p>
 
-<h4>LibreCAD <span style="color:#008000">****GOOD****</span></h4>
+<h4>LibreCAD <span style="color:#008000">****NEARLY GOOD****</span></h4>
 
 <p>It is (was) a fork of QCAD (2011). It looks a lot like QCAD, but the (my)
 first feeling is that the user interface seems better. <strong>The SVG export
@@ -955,29 +971,24 @@ or more points are not cubic bezier curves but only sequence of quadratic
 curves</strong> (it seems possible! is it ? they really look to be smooth of
 order 3!).</p>
 
-<p>In the GUI, the middle point of the curve is entered, not the "bezier
-control point". <strong>It would be nice if one could enter the quadratic
-bezier curve with its start/end points and its control point</strong>. There is
-unfortunately no cubic bezier curves. <strong>It would be nice if one could
-enter the cubic bezier curve with its start/end points and its two control
-points</strong></p>
-
-<p><strong>Yeaahh! There is another splines button (strange!) where it is
-possible to indicate which degree (1, 2 or 3) the spline has to be. And for 2
-and 3 these are bezier quadratic or cubic curves with control points entered
-from the UI.</strong> Setting for the degree is in the main menu bar (this is
-LibreCAD concept, but not so straight to be seen if one not knows).</p>
+<p><strong>There is another splines button (strange!) where it is possible to
+indicate which degree (1, 2 or 3) the spline has to be. And for 2 and 3 these
+are bezier quadratic or cubic curves with control points entered from the
+UI.</strong> Setting for the degree is in the main menu bar (this is LibreCAD
+concept, but not so straight to be seen if one not knows).</p>
 
 <p>Editing polylines/arcs/quad bezier and concatenate them together
 ("<strong>create polyline from existing segments</strong>") works "half",
-(<strong>SVG output is a single &lt;path&gt; entity</strong>) but there is here
-a bug: one cannot concatenate polylines/arcs with beziers/splines. </p>
+(<strong>SVG output is a single &lt;path&gt; entity</strong>) but here there is
+a bug or let's say a missing feature: one cannot concatenate polylines/arcs with beziers/splines. </p>
 
-<p>Snap stuff is perfect, with many clear and practical snap options.</p>
+<p>Snap stuff is perfect, with many clear and practical snap options
+(correction: nearly perfect: cannot snap on bezier curves)</p>
 
 <p><strong>So this is a real pity that LibreCAD does not perform the
-concatenation of lines/arcs with beziers/splines into a single SVG path, but it
-is fixable per hand in the output.</strong></p>
+concatenation of lines/arcs with beziers/splines into a single SVG path, it is
+fixable per hand in the output, but why the hell is LibreCAD not able to
+perform concatenation of lines/arcs with splines?</strong></p>
 
 <p>Conclusion: <strong><span style="color:#008000">A good SVG "path"
 generator/exporter that is unfortunately not completely
@@ -995,11 +1006,11 @@ the svg export, even if you have drawn only 1 path. Unfortunately, you cannot
 give your paths some ids. It would be nice if these "contraints" paths could be
 grouped into their own group in order to isolated them from the real paths.
 There are only cubic bezier curves, quadratic bezier curves are unfortunately
-missing (not sure). The SVG closed path "Z" is also missing (should submit a
-patch!).</p>
+missing (not sure), but one can avoid these in a design. The SVG closed path
+"Z" is also missing (have submitted a patch!).</p>
 
-<p>Conclusion: <strong style="color:#008000">The best SVG "path" generator (and
-path "constructor")</strong> I have found so far.</p>
+<p>Conclusion: <strong style="color:#008000">The best SVG "path"
+generator/exporter </strong>I have found so far.</p>
 
 <div class="info">
 <p><strong>Note</strong>: in 2023, a <strong>Blender</strong> add-on called
@@ -1007,12 +1018,20 @@ path "constructor")</strong> I have found so far.</p>
 library for sketching. Maybe the user interface will be there even better.</p>
 </div>
 
+<h4>Fusion 360</h4>
+
+<p>The free version is also incredible. The parametric "sketcher" is beautiful.
+There is no SVG export per default, but it seems there is an add-on that costs
+about 15$, but I did not buy/try it because I gave up in the meanwhile looking
+for SVG editor... This add-on is certainly awesome.</p>
+
 <h4>XFig</h4>
 
 <p>My beloved drawing editor during my youth! Completely outdated, but still
 the best! Unfortunately the SVG export is deficient. There are Bezier curves
 (really?) i.e. splines with control points (it looks like Bezier) but the SVG
-export outputs them as polylines. <strong>Conclusion: unusable</strong></p>
+export outputs them as polylines (with many points). <strong>Conclusion:
+unusable</strong></p>
 
 <p></p>
 
@@ -1050,11 +1069,6 @@ incredible software. But It seems there is no SVG export at all. "Schade".</p>
 named "2D G-Code generator"! Forget PyCutl! (or not) . SVG export seems to be
 more meant as a picture for display only purpose.</p>
 
-<h4>Fusion 360</h4>
-
-<p>The free version is also incredible. But I did not try the SVG export,
-because I gave up in the meanwhile looking for SVG editor...</p>
-
 <h4>What else?</h4>
 
 <p>It is cumbersome to try to find a decent SVG editor, or at least a CAD
@@ -1085,8 +1099,8 @@ be indeed simple.</p>
 
 <p>The SVG format has the merit to exist, sure, and in some points is very
 practical (that's why I use it), even when not "optimal". But concerning the
-svg path definition, what is the point of allowing paths with sub-paths? maybe
-because the SVG format completely ignores the concept of
+svg path definition, what is the point for example of allowing paths with
+sub-paths? maybe because the SVG format completely ignores the concept of
 "multiline"/"multipolygon" etc. Polygons have no "interiors" so they must be
 defined as such in a path composed of 2 or more subpaths for this purpose.</p>
 

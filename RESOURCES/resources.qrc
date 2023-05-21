@@ -60,8 +60,8 @@
         <file>doc/css/folder-new.png</file>
         <file>doc/css/document-open.png</file>
         <file>doc/css/bookmark-new.png</file>
+        <file>doc/tutorial_qt.html</file>
         <file>doc/tutorial.html</file>
-        <file>doc/tutorial_standalone.html</file>
         <file>doc/about.html</file>
     </qresource>
 </RCC>
