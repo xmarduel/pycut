@@ -45,10 +45,7 @@ class MaterialWidget(QtSvgWidgets.QSvgWidget):
     def display_material(self, thickness=50, clearance=10):
         '''
         '''
-        thickness_level1 = 75 + thickness
-        thickness_level2 = 75 + thickness + 10
-
-        clearance_level1 = 75 - clearance
+        clearance_level1 = 85 - clearance
 
         clearance_display_value = clearance
         thickness_display_value = thickness
@@ -60,19 +57,25 @@ class MaterialWidget(QtSvgWidgets.QSvgWidget):
         img_str = '''
         <svg viewBox='0 0 200 150' xmlns='http://www.w3.org/2000/svg'>
         <g>
-            <rect x="90" y="75" width="100" height="%(thickness)d" fill="white" stroke="black" stroke-width="5px" stroke-linejoin="round" />
-            <rect x="80" y="85" width="100" height="%(thickness)d" fill="white" stroke="black" stroke-width="5px" stroke-linejoin="round"/>
+            <!--  <rect x="90" y="85" width="100" height="%(thickness)d" fill="green" stroke="black" stroke-width="2px"   stroke-linejoin="round"/> --> <!-- not visible -->
+            <rect x="80" y="95" width="100" height="%(thickness)d" fill="red"   stroke="black" stroke-width="2px"  stroke-linejoin="round"/> -->
 
-            <polyline points="80,85    90,75  190,75                   180,85                    80,85" fill="white" stroke="black" stroke-width="5px" stroke-linejoin="round"/>
-            <polyline points="180,85  190,75  190,%(thickness_level1)d 180,%(thickness_level2)d 180,85" fill="white" stroke="black" stroke-width="5px" stroke-linejoin="round"/>
+            <polyline points="80,95    90,85  190,85                   180,95                    80,95"  fill="green" stroke="black" stroke-width="2px"  stroke-linejoin="round"/>
+            <polyline points="180,95  190,85  190,%(thickness_level1)d 180,%(thickness_level2)d  180,95" fill="blue"  stroke="black" stroke-width="2px"  stroke-linejoin="round"/>
 
             <!-- bit -->
-            <polyline points="130,0 130,%(clearance_level1)d 150,%(clearance_level1)d  150,0" fill="white" stroke="black" stroke-width="5px"/>
+            <polyline points="130,%(bit_top)d 130,%(clearance_level1)d 150,%(clearance_level1)d  150,%(bit_top)d" fill="white" stroke="black" stroke-width="2px"/>
+            <!-- bit base -->
+            <rect x="100" y="%(bit_top)d" width="100" height="10" fill="black"   stroke="black" stroke-width="2px"  stroke-linejoin="round"/> -->
+
 
             <!-- legends levels -->
-            <polyline points="25,%(clearance_level1)d   70,%(clearance_level1)d" fill="white" stroke="black" stroke-width="3px" stroke-dasharray="8,8"/>
-            <polyline points="25,85                     70,85"                   fill="white" stroke="black" stroke-width="3px" stroke-dasharray="8,8"/>
-            <polyline points="25,%(thickness_level2)d   70,%(thickness_level2)d" fill="white" stroke="black" stroke-width="3px" stroke-dasharray="8,8"/>
+            <polyline points="25,%(clearance_level1)d   70,%(clearance_level1)d" fill="white" stroke="black" stroke-width="2px" stroke-dasharray="8,8"/>
+            <polyline points="25,85                     70,85"                   fill="white" stroke="black" stroke-width="2px" stroke-dasharray="8,8"/>
+            <polyline points="25,%(thickness_level2)d   70,%(thickness_level2)d" fill="white" stroke="black" stroke-width="2px" stroke-dasharray="8,8"/>
+
+            <!-- machine top -->
+            <rect x="50" y="0" width="150" height="10" fill="black"   stroke="black" stroke-width="2px"  stroke-linejoin="round"/> -->
 
             <!-- legends -->
             <text x="0" y="%(clearance_level1)d" fill="black">%(clearance_disp).2f</text>
@@ -80,7 +83,15 @@ class MaterialWidget(QtSvgWidgets.QSvgWidget):
             <text x="0" y="%(thickness_level2)d" fill="black">%(thickness_disp).2f</text>
 
         </g>
-        </svg>''' % {"thickness": thickness,"thickness_disp": thickness_display_value, "clearance_disp": clearance_display_value, "thickness_level1": thickness_level1, "thickness_level2": thickness_level2, "clearance_level1": clearance_level1}
+        </svg>''' % {
+            "thickness": 2*thickness,
+            "thickness_disp": thickness_display_value, 
+            "clearance_disp": clearance_display_value, 
+            "thickness_level1": 85 + 2*thickness, 
+            "thickness_level2": 95 + 2*thickness, 
+            "clearance_level1": clearance_level1,
+            "bit_top": clearance_level1 - 50
+        }
 
         img = bytes(img_str, encoding='utf-8')
 
