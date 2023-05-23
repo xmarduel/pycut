@@ -20,7 +20,7 @@
       "type": "Pocket",
       "cut_depth": 12.0,
       "paths": [
-        "backlash_item_screw_3.5mm_N"
+        "backlash_item_screw_3mm_N"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -34,7 +34,7 @@
       "type": "Pocket",
       "cut_depth": 12.0,
       "paths": [
-        "backlash_item_screw_3.5mm_E"
+        "backlash_item_screw_3mm_E"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -48,7 +48,7 @@
       "type": "Pocket",
       "cut_depth": 12.0,
       "paths": [
-        "backlash_item_screw_3.5mm_S"
+        "backlash_item_screw_3mm_S"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -62,7 +62,7 @@
       "type": "Pocket",
       "cut_depth": 12.0,
       "paths": [
-        "backlash_item_screw_3.5mm_W"
+        "backlash_item_screw_3mm_W"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
