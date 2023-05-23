@@ -28,7 +28,10 @@
 	</g>
 	<g id="bars">
 	  <rect id="bar_front" x="0" y="0"   rx="1.0" ry="1.0" width="200" height="20" fill="black" />
+	  <rect id="bar_front_schlitz"  x="0" y="18" rx="1.0" ry="1.0" width="200" height="2" fill="gray" />
+	  
 	  <rect id="bar_back"  x="0" y="180" rx="1.0" ry="1.0" width="200" height="20" fill="black" />
+	  
 		  
 	  <rect id="lead_screw_blocker"  x="89" y="200" rx="0" ry="0" width="22" height="3" fill="blue" />	
 		   
@@ -65,7 +68,9 @@
 	</g>
 		
 	<g>
-	   <rect id="jaw"       x="0" y="50" rx="1.0" ry="1.0" width="200" height="40" fill="red" />
+	   <rect id="jaw"         x="0" y="50" rx="1.0" ry="1.0" width="200" height="40" fill="red" />
+	   <rect id="jaw_schlitz" x="0" y="50" rx="1.0" ry="1.0" width="200" height="2" fill="gray" />
+	   
        <rect id="jwa_hole"  x="93" y="68" rx="0" ry="0" width="14" height="22" fill="black" />			   
 	   <line id="lead_screw"  x1="100"  y1="70" x2="100"  y2="260" style="stroke:rgb(100, 100, 100);stroke-width:8" />
 	   <rect id="lead_screw_nut_block"  x="93" y="69" rx="0" ry="0" width="14" height="11" fill="blue" />	

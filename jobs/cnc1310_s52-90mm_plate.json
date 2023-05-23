@@ -1,68 +1,12 @@
 {
-  "svg_file": "..\\misc_private\\cnc1310\\test_svgs\\bearing.resolved.svg",
+  "svg_file": "../misc_private/cnc1310/cnc1310-s52-90x111mm.resolved.svg",
   "operations": [
     {
       "name": "op",
-      "type": "Inside",
-      "cut_depth": 15.75,
+      "type": "Outside",
+      "cut_depth": 3.175,
       "paths": [
-        "bearing_screw_4.5mm_SW_from_full"
-      ],
-      "ramp_plunge": false,
-      "combinaison": "Union",
-      "direction": "Conventional",
-      "units": "mm",
-      "margin": 0.0,
-      "width": 0.0
-    },
-    {
-      "name": "op",
-      "type": "Pocket",
-      "cut_depth": 15.75,
-      "paths": [
-        "bearing_screw_4.5mm_SE_from_full"
-      ],
-      "ramp_plunge": false,
-      "combinaison": "Union",
-      "direction": "Conventional",
-      "units": "mm",
-      "margin": 0.0,
-      "width": 0.0
-    },
-    {
-      "name": "op",
-      "type": "Pocket",
-      "cut_depth": 15.75,
-      "paths": [
-        "bearing_screw_4.5mm_NE_from_full"
-      ],
-      "ramp_plunge": false,
-      "combinaison": "Union",
-      "direction": "Conventional",
-      "units": "mm",
-      "margin": 0.0,
-      "width": 0.0
-    },
-    {
-      "name": "op",
-      "type": "Pocket",
-      "cut_depth": 15.75,
-      "paths": [
-        "bearing_screw_4.5mm_NW_from_full"
-      ],
-      "ramp_plunge": false,
-      "combinaison": "Union",
-      "direction": "Conventional",
-      "units": "mm",
-      "margin": 0.0,
-      "width": 0.0
-    },
-    {
-      "name": "op",
-      "type": "Pocket",
-      "cut_depth": 15.75,
-      "paths": [
-        "bearing_cylinder_from_full"
+        "contour"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -74,9 +18,93 @@
     {
       "name": "op",
       "type": "Inside",
-      "cut_depth": 15.75,
+      "cut_depth": 3.175,
       "paths": [
-        "bearing_cylinder_from_full"
+        "bearing_1_cylinder",
+        "bearing_2_cylinder"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
+    },
+    {
+      "name": "op",
+      "type": "Inside",
+      "cut_depth": 3.175,
+      "paths": [
+        "bearing_2_screw_4.0mm_NE",
+        "bearing_2_screw_4.0mm_NW",
+        "bearing_2_screw_4.0mm_SE",
+        "bearing_2_screw_4.0mm_SW",
+        "bearing_1_screw_4.0mm_NE",
+        "bearing_1_screw_4.0mm_NW",
+        "bearing_1_screw_4.0mm_SE",
+        "bearing_1_screw_4.0mm_SW"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
+    },
+    {
+      "name": "op",
+      "type": "Inside",
+      "cut_depth": 3.175,
+      "paths": [
+        "backlash_item_hole"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
+    },
+    {
+      "name": "op",
+      "type": "Drill",
+      "cut_depth": 3.175,
+      "paths": [
+        "backlash_item_screw_3.0mm_N",
+        "backlash_item_screw_3.0mm_E",
+        "backlash_item_screw_3.0mm_S",
+        "backlash_item_screw_3.0mm_W"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
+    },
+    {
+      "name": "op",
+      "type": "Inside",
+      "cut_depth": 3.175,
+      "paths": [
+        "spacer_screw_5.0mm_NW",
+        "spacer_screw_5.0mm_NE",
+        "spacer_screw_5.0mm_SE",
+        "spacer_screw_5.0mm_SW"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
+    },
+    {
+      "name": "op",
+      "type": "Inside",
+      "cut_depth": 3.175,
+      "paths": [
+        "spindle-hole"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -100,16 +128,16 @@
       "diameter": 3.0,
       "angle": 180,
       "passdepth": 1.0,
-      "overlap": 0.5,
+      "overlap": 0.4,
       "rapid": 500,
       "plunge": 100,
       "cut": 250
     },
     "Material": {
       "units": "mm",
-      "thickness": 15.0,
+      "thickness": 10.0,
       "z_origin": "Top",
-      "clearance": 2.0
+      "clearance": 2.5
     },
     "CurveToLineConversion": {
       "minimum_segments": 5,
@@ -118,9 +146,9 @@
     "GCodeConversion": {
       "units": "mm",
       "flip_xy": false,
-      "x_offset": -66.0,
-      "y_offset": 16.0,
-      "xy_reference": "ZERO_CENTER_OF_OP"
+      "x_offset": 0.0,
+      "y_offset": 0.0,
+      "xy_reference": "ZERO_TOP_LEFT_OF_MATERIAL"
     },
     "GCodeGeneration": {
       "return_to_zero_at_end": true,
