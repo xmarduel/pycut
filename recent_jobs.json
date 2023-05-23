@@ -1,7 +1,7 @@
 [
+  "jobs/cnc1310_test_bearings.json",
+  "jobs/cnc1310_test_motor_stepper.json",
+  "jobs/cnc1310_test_backlash.json",
   "jobs/cnc_circle.json",
-  "jobs/cnc_three_rects.json",
-  "jobs/cnc_test_svgelement.json",
-  "jobs/cnc_polyline.json",
-  "jobs/cnc_all_letters_slaine.json"
+  "jobs/cnc_three_rects.json"
 ]

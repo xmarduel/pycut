@@ -3,7 +3,7 @@
   "operations": [
     {
       "name": "op",
-      "type": "Pocket",
+      "type": "Inside",
       "cut_depth": 12.0,
       "paths": [
         "backlash_item_hole"
@@ -17,7 +17,7 @@
     },
     {
       "name": "op",
-      "type": "Pocket",
+      "type": "Drill",
       "cut_depth": 12.0,
       "paths": [
         "backlash_item_screw_3mm_N"
@@ -31,7 +31,7 @@
     },
     {
       "name": "op",
-      "type": "Pocket",
+      "type": "Drill",
       "cut_depth": 12.0,
       "paths": [
         "backlash_item_screw_3mm_E"
@@ -45,7 +45,7 @@
     },
     {
       "name": "op",
-      "type": "Pocket",
+      "type": "Drill",
       "cut_depth": 12.0,
       "paths": [
         "backlash_item_screw_3mm_S"
@@ -59,7 +59,7 @@
     },
     {
       "name": "op",
-      "type": "Pocket",
+      "type": "Drill",
       "cut_depth": 12.0,
       "paths": [
         "backlash_item_screw_3mm_W"
