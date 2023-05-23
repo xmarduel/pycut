@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" width="110mm" height="110mm" viewBox="0 0 110 110" id="cnc1310-spindle-holder-vertical-sides">
+  <defs id="defs">
+    <circle id="lead_screw_central_hole" style="fill:#ff0000;fill-opacity:0.2" cx="0" cy="0" r="11"/>
+    <circle id="screw_backlash_item_hole_10.2mm" style="fill:#ff00ff;fill-opacity:1.0" cx="0" cy="0" r="5.1"/>
+    <circle id="backlash_item_screw_3.0mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="1.50"/>
+    <rect id="bearing_base" style="fill:#000080;fill-opacity:0.2" width="32" height="32" rx="2" ry="2" x="0" y="0"/>
+    <circle id="bearing_cylinder" style="fill:#ff0000;fill-opacity:1.0" cx="0" cy="0" r="10.5"/>
+    <circle id="bearing_screw_4.0mm" style="fill:#000080;fill-opacity:1.0" cx="0" cy="0" r="2.00"/>
+    <circle id="spacer_screw_5.0mm" style="fill:#0000ff;fill-opacity:1.0" cx="0" cy="0" r="2.50"/>
+    <path id="arrow_up" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1" d="M 0 0 l 1 2  m -1 -2 l -1 2"/>
+    <path id="arrow_dw" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1" d="M 0 0 l 1 -2 m -1 2  l -1 -2"/>
+  </defs>
+  <g id="layer">
+    <rect id="PLATE" width="100.000" height="47.500" x="0.000" y="0.000" rx="1.000" ry="1.000" style="fill:rgb(0,125,125);stroke-width:0;stroke:rgb(0,0,0)"/>
+    <circle id="lead_screw_central_hole" cx="50.000" cy="16.000" r="11.000" style="fill:#ff0000;fill-opacity:0.2"/>
+    <rect id="LEFT_bearing_base" width="32.000" height="32.000" x="0.000" y="0.000" rx="2.000" ry="2.000" style="fill:#000080;fill-opacity:0.2"/>
+    <circle id="LEFT_bearing_cylinder" cx="16.000" cy="16.000" r="10.500" style="fill:#ff0000;fill-opacity:1.0"/>
+    <rect id="IIGHT_bearing_base" width="32.000" height="32.000" x="68.000" y="0.000" rx="2.000" ry="2.000" style="fill:#000080;fill-opacity:0.2"/>
+    <circle id="RIGHT_bearing_cylinder" cx="84.000" cy="16.000" r="10.500" style="fill:#ff0000;fill-opacity:1.0"/>
+    <circle id="LEFT_bearing_screw_4.0mm_SE" cx="4.680" cy="4.680" r="2.000" style="fill:#000080;fill-opacity:1.0"/>
+    <circle id="LEFT_bearing_screw_4.0mm_SW" cx="27.320" cy="4.680" r="2.000" style="fill:#000080;fill-opacity:1.0"/>
+    <circle id="LEFT_bearing_screw_4.0mm_NW" cx="4.680" cy="27.320" r="2.000" style="fill:#000080;fill-opacity:1.0"/>
+    <circle id="LEFT_bearing_screw_4.0mm_NE" cx="27.320" cy="27.320" r="2.000" style="fill:#000080;fill-opacity:1.0"/>
+    <circle id="RIGHT_bearing_screw_4.0mm_SE" cx="72.680" cy="4.680" r="2.000" style="fill:#000080;fill-opacity:1.0"/>
+    <circle id="RIGHT_bearing_screw_4.0mm_SW" cx="95.320" cy="4.680" r="2.000" style="fill:#000080;fill-opacity:1.0"/>
+    <circle id="RIGHT_bearing_screw_4.0mm_NW" cx="72.680" cy="27.320" r="2.000" style="fill:#000080;fill-opacity:1.0"/>
+    <circle id="RIGHT_bearing_screw_4.0mm_NE" cx="95.320" cy="27.320" r="2.000" style="fill:#000080;fill-opacity:1.0"/>
+    <circle cx="12.500" cy="37.500" r="2.500" style="fill:#0000ff;fill-opacity:1.0"/>
+    <circle cx="37.500" cy="37.500" r="2.500" style="fill:#0000ff;fill-opacity:1.0"/>
+    <circle cx="62.500" cy="37.500" r="2.500" style="fill:#0000ff;fill-opacity:1.0"/>
+    <circle cx="87.500" cy="37.500" r="2.500" style="fill:#0000ff;fill-opacity:1.0"/>
+    <circle id="screw_backlash_item_hole" cx="50.000" cy="16.000" r="5.100" style="fill:#ff00ff;fill-opacity:1.0"/>
+    <circle id="backlash_item_screw_3.0mm_1" cx="50.000" cy="8.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
+    <circle id="backlash_item_screw_3.0mm_2" cx="50.000" cy="24.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
+    <circle id="backlash_item_screw_3.0mm_3" cx="42.000" cy="16.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
+    <circle id="backlash_item_screw_3.0mm_4" cx="58.000" cy="16.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
+    <!-- guides -->
+    <path id="line_v_1" d="M 12.50000675,0 L 12.50000675,55.0000297" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
+    <path id="line_v_2" d="M 37.50002025,0 L 37.50002025,55.0000297" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
+    <path id="line_v_3" d="M 50.000027,0 L 50.000027,55.0000297" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
+    <path id="line_v_4" d="M 62.50003375,0 L 62.50003375,55.0000297" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
+    <path id="line_v_5" d="M 87.50004725,0 L 87.50004725,55.0000297" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
+    <path id="line_v_6" d="M 100.000054,0 L 100.000054,55.0000297" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
+    <path id="line_h_7" d="M 0,55.0000297 L 100.000054,55.0000297" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
+    <path id="line_v_8" d="M 110.0000594,0 L 110.0000594,47.50002565" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
+    <path id="line_v_9" d="M 105.0000567,37.50002025 L 105.0000567,47.50002565" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
+    <path d="M 12.50000675,55.0000297 l -2.00000108,1.00000054 m 2.00000108,-1.00000054 l -2.00000108,-1.00000054" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1"/>
+    <path d="M 0,55.0000297 l 2.00000108,1.00000054 m -2.00000108,-1.00000054 l 2.00000108,-1.00000054" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1"/>
+    <path d="M 37.50002025,55.0000297 l -2.00000108,1.00000054 m 2.00000108,-1.00000054 l -2.00000108,-1.00000054" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1"/>
+    <path d="M 12.50000675,55.0000297 l 2.00000108,1.00000054 m -2.00000108,-1.00000054 l 2.00000108,-1.00000054" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1"/>
+    <path d="M 50.000027,55.0000297 l -2.00000108,1.00000054 m 2.00000108,-1.00000054 l -2.00000108,-1.00000054" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1"/>
+    <path d="M 50.000027,55.0000297 l 2.00000108,1.00000054 m -2.00000108,-1.00000054 l 2.00000108,-1.00000054" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1"/>
+    <path d="M 62.50003375,55.0000297 l -2.00000108,1.00000054 m 2.00000108,-1.00000054 l -2.00000108,-1.00000054" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1"/>
+    <path d="M 37.50002025,55.0000297 l 2.00000108,1.00000054 m -2.00000108,-1.00000054 l 2.00000108,-1.00000054" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1"/>
+    <path d="M 87.50004725,55.0000297 l -2.00000108,1.00000054 m 2.00000108,-1.00000054 l -2.00000108,-1.00000054" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1"/>
+    <path d="M 62.50003375,55.0000297 l 2.00000108,1.00000054 m -2.00000108,-1.00000054 l 2.00000108,-1.00000054" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1"/>
+    <path d="M 100.000054,55.0000297 l -2.00000108,1.00000054 m 2.00000108,-1.00000054 l -2.00000108,-1.00000054" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1"/>
+    <path d="M 87.50004725,55.0000297 l 2.00000108,1.00000054 m -2.00000108,-1.00000054 l 2.00000108,-1.00000054" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1"/>
+    <path d="M 110.0000594,0 l 1.00000054,2.00000108 m -1.00000054,-2.00000108 l -1.00000054,2.00000108" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1"/>
+    <path d="M 110.0000594,47.50002565 l 1.00000054,-2.00000108 m -1.00000054,2.00000108 l -1.00000054,-2.00000108" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1"/>
+    <path d="M 105.0000567,37.50002025 l 1.00000054,2.00000108 m -1.00000054,-2.00000108 l -1.00000054,2.00000108" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1"/>
+    <path d="M 105.0000567,47.50002565 l 1.00000054,-2.00000108 m -1.00000054,2.00000108 l -1.00000054,-2.00000108" style="fill:none; stroke:#000000;stroke-width:0.15;stroke-opacity:1"/>
+  </g>
+</svg>

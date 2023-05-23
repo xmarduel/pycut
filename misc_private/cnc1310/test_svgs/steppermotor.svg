@@ -1,50 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
+<svg version="1.1"
   width="80mm"
   height="80mm"
   viewBox="0 0 80 80"
-  version="1.1"
-  id="horozontal-sides"
+  id="horizontal-sides"
   xmlns="http://www.w3.org/2000/svg"
   xmlns:svg="http://www.w3.org/2000/svg"
 >
   <defs id="defs">
     <rect id="motor_base_ref" rx="4" ry="4" width="42" height="42" style="fill:rgb(0,0,0);opacity:0.4;" />
     
-    <circle id="motor_base_hole_24mm_ref" style="fill:#333333;fill-opacity:0.5"
-            cx="0"
-            cy="0"
-            r="12" /> 
-     <circle id="motor_base_hole_22mm_ref" style="fill:#000000;fill-opacity:1;"
-      cx="0"
-      cy="0"
-      r="11" />
-
+    <circle id="motor_base_hole_16mm_ref" style="fill:#333333;fill-opacity:0.8" cx="0" cy="0" r="8" /> 
+    <circle id="motor_base_hole_22mm_ref" style="fill:#000000;fill-opacity:0.5" cx="0" cy="0" r="11" />
     <!-- screws are 3mm diameter 9mm long-->
-    <circle id="motor_screw_3.0mm_ref" style="fill:#00ffff;fill-opacity:1;"
-      cx="0"
-      cy="0"
-      r="1.5" />
-
+    <circle id="motor_screw_3.0mm_ref"        style="fill:#00ffff;fill-opacity:1.0;" cx="0" cy="0" r="1.5" />
     <!-- pocket hole depth = 5mm so that the screws disappear into the plate -->
-    <circle id="motor_screw_pocket_5.0mm_ref"
-      style="fill:#00ffff;fill-opacity:0.5;"
-      cx="0"
-      cy="0"
-      r="2.5" />
+    <circle id="motor_screw_pocket_5.0mm_ref" style="fill:#00ffff;fill-opacity:0.5;" cx="0" cy="0" r="2.5" />
   </defs>
 
   <g id="layer" transform="translate(19,19)">
     <!-- rect origin is (0,0) so the motor "middle" is on [40;40] -->
-    
-    <use href="#motor_base_ref" id="motor_base"/> <!-- just as indicator , no ops -->
-    
+    <!-- just as indicator , no ops -->
+    <rect id="motor_base" rx="4" ry="4" width="42" height="42" style="fill:rgb(180,180,180)" /> 
   </g>
 
   <g id="layer_screws_and_holes" transform="translate(40,40)">  
     <!-- cut through material -->
-    <use href="#motor_base_hole_24mm_ref" id="motor_base_hole_24mm" />
     <use href="#motor_base_hole_22mm_ref" id="motor_base_hole_22mm" />
+	<use href="#motor_base_hole_16mm_ref" id="motor_base_hole_16mm" />
+    
 
     <!--
     <use href="#motor_screw_3.0mm" transform="rotate(45)  translate(24 0)" id="motor_screw_3.0mm_NW" />
@@ -55,10 +39,10 @@
 
     <!-- pocket 5mm so that the screws heads are hidden in material and can reach their holes -->
     <!--
-    <use href="#motor_screw_hole_4.0mm" transform="rotate(45)  translate(24 0)" id="motor_screw_hole_4.0mm_NW" />
-    <use href="#motor_screw_hole_4.0mm" transform="rotate(135) translate(24 0)" id="motor_screw_hole_4.0mm_NE" />
-    <use href="#motor_screw_hole_4.0mm" transform="rotate(225) translate(24 0)" id="motor_screw_hole_4.0mm_NW" />
-    <use href="#motor_screw_hole_4.0mm" transform="rotate(315) translate(24 0)" id="motor_screw_hole_4.0mm_NE" />
+    <use href="#motor_screw_pocket_5.0mm_ref" transform="rotate(45)  translate(24 0)" id="motor_screw_pocket_5.0mm_NW" />
+    <use href="#motor_screw_pocket_5.0mm_ref" transform="rotate(135) translate(24 0)" id="motor_screw_pocket_5.0mm_NE" />
+    <use href="#motor_screw_pocket_5.0mm_ref" transform="rotate(225) translate(24 0)" id="motor_screw_pocket_5.0mm_NW" />
+    <use href="#motor_screw_pocket_5.0mm_ref" transform="rotate(315) translate(24 0)" id="motor_screw_pocket_5.0mm_NE" />
     -->
 
     <use href="#motor_screw_3.0mm_ref" transform="translate(15.5 15.5 )"   id="motor_screw_3.0mm_NW" />

@@ -1,14 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" width="80mm" height="80mm" viewBox="0 0 80 80" version="1.1" id="horozontal-sides">
- 
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" width="80mm" height="80mm" viewBox="0 0 80 80" id="horizontal-sides">
+  <defs id="defs">
+    <rect id="motor_base_ref" rx="4" ry="4" width="42" height="42" style="fill:rgb(0,0,0);opacity:0.4;"/>
+    <circle id="motor_base_hole_16mm_ref" style="fill:#333333;fill-opacity:0.8" cx="0" cy="0" r="8"/>
+    <circle id="motor_base_hole_22mm_ref" style="fill:#000000;fill-opacity:0.5" cx="0" cy="0" r="11"/>
+    <!-- screws are 3mm diameter 9mm long-->
+    <circle id="motor_screw_3.0mm_ref" style="fill:#00ffff;fill-opacity:1.0;" cx="0" cy="0" r="1.5"/>
+    <!-- pocket hole depth = 5mm so that the screws disappear into the plate -->
+    <circle id="motor_screw_pocket_5.0mm_ref" style="fill:#00ffff;fill-opacity:0.5;" cx="0" cy="0" r="2.5"/>
+  </defs>
   <g id="layer">
     <!-- rect origin is (0,0) so the motor "middle" is on [40;40] -->
-    <rect id="base" width="42.000" height="42.000" x="19.000" y="19.000" rx="4.000" ry="4.000" style="fill:rgb(0,0,0);opacity:0.4;"/>
     <!-- just as indicator , no ops -->
+    <rect id="motor_base" width="42.000" height="42.000" x="19.000" y="19.000" rx="4.000" ry="4.000" style="fill:rgb(180,180,180)"/>
   </g>
   <g id="layer_screws_and_holes">
     <!-- cut through material -->
-    <circle id="motor_base_hole_24mm" cx="40.000" cy="40.000" r="12.000" style="fill:#333333;fill-opacity:0.5"/>
-    <circle id="motor_base_hole_22mm" cx="40.000" cy="40.000" r="11.000" style="fill:#000000;fill-opacity:1;"/>
+    <circle id="motor_base_hole_22mm" cx="40.000" cy="40.000" r="11.000" style="fill:#000000;fill-opacity:0.5"/>
+    <circle id="motor_base_hole_16mm" cx="40.000" cy="40.000" r="8.000" style="fill:#333333;fill-opacity:0.8"/>
     <!--
     <use href="#motor_screw_3.0mm" transform="rotate(45)  translate(24 0)" id="motor_screw_3.0mm_NW" />
     <use href="#motor_screw_3.0mm" transform="rotate(135) translate(24 0)" id="motor_screw_3.0mm_NE" />
@@ -17,15 +25,15 @@
     -->
     <!-- pocket 5mm so that the screws heads are hidden in material and can reach their holes -->
     <!--
-    <use href="#motor_screw_hole_4.0mm" transform="rotate(45)  translate(24 0)" id="motor_screw_hole_4.0mm_NW" />
-    <use href="#motor_screw_hole_4.0mm" transform="rotate(135) translate(24 0)" id="motor_screw_hole_4.0mm_NE" />
-    <use href="#motor_screw_hole_4.0mm" transform="rotate(225) translate(24 0)" id="motor_screw_hole_4.0mm_NW" />
-    <use href="#motor_screw_hole_4.0mm" transform="rotate(315) translate(24 0)" id="motor_screw_hole_4.0mm_NE" />
+    <use href="#motor_screw_pocket_5.0mm_ref" transform="rotate(45)  translate(24 0)" id="motor_screw_pocket_5.0mm_NW" />
+    <use href="#motor_screw_pocket_5.0mm_ref" transform="rotate(135) translate(24 0)" id="motor_screw_pocket_5.0mm_NE" />
+    <use href="#motor_screw_pocket_5.0mm_ref" transform="rotate(225) translate(24 0)" id="motor_screw_pocket_5.0mm_NW" />
+    <use href="#motor_screw_pocket_5.0mm_ref" transform="rotate(315) translate(24 0)" id="motor_screw_pocket_5.0mm_NE" />
     -->
-    <circle id="motor_screw_3.0mm_NW" cx="55.500" cy="55.500" r="1.500" style="fill:#00ffff;fill-opacity:1;"/>
-    <circle id="motor_screw_3.0mm_NE" cx="55.500" cy="24.500" r="1.500" style="fill:#00ffff;fill-opacity:1;"/>
-    <circle id="motor_screw_3.0mm_SW" cx="24.500" cy="24.500" r="1.500" style="fill:#00ffff;fill-opacity:1;"/>
-    <circle id="motor_screw_3.0mm_SE" cx="24.500" cy="55.500" r="1.500" style="fill:#00ffff;fill-opacity:1;"/>
+    <circle id="motor_screw_3.0mm_NW" cx="55.500" cy="55.500" r="1.500" style="fill:#00ffff;fill-opacity:1.0;"/>
+    <circle id="motor_screw_3.0mm_NE" cx="55.500" cy="24.500" r="1.500" style="fill:#00ffff;fill-opacity:1.0;"/>
+    <circle id="motor_screw_3.0mm_SW" cx="24.500" cy="24.500" r="1.500" style="fill:#00ffff;fill-opacity:1.0;"/>
+    <circle id="motor_screw_3.0mm_SE" cx="24.500" cy="55.500" r="1.500" style="fill:#00ffff;fill-opacity:1.0;"/>
     <circle id="motor_screw_pocket_5.0mm_NW" cx="55.500" cy="55.500" r="2.500" style="fill:#00ffff;fill-opacity:0.5;"/>
     <circle id="motor_screw_pocket_5.0mm_NE" cx="55.500" cy="24.500" r="2.500" style="fill:#00ffff;fill-opacity:0.5;"/>
     <circle id="motor_screw_pocket_5.0mm_SW" cx="24.500" cy="24.500" r="2.500" style="fill:#00ffff;fill-opacity:0.5;"/>

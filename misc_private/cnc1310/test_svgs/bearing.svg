@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--  test the bearing cut 
 
-1- central cylinder is completety cut out
+1- central hole is completety cut out
 2- base of the bearing with pocket 5mm (if plate 15mm) or without pocket (if plate 10mm)
 3- 4 screws
 
@@ -12,34 +12,26 @@ DIMENSIONS LMK12UU:
 
   cylinder D = 21 outer diameter -> r = 10.5
 
-  4 screws diameter = 4.5
+  4 screws - diameter = 4.0mm  8mm long
 -->
-<svg
+<svg version="1.1"
   width="52mm"
   height="52mm"
   viewBox="0 0 52 52"
-  version="1.1"
   id="bearing"
   xmlns="http://www.w3.org/2000/svg"
   xmlns:svg="http://www.w3.org/2000/svg"
 >
   <defs id="defs">
-    <rect id="bearing_base_o" style="fill:#000080;fill-opacity:0.2;stroke:#f70000;stroke-width:0"
+    <rect id="bearing_base_o" style="fill:#000080;fill-opacity:0.2;"
       width="32"
       height="32"
       x="0"
       y="0"
       rx="2"
       ry="2" />
-    <circle id="bearing_cylinder_o" style="opacity:1;fill:#ff0000;fill-opacity:1;stroke-width:0.388054"
-      cx="0"
-      cy="0"
-      r="10.5" />
-	<!-- new bearings - not sure of thr diameter of the screws CHECK-ME -->
-	<circle id="bearing_screw_5.0mm_o" style="opacity:1;fill:#000080;fill-opacity:1;stroke-width:0.159609"
-      cx="0"
-      cy="0"
-      r="2.50" />
+    <circle id="bearing_cylinder_o" style="opacity:1;fill:#ff0000"     cx="0" cy="0" r="10.5" />
+	<circle id="bearing_screw_4.0mm_o" style="opacity:1;fill:#000080;" cx="0" cy="0" r="2.0" />
   </defs>
 
   <g id="layer" >
@@ -52,15 +44,10 @@ DIMENSIONS LMK12UU:
       <g id="items" transform="translate(16 16)">
   	    <use href="#bearing_cylinder_o" id="bearing_cylinder" />
 	       
-        <use href="#bearing_screw_4.5mm_o" transform="rotate( 45) translate(16 0)" id="bearing_screw_4.5mm_SE" />
-        <use href="#bearing_screw_4.5mm_o" transform="rotate(135) translate(16 0)" id="bearing_screw_4.5mm_SW" />
-        <use href="#bearing_screw_4.5mm_o" transform="rotate(225) translate(16 0)" id="bearing_screw_4.5mm_NW" />
-        <use href="#bearing_screw_4.5mm_o" transform="rotate(315) translate(16 0)" id="bearing_screw_4.5mm_NE" />
-		
-		<use href="#bearing_screw_5.0mm_o" transform="rotate( 45) translate(16 0)" id="bearing_screw_5.0mm_SE" />
-        <use href="#bearing_screw_5.0mm_o" transform="rotate(135) translate(16 0)" id="bearing_screw_5.0mm_SW" />
-        <use href="#bearing_screw_5.0mm_o" transform="rotate(225) translate(16 0)" id="bearing_screw_5.0mm_NW" />
-        <use href="#bearing_screw_5.0mm_o" transform="rotate(315) translate(16 0)" id="bearing_screw_5.0mm_NE" />
+        <use href="#bearing_screw_4.0mm_o" transform="rotate( 45) translate(16 0)" id="bearing_screw_4.0mm_SE" />
+        <use href="#bearing_screw_4.0mm_o" transform="rotate(135) translate(16 0)" id="bearing_screw_4.0mm_SW" />
+        <use href="#bearing_screw_4.0mm_o" transform="rotate(225) translate(16 0)" id="bearing_screw_4.0mm_NW" />
+        <use href="#bearing_screw_4.0mm_o" transform="rotate(315) translate(16 0)" id="bearing_screw_4.0mm_NE" />
       </g>
     </g>
     

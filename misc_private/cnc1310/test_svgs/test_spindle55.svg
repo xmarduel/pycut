@@ -1,58 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- 
-This in to test the spindle holder
+This is to test the spindle holder for the 55mm diam spindle
 
 1- central hole of diameter 38mm
 2- kind a pocket of diameter 55mm where is hole is centered
 
 -->
-<svg
+<svg version="1.1"
   width="80mm"
   height="80mm"
   viewBox="0 0 80 80"
-  version="1.1"
   id="spindle-D55"
   xmlns="http://www.w3.org/2000/svg"
   xmlns:svg="http://www.w3.org/2000/svg">
   <defs id="defs">
-    <circle id="spindle-hole"
-      style="font-variation-settings:normal;vector-effect:none;fill:#ff0000;fill-opacity:1;"
-      cx="0"
-      cy="0"
-      r="19" />
-
-    <circle id="spindle-pocket"
-      style="font-variation-settings:normal;vector-effect:none;fill:#ff00ff;fill-opacity:0.2;"
-      cx="0"
-      cy="0"
-      r="27.5" />
-
-    <circle id="spindle-screw"
-      style="font-variation-settings:normal;vector-effect:none;fill:#000000;fill-opacity:0.5;"
-      cx="0"
-      cy="0"
-      r="1.25" />
+    <circle id="spindle-screw-2mm"   style="fill:#000000;fill-opacity:0.5;" cx="0" cy="0" r="1.0" />
    </defs>
 
   <g id="root_layer" >
-    <rect id="PLATE"  style="fill:rgb(0,125,125);stroke-width:0;stroke:rgb(0,0,0)" 
-	   x="0" y="0" rx="1" ry="1" width="80" height="80"/>
+    <rect id="PLATE"  style="fill:#008888" x="0" y="0" rx="1" ry="1" width="80" height="80"/>
  
     <g transform="translate(40,40)">
       <!-- cut throught material -->
-      <use href="#spindle-hole" />
+      <circle id="spindle-bb-hole" style="fill:#ff0000;fill-opacity:1.0" cx="0" cy="0" r="19.0" />
 
-      <!-- pocket depth 5mm -->
-      <use href="#spindle-pocket"/>
+      <!-- pocket depth 5mm in 10mm plate where the base is lying -->
+      <circle id="spindle-pocket"  style="fill:#ff00ff;fill-opacity:0.2" cx="0" cy="0" r="27.5" />
 
       <!-- cut through material -->
       <g id="layer_spindle_screws">
-        <use href="#spindle-screw" transform="rotate(0)   translate(22,0)" id="spindle_screw_1"/>
-        <use href="#spindle-screw" transform="rotate(60)  translate(22,0)" id="spindle_screw_2"/>
-        <use href="#spindle-screw" transform="rotate(120) translate(22,0)" id="spindle_screw_3"/>
-        <use href="#spindle-screw" transform="rotate(180) translate(22,0)" id="spindle_screw_4"/>
-        <use href="#spindle-screw" transform="rotate(240) translate(22,0)" id="spindle_screw_5"/>
-        <use href="#spindle-screw" transform="rotate(300) translate(22,0)" id="spindle_screw_6"/>
+        <use href="#spindle-screw-2mm" transform="rotate(0)   translate(22,0)" id="spindle_screw_1"/>
+        <use href="#spindle-screw-2mm" transform="rotate(60)  translate(22,0)" id="spindle_screw_2"/>
+        <use href="#spindle-screw-2mm" transform="rotate(120) translate(22,0)" id="spindle_screw_3"/>
+        <use href="#spindle-screw-2mm" transform="rotate(180) translate(22,0)" id="spindle_screw_4"/>
+        <use href="#spindle-screw-2mm" transform="rotate(240) translate(22,0)" id="spindle_screw_5"/>
+        <use href="#spindle-screw-2mm" transform="rotate(300) translate(22,0)" id="spindle_screw_6"/>
       </g>
     </g>
   </g>

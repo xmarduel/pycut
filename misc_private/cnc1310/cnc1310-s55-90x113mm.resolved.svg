@@ -1,63 +1,63 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" width="90mm" height="113mm" viewBox="0 0 90 113" version="1.1" id="spindle-D55">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" width="90mm" height="113mm" viewBox="0 0 90 113" id="spindle-D55">
   <defs id="defs">
-    <circle id="screw_central_hole_ref" style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.352776;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000" cx="0" cy="0" r="11"/>
-    <circle id="backlash_item_hole_10mm" style="fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.352776;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000" cx="0" cy="0" r="5.15"/>
-    <circle id="backlash_item_screw_3.5mm" style="fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1" cx="0" cy="0" r="1.75"/>
-    <rect id="bearing_base_ref" style="fill:#000080;fill-opacity:0.2;stroke:#f70000;stroke-width:0" width="32" height="32" x="0" y="0" rx="4" ry="4"/>
-    <circle id="bearing_cylinder" style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.388054;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1" cx="0" cy="0" r="10.5"/>
-    <circle id="bearing_screw_4.5mm" style="fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1" cx="0" cy="0" r="2.25"/>
-    <circle id="spacer" style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.211666;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000" cx="0" cy="0" r="6"/>
-    <circle id="spacer_screw_5.0mm" style="fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.314309;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000" cx="0" cy="0" r="2.5"/>
+    <circle id="screw_central_hole_ref" style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="11"/>
+    <circle id="backlash_item_hole_10.2mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.1"/>
+    <circle id="backlash_item_screw_3.0mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="1.5"/>
+    <rect id="bearing_base_ref" style="fill:#000080;fill-opacity:0.2" width="32" height="32" x="0" y="0" rx="4" ry="4"/>
+    <circle id="bearing_cylinder" style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="10.5"/>
+    <circle id="bearing_screw_4.0mm" style="fill:#000080;fill-opacity:1" cx="0" cy="0" r="2.0"/>
+    <circle id="spacer" style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="6"/>
+    <circle id="spacer_screw_5.0mm" style="fill:#0000ff;fill-opacity:1" cx="0" cy="0" r="2.5"/>
   </defs>
   <g id="layer1">
-    <path id="contour" d="M 0,0 l 90.0000486,0 l 0,68.00003672 a 45,45 0 0,1 -90.0000486,0 z" style="fill:none;stroke:#0000ff;stroke-width:0.261315px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"/>
-    <circle id="screw_central_hole" cx="45.000" cy="16.000" r="11.000" style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.352776;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"/>
+    <path id="contour" d="M 0,0 l 90.0000486,0 l 0,68.00003672 a 45,45 0 0,1 -90.0000486,0 z" style="fill:none;stroke:#0000ff;stroke-width:0.25"/>
+    <circle id="screw_central_hole" cx="45.000" cy="16.000" r="11.000" style="fill:#ff0000;fill-opacity:1"/>
     <!-- backlash -->
     <g id="backlash">
       <!-- cut through -->
-      <circle id="backlash_item_hole" cx="45.000" cy="16.000" r="5.150" style="fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.352776;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"/>
+      <circle id="backlash_item_hole" cx="45.000" cy="16.000" r="5.100" style="fill:#ff00ff;fill-opacity:1"/>
       <!-- cut through -->
-      <circle id="backlash_item_screw_3.5mm_E" cx="53.000" cy="16.000" r="1.750" style="fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
-      <circle id="backlash_item_screw_3.5mm_S" cx="45.000" cy="24.000" r="1.750" style="fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
-      <circle id="backlash_item_screw_3.5mm_W" cx="37.000" cy="16.000" r="1.750" style="fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
-      <circle id="backlash_item_screw_3.5mm_N" cx="45.000" cy="8.000" r="1.750" style="fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
+      <circle id="backlash_item_screw_3.0mm_E" cx="53.000" cy="16.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
+      <circle id="backlash_item_screw_3.0mm_S" cx="45.000" cy="24.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
+      <circle id="backlash_item_screw_3.0mm_W" cx="37.000" cy="16.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
+      <circle id="backlash_item_screw_3.0mm_N" cx="45.000" cy="8.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
     </g>
     <!-- bearing 1 -->
     <g id="bearing_1">
-      <rect id="bearing_1_base" width="32.000" height="32.000" x="0.000" y="0.000" rx="4.000" ry="4.000" style="fill:#000080;fill-opacity:0.2;stroke:#f70000;stroke-width:0"/>
+      <rect id="bearing_1_base" width="32.000" height="32.000" x="0.000" y="0.000" rx="4.000" ry="4.000" style="fill:#000080;fill-opacity:0.2"/>
       <g id="bearing_1_items">
         <!-- reference is the center of the bearing item -->
-        <circle id="bearing_1_cylinder" cx="16.000" cy="16.000" r="10.500" style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.388054;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
-        <circle id="bearing_1_screw_4.5mm_SE" cx="27.314" cy="27.314" r="2.250" style="fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
-        <circle id="bearing_1_screw_4.5mm_SW" cx="4.686" cy="27.314" r="2.250" style="fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
-        <circle id="bearing_1_screw_4.5mm_NW" cx="4.686" cy="4.686" r="2.250" style="fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
-        <circle id="bearing_1_screw_4.5mm_NE" cx="27.314" cy="4.686" r="2.250" style="fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
+        <circle id="bearing_1_cylinder" cx="16.000" cy="16.000" r="10.500" style="fill:#ff0000;fill-opacity:1"/>
+        <circle id="bearing_1_screw_4.5mm_SE" cx="27.314" cy="27.314" r="2.000" style="fill:#000080;fill-opacity:1"/>
+        <circle id="bearing_1_screw_4.5mm_SW" cx="4.686" cy="27.314" r="2.000" style="fill:#000080;fill-opacity:1"/>
+        <circle id="bearing_1_screw_4.5mm_NW" cx="4.686" cy="4.686" r="2.000" style="fill:#000080;fill-opacity:1"/>
+        <circle id="bearing_1_screw_4.5mm_NE" cx="27.314" cy="4.686" r="2.000" style="fill:#000080;fill-opacity:1"/>
       </g>
     </g>
     <!-- bearing 2 -->
     <g id="bearing_2">
-      <rect id="bearing_2_base" width="32.000" height="32.000" x="58.000" y="0.000" rx="4.000" ry="4.000" style="fill:#000080;fill-opacity:0.2;stroke:#f70000;stroke-width:0"/>
+      <rect id="bearing_2_base" width="32.000" height="32.000" x="58.000" y="0.000" rx="4.000" ry="4.000" style="fill:#000080;fill-opacity:0.2"/>
       <g id="bearing_2_items">
         <!-- reference is the center of the bearing item -->
-        <circle id="bearing_2_cylinder" cx="74.000" cy="16.000" r="10.500" style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.388054;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
-        <circle id="bearing_2_screw_4.5mm_SE" cx="85.314" cy="27.314" r="2.250" style="fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
-        <circle id="bearing_2_screw_4.5mm_SW" cx="62.686" cy="27.314" r="2.250" style="fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
-        <circle id="bearing_2_screw_4.5mm_NW" cx="62.686" cy="4.686" r="2.250" style="fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
-        <circle id="bearing_2_screw_4.5mm_NE" cx="85.314" cy="4.686" r="2.250" style="fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke-width:0.159609;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"/>
+        <circle id="bearing_2_cylinder" cx="74.000" cy="16.000" r="10.500" style="fill:#ff0000;fill-opacity:1"/>
+        <circle id="bearing_2_screw_4.5mm_SE" cx="85.314" cy="27.314" r="2.000" style="fill:#000080;fill-opacity:1"/>
+        <circle id="bearing_2_screw_4.5mm_SW" cx="62.686" cy="27.314" r="2.000" style="fill:#000080;fill-opacity:1"/>
+        <circle id="bearing_2_screw_4.5mm_NW" cx="62.686" cy="4.686" r="2.000" style="fill:#000080;fill-opacity:1"/>
+        <circle id="bearing_2_screw_4.5mm_NE" cx="85.314" cy="4.686" r="2.000" style="fill:#000080;fill-opacity:1"/>
       </g>
     </g>
-    <circle id="spindle-hole" cx="45.000" cy="68.000" r="27.500" style="font-variation-settings:normal;vector-effect:none;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.970135;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"/>
-    <circle id="large_circle_indicator" cx="45.000" cy="68.000" r="45.000" style="font-variation-settings:normal;vector-effect:none;fill:#ff00ff;fill-opacity:0.2;fill-rule:evenodd;stroke-width:0.970137;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"/>
-    <circle id="spacer_NW" cx="15.000" cy="44.000" r="6.000" style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.211666;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"/>
-    <circle id="spacer_NE" cx="75.000" cy="44.000" r="6.000" style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.211666;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"/>
-    <circle id="spacer_SW" cx="15.000" cy="88.000" r="6.000" style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.211666;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"/>
-    <circle id="spacer_SE" cx="75.000" cy="88.000" r="6.000" style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.211666;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"/>
-    <circle id="spacer_screw_5.0mm_NW" cx="15.000" cy="44.000" r="2.500" style="fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.314309;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"/>
-    <circle id="spacer_screw_5.0mm_NE" cx="75.000" cy="44.000" r="2.500" style="fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.314309;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"/>
-    <circle id="spacer_screw_5.0mm_SW" cx="15.000" cy="88.000" r="2.500" style="fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.314309;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"/>
-    <circle id="spacer_screw_5.0mm_SE" cx="75.000" cy="88.000" r="2.500" style="fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.314309;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"/>
-    <text id="legend" x="20.000" y="39.500" style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583">Spindle Diameter: 55 mm</text>
-    <path id="horizontal_line" d="M 0,68.00003672 L 90.0000486,68.00003672" style="fill:none;stroke:#000000;stroke-width:0.144139px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"/>
-    <path id="vertical_line" d="M 45.0000243,0 L 45.0000243,113.00006102" style="fill:none;stroke:#000000;stroke-width:0.144059px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"/>
+    <circle id="spindle-hole" cx="45.000" cy="68.000" r="27.500" style="fill:#ff0000;fill-opacity:1"/>
+    <circle id="large_circle_indicator" cx="45.000" cy="68.000" r="45.000" style="fill:#ff00ff;fill-opacity:0.1"/>
+    <circle id="spacer_NW" cx="15.000" cy="44.000" r="6.000" style="fill:#ff0000;fill-opacity:1"/>
+    <circle id="spacer_NE" cx="75.000" cy="44.000" r="6.000" style="fill:#ff0000;fill-opacity:1"/>
+    <circle id="spacer_SW" cx="15.000" cy="88.000" r="6.000" style="fill:#ff0000;fill-opacity:1"/>
+    <circle id="spacer_SE" cx="75.000" cy="88.000" r="6.000" style="fill:#ff0000;fill-opacity:1"/>
+    <circle id="spacer_screw_5.0mm_NW" cx="15.000" cy="44.000" r="2.500" style="fill:#0000ff;fill-opacity:1"/>
+    <circle id="spacer_screw_5.0mm_NE" cx="75.000" cy="44.000" r="2.500" style="fill:#0000ff;fill-opacity:1"/>
+    <circle id="spacer_screw_5.0mm_SW" cx="15.000" cy="88.000" r="2.500" style="fill:#0000ff;fill-opacity:1"/>
+    <circle id="spacer_screw_5.0mm_SE" cx="75.000" cy="88.000" r="2.500" style="fill:#0000ff;fill-opacity:1"/>
+    <text id="legend" x="20.000" y="65.000" style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583">Spindle Diameter: 55 mm</text>
+    <path id="horizontal_line" d="M 0,68.00003672 L 90.0000486,68.00003672" style="fill:none;stroke:#000000;stroke-width:0.1"/>
+    <path id="vertical_line" d="M 45.0000243,0 L 45.0000243,113.00006102" style="fill:none;stroke:#000000;stroke-width:0.1"/>
   </g>
 </svg>
