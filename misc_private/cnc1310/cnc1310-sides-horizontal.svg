@@ -11,12 +11,12 @@
   <defs id="defs">
     <circle id="motor_base_hole_22mm_ref" style="fill:#ff00ff;fill-opacity:1;;stroke-opacity:1"  cx="0" cy="0" r="11" />
 
-	<circle id="spacer_pocket_12mm" style="fill:#ff0000;fill-opacity:1"    cx="0" cy="0" r="6" />
+    <circle id="spacer_pocket_12mm" style="fill:#ff0000;fill-opacity:1"    cx="0" cy="0" r="6" />
     <circle id="spacer_screw_5.0mm" style="fill:#0000ff;fill-opacity:1"    cx="0" cy="0" r="2.5" />
 
-	<!-- on the other side od the plate : how to do this ? -->
-	<circle id="spacer_screw_5.0mm_pocket_11.0mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.5" />
-	<!-- on the other side od the plate : how to do this ? -->
+	  <!-- on the other side od the plate : how to do this ? -->
+  	<circle id="spacer_screw_5.0mm_pocket_11.0mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.5" />
+	  <!-- on the other side od the plate : how to do this ? -->
 
     <circle id="motor_screw_3.0mm_pocket_5.0mm"   style="fill:#00ffff;fill-opacity:0.5"  cx="0" cy="0" r="2.5" />
     <circle id="motor_screw_3.0mm"                style="fill:#00ffff;fill-opacity:1.0"  cx="0" cy="0" r="1.50" />

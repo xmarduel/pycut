@@ -7,8 +7,8 @@
   xmlns="http://www.w3.org/2000/svg"
   xmlns:svg="http://www.w3.org/2000/svg">
   <defs id="defs">
-    <circle id="backlash_item_hole_10.2mm" style="fill:#ff00ff;fill-opacity:1;" cx="0" cy="0" r="5.10" />
-    <circle id="backlash_item_screw_3mm" style="fill:#ff00ff;fill-opacity:1;" cx="0" cy="0" r="1.50" />
+    <circle id="backlash_item_hole_10mm" style="fill:#ff00ff;fill-opacity:1;" cx="0" cy="0" r="5.0" />
+    <circle id="backlash_item_screw_3mm" style="fill:#ff00ff;fill-opacity:1;" cx="0" cy="0" r="1.5" />
   </defs>
    
   <g id="layer" transform="translate(20,20)">
@@ -16,12 +16,12 @@
     <circle id="backlash_item" style="fill-opacity:0;stroke:#000000;stroke-width:0.15" cx="0" cy="0" r="11" />
     
     <!-- backlash item -->
-	<use href="#backlash_item_hole_10.2mm"  id="backlash_item_hole" />
+    <use href="#backlash_item_hole_10mm"  id="backlash_item_hole" />
 
     <!-- backlash item screws -->
     <use href="#backlash_item_screw_3mm" transform="rotate(0)   translate(8,0)"  id="backlash_item_screw_3mm_E" />
-	<use href="#backlash_item_screw_3mm" transform="rotate(90)  translate(8,0)"  id="backlash_item_screw_3mm_S" />
-	<use href="#backlash_item_screw_3mm" transform="rotate(180) translate(8,0)"  id="backlash_item_screw_3mm_W" />
-	<use href="#backlash_item_screw_3mm" transform="rotate(270) translate(8,0)"  id="backlash_item_screw_3mm_N" />
+    <use href="#backlash_item_screw_3mm" transform="rotate(90)  translate(8,0)"  id="backlash_item_screw_3mm_S" />
+    <use href="#backlash_item_screw_3mm" transform="rotate(180) translate(8,0)"  id="backlash_item_screw_3mm_W" />
+    <use href="#backlash_item_screw_3mm" transform="rotate(270) translate(8,0)"  id="backlash_item_screw_3mm_N" />
   </g>
 </svg>

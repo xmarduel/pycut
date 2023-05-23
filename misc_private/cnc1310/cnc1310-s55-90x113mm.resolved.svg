@@ -1,21 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" width="90mm" height="113mm" viewBox="0 0 90 113" id="spindle-D55">
-  <defs id="defs">
-    <circle id="screw_central_hole_ref" style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="11"/>
-    <circle id="backlash_item_hole_10.2mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.1"/>
-    <circle id="backlash_item_screw_3.0mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="1.5"/>
-    <rect id="bearing_base_ref" style="fill:#000080;fill-opacity:0.2" width="32" height="32" x="0" y="0" rx="4" ry="4"/>
-    <circle id="bearing_cylinder" style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="10.5"/>
-    <circle id="bearing_screw_4.0mm" style="fill:#000080;fill-opacity:1" cx="0" cy="0" r="2.0"/>
-    <circle id="spacer" style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="6"/>
-    <circle id="spacer_screw_5.0mm" style="fill:#0000ff;fill-opacity:1" cx="0" cy="0" r="2.5"/>
-  </defs>
   <g id="layer1">
     <path id="contour" d="M 0,0 l 90.0000486,0 l 0,68.00003672 a 45,45 0 0,1 -90.0000486,0 z" style="fill:none;stroke:#0000ff;stroke-width:0.25"/>
     <circle id="screw_central_hole" cx="45.000" cy="16.000" r="11.000" style="fill:#ff0000;fill-opacity:1"/>
     <!-- backlash -->
     <g id="backlash">
       <!-- cut through -->
-      <circle id="backlash_item_hole" cx="45.000" cy="16.000" r="5.100" style="fill:#ff00ff;fill-opacity:1"/>
+      <circle id="backlash_item_hole" cx="45.000" cy="16.000" r="5.000" style="fill:#ff00ff;fill-opacity:1"/>
       <!-- cut through -->
       <circle id="backlash_item_screw_3.0mm_E" cx="53.000" cy="16.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
       <circle id="backlash_item_screw_3.0mm_S" cx="45.000" cy="24.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>

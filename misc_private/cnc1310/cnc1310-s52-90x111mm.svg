@@ -8,12 +8,12 @@
   xmlns:svg="http://www.w3.org/2000/svg">
   <defs id="defs">
     <circle id="screw_central_hole_ref"     style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="11" />
-	<circle id="backlash_item_hole_10.2mm"  style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.1" />
-	<circle id="backlash_item_screw_3.0mm"  style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="1.5" />
-    <rect   id="bearing_base_ref" style="fill:#000080;fill-opacity:0.2" width="32" height="32" x="0" y="0" rx="4" ry="4"/>
-    <circle id="bearing_cylinder"    style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="10.5" />
-    <circle id="bearing_screw_4.0mm" style="fill:#000080;fill-opacity:1" cx="0" cy="0" r="2.00" />
-	<circle id="spacer_pocket_6.0mm"        style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="6" />
+    <circle id="backlash_item_hole_10.0mm"  style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.0" />
+    <circle id="backlash_item_screw_3.0mm"  style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="1.5" />
+    <rect   id="bearing_base_ref"           style="fill:#000080;fill-opacity:0.2" width="32" height="32" x="0" y="0" rx="4" ry="4"/>
+    <circle id="bearing_cylinder"           style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="10.5" />
+    <circle id="bearing_screw_4.0mm"        style="fill:#000080;fill-opacity:1" cx="0" cy="0" r="2.00" />
+    <circle id="spacer_pocket_6.0mm"        style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="6" />
     <circle id="spacer_screw_5.0mm"         style="fill:#0000ff;fill-opacity:1" cx="0" cy="0" r="2.5" />
   </defs>
   
@@ -26,13 +26,13 @@
     <!-- backlash -->
 	  <g id="backlash" transform="translate(45,16)">
       <!-- cut through -->
-	    <use href="#backlash_item_hole_10.2mm"  id="backlash_item_hole" />
+	    <use href="#backlash_item_hole_10.0mm"  id="backlash_item_hole" />
 
       <!-- cut through -->
       <use href="#backlash_item_screw_3.0mm" transform="rotate(0)   translate(8,0)"  id="backlash_item_screw_3.0mm_E" />
-	  <use href="#backlash_item_screw_3.0mm" transform="rotate(90)  translate(8,0)"  id="backlash_item_screw_3.0mm_S" />
-	  <use href="#backlash_item_screw_3.0mm" transform="rotate(180) translate(8,0)"  id="backlash_item_screw_3.0mm_W" />
-	  <use href="#backlash_item_screw_3.0mm" transform="rotate(270) translate(8,0)"  id="backlash_item_screw_3.0mm_N" />
+      <use href="#backlash_item_screw_3.0mm" transform="rotate(90)  translate(8,0)"  id="backlash_item_screw_3.0mm_S" />
+      <use href="#backlash_item_screw_3.0mm" transform="rotate(180) translate(8,0)"  id="backlash_item_screw_3.0mm_W" />
+      <use href="#backlash_item_screw_3.0mm" transform="rotate(270) translate(8,0)"  id="backlash_item_screw_3.0mm_N" />
     </g>
 
     <!-- bearing 1 -->
@@ -63,10 +63,8 @@
       </g>
     </g>
 	  
-    <circle  id="spindle-hole" style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.970135;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-      cx="45" cy="66" r="26.0" />
-    <circle  id="large_circle_indicator" style="fill:#ff00ff;fill-opacity:0.2;fill-rule:evenodd;stroke-width:0.970137;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
-      cx="45" cy="66" r="45" />
+    <circle  id="spindle-hole"           style="fill:#ff0000;fill-opacity:1"   cx="45" cy="66" r="26.0" />
+    <circle  id="large_circle_indicator" style="fill:#ff00ff;fill-opacity:0.2" cx="45" cy="66" r="45" />
       
     <use href="#spacer_pocket_6.0mm" transform="translate(15 42)" id="spacer_pocket_NW" />
     <use href="#spacer_pocket_6.0mm" transform="translate(75 42)" id="spacer_pocket_NE" />
