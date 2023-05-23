@@ -1,12 +1,13 @@
 {
-  "svg_file": "misc_private/svg/cnc1310/svgelements/cnc1310-60-100mm.resolved.svg",
+  "svg_file": "../misc_private/cnc1310/cnc1310-s52-90x111mm.resolved.svg",
   "operations": [
     {
       "name": "op",
       "type": "Inside",
-      "cut_depth": 8.0,
+      "cut_depth": 10.0,
       "paths": [
-        "z_screw_central_holex"
+        "bearing_1_cylinder",
+        "bearing_2_cylinder"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -18,9 +19,12 @@
     {
       "name": "op",
       "type": "Inside",
-      "cut_depth": 8.0,
+      "cut_depth": 10.0,
       "paths": [
-        "bearing_cylinder_left"
+        "spacer_screw_5.0mm_NE",
+        "spacer_screw_5.0mm_NW",
+        "spacer_screw_5.0mm_SW",
+        "spacer_screw_5.0mm_SE"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -32,9 +36,16 @@
     {
       "name": "op",
       "type": "Inside",
-      "cut_depth": 8.0,
+      "cut_depth": 10.0,
       "paths": [
-        "bearing_cylinder_right"
+        "bearing_1_screw_4.0mm_NW",
+        "bearing_1_screw_4.0mm_NE",
+        "bearing_1_screw_4.0mm_SW",
+        "bearing_1_screw_4.0mm_SE",
+        "bearing_2_screw_4.0mm_NW",
+        "bearing_2_screw_4.0mm_NE",
+        "bearing_2_screw_4.0mm_SW",
+        "bearing_2_screw_4.0mm_SE"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -45,13 +56,13 @@
     },
     {
       "name": "op",
-      "type": "Pocket",
-      "cut_depth": 8.0,
+      "type": "Drill",
+      "cut_depth": 10.0,
       "paths": [
-        "abstand_screw_SW",
-        "abstand_screw_SE",
-        "abstand_screw_NE",
-        "abstand_screw_NW"
+        "backlash_item_screw_3.0mm_W",
+        "backlash_item_screw_3.0mm_N",
+        "backlash_item_screw_3.0mm_E",
+        "backlash_item_screw_3.0mm_S"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -63,12 +74,9 @@
     {
       "name": "op",
       "type": "Inside",
-      "cut_depth": 4.0,
+      "cut_depth": 10.0,
       "paths": [
-        "abstand_SW",
-        "abstand_SE",
-        "abstand_NE",
-        "abstand_NW"
+        "backlash_item_hole"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -80,7 +88,7 @@
     {
       "name": "op",
       "type": "Inside",
-      "cut_depth": 8.0,
+      "cut_depth": 10.0,
       "paths": [
         "spindle-hole"
       ],
@@ -94,30 +102,9 @@
     {
       "name": "op",
       "type": "Outside",
-      "cut_depth": 8.0,
+      "cut_depth": 10.0,
       "paths": [
         "contour"
-      ],
-      "ramp_plunge": false,
-      "combinaison": "Union",
-      "direction": "Conventional",
-      "units": "mm",
-      "margin": 0.0,
-      "width": 0.0
-    },
-    {
-      "name": "op",
-      "type": "Pocket",
-      "cut_depth": 8.0,
-      "paths": [
-        "bearing_screw_4.5mm_use28",
-        "bearing_screw_4.5mm_use30",
-        "bearing_screw_4.5mm_use32",
-        "bearing_screw_4.5mm_use34",
-		    "bearing_screw_4.5mm_use36",
-        "bearing_screw_4.5mm_use38",
-        "bearing_screw_4.5mm_use40",
-        "bearing_screw_4.5mm_use42"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -141,33 +128,33 @@
       "diameter": 3.0,
       "angle": 180,
       "passdepth": 1.0,
-      "overlap": 0.6,
+      "overlap": 0.4,
       "rapid": 500,
       "plunge": 100,
-      "cut": 200
+      "cut": 250
     },
     "Material": {
       "units": "mm",
-      "thickness": 50.0,
+      "thickness": 10.0,
       "z_origin": "Top",
-      "clearance": 10.0
+      "clearance": 2.5
     },
     "CurveToLineConversion": {
       "minimum_segments": 5,
-      "minimum_segments_length": 0.1
+      "minimum_segments_length": 0.01
     },
     "GCodeConversion": {
       "units": "mm",
       "flip_xy": false,
-      "x_offset": 0.0,
-      "y_offset": 0.0,
-      "xy_reference": "ZERO_TOP_LEFT_OF_MATERIAL"
+      "x_offset": -45.0,
+      "y_offset": 55.5,
+      "xy_reference": "ZERO_CENTER_OF_OP"
     },
     "GCodeGeneration": {
       "return_to_zero_at_end": true,
       "spindle_control": true,
-      "spindle_speed": 10000,
-      "program_end": false
+      "spindle_speed": 1000,
+      "program_end": true
     }
   }
 }
