@@ -1,17 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" width="90mm" height="110mm" viewBox="0 0 90 110" id="spindle-D55">
-  <defs id="defs">
-    <circle id="screw_central_hole_ref" style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="11"/>
-    <circle id="backlash_item_hole_10.0mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.0"/>
-    <circle id="backlash_item_screw_3.0mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="1.5"/>
-    <rect id="bearing_base_ref" style="fill:#000080;fill-opacity:0.2" width="32" height="32" x="0" y="0" rx="4" ry="4"/>
-    <circle id="bearing_cylinder" style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="10.5"/>
-    <circle id="bearing_screw_4.0mm" style="fill:#000080;fill-opacity:1" cx="0" cy="0" r="2.0"/>
-    <circle id="bearing_screw_gew_3.2mm" style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="1.60"/>
-    <circle id="spacer_pocket_6.0mm" style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="6"/>
-    <circle id="spacer_screw_5.0mm" style="fill:#0000ff;fill-opacity:1" cx="0" cy="0" r="2.5"/>
-    <circle id="spindle_screw_3.0mm" style="fill:#000080;fill-opacity:1" cx="0" cy="0" r="1.50"/>
-    <circle id="spindle_screw_gew_2.5mm" style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="1.25"/>
-  </defs>
   <g id="layer1">
     <!--
 		<path id="contour" style="fill:none;stroke:#0000ff;stroke-width:0.25"
@@ -66,12 +53,18 @@
     <circle id="spindle-small-base" cx="45.000" cy="65.000" r="19.000" style="fill:#ffff00;fill-opacity:1"/>
     <!-- diam = 38mm , height = 6mm -->
     <g id="spindle_center">
-      <circle id="spindle_screw_3.0mm_SE" cx="60.550" cy="80.550" r="1.500" style="fill:#000080;fill-opacity:1"/>
-      <circle id="spindle_screw_3.0mm_SW" cx="29.450" cy="80.550" r="1.500" style="fill:#000080;fill-opacity:1"/>
       <circle id="spindle_screw_3.0mm_NN" cx="45.000" cy="43.000" r="1.500" style="fill:#000080;fill-opacity:1"/>
-      <circle id="spindle_screw_gew_2.5mm_SE" cx="60.550" cy="80.550" r="1.250" style="fill:#008080;fill-opacity:1"/>
-      <circle id="spindle_screw_gew_2.5mm_SW" cx="29.450" cy="80.550" r="1.250" style="fill:#008080;fill-opacity:1"/>
+      <circle id="spindle_screw_3.0mm_1" cx="64.053" cy="54.000" r="1.500" style="fill:#000080;fill-opacity:1"/>
+      <circle id="spindle_screw_3.0mm_2" cx="64.053" cy="76.000" r="1.500" style="fill:#000080;fill-opacity:1"/>
+      <circle id="spindle_screw_3.0mm_SS" cx="45.000" cy="87.000" r="1.500" style="fill:#000080;fill-opacity:1"/>
+      <circle id="spindle_screw_3.0mm_3" cx="25.947" cy="76.000" r="1.500" style="fill:#000080;fill-opacity:1"/>
+      <circle id="spindle_screw_3.0mm_4" cx="25.947" cy="54.000" r="1.500" style="fill:#000080;fill-opacity:1"/>
       <circle id="spindle_screw_gew_2.5mm_NN" cx="45.000" cy="43.000" r="1.250" style="fill:#008080;fill-opacity:1"/>
+      <circle id="spindle_screw_gew_2.5mm_1" cx="64.053" cy="54.000" r="1.250" style="fill:#008080;fill-opacity:1"/>
+      <circle id="spindle_screw_gew_2.5mm_2" cx="64.053" cy="76.000" r="1.250" style="fill:#008080;fill-opacity:1"/>
+      <circle id="spindle_screw_gew_2.5mm_SS" cx="45.000" cy="87.000" r="1.250" style="fill:#008080;fill-opacity:1"/>
+      <circle id="spindle_screw_gew_2.5mm_3" cx="25.947" cy="76.000" r="1.250" style="fill:#008080;fill-opacity:1"/>
+      <circle id="spindle_screw_gew_2.5mm_4" cx="25.947" cy="54.000" r="1.250" style="fill:#008080;fill-opacity:1"/>
     </g>
     <circle id="spacer_pocket_NW" cx="15.000" cy="41.000" r="6.000" style="fill:#ff0000;fill-opacity:1"/>
     <circle id="spacer_pocket_NE" cx="75.000" cy="41.000" r="6.000" style="fill:#ff0000;fill-opacity:1"/>

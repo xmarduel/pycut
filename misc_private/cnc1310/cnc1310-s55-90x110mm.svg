@@ -74,12 +74,20 @@
 		<circle id="spindle-small-base" style="fill:#ffff00;fill-opacity:1" cx="45" cy="65" r="19.0" />
 		<!-- diam = 38mm , height = 6mm -->
 		<g id="spindle_center" transform="translate(45,65)">
-			<use href="#spindle_screw_3.0mm" transform="translate(15.55 15.55)" id="spindle_screw_3.0mm_SE" />
-			<use href="#spindle_screw_3.0mm" transform="translate(-15.55 15.55)" id="spindle_screw_3.0mm_SW" />
 			<use href="#spindle_screw_3.0mm" transform="translate(0.0 -22.0)" id="spindle_screw_3.0mm_NN" />
-			<use href="#spindle_screw_gew_2.5mm" transform="translate(15.55 15.55)" id="spindle_screw_gew_2.5mm_SE" />
-			<use href="#spindle_screw_gew_2.5mm" transform="translate(-15.55 15.55)" id="spindle_screw_gew_2.5mm_SW" />
+			<use href="#spindle_screw_3.0mm" transform="rotate(60) translate(0.0 -22.0)" id="spindle_screw_3.0mm_1" />
+			<use href="#spindle_screw_3.0mm" transform="rotate(120) translate(0.0 -22.0)" id="spindle_screw_3.0mm_2" />
+			<use href="#spindle_screw_3.0mm" transform="rotate(180) translate(0.0 -22.0)" id="spindle_screw_3.0mm_SS" />
+			<use href="#spindle_screw_3.0mm" transform="rotate(240) translate(0.0 -22.0)" id="spindle_screw_3.0mm_3" />
+			<use href="#spindle_screw_3.0mm" transform="rotate(300) translate(0.0 -22.0)" id="spindle_screw_3.0mm_4" />
+			
 			<use href="#spindle_screw_gew_2.5mm" transform="translate(0.0 -22.0)" id="spindle_screw_gew_2.5mm_NN" />
+			<use href="#spindle_screw_gew_2.5mm" transform="rotate(60) translate(0.0 -22.0)" id="spindle_screw_gew_2.5mm_1" />
+			<use href="#spindle_screw_gew_2.5mm" transform="rotate(120) translate(0.0 -22.0)" id="spindle_screw_gew_2.5mm_2" />
+			<use href="#spindle_screw_gew_2.5mm" transform="rotate(180) translate(0.0 -22.0)" id="spindle_screw_gew_2.5mm_SS" />
+			<use href="#spindle_screw_gew_2.5mm" transform="rotate(240) translate(0.0 -22.0)" id="spindle_screw_gew_2.5mm_3" />
+			<use href="#spindle_screw_gew_2.5mm" transform="rotate(300) translate(0.0 -22.0)" id="spindle_screw_gew_2.5mm_4" />
+			
 		</g>
 		<use href="#spacer_pocket_6.0mm" transform="translate(15 41)" id="spacer_pocket_NW" />
 		<use href="#spacer_pocket_6.0mm" transform="translate(75 41)" id="spacer_pocket_NE" />
