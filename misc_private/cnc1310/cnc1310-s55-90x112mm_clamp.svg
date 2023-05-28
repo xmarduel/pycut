@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg version="1.1" width="140mm" height="110mm" viewBox="0 0 140 110" id="spindle-D55-holder-with-clamp" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+<svg version="1.1" width="140mm" height="112mm" viewBox="0 0 140 112" id="spindle-D55-holder-with-clamp" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
 	<defs id="defs">
 		<circle id="screw_central_hole_ref"    style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="11" />
 		<circle id="backlash_item_hole_10.0mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.0" />
@@ -13,43 +13,53 @@
 		<circle id="spindle_screw_3.0mm"       style="fill:#000080;fill-opacity:1" cx="0" cy="0" r="1.50" />
 		<circle id="spindle_screw_gew_2.5mm"   style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="1.25" />
 	</defs>
+	
 	<g id="layer1" transform="translate(20 0)">
 		<!--
 		<path id="contour" style="fill:none;stroke:#0000ff;stroke-width:0.25"
-		d="M 0.0,0.0 h 90 v 66 a 45,45 0 0 1 -90,0 z" />
+		d="M 0.0,0.0 h 90 v 67 a 45,45 0 0 1 -90,0 z" />
 		-->
 		<path id="contour" style="fill:none;stroke:#0000ff;stroke-width:0.25"  
-		d="M 2.0,0.0 h 86
+		d="M 2.0,0.0 
+	  h 86
       a 2 2 0 0 1 2 2 
-	  v 63 
+	  v 65 
 	  a 45,45 0 0 1 -90,0 
-	  v -63 
+	  v -65 
 	  a 2 2 0 0 1 2 -2
 	  z" />
 	  
-		<path id="contour_with_clamps" style="fill:none;stroke:#0000ff;stroke-width:0.25" d="M 1.0,0.0 
-	  h 88
-      a 1 1 0 0 1 1 1 
-      v 47
+		<path id="contour_with_clamps" style="fill:none;stroke:#0000ff;stroke-width:0.25" 
+		d="M 2.0,0.0 
+	  h 86
+      a 2 2 0 0 1 2 2
+      v 46
       a 1 1 0 0 0 1 1 
       h 12
       a 1 1 0 0 1 1 1
       v 38
       a 1 1 0 0 1 -1 1
-      h -20.0
-      a  45,45 0 0 1  -76.0,0
-      h -20.0
+      h -18.75
+      a  45,45 0 0 1  -78.5,0
+      h -18.75
       a 1 1 0 0 1 -1 -1 
       v -38
       a 1 1 0 0 1 1 -1 
       h 12
       a 1 1 0 0 0 1 -1 
-      v -47
-      a 1 1 0 0 1 1 -1 
+      v -46
+      a 2 2 0 0 1 2 -2
       " />
-		<use href="#screw_central_hole_ref" x="45" y="16" id="screw_central_hole" />
+		
+		<g id="layer_motor" transform="translate(24,-5)">
+          <!-- just as indicator , the spindle must "touch" the motor -->
+          <rect rx="4" ry="4" width="42" height="42" style="fill:#000000; fill-opacity:0.2" /> 
+        </g>
+		
 		<!-- backlash -->
 		<g id="backlash" transform="translate(45,16)">
+		    <use href="#screw_central_hole_ref" id="screw_central_hole" />
+		
 			<!-- cut through -->
 			<use href="#backlash_item_hole_10.0mm" id="backlash_item_hole" />
 			<!-- cut through -->
@@ -90,11 +100,13 @@
 				<use href="#bearing_screw_gew_3.2mm" transform="rotate(315) translate(16 0)" id="bearing_2_screw_gew_3.2mm_NE" />
 			</g>
 		</g>
-		<circle id="large_circle_indicator" style="fill:#ff00ff;fill-opacity:0.1" cx="45" cy="65" r="45.0" />
-		<circle id="spindle-hole" style="fill:#ff0000;fill-opacity:1" cx="45" cy="65" r="27.5" />
-		<circle id="spindle-small-base" style="fill:#ffff00;fill-opacity:1" cx="45" cy="65" r="19.0" />
-		<!-- diam = 38mm , height = 6mm -->
-		<g id="spindle_center" transform="translate(45,65)">
+		
+		<g id="spindle_center" transform="translate(45,67)">
+		    <circle id="large_circle_indicator" style="fill:#ff00ff;fill-opacity:0.1"  r="45.0" />
+		    <circle id="spindle-hole2" style="fill:#ff00ff;fill-opacity:1" r="28.5" /> <!-- alu parts -->
+			<circle id="spindle-hole" style="fill:#ff0000;fill-opacity:1" r="27.5" />
+		    <circle id="spindle-small-base" style="fill:#ffff00;fill-opacity:1" r="19.0" /> <!-- diam = 38mm , height = 6mm -->
+		
 			<use href="#spindle_screw_3.0mm" transform="translate(0.0 -22.0)" id="spindle_screw_3.0mm_NN" />
 			<use href="#spindle_screw_3.0mm" transform="rotate(60) translate(0.0 -22.0)" id="spindle_screw_3.0mm_1" />
 			<use href="#spindle_screw_3.0mm" transform="rotate(120) translate(0.0 -22.0)" id="spindle_screw_3.0mm_2" />
@@ -109,18 +121,22 @@
 			<use href="#spindle_screw_gew_2.5mm" transform="rotate(240) translate(0.0 -22.0)" id="spindle_screw_gew_2.5mm_3" />
 			<use href="#spindle_screw_gew_2.5mm" transform="rotate(300) translate(0.0 -22.0)" id="spindle_screw_gew_2.5mm_4" />
 		</g>
-		<use href="#spacer_pocket_6.0mm" transform="translate(15 41)" id="spacer_pocket_NW" />
-		<use href="#spacer_pocket_6.0mm" transform="translate(75 41)" id="spacer_pocket_NE" />
-		<use href="#spacer_pocket_6.0mm" transform="translate(15 85)" id="spacer_pocket_SW" />
-		<use href="#spacer_pocket_6.0mm" transform="translate(75 85)" id="spacer_pocket_SE" />
-		<use href="#spacer_screw_5.0mm" transform="translate(15 41)" id="spacer_screw_5.0mm_NW" />
-		<use href="#spacer_screw_5.0mm" transform="translate(75 41)" id="spacer_screw_5.0mm_NE" />
-		<use href="#spacer_screw_5.0mm" transform="translate(15 85)" id="spacer_screw_5.0mm_SW" />
-		<use href="#spacer_screw_5.0mm" transform="translate(75 85)" id="spacer_screw_5.0mm_SE" />
-		<text id="legend" xml:space="preserve" style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583" x="20" y="64">
-			Spindle Diameter: 55 mm
-		</text>
-		<path id="horizontal_line" style="fill:none;stroke:#000000;stroke-width:0.1" d="M 0,65 90,65" />
-		<path id="vertical_line" style="fill:none;stroke:#000000;stroke-width:0.1" d="M 45,0 45,110" />
+		
+		<g id="spacers"  transform="translate(45,67)">
+		   <use href="#spacer_pocket_6.0mm" transform="rotate(34) translate(36 0)" id="spacer_pocket_SW" />
+		   <use href="#spacer_pocket_6.0mm" transform="translate(0 -5) rotate(-34) translate(36 0)" id="spacer_pocket_NW" />
+		   <use href="#spacer_pocket_6.0mm" transform="translate(0 -5) rotate(34) translate(-36 0)" id="spacer_pocket_NE" />
+		   <use href="#spacer_pocket_6.0mm" transform="rotate(-34) translate(-36 0)" id="spacer_pocket_SE" />
+		   
+		   <use href="#spacer_screw_5.0mm" transform="rotate(34) translate(36 0)" id="spacer_screw_5.0mm_SW" />
+		   <use href="#spacer_screw_5.0mm" transform="translate(0 -5) rotate(-34) translate(36 0)" id="spacer_screw_5.0mm_NW" />
+		   <use href="#spacer_screw_5.0mm" transform="translate(0 -5) rotate(34) translate(-36 0)" id="spacer_screw_5.0mm_NE" />
+		   <use href="#spacer_screw_5.0mm" transform="rotate(-34) translate(-36 0)" id="spacer_screw_5.0mm_SE" />
+		</g>
+		
+		<g id="lines_ref">
+		  <path id="horizontal_line" style="fill:none;stroke:#000000;stroke-width:0.1" d="M 0,67 90,67" />
+		  <path id="vertical_line" style="fill:none;stroke:#000000;stroke-width:0.1" d="M 45,0 45,112" />
+		</g>
 	</g>
 </svg>
