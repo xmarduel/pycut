@@ -1,13 +1,17 @@
-# 1.1.0 (TODO)
+# 2.0.0
 
-Can process basic <text> elements without converting them before to <path> elements
-Can process defs/use and transformations in svg (ie resolve them) without converting them before
+GCode dressup for angles
 
-# 1.0.0 (TODO)
+# 1.1.0
+
+Process basic <text> elements without converting them before to <path> elements
+Process defs/use and transformations in svg (ie resolve them) without converting them before
+
+# 1.0.0
 
 with shapely 2.1.0
 
-# 0.6.0 (TODO)
+# 0.6.0
 
 use QOpenGLWidget for gcode simulation, get rid of the jscut WebGL stuff
 

@@ -1,7 +1,7 @@
 [
+  "jobs/cnc1310_s52_90x111.json",
+  "jobs/cnc1310_s52_90x111_only_bearings.json",
+  "jobs/vise_washer.json",
   "jobs/cnc1310_plate.json",
-  "jobs/cnc1310.json",
-  "jobs/cnc1310_test_bearings.json",
-  "jobs/cnc1310_test_motor_stepper.json",
-  "jobs/cnc1310_test_backlash.json"
+  "jobs/cnc1310.json"
 ]

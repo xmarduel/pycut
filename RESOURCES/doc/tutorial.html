@@ -689,13 +689,13 @@ higher than the pass depth)</p>
 
 <p>we want to insert a GCode block</p>
 <pre><code class="language-gcode">G1 X09.0000 Y21.0000 ; goes 1mm top left
-G1 X11.0000 Y20.0000 ; and back</code></pre>
+G1 X10.0000 Y20.0000 ; and back</code></pre>
 
 <p></p>
 
 <p>Of course we need to inform the Gcode generator that he has to take into
-account this fixup, thus inserting the "block" each time a line wwith such a
-pattern is produced. It is up to the user to give the right fixups. For each
+account this fixup, thus inserting the "block" each time a line with such a
+pattern is found. It is up to the user to give the right fixups. For each
 "problem zone" (corner) one block. </p>
 
 <p>Of course this fixup has to be saved in the project, and to be applied only
@@ -717,7 +717,7 @@ for the desired operations. In the job file at the operation definition:</p>
        {"G1 X10.0000 Y20.0000" : [ 
            "; start fixup", 
            "G1 X11.0000 Y19.0000 ; goes 1mm top left" , 
-           "G1 X11.0000 Y20.0000 ; and back",
+           "G1 X10.0000 Y20.0000 ; and back",
            "; end fixup""]
        },
        {"G1 X15.0000 Y20.0000" : [ 
@@ -807,11 +807,11 @@ calculated with</p>
 
 <p>So we can calculate the offset as well as the orientation "a" of the corner.
 Theorically a fixup is needed as soon as a path "angle" is smaller than 180
-degrees. It is up the the user to decide at which threshold fixups shouls be
-performed. Value of Pi/2 seems acceptable, or maybe Pi/4. So fixups will be
+degrees. It is up the the user to decide at which threshold fixups should be
+performed. Value of Pi/2 seems acceptable, or maybe Pi/3. So fixups will be
 perform only for angles smaller than this threshold.</p>
 
-  <svg width="200mm" height="80mm" viewBox="0 0 200 80" version="1.1"
+<svg width="400mm" height="80mm" viewBox="0 0 400 80" version="1.1"
   xmlns="http://www.w3.org/2000/svg"
   xmlns:svg="http://www.w3.org/2000/svg">
  <g id="layer1">
@@ -825,28 +825,51 @@ perform only for angles smaller than this threshold.</p>
     <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     -->
 
-    <circle cx="66.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
- 
-     
+    <circle cx="66.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/> 
  </g>
+
+ <g id="layer1" transform="translate(120 0)">
+  <polyline points="10,10 70,10 100,53" stroke-width="0.5"  fill="none" stroke="black"/>
+  <polyline points="10,20 65.0,20 93.2,60" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="20px" stroke-opacity="0.2"/>
+
+  <polyline points="10,20 65.0,20 93.2,60" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8"/>
+
+  <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+  <!--
+  <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+  -->
+
+  <circle cx="65.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+</g>
 </svg>
 
-<svg width="200mm" height="80mm" viewBox="0 0 200 80" version="1.1"
+<svg width="400mm" height="80mm" viewBox="0 0 400 80" version="1.1"
 xmlns="http://www.w3.org/2000/svg"
 xmlns:svg="http://www.w3.org/2000/svg">
-<g id="layer1">
+
+<g id="layer1" transform="translate(120 0)">
+    <polyline points="10,70 10,10 100,10 100,70" stroke-width="0.5"  fill="none" stroke="black"/>
+    <polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="20px" stroke-opacity="0.2"/>
+
+    <polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8"/>
+
+    <circle cx="20" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+  <circle cx="90" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+     
+ </g>
+
+ <g id="layer1">
   <polyline points="10,10 110,10 60,60" stroke-width="0.5"  fill="none" stroke="black"/>
   <polyline points="10,20  86,20 46,60" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="20px" stroke-opacity="0.2"/>
 
   <polyline points="10,20  86,20 46,60" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8"/>
 
-  
-  
   <circle cx="86" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
-
-   
 </g>
+
 </svg>
+
+
 
 <p><strong>PyCut GCode Dressup GUI</strong></p>
 
