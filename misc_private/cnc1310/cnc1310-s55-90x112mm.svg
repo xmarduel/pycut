@@ -10,8 +10,8 @@
 		<circle id="bearing_screw_gew_3.2mm"   style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="1.60" />
 		<circle id="spacer_pocket_6.0mm"       style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="6" />
 		<circle id="spacer_screw_5.0mm"        style="fill:#0000ff;fill-opacity:1" cx="0" cy="0" r="2.5" />
-		<circle id="spindle_screw_3.0mm"       style="fill:#000080;fill-opacity:1" cx="0" cy="0" r="1.50" />
-		<circle id="spindle_screw_gew_2.5mm"   style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="1.25" />
+		<circle id="spindle_screw_3.5mm"       style="fill:#000080;fill-opacity:1" cx="0" cy="0" r="1.75" />
+		<circle id="spindle_screw_gew_3.0mm"   style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="1.50" />
 	</defs>
 	<g id="layer1">
 		<!--
@@ -84,19 +84,19 @@
 		    <circle id="spindle-hole" style="fill:#ff0000;fill-opacity:1"  r="27.5" />
 		    <circle id="spindle-small-base" style="fill:#ffff00;fill-opacity:1"  r="19.0" />
 		
-			<use href="#spindle_screw_3.0mm" transform="translate(0.0 -22.0)" id="spindle_screw_3.0mm_NN" />
-			<use href="#spindle_screw_3.0mm" transform="rotate(60) translate(0.0 -22.0)" id="spindle_screw_3.0mm_1" />
-			<use href="#spindle_screw_3.0mm" transform="rotate(120) translate(0.0 -22.0)" id="spindle_screw_3.0mm_2" />
-			<use href="#spindle_screw_3.0mm" transform="rotate(180) translate(0.0 -22.0)" id="spindle_screw_3.0mm_SS" />
-			<use href="#spindle_screw_3.0mm" transform="rotate(240) translate(0.0 -22.0)" id="spindle_screw_3.0mm_3" />
-			<use href="#spindle_screw_3.0mm" transform="rotate(300) translate(0.0 -22.0)" id="spindle_screw_3.0mm_4" />
+			<use href="#spindle_screw_3.5mm" transform="rotate(0)   translate(0.0 -22.5)" id="spindle_screw_3.5mm_NN" />
+			<use href="#spindle_screw_3.5mm" transform="rotate(60)  translate(0.0 -22.5)" id="spindle_screw_3.5mm_1" />
+			<use href="#spindle_screw_3.5mm" transform="rotate(120) translate(0.0 -22.5)" id="spindle_screw_3.5mm_2" />
+			<use href="#spindle_screw_3.5mm" transform="rotate(180) translate(0.0 -22.5)" id="spindle_screw_3.5mm_SS" />
+			<use href="#spindle_screw_3.5mm" transform="rotate(240) translate(0.0 -22.5)" id="spindle_screw_3.5mm_3" />
+			<use href="#spindle_screw_3.5mm" transform="rotate(300) translate(0.0 -22.5)" id="spindle_screw_3.5mm_4" />
 			
-			<use href="#spindle_screw_gew_2.5mm" transform="translate(0.0 -22.0)" id="spindle_screw_gew_2.5mm_NN" />
-			<use href="#spindle_screw_gew_2.5mm" transform="rotate(60) translate(0.0 -22.0)" id="spindle_screw_gew_2.5mm_1" />
-			<use href="#spindle_screw_gew_2.5mm" transform="rotate(120) translate(0.0 -22.0)" id="spindle_screw_gew_2.5mm_2" />
-			<use href="#spindle_screw_gew_2.5mm" transform="rotate(180) translate(0.0 -22.0)" id="spindle_screw_gew_2.5mm_SS" />
-			<use href="#spindle_screw_gew_2.5mm" transform="rotate(240) translate(0.0 -22.0)" id="spindle_screw_gew_2.5mm_3" />
-			<use href="#spindle_screw_gew_2.5mm" transform="rotate(300) translate(0.0 -22.0)" id="spindle_screw_gew_2.5mm_4" />
+			<use href="#spindle_screw_gew_3.0mm" transform="rotate(0)   translate(0.0 -22.5)" id="spindle_screw_gew_3.0mm_NN" />
+			<use href="#spindle_screw_gew_3.0mm" transform="rotate(60)  translate(0.0 -22.5)" id="spindle_screw_gew_3.0mm_1" />
+			<use href="#spindle_screw_gew_3.0mm" transform="rotate(120) translate(0.0 -22.5)" id="spindle_screw_gew_3.0mm_2" />
+			<use href="#spindle_screw_gew_3.0mm" transform="rotate(180) translate(0.0 -22.5)" id="spindle_screw_gew_3.0mm_SS" />
+			<use href="#spindle_screw_gew_3.0mm" transform="rotate(240) translate(0.0 -22.5)" id="spindle_screw_gew_3.0mm_3" />
+			<use href="#spindle_screw_gew_3.0mm" transform="rotate(300) translate(0.0 -22.5)" id="spindle_screw_gew_3.0mm_4" />
 			
 		</g>
 		
