@@ -1,10 +1,10 @@
 {
-  "svg_file": "../misc_private/cnc1310/cnc1310-s52-90x111mm.resolved.svg",
+  "svg_file": "../misc_private/cnc1310/cnc1310-s52-90x110mm.resolved.svg",
   "operations": [
     {
       "name": "op",
       "type": "Inside",
-      "cut_depth": 10.0,
+      "cut_depth": 9.0,
       "paths": [
         "bearing_1_cylinder",
         "bearing_2_cylinder"
@@ -19,7 +19,7 @@
     {
       "name": "op",
       "type": "Inside",
-      "cut_depth": 10.0,
+      "cut_depth": 9.0,
       "paths": [
         "spacer_screw_5.0mm_NE",
         "spacer_screw_5.0mm_NW",
@@ -36,7 +36,7 @@
     {
       "name": "op",
       "type": "Inside",
-      "cut_depth": 10.0,
+      "cut_depth": 9.0,
       "paths": [
         "bearing_1_screw_4.0mm_NW",
         "bearing_1_screw_4.0mm_NE",
@@ -57,7 +57,7 @@
     {
       "name": "op",
       "type": "Drill",
-      "cut_depth": 10.0,
+      "cut_depth": 9.0,
       "paths": [
         "backlash_item_screw_3.0mm_W",
         "backlash_item_screw_3.0mm_N",
@@ -74,7 +74,21 @@
     {
       "name": "op",
       "type": "Inside",
-      "cut_depth": 10.0,
+      "cut_depth": 9.0,
+      "paths": [
+        "screw_central_hole"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
+    },
+    {
+      "name": "op",
+      "type": "Inside",
+      "cut_depth": 9.0,
       "paths": [
         "backlash_item_hole"
       ],
@@ -88,13 +102,13 @@
     {
       "name": "op",
       "type": "Inside",
-      "cut_depth": 10.0,
+      "cut_depth": 9.0,
       "paths": [
         "spindle-small-base"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
-      "direction": "Conventional",
+      "direction": "Climb",
       "units": "mm",
       "margin": 0.0,
       "width": 0.0
@@ -117,7 +131,21 @@
     {
       "name": "op",
       "type": "Inside",
-      "cut_depth": 10.0,
+      "cut_depth": 9.0,
+      "paths": [
+        "spindle-hole"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
+    },
+    {
+      "name": "op",
+      "type": "Inside",
+      "cut_depth": 9.0,
       "paths": [
         "spindle_screw_gew_3.2mm_SE",
         "spindle_screw_gew_3.2mm_NE",
@@ -134,7 +162,7 @@
     {
       "name": "op",
       "type": "Outside",
-      "cut_depth": 10.0,
+      "cut_depth": 9.0,
       "paths": [
         "contour"
       ],
@@ -153,21 +181,46 @@
     "Tabs": {
       "units": "mm",
       "height": 1.0,
-      "tabs": []
+      "tabs": [
+        {
+          "center": [
+            -2,
+            47
+          ],
+          "radius": 5,
+          "enabled": true
+        },
+        {
+          "center": [
+            43,
+            -2
+          ],
+          "radius": 5,
+          "enabled": true
+        },
+        {
+          "center": [
+            93.0,
+            49
+          ],
+          "radius": 5,
+          "enabled": true
+        }
+      ]
     },
     "Tool": {
       "units": "mm",
-      "diameter": 3.0,
+      "diameter": 6.0,
       "angle": 180,
-      "passdepth": 1.0,
+      "passdepth": 1.25,
       "overlap": 0.4,
       "rapid": 500,
       "plunge": 100,
-      "cut": 250
+      "cut": 300
     },
     "Material": {
       "units": "mm",
-      "thickness": 10.0,
+      "thickness": 9.0,
       "z_origin": "Top",
       "clearance": 1.0
     },
@@ -179,7 +232,7 @@
       "units": "mm",
       "flip_xy": false,
       "x_offset": -45.0,
-      "y_offset": 55.5,
+      "y_offset": 55.0,
       "xy_reference": "ZERO_CENTER_OF_OP"
     },
     "GCodeGeneration": {

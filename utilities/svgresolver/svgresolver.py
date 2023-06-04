@@ -1,6 +1,6 @@
 # This Python file uses the following encoding: utf-8
 
-VERSION = "1_0_0"
+VERSION = "1_1_0_alpha"
 
 import os
 import argparse
@@ -20,6 +20,8 @@ class SvgResolver:
         self.filename = options.svg
         self.resolved_filename = os.path.splitext(self.filename)[0] + '.resolved.svg'
         
+        self.drop_defs = options.drop_defs
+
         self.shapes = []
         self.groups = []
 
@@ -191,9 +193,30 @@ class SvgResolver:
 
             self.replace_elements(ch)
 
+    def remove_defs(self, root:etree.ElementTree):
+        '''
+        '''
+        NS = "{http://www.w3.org/2000/svg}"
+
+        defs = None
+
+        for ch in root:
+            print("child", ch.tag)
+            if ch.tag == NS + "defs":
+                defs = ch
+            
+        if defs is not None:
+            root.remove(defs)
+        else:
+            print("defs not found")
+    
+    
     def write_result(self, root:etree.ElementTree):
         '''
         '''
+        if self.drop_defs:
+            self.remove_defs(root)
+
         doc = etree.ElementTree(root)
 
         doc.write(self.resolved_filename, 
@@ -605,6 +628,7 @@ if __name__ == '__main__':
     # argument
     parser.add_argument("svg", help="svg to resolve")
     parser.add_argument("-u", "--units", dest="units", default="mm", help='viewbox units ("px", "mm" or "in")')
+    parser.add_argument("--z","--drop-defs", action='store_true', dest="drop_defs", default=False, help='do not keep defs in resolved svg')
 
     # version info
     parser.add_argument("--version", action='version', version='%s' % VERSION)

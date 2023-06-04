@@ -52,19 +52,21 @@
 	</g>
 		
 	<g>
-	   <rect id="jaw"       x="0" y="50" rx="1.0" ry="1.0" width="150" height="16" fill="red" />
+	   <rect id="jaw"       x="0" y="42" rx="1.0" ry="1.0" width="150" height="24" fill="red" />
        <rect id="jwa_hole"  x="68" y="52" rx="0" ry="0" width="14" height="14" fill="black" />			   
 	   <line id="lead_screw"  x1="75"  y1="60" x2="75"  y2="160" style="stroke:rgb(100, 100, 100);stroke-width:8" />
-	   <rect id="lead_screw_blocker"  x="64" y="100" rx="0" ry="0" width="22" height="3" fill="blue" />	
+	   <rect id="lead_screw_nut"  x="64" y="100" rx="0" ry="0" width="22" height="3" fill="blue" />	
 	
-	   <rect id="lead_screw_blocker1_in_jaw"  x="68" y="52" rx="0" ry="0" width="14" height="4" fill="blue" />	
-	   <path id="lead_screw_blocker2_in_jaw"  d="M 68,56 h 14 v 1 l-4,4 l 4,4 v 1 h -14 v -1  l4,-4 l -4,-4 v-1 z" fill="green" />
+	   <rect id="lead_screw_nut_block"  x="68" y="46" rx="0" ry="0" width="14" height="10" fill="blue" />	
+	   <path id="lead_screw_nut_schlitz"  d="M 68,56 h 14 v 1 l-4,4 l 4,4 v 1 h -14 v -1  l4,-4 l -4,-4 v-1 z" fill="green" />
  	
 	     </g>
 
     <g id="layer1">
         <use href="#lead_screw_jaw_screw"      x="68" y="61"  />
 		<use href="#lead_screw_jaw_screw"      x="82" y="61"  />
+		
+		<use href="#lead_screw_jaw_screw"      x="75" y="51"  />
     
     </g>	
 	
