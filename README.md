@@ -1,7 +1,5 @@
 # pycut
-clone of jscut  in python - work in progress -
-
-Note: the project has advanced nicely during the last holidays (24.12.2021), but there are certainly many many bugs.
+clone of jscut in python
 
 ![pycut1](https://user-images.githubusercontent.com/28778239/226173273-8989a03e-e9d6-4753-9ade-17af9e15d4c3.png)
 
