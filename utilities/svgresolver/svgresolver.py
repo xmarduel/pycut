@@ -492,7 +492,7 @@ class SvgResolver:
         if style:
             l.attrib["style"] = style
 
-        item.addnext(p)
+        item.addnext(l)
         item.getparent().remove(item)
 
     def make_xml_polyline(self, item: etree.Element, shape: svgelements.Shape):
