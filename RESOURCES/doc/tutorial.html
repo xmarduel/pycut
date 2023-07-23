@@ -553,12 +553,12 @@ hand" in a repeatable manner? here is my proposed method:</p>
               stroke-width="0.2" stroke-opacity="0.8"/>
     <svg:circle cx="20" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
     <!-- 
-                         D = sqrt(10*10 + 10*10) = 14.14
-                         d = 14.14 -10 = 4.14
-                         
-                         dx = dy =  d / sqrt(2) = 2.93
-                         
-                         -->
+                                 D = sqrt(10*10 + 10*10) = 14.14
+                                 d = 14.14 -10 = 4.14
+                                 
+                                 dx = dy =  d / sqrt(2) = 2.93
+                                 
+                                 -->
     <svg:polyline id="dog-bone-path1" points="20,20 17.07,17.07" fill="none" stroke="blue" stroke-linejoin="round"
               stroke-width="0.3" stroke-opacity="0.2"/>
     <svg:circle id="dog-bone-path1-material" cx="17.07" cy="17.07" r="10" fill="red" stroke-width="0.2"
@@ -703,8 +703,8 @@ threshold.</p>
     <svg:polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                            <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                            -->
+                                    <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                    -->
     <svg:circle cx="66.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </svg:g>
   <svg:g id="layer1" transform="translate(120 0)">
@@ -716,8 +716,8 @@ threshold.</p>
     <svg:polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                          <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                          -->
+                                  <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                  -->
     <svg:circle cx="65.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </svg:g>
 </svg:svg>
@@ -781,6 +781,8 @@ curves.</p>
 time. This means, I act as a very basic user. If I do not succeed, this is due in part to my inexperience, but also in
 part to the difficulty of use of the app.</p>
 
+<p>Finally, <strong>after have tried quite a lot of them</strong>, I give here only the ones worth a mention.</p>
+
 <h3>Free software</h3>
 
 <h4>Inkscape</h4>
@@ -813,16 +815,6 @@ paths.</strong></p>
 <p>PS: There is the "Draw Bezier and straight line tool" with mode "Create regular Bezier path" but after many many
 hours of trial (despite YouTube tutorials) I did not succeed to use it properly. Is it just me ? With it you cannot
 anyway mix your path with an arc curve.</p>
-
-<h4>QCAD</h4>
-
-<p>It reads/writes <strong>dxf</strong> files, can export them as SVG. Unfortunately the <strong>SVG export</strong>
-comes with extra rubbish for the trial version (nice!). Forget the free version. <strong>Trial version allows you to
-test it about 15 min, then it closes itself</strong> (you can restart). So in fifteen minutes I could observe that
-editing polylines is possible, as well as Arcs and Cubic Bezier curves (did not find quadratic bezier curves). These
-Cubic Bezier curves are exported right in the SVG export. Unfortunately (again), when concatening lines/polylines with
-these cubic bezier curves in order to form a whole path, they are transformed into Arcs (why ?) or Lines (why?), and so
-the SVG export. Conclusion: <strong>completely unusable</strong>.</p>
 
 <h4>LibreCAD <span style="color:#008000">****NEARLY GOOD****</span></h4>
 
@@ -872,7 +864,8 @@ sure), but one can avoid these in a design. The SVG closed path "Z" is also miss
 
 <div class="info">
 <p><strong>Note</strong>: in 2023, a <strong>Blender</strong> add-on called <strong>CAD Sketcher</strong> is in
-development, which utilize the SolveSpace library for sketching. Maybe the user interface will be there even better.</p>
+development, which utilize the SolveSpace library for sketching. Maybe the user interface will be there even better
+(and gives the SVG export).</p>
 </div>
 
 <h4>Fusion 360</h4>
@@ -911,8 +904,6 @@ and <strong>height</strong> of the svg and also add some "<strong>id</strong>" f
 <p><strong>Unfortunately</strong> it does not support SVG "shapes", as well as multiple paths in one svg file export
 (will propose a feature request!).</p>
 
-<p></p>
-
 <h4>Others:</h4>
 
 <p>I do not mention them because the list would be too long... but I did not find something I was pleased of.</p>
@@ -924,10 +915,6 @@ and <strong>height</strong> of the svg and also add some "<strong>id</strong>" f
 <h4>DesignCAD</h4>
 
 <p>The free version has the same capabilities as the full version, excepted the exports to other formats. Bad!</p>
-
-<h4>TurboCAD</h4>
-
-<p>Only a 15 days trial version - TO SEE</p>
 
 <h4>Solid Edge 2D Drafting (Siemens)</h4>
 
@@ -942,15 +929,15 @@ PyCutl! (or not) . SVG export seems to be more meant as a picture for display on
 <h4>What else?</h4>
 
 <p>It is cumbersome to try to find a decent SVG editor, or at least a CAD program with ease of use and decent SVG
-export. <strong><span style="color:#008000">LibreCAD</span></strong> would be simply very good if it could support
-spline "concatenation" into a path (keeping dxf as input data alongside svg as export data is not a problem). Does
-anyone knows one? (I mean, if he/s<strong></strong>he **really** tried it and can recommand it). <strong><span
+export. <strong><span style="color:#008000">LibreCAD</span></strong> would be simply ok if it could support spline
+"concatenation" into a path (keeping dxf as input data alongside svg as export data is not a problem). Does anyone
+knows one? (I mean, if he/s<strong></strong>he **really** tried it and can recommand it). <strong><span
 style="color:#008000">Finally discovered SolveSpace which is simply great.</span></strong></p>
 
 <h3>Conclusion</h3>
 
 <p>The fact that it is so difficult to find an acceptable SVG path "writer" program let me wonder why it is the case.
-And why does only <strong>SolveSpace</strong> perform the task correctly? Why such a capable App like
+And why does only <strong>SolveSpace</strong> perform the task correctly? Why such a capable (really?) app like
 <strong>LibreCAD</strong> fails for this task? Well in case of LibreCAD, it cannot concatenate splines with lines, so
 does the export. </p>
 
@@ -968,7 +955,7 @@ maybe because the SVG format completely ignores the concept of "multiline"/"mult
 <p><strong>All in all very desapointing, excepted <span style="color:#008000">SolveSpace</span> and <span
 style="color:#008000">SvgPathEditor</span>!</strong></p>
 
-<h4><strong><span style="color:#0000ff">Per hand</span>/strong&gt;</strong></h4>
+<h4><strong><span style="color:#0000ff">Per hand</span></strong></h4>
 
 <p>Finally my prefered method! Per hand you can also write items in the <code>&lt;def&gt;</code> section, and use these
 items repeatidly with transformations with the <code>&lt;use&gt;</code> tag. My utility <strong>svgresolver.py</strong>
