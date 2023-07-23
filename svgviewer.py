@@ -194,6 +194,10 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # ordered list of selected items
         self.selected_items : List[SvgItem] = []
 
+        # extra items (geometry selections / tabs / toolpaths)
+        self.extra_items = []
+        self.extra_renderers = []
+
         #self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         self.setViewportUpdateMode(QtWidgets.QGraphicsView.FullViewportUpdate)
 
@@ -271,7 +275,10 @@ class SvgViewer(QtWidgets.QGraphicsView):
         '''
         return [ item.elementId() for item in self.selected_items ]
 
-    def clean(self):
+    def reset(self):
+        '''
+        Completely clean the scene on new svg
+        '''
         self.scene.clear()
         self.resetTransform()
 
@@ -280,10 +287,25 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.items : List[SvgItem] = []
         self.selected_items : List[SvgItem] = []
 
+        self.extra_items : List[SvgItem] = []
+        self.extra_renderers = []
+
+    def clean(self):
+        '''
+        Remove only the "extra_items", not the base svg file items
+        '''
+        for svg_item in self.extra_items:
+            self.scene.removeItem(svg_item)
+            
+        self.extra_items = []
+        self.extra_renderers = []
+    
     def set_svg(self, svg: str):
         '''
         This sets the 'real' svg file data, not the later 'augmented' svg
         '''
+        self.reset()
+
         root = etree.fromstring(svg)
 
         viewBox = root.attrib["viewBox"].split()
@@ -309,17 +331,27 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # TODO -----------------------------------------------------
          
         self.svg = svg
-        self.fill_svg_viewer(self.svg)
+        self.fill_svg_viewer(self.svg, initial_svg=True)
 
-    def fill_svg_viewer(self, svg: str):
+    def fill_svg_viewer(self, svg: str, initial_svg=True):
         '''
         '''
-        self.clean()
+        if initial_svg:
+            # read all shapes/paths with svgelement as "paths"
+            self.svg_shapes = SvgPath.read_svg_shapes_and_paths(svg)
 
-        # read all shapes/paths with svgelement as "paths"
-        self.svg_shapes = SvgPath.read_svg_shapes_and_paths(svg)
+        curr_renderer = None
 
-        self.renderer.load(bytes(svg, 'utf-8'))
+        if initial_svg:
+            self.renderer.load(bytes(svg, 'utf-8'))
+            curr_renderer = self.renderer
+        else:
+            renderer = QtSvg.QSvgRenderer()
+            renderer.load(bytes(svg, 'utf-8'))
+
+            self.extra_renderers.append(renderer)
+
+            curr_renderer = renderer
 
         # python xml module can load with svg xml header with encoding utf-8
         tree = etree.fromstring(svg)
@@ -356,10 +388,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
         for image in images:
             image_id = image.attrib.get('id', None)
 
-            item = SvgItem(image_id, self, self.renderer)
+            item = SvgItem(image_id, self, curr_renderer)
             # does not work
             self.scene.addItem(item)
-            self.items.append(item)
+
+            if initial_svg:
+                self.items.append(item)
+            else:
+                self.extra_items.append(item)
 
 
         shapes : List[etree.ElementTree] = []
@@ -382,10 +418,13 @@ class SvgViewer(QtWidgets.QGraphicsView):
                 print("    -> ignoring")
                 continue
 
-            item = SvgItem(shape_id, self, self.renderer)
+            item = SvgItem(shape_id, self, curr_renderer)
             self.scene.addItem(item)
 
-            self.items.append(item)
+            if initial_svg:
+                self.items.append(item)
+            else:
+                self.extra_items.append(item)
 
             # tabs can be dragged
             if shape_id.startswith("pycut_tab"):
@@ -396,7 +435,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
                 item.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, False)
 
         # zoom with the initial zoom factor
-        self.scale(self.currentZoom, self.currentZoom)
+        #self.scale(self.currentZoom, self.currentZoom)
 
     def set_tabs(self, tabs: List[Dict[str,any]]):
         '''
@@ -531,7 +570,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         '''
         '''
         self.clean()
-        self.fill_svg_viewer(self.svg)
+        #self.fill_svg_viewer(self.svg)
         self.display_tabs(self.tabs)
 
     def make_tabs_svg_paths(self, tabs: List[Dict[str,any]]) -> List[SvgPath]:
@@ -621,7 +660,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         augmented_svg = transformer.augment(tabs_svg_paths)
 
         # done
-        self.fill_svg_viewer(augmented_svg)
+        self.fill_svg_viewer(augmented_svg, initial_svg=False)
 
     def display_job_geometry(self, cnc_ops: List['CncOp']):
         '''
@@ -634,40 +673,32 @@ class SvgViewer(QtWidgets.QGraphicsView):
         transformer = SvgTransformer(self.svg)
         augmented_svg = transformer.augment(preview_geometry_svg_paths)
 
-        # then the tabs
-        tabs_svg_paths = self.make_tabs_svg_paths(self.tabs)
-
-        transformer = SvgTransformer(augmented_svg)
-        augmented_svg = transformer.augment(tabs_svg_paths)
-
         # done
-        self.fill_svg_viewer(augmented_svg)
+        self.fill_svg_viewer(augmented_svg, initial_svg=False)
+
+        # then the tabs
+        self.display_tabs(self.tabs)
 
     def display_job_toolpaths(self, cnc_ops: List['CncOp']):
         '''
         The list of svg_paths results of the toolpath calculation for given ops
         The resulting svg_paths will the displayed in green together with the original svg, tabs and preview geometries
         '''
-        # display preview geometries
-        preview_geometry_svg_paths = self.make_cnc_ops_preview_geometry_svg_paths(cnc_ops)
-
-        transformer = SvgTransformer(self.svg)
-        augmented_svg = transformer.augment(preview_geometry_svg_paths)
+        # display the preview geometries
+        self.display_job_geometry(cnc_ops)
 
         # then the tabs
-        tabs_svg_paths = self.make_tabs_svg_paths(self.tabs)
-
-        transformer = SvgTransformer(augmented_svg)
-        augmented_svg = transformer.augment(tabs_svg_paths)
+        self.display_tabs(self.tabs)
 
         # then the toolpaths
         cam_paths_svg_paths = self.make_toolpaths_svg_paths(cnc_ops)
 
-        transformer = SvgTransformer(augmented_svg)
+        transformer = SvgTransformer(self.svg)
         augmented_svg = transformer.augment(cam_paths_svg_paths)
 
         # done
-        self.fill_svg_viewer(augmented_svg)
+        self.fill_svg_viewer(augmented_svg, initial_svg=False)
+
 
     def svg_text_to_paths(self, svg: str) -> str :
         '''
@@ -715,27 +746,7 @@ class SvgTransformer:
     def augment(self, augm_svg_paths: List[SvgPath]) -> str:
         '''
         '''
-        all_paths = ""
-
-        shapes = self.collect_shapes()
-
         paths_str = []
-
-        for shape in shapes:
-            shape_id = shape.attrib.get('id', None)
-
-            #print("svg : found shape %s : %s" % (shape.tag, shape_id))
-
-            if shape_id is None:
-                print("      -> ignoring")
-                continue
-
-            tag = shape.tag.split("}")[1]
-            svg_attrs = ''
-            for key, value in shape.attrib.items():
-                svg_attrs += ' %s="%s"' % (key, value)
-
-            paths_str.append('<%s %s/>' % (tag, svg_attrs))
 
         for k, svg_path in enumerate(augm_svg_paths):
             p_id = svg_path.p_id

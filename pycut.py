@@ -232,35 +232,26 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.menuBar().addAction(self.menubarToggleLeftSideButton)
         self.menuBar().addAction(self.menubarToggleMiddleAreaButton)
         self.menuBar().addAction(self.menubarToggleRightSideButton)
-        
-        # how set add a combobox to the menu bar ??
-        # self.comboBoxGeomPreviewColor = QtWidgets.QComboBox(self.menuBar())
-        # self.comboBoxGeomPreviewColor.setItemData(0, QtGui.QColor.red, QtGui.Qt.DecorationRole)
-        # self.comboBoxGeomPreviewColor.setItemData(1, QtGui.QColor.blue, QtGui.Qt.DecorationRole)
-        # self.comboBoxGeomPreviewColor.setItemData(1, QtGui.QColor.green, QtGui.Qt.DecorationRole)
-        # self.menubarChangeGeomPreviewColorAction = QtWidgets.QWidgetAction(self.menuBar())
-        # self.menubarChangeGeomPreviewColorAction.setDefaultWidget(self.comboBoxGeomPreviewColor)
-        # self.menuBar().addAction(self.menubarChangeGeomPreviewColorAction)
 
         # some buttons (3) to quickly set/unset the geometry preview color to a predefined "custom" color
-        self.menubarGeometryPreviewRedColorButton = QtGui.QAction(QtGui.QPixmap(":images/media-record-red.png"), "",
-                self, shortcut=QtGui.QKeySequence.Back,
-                statusTip="Geometry Preview in Red", triggered=self.set_unset_geometry_preview_custom_color_red)
-        self.menubarGeometryPreviewRedColorButton.setCheckable(True)
+        #self.menubarGeometryPreviewRedColorButton = QtGui.QAction(QtGui.QPixmap(":images/media-record-red.png"), "",
+        #        self, shortcut=QtGui.QKeySequence.Back,
+        #        statusTip="Geometry Preview in Red", triggered=self.set_unset_geometry_preview_custom_color_red)
+        #self.menubarGeometryPreviewRedColorButton.setCheckable(True)
         
-        self.menubarGeometryPreviewGreenColorButton = QtGui.QAction(QtGui.QIcon(":images/media-record-green.png"), "",
-                self, shortcut=QtGui.QKeySequence.Back,
-                statusTip="Geometry Preview in Green", triggered=self.set_unset_geometry_preview_custom_color_green)
-        self.menubarGeometryPreviewGreenColorButton.setCheckable(True)
+        #self.menubarGeometryPreviewGreenColorButton = QtGui.QAction(QtGui.QIcon(":images/media-record-green.png"), "",
+        #        self, shortcut=QtGui.QKeySequence.Back,
+        #        statusTip="Geometry Preview in Green", triggered=self.set_unset_geometry_preview_custom_color_green)
+        #self.menubarGeometryPreviewGreenColorButton.setCheckable(True)
 
-        self.menubarGeometryPreviewBlueColorButton = QtGui.QAction(QtGui.QIcon(":images/media-record-blue.png"), "",
-                self, shortcut=QtGui.QKeySequence.Back,
-                statusTip="Geometry Preview in Blue", triggered=self.set_unset_geometry_preview_custom_color_blue)
-        self.menubarGeometryPreviewBlueColorButton.setCheckable(True)
+        #self.menubarGeometryPreviewBlueColorButton = QtGui.QAction(QtGui.QIcon(":images/media-record-blue.png"), "",
+        #        self, shortcut=QtGui.QKeySequence.Back,
+        #        statusTip="Geometry Preview in Blue", triggered=self.set_unset_geometry_preview_custom_color_blue)
+        #self.menubarGeometryPreviewBlueColorButton.setCheckable(True)
 
-        self.menuBar().addAction(self.menubarGeometryPreviewRedColorButton)
-        self.menuBar().addAction(self.menubarGeometryPreviewGreenColorButton)
-        self.menuBar().addAction(self.menubarGeometryPreviewBlueColorButton)
+        #self.menuBar().addAction(self.menubarGeometryPreviewRedColorButton)
+        #self.menuBar().addAction(self.menubarGeometryPreviewGreenColorButton)
+        #self.menuBar().addAction(self.menubarGeometryPreviewBlueColorButton)
 
         # these callbacks only after have loading a job
         self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
@@ -270,6 +261,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.setWindowState(QtCore.Qt.WindowMaximized)
 
+    """
     def set_unset_geometry_preview_custom_color_red(self):
         '''
         '''
@@ -317,7 +309,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         else:
             self.svg_viewer.set_settings_geometry_preview_custom_color_reset()
             self.menubarGeometryPreviewBlueColorButton.setIcon(QtGui.QIcon(":images/media-record-blue.png"))
-
+    """
+    
     def toggle_left_side(self):
         '''
         '''
@@ -716,10 +709,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         jobfilename = self.minify_path(jobfilename)
         
-        self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.disconnect(self.cb_generate_gcode_x_offset)
-        self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.disconnect(self.cb_generate_gcode_y_offset)
-        self.ui.checkBox_GCodeConversion_FlipXY.clicked.disconnect(self.cb_generate_gcode)
-
+        try:
+            self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.disconnect(self.cb_generate_gcode_x_offset)
+            self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.disconnect(self.cb_generate_gcode_y_offset)
+            self.ui.checkBox_GCodeConversion_FlipXY.clicked.disconnect(self.cb_generate_gcode)
+        except e:
+            pass
+        
         self.open_job(jobfilename)
         
         self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
@@ -1024,8 +1020,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def display_svg(self, svg_file):
         '''
         '''
-        self.svg_viewer.clean()
-
         if svg_file is None:
             
             svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"

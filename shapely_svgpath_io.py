@@ -297,6 +297,8 @@ class SvgPath:
     def import_as_polygons_list(self) -> List[shapely.geometry.Polygon]:
         '''
         '''
+        self.polys = []
+        
         self.import_svgpath(process_holes=True)
 
         return self.polys
