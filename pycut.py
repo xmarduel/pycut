@@ -713,7 +713,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.disconnect(self.cb_generate_gcode_x_offset)
             self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.disconnect(self.cb_generate_gcode_y_offset)
             self.ui.checkBox_GCodeConversion_FlipXY.clicked.disconnect(self.cb_generate_gcode)
-        except e:
+        except Exception as e:
+            print(e)
             pass
         
         self.open_job(jobfilename)
