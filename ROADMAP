@@ -11,7 +11,7 @@ Process defs/use and transformations in svg (ie resolve them) without converting
 
 with shapely 2.1.0
 
-# 0.6.0
+# 0.9.0
 
 use QOpenGLWidget for gcode simulation, get rid of the jscut WebGL stuff
 

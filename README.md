@@ -50,7 +50,7 @@ Main Improvments over JsCut
 ---------------------------
 - tabs "on the fly" (no need to define them in the svg file)
 - flip X/Y in GCode (good for my machine - the "1419" one -)
-- can handle polygons as well as lines ("opened paths")
+- can handle polygons as well as lines ("closed paths" and "opened paths")
 
 
 See the Wiki page for more.
