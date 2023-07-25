@@ -19,8 +19,6 @@ from typing import List
 from typing import Dict
 from typing import Any
 
-import copy
-
 import shapely
 import shapely.geometry
 import shapely.ops
@@ -31,8 +29,8 @@ from shapely_matplotlib import MatplotLibUtils
 
 from svgviewer import SvgViewer
 
-from cam import cam
-from cam import CamPath
+from shapely_cam import cam
+from shapely_cam import CamPath
 
 from val_with_unit import ValWithUnit
 
