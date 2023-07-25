@@ -83,7 +83,7 @@ for (var i = 0; i < tree.length; i++){
 <p>Welcome to <strong>PyCut</strong>, a clone of <strong>jsCut</strong>, the excellent (at least for beginners) CAM,
 web-based programm, that takes as input <strong>SVG</strong> files and generates G-Code. So why this rewrite ?</p>
 
-<p><strong>PyCut</strong> aims to offer all the (minimalistics) features found in jsCut, with some small improvements.
+<p><strong>PyCut</strong> aims to offer all the (minimalistics) features found in jsCut, with some improvements.
 Hopefully you will find <strong>PyCut</strong> usefull when learning CNC and producing your first GCode files.</p>
 
 <p>Starting point of <strong>PyCut</strong> are <strong>SVG</strong> files, your designs. In the following, we will use
@@ -92,7 +92,7 @@ into consideration when creating "usable" <strong>SVG</strong> files for <strong
 
 <h3 id="P-01-01">SVG Shapes and Paths</h3>
 
-<p>The SVG standard is large, and <strong>PyCut</strong> cannot simply read a svg file, display it, and allow the user
+<p>The SVG standard is very large, and <strong>PyCut</strong> cannot simply read a svg file, display it, and allow the user
 to define cnc operations on the "shapes" defined inside the svg file. Of course, the goal of <strong>PyCut</strong> is
 to process as many svg data as possible.</p>
 
@@ -113,17 +113,19 @@ to process as many svg data as possible.</p>
 
 <p>can define in a single path definition many closed or opened paths, not necessarely related with each others.</p>
 
-<p>Finally, the user will also want to process the strings written in the svg file:</p>
-<ul>
-  <li><span style="color:#0000ff">&lt;text&gt;</span></li>
-</ul>
-
 <p><strong>PyCut</strong> processes "paths" in order to calculate cnc tool paths, but thankfully it can read out of the
 box all kind of shapes, so there is <strong>no need</strong> to convert your svg files into "paths only" svgs.</p>
 
 <div class="warning">
 <p><strong>Warning:</strong> PyCut will only display shapes/paths in its viewer which have an id.</p>
 </div>
+
+<p>Finally, the user will maybe also want to process the strings written in the svg file:</p>
+<ul>
+  <li><span style="color:#0000ff">&lt;text&gt;</span></li>
+</ul>
+
+<p>For these strings to be imported, they have to be first converted to path</p>
 
 <p><strong>PyCut</strong> will import these shapes/paths either as (shapely) "<span
 style="color:#0000ff">Polygon</span>" (i.e. <strong>closed items</strong>) or as (shapely) "<span
@@ -135,14 +137,14 @@ opened items. When importing a <span style="color:#0000ff">&lt;path&gt;</span>, 
 can be composed of many subpaths (starting with [<strong>Mm</strong>]) and every subpath can be closed or not (ending
 with [<strong>Zz</strong>]). <strong>PyCut</strong> will try to import these paths definitions right, and in case of
 closed paths will also try to import them as shapely polygons "<strong>with holes</strong>" even if this concept does
-not really exist in SVG. Moreover <strong>PyCut</strong> will try to import a svg path as a valid (shapely) <span
+not really in SVG. Moreover <strong>PyCut</strong> will try to import a svg path as a valid (shapely) <span
 style="color:#0000ff">MultiPolygon </span> in the shapely sense, or as a list of valid MultiPolygons if one single
 valid MultiPolygon is not possible. For example, the letters "i" or "j" are defined with a single svg path, defining
 two separates polygons, and it makes sense to consider these paths as a single shapely MultiPolygon entity. The letter
 "a" is a polygon with one hole, the letter "g" is a polygon with two holes (for some fonts). In the freetype
 vocabulary, "a" is formed by 2 "contours", "g" by three "contours".</p>
 
-<p>There is one exception: <strong>PyCut</strong> cannot process yet <span style="color:#0000ff">&lt;text&gt;</span>
+<p><strong>PyCut</strong> cannot process yet <span style="color:#0000ff">&lt;text&gt;</span>
 items. Fortunately, <span style="color:#0000ff">&lt;text&gt;</span> items can to be converted into <span
 style="color:#0000ff">&lt;path&gt;</span> items within <strong>Inkscape</strong>, sonce they will be ignored by
 <strong>PyCut</strong>. <strong>PyCut</strong> also comes with the utiilty <strong>svgtext2svgpath.py</strong> which
@@ -186,7 +188,7 @@ that the user can spare this step. Actually, this utility is found in the source
 
 <h2 id="P-02">Svg Documents</h2>
 
-<p>Svg datas can be written with basic editors (vi, emacs etc..) or with real applications, like
+<p>Svg datas can be written with basic text editors (vi, emacs etc..) or with graphical applications, like
 <strong>Inkscape</strong>. In both cases, the svg datas should contains (and <strong>Inkscape</strong> does it
 automatically) a <strong>viewBox</strong> as well as a <strong>width</strong> and an <strong>height</strong>. These 2
 important attributes should be given with a unit, i.e "<strong>mm</strong>" or "<strong>in</strong>" as we are editing
@@ -214,7 +216,10 @@ creating a svg file with a text editor</strong></span>.</p>
 
 <p>This way, it is easy for example to define shapes in the <strong>&lt;def&gt;</strong> paragraph and reuse theses
 shapes in the main body of the svg file with the help of the <strong>&lt;use&gt;</strong> tag and some transformations.
-The utility <strong>svgresolver.py</strong> will have to be used.</p>
+Unfortunately <strong<>PyCut</strong> cannot imported such construct. 
+The utility <strong>svgresolver.py</strong> delivered with </strong>PyCut</strong> will have to be used. It takes as input
+the SVG file defined with <code>&lt;defs&gt</code> and outputs a new SVG where all <code>&lt;defs&gt;/&lt;use&gt;</code>
+ have been resolved.</p>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
@@ -228,7 +233,7 @@ The utility <strong>svgresolver.py</strong> will have to be used.</p>
 
 <p><code>&gt; python pycut.py [job]</code></p>
 
-<p>Without argument, pycut opens itself. With argument, a previously saved job is opened.</p>
+<p>Without argument, pycut opens without loading any SVG file. With argument, a previously saved job is opened.</p>
 
 <p>For the very first time, start pycut without job.</p>
 
@@ -244,7 +249,7 @@ The utility <strong>svgresolver.py</strong> will have to be used.</p>
 <h3 id="P-03-02">Creating a PyCut Job</h3>
 
 <p>Then create a new "job" : this is a kind of project file that stores for a given svg file all the CAM operations
-that the users has created, together with all others settings relevant when generating g-code. It can be created, saved
+that the users has created, together with all others settings relevant when generating GCode. It can be created, saved
 and loaded again and modified - quite practical.</p>
 
 <h3 id="P-03-03">Creating CAM operations</h3>
@@ -256,7 +261,7 @@ should appear.</p>
 <p>Define the properties of the operation: the main one is the CAM operation type: "<strong>Pocket</strong>",
 "<strong>Engrave</strong>", "<strong>Inside</strong>" or "<strong>Outside</strong>". There are also the
 "<strong>Drill</strong>" and "<strong>Peck</strong>" operations, for the <span
-style="color:#0000ff">&lt;circle&gt;</span> shapes whose diameter is smaller or equals to the tool diameter. The others
+style="color:#0000ff">&lt;circle&gt;</span> shapes whose diameter is smaller or equal to the tool diameter. The others
 options will be discussed later. Default values at this point should be Ok.</p>
 
 <h3 id="P-03-04">Create the GCode</h3>
@@ -267,10 +272,10 @@ black in the SVG viewer: this is (are) the region(s) of the material that wil be
 <p>Then finish creating the G-Code by pressing the button "Generate GCode" above the operation table: the tool path(s)
 should appear(s) in green in the black regions.</p>
 
-<p>The produced G-Code can be inspected in the "G code viewer" and the "G code Simulator" display areas.</p>
+<p>The produced G-Code can be inspected in the "G Code viewer" and the "G Code Simulator" display areas.</p>
 
-<p>You just have to save the G-Code and you're done. The gcode file should be named as the CAM operation name, or, in
-case of multiple operations enabled, as the project name, with ending "nc".</p>
+<p>You just have to save the G-Code and you're done. The G-Code file should be named as the CAM operation name, or, in
+case of multiple operations enabled, as the project name, with ending suffix "nc".</p>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
@@ -421,6 +426,16 @@ top-left postion.</p>
 <p>These four references points set the XOffset and YOffset of the GCode calculation. After a GCode generation, it is
 still possible to modify the XOffset and YOffset to fit at best how to user wants to have the origin be located with
 the help of the 2 spin boxes. </p>
+
+<div class="warning">
+<p><strong>Info</strong>: The option "Center of the Gcode area" is particularely usefull when the user wants to run 2 differents 
+G-Code files produced on the same workpiece with 2 different tool diameters. By ensuring that the center of the operations are the same,
+at the end of the first operation (first GCode file), the users can change the tool in the machine and load/start the second G-Code file.
+
+This occurs when some holes have to be drilled in the first operation and a contour or pocket operation has to be performed in the second
+operation with a much larger tool. 
+
+</div>
 
 <p>And further:</p>
 <ul>
@@ -902,7 +917,7 @@ with holes.</p>
 and <strong>height</strong> of the svg and also add some "<strong>id</strong>" for the generated paths.</p>
 
 <p><strong>Unfortunately</strong> it does not support SVG "shapes", as well as multiple paths in one svg file export
-(will propose a feature request!).</p>
+(will submit a feature request!).</p>
 
 <h4>Others:</h4>
 

@@ -11,8 +11,11 @@ import pathlib
 import posixpath
 import ntpath
 
+import xml.etree.ElementTree as etree
+
 from typing import List
 from typing import Dict
+from typing import Tuple
 
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -341,9 +344,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         global settings_dialog
 
         def fill_dialog():
-            settings_dialog.colorpicker_Tabs_fill.setColor(QtGui.QColor(svgviewer.SvgViewer.TABS["fill"]))
-            settings_dialog.doubleSpinBox_Tabs_fill_opacity.setValue(float(svgviewer.SvgViewer.TABS["fill-opacity"]))
-            settings_dialog.doubleSpinBox_Tabs_fill_opacity_disabled.setValue(float(svgviewer.SvgViewer.TABS["fill-opacity-disabled"]))
+            settings_dialog.colorpicker_Tabs_fill.setColor(QtGui.QColor(svgviewer.SvgViewer.TABS_SETTINGS["fill"]))
+            settings_dialog.doubleSpinBox_Tabs_fill_opacity.setValue(float(svgviewer.SvgViewer.TABS_SETTINGS["fill-opacity"]))
+            settings_dialog.doubleSpinBox_Tabs_fill_opacity_disabled.setValue(float(svgviewer.SvgViewer.TABS_SETTINGS["fill-opacity-disabled"]))
 
             settings_dialog.colorpicker_Toolpath_stroke.setColor(QtGui.QColor(svgviewer.SvgViewer.TOOLPATHS["stroke"]))
             settings_dialog.doubleSpinBox_Toolpath_stroke_width.setValue(float(svgviewer.SvgViewer.TOOLPATHS["stroke-width"]))
@@ -361,7 +364,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         def set_ok():
             settings = {
-                "TABS" : {
+                "TABS_SETTINGS" : {
                     "stroke": "#aa4488",
                     "stroke-width": "0",
                     "fill": settings_dialog.colorpicker_Tabs_fill.color().name(),
@@ -1020,47 +1023,68 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
     def display_svg(self, svg_file):
         '''
+        em 	The default font size - usually the height of a character.
+        ex 	The height of the character x
+        px 	Pixels
+        pt 	Points (1 / 72 of an inch)
+        pc 	Picas (1 / 6 of an inch)
+        cm 	Centimeters
+        mm 	Millimeters
+        in Inches
         '''
         if svg_file is None:
+            return
+        
+        fp = open(svg_file, "r")
+        svg = fp.read()
+        fp.close()
             
-            svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
-                width="1091" height="490"
-                viewBox="0 0 1091 490"
-                version="1.1">
-                <g><image href="logo.png" id="splash_screen"/></g>
-             </svg>'''
-            self.svg_viewer.set_svg(svg)
+        def extract_svg_dimensions(svg: str) -> Tuple[int, int]:
+            '''
+            Dimension of the svg are of importance when making gcode from the lower left 
+            side of the material
+            '''
+            tree = etree.fromstring(svg)
+            tree_attrib = tree.attrib
+
+            w = tree_attrib["width"]
+            h = tree_attrib["height"]
+
+            return w, h
+
+        # extract dimension of material as global variables in the SvgModel
+        size_xstr, size_ystr = extract_svg_dimensions(svg)
+
+        suffix = ""
+            
+        if "mm" in size_xstr:
+            suffix = "mm"
+            size_x, size_y = float(size_xstr.split("mm")[0]), float(size_ystr.split("mm")[0])
+        elif "cm" in size_xstr:
+            suffix = "mm"
+            size_x, size_y = 10 * float(size_xstr.split("cm")[0]), 10 * float(size_ystr.split("cm")[0])
+        elif "in" in size_xstr:
+            suffix = "in"
+            size_x, size_y = float(size_xstr.split("in")[0]), float(size_ystr.split("in")[0])
+        elif "px" in size_xstr:
+            suffix = "mm"
+            size_x, size_y = float(size_xstr.split("px")[0]), float(size_ystr.split("px")[0])
         else:
-            fp = open(svg_file, "r")
-            svg = fp.read()
-            fp.close()
+            suffix = "mm"
+            size_x, size_y = float(size_xstr), float(size_ystr)
 
-            # extract dimension of material as global variables in the SvgModel
-            size_xstr, size_ystr = svgviewer.extract_svg_dimensions(svg)
+        self.ui.doubleSpinBox_SvgModelWidth.setValue(size_x)
+        self.ui.doubleSpinBox_SvgModelHeight.setValue(size_y)
 
-            suffix = ""
-            
-            if "mm" in size_xstr:
-                suffix = "mm"
-                size_x, size_y = float(size_xstr.split("mm")[0]), float(size_ystr.split("mm")[0])
-            elif "in" in size_xstr:
-                suffix = "in"
-                size_x, size_y = float(size_xstr.split("in")[0]), float(size_ystr.split("in")[0])
-            else:
-                size_x, size_y = float(size_xstr), float(size_ystr)
+        self.ui.doubleSpinBox_SvgModelWidth.setSuffix(suffix)
+        self.ui.doubleSpinBox_SvgModelHeight.setSuffix(suffix)
 
-            self.ui.doubleSpinBox_SvgModelWidth.setValue(size_x)
-            self.ui.doubleSpinBox_SvgModelHeight.setValue(size_y)
+        SvgModel.size_x = size_x
+        SvgModel.size_y = size_y
 
-            self.ui.doubleSpinBox_SvgModelWidth.setSuffix(suffix)
-            self.ui.doubleSpinBox_SvgModelHeight.setSuffix(suffix)
-
-            SvgModel.size_x = size_x
-            SvgModel.size_y = size_y
-
-            self.svg_viewer.set_svg(svg)
-            # and the tabs if any
-            self.svg_viewer.set_tabs(self.tabs)
+        self.svg_viewer.set_svg(svg)
+        # and the tabs if any
+        self.svg_viewer.set_tabs(self.tabs)
 
     def assign_tabs(self, tabs: List[Tab]):
         '''
@@ -1316,7 +1340,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.doubleSpinBox_GCodeConversion_MaxX.setValue(generator.maxX)
         self.ui.doubleSpinBox_GCodeConversion_MaxY.setValue(generator.maxY)
 
-        self.svg_viewer.display_job_toolpaths(generator.job.operations)
+        self.svg_viewer.display_job(generator.job)
         
         # gcode viewer/simulator
         gcode = generator.gcode

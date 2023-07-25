@@ -28,6 +28,8 @@ class RendererType(Enum):
 class SvgView(QtWidgets.QGraphicsView):
     '''
     '''
+    zoomChanged = QtCore.Signal()
+
     def __init__(self):
         '''
         '''
@@ -212,10 +214,9 @@ class SvgView(QtWidgets.QGraphicsView):
         self.zoomBy(0.5)
 
     def resetZoom(self):
-        pass
-        #if not qFuzzyCompare(zoomFactor(), qreal(1)):
-        #    resetTransform()
-        #    emit zoomChanged()
+        if math.fabs(self.zoomFactor()- 1.0) < 0.1:
+            self.resetTransform()
+            self.zoomChanged.emit()
 
     def paintEvent(self, event: QtGui.QPaintEvent):
 
@@ -246,7 +247,7 @@ class SvgView(QtWidgets.QGraphicsView):
 
 
 class SvgMainWindow(QtWidgets.QMainWindow):
-    '''
+    '''SvgMainWindow
     '''
     def __init__(self):
         '''
@@ -254,20 +255,128 @@ class SvgMainWindow(QtWidgets.QMainWindow):
         super(SvgMainWindow, self).__init__()
 
         self.m_view = SvgView()
+        self.m_zoomLabel = QtWidgets.QLabel()
+        self.m_currentPath = ""
+
+        toolBar = QtWidgets.QToolBar(self)
+        self.addToolBar(QtGui.Qt.TopToolBarArea, toolBar)
+
+        fileMenu = self.menuBar().addMenu("&File")
+        openIcon = QtGui.QIcon.fromTheme("document-open", QtGui.QIcon(":/qt-project.org/styles/commonstyle/images/standardbutton-open-32.png"))
+        #openAction = fileMenu.addAction(openIcon, "&Open...", self, self.openFile)
+        openAction = QtGui.QAction(openIcon, "&Open...", self, shortcut=QtGui.QKeySequence.Open, triggered=self.openFile)
+        toolBar.addAction(openAction)
+
+        exportIcon = QtGui.QIcon.fromTheme("document-save", QtGui.QIcon(":/qt-project.org/styles/commonstyle/images/standardbutton-save-32.png"))
+        #exportAction = fileMenu.addAction(exportIcon, "&Export...", self, self.exportImage)
+        exportAction = QtGui.QAction(exportIcon, "&Export...", self, shortcut=QtGui.Qt.CTRL | QtGui.Qt.Key_E, triggered=self.openFile)
+        fileMenu.addAction(exportAction)
+
+        #quitAction = fileMenu.addAction("E&xit", self.app(), QtWidgets.QCoreApplication.quit)
+        quitAction = QtGui.QAction(exportIcon, "E&xit", self, shortcut=QtGui.QKeySequence.Quit, triggered=QtWidgets.QApplication.instance().quit)
+        fileMenu.addAction(quitAction)
+
+        viewMenu = self.menuBar().addMenu("&View")
+
+        self.m_backgroundAction = viewMenu.addAction("&Background")
+        self.m_backgroundAction.setEnabled(False)
+        self.m_backgroundAction.setCheckable(True)
+        self.m_backgroundAction.setChecked(False)
+        self.m_backgroundAction.toggled.connect(self.m_view.setViewBackground)
+
+        self.m_outlineAction = viewMenu.addAction("&Outline")
+        self.m_outlineAction.setEnabled(False)
+        self.m_outlineAction.setCheckable(True)
+        self.m_outlineAction.setChecked(True)
+        self.m_outlineAction.toggled.connect(self.m_view.setViewOutline)
+
+        viewMenu.addSeparator()
+        zoomAction = viewMenu.addAction("Zoom &In", self.m_view.zoomIn)
+        zoomAction.setShortcut(QtGui.QKeySequence.ZoomIn)
+        zoomAction = viewMenu.addAction("Zoom &Out", self.m_view.zoomOut)
+        zoomAction.setShortcut(QtGui.QKeySequence.ZoomOut)
+        zoomAction = viewMenu.addAction("Reset Zoom", self.m_view.resetZoom)
+        zoomAction.setShortcut(QtGui.Qt.CTRL | QtGui.Qt.Key_0)
+
+        rendererMenu = self.menuBar().addMenu("&Renderer")
+        m_nativeAction = rendererMenu.addAction("&Native")
+        m_nativeAction.setCheckable(True)
+        m_nativeAction.setChecked(True)
+        m_nativeAction.setData(RendererType.Native)
+#ifdef USE_OPENGLWIDGETS
+        #m_glAction = rendererMenu.addAction("&OpenGL")
+        #m_glAction.setCheckable(True)
+        #m_glAction.setData(RendererType.OpenGL)
+#endif
+        m_imageAction = rendererMenu.addAction("&Image")
+        m_imageAction.setCheckable(True)
+        m_imageAction.setData(RendererType.Image)
+    
+        rendererMenu.addSeparator()
+        m_antialiasingAction = rendererMenu.addAction("&Antialiasing")
+        m_antialiasingAction.setCheckable(True)
+        m_antialiasingAction.setChecked(False)
+        m_antialiasingAction.toggled.connect(self.m_view.setAntialiasing)
+
+        rendererGroup = QtGui.QActionGroup(self)
+        rendererGroup.addAction(m_nativeAction)
+#ifdef USE_OPENGLWIDGETS
+        #rendererGroup.addAction(m_glAction)
+#endif
+        rendererGroup.addAction(m_imageAction)
+
+        self.menuBar().addMenu(rendererMenu)
+
+        rendererGroup.triggered.connect(self.setRenderer(rendererGroup.actions()[0].data()))
+
+        help = self.menuBar().addMenu("&Help")
+        helpAction = QtGui.QAction(None, "&Help", self, triggered=QtWidgets.QApplication.instance().aboutQt)
+        #help.addAction("About Qt", qApp, &QApplication.aboutQt)
+        help.addAction(helpAction)
 
         self.setCentralWidget(self.m_view)
 
+        self.m_zoomLabel.setToolTip("Use the mouse wheel to zoom")
+        self.statusBar().addPermanentWidget(self.m_zoomLabel)
+        self.updateZoomLabel()
+        self.m_view.zoomChanged.connect(self.updateZoomLabel)
+
         self.setRenderer(RendererType.Native)
 
-        #self.loadFile("bubbles.svg")
         self.loadFile("c1.svg")
         self.loadFile("c2.svg")
+
+    def updateZoomLabel(self):
+        percent = math.floor(self.m_view.zoomFactor() * 100.0)
+        self.m_zoomLabel.setText("%d" % percent + "%")
+
+    def openFile(self):
+        fileDialog = QtWidgets.QFileDialog(self)
+        fileDialog.setAcceptMode(QtWidgets.QFileDialog.AcceptOpen)
+        fileDialog.setMimeTypeFilters(["image/svg+xml", "image/svg+xml-compressed"])
+        fileDialog.setWindowTitle("Open SVG File")
+        #if self.m_currentPath.isEmpty():
+        #    fileDialog.setDirectory(self.picturesLocation())
+
+        while fileDialog.exec() == QtWidgets.QDialog.Accepted and not self.loadFile(fileDialog.selectedFiles().constFirst()):
+               pass
 
     def loadFile(self, file_name: str) -> bool:
         '''
         '''
         if not self.m_view.openFile(file_name):
             return False
+        
+        if not file_name.startsWith(":/"):
+            self.setWindowFilePath(file_name)
+            self.m_currentPath = file_name
+
+            size = self.m_view.svgSize()
+            message = "Opened %1, %2x%3" % (QtCore.QFileInfo(file_name).fileName(), size.width(), size.width())
+            self.statusBar().showMessage(message)
+
+        self.m_outlineAction.setEnabled(True)
+        self.m_backgroundAction.setEnabled(True)
 
         available_size = self.screen().availableGeometry().size()
         self.resize(self.m_view.sizeHint().expandedTo(available_size / 4) + QtCore.QSize(80, 80 + self.menuBar().height()))
