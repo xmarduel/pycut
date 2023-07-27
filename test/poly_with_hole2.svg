@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- the space between the interior ellipse and the exterior circle in smaller than the cutter diameter -->
+<svg version="1.1" id="test_rectangle" width="300mm" height="300mm" viewBox="0 0 300 300"
+   xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+  <g id="layer">
+     <circle id="outline"   style="fill:#0000ff" cx="100" cy="100" r="80" />
+     <ellipse id="inside-e" style="fill:#00ffff" cx="100" cy="100" rx="38" ry="70" />
+	  <circle id="inside-c1" style="fill:#00ffff" cx="158" cy="100" r="16"  />
+	  <circle id="inside-c2" style="fill:#00ffff" cx="42"  cy="100" r="16"  />
+     <circle id="inside-c3" style="fill:#00ffff" cx="148" cy="140" r="12"  />
+     <circle id="inside-c4" style="fill:#00ffff" cx="148" cy="60" r="12"  />
+	  <circle id="inside-c5" style="fill:#00ffff" cx="52"  cy="60" r="14"  />
+     <circle id="inside-c6" style="fill:#00ffff" cx="52"  cy="140" r="14"  />
+  </g>
+</svg>
