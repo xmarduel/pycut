@@ -303,6 +303,8 @@ class GcodePreprocessorUtils :
         h_x2_div_d = 4 * R * R - x * x - y * y
         if h_x2_div_d < 0: 
             print("Error computing arc radius.")
+            if math.fabs(h_x2_div_d) < 1.0e-4 :
+                h_x2_div_d = 0
 
         h_x2_div_d = (-math.sqrt(h_x2_div_d)) / math.hypot(x, y)
 
@@ -408,9 +410,9 @@ class GcodePreprocessorUtils :
         elif plane == PointSegment.Plane.YZ:
             m.rotate(-90, 0.0, 1.0, 0.0)
             
-        start = m * start
-        end = m * end
-        center = m * center
+        start = m.map(start)  # m * start
+        end = m.map(end)  # m * end
+        center = m.map(center)  # m * center
 
         # Check center
         if qIsNaN(center.length()):
@@ -449,11 +451,11 @@ class GcodePreprocessorUtils :
         m = QMatrix4x4()
         m.setToIdentity()
         
-        if plane == PointSegment.plane.XY:
+        if plane == PointSegment.Plane.XY:
             pass
-        elif plane == PointSegment.plane.ZX:
+        elif plane == PointSegment.Plane.ZX:
             m.rotate(-90, 1.0, 0.0, 0.0)
-        elif plane == PointSegment.plane.YZ:
+        elif plane == PointSegment.Plane.YZ:
             m.rotate(90, 0.0, 1.0, 0.0)
 
         lineEnd = QVector3D(p2.x(), p2.y(), p1.z())
@@ -479,9 +481,11 @@ class GcodePreprocessorUtils :
             lineEnd.setY(math.sin(angle) * radius + center.y())
             lineEnd.setZ(lineEnd.z() + zIncrement)
 
-            segments.append(m * lineEnd)
+            #segments.append(m * lineEnd)
+            segments.append(m .map(lineEnd))
 
-        segments.append(m * p2)
+        #segments.append(m * p2)
+        segments.append(m .map(p2))
 
         return segments
 
