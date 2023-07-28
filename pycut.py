@@ -25,6 +25,8 @@ from PySide6 import QtWebEngineWidgets
 
 from PySide6.QtUiTools import QUiLoader
 
+from PySide6.QtCore import QRegularExpression
+
 # TEST simulator with python
 # from gcodesimulator.python.parser.gcodeminiparser import GcodeMiniParser
 #import gcodesimulator.python.widgets.glwidget_container as glwidget_simulator_container
@@ -840,8 +842,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def cb_open_gcode(self, gcodefilename):
         '''
         '''
-        # read jsgcodeon
-        xfilter = "GCODE Files (*.nc *.gcode)"
+        # read gcode
+        xfilter = "GCODE Files (*.nc *.ncc, *.ngc, *.gcode)"
         gcodefilename, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
 
         gcodefilename = self.minify_path(gcodefilename)
@@ -852,16 +854,39 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         with open(gcodefilename) as f:
             gcode = f.read()
 
-            tool_diameter_keyword = "; Diameter:"
+            tool_diameter_keyword_0 = "; Diameter:"
+
             found = False
             # try to get the tool diameter from the gcode comments
             lines = gcode.split("\n")
             for line in lines:
-                if line.startswith(tool_diameter_keyword):
-                    data = line.split(tool_diameter_keyword)[1].strip()
+                if line.startswith(tool_diameter_keyword_0):
+                    data = line.split(tool_diameter_keyword_0)[1].strip()
                     tool_diameter = float(data)
                     self.ui.doubleSpinBox_Tool_Diameter.setValue(tool_diameter)
                     found = True
+                    break
+
+            if not found:
+                tool_diameter_keyword1 = "\(tool -> ([0-9.]+) mm end mill\)"
+                tool_diameter_keyword2 = "\(TOOL DIA.([0-9.]+)\)"
+
+                res = [
+                    QRegularExpression(tool_diameter_keyword1),
+                    QRegularExpression(tool_diameter_keyword2)
+                ]
+                pos = 0
+                for line in lines:
+                    for re in res:
+                        m =  re.match(line, pos)
+                        if m.hasMatch():
+                            data = m.captured(1)
+                            tool_diameter = float(data)
+                            self.ui.doubleSpinBox_Tool_Diameter.setValue(tool_diameter)
+                            found = True
+                            break
+                    if found:
+                        break
 
             if not found:
                 msgBox = QtWidgets.QMessageBox()
