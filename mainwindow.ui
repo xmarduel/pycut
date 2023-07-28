@@ -1542,9 +1542,16 @@
     </property>
     <addaction name="actionSettings"/>
    </widget>
+   <widget class="QMenu" name="menuGCode">
+    <property name="title">
+     <string>GCode</string>
+    </property>
+    <addaction name="actionOpenGCode"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSvg"/>
    <addaction name="menuSettings"/>
+   <addaction name="menuGCode"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionOpenSvg">
@@ -1590,6 +1597,11 @@
   <action name="actionSettings">
    <property name="text">
     <string>Settings...</string>
+   </property>
+  </action>
+  <action name="actionOpenGCode">
+   <property name="text">
+    <string>Load GCode</string>
    </property>
   </action>
  </widget>

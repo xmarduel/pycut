@@ -49,6 +49,8 @@ class Ui_mainwindow(object):
         self.actionAboutPyCut.setObjectName(u"actionAboutPyCut")
         self.actionSettings = QAction(mainwindow)
         self.actionSettings.setObjectName(u"actionSettings")
+        self.actionOpenGCode = QAction(mainwindow)
+        self.actionOpenGCode.setObjectName(u"actionOpenGCode")
         self.centralwidget = QWidget(mainwindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout_2 = QHBoxLayout(self.centralwidget)
@@ -887,11 +889,14 @@ class Ui_mainwindow(object):
         self.menuHelp.setObjectName(u"menuHelp")
         self.menuSettings = QMenu(self.menubar)
         self.menuSettings.setObjectName(u"menuSettings")
+        self.menuGCode = QMenu(self.menubar)
+        self.menuGCode.setObjectName(u"menuGCode")
         mainwindow.setMenuBar(self.menubar)
 
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuSvg.menuAction())
         self.menubar.addAction(self.menuSettings.menuAction())
+        self.menubar.addAction(self.menuGCode.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
         self.menuSvg.addAction(self.actionOpenSvg)
         self.menuSvg.addSeparator()
@@ -904,6 +909,7 @@ class Ui_mainwindow(object):
         self.menuHelp.addAction(self.actionAboutQt)
         self.menuHelp.addAction(self.actionAboutPyCut)
         self.menuSettings.addAction(self.actionSettings)
+        self.menuGCode.addAction(self.actionOpenGCode)
 
         self.retranslateUi(mainwindow)
 
@@ -924,6 +930,7 @@ class Ui_mainwindow(object):
         self.actionAboutQt.setText(QCoreApplication.translate("mainwindow", u"About &Qt", None))
         self.actionAboutPyCut.setText(QCoreApplication.translate("mainwindow", u"About PyCut", None))
         self.actionSettings.setText(QCoreApplication.translate("mainwindow", u"Settings...", None))
+        self.actionOpenGCode.setText(QCoreApplication.translate("mainwindow", u"Load GCode", None))
         self.label_SvgSettings.setText(QCoreApplication.translate("mainwindow", u" Svg Settings", None))
         self.label_PxPerInch.setText(QCoreApplication.translate("mainwindow", u"user units scale factor", None))
         self.label_SvgModelWidth.setText(QCoreApplication.translate("mainwindow", u"width", None))
@@ -1020,5 +1027,6 @@ class Ui_mainwindow(object):
         self.menuOpen_Recent_Jobs.setTitle(QCoreApplication.translate("mainwindow", u"Open Recent Jobs", None))
         self.menuHelp.setTitle(QCoreApplication.translate("mainwindow", u"Help", None))
         self.menuSettings.setTitle(QCoreApplication.translate("mainwindow", u"Settings", None))
+        self.menuGCode.setTitle(QCoreApplication.translate("mainwindow", u"GCode", None))
     # retranslateUi
 

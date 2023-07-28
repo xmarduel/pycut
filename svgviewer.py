@@ -658,13 +658,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
         '''
         '''
         # the tabs as paths
-        tabs_svg_paths = self.make_tabs_svg_paths(tabs)
+        svg_paths = self.make_tabs_svg_paths(tabs)
 
-        maker = SvgMaker(self.svg)
-        maker_svg = maker.build(tabs_svg_paths)
-
-        # done
-        self.fill_svg_viewer(maker_svg, initial_svg=False)
+        self.display_extra_paths(svg_paths)
 
     def display_job_geometry(self, cnc_ops: List['CncOp']):
         '''
@@ -672,13 +668,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
         The resulting geometries will the displayed in black together with the original svg and tabs
         '''
         # preview geometries as svg paths
-        preview_geometry_svg_paths = self.make_cnc_ops_preview_geometry_svg_paths(cnc_ops)
+        svg_paths = self.make_cnc_ops_preview_geometry_svg_paths(cnc_ops)
         
-        maker = SvgMaker(self.svg)
-        maker_svg = maker.build(preview_geometry_svg_paths)
-
-        # done
-        self.fill_svg_viewer(maker_svg, initial_svg=False)
+        self.display_extra_paths(svg_paths)
 
     def display_job_toolpaths(self, cnc_ops: List['CncOp']):
         '''
@@ -686,13 +678,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
         The resulting svg_paths will the displayed in green together with the original svg, tabs and preview geometries
         '''
         # the toolpaths as svg paths
-        cam_paths_svg_paths = self.make_toolpaths_svg_paths(cnc_ops)
+        svg_paths = self.make_toolpaths_svg_paths(cnc_ops)
 
-        maker = SvgMaker(self.svg)
-        maker_svg = maker.build(cam_paths_svg_paths)
-
-        # done
-        self.fill_svg_viewer(maker_svg, initial_svg=False)
+        self.display_extra_paths(svg_paths)
 
     def display_job(self, job: 'JobModel'):
         '''
@@ -700,24 +688,37 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.display_job_geometry(job.operations)
         self.display_job_toolpaths(job.operations)
 
+    def display_extra_paths(self, svg_paths: List[SvgPath]):
+        """ to display extra items in the viewer: paths calculated from
+        - tabs
+        - preview geometries
+        - tool paths
+        """
+        maker = SvgMaker(self.svg)
+        extra_items_svg = maker.build(svg_paths)
+
+        # done
+        self.fill_svg_viewer(extra_items_svg, initial_svg=False)
+
     def svg_text_to_paths(self, svg: str) -> str :
         '''
         The super mega method: transform all text elements into path elements
         '''
         return svg  # TODO
 
-
+    
 class SvgMaker:
-    '''
-    To build a "full" svg with calculated svg paths, while the width/height of the svg data
+    """
+    To build a "compatible" svg with calculated svg paths, while the width/height of the svg data
     is identical to the initial svg
-    '''
+    """
+
     def __init__(self, svg: str):
+        """ the initial svg"""
         self.svg = svg
      
     def build(self, svg_paths: List[SvgPath]) -> str:
-        '''
-        '''
+        """ """
         paths_str = []
 
         for k, svg_path in enumerate(svg_paths):

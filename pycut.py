@@ -152,6 +152,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.ui.actionSettings.triggered.connect(self.cb_open_settings_dialog)
 
+        self.ui.actionOpenGCode.triggered.connect(self.cb_open_gcode)
+
         self.ui.actionTutorial.triggered.connect(self.cb_show_tutorial_qt)
         self.ui.actionAboutQt.triggered.connect(self.cb_show_about_qt)
         self.ui.actionAboutPyCut.triggered.connect(self.cb_show_about_pycut)
@@ -210,6 +212,17 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 msgBox = QtWidgets.QMessageBox()
                 msgBox.setWindowTitle("PyCut")
                 msgBox.setText("Job File %s not found" % options.job)
+                msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
+                msgBox.exec()
+
+        elif options.gcode is not None:
+            if os.path.exists(options.gcode):
+                self.open_gcode(options.gcode)
+            else:
+                # alert
+                msgBox = QtWidgets.QMessageBox()
+                msgBox.setWindowTitle("PyCut")
+                msgBox.setText("GCode File %s not found" % options.gcode)
                 msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
                 msgBox.exec()
 
@@ -824,6 +837,42 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             self.jobfilename = jobfilename
     
+    def cb_open_gcode(self, gcodefilename):
+        '''
+        '''
+        # read jsgcodeon
+        xfilter = "GCODE Files (*.nc *.gcode)"
+        gcodefilename, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
+
+        gcodefilename = self.minify_path(gcodefilename)
+        
+        self.open_gcode(gcodefilename)
+
+    def open_gcode(self, gcodefilename: str):
+        with open(gcodefilename) as f:
+            gcode = f.read()
+
+            tool_diameter_keyword = "; Diameter:"
+            found = False
+            # try to get the tool diameter from the gcode comments
+            lines = gcode.split("\n")
+            for line in lines:
+                if line.startswith(tool_diameter_keyword):
+                    data = line.split(tool_diameter_keyword)[1].strip()
+                    tool_diameter = float(data)
+                    self.ui.doubleSpinBox_Tool_Diameter.setValue(tool_diameter)
+                    found = True
+
+            if not found:
+                msgBox = QtWidgets.QMessageBox()
+                msgBox.setWindowTitle("PyCut")
+                msgBox.setText("No tool diameter found in file, using current tool diameter for GCode Simulator")
+                msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
+                msgBox.exec()
+
+
+            self.display_gcode(gcode)
+
     def cb_curve_min_segments(self):
         '''
         what is it good for ?
@@ -1448,7 +1497,8 @@ def main():
     parser = argparse.ArgumentParser(prog="PyCut", description="PyCut CAM program - Read the doc!")
 
     # argument
-    parser.add_argument('job', nargs='?', default=None, help="load job file | empty")
+    parser.add_argument("-j", "--job", dest="job", nargs='?', default=None, help="load job file | empty")
+    parser.add_argument("-g", "--gcode", dest="gcode", nargs='?', default=None, help="load gcode file | empty")
 
     # version info
     parser.add_argument("--version", action='version', version='%s' % VERSION)

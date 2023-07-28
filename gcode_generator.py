@@ -884,6 +884,7 @@ class GcodeGenerator:
         plungeRate = int(self.unit_converter.from_mm(self.tool_model.plungeRate.toMm()))
         cutRate = int(self.unit_converter.from_mm(self.tool_model.cutRate.toMm()))
         passdepth = self.unit_converter.from_mm(self.tool_model.passdepth.toMm())
+        toolDiameter = self.unit_converter.from_mm(self.tool_model.diameter.toMm())
         topZ = self.unit_converter.from_mm(self.material_model.matTopZ.toMm())
         tabHeight = self.unit_converter.from_mm(self.tabs_model.height.toMm())
         peckZ = self.unit_converter.from_mm(1.0)
@@ -905,6 +906,12 @@ class GcodeGenerator:
         if self.gcode_model.spindleControl:
             gcode += f"\n; Start the spindle\n"
             gcode += f"M3 S{self.gcode_model.spindleSpeed}\n"
+
+        gcode += f"\n"
+        gcode += f";\n"
+        gcode += f"; Tool Info\n"
+        gcode += f"; Diameter:    {toolDiameter}"
+        gcode += f"\n"
 
         for idx, cnc_op in enumerate(cnc_ops):
             cut_depth = self.unit_converter.from_mm(cnc_op.cut_depth.toMm())
