@@ -3,7 +3,7 @@ import sys
 
 from PySide6 import QtWidgets
 
-import gcodesimulator.python.widgets.glwidget_container as glwidget_simulator_container
+import gcodesimulator.python.widgets.gcodesimulator as gcodesimulator
 import resources_rc
 
 
@@ -13,7 +13,7 @@ class TestMainWindow(QtWidgets.QMainWindow):
 
         self.setWindowTitle("Test GL")
 
-        simulator = glwidget_simulator_container.GLWidgetContainer(self)
+        simulator = gcodesimulator.GCODESimulator(self)
         simulator.loadFile("jscut.gcode")
 
         self.setCentralWidget(simulator)

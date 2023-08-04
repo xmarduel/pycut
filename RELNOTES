@@ -1,3 +1,9 @@
+# 0.5.1
+
+load gcode file
+- produced by pycut: Ok
+- general: viewer: Ok, simulator:NOk
+
 # 0.5.0
 
 use only svgelements, get rid of svgpathtools

@@ -68,6 +68,8 @@ class HeightMapDrawer(ShaderDrawable):
     sizeof_vertexdata = 24
     sizeof_vector2D = 8
     sizeof_float = 4
+
+    PYCUT_TEXTURE_INDEX = 0
     
     class DrawMode(Enum):
         Vectors = 0
@@ -338,7 +340,11 @@ class HeightMapDrawer(ShaderDrawable):
         if len(self.m_triangles) != 0:
             if self.m_texture:
                 self.m_texture.bind()
-                self.m_shader_program.setUniformValue("texture", 0)
+                # jsCut
+                # # self.m_shader_program.setUniformValue("texture", 0)
+                # - > XAM
+                textureLocationID = self.m_shader_program.uniformLocation("texture")  # XAM
+                self.m_shader_program.setUniformValue(textureLocationID, HeightMapDrawer.PYCUT_TEXTURE_INDEX)  # XAM the index of the texture
         
             self.glDrawArrays(GL.GL_TRIANGLES, 0, len(self.m_triangles))
 
@@ -375,7 +381,10 @@ class HeightMapDrawer(ShaderDrawable):
 
             self.pathRgbaTexture = QtOpenGL.QOpenGLTexture(QtOpenGL.QOpenGLTexture.Target2D)
             self.glActiveTexture(GL.GL_TEXTURE0)
+            # ------------------------------
             #self.pathRgbaTexture.bind(GL.GL_TEXTURE_2D)
+            self.pathRgbaTexture.bind(HeightMapDrawer.PYCUT_TEXTURE_INDEX) # XAM
+            # ------------------------------
             self.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, self.m_gcodedrawer.resolution, self.m_gcodedrawer.resolution, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, None)
             self.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
             self.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
@@ -389,7 +398,7 @@ class HeightMapDrawer(ShaderDrawable):
             renderbuffer.release()
             
             self.pathFramebuffer.release()
-            self.pathRgbaTexture = self.pathFramebuffer.texture()
+            self.pathRgbaTexture = self.pathFramebuffer.texture() ## why something here - not is jscut !
         
         self.pathFramebuffer.bind()
         self.m_gcodedrawer.draw(context)

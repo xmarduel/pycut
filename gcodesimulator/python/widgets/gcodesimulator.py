@@ -15,10 +15,6 @@ from PySide6 import QtWidgets
 from PySide6 import QtCore
 from PySide6 import QtGui
 
-from PySide6.QtWidgets import QProgressDialog
-from PySide6.QtWidgets import QMessageBox
-from PySide6.QtWidgets import QApplication
-
 from gcodesimulator.python.drawers.gcodedrawer import GcodeDrawer
 from gcodesimulator.python.drawers.tooldrawer import ToolDrawer
 from gcodesimulator.python.drawers.heightmapdrawer import HeightMapDrawer
@@ -33,13 +29,13 @@ PROGRESSMINLINES = 10000
 PROGRESSSTEP     =  1000
 
 
-class GLWidgetContainer(QtWidgets.QWidget):
+class GCODESimulator(QtWidgets.QWidget):
     '''
     '''
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
 
-        self.glwVisualizer = GLWidget(self)
+        self.glVisualizer = GLWidget(self)
         self.slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
 
         # slider properties
@@ -49,10 +45,11 @@ class GLWidgetContainer(QtWidgets.QWidget):
         layout = QtWidgets.QVBoxLayout()
         self.setLayout(layout)
 
-        layout.addWidget(self.glwVisualizer)
+        layout.addWidget(self.glVisualizer)
         layout.addWidget(self.slider)
 
-        self.glwVisualizer.setMinimumHeight(100)
+        self.glVisualizer.setMinimumHeight(400)
+        self.glVisualizer.setMinimumWidth(400)
         
         self.m_programFileName = None
 
@@ -102,11 +99,11 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.m_toolDrawer = ToolDrawer(self.m_codeDrawer)
         self.m_toolDrawer.update()
 
-        self.glwVisualizer.addDrawable(self.m_codeDrawer)
-        self.glwVisualizer.addDrawable(self.m_heightmapDrawer)
-        self.glwVisualizer.addDrawable(self.m_toolDrawer)
+        self.glVisualizer.addDrawable(self.m_codeDrawer)
+        self.glVisualizer.addDrawable(self.m_heightmapDrawer)
+        self.glVisualizer.addDrawable(self.m_toolDrawer)
         
-        self.glwVisualizer.fitDrawable()
+        self.glVisualizer.fitDrawable()
 
         # Reset parsers
         self.m_gcodeMiniParser.reset()
@@ -116,7 +113,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.m_codeDrawer.update()
         
         try:
-            self.glwVisualizer.fitDrawable(self.m_codeDrawer)
+            self.glVisualizer.fitDrawable(self.m_codeDrawer)
         except Exception:
             pass
         
@@ -135,7 +132,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         # Update code drawer
         self.m_codeDrawer.update()
         try:
-            self.glwVisualizer.fitDrawable(self.m_codeDrawer)
+            self.glVisualizer.fitDrawable(self.m_codeDrawer)
         except Exception:
             pass
 
