@@ -302,9 +302,11 @@ class GcodePreprocessorUtils :
 
         h_x2_div_d = 4 * R * R - x * x - y * y
         if h_x2_div_d < 0: 
-            print("Error computing arc radius.")
+            #print("Error computing arc radius.")
             if math.fabs(h_x2_div_d) < 1.0e-4 :
                 h_x2_div_d = 0
+            else:
+                print("Error computing arc radius.")
 
         h_x2_div_d = (-math.sqrt(h_x2_div_d)) / math.hypot(x, y)
 

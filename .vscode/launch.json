@@ -4,8 +4,8 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    
 
+    
 
 
 
@@ -33,9 +33,10 @@
             "name": "TEST SIMULATOR",
             "type": "python",
             "request": "launch",
-            "program": "testsimulator.py",
+            "program": "RenderPath.py",
             "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator\\python"
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator\\python_new",
+            "args": ["jscut.gcode"]
         },
         {
             "name": "TEST VIEWER PROFILER",
