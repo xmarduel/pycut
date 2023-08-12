@@ -329,7 +329,7 @@ class HeightMapDrawer(ShaderDrawable):
             self.m_shader_program.setAttributeBuffer(vertexLocation3, GL.GL_FLOAT, offset, 2, self.sizeof_vertexdata)  
 
             # Offset for vertex
-            offset += self.sizeof_float
+            offset += self.sizeof_vector2D
 
             # Tell OpenGL programmable pipeline how to locate vertex color data
             vertex = self.m_shader_program.attributeLocation("vertex")

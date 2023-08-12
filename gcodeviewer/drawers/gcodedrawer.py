@@ -339,7 +339,7 @@ class GcodeDrawer(ShaderDrawable) :
             vertexIndex = line.vertexIndex()
             if vertexIndex >= 0:
                 # Update vertex array            
-                if data:
+                if data:  # FIXME: if data is not None:
                     data[vertexIndex].color = self.getSegmentColorVector(line)
                     data[vertexIndex + 1].color = data[vertexIndex].color
                 else:
@@ -347,7 +347,7 @@ class GcodeDrawer(ShaderDrawable) :
                     self.m_lines[vertexIndex + 1].color = self.m_lines[vertexIndex].color
 
         self.m_indexes = []
-        if data:
+        if data:  # FIXME: if data is not None:
             self.m_vbo.unmap()
         
         return not data

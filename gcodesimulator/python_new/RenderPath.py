@@ -26,6 +26,7 @@ from PySide6 import QtGui
 from PySide6.QtOpenGL import (
     QOpenGLVertexArrayObject,
     QOpenGLBuffer,
+    QOpenGLFramebufferObject,
     QOpenGLShaderProgram,
     QOpenGLShader,
     QOpenGLTexture,
@@ -70,7 +71,7 @@ class Scene:
         self.topZ = 0.0
         self.cutterDiameter = 0.125 * 25.4
         self.cutterAngle = 180.0
-        self.cutterHeight = 1.0
+        self.cutterHeight = 1.0 * 25.4
 
         self.isVBit = self.cutterAngle < 180
 
@@ -369,6 +370,97 @@ class SceneCutter:
         return len(self.vertices) * SceneCutter.VertexData.NB_FLOATS_PER_VERTEX * np.float32().itemsize
 
 
+class SceneHeightMap:
+    class VertexData:
+        NB_FLOATS_PER_VERTEX = 9
+
+        def __init__(self):
+            self.vPos0 = QVector2D()
+            self.vPos1 = QVector2D()
+            self.vPos2 = QVector2D()
+            self.vThisLoc = QVector2D()
+            self.vertex = 0.0
+
+    def __init__(self, resolution: int):
+        self.resolution = resolution
+
+        self.numTriangles = self.resolution * (self.resolution - 1)  # ?
+        self.meshNumVertexes = self.numTriangles * 3  # ?
+
+        # make a scene
+        self.vertices: List[SceneHeightMap.VertexData] = self.make_scene()
+
+        # fill the numpy array from the scene and gets its buffer
+        self.buffer = self.make_buffer()
+
+    def make_scene(self) -> List[VertexData]:
+        vertices : List[SceneHeightMap.VertexData] = []
+
+        def addVertex(x0: float, y0: float, x1: float, y1: float, x2: float, y2: float, x3: float, y3: float, idx):
+            vertex = SceneHeightMap.VertexData()
+            vertex.vPos0.setX(x0)
+            vertex.vPos0.setY(y0)
+            vertex.vPos1.setX(x1)
+            vertex.vPos1.setY(y1)
+            vertex.vPos2.setX(x2)
+            vertex.vPos2.setY(y2)
+            vertex.vThisLoc.setX(x3)
+            vertex.vThisLoc.setY(y3)
+            vertex.vertex = idx
+        
+            vertices.append(vertex)
+        
+        
+        for y in range(self.resolution - 1):
+            for x in range(self.resolution):
+                left = x - 1
+                if left < 0:
+                    left = 0
+                right = x + 1
+                if right >= self.resolution:
+                    right = self.resolution - 1
+                if not ((x & 1) ^ (y & 1)):
+                    for idx in range(3):
+                        if idx == 0 :
+                            addVertex(left, y+1, x, y, right, y+1, left, y+1, idx) 
+                        elif idx == 1:
+                            addVertex(left, y+1, x, y, right, y+1, x, y, idx)
+                        else :
+                            addVertex(left, y+1, x, y, right, y+1, right, y+1, idx)
+                else:
+                    for idx in range(3):
+                        if idx == 0:
+                            addVertex(left, y, right, y, x, y+1, left, y, idx)
+                        elif idx == 1:
+                            addVertex(left, y, right, y, x, y+1, right, y, idx)
+                        else:
+                            addVertex(left, y, right, y, x, y+1, x, y+1, idx)
+
+        return vertices
+
+    def make_buffer(self):
+        # fill the numpy array - each vertex is composed of 6 float
+        array = np.empty(len(self.vertices) * SceneHeightMap.VertexData.NB_FLOATS_PER_VERTEX, dtype=np.float32)
+
+        for k, vertex in enumerate(self.vertices):
+            array[9 * k + 0] = vertex.vPos0.x()
+            array[9 * k + 1] = vertex.vPos0.y()
+            array[9 * k + 2] = vertex.vPos1.x()
+            array[9 * k + 3] = vertex.vPos1.y()
+            array[9 * k + 4] = vertex.vPos2.x()
+            array[9 * k + 5] = vertex.vPos2.y()
+            array[9 * k + 6] = vertex.vThisLoc.x()
+            array[9 * k + 7] = vertex.vThisLoc.y()
+            array[9 * k + 8] = vertex.vertex
+
+        return array.tobytes()
+
+    def buffer_size(self) -> int:
+        """in bytes"""
+        return len(self.vertices) * SceneHeightMap.VertexData.NB_FLOATS_PER_VERTEX * np.float32().itemsize
+
+
+
 class Drawable:
     path_shader_vs = "shaders/rasterizePathVertexShader.txt"
     path_shader_fs = "shaders/rasterizePathFragmentShader.txt"
@@ -380,14 +472,20 @@ class Drawable:
     basic_shader_vs = "shaders/basicVertexShader.txt"
     basic_shader_fs = "shaders/basicFragmentShader.txt"
 
-    def __init__(self, gcode):
-        self.scene = Scene(gcode)
-        self.scene_cutter = SceneCutter()
+    TEXTURE_INDEX_0 = 0
 
+    def __init__(self, gcode):
         coeff = 2 # MY GPU
 
         self.gpuMem = 2 * 1024 * 1024 * coeff * coeff
-        self.resolution = float(1024 * coeff)
+        self.resolution = 1024 * coeff
+        
+        print("Scene path...")
+        self.scene = Scene(gcode)
+        print("Scene cutter...")
+        self.scene_cutter = SceneCutter()
+        print("Scene heightmap...")
+        #self.scene_heightmap = SceneHeightMap(self.resolution)
 
         self.cutterDia = self.scene.cutterDiameter
         self.cutterAngleRad = self.scene.cutterAngle * math.pi / 180
@@ -417,6 +515,10 @@ class Drawable:
         self.vao_cutter = QOpenGLVertexArrayObject()
         self.vbo_cutter = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
 
+        self.program_heightmap = QOpenGLShaderProgram()
+        self.vao_heightmap = QOpenGLVertexArrayObject()
+        self.vbo_heightmap = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
+
         self.texture1 = QOpenGLTexture(QOpenGLTexture.Target2D)
         self.texture2 = QOpenGLTexture(QOpenGLTexture.Target2D)
 
@@ -433,19 +535,26 @@ class Drawable:
     def clean(self):
         self.vbo_path.destroy()
         self.vbo_cutter.destroy()
+        self.vbo_heightmap.destroy()
         del self.program_path
         del self.program_cutter
+        del self.program_heightmap
         self.program_path = None
         self.program_cutter = None
+        self.program_heightmap = None
 
     def initialize(self):
         """ """
         self.initialize_path()
         self.initialize_cutter()
+        #self.initialize_heightmap()
 
     def draw(self, gl: "GLWidget"):
-        #self.draw_path(gl)
+        self.draw_path(gl)
         self.draw_cutter(gl)
+        #self.draw_heightmap(gl)
+
+    # -----------------------------------------------------------------
 
     def initialize_path(self):
         """ """
@@ -459,8 +568,8 @@ class Drawable:
         self.vbo_path.setUsagePattern(QOpenGLBuffer.DynamicDraw)
         self.vbo_path.bind()
 
-        array = np.empty(self.gpuMem, dtype=np.float32)
-        self.vbo_path.allocate(array.tobytes(), self.gpuMem * np.float32().itemsize)
+        self.array = np.zeros(self.gpuMem, dtype=np.float32)
+        self.vbo_path.allocate(self.array.tobytes(), self.gpuMem * np.float32().itemsize)
 
         self.setup_vao_path()
 
@@ -522,16 +631,16 @@ class Drawable:
         """ """
         self.program_path.bind()
 
-        self.program_path.setUniformValue1f(self.resolutionLocation, self.resolution)
-        self.program_path.setUniformValue1f(self.cutterDiaLocation, self.cutterDia)
-        self.program_path.setUniformValue(self.pathXYOffsetLocation, self.pathXOffset, self.pathYOffset)
-        self.program_path.setUniformValue1f(self.pathScaleLocation, self.pathScale)
-        self.program_path.setUniformValue1f(self.pathMinZLocation, self.pathMinZ)
-        self.program_path.setUniformValue1f(self.pathTopZLocation, self.pathTopZ)
-        self.program_path.setUniformValue1f(self.stopAtTimeLocation, self.stopAtTime)
-
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_path)
         
+        self.program_path.setUniformValue1f(self.resolutionLocation, float(self.resolution))
+        self.program_path.setUniformValue1f(self.cutterDiaLocation, float(self.cutterDia))
+        self.program_path.setUniformValue(self.pathXYOffsetLocation, float(self.pathXOffset), float(self.pathYOffset))
+        self.program_path.setUniformValue1f(self.pathScaleLocation, float(self.pathScale))
+        self.program_path.setUniformValue1f(self.pathMinZLocation, float(self.pathMinZ))
+        self.program_path.setUniformValue1f(self.pathTopZLocation, float(self.pathTopZ))
+        self.program_path.setUniformValue1f(self.stopAtTimeLocation, float(self.stopAtTime))
+
         numTriangles = self.scene.pathNumVertexes // 3
         lastTriangle = 0
         maxTriangles = math.floor(self.gpuMem // self.scene.pathStride // 3 // np.float32().itemsize)
@@ -551,14 +660,16 @@ class Drawable:
             
             scene_buffer_window = self.scene.pathBufferContent[start:start + length]
 
-            # -> map to vbo
+            # -> map to vbo : DOES NOT WORK !
             data = self.vbo_path.map(QOpenGLBuffer.WriteOnly)
+    
             print("data = ", data)
-            data[:] = scene_buffer_window[:]
-            self.vbo_path.unmap()
-            # -> done
+            if data :
+                data[:] = scene_buffer_window[:]
+                self.vbo_path.unmap()
+                # -> done
                        
-            gl.glDrawArrays(GL.GL_TRIANGLES, 0, n * 3)
+                gl.glDrawArrays(GL.GL_TRIANGLES, 0, n * 3)
             
             lastTriangle += n
         
@@ -566,6 +677,8 @@ class Drawable:
         vao_binder = None
 
         self.program_path.release()
+
+    # -----------------------------------------------------------------
 
     def initialize_cutter(self):
         """
@@ -678,6 +791,132 @@ class Drawable:
         vao_binder = None
 
         self.program_cutter.release()
+
+    # -----------------------------------------------------------------
+
+    def initialize_heightmap(self):
+        """
+        """
+        self.program_heightmap.addCacheableShaderFromSourceFile(QOpenGLShader.Vertex, self.height_shader_vs)
+        self.program_heightmap.addCacheableShaderFromSourceFile(QOpenGLShader.Fragment, self.height_shader_fs)
+        self.program_heightmap.link()
+
+        self.program_heightmap.bind()
+
+        self.vbo_heightmap.create()
+        #self.vbo_heightmap.setUsagePattern(QOpenGLBuffer.StaticDraw)
+        self.vbo_heightmap.bind()
+
+        self.vbo_heightmap.allocate(self.scene_heightmap.buffer, self.scene_heightmap.buffer_size())
+
+        self.setup_vao_heightmap()
+
+        self.program_heightmap.release()
+
+    def setup_vao_heightmap(self):
+        self.vao_heightmap.create()
+        vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_heightmap)
+
+        self.program_heightmap_resolutionLocation = self.program_heightmap.uniformLocation("resolution")
+        self.program_heightmap_pathScaleLocation = self.program_heightmap.uniformLocation("pathScale")
+        self.program_heightmap_pathMinZLocation = self.program_heightmap.uniformLocation("pathMinZ")
+        self.program_heightmap_pathTopZLocation = self.program_heightmap.uniformLocation("pathTopZ")
+        self.program_heightmap_rotateLocation = self.program_heightmap.uniformLocation("rotate")
+        self.program_heightmap_heightMapLocation = self.program_heightmap.uniformLocation("heightMap")
+
+        self.program_heightmap_pos0Location = self.program_heightmap.attributeLocation("pos0")
+        self.program_heightmap_pos1Location = self.program_heightmap.attributeLocation("pos1")
+        self.program_heightmap_pos2Location = self.program_heightmap.attributeLocation("pos2")
+        self.program_heightmap_thisPos = self.program_heightmap.attributeLocation("thisPos")
+        self.program_heightmap_vertex = self.program_heightmap.attributeLocation("vertex")
+
+        self.vbo_heightmap.bind()
+
+        self.program_heightmap.enableAttributeArray(self.program_heightmap_pos0Location)
+        self.program_heightmap.enableAttributeArray(self.program_heightmap_pos1Location)
+        self.program_heightmap.enableAttributeArray(self.program_heightmap_pos2Location)
+        self.program_heightmap.enableAttributeArray(self.program_heightmap_thisPos)
+        #self.program_heightmap.enableAttributeArray(self.program_heightmap_vertex)
+
+        stride = 9 * np.float32().itemsize
+
+        self.program_heightmap.setAttributeBuffer(self.program_heightmap_pos0Location, GL.GL_FLOAT, 0,                         2, stride)
+        self.program_heightmap.setAttributeBuffer(self.program_heightmap_pos1Location, GL.GL_FLOAT, 2 * np.float32().itemsize, 2, stride)
+        self.program_heightmap.setAttributeBuffer(self.program_heightmap_pos2Location, GL.GL_FLOAT, 4 * np.float32().itemsize, 2, stride)
+        self.program_heightmap.setAttributeBuffer(self.program_heightmap_thisPos,      GL.GL_FLOAT, 6 * np.float32().itemsize, 2, stride)
+        #self.program_heightmap.setAttributeBuffer(self.program_heightmap_vertex,       GL.GL_FLOAT, 8 * np.float32().itemsize, 1, stride)
+
+
+        self.program_heightmap.disableAttributeArray(self.program_heightmap_pos0Location)
+        self.program_heightmap.disableAttributeArray(self.program_heightmap_pos1Location)
+        self.program_heightmap.disableAttributeArray(self.program_heightmap_pos2Location)
+        self.program_heightmap.disableAttributeArray(self.program_heightmap_thisPos)
+        #self.program_heightmap.disableAttributeArray(self.program_heightmap_vertex)
+
+        self.vbo_heightmap.release()
+
+        vao_binder = None
+
+    def create_heightmap_textures(self, gl: "GLWidget"):
+        pass  # TODO
+        self.pathFramebuffer = QOpenGLFramebufferObject(
+            QSize(self.resolution, self.resolution),
+            QOpenGLFramebufferObject.CombinedDepthStencil
+        )
+        self.pathFramebuffer.bind()
+
+        self.pathRgbaTexture = QOpenGLTexture(QOpenGLTexture.Target2D)
+        gl.glActiveTexture(GL.GL_TEXTURE0)
+
+        self.pathRgbaTexture.bind(self.TEXTURE_INDEX_0)
+        gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, self.resolution, self.resolution, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, None)
+        gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
+        gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
+        gl.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, self.pathRgbaTexture, 0)
+        self.pathRgbaTexture.release()
+    
+        self.renderbuffer = QOpenGLBuffer() 
+        self.renderbuffer.bind(GL.GL_RENDERBUFFER)
+        gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, self.resolution, self.resolution)
+        gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, self.renderbuffer)
+        self.renderbuffer.release()
+    
+        self.pathFramebuffer.release()
+        
+    def draw_heightmap(self, gl: "GLWidget"):
+        pass # TODO
+
+        self.program_heightmap.bind()
+
+        self.program_heightmap.setUniformValue(self.program_heightmap_resolutionLocation, self.resolution)
+        self.program_heightmap.setUniformValue(self.program_heightmap_pathScaleLocation, self.pathScale)
+        self.program_heightmap.setUniformValue(self.program_heightmap_pathMinZLocation, self.pathMinZ)
+        self.program_heightmap.setUniformValue(self.program_heightmap_pathTopZLocation, self.pathTopZ)
+        self.program_heightmap.setUniformValue(self.program_heightmap_rotateLocation, self.rotate)
+        self.program_heightmap.setUniformValue(self.program_heightmap_heightMapLocation, 0)
+        
+        vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_heightmap)
+
+        self.program_heightmap.enableAttributeArray(self.program_heightmap_pos0Location)
+        self.program_heightmap.enableAttributeArray(self.program_heightmap_pos1Location)
+        self.program_heightmap.enableAttributeArray(self.program_heightmap_pos2Location)
+        self.program_heightmap.enableAttributeArray(self.program_heightmap_thisPos)
+        #self.program_heightmap.enableAttributeArray(self.program_heightmap_vertex)
+
+        # bind texture to texture index "TEXTURE_INDEX_0" -> accessible in fragment shader through "texture"
+        self.pathRgbaTexture.bind(self.TEXTURE_INDEX_0)
+
+        gl.glDrawArrays(GL.GL_TRIANGLES, 0, len(self.scene_heightmap.vertices))
+
+        self.program_heightmap.disableAttributeArray(self.program_heightmap_pos0Location)
+        self.program_heightmap.disableAttributeArray(self.program_heightmap_pos1Location)
+        self.program_heightmap.disableAttributeArray(self.program_heightmap_pos2Location)
+        self.program_heightmap.disableAttributeArray(self.program_heightmap_thisPos)
+        #self.program_heightmap.disableAttributeArray(self.program_heightmap_vertex)
+
+        vao_binder = None
+
+        self.program_heightmap.release()
 
 
 class GLWidget(QOpenGLWidget, QOpenGLFunctions):
