@@ -8,6 +8,9 @@ import numpy as np
 from typing import List
 from typing import Dict
 
+# works great !
+from numba import jit
+
 from PySide6.QtCore import QSize, QPoint
 from PySide6.QtGui import (
     QOpenGLFunctions,
@@ -44,6 +47,99 @@ sNaN = float('NaN')
 
 ZOOMSTEP = 2.0
 
+
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
+
+@jit(nopython=True)
+def make_scene_numba(resolution) -> np.array :
+    meshNumVertexes = resolution * (resolution - 1)
+    meshStride = 9
+
+    arraySize = meshNumVertexes *  3 * meshStride  # in float
+    array = np.zeros(arraySize, dtype=np.float32)
+        
+    print("make_scene_numba...", arraySize)
+
+    pos = 0
+    for y in range(resolution - 1):
+        for x in range(resolution):
+            left = x - 1
+            if left < 0:
+                left = 0
+            right = x + 1
+            if right >= resolution:
+                right = resolution - 1
+            if not ((x & 1) ^ (y & 1)):
+                for i in range(3):
+                    array[pos] = left
+                    pos += 1
+                    array[pos] = y + 1
+                    pos += 1
+                    array[pos] = x
+                    pos += 1
+                    array[pos] = y
+                    pos += 1
+                    array[pos] = right
+                    pos += 1
+                    array[pos] = y + 1
+                    pos += 1
+                    if i == 0:
+                        array[pos] = left
+                        pos += 1
+                        array[pos] = y + 1
+                        pos += 1
+                    elif i == 1:
+                        array[pos] = x
+                        pos += 1
+                        array[pos] = y
+                        pos += 1
+                    else :
+                        array[pos] = right
+                        pos += 1
+                        array[pos] = y + 1
+                        pos += 1
+                        
+                    array[pos] = i
+                    pos += 1
+            else:
+                for i in range(3):
+                    array[pos] = left
+                    pos += 1
+                    array[pos] = y
+                    pos += 1
+                    array[pos] = right
+                    pos += 1
+                    array[pos] = y
+                    pos += 1
+                    array[pos] = x
+                    pos += 1
+                    array[pos] = y + 1
+                    pos += 1
+                    if i == 0:
+                        array[pos] = left
+                        pos += 1
+                        array[pos] = y
+                        pos += 1
+                    elif i == 1:
+                        array[pos] = right
+                        pos += 1
+                        array[pos] = y
+                        pos += 1
+                    else :
+                        array[pos] = x
+                        pos += 1
+                        array[pos] = y + 1
+                        pos += 1
+                        
+                    array[pos] = i
+                    pos += 1
+                    
+        print("DONE!")
+        return array
+
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
 
 
 class Scene:
@@ -374,12 +470,12 @@ class SceneHeightMap:
     class VertexData:
         NB_FLOATS_PER_VERTEX = 9
 
-        def __init__(self):
-            self.vPos0 = QVector2D()
-            self.vPos1 = QVector2D()
-            self.vPos2 = QVector2D()
-            self.vThisLoc = QVector2D()
-            self.vertex = 0.0
+        def __init__(self, x0: float, y0: float, x1: float, y1: float, x2: float, y2: float, x3: float, y3: float, idx: int):
+            self.vPos0 = QVector2D(x0, y0)
+            self.vPos1 = QVector2D(x1, y1)
+            self.vPos2 = QVector2D(x2, y2)
+            self.vThisLoc = QVector2D(x3, y3)
+            self.vertex = idx
 
     def __init__(self, resolution: int):
         self.resolution = resolution
@@ -387,30 +483,27 @@ class SceneHeightMap:
         self.numTriangles = self.resolution * (self.resolution - 1)  # ?
         self.meshNumVertexes = self.numTriangles * 3  # ?
 
-        # make a scene
+        self.vertices : List[SceneHeightMap.VertexData] = []
+
+        # make a scene -> much too slow
+        """
         self.vertices: List[SceneHeightMap.VertexData] = self.make_scene()
 
-        # fill the numpy array from the scene and gets its buffer
         self.buffer = self.make_buffer()
+        """
+
+        # -> numba helps! fill the numpy array from the scene and gets its buffer
+        self.np_array = make_scene_numba(self.resolution)
+        self.buffer = self.np_array.tobytes()
 
     def make_scene(self) -> List[VertexData]:
         vertices : List[SceneHeightMap.VertexData] = []
 
-        def addVertex(x0: float, y0: float, x1: float, y1: float, x2: float, y2: float, x3: float, y3: float, idx):
-            vertex = SceneHeightMap.VertexData()
-            vertex.vPos0.setX(x0)
-            vertex.vPos0.setY(y0)
-            vertex.vPos1.setX(x1)
-            vertex.vPos1.setY(y1)
-            vertex.vPos2.setX(x2)
-            vertex.vPos2.setY(y2)
-            vertex.vThisLoc.setX(x3)
-            vertex.vThisLoc.setY(y3)
-            vertex.vertex = idx
-        
+        def addVertex(x0: float, y0: float, x1: float, y1: float, x2: float, y2: float, x3: float, y3: float, idx: int):
+            vertex = SceneHeightMap.VertexData(x0, y0, x1, y1, x2, y2, x3, y3, idx)
             vertices.append(vertex)
         
-        
+        print("make_scene...")
         for y in range(self.resolution - 1):
             for x in range(self.resolution):
                 left = x - 1
@@ -420,25 +513,21 @@ class SceneHeightMap:
                 if right >= self.resolution:
                     right = self.resolution - 1
                 if not ((x & 1) ^ (y & 1)):
-                    for idx in range(3):
-                        if idx == 0 :
-                            addVertex(left, y+1, x, y, right, y+1, left, y+1, idx) 
-                        elif idx == 1:
-                            addVertex(left, y+1, x, y, right, y+1, x, y, idx)
-                        else :
-                            addVertex(left, y+1, x, y, right, y+1, right, y+1, idx)
+                    pass
+                    addVertex(left, y+1, x, y, right, y+1, left, y+1, 0) 
+                    addVertex(left, y+1, x, y, right, y+1, x, y, 1)
+                    addVertex(left, y+1, x, y, right, y+1, right, y+1, 2)
                 else:
-                    for idx in range(3):
-                        if idx == 0:
-                            addVertex(left, y, right, y, x, y+1, left, y, idx)
-                        elif idx == 1:
-                            addVertex(left, y, right, y, x, y+1, right, y, idx)
-                        else:
-                            addVertex(left, y, right, y, x, y+1, x, y+1, idx)
+                    pass
+                    addVertex(left, y, right, y, x, y+1, left, y, 0)
+                    addVertex(left, y, right, y, x, y+1, right, y, 1)
+                    addVertex(left, y, right, y, x, y+1, x, y+1, 2)
 
+        print("DONE!")
         return vertices
 
     def make_buffer(self):
+        print("make_buffer....")
         # fill the numpy array - each vertex is composed of 6 float
         array = np.empty(len(self.vertices) * SceneHeightMap.VertexData.NB_FLOATS_PER_VERTEX, dtype=np.float32)
 
@@ -453,12 +542,19 @@ class SceneHeightMap:
             array[9 * k + 7] = vertex.vThisLoc.y()
             array[9 * k + 8] = vertex.vertex
 
+        print("DONE!")
+
         return array.tobytes()
+
+    """
+    def buffer_size(self) -> int:
+        '''in bytes'''
+        return len(self.vertices) * SceneHeightMap.VertexData.NB_FLOATS_PER_VERTEX * np.float32().itemsize
+    """
 
     def buffer_size(self) -> int:
         """in bytes"""
-        return len(self.vertices) * SceneHeightMap.VertexData.NB_FLOATS_PER_VERTEX * np.float32().itemsize
-
+        return  self.np_array.size * np.float32().itemsize
 
 
 class Drawable:
@@ -485,7 +581,7 @@ class Drawable:
         print("Scene cutter...")
         self.scene_cutter = SceneCutter()
         print("Scene heightmap...")
-        #self.scene_heightmap = SceneHeightMap(self.resolution)
+        self.scene_heightmap = SceneHeightMap(self.resolution)
 
         self.cutterDia = self.scene.cutterDiameter
         self.cutterAngleRad = self.scene.cutterAngle * math.pi / 180
@@ -547,12 +643,12 @@ class Drawable:
         """ """
         self.initialize_path()
         self.initialize_cutter()
-        #self.initialize_heightmap()
+        self.initialize_heightmap()
 
     def draw(self, gl: "GLWidget"):
         self.draw_path(gl)
         self.draw_cutter(gl)
-        #self.draw_heightmap(gl)
+        self.draw_heightmap(gl)
 
     # -----------------------------------------------------------------
 
@@ -822,7 +918,7 @@ class Drawable:
         self.program_heightmap_pathMinZLocation = self.program_heightmap.uniformLocation("pathMinZ")
         self.program_heightmap_pathTopZLocation = self.program_heightmap.uniformLocation("pathTopZ")
         self.program_heightmap_rotateLocation = self.program_heightmap.uniformLocation("rotate")
-        self.program_heightmap_heightMapLocation = self.program_heightmap.uniformLocation("heightMap")
+        #self.program_heightmap_heightMapLocation = self.program_heightmap.uniformLocation("heightMap")
 
         self.program_heightmap_pos0Location = self.program_heightmap.attributeLocation("pos0")
         self.program_heightmap_pos1Location = self.program_heightmap.attributeLocation("pos1")
@@ -884,18 +980,18 @@ class Drawable:
         self.pathFramebuffer.release()
         
     def draw_heightmap(self, gl: "GLWidget"):
-        pass # TODO
-
         self.program_heightmap.bind()
 
-        self.program_heightmap.setUniformValue(self.program_heightmap_resolutionLocation, self.resolution)
-        self.program_heightmap.setUniformValue(self.program_heightmap_pathScaleLocation, self.pathScale)
-        self.program_heightmap.setUniformValue(self.program_heightmap_pathMinZLocation, self.pathMinZ)
-        self.program_heightmap.setUniformValue(self.program_heightmap_pathTopZLocation, self.pathTopZ)
-        self.program_heightmap.setUniformValue(self.program_heightmap_rotateLocation, self.rotate)
-        self.program_heightmap.setUniformValue(self.program_heightmap_heightMapLocation, 0)
-        
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_heightmap)
+
+        self.program_heightmap.setUniformValue1f(self.program_heightmap_resolutionLocation, self.resolution)
+        self.program_heightmap.setUniformValue1f(self.program_heightmap_pathScaleLocation, self.pathScale)
+        self.program_heightmap.setUniformValue1f(self.program_heightmap_pathMinZLocation, self.pathMinZ)
+        self.program_heightmap.setUniformValue1f(self.program_heightmap_pathTopZLocation, self.pathTopZ)
+        self.program_heightmap.setUniformValue(self.program_heightmap_rotateLocation, self.rotate)
+        #self.program_heightmap.setUniformValue(self.program_heightmap_heightMapLocation, 0)
+        
+        
 
         self.program_heightmap.enableAttributeArray(self.program_heightmap_pos0Location)
         self.program_heightmap.enableAttributeArray(self.program_heightmap_pos1Location)
@@ -904,7 +1000,7 @@ class Drawable:
         #self.program_heightmap.enableAttributeArray(self.program_heightmap_vertex)
 
         # bind texture to texture index "TEXTURE_INDEX_0" -> accessible in fragment shader through "texture"
-        self.pathRgbaTexture.bind(self.TEXTURE_INDEX_0)
+        #self.pathRgbaTexture.bind(self.TEXTURE_INDEX_0)
 
         gl.glDrawArrays(GL.GL_TRIANGLES, 0, len(self.scene_heightmap.vertices))
 
