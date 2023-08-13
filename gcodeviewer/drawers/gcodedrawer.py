@@ -325,7 +325,7 @@ class GcodeDrawer(ShaderDrawable) :
         # Update vertices
         lines = self.m_viewParser.getLines()
 
-        # Map buffer
+        # Map buffer : C++ => cast to VertexData* pointer ; Python => Shiboken VoidPtr
         data = self.m_vbo.map(QOpenGLBuffer.WriteOnly)
 
         # Update vertices for each line segment
@@ -342,6 +342,18 @@ class GcodeDrawer(ShaderDrawable) :
                 if data:  # FIXME: if data is not None:
                     data[vertexIndex].color = self.getSegmentColorVector(line)
                     data[vertexIndex + 1].color = data[vertexIndex].color
+                    # FIXME : work at the buffer level
+                    # buffer_index <- vertexIndex
+                    # np_array <-> data
+                    # color = self.getSegmentColorVector(line)
+                    # np_array[bufferIndex + colorOffset + 0] as np array = color.x()
+                    # np_array[bufferIndex + colorOffset + 1] as np array = color.y()
+                    # np_array[bufferIndex + colorOffset + 2] as np array = color.z()
+                    #
+                    # np_array[bufferIndex + stride + colorOffset + 0] as np array = color.x()
+                    # np_array[bufferIndex + stride + colorOffset + 1] as np array = color.y()
+                    # np_array[bufferIndex + stride + colorOffset + 2] as np array = color.z()
+                    #
                 else:
                     self.m_lines[vertexIndex].color = self.getSegmentColorVector(line)
                     self.m_lines[vertexIndex + 1].color = self.m_lines[vertexIndex].color
