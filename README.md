@@ -26,6 +26,7 @@ Dependencies
 - lxml (latest)
 - freetype-py (latest) - used in svgtext2svpath.py utility
 - matplotlib 3.6.2 (to debug/view shapely offsets ops)
+- numba (latest) - for optimisation
 
 
 Features
