@@ -45,7 +45,7 @@ from gcodeminiparser import GcodeMiniParser
 
 sNaN = float('NaN')
 
-ZOOMSTEP = 2.0
+ZOOMSTEP = 1.1
 
 
 # ------------------------------------------------------------------------
@@ -399,9 +399,9 @@ class SceneCutter:
         self.buffer = self.make_buffer()
 
     def make_scene(self) -> List[VertexData]:
-        r = 0.7
-        g = 0.7
-        b = 0.0
+        r = 0.2
+        g = 0.2
+        b = 0.3
 
         vertices: List[SceneCutter.VertexData] = []
 
@@ -427,18 +427,24 @@ class SceneCutter:
             x = 0.5 * math.cos(j * 2 * math.pi / self.numDivisions)
             y = 0.5 * math.sin(j * 2 * math.pi / self.numDivisions)
  
-            addVertex(lastX, lastY, 0)
-            addVertex(x, y, 0)
-            addVertex(lastX, lastY, 1)
-            addVertex(x, y, 0)
-            addVertex(x, y, 1)
-            addVertex(lastX, lastY, 1)
-            addVertex(0, 0, 0)
-            addVertex(x, y, 0)
-            addVertex(lastX, lastY, 0)
-            addVertex(0, 0, 1)
-            addVertex(lastX, lastY, 1)
-            addVertex(x, y, 1)
+            # 2 triangles for the cylinder "wall"
+            addVertex(lastX, lastY, 0.0)
+            addVertex(x, y, 0.0)
+            addVertex(lastX, lastY, 1.0)
+
+            addVertex(x, y, 0.0)
+            addVertex(x, y, 1.0)
+            addVertex(lastX, lastY, 1.0)
+
+            # lower base -> cheese part
+            addVertex(0, 0, 0.0)
+            addVertex(x, y, 0.0)
+            addVertex(lastX, lastY, 0.0)
+
+            # upper base -> cheese part
+            addVertex(0, 0, 1.0)
+            addVertex(lastX, lastY, 1.0)
+            addVertex(x, y, 1.0)
 
             lastX = x
             lastY = y
@@ -447,7 +453,7 @@ class SceneCutter:
 
     def make_buffer(self):
         # fill the numpy array - each vertex is composed of 6 float
-        array = np.empty(len(self.vertices) * SceneCutter.VertexData.NB_FLOATS_PER_VERTEX, dtype=np.float32)
+        array = np.zeros(len(self.vertices) * SceneCutter.VertexData.NB_FLOATS_PER_VERTEX, dtype=np.float32)
 
         for k, vertex in enumerate(self.vertices):
             array[6 * k + 0] = vertex.vPos.x()
@@ -458,10 +464,6 @@ class SceneCutter:
             array[6 * k + 5] = vertex.vColor.z()
 
         return array.tobytes()
-
-    def buffer_size(self) -> int:
-        """in bytes"""
-        return len(self.vertices) * SceneCutter.VertexData.NB_FLOATS_PER_VERTEX * np.float32().itemsize
 
 
 class SceneHeightMap:
@@ -481,9 +483,7 @@ class SceneHeightMap:
         self.numTriangles = self.resolution * (self.resolution - 1)  # ?
         self.meshNumVertexes = self.numTriangles * 3  # ?
 
-        self.vertices : List[SceneHeightMap.VertexData] = []
-
-        # make a scene -> much too slow
+        # make a scene (eval vertices) -> much too slow
         """
         self.vertices: List[SceneHeightMap.VertexData] = self.make_scene()
 
@@ -494,6 +494,7 @@ class SceneHeightMap:
         self.np_array = make_scene_numba(self.resolution)
         self.buffer = self.np_array.tobytes()
 
+    """
     def make_scene(self) -> List[VertexData]:
         vertices : List[SceneHeightMap.VertexData] = []
 
@@ -544,7 +545,6 @@ class SceneHeightMap:
 
         return array.tobytes()
 
-    """
     def buffer_size(self) -> int:
         '''in bytes'''
         return len(self.vertices) * SceneHeightMap.VertexData.NB_FLOATS_PER_VERTEX * np.float32().itemsize
@@ -552,7 +552,7 @@ class SceneHeightMap:
 
     def buffer_size(self) -> int:
         """in bytes"""
-        return  self.np_array.size * np.float32().itemsize
+        return self.np_array.size * np.float32().itemsize
 
 
 class Drawable:
@@ -824,7 +824,7 @@ class Drawable:
         self.vbo_cutter.setUsagePattern(QOpenGLBuffer.StaticDraw)
         self.vbo_cutter.bind()
 
-        self.vbo_cutter.allocate(self.scene_cutter.buffer, self.scene_cutter.buffer_size())
+        self.vbo_cutter.allocate(self.scene_cutter.buffer, len(self.scene_cutter.buffer))
 
         self.setup_vao_cutter()
 
@@ -855,7 +855,7 @@ class Drawable:
         self.program_cutter.setAttributeBuffer(self.colLocation, GL.GL_FLOAT, 3 * np.float32().itemsize, 3, stride)
         self.program_cutter.enableAttributeArray(self.colLocation)
 
-        self.vbo_cutter.release()
+        #self.vbo_cutter.release()
 
         vao_binder = None
 
@@ -903,7 +903,7 @@ class Drawable:
 
         self.program_cutter.bind()
 
-        print("SCALE = ", self.pathScale)
+        print("PATH_SCALE = ", self.pathScale)
 
         self.program_cutter.setUniformValue(self.scaleLocation, self.cutterDia * self.pathScale, self.cutterDia * self.pathScale, self.cutterH * self.pathScale)
         self.program_cutter.setUniformValue(self.translateLocation, (x + self.pathXOffset) * self.pathScale, (y + self.pathYOffset) * self.pathScale, (z - self.pathTopZ) * self.pathScale)
@@ -911,13 +911,15 @@ class Drawable:
 
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_cutter)
 
-        self.program_cutter.enableAttributeArray(self.posLocation)
-        self.program_cutter.enableAttributeArray(self.colLocation)
+        #self.program_cutter.enableAttributeArray(self.posLocation)
+        #self.program_cutter.enableAttributeArray(self.colLocation)
 
+        #gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
         gl.glDrawArrays(GL.GL_TRIANGLES, 0, len(self.scene_cutter.vertices))
+        #gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
 
-        self.program_cutter.disableAttributeArray(self.posLocation)
-        self.program_cutter.disableAttributeArray(self.colLocation)
+        #self.program_cutter.disableAttributeArray(self.posLocation)
+        #self.program_cutter.disableAttributeArray(self.colLocation)
 
         vao_binder = None
 
@@ -964,7 +966,7 @@ class Drawable:
 
         self.vbo_heightmap.bind()
 
-        stride = 9 * np.float32().itemsize
+        stride = SceneHeightMap.VertexData.NB_FLOATS_PER_VERTEX * np.float32().itemsize
 
         self.program_heightmap.setAttributeBuffer(self.program_heightmap_pos0Location, GL.GL_FLOAT, 0,                         2, stride)
         self.program_heightmap.enableAttributeArray(self.program_heightmap_pos0Location)
@@ -1019,6 +1021,9 @@ class Drawable:
         self.pathFramebuffer.release()
 
     def draw_heightmap_texture(self, gl: "GLWidget"):
+        """
+        this calls the "drawPath" (in RenderPath.js) ...
+        """
         self.pathFramebuffer.bind()
         self.draw_path(gl)
         self.pathFramebuffer.release()
@@ -1027,30 +1032,27 @@ class Drawable:
         self.needToDrawHeightMap = True
         
     def draw_heightmap(self, gl: "GLWidget"):
-        """
-        this calls the "drawPath" (in RenderPath.js) ...
-        """
         self.program_heightmap.bind()
 
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_heightmap)
+
+        # bind texture to texture index "TEXTURE_INDEX_0" -> accessible in fragment shader through "texture"
+        self.pathRgbaTexture.bind(self.TEXTURE_INDEX_0)
 
         self.program_heightmap.setUniformValue1f(self.program_heightmap_resolutionLocation, self.resolution)
         self.program_heightmap.setUniformValue1f(self.program_heightmap_pathScaleLocation, self.pathScale)
         self.program_heightmap.setUniformValue1f(self.program_heightmap_pathMinZLocation, self.pathMinZ)
         self.program_heightmap.setUniformValue1f(self.program_heightmap_pathTopZLocation, self.pathTopZ)
         self.program_heightmap.setUniformValue(self.program_heightmap_rotateLocation, self.rotate)
-        #self.program_heightmap.setUniformValue(self.program_heightmap_heightMapLocation, 0)
+        self.program_heightmap.setUniformValue(self.program_heightmap_heightMapLocation, 0)
 
-        self.program_heightmap.enableAttributeArray(self.program_heightmap_pos0Location)
-        self.program_heightmap.enableAttributeArray(self.program_heightmap_pos1Location)
-        self.program_heightmap.enableAttributeArray(self.program_heightmap_pos2Location)
-        self.program_heightmap.enableAttributeArray(self.program_heightmap_thisPos)
+        #self.program_heightmap.enableAttributeArray(self.program_heightmap_pos0Location)
+        #self.program_heightmap.enableAttributeArray(self.program_heightmap_pos1Location)
+        #self.program_heightmap.enableAttributeArray(self.program_heightmap_pos2Location)
+        #self.program_heightmap.enableAttributeArray(self.program_heightmap_thisPos)
         #self.program_heightmap.enableAttributeArray(self.program_heightmap_vertex)
 
-        # bind texture to texture index "TEXTURE_INDEX_0" -> accessible in fragment shader through "texture"
-        self.pathRgbaTexture.bind(self.TEXTURE_INDEX_0)
-
-        gl.glDrawArrays(GL.GL_TRIANGLES, 0, len(self.scene_heightmap.vertices))
+        gl.glDrawArrays(GL.GL_TRIANGLES, 0, self.scene_heightmap.np_array.size // SceneHeightMap.VertexData.NB_FLOATS_PER_VERTEX )
 
         self.program_heightmap.disableAttributeArray(self.program_heightmap_pos0Location)
         self.program_heightmap.disableAttributeArray(self.program_heightmap_pos1Location)
@@ -1061,6 +1063,9 @@ class Drawable:
         vao_binder = None
 
         self.program_heightmap.release()
+
+        self.vbo_heightmap.release()
+        self.pathRgbaTexture.release()
 
 
 class GLWidget(QOpenGLWidget, QOpenGLFunctions):
@@ -1374,6 +1379,11 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
             ) * (1 - 1 / ZOOMSTEP)
 
             self.m_zoom /= ZOOMSTEP
+
+            # XAM
+            self.drawable.pathScale  /= ZOOMSTEP
+            # XAM
+
         elif self.m_zoom < 10 and we.angleDelta().y() > 0:
             self.m_xPan -= (
                 (float)(we.position().x() / self.width() - 0.5 + self.m_xPan)
@@ -1383,6 +1393,10 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
             ) * (1 - ZOOMSTEP)
 
             self.m_zoom *= ZOOMSTEP
+
+            # XAM
+            self.drawable.pathScale  *= ZOOMSTEP
+            # XAM
 
         self.updateProjection()
         self.updateView()
