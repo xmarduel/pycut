@@ -13,30 +13,22 @@
 
     
         {
-            "name": "OPENGL DEMO1",
-            "type": "python",
-            "request": "launch",
-            "program": "demo1.py",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator\\python\\demo1",
-            "console": "integratedTerminal"
-        },
-        {
-            "name": "OPENGL QT - DEMO",
-            "type": "python",
-            "request": "launch",
-            "program": "openGL_demo.py",
-            "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\opengl",
-            "args": []
-        },
-        {
             "name": "TEST SIMULATOR",
             "type": "python",
             "request": "launch",
             "program": "RenderPath.py",
             "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator\\python_new",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator_python",
             "args": ["jscut.gcode"]
+        },
+        {
+            "name": "TEST SIMULATOR_DEBUG",
+            "type": "python",
+            "request": "launch",
+            "program": "RenderPath.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator_python",
+            "args": ["jscut_debug.gcode"]
         },
         {
             "name": "TEST VIEWER PROFILER",

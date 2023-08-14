@@ -163,9 +163,9 @@ class Scene:
         self.parser.parse_gcode(self.gcode)
 
         self.topZ = 0.0
-        self.cutterDiameter = 0.125 * 25.4
+        self.cutterDiameter = 6.0 # 0.125 * 25.4
         self.cutterAngle = 180.0
-        self.cutterHeight = 1.0 * 25.4
+        self.cutterHeight = 30.0 # 1.0 * 25.4
 
         self.isVBit = self.cutterAngle < 180
 
@@ -235,7 +235,7 @@ class Scene:
             x = point.pos.x()
             y = point.pos.y()
             z = point.pos.z()
-            f = point.feedrate
+            feedrate = point.feedrate
             
             prevX = prevPoint.pos.x()
             prevY = prevPoint.pos.y()
@@ -243,7 +243,7 @@ class Scene:
             
             dist = math.sqrt((x - prevX) * (x - prevX) + (y - prevY) * (y - prevY) + (z - prevZ) * (z - prevZ))
             beginTime = total_time
-            total_time = total_time + dist / f * 60
+            total_time = total_time + dist / feedrate * 60
 
             minX = min(minX, x)
             maxX = max(maxX, x)
@@ -550,10 +550,6 @@ class SceneHeightMap:
         return len(self.vertices) * SceneHeightMap.VertexData.NB_FLOATS_PER_VERTEX * np.float32().itemsize
     """
 
-    def buffer_size(self) -> int:
-        """in bytes"""
-        return self.np_array.size * np.float32().itemsize
-
 
 class Drawable:
     path_shader_vs = "shaders/rasterizePathVertexShader.txt"
@@ -569,10 +565,11 @@ class Drawable:
     TEXTURE_INDEX_0 = 0
 
     def __init__(self, gcode):
-        coeff = 2 # MY GPU
+        coeff = 1 # MY GPU
 
-        self.gpuMem = 2 * 1024 * 1024 * coeff * coeff
         self.resolution = 1024 * coeff
+        self.gpuMem = 2 * self.resolution * self.resolution
+        
         
         print("Scene path...")
         self.scene = Scene(gcode)
@@ -628,6 +625,7 @@ class Drawable:
         self.vbo_path.destroy()
         self.vbo_cutter.destroy()
         self.vbo_heightmap.destroy()
+        #self.pathRgbaTexture.destroy()
         del self.program_path
         del self.program_cutter
         del self.program_heightmap
@@ -646,7 +644,6 @@ class Drawable:
         self.draw_heightmap(gl)
         
         self.draw_cutter(gl)
-        
 
     # -----------------------------------------------------------------
 
@@ -662,12 +659,13 @@ class Drawable:
 
         self.program_path.bind()
 
+        self.array = np.zeros(self.gpuMem, dtype=np.float32)
+
         self.vbo_path.create()  # QOpenGLBuffer.VertexBuffer
         self.vbo_path.setUsagePattern(QOpenGLBuffer.DynamicDraw)
         self.vbo_path.bind()
 
-        self.array = np.zeros(self.gpuMem, dtype=np.float32)
-        self.vbo_path.allocate(self.array.tobytes(), self.gpuMem * np.float32().itemsize)
+        self.vbo_path.allocate(self.array.tobytes(), self.array.size * np.float32().itemsize)
 
         self.setup_vao_path()
 
@@ -730,8 +728,6 @@ class Drawable:
     def draw_path(self, gl: "GLWidget"):
         """ """
         self.program_path.bind()
-
-        vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_path)
         
         self.program_path.setUniformValue1f(self.resolutionLocation, float(self.resolution))
         self.program_path.setUniformValue1f(self.cutterDiaLocation, float(self.cutterDia))
@@ -749,51 +745,60 @@ class Drawable:
         if self.isVBit:
             self.program_path.enableAttributeArray(self.rawPosLocation)
 
+        vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_path)
+        
         numTriangles = self.scene.pathNumVertexes // 3
         lastTriangle = 0
         maxTriangles = math.floor(self.gpuMem // self.scene.pathStride // 3 // np.float32().itemsize)
-        
+
         while lastTriangle < numTriangles:
             n = min(numTriangles - lastTriangle, maxTriangles)
 
             """
+            PROTOTYPE Float32Array(a.buffer, offset, length) : offset in bytes, length = #floats 
+            pathBufferContent is a Float32Array
+            pathBufferContent.buffer is an ArrayBuffer
+
             b = new Float32Array(pathBufferContent.buffer, lastTriangle * pathStride * 3 * Float32Array.BYTES_PER_ELEMENT, n * pathStride * 3)
             gl.bufferSubData(self.gl.ARRAY_BUFFER, 0, b)
             """
 
             # TRANSLATES TO
 
-            start = lastTriangle * self.scene.pathStride * 3 * np.float32().itemsize
-            length = n * self.scene.pathStride * 3
-            
-            scene_buffer_window = self.scene.pathBufferContent[start:start + length]
+            start = lastTriangle * self.scene.pathStride * 3 # in float
+            length = n * self.scene.pathStride * 3 # in float
+
+            array_window = self.array[start: start + length]
 
             # how to do ?
-            use_GL = False
             use_MAP_UNMAP = False
             use_WRITE = True
 
-            if use_GL:
-                # crash !
-                GL.glBufferSubData(GL.GL_ARRAY_BUFFER, 0, length, scene_buffer_window)
-                gl.glDrawArrays(GL.GL_TRIANGLES, 0, n * 3)
-
-            # -> map to vbo : DOES NOT WORK ! data IS ALWAYS NONE !
+            # -> map to vbo : DOES NOT WORK ! data IS ALWAYS NONE ! with bind() -> ok !
             if use_MAP_UNMAP:
-                data = self.vbo_path.map(QOpenGLBuffer.WriteOnly)
+                res = self.vbo_path.bind()
+                data = self.vbo_path.map(QOpenGLBuffer.ReadWrite)
+                #data = self.vbo_path.mapRange(start * np.float32().itemsize, length, QOpenGLBuffer.RangeWrite) # QOpenGLBuffer.RangeWrite
     
-                print("data = ", data)
-                if data :
-                    # copy
-                    data[start:start+length] = scene_buffer_window[:]
+                print("data from 'vbo_path.map' = ", data)
+                if data is not None:
+                    print(dir(data))
+                    print(data.toBytes())
+                    # do not known how to use this: cannot write into data shiboken VoidPtr
+                    
+                    #data[start * np.float32().itemsize : (start+length) * np.float32().itemsize] = array_window.tobytes()
+                    data[0 : length * np.float32().itemsize] = array_window.tobytes()
                     self.vbo_path.unmap()
                     # -> done
-                       
-                    gl.glDrawArrays(GL.GL_TRIANGLES, 0, n * 3)
 
             # to test
             if use_WRITE:
-                self.vbo_path.write(start, scene_buffer_window, length)
+                res = self.vbo_path.bind()
+                #self.vbo_path.write(start  * np.float32().itemsize , array_window.tobytes(), array_window.size * np.float32().itemsize)
+                self.vbo_path.write(0 , array_window.tobytes(), array_window.size * np.float32().itemsize)
+                
+            # draw
+            gl.glDrawArrays(GL.GL_TRIANGLES, 0, n * 3)
             
             lastTriangle += n
     
@@ -940,7 +945,7 @@ class Drawable:
         #self.vbo_heightmap.setUsagePattern(QOpenGLBuffer.StaticDraw)
         self.vbo_heightmap.bind()
 
-        self.vbo_heightmap.allocate(self.scene_heightmap.buffer, self.scene_heightmap.buffer_size())
+        self.vbo_heightmap.allocate(self.scene_heightmap.buffer, len(self.scene_heightmap.buffer))
 
         self.create_heightmap_texture()
         self.setup_vao_heightmap()
@@ -1006,11 +1011,16 @@ class Drawable:
         # Wrap style
         ## gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
         ## gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
+
         # Wrap style
         self.pathRgbaTexture.setWrapMode(QOpenGLTexture.ClampToBorder)
 
+        # Texture Filtering
+        self.pathRgbaTexture.setMinificationFilter(QOpenGLTexture.NearestMipMapLinear)
+        self.pathRgbaTexture.setMagnificationFilter(QOpenGLTexture.NearestMipMapLinear)
+
         ## gl.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, self.pathRgbaTexture, 0)
-        ## self.pathFramebuffer.addColorAttachment(0,0,GL.GL_TEXTURE_2D)
+        #self.pathFramebuffer.addColorAttachment(self.resolution, self.resolution, QOpenGLTexture.COLOR_ATTACHMENT0)
     
         ## var renderbuffer = self.gl.createRenderbuffer();
         ## self.gl.bindRenderbuffer(self.gl.RENDERBUFFER, renderbuffer);
@@ -1018,7 +1028,8 @@ class Drawable:
         ## self.gl.framebufferRenderbuffer(self.gl.FRAMEBUFFER, self.gl.DEPTH_ATTACHMENT, self.gl.RENDERBUFFER, renderbuffer);
         ## self.gl.bindRenderbuffer(self.gl.RENDERBUFFER, null);
     
-        self.pathFramebuffer.release()
+        #self.pathFramebuffer.release()
+        self.pathFramebuffer.bindDefault()
 
     def draw_heightmap_texture(self, gl: "GLWidget"):
         """
@@ -1052,7 +1063,7 @@ class Drawable:
         #self.program_heightmap.enableAttributeArray(self.program_heightmap_thisPos)
         #self.program_heightmap.enableAttributeArray(self.program_heightmap_vertex)
 
-        gl.glDrawArrays(GL.GL_TRIANGLES, 0, self.scene_heightmap.np_array.size // SceneHeightMap.VertexData.NB_FLOATS_PER_VERTEX )
+        gl.glDrawArrays(GL.GL_TRIANGLES, 0, self.scene_heightmap.meshNumVertexes)
 
         self.program_heightmap.disableAttributeArray(self.program_heightmap_pos0Location)
         self.program_heightmap.disableAttributeArray(self.program_heightmap_pos1Location)
@@ -1065,7 +1076,9 @@ class Drawable:
         self.program_heightmap.release()
 
         self.vbo_heightmap.release()
-        self.pathRgbaTexture.release()
+        #self.pathRgbaTexture.release()
+
+        self.needToDrawHeightMap = False
 
 
 class GLWidget(QOpenGLWidget, QOpenGLFunctions):
