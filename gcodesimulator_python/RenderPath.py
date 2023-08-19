@@ -345,7 +345,7 @@ class Scene:
                     vertex.pos2 = QVector3D(x, y, z)
                     vertex.startTime = beginTime
                     vertex.endTime = total_time
-                    vertex.command = virtex
+                    vertex.command = float(virtex)
 
                     vertices.append(vertex)
 
@@ -371,7 +371,7 @@ class Scene:
             self.array[9 * k + 5] = vertex.pos2.z()
             self.array[9 * k + 6] = vertex.startTime
             self.array[9 * k + 7] = vertex.endTime
-            self.array[9 * k + 8] = vertex.command
+            self.array[9 * k + 8] = float(vertex.command)
 
         return self.array.tobytes() 
 
@@ -564,6 +564,10 @@ class Drawable:
 
     TEXTURE_INDEX_0 = 0
 
+
+    USE_FRAME_BUFFER = False
+    USE_FRAME_BUFFER = True
+
     def __init__(self, gcode):
         coeff = 1 # MY GPU
 
@@ -608,7 +612,6 @@ class Drawable:
         self.program_heightmap = QOpenGLShaderProgram()
         self.vao_heightmap = QOpenGLVertexArrayObject()
         self.vbo_heightmap = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
-        self.pathRgbaTexture = QOpenGLTexture(QOpenGLTexture.Target2D)
 
         self.model = QMatrix4x4()
         self.model.setToIdentity()
@@ -638,9 +641,25 @@ class Drawable:
         self.initialize_heightmap()
 
     def draw(self, gl: "GLWidget"):
-        self.draw_heightmap_texture(gl) # calls self.draw_path(gl)
-        self.draw_heightmap(gl)
+        if Drawable.USE_FRAME_BUFFER == True:
+            self.pathFramebuffer.bind()
+            gl.glEnable(GL.GL_DEPTH_TEST)
         
+        self.draw_path(gl)
+
+        if Drawable.USE_FRAME_BUFFER == True:
+            self.pathFramebuffer.release()
+            self.pathFramebuffer.bindDefault()
+            gl.glDisable(GL.GL_DEPTH_TEST)
+
+        img = self.pathFramebuffer.toImage()
+        img.save("toto.jpg")
+
+
+        self.needToCreatePathTexture = False
+        self.needToDrawHeightMap = True
+    
+        self.draw_heightmap(gl)    
         self.draw_cutter(gl)
 
     # -----------------------------------------------------------------
@@ -657,13 +676,13 @@ class Drawable:
 
         self.program_path.bind()
 
-        self.array = np.zeros(self.gpuMem, dtype=np.float32)
+        vbo_float_array = np.zeros(self.gpuMem, dtype=np.float32)
 
         self.vbo_path.create()  # QOpenGLBuffer.VertexBuffer
         self.vbo_path.setUsagePattern(QOpenGLBuffer.DynamicDraw)
         self.vbo_path.bind()
 
-        self.vbo_path.allocate(self.array.tobytes(), self.array.size * np.float32().itemsize)
+        self.vbo_path.allocate(vbo_float_array.tobytes(), vbo_float_array.size * np.float32().itemsize)
 
         self.setup_vao_path()
 
@@ -716,7 +735,7 @@ class Drawable:
         self.program_path.enableAttributeArray(self.commandLocation)      
 
         if self.isVBit:
-            self.program_path.setAttributeBuffer(self.commandLocation, GL.GL_FLOAT,   9* np.float32().itemsize, 1, stride)
+            self.program_path.setAttributeBuffer(self.rawPosLocation, GL.GL_FLOAT,   9* np.float32().itemsize, 3, stride)
             self.program_path.enableAttributeArray(self.rawPosLocation)
 
         self.vbo_path.release()
@@ -980,24 +999,12 @@ class Drawable:
         self.program_heightmap.setUniformValue(textureLocationID, self.TEXTURE_INDEX_0)  # the index of the texture
         # --------------------------------- the texture ------------------------------------------
 
-    def draw_heightmap_texture(self, gl: "GLWidget"):
-        """
-        this calls the "drawPath" (in RenderPath.js) ...
-        """
-        self.pathFramebuffer.bind()
-        gl.glEnable(GL.GL_DEPTH_TEST)
-        self.draw_path(gl)
-        self.pathFramebuffer.release()
-        self.pathFramebuffer.bindDefault()
-
-        self.needToCreatePathTexture = False
-        self.needToDrawHeightMap = True
-        
     def draw_heightmap(self, gl: "GLWidget"):
         self.program_heightmap.bind()
 
         gl.glDisable(GL.GL_DEPTH_TEST)
-        gl.glClearColor(1.0, 0.0, 0.0, 1.0)  
+        gl.glClearColor(1.0, 0.0, 0.0, 0.0)  
+        gl.glViewport(0, 0, 800, 800)
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_heightmap)
@@ -1471,6 +1478,8 @@ class MainWindow(QMainWindow):
         self.control.horizontalSlider_Position.setMaximum(self.slider_end)
         self.control.horizontalSlider_Position.setSingleStep(self.slider_tick)
         self.control.horizontalSlider_Position.valueChanged.connect(self.OnSimAtTick)
+
+        self.control.horizontalSlider_Position.setValue(self.slider_end)
 
         #self.control.spinBox_SpeedFactor.valueChanged.connect(self.OnSpeedChange)
 
