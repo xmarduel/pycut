@@ -16,6 +16,8 @@
 # along with pycut.  If not, see <http:#www.gnu.org/licenses/>.
 
 import math
+import sys
+import time
 
 from typing import List
 from typing import Tuple
@@ -104,15 +106,16 @@ class GcodeMiniParser:
             f = sNaN
 
             while self.char_no < len(self.gcode) and self.gcode[self.char_no] != '' and self.gcode[self.char_no] != '\r' and self.gcode[self.char_no] != '\n':
-                if self.gcode[self.char_no] == 'G' or self.gcode[self.char_no] == 'g':
+                letter = self.gcode[self.char_no]
+                if letter == 'G' or letter == 'g':
                     g = parse()
-                elif self.gcode[self.char_no] == 'X' or self.gcode[self.char_no] == 'x':
+                elif letter == 'X' or letter == 'x':
                     x = parse()
-                elif self.gcode[self.char_no] == 'Y' or self.gcode[self.char_no] == 'y':
+                elif letter == 'Y' or letter == 'y':
                     y = parse()
-                elif self.gcode[self.char_no] == 'Z' or self.gcode[self.char_no] == 'z':
+                elif letter == 'Z' or letter == 'z':
                     z = parse()
-                elif self.gcode[self.char_no] == 'F' or self.gcode[self.char_no] == 'f':
+                elif letter == 'F' or letter == 'f':
                     f = parse()
                 else:
                     self.char_no += 1
@@ -161,7 +164,7 @@ class GcodeMiniParser:
         self.path_time_map = []
         self.line_no_time_map =  {}
 
-        total_time = 0 
+        total_time = 0.0
 
         for path_idx, point in enumerate(self.path):
             prevIdx = max(path_idx - 1, 0)
@@ -221,3 +224,18 @@ class GcodeMiniParser:
     
         return end
 
+
+if __name__ == '__main__':
+    gcodefile = sys.argv[1]
+    
+    fp = open(gcodefile, "r")
+    gcode = fp.read()
+    fp.close()
+
+    t1 = time.time()
+    parser = GcodeMiniParser()
+    parser.parse_gcode(gcode)
+    t2 = time.time()
+
+    print("gcode time: ", parser.path_time)
+    print("parser time:", t2-t1)

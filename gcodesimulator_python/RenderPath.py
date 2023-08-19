@@ -567,9 +567,8 @@ class Drawable:
     def __init__(self, gcode):
         coeff = 1 # MY GPU
 
-        self.resolution = 1024 * coeff
-        self.gpuMem = 2 * self.resolution * self.resolution
-        
+        self.gpuMem = 2 * 1024 * 1024
+        self.resolution = 1024
         
         print("Scene path...")
         self.scene = Scene(gcode)
@@ -625,7 +624,6 @@ class Drawable:
         self.vbo_path.destroy()
         self.vbo_cutter.destroy()
         self.vbo_heightmap.destroy()
-        #self.pathRgbaTexture.destroy()
         del self.program_path
         del self.program_cutter
         del self.program_heightmap
@@ -728,7 +726,12 @@ class Drawable:
     def draw_path(self, gl: "GLWidget"):
         """ """
         self.program_path.bind()
-        
+
+        gl.glClearColor(0.0, 0.0, 0.0, 1.0)
+        gl.glEnable(GL.GL_DEPTH_TEST)
+        gl.glViewport(0, 0, 800*2, 800*2)
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+
         self.program_path.setUniformValue1f(self.resolutionLocation, float(self.resolution))
         self.program_path.setUniformValue1f(self.cutterDiaLocation, float(self.cutterDia))
         self.program_path.setUniformValue(self.pathXYOffsetLocation, float(self.pathXOffset), float(self.pathYOffset))
@@ -768,34 +771,9 @@ class Drawable:
             start = lastTriangle * self.scene.pathStride * 3 # in float
             length = n * self.scene.pathStride * 3 # in float
 
-            array_window = self.array[start: start + length]
+            array_window = self.scene.array[start: start + length]
 
-            # how to do ?
-            use_MAP_UNMAP = False
-            use_WRITE = True
-
-            # -> map to vbo : DOES NOT WORK ! data IS ALWAYS NONE ! with bind() -> ok !
-            if use_MAP_UNMAP:
-                res = self.vbo_path.bind()
-                data = self.vbo_path.map(QOpenGLBuffer.ReadWrite)
-                #data = self.vbo_path.mapRange(start * np.float32().itemsize, length, QOpenGLBuffer.RangeWrite) # QOpenGLBuffer.RangeWrite
-    
-                print("data from 'vbo_path.map' = ", data)
-                if data is not None:
-                    print(dir(data))
-                    print(data.toBytes())
-                    # do not known how to use this: cannot write into data shiboken VoidPtr
-                    
-                    #data[start * np.float32().itemsize : (start+length) * np.float32().itemsize] = array_window.tobytes()
-                    data[0 : length * np.float32().itemsize] = array_window.tobytes()
-                    self.vbo_path.unmap()
-                    # -> done
-
-            # to test
-            if use_WRITE:
-                res = self.vbo_path.bind()
-                #self.vbo_path.write(start  * np.float32().itemsize , array_window.tobytes(), array_window.size * np.float32().itemsize)
-                self.vbo_path.write(0 , array_window.tobytes(), array_window.size * np.float32().itemsize)
+            self.vbo_path.write(0, array_window.tobytes(), array_window.size * np.float32().itemsize)
                 
             # draw
             gl.glDrawArrays(GL.GL_TRIANGLES, 0, n * 3)
@@ -994,50 +972,23 @@ class Drawable:
 
     def create_heightmap_texture(self):
         self.pathFramebuffer = QOpenGLFramebufferObject(
-            QSize(self.resolution, self.resolution),
+            QSize(self.resolution * 2, self.resolution * 2),
             QOpenGLFramebufferObject.CombinedDepthStencil
         )
-        self.pathFramebuffer.bind()
-
-        self.pathRgbaTexture.create()
         # --------------------------------- the texture ------------------------------------------
         textureLocationID = self.program_heightmap.uniformLocation("heightMap")
         self.program_heightmap.setUniformValue(textureLocationID, self.TEXTURE_INDEX_0)  # the index of the texture
         # --------------------------------- the texture ------------------------------------------
-
-        self.pathRgbaTexture.bind(self.TEXTURE_INDEX_0)
-        ## gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, self.resolution, self.resolution, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, None)
-        
-        # Wrap style
-        ## gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
-        ## gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
-
-        # Wrap style
-        self.pathRgbaTexture.setWrapMode(QOpenGLTexture.ClampToBorder)
-
-        # Texture Filtering
-        self.pathRgbaTexture.setMinificationFilter(QOpenGLTexture.NearestMipMapLinear)
-        self.pathRgbaTexture.setMagnificationFilter(QOpenGLTexture.NearestMipMapLinear)
-
-        ## gl.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D, self.pathRgbaTexture, 0)
-        #self.pathFramebuffer.addColorAttachment(self.resolution, self.resolution, QOpenGLTexture.COLOR_ATTACHMENT0)
-    
-        ## var renderbuffer = self.gl.createRenderbuffer();
-        ## self.gl.bindRenderbuffer(self.gl.RENDERBUFFER, renderbuffer);
-        ## self.gl.renderbufferStorage(self.gl.RENDERBUFFER, self.gl.DEPTH_COMPONENT16, resolution, resolution);
-        ## self.gl.framebufferRenderbuffer(self.gl.FRAMEBUFFER, self.gl.DEPTH_ATTACHMENT, self.gl.RENDERBUFFER, renderbuffer);
-        ## self.gl.bindRenderbuffer(self.gl.RENDERBUFFER, null);
-    
-        #self.pathFramebuffer.release()
-        self.pathFramebuffer.bindDefault()
 
     def draw_heightmap_texture(self, gl: "GLWidget"):
         """
         this calls the "drawPath" (in RenderPath.js) ...
         """
         self.pathFramebuffer.bind()
+        gl.glEnable(GL.GL_DEPTH_TEST)
         self.draw_path(gl)
         self.pathFramebuffer.release()
+        self.pathFramebuffer.bindDefault()
 
         self.needToCreatePathTexture = False
         self.needToDrawHeightMap = True
@@ -1045,22 +996,26 @@ class Drawable:
     def draw_heightmap(self, gl: "GLWidget"):
         self.program_heightmap.bind()
 
+        gl.glDisable(GL.GL_DEPTH_TEST)
+        gl.glClearColor(1.0, 0.0, 0.0, 1.0)  
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_heightmap)
 
-        # bind texture to texture index "TEXTURE_INDEX_0" -> accessible in fragment shader through "texture"
-        self.pathRgbaTexture.bind(self.TEXTURE_INDEX_0)
+        gl.glActiveTexture(self.TEXTURE_INDEX_0)
+        gl.glBindTexture(GL.GL_TEXTURE_2D, self.pathFramebuffer.texture())
 
         self.program_heightmap.setUniformValue1f(self.program_heightmap_resolutionLocation, self.resolution)
         self.program_heightmap.setUniformValue1f(self.program_heightmap_pathScaleLocation, self.pathScale)
         self.program_heightmap.setUniformValue1f(self.program_heightmap_pathMinZLocation, self.pathMinZ)
         self.program_heightmap.setUniformValue1f(self.program_heightmap_pathTopZLocation, self.pathTopZ)
         self.program_heightmap.setUniformValue(self.program_heightmap_rotateLocation, self.rotate)
-        self.program_heightmap.setUniformValue(self.program_heightmap_heightMapLocation, 0)
+        #self.program_heightmap.setUniformValue(self.program_heightmap_heightMapLocation, self.TEXTURE_INDEX_0)
 
-        #self.program_heightmap.enableAttributeArray(self.program_heightmap_pos0Location)
-        #self.program_heightmap.enableAttributeArray(self.program_heightmap_pos1Location)
-        #self.program_heightmap.enableAttributeArray(self.program_heightmap_pos2Location)
-        #self.program_heightmap.enableAttributeArray(self.program_heightmap_thisPos)
+        self.program_heightmap.enableAttributeArray(self.program_heightmap_pos0Location)
+        self.program_heightmap.enableAttributeArray(self.program_heightmap_pos1Location)
+        self.program_heightmap.enableAttributeArray(self.program_heightmap_pos2Location)
+        self.program_heightmap.enableAttributeArray(self.program_heightmap_thisPos)
         #self.program_heightmap.enableAttributeArray(self.program_heightmap_vertex)
 
         gl.glDrawArrays(GL.GL_TRIANGLES, 0, self.scene_heightmap.meshNumVertexes)
@@ -1073,10 +1028,14 @@ class Drawable:
 
         vao_binder = None
 
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0)
+        gl.glBindTexture(GL.GL_TEXTURE_2D, 0)
+
         self.program_heightmap.release()
 
+        
+
         self.vbo_heightmap.release()
-        #self.pathRgbaTexture.release()
 
         self.needToDrawHeightMap = False
 
@@ -1091,9 +1050,12 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         QOpenGLWidget.__init__(self)
         QOpenGLFunctions.__init__(self)
 
+        self.setGeometry(0,0,800,800)
+
         self.drawable = Drawable(gcode)
 
         self.m_xRot = 90.0
+        self.m_xRot = 0.0 # PYCUT
         self.m_yRot = 0.0
         self.m_xLastRot = 0.0
         self.m_yLastRot = 0.0
@@ -1336,6 +1298,15 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         self.drawable.view.rotate(-90, 1.0, 0.0, 0.0)
 
+        # PYCUT WANTS THE ROTATION ONLY
+        self.drawable.rotate.setToIdentity()
+        self.drawable.rotate.rotate(-90, 1.0, 0.0, 0.0)
+        self.drawable.rotate.rotate(angX * 180 / math.pi, 1.0, 0.0, 0.0)
+        self.drawable.rotate.rotate(angY * 180 / math.pi, 0.0, 1.0, 0.0)
+        # PYCUT WANTS THE ROTATION ONLY
+
+        self.update()
+
     def set_model_position(self, position: QVector3D):
         self.drawable.model.setToIdentity()
         self.drawable.model.translate(position)
@@ -1434,6 +1405,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.context().aboutToBeDestroyed.connect(self.cleanup)
         self.initializeOpenGLFunctions()
         self.glClearColor(0.2, 0.7, 0.7, 1)
+        self.glViewport(0,0,800,800)
 
         self.drawable.initialize()
 
