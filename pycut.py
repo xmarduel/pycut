@@ -27,9 +27,9 @@ from PySide6.QtUiTools import QUiLoader
 
 from PySide6.QtCore import QRegularExpression
 
-# TEST simulator with python
-# from gcodesimulator.python.parser.gcodeminiparser import GcodeMiniParser
-#import gcodesimulator.python.widgets.glwidget_container as glwidget_simulator_container
+# TEST simulator with python TODO
+#import gcodesimulator_python.glviewer as glviewer
+#import gcodesimulator_python.gcodefileviewer as gcodefileviewer
 
 import shapely_svgpath_io
 
@@ -37,8 +37,8 @@ from val_with_unit import ValWithUnit
 
 import svgviewer
 import gcodeviewer.widgets.glwidget_container as glwidget_container
-import gcodesimulator.webglviewer as webglviewer
-import gcodesimulator.gcodefileviewer as gcodefileviewer
+import gcodesimulator_webgl.webglviewer as webglviewer
+import gcodesimulator_webgl.gcodefileviewer as gcodefileviewer
 
 import operations_tableview
 import tabs_tableview
