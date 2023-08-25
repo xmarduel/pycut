@@ -564,8 +564,8 @@ class Drawable:
     TEXTURE_INDEX_0 = 0
 
 
-    USE_FRAME_BUFFER = False
-    #USE_FRAME_BUFFER = True
+    #USE_FRAME_BUFFER = False
+    USE_FRAME_BUFFER = True
 
     def __init__(self, gcode):
         RESOL = 1024
@@ -638,7 +638,7 @@ class Drawable:
         BUG : inverting initialisation of cutter and heightmap is quite a difference!
         """
         self.initialize_path()
-        #self.initialize_heightmap()
+        self.initialize_heightmap()
         self.initialize_cutter()
 
     def draw(self, gl: "GLWidget"):
@@ -655,7 +655,7 @@ class Drawable:
             img = self.pathFramebuffer.toImage()
             img.save("framebuffer_tex.jpg")
         
-        #self.draw_heightmap(gl)
+        self.draw_heightmap(gl)
 
         gl.glViewport(0, 0, 600*2, 600*2) # as in jsCut!
         self.draw_cutter(gl)
