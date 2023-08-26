@@ -28,12 +28,12 @@ class GCodeFileViewerLineNumberArea(QtWidgets.QWidget):
 class GCodeFileViewer(QtWidgets.QPlainTextEdit):
     '''
     '''
-    def __init__(self, parent, webgl_viewer):
+    def __init__(self, simulator):
         '''
         '''
-        super().__init__()
+        super().__init__(simulator)
 
-        self.webgl_viewer = webgl_viewer
+        self.simulator = simulator
         self.gcode = ""
         self.line_number_area = GCodeFileViewerLineNumberArea(self)
 
@@ -171,7 +171,7 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
         else:
             simtime = self.miniparser.line_no_time_map[self.curr_line_no]
 
-        self.webgl_viewer.set_simtime(simtime)
+        self.simulator.set_simtime_from_textbrowser(simtime)
 
         super().mousePressEvent(event)
 
@@ -194,7 +194,7 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
                 # from the python "miniparser"
                 try:
                     simtime = self.miniparser.line_no_time_map[self.curr_line_no]
-                    self.webgl_viewer.set_simtime(simtime)
+                    self.simulator.set_simtime_from_textbrowser(simtime)
                 except Exception as e:
                     pass
 

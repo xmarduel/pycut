@@ -552,8 +552,6 @@ class SceneCutter:
         return array.tobytes()
 
 
-
-
 class Drawable:
     path_shader_vs = "shaders/rasterizePathVertexShader.txt"
     path_shader_fs = "shaders/rasterizePathFragmentShader.txt"
@@ -574,6 +572,9 @@ class Drawable:
 
         self.gpuMem = 2 * RESOL * RESOL
         self.resolution = RESOL
+
+        self.SIZE_X = 700
+        self.SIZE_Y = 700
         
         print("Scene path...")
         self.scene = Scene(gcode)
@@ -623,6 +624,10 @@ class Drawable:
         self.view = QMatrix4x4()
         self.view.setToIdentity()
         self.view.translate(QVector3D(0, 0, -5))
+
+    def resize(self, width, height):
+        self.SIZE_X = width
+        self.SIZE_Y = height
 
     def clean(self):
         self.vbo_path.destroy()
@@ -902,7 +907,7 @@ class Drawable:
         gl.glDisable(GL.GL_DEPTH_TEST)  # the "standard" framebuffer draw.... (learnopengl.com)
         gl.glEnable(GL.GL_DEPTH_TEST) # as in jsCut! strange but so it is!
         gl.glClearColor(0.7, 0.2, 0.2, 0.0)  
-        gl.glViewport(0, 0, 700 * OPENGL_FB, 700 * OPENGL_FB)
+        gl.glViewport(0, 0, self.SIZE_X * OPENGL_FB, self.SIZE_Y * OPENGL_FB)
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
         self.program_heightmap.bind()
@@ -1446,9 +1451,15 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         #self.update()
 
     def resizeGL(self, width, height):
-        self.glViewport(0, 0, width * OPENGL_FB, height * OPENGL_FB)
+        quadra_size = min(width, height)
+
+        xoffset = width - quadra_size // 2
+        yoffset = height - quadra_size // 2
+
+        self.glViewport(xoffset, yoffset, quadra_size * OPENGL_FB, quadra_size * OPENGL_FB)
 
         ratio = width / float(height)
+        self.drawable.resize(quadra_size, quadra_size)
         self.drawable.proj.perspective(45.0, ratio, 2.0, 100.0)
 
         self.update()
@@ -1458,57 +1469,106 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.update()
 
 
-
-
-class MainWindow(QMainWindow):
-    """ """
-
-    update_gl_scene = QtCore.Signal()
+class SimulationControls(QtWidgets.QWidget):
+    '''
+    '''
     simtime_changed = QtCore.Signal(float)
 
-    def __init__(self, gcode):
-        QMainWindow.__init__(self)
+    # -----------------------------------------------------------------------------
+    class SimulatorRunner(QtCore.QObject):
+        """ """
+        current_tick_changed = QtCore.Signal(int)
 
-        self.gcode = gcode
+        def __init__(self, parent: "SimulationControls", init_tick: int, end_tick: int):
+            QtCore.QObject.__init__(self)
 
-        self.centralwidget = QtWidgets.QWidget()
+            self.parent = parent
 
-        self.centralwidget_layout = QtWidgets.QHBoxLayout()
-        self.centralwidget.setLayout(self.centralwidget_layout)
+            self.base_speed = 1
+            self.speed = 1
 
-        self.gl_with_controls_layout = QtWidgets.QVBoxLayout()
+            self.direction = 'forward' # 'backward
 
-        self.gl_widget = GLWidget(gcode)
-        self.gl_with_controls_layout.addWidget(self.gl_widget)
+            self.init_tick = init_tick
+            self.end_tick = end_tick
 
-        self.add_sim_controls()
-        self.gl_with_controls_layout.addWidget(self.control)
+            self.total_tick = self.end_tick - self.init_tick
 
-        self.gl_with_controls_layout.setStretch(0, 1)
+            self.current_tick = self.init_tick
 
-        self.centralwidget_layout.addLayout(self.gl_with_controls_layout)
+            self.set_current_tick(self.end_tick)
+            self.current_tick_changed.connect(self.parent.OnSimAtTickFromSimulatorRunner)
 
-        self.gcode_textviewer = GCodeFileViewer(self.centralwidget, self)
-        self.gcode_textviewer.load_data(self.gcode)
-        self.simtime_changed.connect(self.gcode_textviewer.on_simtime_from_js)
+            self.timer = QtCore.QTimer()
+            self.timer.timeout.connect(self.run)
+
+            self.timer_on = False
+
+        def set_speed(self, coeff):
+            self.speed = self.base_speed * coeff
+
+            if self.timer_on == True:
+                self.stop_timer()
+                self.start_timer()
+
+        def set_current_tick(self, current_tick):
+            """ """
+            self.current_tick = current_tick
+            self.current_tick_changed.emit(self.current_tick)
+
+        def step_forward(self):
+            """ """
+            self.current_tick += 1 * self.speed
+            self.current_tick_changed.emit(self.current_tick)
+
+        def step_backward(self):
+            """ """
+            self.current_tick -= 1 * self.speed
+            self.current_tick_changed.emit(self.current_tick)
+
+        def start_timer(self):
+            timeout = 1.0
+            if self.timer_on == False:
+                self.timer_on = True
+                self.timer.start(timeout)
+
+        def stop_timer(self):
+            if self.timer_on == True:
+                self.timer.stop()
+                self.timer_on = False
+
+        def run(self):
+            """
+            callback on timer
+            """
+            if self.direction == 'forward':
+                current_tick = self.current_tick + 1 * self.speed
+
+                if current_tick >= self.end_tick:
+                    current_tick = self.init_tick
+
+            else:
+
+                current_tick = self.current_tick - 1 * self.speed
+
+                if current_tick < 0:
+                    current_tick = self.end_tick
+
+            self.set_current_tick(current_tick)
+    # -----------------------------------------------------------------------------
+
+    def __init__(self, parent, gl_widget: GLWidget, gcode_textviewer: GCodeFileViewer):
+        QtWidgets.QWidget.__init__(self)
         
-        self.centralwidget_layout.addWidget(self.gcode_textviewer)
+        loader = QUiLoader(parent)
 
-        self.centralwidget_layout.setStretch(0, 1)
-        self.centralwidget_layout.setStretch(1, 0)
-
-
-        self.setCentralWidget(self.centralwidget)
-        self.setWindowTitle(self.tr("Hello GL"))
-
-    def set_simtime(self, simtime: float):
-        """ slot on signal from gcode text browser """
-        tick = math.floor(simtime * 1000)
-        self.OnSimAtTickFromTextBrowser(tick)
-    
-    def add_sim_controls(self):
-        loader = QUiLoader(self)
         self.control = loader.load("simcontrolwidget.ui")
+
+        self.setLayout(QtWidgets.QHBoxLayout())
+        self.layout().addWidget(self.control)
+        
+        self.gl_widget = gl_widget
+        self.gcode_textviewer = gcode_textviewer
 
         self.control.pushButton_ToEnd.clicked.connect(self.OnSimToEnd)
         self.control.pushButton_Rewind.clicked.connect(self.OnSimAtStart)
@@ -1531,94 +1591,12 @@ class MainWindow(QMainWindow):
         self.control.spinBox_SpeedFactor.setMinimum(1)
         self.control.spinBox_SpeedFactor.setMaximum(9999)
 
-        # -----------------------------------------------------------------------------
-        class SimulatorRunner(QtCore.QObject):
-            """ """
-            current_tick_changed = QtCore.Signal(int)
-
-            def __init__(self, parent: "MainWindow", init_tick: int, end_tick: int):
-                QtCore.QObject.__init__(self)
-
-                self.parent = parent
-
-                self.base_speed = 1
-                self.speed = 1
-
-                self.direction = 'forward' # 'backward
-
-                self.init_tick = init_tick
-                self.end_tick = end_tick
-
-                self.total_tick = self.end_tick - self.init_tick
-
-                self.current_tick = self.init_tick
-
-                self.set_current_tick(self.end_tick)
-                self.current_tick_changed.connect(self.parent.OnSimAtTickFromSimulatorRunner)
-
-                self.timer = QtCore.QTimer()
-                self.timer.timeout.connect(self.run)
-
-                self.timer_on = False
-
-            def set_speed(self, coeff):
-                self.speed = self.base_speed * coeff
-
-                if self.timer_on == True:
-                    self.stop_timer()
-                    self.start_timer()
-
-            def set_current_tick(self, current_tick):
-                """ """
-                self.current_tick = current_tick
-                self.current_tick_changed.emit(self.current_tick)
-
-            def step_forward(self):
-                """ """
-                self.current_tick += 1 * self.speed
-                self.current_tick_changed.emit(self.current_tick)
-
-            def step_backward(self):
-                """ """
-                self.current_tick -= 1 * self.speed
-                self.current_tick_changed.emit(self.current_tick)
-
-            def start_timer(self):
-                timeout = 1.0
-                if self.timer_on == False:
-                    self.timer_on = True
-                    self.timer.start(timeout)
-
-            def stop_timer(self):
-                if self.timer_on == True:
-                    self.timer.stop()
-                    self.timer_on = False
-
-            def run(self):
-                """
-                callback on timer
-                """
-                if self.direction == 'forward':
-
-                    current_tick = self.current_tick + 1 * self.speed
-
-                    if current_tick >= self.end_tick:
-                        current_tick = self.init_tick
-
-                else:
-
-                    current_tick = self.current_tick - 1 * self.speed
-
-                    if current_tick < 0:
-                        current_tick = self.end_tick
-
-                self.set_current_tick(current_tick)
-
-
-        # -----------------------------------------------------------------------------
-        self.simulation_runner = SimulatorRunner(self, 0, self.slider_end)
+        self.simulation_runner = SimulationControls.SimulatorRunner(self, 0, self.slider_end)
 
         self.control.horizontalSlider_Position.setValue(self.slider_end)
+
+        # signal
+        self.simtime_changed.connect(self.gcode_textviewer.on_simtime_from_js)
 
     def OnSimAtStart(self):
         self.control.horizontalSlider_Position.setValue(0)
@@ -1675,16 +1653,63 @@ class MainWindow(QMainWindow):
         self.simulation_runner.set_speed(int(value))
 
 
+class GCodeSimulator(QtWidgets.QWidget):
+    """ """
+    def __init__(self, parent: QtWidgets.QWidget, gcodefile: str):
+        QtWidgets.QWidget.__init__(self)
+
+        self.gcodefile = gcodefile
+
+        fp = open(gcodefile, "r")
+        self.gcode = fp.read()
+        fp.close()
+
+        layout = QtWidgets.QHBoxLayout()
+        self.setLayout(layout)
+
+        self.gl_with_controls_layout = QtWidgets.QVBoxLayout()
+
+        self.gcode_textviewer = GCodeFileViewer(self)
+        self.gcode_textviewer.load_data(self.gcode)
+
+        self.gl_widget = GLWidget(self.gcode)
+        self.gl_with_controls_layout.addWidget(self.gl_widget)
+
+        self.controls = SimulationControls(self, self.gl_widget, self.gcode_textviewer)
+        self.gl_with_controls_layout.addWidget(self.controls)
+
+        self.gl_with_controls_layout.setStretch(0, 1)
+
+        layout.addLayout(self.gl_with_controls_layout)
+        layout.addWidget(self.gcode_textviewer)
+
+        layout.setStretch(0, 1)
+        layout.setStretch(1, 0)
+
+    def set_simtime_from_textbrowser(self, simtime: float):
+        """ slot on signal from gcode text browser "select line" """
+        tick = math.floor(simtime * 1000)
+        self.controls.OnSimAtTickFromTextBrowser(tick)
+
+
+class MainWindow(QMainWindow):
+    """ """
+
+    def __init__(self, gcodefile: str):
+        QMainWindow.__init__(self)
+
+        self.simulator = GCodeSimulator(self, gcodefile)
+        self.setCentralWidget(self.simulator)
+
+        self.setWindowTitle(self.tr("Hello GL"))
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     gcodefile = sys.argv[1]
 
-    fp = open(gcodefile, "r")
-    gcode = fp.read()
-    fp.close()
-
-    main_window = MainWindow(gcode)
+    main_window = MainWindow(gcodefile)
     main_window.show()
 
     res = app.exec()
