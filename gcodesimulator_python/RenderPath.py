@@ -900,7 +900,7 @@ class Drawable:
         gl.glDisable(GL.GL_DEPTH_TEST)  # the "standard" framebuffer draw.... (learnopengl.com)
         gl.glEnable(GL.GL_DEPTH_TEST) # as in jsCut! strange but so it is!
         gl.glClearColor(0.7, 0.2, 0.2, 0.0)  
-        gl.glViewport(0, 0, 600 * OPENGL_FB, 600 * OPENGL_FB)
+        gl.glViewport(0, 0, 700 * OPENGL_FB, 700 * OPENGL_FB)
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
         self.program_heightmap.bind()
@@ -1043,8 +1043,6 @@ class Drawable:
         self.program_cutter.bind()
         self.vbo_cutter.bind()
 
-        print("PATH_SCALE = ", self.pathScale)
-
         self.program_cutter.setUniformValue(self.scaleLocation, self.cutterDia * self.pathScale, self.cutterDia * self.pathScale, self.cutterH * self.pathScale)
         self.program_cutter.setUniformValue(self.translateLocation, (x + self.pathXOffset) * self.pathScale, (y + self.pathYOffset) * self.pathScale, (z - self.pathTopZ) * self.pathScale)
         self.program_cutter.setUniformValue(self.rotateLocation, self.rotate)
@@ -1075,7 +1073,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         QOpenGLWidget.__init__(self)
         QOpenGLFunctions.__init__(self)
 
-        self.setGeometry(0, 0, 600, 600)
+        self.setGeometry(0, 0, 700, 700)
 
         self.drawable = Drawable(gcode)
 
@@ -1150,6 +1148,8 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
 
         self.rotationChanged.connect(self.onVisualizatorRotationChanged)
         self.resized.connect(self.placeVisualizerButtons)
+
+        self.on_cmdIsometric_clicked()
 
     def placeVisualizerButtons(self):
         self.cmdIsometric.move(self.width() - self.cmdIsometric.width() - 8, 8)
@@ -1417,7 +1417,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
     # --------------------------------------------------------------------------
 
     def sizeHint(self):
-        return QSize(600, 600)
+        return QSize(700, 700)
 
     def cleanup(self):
         self.makeCurrent()
@@ -1428,7 +1428,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.context().aboutToBeDestroyed.connect(self.cleanup)
         self.initializeOpenGLFunctions()
         self.glClearColor(0.2, 0.7, 0.7, 1)
-        self.glViewport(0, 0, 600 * OPENGL_FB, 600 * OPENGL_FB)
+        self.glViewport(0, 0, 700 * OPENGL_FB, 700 * OPENGL_FB)
 
         self.drawable.initialize()
 
@@ -1475,7 +1475,6 @@ class MainWindow(QMainWindow):
         self.gl_widget = GLWidget(gcode)
         self.centralwidget_layout.addWidget(self.gl_widget)
 
-        #self.control = self.loadUi("simcontrolwidget.ui", self)
         self.add_sim_controls()
         self.centralwidget_layout.addWidget(self.control)
 
@@ -1485,14 +1484,17 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.centralwidget)
         self.setWindowTitle(self.tr("Hello GL"))
 
-
     def add_sim_controls(self):
-        self.control = self.loadUi("simcontrolwidget.ui", self)
+        loader = QUiLoader(self)
+        self.control = loader.load("simcontrolwidget.ui")
 
-        #self.control.pushButton_ToEnd.clicked.connect(self.OnSimToEnd)
-        #self.control.pushButton_Rewind.clicked.connect(self.OnSimRewind)
-        #self.control.pushButton_Run.clicked.connect(self.OnSimRun)
-        #self.control.pushButton_Pause.clicked.connect(self.OnSimPause)
+        self.control.pushButton_ToEnd.clicked.connect(self.OnSimToEnd)
+        self.control.pushButton_Rewind.clicked.connect(self.OnSimAtStart)
+        self.control.pushButton_RunForward.clicked.connect(self.OnSimRunForward)
+        self.control.pushButton_RunBackward.clicked.connect(self.OnSimRunBackward)
+        self.control.pushButton_StepForward.clicked.connect(self.OnSimStepForward)
+        self.control.pushButton_StepBackward.clicked.connect(self.OnSimStepBackward)
+        self.control.pushButton_Pause.clicked.connect(self.OnSimPause)
 
         self.slider_start = 0
         self.slider_end = int(self.gl_widget.drawable.scene.totalTime * 1000)
@@ -1503,55 +1505,140 @@ class MainWindow(QMainWindow):
         self.control.horizontalSlider_Position.setSingleStep(self.slider_tick)
         self.control.horizontalSlider_Position.valueChanged.connect(self.OnSimAtTick)
 
+        self.control.spinBox_SpeedFactor.valueChanged.connect(self.OnSpeedChange)
+        self.control.spinBox_SpeedFactor.setMinimum(1)
+        self.control.spinBox_SpeedFactor.setMaximum(9999)
+
+        # -----------------------------------------------------------------------------
+        class SimulatorRunner(QtCore.QObject):
+            """ """
+            current_tick_changed = QtCore.Signal(int)
+
+            def __init__(self, parent: "MainWindow", init_tick: int, end_tick: int):
+                QtCore.QObject.__init__(self)
+
+                self.parent = parent
+
+                self.base_speed = 1
+                self.speed = 1
+
+                self.direction = 'forward' # 'backward
+
+                self.init_tick = init_tick
+                self.end_tick = end_tick
+
+                self.total_tick = self.end_tick - self.init_tick
+
+                self.current_tick = self.init_tick
+
+                self.set_current_tick(self.end_tick)
+                self.current_tick_changed.connect(self.parent.OnSimAtTickFromSimulatorRunner)
+
+                self.timer = QtCore.QTimer()
+                self.timer.timeout.connect(self.run)
+
+                self.timer_on = False
+
+            def set_speed(self, coeff):
+                self.speed = self.base_speed * coeff
+
+                if self.timer_on == True:
+                    self.stop_timer()
+                    self.start_timer()
+
+            def set_current_tick(self, current_tick):
+                """ """
+                self.current_tick = current_tick
+                self.current_tick_changed.emit(self.current_tick)
+
+            def step_forward(self):
+                """ """
+                self.current_tick += 1 * self.speed
+                self.current_tick_changed.emit(self.current_tick)
+
+            def step_backward(self):
+                """ """
+                self.current_tick -= 1 * self.speed
+                self.current_tick_changed.emit(self.current_tick)
+
+            def start_timer(self):
+                timeout = 1.0
+                if self.timer_on == False:
+                    self.timer_on = True
+                    self.timer.start(timeout)
+
+            def stop_timer(self):
+                if self.timer_on == True:
+                    self.timer.stop()
+                    self.timer_on = False
+
+            def run(self):
+                """
+                callback on timer
+                """
+                if self.direction == 'forward':
+
+                    current_tick = self.current_tick + 1 * self.speed
+
+                    if current_tick >= self.end_tick:
+                        current_tick = self.init_tick
+
+                else:
+
+                    current_tick = self.current_tick - 1 * self.speed
+
+                    if current_tick < 0:
+                        current_tick = self.end_tick
+
+                self.set_current_tick(current_tick)
+
+
+        # -----------------------------------------------------------------------------
+        self.simulation_runner = SimulatorRunner(self, 0, self.slider_end)
+
         self.control.horizontalSlider_Position.setValue(self.slider_end)
 
-        #self.control.spinBox_SpeedFactor.valueChanged.connect(self.OnSpeedChange)
+    def OnSimAtStart(self):
+        self.control.horizontalSlider_Position.setValue(0)
 
-    def loadUi(self, uifile, baseinstance=None):
-        """ """
-        loader = QUiLoader(baseinstance)
-
-        widget = loader.load(uifile)
-
-        return widget
-
-    """
     def OnSimToEnd(self):
-        timer_on = self.simulation.timer_on
-    
-        if timer_on:
-            self.simulation.stop_timer()
-    
-        self.simulation.set_current_time(self.sim_end)
-    
-        if timer_on:
-            self.simulation.start_timer()
+        self.control.horizontalSlider_Position.setValue(self.slider_end)
 
     def OnSimRewind(self):
-        timer_on = self.simulation.timer_on
-
-        if timer_on:
-            self.simulation.stop_timer()
-
-        self.simulation.set_current_time(self.sim_start)
-
-        if timer_on:
-            self.simulation.start_timer()
-    """
+        self.control.horizontalSlider_Position.setValue(0)
 
     def OnSimAtTick(self, tick: int):
+        # inform openGL simulation
         self.gl_widget.setStopAtTime(tick / 1000.0)
 
-    """
-    def OnSimRun(self):
-        self.simulation.start_timer()
+        # set value directly in simulation runner-> no callback
+        self.simulation_runner.current_tick = tick
+
+    def OnSimAtTickFromSimulatorRunner(self, tick: int):
+        # inform openGL simulation
+        self.gl_widget.setStopAtTime(tick / 1000.0)
+        # inform the scrollbar
+        self.control.horizontalSlider_Position.setValue(tick)
+
+    def OnSimStepForward(self):
+        self.simulation_runner.step_forward()
+
+    def OnSimRunForward(self):
+        self.simulation_runner.direction = 'forward'
+        self.simulation_runner.start_timer()
+
+    def OnSimRunBackward(self):
+        self.simulation_runner.direction = 'backward'
+        self.simulation_runner.start_timer()
+
+    def OnSimStepBackward(self):
+        self.simulation_runner.step_backward()
 
     def OnSimPause(self):
-        self.simulation.stop_timer()
+        self.simulation_runner.stop_timer()
 
     def OnSpeedChange(self, value: int):
-        self.simulation.set_speed(int(value))
-    """
+        self.simulation_runner.set_speed(int(value))
 
 
 if __name__ == "__main__":

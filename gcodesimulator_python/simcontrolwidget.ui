@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>457</width>
+    <width>674</width>
     <height>69</height>
    </rect>
   </property>
@@ -33,6 +33,12 @@ QGroupBox {
 }</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -47,19 +53,6 @@ QGroupBox {
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
       <widget class="QPushButton" name="pushButton_Rewind">
        <property name="text">
         <string>Rewind</string>
@@ -71,13 +64,27 @@ QGroupBox {
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_Run">
+      <widget class="QPushButton" name="pushButton_StepBackward">
        <property name="text">
-        <string>Run</string>
+        <string>Step</string>
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>pics/media-playback-start.png</normaloff>pics/media-playback-start.png</iconset>
+         <normaloff>pics/media-seek-backward.png</normaloff>pics/media-seek-backward.png</iconset>
+       </property>
+       <property name="autoRepeat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_RunBackward">
+       <property name="text">
+        <string>Back</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>pics/media-playback-back.png</normaloff>pics/media-playback-back.png</iconset>
        </property>
       </widget>
      </item>
@@ -89,6 +96,31 @@ QGroupBox {
        <property name="icon">
         <iconset>
          <normaloff>pics/media-playback-pause.png</normaloff>pics/media-playback-pause.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_RunForward">
+       <property name="text">
+        <string>Run</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>pics/media-playback-start.png</normaloff>pics/media-playback-start.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_StepForward">
+       <property name="text">
+        <string>Step</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>pics/media-seek-forward.png</normaloff>pics/media-seek-forward.png</iconset>
+       </property>
+       <property name="autoRepeat">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
