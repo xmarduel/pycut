@@ -1,0 +1,62 @@
+{
+  "svg_file": "gcodesimulator_python/jscut_debug.svg",
+  "operations": [
+    {
+      "name": "op",
+      "type": "Engrave",
+      "cut_depth": 3.0,
+      "paths": [
+        "rect"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
+    }
+  ],
+  "settings": {
+    "svg": {
+      "px_per_inch": 96
+    },
+    "Tabs": {
+      "units": "mm",
+      "height": 1.0,
+      "tabs": []
+    },
+    "Tool": {
+      "units": "mm",
+      "diameter": 3.0,
+      "angle": 180,
+      "passdepth": 3.0,
+      "overlap": 0.4,
+      "rapid": 500,
+      "plunge": 100,
+      "cut": 250
+    },
+    "Material": {
+      "units": "mm",
+      "thickness": 10.0,
+      "z_origin": "Top",
+      "clearance": 2.5
+    },
+    "CurveToLineConversion": {
+      "minimum_segments": 5,
+      "minimum_segments_length": 0.01
+    },
+    "GCodeConversion": {
+      "units": "mm",
+      "flip_xy": false,
+      "x_offset": 0.0,
+      "y_offset": 0.0,
+      "xy_reference": "ZERO_TOP_LEFT_OF_MATERIAL"
+    },
+    "GCodeGeneration": {
+      "return_to_zero_at_end": true,
+      "spindle_control": true,
+      "spindle_speed": 1000,
+      "program_end": true
+    }
+  }
+}

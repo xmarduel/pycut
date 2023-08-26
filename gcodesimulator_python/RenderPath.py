@@ -565,12 +565,10 @@ class Drawable:
 
     TEXTURE_INDEX_0 = 0
 
-
-    #USE_FRAME_BUFFER = False
-    USE_FRAME_BUFFER = True
+    GPU_COEFF = 1  # SMALL GPU !
 
     def __init__(self, gcode):
-        RESOL = 1024
+        RESOL = 1024 * Drawable.GPU_COEFF
 
         self.gpuMem = 2 * RESOL * RESOL
         self.resolution = RESOL
@@ -643,18 +641,16 @@ class Drawable:
         self.initialize_cutter()
 
     def draw(self, gl: "GLWidget"):
-        if Drawable.USE_FRAME_BUFFER == True:
-            rc1 = self.pathFramebuffer.bind()
-            gl.glEnable(GL.GL_DEPTH_TEST)
+        rc1 = self.pathFramebuffer.bind()
+        gl.glEnable(GL.GL_DEPTH_TEST)
         
         self.create_path_texture(gl)
 
-        if Drawable.USE_FRAME_BUFFER == True:
-            rc2 = self.pathFramebuffer.bindDefault()
+        rc2 = self.pathFramebuffer.bindDefault()
 
-            # SAVE IMAGE: PATH
-            #img = self.pathFramebuffer.toImage()
-            #img.save("framebuffer_tex.jpg")
+        # SAVE IMAGE: PATH
+        #img = self.pathFramebuffer.toImage()
+        #img.save("framebuffer_tex.jpg")
         
         self.draw_heightmap(gl)
         self.draw_cutter(gl)
@@ -745,18 +741,13 @@ class Drawable:
         """ """
         gl.glClearColor(0.0, 1.0, 0.0, 1.0)
         gl.glEnable(GL.GL_DEPTH_TEST)
-
-        if Drawable.USE_FRAME_BUFFER:
-            gl.glViewport(0, 0, self.resolution*OPENGL_FB, self.resolution*OPENGL_FB) # as in jsCut!
-        else:
-            gl.glViewport(0, 0, 600*OPENGL_FB, 600*OPENGL_FB) # as in jsCut!
-        
+        gl.glViewport(0, 0, self.resolution * OPENGL_FB, self.resolution * OPENGL_FB)
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
         self.program_path.bind()
         self.vbo_path.bind()
 
-        self.program_path.setUniformValue1f(self.resolutionLocation, float(self.resolution*OPENGL_FB))
+        self.program_path.setUniformValue1f(self.resolutionLocation, float(self.resolution * OPENGL_FB))
         self.program_path.setUniformValue1f(self.cutterDiaLocation, float(self.cutterDia))
         self.program_path.setUniformValue(self.pathXYOffsetLocation, float(self.pathXOffset), float(self.pathYOffset))
         self.program_path.setUniformValue1f(self.pathScaleLocation, float(self.pathScale))
@@ -909,7 +900,7 @@ class Drawable:
         gl.glDisable(GL.GL_DEPTH_TEST)  # the "standard" framebuffer draw.... (learnopengl.com)
         gl.glEnable(GL.GL_DEPTH_TEST) # as in jsCut! strange but so it is!
         gl.glClearColor(0.7, 0.2, 0.2, 0.0)  
-        gl.glViewport(0, 0, 600*OPENGL_FB, 600*OPENGL_FB)
+        gl.glViewport(0, 0, 600 * OPENGL_FB, 600 * OPENGL_FB)
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
         self.program_heightmap.bind()
@@ -1437,7 +1428,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.context().aboutToBeDestroyed.connect(self.cleanup)
         self.initializeOpenGLFunctions()
         self.glClearColor(0.2, 0.7, 0.7, 1)
-        self.glViewport(0, 0, 600*OPENGL_FB, 600*OPENGL_FB)
+        self.glViewport(0, 0, 600 * OPENGL_FB, 600 * OPENGL_FB)
 
         self.drawable.initialize()
 
@@ -1453,7 +1444,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         #self.update()
 
     def resizeGL(self, width, height):
-        self.glViewport(0, 0, width, height)
+        self.glViewport(0, 0, width * OPENGL_FB, height * OPENGL_FB)
 
         ratio = width / float(height)
         self.drawable.proj.perspective(45.0, ratio, 2.0, 100.0)
