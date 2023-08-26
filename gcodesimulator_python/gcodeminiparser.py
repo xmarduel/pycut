@@ -179,7 +179,6 @@ class GcodeMiniParser:
 
     def eval_path_time(self) -> float:
         '''
-        in seconds
         '''
         self.path_time_map = []
         self.line_no_time_map =  {}
@@ -200,6 +199,24 @@ class GcodeMiniParser:
             dist = mvt.pos.distanceToPoint(prev_mvt.pos)
             
             total_time = total_time + dist / f
+
+            # ------------------------------------------
+            # fill self.line_no_time_map
+            # ------------------------------------------
+            if idx in self.path_idx_line_no:
+                line_no = self.path_idx_line_no[idx]
+            else:
+                idx0 = idx
+                while True:
+                    idx0 = idx0 - 1
+                    if idx0 in self.path_idx_line_no:
+                        line_no = self.path_idx_line_no[idx0]
+                        break
+            # ------------------------------------------
+            self.line_no_time_map[line_no] = total_time * 60
+            # ------------------------------------------
+            self.path_time_map.append(total_time * 60)
+            # ------------------------------------------
 
             mvt.at_time = total_time * 60
         

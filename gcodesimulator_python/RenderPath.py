@@ -39,6 +39,8 @@ from PySide6.QtUiTools import QUiLoader
 from gcodeminiparser import GcodeAtomicMvt
 from gcodeminiparser import GcodeMiniParser
 
+from gcodefileviewer import GCodeFileViewer
+
 sNaN = float('NaN')
 
 ZOOMSTEP = 1.1
@@ -1456,34 +1458,54 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.update()
 
 
+
+
 class MainWindow(QMainWindow):
     """ """
 
     update_gl_scene = QtCore.Signal()
+    simtime_changed = QtCore.Signal(float)
 
     def __init__(self, gcode):
         QMainWindow.__init__(self)
 
         self.gcode = gcode
 
-        self.layout = QtWidgets.QVBoxLayout()
         self.centralwidget = QtWidgets.QWidget()
 
-        self.centralwidget_layout = QtWidgets.QVBoxLayout()
+        self.centralwidget_layout = QtWidgets.QHBoxLayout()
         self.centralwidget.setLayout(self.centralwidget_layout)
 
+        self.gl_with_controls_layout = QtWidgets.QVBoxLayout()
+
         self.gl_widget = GLWidget(gcode)
-        self.centralwidget_layout.addWidget(self.gl_widget)
+        self.gl_with_controls_layout.addWidget(self.gl_widget)
 
         self.add_sim_controls()
-        self.centralwidget_layout.addWidget(self.control)
+        self.gl_with_controls_layout.addWidget(self.control)
+
+        self.gl_with_controls_layout.setStretch(0, 1)
+
+        self.centralwidget_layout.addLayout(self.gl_with_controls_layout)
+
+        self.gcode_textviewer = GCodeFileViewer(self.centralwidget, self)
+        self.gcode_textviewer.load_data(self.gcode)
+        self.simtime_changed.connect(self.gcode_textviewer.on_simtime_from_js)
+        
+        self.centralwidget_layout.addWidget(self.gcode_textviewer)
 
         self.centralwidget_layout.setStretch(0, 1)
+        self.centralwidget_layout.setStretch(1, 0)
 
-        self.centralwidget.setLayout(self.layout)
+
         self.setCentralWidget(self.centralwidget)
         self.setWindowTitle(self.tr("Hello GL"))
 
+    def set_simtime(self, simtime: float):
+        """ slot on signal from gcode text browser """
+        tick = math.floor(simtime * 1000)
+        self.OnSimAtTickFromTextBrowser(tick)
+    
     def add_sim_controls(self):
         loader = QUiLoader(self)
         self.control = loader.load("simcontrolwidget.ui")
@@ -1614,11 +1636,23 @@ class MainWindow(QMainWindow):
         # set value directly in simulation runner-> no callback
         self.simulation_runner.current_tick = tick
 
+        self.simtime_changed.emit(tick / 1000.0)
+
     def OnSimAtTickFromSimulatorRunner(self, tick: int):
         # inform openGL simulation
         self.gl_widget.setStopAtTime(tick / 1000.0)
         # inform the scrollbar
         self.control.horizontalSlider_Position.setValue(tick)
+
+    def OnSimAtTickFromTextBrowser(self, tick: int):
+        self.simtime_changed.disconnect(self.gcode_textviewer.on_simtime_from_js)
+
+        # inform openGL simulation
+        self.gl_widget.setStopAtTime(tick / 1000.0)
+        # inform the scrollbar
+        self.control.horizontalSlider_Position.setValue(tick)
+
+        self.simtime_changed.connect(self.gcode_textviewer.on_simtime_from_js)
 
     def OnSimStepForward(self):
         self.simulation_runner.step_forward()
