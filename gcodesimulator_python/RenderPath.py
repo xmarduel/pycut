@@ -51,6 +51,8 @@ OPENGL_FB = 2
 
 @jit(nopython=True)
 def make_scene_numba(resolution) -> np.array :
+    print("START NUMBA!")
+
     meshNumVertexes = resolution * (resolution - 1)
     meshStride = 9
 
@@ -66,7 +68,7 @@ def make_scene_numba(resolution) -> np.array :
             right = x + 1
             if right >= resolution:
                 right = resolution - 1
-            if not ((x & 1) ^ (y & 1)):
+            if not (x & 1) ^ (y & 1):
                 for i in range(3):
                     array[pos] = left
                     pos += 1
@@ -634,8 +636,7 @@ class Drawable:
         self.program_heightmap = None
 
     def initialize(self):
-        """ 
-        BUG : inverting initialisation of cutter and heightmap is quite a difference!
+        """
         """
         self.initialize_path()
         self.initialize_heightmap()
@@ -651,13 +652,11 @@ class Drawable:
         if Drawable.USE_FRAME_BUFFER == True:
             rc2 = self.pathFramebuffer.bindDefault()
 
-            # BUG: nothing is drawn in the framebuffer!
-            img = self.pathFramebuffer.toImage()
-            img.save("framebuffer_tex.jpg")
+            # SAVE IMAGE: PATH
+            #img = self.pathFramebuffer.toImage()
+            #img.save("framebuffer_tex.jpg")
         
         self.draw_heightmap(gl)
-
-        gl.glViewport(0, 0, 600*2, 600*2) # as in jsCut!
         self.draw_cutter(gl)
 
     # -----------------------------------------------------------------
@@ -748,16 +747,16 @@ class Drawable:
         gl.glEnable(GL.GL_DEPTH_TEST)
 
         if Drawable.USE_FRAME_BUFFER:
-            gl.glViewport(0, 0, self.resolution*2, self.resolution*2) # as in jsCut!
+            gl.glViewport(0, 0, self.resolution*OPENGL_FB, self.resolution*OPENGL_FB) # as in jsCut!
         else:
-            gl.glViewport(0, 0, 600*2, 600*2) # as in jsCut!
+            gl.glViewport(0, 0, 600*OPENGL_FB, 600*OPENGL_FB) # as in jsCut!
         
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
         self.program_path.bind()
         self.vbo_path.bind()
 
-        self.program_path.setUniformValue1f(self.resolutionLocation, float(self.resolution))
+        self.program_path.setUniformValue1f(self.resolutionLocation, float(self.resolution*OPENGL_FB))
         self.program_path.setUniformValue1f(self.cutterDiaLocation, float(self.cutterDia))
         self.program_path.setUniformValue(self.pathXYOffsetLocation, float(self.pathXOffset), float(self.pathYOffset))
         self.program_path.setUniformValue1f(self.pathScaleLocation, float(self.pathScale))
@@ -777,7 +776,7 @@ class Drawable:
         
         numTriangles = self.scene.pathNumVertexes // 3
         lastTriangle = 0
-        maxTriangles = math.floor(self.gpuMem // self.scene.pathStride // 3 // np.float32().itemsize)
+        maxTriangles = self.gpuMem // (self.scene.pathStride * 3 * np.float32().itemsize)
 
         while lastTriangle < numTriangles:
             n = min(numTriangles - lastTriangle, maxTriangles)
@@ -910,7 +909,7 @@ class Drawable:
         gl.glDisable(GL.GL_DEPTH_TEST)  # the "standard" framebuffer draw.... (learnopengl.com)
         gl.glEnable(GL.GL_DEPTH_TEST) # as in jsCut! strange but so it is!
         gl.glClearColor(0.7, 0.2, 0.2, 0.0)  
-        gl.glViewport(0, 0, 600*2, 600*2)
+        gl.glViewport(0, 0, 600*OPENGL_FB, 600*OPENGL_FB)
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
         self.program_heightmap.bind()
@@ -918,8 +917,9 @@ class Drawable:
         gl.glActiveTexture(self.TEXTURE_INDEX_0)
         gl.glBindTexture(GL.GL_TEXTURE_2D, self.pathFramebuffer.texture())
 
-        #vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_heightmap)
-        self.vao_heightmap.bind()
+        vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_heightmap)
+        #self.vao_heightmap.bind()
+        self.vbo_heightmap.bind()
 
         self.program_heightmap.setUniformValue1f(self.program_heightmap_resolutionLocation, self.resolution)
         self.program_heightmap.setUniformValue1f(self.program_heightmap_pathScaleLocation, self.pathScale)
@@ -1437,7 +1437,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.context().aboutToBeDestroyed.connect(self.cleanup)
         self.initializeOpenGLFunctions()
         self.glClearColor(0.2, 0.7, 0.7, 1)
-        self.glViewport(0, 0, 600*2, 600*2)
+        self.glViewport(0, 0, 600*OPENGL_FB, 600*OPENGL_FB)
 
         self.drawable.initialize()
 

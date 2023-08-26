@@ -7,8 +7,6 @@ GCode dressup for angles
 Process basic <text> elements without converting them before to <path> elements
 Process defs/use and transformations in svg (ie resolve them) without converting them before
 
-use QOpenGLWidget for gcode simulation, get rid of the jscut WebGL stuff
-
 # 1.0.0
 
 with shapely 2.1.0
@@ -16,6 +14,11 @@ with shapely 2.1.0
 # 0.9.9
 
 Clean clean clean
+
+# 0.6.0
+
+gcode simulator in python + qopengl with candle gcode parser.
+Got rid of the jscut WebGL stuff.
 
 
 
