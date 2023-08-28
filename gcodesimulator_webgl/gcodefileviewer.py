@@ -37,6 +37,9 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
         self.gcode = ""
         self.line_number_area = GCodeFileViewerLineNumberArea(self)
 
+        self.webgl_viewer.simtime_received_from_js.connect(self.on_simtime_from_js)
+
+
         self.blockCountChanged.connect(self.updateLineNumberAreaWidth)
         self.updateRequest.connect(self.updateLineNumberArea)
         self.cursorPositionChanged.connect(self.highlightCurrentLine)

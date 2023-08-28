@@ -1,11 +1,17 @@
 
+VERSION = "1_0_0"
+
+import os
 import sys
 import math
 import time
+import argparse
+from collections import namedtuple
 
 import numpy as np
 
 from typing import List
+from typing import Dict
 
 # works great !
 from numba import jit
@@ -44,9 +50,6 @@ from gcodefileviewer import GCodeFileViewer
 sNaN = float('NaN')
 
 ZOOMSTEP = 1.1
-
-OPENGL_FB = 2
-
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
@@ -158,16 +161,16 @@ class Scene:
             # VBit
             # self.rawPos = QVector3D()
 
-    def __init__(self, gcode):
+    def __init__(self, gcode, cutterDiameter, cutterHeight, cutterAngle: float):
         """ """
         self.gcode = gcode
         self.parser = GcodeMiniParser()
         self.parser.parse_gcode(self.gcode)
 
         self.topZ = 0.0
-        self.cutterDiameter = 6.0
-        self.cutterAngle = 180.0
-        self.cutterHeight = 30.0
+        self.cutterDiameter = cutterDiameter
+        self.cutterAngle = cutterAngle
+        self.cutterHeight = cutterHeight
 
         self.isVBit = self.cutterAngle < 180
 
@@ -474,7 +477,12 @@ class SceneCutter:
             self.vPos = QVector3D()
             self.vColor = QVector3D()
 
-    def __init__(self):
+    def __init__(self, cutterDiameter, cutterHeight, cutterAngle):
+        """ infact mormalize dim here """
+        self.cutterDiameter = cutterDiameter  # not used here
+        self.cutterAngle = cutterAngle # not used
+        self.cutterHeight = cutterHeight  # not used here
+
         self.numDivisions = 40
         self.numTriangles = self.numDivisions * 4
 
@@ -485,21 +493,22 @@ class SceneCutter:
         self.buffer = self.make_buffer()
 
     def make_scene(self) -> List[VertexData]:
-        r = 0.2
-        g = 0.2
-        b = 0.3
+        Color = namedtuple('color', ['r', 'g', 'b'])
+        
+        cyl_color = Color(0.2, 0.5, 0.3)
+        top_color = Color(0.0, 0.0, 0.0)
 
         vertices: List[SceneCutter.VertexData] = []
 
-        def addVertex(x: float, y: float, z: float):
+        def addVertex(x: float, y: float, z: float, color=cyl_color):
             vertex = SceneCutter.VertexData()
             vertex.vPos.setX(x)
             vertex.vPos.setY(y)
             vertex.vPos.setZ(z)
 
-            vertex.vColor.setX(r)
-            vertex.vColor.setY(g)
-            vertex.vColor.setZ(b)
+            vertex.vColor.setX(color.r)
+            vertex.vColor.setY(color.g)
+            vertex.vColor.setZ(color.b)
         
             vertices.append(vertex)
 
@@ -524,13 +533,13 @@ class SceneCutter:
 
             # lower base -> cheese part
             addVertex(0, 0, 0.0)
-            addVertex(x, y, 0.0)
-            addVertex(lastX, lastY, 0.0)
+            addVertex(x, y, 0.0, top_color)
+            addVertex(lastX, lastY, 0.0, top_color)
 
             # upper base -> cheese part
             addVertex(0, 0, 1.0)
-            addVertex(lastX, lastY, 1.0)
-            addVertex(x, y, 1.0)
+            addVertex(lastX, lastY, 1.0, top_color)
+            addVertex(x, y, 1.0, top_color)
 
             lastX = x
             lastY = y
@@ -567,7 +576,7 @@ class Drawable:
 
     GPU_COEFF = 1  # SMALL GPU !
 
-    def __init__(self, gcode):
+    def __init__(self, gcode, cutter_diameter: float, cutter_height: float, cutter_angle: float):
         RESOL = 1024 * Drawable.GPU_COEFF
 
         self.gpuMem = 2 * RESOL * RESOL
@@ -575,11 +584,15 @@ class Drawable:
 
         self.SIZE_X = 700
         self.SIZE_Y = 700
+
+        self.cutter_diameter = cutter_diameter
+        self.cutter_height = cutter_height
+        self.cutter_angle = cutter_angle
         
         print("Scene path...")
-        self.scene = Scene(gcode)
+        self.scene = Scene(gcode, cutter_diameter, cutter_height, cutter_angle)
         print("Scene cutter...")
-        self.scene_cutter = SceneCutter()
+        self.scene_cutter = SceneCutter(cutter_diameter, cutter_height, cutter_angle)
         print("Scene heightmap...")
         self.scene_heightmap = SceneHeightMap(self.resolution)
 
@@ -647,7 +660,7 @@ class Drawable:
         self.initialize_heightmap()
         self.initialize_cutter()
 
-    def draw(self, gl: "GLWidget"):
+    def draw(self, gl: "GLView"):
         rc1 = self.pathFramebuffer.bind()
         gl.glEnable(GL.GL_DEPTH_TEST)
         
@@ -744,17 +757,17 @@ class Drawable:
 
         #self.vbo_path.release()
 
-    def create_path_texture(self, gl: "GLWidget"):
+    def create_path_texture(self, gl: "GLView"):
         """ """
         gl.glClearColor(0.0, 1.0, 0.0, 1.0)
         gl.glEnable(GL.GL_DEPTH_TEST)
-        gl.glViewport(0, 0, self.resolution * OPENGL_FB, self.resolution * OPENGL_FB)
+        gl.glViewport(0, 0, self.resolution * GCodeSimulatorSettings.OPENGL_FB, self.resolution * GCodeSimulatorSettings.OPENGL_FB)
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
         self.program_path.bind()
         self.vbo_path.bind()
 
-        self.program_path.setUniformValue1f(self.resolutionLocation, float(self.resolution * OPENGL_FB))
+        self.program_path.setUniformValue1f(self.resolutionLocation, float(self.resolution * GCodeSimulatorSettings.OPENGL_FB))
         self.program_path.setUniformValue1f(self.cutterDiaLocation, float(self.cutterDia))
         self.program_path.setUniformValue(self.pathXYOffsetLocation, float(self.pathXOffset), float(self.pathYOffset))
         self.program_path.setUniformValue1f(self.pathScaleLocation, float(self.pathScale))
@@ -894,7 +907,7 @@ class Drawable:
 
     def create_heightmap_texture(self):
         self.pathFramebuffer = QOpenGLFramebufferObject(
-            QSize(self.resolution * OPENGL_FB, self.resolution * OPENGL_FB),
+            QSize(self.resolution * GCodeSimulatorSettings.OPENGL_FB, self.resolution * GCodeSimulatorSettings.OPENGL_FB),
             QOpenGLFramebufferObject.CombinedDepthStencil
         )
         # --------------------------------- the texture ------------------------------------------
@@ -902,12 +915,12 @@ class Drawable:
         self.program_heightmap.setUniformValue(self.textureLocationID, self.TEXTURE_INDEX_0)  # the index of the texture
         # --------------------------------- the texture ------------------------------------------
 
-    def draw_heightmap(self, gl: "GLWidget"):
+    def draw_heightmap(self, gl: "GLView"):
 
         gl.glDisable(GL.GL_DEPTH_TEST)  # the "standard" framebuffer draw.... (learnopengl.com)
         gl.glEnable(GL.GL_DEPTH_TEST) # as in jsCut! strange but so it is!
         gl.glClearColor(0.7, 0.2, 0.2, 0.0)  
-        gl.glViewport(0, 0, self.SIZE_X * OPENGL_FB, self.SIZE_Y * OPENGL_FB)
+        gl.glViewport(0, 0, self.SIZE_X * GCodeSimulatorSettings.OPENGL_FB, self.SIZE_Y * GCodeSimulatorSettings.OPENGL_FB)
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
         self.program_heightmap.bind()
@@ -1003,7 +1016,7 @@ class Drawable:
 
         vao_binder = None
 
-    def draw_cutter(self, gl: "GLWidget"):
+    def draw_cutter(self, gl: "GLView"):
         """
         """
         def lowerBound(data, offset: int, stride: int, begin: int, end: int, value: float):
@@ -1070,19 +1083,19 @@ class Drawable:
         self.program_cutter.release()
 
 
-class GLWidget(QOpenGLWidget, QOpenGLFunctions):
+class GLView(QOpenGLWidget, QOpenGLFunctions):
     """ """
 
     rotationChanged = QtCore.Signal()
     resized = QtCore.Signal()
 
-    def __init__(self, gcode):
+    def __init__(self, gcode, cutter_diameter, cutter_height, cutter_angle):
         QOpenGLWidget.__init__(self)
         QOpenGLFunctions.__init__(self)
 
         self.setGeometry(0, 0, 700, 700)
 
-        self.drawable = Drawable(gcode)
+        self.drawable = Drawable(gcode, cutter_diameter, cutter_height, cutter_angle)
 
         self.m_xRot = 90.0
         self.m_xRot = 0.0 # PYCUT
@@ -1435,7 +1448,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         self.context().aboutToBeDestroyed.connect(self.cleanup)
         self.initializeOpenGLFunctions()
         self.glClearColor(0.2, 0.7, 0.7, 1)
-        self.glViewport(0, 0, 700 * OPENGL_FB, 700 * OPENGL_FB)
+        self.glViewport(0, 0, 700 * GCodeSimulatorSettings.OPENGL_FB, 700 * GCodeSimulatorSettings.OPENGL_FB)
 
         self.drawable.initialize()
 
@@ -1456,7 +1469,7 @@ class GLWidget(QOpenGLWidget, QOpenGLFunctions):
         xoffset = width - quadra_size // 2
         yoffset = height - quadra_size // 2
 
-        self.glViewport(xoffset, yoffset, quadra_size * OPENGL_FB, quadra_size * OPENGL_FB)
+        self.glViewport(xoffset, yoffset, quadra_size * GCodeSimulatorSettings.OPENGL_FB, quadra_size * GCodeSimulatorSettings.OPENGL_FB)
 
         ratio = width / float(height)
         self.drawable.resize(quadra_size, quadra_size)
@@ -1557,12 +1570,12 @@ class SimulationControls(QtWidgets.QWidget):
             self.set_current_tick(current_tick)
     # -----------------------------------------------------------------------------
 
-    def __init__(self, parent, gl_widget: GLWidget, gcode_textviewer: GCodeFileViewer):
+    def __init__(self, parent, gl_widget: GLView, gcode_textviewer: GCodeFileViewer):
         QtWidgets.QWidget.__init__(self)
         
         loader = QUiLoader(parent)
 
-        self.control = loader.load("simcontrolwidget.ui")
+        self.control = loader.load("simcontrols.ui")
 
         self.setLayout(QtWidgets.QHBoxLayout())
         self.layout().addWidget(self.control)
@@ -1655,35 +1668,35 @@ class SimulationControls(QtWidgets.QWidget):
 
 class GCodeSimulator(QtWidgets.QWidget):
     """ """
-    def __init__(self, parent: QtWidgets.QWidget, gcodefile: str):
+    def __init__(self, parent: QtWidgets.QWidget, options: Dict[str, str]):
         QtWidgets.QWidget.__init__(self)
 
-        self.gcodefile = gcodefile
-
-        fp = open(gcodefile, "r")
-        self.gcode = fp.read()
-        fp.close()
+        self.gcode = gcode = options["gcode"]
+        self.cutter_diameter = cutter_diameter = options["cutter_diameter"]
+        self.cutter_height = cutter_height = options["cutter_height"]
+        self.cutter_angle = cutter_angle = options["cutter_angle"]
 
         layout = QtWidgets.QHBoxLayout()
         self.setLayout(layout)
 
+        self.gcode_textviewer = GCodeFileViewer(self)
+        self.gcode_textviewer.load_data(gcode)
+
         self.gl_with_controls_layout = QtWidgets.QVBoxLayout()
 
-        self.gcode_textviewer = GCodeFileViewer(self)
-        self.gcode_textviewer.load_data(self.gcode)
-
-        self.gl_widget = GLWidget(self.gcode)
+        self.gl_widget = GLView(gcode, cutter_diameter, cutter_height, cutter_angle)
         self.gl_with_controls_layout.addWidget(self.gl_widget)
 
         self.controls = SimulationControls(self, self.gl_widget, self.gcode_textviewer)
         self.gl_with_controls_layout.addWidget(self.controls)
 
         self.gl_with_controls_layout.setStretch(0, 1)
+        self.gl_with_controls_layout.setStretch(1, 0)
 
         layout.addLayout(self.gl_with_controls_layout)
         layout.addWidget(self.gcode_textviewer)
 
-        layout.setStretch(0, 1)
+        layout.setStretch(0, 0)
         layout.setStretch(1, 0)
 
     def set_simtime_from_textbrowser(self, simtime: float):
@@ -1692,24 +1705,48 @@ class GCodeSimulator(QtWidgets.QWidget):
         self.controls.OnSimAtTickFromTextBrowser(tick)
 
 
+class GCodeSimulatorSettings:
+    """ """
+    DEFAULT_OPENGL_FB = 2
+    OPENGL_FB = 2
+
+
 class MainWindow(QMainWindow):
     """ """
 
-    def __init__(self, gcodefile: str):
+    def __init__(self, options: Dict[str, str]):
         QMainWindow.__init__(self)
 
-        self.simulator = GCodeSimulator(self, gcodefile)
+        fp = open(options["gcodefile"], "r")
+        gcode = fp.read()
+        fp.close()
+
+        options["gcode"] = gcode
+
+        self.simulator = GCodeSimulator(self, options)
         self.setCentralWidget(self.simulator)
 
-        self.setWindowTitle(self.tr("Hello GL"))
+        self.setWindowTitle(self.tr("GCode Simulator (QOpenGL)"))
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
+    parser = argparse.ArgumentParser(prog="RenderPath", description="Simulate gcode")
 
-    gcodefile = sys.argv[1]
+    # argument
+    parser.add_argument("gcodefile", help="gcode file")
+    # options
+    parser.add_argument("--cutterdiameter", dest="cutter_diameter", type=float, default=6.0, help="cutter diameter (mm)")
+    parser.add_argument("--cutterheight",   dest="cutter_height", type=float, default=30.0, help="cutter height (mm)")
+    parser.add_argument("--cutterangle",   dest="cutter_angle", type=float, default=180.0, help="cutter angle (degree) - not used yet")
+    
+    # version info
+    parser.add_argument("--version", action='version', version=f"{VERSION}")
 
-    main_window = MainWindow(gcodefile)
+    options = parser.parse_args()
+
+    app = QApplication([])
+
+    main_window = MainWindow(vars(options))
     main_window.show()
 
     res = app.exec()

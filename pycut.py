@@ -117,6 +117,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui = Ui_mainwindow()
         self.ui.setupUi(self)
 
+        # in work...
+        # self.ui.tabWidget.setTabVisible(3, False)
+
         self.setWindowTitle("PyCut")
         self.setWindowIcon(QtGui.QIcon(":/images/tango/32x32/categories/applications-system.png"))
 
@@ -131,12 +134,15 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # open/read/write job settings
         self.jobfilename = None
 
-        self.webgl_viewer = None
-        self.gcode_textviewer = None
+        self.simulator_webgl_viewer = None
+        self.simulator_webgl_browser = None
+
+        self.simulator_python = None
 
         self.svg_viewer = self.setup_svg_viewer()
         self.svg_material_viewer = self.setup_material_viewer()
-        self.webgl_viewer = self.setup_webgl_viewer()
+        self.simulator_webgl_viewer = self.setup_simulator_webgl_viewer()
+        #self.simulator_python = self.setup_simulator_python_viewer()
         self.candle_viewer = self.setup_candle_viewer()
 
         self.ui.tabsview_manager.set_svg_viewer(self.svg_viewer)
@@ -373,8 +379,17 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             settings_dialog.doubleSpinBox_GeometryPreview_stroke_opacity.setValue(float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"]))
             settings_dialog.doubleSpinBox_GeometryPreview_stroke_width.setValue(float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]))
 
+            #if GCodeSimulatorSettings.OPENGL_FB == 1:
+            #    settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.setChecked(True)
+            #    settings_dialog.radioButton_GCODE_SIMULATOR_FB_2.setChecked(False)
+            #else:
+            #    settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.setChecked(False)
+            #    settings_dialog.radioButton_GCODE_SIMULATOR_FB_2.setChecked(True)
+
         def set_defaults():
             self.svg_viewer.set_default_settings()
+            #GCodeSimulatorSettings.OPENGL_FB =  GCodeSimulatorSettings.DEFAULT_OPENGL_FB
+
             fill_dialog()
 
         def set_ok():
@@ -406,6 +421,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 }
             }
             self.svg_viewer.set_settings(settings)
+            #if settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.isChecked() :
+            #    GCodeSimulatorSettings.OPENGL_FB = 1
+            #else:
+            #    GCodeSimulatorSettings.OPENGL_FB = 2
+
             settings_dialog.close()
 
         def set_cancel():
@@ -447,7 +467,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
     def cb_show_tutorial_qt(self):
         '''
-        in test
         '''
         dlg = QtWidgets.QDialog(self)
 
@@ -536,10 +555,15 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "cutterAngle": self.ui.spinBox_Tool_Angle.value(),
         }
         
-        self.webgl_viewer.set_data(simulator_data)
-        self.webgl_viewer.show_gcode()
+        if self.simulator_webgl_viewer is not None:
+            self.simulator_webgl_viewer.set_data(simulator_data)
+            self.simulator_webgl_viewer.show_gcode()
 
-        self.gcode_textviewer.load_data(gcode)
+            self.simulator_webgl_browser.load_data(gcode)
+        
+        #if self.simulator_python is not None:
+        #    self.simulator_python.set_data(simulator_data)
+        #    self.simulator_python.show_gcode()
 
         self.candle_viewer.loadData(gcode)
 
@@ -1077,23 +1101,43 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         
         return candle_viewer
 
-    def setup_webgl_viewer(self):
+    def setup_simulator_webgl_viewer(self):
         '''
         '''
-        simulator = self.ui.simulator
+        simulator = self.ui.simulator_webgl
         layout = simulator.layout()
         
-        self.webgl_viewer = webglviewer.WebGlViewer(simulator)
-        self.gcode_textviewer = gcodefileviewer.GCodeFileViewer(simulator, self.webgl_viewer)
+        self.simulator_webgl_viewer = webglviewer.WebGlViewer(simulator)
+        self.simulator_webgl_browser = gcodefileviewer.GCodeFileViewer(simulator, self.simulator_webgl_viewer)
 
-        self.webgl_viewer.simtime_received_from_js.connect(self.gcode_textviewer.on_simtime_from_js)
-
-        layout.addWidget(self.webgl_viewer)
-        layout.addWidget(self.gcode_textviewer)
+        layout.addWidget(self.simulator_webgl_viewer)
+        layout.addWidget(self.simulator_webgl_browser)
         layout.setStretch(0, 1)
         layout.setStretch(1, 0)
         
-        return self.webgl_viewer
+        return self.simulator_webgl_viewer
+    
+    """
+    def setup_simulator_python_viewer(self):
+        '''
+        '''
+        simulator_python_container = self.ui.simulator_python
+        layout = simulator_python_container.layout()
+
+        options = {
+            "gcode": "",
+            "cutter_diameter": 6.0,
+            "cutter_height": 30.0,
+            "cutter_angle": 180.0
+        }
+
+        self.simulator_python = pythonglviewer.GCodeSimulator(simulator_python_container, options)
+
+        layout.addWidget(self.simulator_python)
+        layout.setStretch(0, 1)
+        
+        return self.simulator_python
+    """
 
     def display_svg(self, svg_file):
         '''

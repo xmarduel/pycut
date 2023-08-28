@@ -325,7 +325,7 @@ QGroupBox {
           <number>0</number>
          </property>
          <item>
-          <widget class="QLabel" name="label_doubleSpinBox_viewer_linewidth">
+          <widget class="QLabel" name="label_doubleSpinBox_GCODEVIEWER_linewidth">
            <property name="minimumSize">
             <size>
              <width>150</width>
@@ -338,7 +338,7 @@ QGroupBox {
           </widget>
          </item>
          <item>
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_gcodeviewer_linewidth">
+          <widget class="QDoubleSpinBox" name="doubleSpinBox_GCODEVIEWER_linewidth">
            <property name="decimals">
             <number>1</number>
            </property>
@@ -351,6 +351,71 @@ QGroupBox {
        </item>
        <item>
         <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="TabGCodeSimulator">
+      <attribute name="title">
+       <string>GCode Simulator</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>OpenGL FrameBuffer Size</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QRadioButton" name="radioButton_GCODE_SIMULATOR_FB_1">
+             <property name="text">
+              <string>Standard</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton_GCODE_SIMULATOR_FB_2">
+             <property name="text">
+              <string>Double</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>

@@ -594,6 +594,7 @@ function RenderPath(options, canvas, shaderDir, shadersReady) {
         cylNumVertexes = numTriangles * 3;
         var bufferContent = new Float32Array(cylNumVertexes * cylStride);
         var r = 0.7, g = 0.7, b = 0.0;
+        var r_top = 0.0, g_top = 0.0, b_top = 0.0;
 
         var pos = 0;
         function addVertex(x, y, z) {
@@ -603,6 +604,14 @@ function RenderPath(options, canvas, shaderDir, shadersReady) {
             bufferContent[pos++] = r;
             bufferContent[pos++] = g;
             bufferContent[pos++] = b;
+        }
+        function addVertexTop(x, y, z) {
+            bufferContent[pos++] = x;
+            bufferContent[pos++] = y;
+            bufferContent[pos++] = z;
+            bufferContent[pos++] = r_top;
+            bufferContent[pos++] = g_top;
+            bufferContent[pos++] = b_top;
         }
 
         var lastX = .5 * Math.cos(0);
@@ -621,11 +630,11 @@ function RenderPath(options, canvas, shaderDir, shadersReady) {
             addVertex(x, y, 1);
             addVertex(lastX, lastY, 1);
             addVertex(0, 0, 0);
-            addVertex(x, y, 0);
-            addVertex(lastX, lastY, 0);
+            addVertexTop(x, y, 0);
+            addVertexTop(lastX, lastY, 0);
             addVertex(0, 0, 1);
-            addVertex(lastX, lastY, 1);
-            addVertex(x, y, 1);
+            addVertexTop(lastX, lastY, 1);
+            addVertexTop(x, y, 1);
 
             lastX = x;
             lastY = y;

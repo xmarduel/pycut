@@ -11,6 +11,8 @@ misc_private/cnc1419
 #misc_private/others_stuff
 misc_private/images
 
+gcodesimulator_webgl/RESOURCES
+
 gcodeviewer/drawers/*h
 gcodeviewer/drawers/*cpp
 gcodeviewer/*.bin

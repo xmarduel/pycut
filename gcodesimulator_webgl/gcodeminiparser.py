@@ -41,7 +41,7 @@ class GcodeMiniParser:
 
         self.path : List[Tuple[float, float, float, float]] = []
         self.path_time_map : List[float] = []    # idx -> time
-        
+
         self.path_time = None
 
         # helpers
@@ -166,8 +166,8 @@ class GcodeMiniParser:
 
         total_time = 0.0
 
-        for path_idx, point in enumerate(self.path):
-            prevIdx = max(path_idx - 1, 0)
+        for idx, point in enumerate(self.path):
+            prevIdx = max(idx - 1, 0)
             prevPoint = self.path[prevIdx]
            
             x = point[0]
@@ -191,10 +191,10 @@ class GcodeMiniParser:
             # ------------------------------------------
             # fill self.line_no_time_map
             # ------------------------------------------
-            if path_idx in self.path_idx_line_no:
-                line_no = self.path_idx_line_no[path_idx]
+            if idx in self.path_idx_line_no:
+                line_no = self.path_idx_line_no[idx]
             else:
-                idx0 = path_idx
+                idx0 = idx
                 while True:
                     idx0 = idx0 - 1
                     if idx0 in self.path_idx_line_no:
@@ -205,7 +205,7 @@ class GcodeMiniParser:
             # ------------------------------------------
             self.path_time_map.append(total_time)
             # ------------------------------------------
-        
+
         self.path_time = total_time
 
     def get_path_idx_for_time(self, atime: float) -> int:

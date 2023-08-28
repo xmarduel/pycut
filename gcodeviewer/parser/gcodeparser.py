@@ -114,7 +114,7 @@ class GcodeParser :
         return self.addCommand(args)
 
     @addCommand.register
-    def _(self, command: list) -> PointSegment:   ### List[int] is not a class !!!
+    def _(self, command: list) -> PointSegment:
         if len(command) == 0:
             return None
     

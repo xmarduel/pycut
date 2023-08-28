@@ -5,6 +5,7 @@ from typing import Dict
 from typing import Any
 
 from PySide6 import QtCore
+from PySide6 import QtGui
 from PySide6 import QtWidgets
 from PySide6 import QtWebEngineWidgets
 from PySide6 import QtWebEngineCore
@@ -83,6 +84,19 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
             channel.registerObject("talkie", self.talkie)
             self.page.setWebChannel(channel)
 
+    def resizeEvent(self, event: QtGui.QResizeEvent) -> None:
+        width = self.size().width()
+        height = self.size().height()
+
+        square_size = min(width, height)
+
+        self.data["width"] = square_size - 100
+        self.data["height"] = square_size - 100
+        
+        self.show_gcode()
+
+        return super().resizeEvent(event)
+    
     def set_data(self, data: Dict[str, Any]):
         '''
         '''
@@ -220,7 +234,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 
-#bloc1, #bloc2, #bloc3, #bloc4, #bloc5, #bloc6, #bloc7, #bloc8
+#bloc1, #bloc2, #bloc3, #bloc4, #bloc5, #bloc6, #bloc7
 {
     display:inline;
 }
@@ -250,23 +264,13 @@ var talkie = null;
 var simtime_from_python = false;
 
 
-function sliderSizeCanvas(size) {
-  // size of canvas
-  const gl_canvas = document.getElementById('glCanvas');
-  gl_canvas.width = size;
-  gl_canvas.height = size;
 
-  // size of slider
-  const simtime_slider = document.getElementById('simtime_slider');
-  simtime_slider.style.width = size; 
-}
-
-function showAtTime(simtine) {
+function showAtTime(simtime) {
   if (gcode_simulator) {
     const simtime_slider = document.getElementById('simtime_slider');
-    simtime_slider.value = simtine;
+    simtime_slider.value = simtime;
   
-    sliderChangeSimTime(simtine);
+    sliderChangeSimTime(simtime);
   }
 }
 
@@ -395,7 +399,8 @@ function to_end() {
 
 <div>
     <canvas id="glCanvas" width="500" height="500"></canvas>
-    <input id="simtime_slider" type="range" min="0" max="1000" value="1000" step="1" oninput="sliderChangeSimTime(this.value)" style="width: 500px"></input>
+    <br />
+    <input id="simtime_slider" type="range" min="0" max="1000" value="1000" step="1" oninput="sliderChangeSimTime(this.value)"></input>
     <div id="block_container">
       <div id="bloc1"><button type="button" onclick="to_begin()"><img src="qrc:/images/tango/22x22/actions/media-skip-backward.png"/></button> </div>  
       <div id="bloc2"><button type="button" onclick="step_backward()"><img src="qrc:/images/tango/22x22/actions/media-seek-backward.png"/></button> </div>  
@@ -404,7 +409,6 @@ function to_end() {
       <div id="bloc5"><button type="button" onclick="run()"><img src="qrc:/images/tango/22x22/actions/media-playback-start.png"/></button> </div>
       <div id="bloc6"><button type="button" onclick="step_forward()"><img src="qrc:/images/tango/22x22/actions/media-seek-forward.png"/></button> </div>
       <div id="bloc7"><button type="button" onclick="to_end()"><img src="qrc:/images/tango/22x22/actions/media-skip-forward.png"/></button> </div>
-      <div id="bloc8"><input id="size_slider" type="range" min="250" max="750" value="500" step="10" oninput="sliderSizeCanvas(this.value)" style="width: 100px"></input></div>
     </div>
     <div>Click twice a button or move the mouse outside the buttons to refresh the view!</div>
   </div>
@@ -540,7 +544,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // size of slider from outside
             const simtime_slider = document.getElementById('simtime_slider');
-            simtime_slider.width = simdata["width"];
+            var square_width = Math.min(simdata["width"], simdata["height"]);
+            simtime_slider.style.width = square_width;
 
 
             gcode_simulator = new GCodeSimulator(simdata);
@@ -584,13 +589,13 @@ class TalkyTalky(QtCore.QObject):
         self.send_data_js_side.emit(jsondata)
 
     @QtCore.Slot() 
-    def set_simtime(self, simtine: float):
+    def set_simtime(self, simtime: float):
         '''
         set the sim time from the outside into js (from the gcode file browser per example)
         '''
         #print("TalkyTalky::set_simtime", simtine)
 
-        self.send_simtime_js_side.emit(simtine)
+        self.send_simtime_js_side.emit(simtime)
 
     @QtCore.Slot(float) 
     def js_inform_python_for_simtime(self, simtime: float):

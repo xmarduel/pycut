@@ -771,11 +771,17 @@
             </property>
            </layout>
           </widget>
-          <widget class="QWidget" name="simulator">
+          <widget class="QWidget" name="simulator_webgl">
            <attribute name="title">
             <string>GCode Simulator</string>
            </attribute>
            <layout class="QHBoxLayout" name="horizontalLayout_5"/>
+          </widget>
+          <widget class="QWidget" name="simulator_python">
+           <attribute name="title">
+            <string>GCode Simulator</string>
+           </attribute>
+           <layout class="QHBoxLayout" name="horizontalLayout_5b"/>
           </widget>
          </widget>
          <widget class="PyCutOperationsTableViewManager" name="operationsview_manager" native="true">
