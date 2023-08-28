@@ -1,6 +1,6 @@
 # This Python file uses the following encoding: utf-8
 
-VERSION = "0_5_1"
+VERSION = "0_5_2"
 
 import sys
 import os
@@ -27,18 +27,15 @@ from PySide6.QtUiTools import QUiLoader
 
 from PySide6.QtCore import QRegularExpression
 
-# TEST simulator with python TODO
-#import gcodesimulator_python.glviewer as glviewer
-#import gcodesimulator_python.gcodefileviewer as gcodefileviewer
-
 import shapely_svgpath_io
 
 from val_with_unit import ValWithUnit
 
 import svgviewer
 import gcodeviewer.widgets.glwidget_container as glwidget_container
-import gcodesimulator_webgl.webglviewer as webglviewer
-import gcodesimulator_webgl.gcodefileviewer as gcodefileviewer
+
+import gcodesimulator_webgl.viewer as gcodesimulator_webgl_viewer
+#import gcodesimulator_python.viewer as gcodesimulator_python_viewer
 
 import operations_tableview
 import tabs_tableview
@@ -118,7 +115,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
 
         # in work...
-        # self.ui.tabWidget.setTabVisible(3, False)
+        self.ui.tabWidget.setTabVisible(3, False)
 
         self.setWindowTitle("PyCut")
         self.setWindowIcon(QtGui.QIcon(":/images/tango/32x32/categories/applications-system.png"))
@@ -135,14 +132,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.jobfilename = None
 
         self.simulator_webgl_viewer = None
-        self.simulator_webgl_browser = None
-
-        self.simulator_python = None
+        self.simulator_python_viewer = None
 
         self.svg_viewer = self.setup_svg_viewer()
         self.svg_material_viewer = self.setup_material_viewer()
         self.simulator_webgl_viewer = self.setup_simulator_webgl_viewer()
-        #self.simulator_python = self.setup_simulator_python_viewer()
+        #self.simulator_python_viewer = self.setup_simulator_python_viewer()
         self.candle_viewer = self.setup_candle_viewer()
 
         self.ui.tabsview_manager.set_svg_viewer(self.svg_viewer)
@@ -557,13 +552,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         
         if self.simulator_webgl_viewer is not None:
             self.simulator_webgl_viewer.set_data(simulator_data)
-            self.simulator_webgl_viewer.show_gcode()
 
-            self.simulator_webgl_browser.load_data(gcode)
-        
-        #if self.simulator_python is not None:
-        #    self.simulator_python.set_data(simulator_data)
-        #    self.simulator_python.show_gcode()
+        if self.simulator_python_viewer is not None:
+            self.simulator_python_viewer.set_data(simulator_data)
 
         self.candle_viewer.loadData(gcode)
 
@@ -1104,40 +1095,29 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def setup_simulator_webgl_viewer(self):
         '''
         '''
-        simulator = self.ui.simulator_webgl
-        layout = simulator.layout()
+        container = self.ui.simulator_webgl
+        layout = container.layout()
         
-        self.simulator_webgl_viewer = webglviewer.WebGlViewer(simulator)
-        self.simulator_webgl_browser = gcodefileviewer.GCodeFileViewer(simulator, self.simulator_webgl_viewer)
-
+        self.simulator_webgl_viewer = gcodesimulator_webgl_viewer.GCodeViewer(container)
+        
         layout.addWidget(self.simulator_webgl_viewer)
-        layout.addWidget(self.simulator_webgl_browser)
         layout.setStretch(0, 1)
-        layout.setStretch(1, 0)
         
         return self.simulator_webgl_viewer
     
-    """
     def setup_simulator_python_viewer(self):
         '''
         '''
-        simulator_python_container = self.ui.simulator_python
-        layout = simulator_python_container.layout()
+        container = self.ui.simulator_python
+        layout = container.layout()
 
-        options = {
-            "gcode": "",
-            "cutter_diameter": 6.0,
-            "cutter_height": 30.0,
-            "cutter_angle": 180.0
-        }
+        """self.simulator_python_viewer = gcodesimulator_python_viewer.GCodeViewer(container)
 
-        self.simulator_python = pythonglviewer.GCodeSimulator(simulator_python_container, options)
-
-        layout.addWidget(self.simulator_python)
+        layout.addWidget(self.simulator_python_viewer)
         layout.setStretch(0, 1)
         
-        return self.simulator_python
-    """
+        return self.simulator_python_viewer"""
+        return None
 
     def display_svg(self, svg_file):
         '''
