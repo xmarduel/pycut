@@ -9,39 +9,9 @@ from typing import Dict
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QApplication, QMainWindow
 
-import webglviewer
-import gcodefileviewer
+import viewer
 
 import resources_rc
-
-
-class GCodeSimulator(QtWidgets.QWidget):
-    """ """
-    def __init__(self, parent, options: Dict[str, str]):
-        QtWidgets.QWidget.__init__(self)
-
-        simulator_data =  {
-            "gcode": options["gcode"],
-            "cutterHeight": options["cutter_height"],
-            "cutterDiameter": options["cutter_diameter"],
-            "cutterAngle": options["cutter_angle"]
-        }
-
-        layout = QtWidgets.QHBoxLayout()
-        self.setLayout(layout)
-
-        self.gcode_glviewer = webglviewer.WebGlViewer(self)
-        self.gcode_glviewer.set_data(simulator_data)
-        self.gcode_glviewer.show_gcode()
-        
-        self.gcode_textviewer = gcodefileviewer.GCodeFileViewer(self, self.gcode_glviewer)
-        self.gcode_textviewer.load_data(simulator_data["gcode"])
-
-        layout.addWidget(self.gcode_glviewer)
-        layout.addWidget(self.gcode_textviewer)
-
-        layout.setStretch(0, 1)
-        layout.setStretch(1, 0)
 
 
 class MainWindow(QMainWindow):
@@ -57,8 +27,14 @@ class MainWindow(QMainWindow):
 
         options["gcode"] = gcode
 
-        self.simulator = GCodeSimulator(self, options)
-        self.setCentralWidget(self.simulator)
+        options["cutterDiameter"] = options["cutter_diameter"]
+        options["cutterHeight"] = options["cutter_height"]
+        options["cutterAngle"] = options["cutter_angle"]
+
+        self.viewer = viewer.GCodeViewer(self)
+        self.viewer.set_data(options)
+
+        self.setCentralWidget(self.viewer)
 
         self.setWindowTitle(self.tr("GCode Simulator (WebGL)"))
 

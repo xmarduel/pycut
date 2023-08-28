@@ -582,8 +582,8 @@ class Drawable:
         self.gpuMem = 2 * RESOL * RESOL
         self.resolution = RESOL
 
-        self.SIZE_X = 700
-        self.SIZE_Y = 700
+        self.SIZE_X = 800
+        self.SIZE_Y = 800
 
         self.cutter_diameter = cutter_diameter
         self.cutter_height = cutter_height
@@ -1093,7 +1093,7 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
         QOpenGLWidget.__init__(self)
         QOpenGLFunctions.__init__(self)
 
-        self.setGeometry(0, 0, 700, 700)
+        self.setGeometry(0, 0, 800, 800)
 
         self.drawable = Drawable(gcode, cutter_diameter, cutter_height, cutter_angle)
 
@@ -1437,7 +1437,7 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
     # --------------------------------------------------------------------------
 
     def sizeHint(self):
-        return QSize(700, 700)
+        return QSize(800, 800)
 
     def cleanup(self):
         self.makeCurrent()
@@ -1448,7 +1448,7 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
         self.context().aboutToBeDestroyed.connect(self.cleanup)
         self.initializeOpenGLFunctions()
         self.glClearColor(0.2, 0.7, 0.7, 1)
-        self.glViewport(0, 0, 700 * GCodeSimulatorSettings.OPENGL_FB, 700 * GCodeSimulatorSettings.OPENGL_FB)
+        self.glViewport(0, 0, 800 * GCodeSimulatorSettings.OPENGL_FB, 800 * GCodeSimulatorSettings.OPENGL_FB)
 
         self.drawable.initialize()
 
@@ -1709,45 +1709,3 @@ class GCodeSimulatorSettings:
     """ """
     DEFAULT_OPENGL_FB = 2
     OPENGL_FB = 2
-
-
-class MainWindow(QMainWindow):
-    """ """
-
-    def __init__(self, options: Dict[str, str]):
-        QMainWindow.__init__(self)
-
-        fp = open(options["gcodefile"], "r")
-        gcode = fp.read()
-        fp.close()
-
-        options["gcode"] = gcode
-
-        self.simulator = GCodeSimulator(self, options)
-        self.setCentralWidget(self.simulator)
-
-        self.setWindowTitle(self.tr("GCode Simulator (QOpenGL)"))
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog="RenderPath", description="Simulate gcode")
-
-    # argument
-    parser.add_argument("gcodefile", help="gcode file")
-    # options
-    parser.add_argument("--cutterdiameter", dest="cutter_diameter", type=float, default=6.0, help="cutter diameter (mm)")
-    parser.add_argument("--cutterheight",   dest="cutter_height", type=float, default=30.0, help="cutter height (mm)")
-    parser.add_argument("--cutterangle",   dest="cutter_angle", type=float, default=180.0, help="cutter angle (degree) - not used yet")
-    
-    # version info
-    parser.add_argument("--version", action='version', version=f"{VERSION}")
-
-    options = parser.parse_args()
-
-    app = QApplication([])
-
-    main_window = MainWindow(vars(options))
-    main_window.show()
-
-    res = app.exec()
-    sys.exit(res)
