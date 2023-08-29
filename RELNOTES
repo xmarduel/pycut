@@ -1,6 +1,6 @@
 # 0.6.0  IN PROGRESS
 
-- gcode simulator in python + qopengl with candle gcode parser.
+- gcode simulator in python + qt-opengl with candle gcode parser.
 - jscut WebGL stuff kept as option
 
 # 0.5.1

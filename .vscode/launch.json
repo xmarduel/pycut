@@ -4,6 +4,8 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
+
         {
             "name": "TEST SIMULATOR",
             "type": "python",
@@ -29,7 +31,7 @@
             "program": "driver.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator_python",
-            "args": "../gcode/ZZZ1.gcode --cutterdiameter=4.0 --candleparser"
+            "args": "./tests/g2.gcode --cutterdiameter=4.0 --candleparser"
         },
         {
             "name": "TEST VIEWER PROFILER",

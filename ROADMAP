@@ -17,7 +17,7 @@ Clean clean clean
 
 # 0.6.0
 
-gcode simulator in python + qopengl with candle gcode parser.
+gcode simulator in python + qt-opengl with candle gcode parser.
 Got rid of the jscut WebGL stuff.
 
 

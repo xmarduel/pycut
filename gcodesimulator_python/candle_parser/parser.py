@@ -58,7 +58,7 @@ class CandleParser:
 
         # Prepare parser
         gp = GcodeParser()
-        gp.setTraverseSpeed(100)  # self.m_settings.rapidSpeed()
+        gp.setTraverseSpeed(2500)  # self.m_settings.rapidSpeed() -> from cmdline
         gp.reset(QVector3D(qQNaN(), qQNaN(), 0))
 
         print("Prepared to load: %s" % time.elapsed())

@@ -36,9 +36,9 @@ def qQNaN():
 class GcodeAtomicMvt:
     '''
     '''
-    def __init__(self, x, y, z, feedrate):
+    def __init__(self, pos: QVector3D, feedrate: float):
         self.at_time = None
-        self.pos = QVector3D(x,y,z)
+        self.pos = pos
         self.feedrate = feedrate # mm per minutes or inches per minutes
 
     @classmethod
@@ -169,7 +169,7 @@ class GcodeMiniParser:
                             self.path[j].feedrate = f
                     lastF = f
 
-                self.path.append(GcodeAtomicMvt(lastX, lastY, lastZ, lastF))
+                self.path.append(GcodeAtomicMvt(QVector3D(lastX, lastY, lastZ), lastF))
                 self.path_idx_line_no[len(self.path)-1] = self.line_no
 
             while self.char_no < len(self.gcode) and self.gcode[self.char_no] != '\r' and self.gcode[self.char_no] != '\n':
@@ -254,21 +254,22 @@ class GcodeMiniParser:
         self.gcode = gcode
 
         for ls in candle_parser.linesegments:
-            pt_second = ls.m_second
+            pt = ls.m_first
+            #pt = ls.m_second
             feedrate = ls.m_speed
 
             if feedrate > 0.0:
-                x = pt_second.x()
-                y = pt_second.y()
-                z = pt_second.z()
+                x = pt.x()
+                y = pt.y()
+                z = pt.z()
 
                 if qIsNaN(x) or qIsNaN(y) or qIsNaN(z):
                     continue 
              
-                mvt = GcodeAtomicMvt(x, y, z, feedrate)
+                mvt = GcodeAtomicMvt(pt, feedrate)
                 self.path.append(mvt)
 
-                self.path_idx_line_no[len(self.path)-1] = ls.m_lineNumber
+                self.path_idx_line_no[len(self.path)-1] = ls.m_lineNumber + 1
 
         # last thing
         self.eval_path_time()
