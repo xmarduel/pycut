@@ -1,3 +1,5 @@
+import argparse
+import sys
 
 from typing import List
 
@@ -11,29 +13,24 @@ from gcodeviewer.parser.gcodepreprocessorutils import  GcodePreprocessorUtils
 from gcodeviewer.parser.gcodeparser import  GcodeParser 
 
 from gcodeviewer.tables.gcodetablemodel import GCodeItem
-from gcodeviewer.tables.gcodetablemodel import GCodeTableModel
 
 PROGRESSMINLINES = 10000
 PROGRESSSTEP     =  1000
 
-global filename
-filename = None
 
-class GCodeLoader:
+class CandleParser:
     '''
     '''
-    def __init__(self, filename):
+    def __init__(self, filename: str):
         self.filename = filename
-        
         self.m_viewParser = GcodeViewParse()
-        self.m_programModel = GCodeTableModel()
+        self.linesegments = []
 
-        
     def loadFile(self):
         file = QFile(self.filename)
 
         if not file.open(QIODevice.ReadOnly):
-            print("Can't open file:\n" + self.filename)
+            print(f"Can't open file: {self.filename}\n")
             return
 
         # Prepare text stream
@@ -56,16 +53,13 @@ class GCodeLoader:
 
         # Prepare parser
         gp = GcodeParser()
-        ####gp.setTraverseSpeed(self.m_settings.rapidSpeed())
-        gp.setTraverseSpeed(100)
+        gp.setTraverseSpeed(100)  # self.m_settings.rapidSpeed()
 
         print("Prepared to load: %s" % time.elapsed())
         time.start()
 
-        # Block parser updates on table changes
-        self.m_programLoading = True
+        while len(data) > 0:
 
-        while len(data) > 0:    
             command = data.pop(0)
 
             # Trim command
@@ -85,59 +79,32 @@ class GCodeLoader:
                 item.line = gp.getCommandNumber()
                 item.args = args
 
-                self.m_programModel.m_data.append(item)
-
-        self.m_programModel.insertRow(self.m_programModel.rowCount())
-        print("model filled: %s ms." % time.elapsed())
-
-        time.start()
-
-        arcPrecision = 0.0 # TODO self.m_settings.arcPrecision()
+        arcPrecision = 0.2 # TODO self.m_settings.arcPrecision()  # default is 0.1
         arcDegreeMode = False # TODO self.m_settings.arcDegreeMode()
 
-        all_lines = self.m_viewParser.getLinesFromParser(gp, arcPrecision, arcDegreeMode)
-
-        #self.updateProgramEstimatedTime(all_lines)
-        print("view parser filled: %s ms" % time.elapsed())
-
-        self.m_programLoading = False
+        self.linesegments = self.m_viewParser.getLinesFromParser(gp, arcPrecision, arcDegreeMode)
 
 
-def main():
+def main(filename):
     '''
     '''
-    codeLoader = GCodeLoader(filename)
+    codeLoader = CandleParser(filename)
     codeLoader.loadFile()
+    
+    print("DONE!")
 
 
-def main_profiled():
-    """
-    """
-    import profile
-    import pstats
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(prog="gcodec_candle_parser", description="Parse gcode")
 
-    outfile = 'test_parser.bin'
+    # argument
+    parser.add_argument("gcodefile", help="gcode file")
+    
+    options = parser.parse_args()
 
-    profile.run("main()", filename=outfile)
-    p = pstats.Stats(outfile)
+    main(options.gcodefile)
+    sys.exit(0)
 
-    # 1.
-    p.sort_stats('cumulative')
-    p.print_stats(100) # p.print_stats(50)
-
-    # 2.
-    p.sort_stats('time')
-    p.print_stats(100) # p.print_stats(50)
-
-    # 3.
-    p.sort_stats('time', 'cumulative').print_stats(.5) # (.5, 'init')
-
-
-if __name__ =='__main__':
-    '''
-    python -m cProfile -o test_parser.prof test_parser.py
-    '''
-    filename = "pycut_cnc_all_letters_op.nc"
-
-    main()
-    #main_profiled()
+'''
+python -m cProfile -o test_parser.prof test_parser.py
+'''

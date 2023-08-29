@@ -6,7 +6,6 @@ import sys
 
 from typing import Dict
 
-from PySide6 import QtWidgets
 from PySide6.QtWidgets import QApplication, QMainWindow
 
 import viewer

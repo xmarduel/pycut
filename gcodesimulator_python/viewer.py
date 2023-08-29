@@ -10,8 +10,8 @@ from typing import Dict
 
 from PySide6 import QtWidgets
 
-import glviewer
-import gcodefileviewer
+from gcodesimulator_python import glviewer
+from gcodesimulator_python import gcodefileviewer
 
 
 class GCodeViewer(QtWidgets.QWidget):
@@ -24,15 +24,18 @@ class GCodeViewer(QtWidgets.QWidget):
         self.cutter_height = cutter_height = options["cutter_height"]
         self.cutter_angle = cutter_angle = options["cutter_angle"]
 
+        self.use_candle_parser = use_candle_parser = options["use_candle_parser"]
+
+
         layout = QtWidgets.QHBoxLayout()
         self.setLayout(layout)
 
         self.gcode_textbrowser = gcodefileviewer.GCodeFileViewer(self)
-        self.gcode_textbrowser.load_data(gcode)
+        self.gcode_textbrowser.load_data(gcode, use_candle_parser)
 
         self.gl_with_controls_layout = QtWidgets.QVBoxLayout()
 
-        self.gcode_glviewer = glviewer.GLView(gcode, cutter_diameter, cutter_height, cutter_angle)
+        self.gcode_glviewer = glviewer.GLView(gcode, cutter_diameter, cutter_height, cutter_angle, use_candle_parser)
         self.gl_with_controls_layout.addWidget(self.gcode_glviewer)
 
         self.controls = glviewer.SimulationControls(self, self.gcode_glviewer, self.gcode_textbrowser)

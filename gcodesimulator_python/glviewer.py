@@ -1,11 +1,5 @@
-
-VERSION = "1_0_0"
-
-import os
-import sys
 import math
 import time
-import argparse
 from collections import namedtuple
 
 import numpy as np
@@ -23,7 +17,6 @@ from PySide6.QtGui import (
     QVector3D,
     QMatrix4x4,
 )
-from PySide6.QtWidgets import QApplication, QMainWindow
 
 from PySide6 import QtWidgets
 from PySide6 import QtCore
@@ -161,11 +154,15 @@ class Scene:
             # VBit
             # self.rawPos = QVector3D()
 
-    def __init__(self, gcode, cutterDiameter, cutterHeight, cutterAngle: float):
+    def __init__(self, gcode: str, cutterDiameter: float, cutterHeight: float, cutterAngle: float, useCandleParser: bool):
         """ """
         self.gcode = gcode
         self.parser = GcodeMiniParser()
-        self.parser.parse_gcode(self.gcode)
+
+        if useCandleParser == False:
+            self.parser.parse_gcode(self.gcode)
+        else:
+            self.parser.parse_gcode_use_candle_parser(self.gcode)
 
         self.topZ = 0.0
         self.cutterDiameter = cutterDiameter
@@ -576,7 +573,7 @@ class Drawable:
 
     GPU_COEFF = 1  # SMALL GPU !
 
-    def __init__(self, gcode, cutter_diameter: float, cutter_height: float, cutter_angle: float):
+    def __init__(self, gcode: str, cutter_diameter: float, cutter_height: float, cutter_angle: float, use_candle_parser: bool):
         RESOL = 1024 * Drawable.GPU_COEFF
 
         self.gpuMem = 2 * RESOL * RESOL
@@ -588,9 +585,11 @@ class Drawable:
         self.cutter_diameter = cutter_diameter
         self.cutter_height = cutter_height
         self.cutter_angle = cutter_angle
+
+        self.use_candle_parser = use_candle_parser
         
         print("Scene path...")
-        self.scene = Scene(gcode, cutter_diameter, cutter_height, cutter_angle)
+        self.scene = Scene(gcode, cutter_diameter, cutter_height, cutter_angle, use_candle_parser)
         print("Scene cutter...")
         self.scene_cutter = SceneCutter(cutter_diameter, cutter_height, cutter_angle)
         print("Scene heightmap...")
@@ -1089,13 +1088,13 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
     rotationChanged = QtCore.Signal()
     resized = QtCore.Signal()
 
-    def __init__(self, gcode, cutter_diameter, cutter_height, cutter_angle):
+    def __init__(self, gcode: str, cutter_diameter: float, cutter_height: float, cutter_angle: float, use_candle_parser: bool):
         QOpenGLWidget.__init__(self)
         QOpenGLFunctions.__init__(self)
 
         self.setGeometry(0, 0, 800, 800)
 
-        self.drawable = Drawable(gcode, cutter_diameter, cutter_height, cutter_angle)
+        self.drawable = Drawable(gcode, cutter_diameter, cutter_height, cutter_angle, use_candle_parser)
 
         self.m_xRot = 90.0
         self.m_xRot = 0.0 # PYCUT

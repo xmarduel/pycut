@@ -25,7 +25,12 @@ from typing import Tuple
 from PySide6.QtCore import qIsNaN
 from PySide6.QtGui import QVector3D
 
+from candle_parser.parser import CandleParser
+
 sNaN = float('NaN')
+
+def qQNaN():
+    return float('NaN')
 
 
 class GcodeAtomicMvt:
@@ -239,6 +244,34 @@ class GcodeMiniParser:
                 end = i
     
         return end
+
+    def parse_gcode_use_candle_parser(self, gcode: str):
+        """ """
+        candle_parser = CandleParser("")
+        candle_parser.loadData(gcode.split("\n"))
+
+        self.reset()
+        self.gcode = gcode
+
+        for ls in candle_parser.linesegments:
+            pt_second = ls.m_second
+            feedrate = ls.m_speed
+
+            if feedrate > 0.0:
+                x = pt_second.x()
+                y = pt_second.y()
+                z = pt_second.z()
+
+                if qIsNaN(x) or qIsNaN(y) or qIsNaN(z):
+                    continue 
+             
+                mvt = GcodeAtomicMvt(x, y, z, feedrate)
+                self.path.append(mvt)
+
+                self.path_idx_line_no[len(self.path)-1] = ls.m_lineNumber
+
+        # last thing
+        self.eval_path_time()
 
 
 if __name__ == '__main__':

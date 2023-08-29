@@ -1,5 +1,3 @@
-import argparse
-import sys
 
 from typing import List
 
@@ -11,15 +9,18 @@ from PySide6.QtCore import qIsNaN
 
 from PySide6.QtGui import QVector3D
 
-from gcodeviewer.parser.gcodeviewparse import GcodeViewParse 
-from gcodeviewer.parser.gcodepreprocessorutils import  GcodePreprocessorUtils  
-from gcodeviewer.parser.gcodeparser import  GcodeParser 
+from candle_parser.gcodeviewparse import GcodeViewParse 
+from candle_parser.gcodepreprocessorutils import  GcodePreprocessorUtils  
+from candle_parser.gcodeparser import  GcodeParser 
 
 from gcodeviewer.util.util import qQNaN
 
 
 PROGRESSMINLINES = 10000
 PROGRESSSTEP     =  1000
+
+sNan = 65536.0  # ???
+sNan = float('NaN')
 
 
 class CandleParser:
@@ -82,27 +83,3 @@ class CandleParser:
 
         self.linesegments = self.m_viewParser.getLinesFromParser(gp, arcPrecision, arcDegreeMode)
 
-
-def main(filename):
-    '''
-    '''
-    codeLoader = CandleParser(filename)
-    codeLoader.loadFile()
-    
-    print("DONE!")
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog="gcode_candle_parser", description="Parse gcode")
-
-    # argument
-    parser.add_argument("gcodefile", help="gcode file")
-    
-    options = parser.parse_args()
-
-    main(options.gcodefile)
-    sys.exit(0)
-
-'''
-python -m cProfile -o test_gcodeparser.prof test_gcodeparser.py
-'''

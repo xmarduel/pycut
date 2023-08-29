@@ -55,7 +55,7 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
         self.updateLineNumberAreaWidth(0)
         self.highlightCurrentLine()
 
-    def load_data(self, gcode):
+    def load_data(self, gcode, use_candle_parser: bool):
         '''
         '''
         self.gcode = gcode
@@ -65,7 +65,11 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
         gcode_syntaxhighlighter.GCodeSyntaxHighlighter(self.document())
 
         self.miniparser.reset()
-        self.miniparser.parse_gcode(gcode)
+
+        if use_candle_parser == False:
+            self.miniparser.parse_gcode(gcode)
+        else:
+            self.miniparser.parse_gcode_use_candle_parser(gcode)
 
         '''
         very strange : 

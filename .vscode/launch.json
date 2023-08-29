@@ -4,23 +4,6 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    
-
-
-
-
-
-
-
-    
-
-    
-
-
-
-
-
-    
         {
             "name": "TEST SIMULATOR",
             "type": "python",
@@ -34,10 +17,19 @@
             "name": "TEST SIMULATOR_DEBUG",
             "type": "python",
             "request": "launch",
-            "program": "RenderPath.py",
+            "program": "driver.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator_python",
-            "args": "jscut_mini.gcode --cutterdiameter=6.0 --cutterheight=30.0"
+            "args": "./tests/jscut_mini.gcode --cutterdiameter=6.0 --cutterheight=30.0"
+        },
+        {
+            "name": "TEST SIMULATOR_DEBUG-CANDLE_PARSER",
+            "type": "python",
+            "request": "launch",
+            "program": "driver.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator_python",
+            "args": "../gcode/ZZZ1.gcode --cutterdiameter=4.0 --candleparser"
         },
         {
             "name": "TEST VIEWER PROFILER",
@@ -165,104 +157,15 @@
             "args": ["misc_private\\svg\\hobbymat\\hobbymat_gear_40.json"]
         },
         {
-            "name": "PYCUT SVGTEXT_2_SVGPATH SLAINE",
-            "type": "python",
-            "request": "launch",
-            "program": "svgtext2svgpath.py",
-            "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgtext2svgpaths",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgtext2svgpaths\\examples\\all_letters_slaine.svg"]
-        },
-        {
-            "name": "PYCUT SVGTEXT_2_SVGPATH SMALL SLAINE",
-            "type": "python",
-            "request": "launch",
-            "program": "svgtext2svgpath.py",
-            "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgtext2svgpaths",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgtext2svgpaths\\examples\\slaine.svg"]
-        },
-        {
-            "name": "PYCUT RESOLVER",
-            "type": "python",
-            "request": "launch",
-            "program": "svgresolver.py",
-            "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
-            "args": ["-i", "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\misc_private\\svg\\hobbymat\\hobbymat_gear_40.svg"]
-        },
-        {
-            "name": "PYCUT RESOLVER TEST_BASIC",
-            "type": "python",
-            "request": "launch",
-            "program": "svgresolver.py",
-            "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver\\test_basic.svg"]
-        },
-        {
-            "name": "PYCUT RESOLVER TEST_BASIC2",
-            "type": "python",
-            "request": "launch",
-            "program": "svgresolver.py",
-            "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver\\test_basic2.svg"]
-        },
-        {
-            "name": "PYCUT RESOLVER TEST_BASIC3",
-            "type": "python",
-            "request": "launch",
-            "program": "svgresolver.py",
-            "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver\\test_basic3.svg"]
-        },
-        {
-            "name": "PYCUT RESOLVER TEST_BEARING",
-            "type": "python",
-            "request": "launch",
-            "program": "svgresolver.py",
-            "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\svg\\test_bearing.svg"]
-        },
-        {
-            "name": "PYCUT RESOLVER CNC 1310 SIDES HORIZONTAL",
-            "type": "python",
-            "request": "launch",
-            "program": "svgresolver.py",
-            "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
-            "args": ["C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver\\cnc1310-sides-horizontal.svg"]
-        },
-        {
-            "name": "TABLEVIEW",
-            "type": "python",
-            "request": "launch",
-            "program": "tableview2.py",
-            "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\pyside_ex"
-        },
-        {
-            "name": "GCODE VIEW PARSE",
+            "name": "GCODE PARSER",
             "type": "python",
             "request": "launch",
             "program": "test_gcodeparser.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodeviewer",
             "args": [
-                "pycut_gcode.gcode"
+                "../gcode/ZZZ1.gcode"
             ]
-        },
-        {
-            "name": "OPENGL TEST1",
-            "type": "python",
-            "request": "launch",
-            "program": "openGL_demo1.py",
-            "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodeviewer",
-            "args": []
         },
         {
             "name": "FREETYPE",
