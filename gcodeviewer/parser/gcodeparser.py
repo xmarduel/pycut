@@ -90,7 +90,7 @@ class GcodeParser :
         self.m_truncateDecimalLength = truncateDecimalLength
 
     def reset(self, initialPoint : QVector3D = None):
-        print("reseting gp %s" % initialPoint)
+        #print("reseting gp %s" % initialPoint)
 
         if initialPoint is None:
             #initialPoint = QVector3D(qQNaN(), qQNaN(), qQNaN()) # CANDLE: this line!

@@ -246,16 +246,24 @@ class GcodeMiniParser:
         return end
 
     def parse_gcode_use_candle_parser(self, gcode: str):
-        """ """
+        """ 
+        candle "linesegment"  has a src and target point
+        and the speed is the speed between these 2 points
+        """
         candle_parser = CandleParser("")
         candle_parser.loadData(gcode.split("\n"))
 
         self.reset()
         self.gcode = gcode
 
-        for ls in candle_parser.linesegments:
-            pt = ls.m_first
-            #pt = ls.m_second
+        is_first = True
+
+        for idx, ls in enumerate(candle_parser.linesegments):
+            if is_first:
+                pt = ls.m_first
+            else:
+                pt = ls.m_second
+            
             feedrate = ls.m_speed
 
             if feedrate > 0.0:
@@ -266,10 +274,24 @@ class GcodeMiniParser:
                 if qIsNaN(x) or qIsNaN(y) or qIsNaN(z):
                     continue 
              
-                mvt = GcodeAtomicMvt(pt, feedrate)
-                self.path.append(mvt)
+                if is_first:
+                    mvt = GcodeAtomicMvt(pt, 100000)
+                    self.path.append(mvt)
+                    is_first = False
 
-                self.path_idx_line_no[len(self.path)-1] = ls.m_lineNumber + 1
+                    # +1 because we consider line numbering from "1"
+                    self.path_idx_line_no[len(self.path)-1] = ls.m_lineNumber + 1
+
+                    mvt = GcodeAtomicMvt(ls.m_second, feedrate)
+                    self.path.append(mvt)
+
+
+                else:
+                    mvt = GcodeAtomicMvt(pt, feedrate)
+                    self.path.append(mvt)
+
+                # +2 because the "second" point (target) is from the next line
+                self.path_idx_line_no[len(self.path)-1] = ls.m_lineNumber + 2
 
         # last thing
         self.eval_path_time()

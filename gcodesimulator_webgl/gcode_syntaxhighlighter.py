@@ -26,6 +26,8 @@ def format(color, style=''):
 STYLES = {
     'comment': format('darkGreen', 'italic'),
     'keyword': format('blue', 'bold'),
+    'tool': format('red', 'bold'),
+    'poskeyword': format('blue'),
     'numbers': format('brown'),
     'numbersZ': format('magenta'),
 }
@@ -42,14 +44,20 @@ class GCodeSyntaxHighlighter (QSyntaxHighlighter):
         rules = [
 
             # From ';' until a newline
-            (r';[^\n]*', 0, STYLES['comment']),
+            (r'[;(][^\n]*', 0, STYLES['comment']),
 
             # Positions Numeric literals
             (r'\b[XY][+-]?[0-9]+(?:\.[0-9]+)?\b', 0, STYLES['numbers']),
             (r'\b[Z][+-]?[0-9]+(?:\.[0-9]+)?\b', 0, STYLES['numbersZ']),
 
+            # Others Positional Numeric literals
+            (r'\b[R][0-9]+(?:\.[0-9]+)?\b', 0, STYLES['poskeyword']),
+
             # Others Numeric literals
-            (r'\b[GSMF][0-9]+?\b', 0, STYLES['keyword'])
+            (r'\b[GSMFH][0-9]+(?:\.[0-9]+)?\b', 0, STYLES['keyword']),
+
+            # Tools
+            (r'\b[T][0-9]+(?:\.[0-9]+)?\b', 0, STYLES['tool'])
         ]
 
         # Build a QRegularExpression for each pattern
