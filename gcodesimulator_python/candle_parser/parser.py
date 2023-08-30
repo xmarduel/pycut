@@ -31,6 +31,9 @@ class CandleParser:
         self.m_viewParser = GcodeViewParse()
         self.linesegments = []
 
+        # store mapping of gcode instruction no -> fileline no
+        self.lineno2filelineno = {}
+
     def loadFile(self):
         file = QFile(self.filename)
 
@@ -64,7 +67,11 @@ class CandleParser:
         print("Prepared to load: %s" % time.elapsed())
         time.start()
 
+        filelineno = -1
+        self.lineno2filelineno = {}
+
         while len(data) > 0:
+            filelineno += 1
 
             command = data.pop(0)
 
@@ -76,7 +83,10 @@ class CandleParser:
                 stripped = GcodePreprocessorUtils.removeComment(command)
                 args = GcodePreprocessorUtils.splitCommand(stripped)
 
-                gp.addCommand(args)
+                ps = gp.addCommand(args)
+
+                if ps:
+                    self.lineno2filelineno[ps.m_lineNumber] = filelineno
 
         arcPrecision = 0.2 # TODO self.m_settings.arcPrecision()  # default is 0.1
         arcDegreeMode = False # TODO self.m_settings.arcDegreeMode()

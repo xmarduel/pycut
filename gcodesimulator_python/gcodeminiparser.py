@@ -258,40 +258,43 @@ class GcodeMiniParser:
 
         is_first = True
 
-        for idx, ls in enumerate(candle_parser.linesegments):
-            if is_first:
-                pt = ls.m_first
-            else:
-                pt = ls.m_second
+        def get_lineno_for_directiveno(no: int):
+            while no not in candle_parser.lineno2filelineno:
+                no -= 1
+            return candle_parser.lineno2filelineno[no]
+
+
+        for ls in candle_parser.linesegments:
+            first = ls.m_first
+            pt = ls.m_second
             
             feedrate = ls.m_speed
 
             if feedrate > 0.0:
-                x = pt.x()
-                y = pt.y()
-                z = pt.z()
+                x = first.x()
+                y = first.y()
+                z = first.z()
 
                 if qIsNaN(x) or qIsNaN(y) or qIsNaN(z):
                     continue 
              
                 if is_first:
-                    mvt = GcodeAtomicMvt(pt, 100000)
+                    # go to this first point
+                    mvt = GcodeAtomicMvt(first, 100000)
                     self.path.append(mvt)
+                    
+                    no = ls.m_lineNumber
+                    # self.path_idx_line_no[len(self.path)-1] = ls.m_lineNumber
+                    self.path_idx_line_no[len(self.path)-1] = get_lineno_for_directiveno(no)
+
                     is_first = False
 
-                    # +1 because we consider line numbering from "1"
-                    self.path_idx_line_no[len(self.path)-1] = ls.m_lineNumber + 1
+                mvt = GcodeAtomicMvt(pt, feedrate)
+                self.path.append(mvt)
 
-                    mvt = GcodeAtomicMvt(ls.m_second, feedrate)
-                    self.path.append(mvt)
-
-
-                else:
-                    mvt = GcodeAtomicMvt(pt, feedrate)
-                    self.path.append(mvt)
-
-                # +2 because the "second" point (target) is from the next line
-                self.path_idx_line_no[len(self.path)-1] = ls.m_lineNumber + 2
+                no = ls.m_lineNumber
+                # self.path_idx_line_no[len(self.path)-1] = no
+                self.path_idx_line_no[len(self.path)-1] = get_lineno_for_directiveno(no)
 
         # last thing
         self.eval_path_time()

@@ -34,6 +34,15 @@
             "args": "./tests/g2.gcode --cutterdiameter=4.0 --candleparser"
         },
         {
+            "name": "TEST SIMULATOR_DEBUG-CANDLE_PARSER-2",
+            "type": "python",
+            "request": "launch",
+            "program": "driver.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator_python",
+            "args": "./tests/jscut.gcode --cutterdiameter=6.0 --candleparser"
+        },
+        {
             "name": "TEST VIEWER PROFILER",
             "type": "python",
             "request": "launch",
