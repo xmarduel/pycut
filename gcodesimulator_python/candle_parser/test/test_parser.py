@@ -95,7 +95,7 @@ def main(filename):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog="gcodec_candle_parser", description="Parse gcode")
+    parser = argparse.ArgumentParser(prog="gcode_candle_parser", description="Parse gcode")
 
     # argument
     parser.add_argument("gcodefile", help="gcode file")
