@@ -552,8 +552,8 @@ round). </p>
     <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                                                                                                                                                                                                                                                                                        <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                        -->
+                                                                                                                                                                                                                                                                                            <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                                                                                                                                                                                                                                                                            -->
     <circle cx="66.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </g>
   <g id="layer1" transform="translate(120 0)">
@@ -565,8 +565,8 @@ round). </p>
     <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                                                                                                                                                                                                                                                                                      <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                      -->
+                                                                                                                                                                                                                                                                                          <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                                                                                                                                                                                                                                                                          -->
     <circle cx="65.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </g>
 </svg>
@@ -633,12 +633,12 @@ strategy "2" on the right:</p>
               stroke-opacity="0.8"/>
     <circle cx="20" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
     <!-- 
-                                                                                                                                                                                                                                                                                     D = sqrt(10*10 + 10*10) = 14.14
-                                                                                                                                                                                                                                                                                     d = 14.14 -10 = 4.14
-                                                                                                                                                                                                                                                                                     
-                                                                                                                                                                                                                                                                                     dx = dy =  d / sqrt(2) = 2.93
-                                                                                                                                                                                                                                                                                     
-                                                                                                                                                                                                                                                                                     -->
+                                                                                                                                                                                                                                                                                         D = sqrt(10*10 + 10*10) = 14.14
+                                                                                                                                                                                                                                                                                         d = 14.14 -10 = 4.14
+                                                                                                                                                                                                                                                                                         
+                                                                                                                                                                                                                                                                                         dx = dy =  d / sqrt(2) = 2.93
+                                                                                                                                                                                                                                                                                         
+                                                                                                                                                                                                                                                                                         -->
     <polyline id="dog-bone-path1" points="20,20 17.07,17.07" fill="none" stroke="blue" stroke-linejoin="round"
               stroke-width="0.3" stroke-opacity="0.2"/>
     <circle id="dog-bone-path1-material" cx="17.07" cy="17.07" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2"
@@ -856,36 +856,6 @@ incoming segment is <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mo>)</mo>
 </math>, and so the slopes of the lines on the stock being milled.</p>
 
-<p>incoming segment : <math xmlns="http://www.w3.org/1998/Math/MathML">
-  <mi>y</mi>
-  <mo>=</mo>
-  <msub>
-    <mi>m</mi>
-    <mn>1</mn>
-  </msub>
-  <mi>x</mi>
-  <mo>+</mo>
-  <msub>
-    <mi>b</mi>
-    <mn>1</mn>
-  </msub>
-</math></p>
-
-<p>outcoming segment: <math xmlns="http://www.w3.org/1998/Math/MathML">
-  <mi>y</mi>
-  <mo>=</mo>
-  <msub>
-    <mi>m</mi>
-    <mn>2</mn>
-  </msub>
-  <mi>x</mi>
-  <mo>+</mo>
-  <msub>
-    <mi>b</mi>
-    <mn>2</mn>
-  </msub>
-</math></p>
-
 <p>The stock theoretical corner is the intersection of these two lines. The slopes of these 2 lines is known (parallel
 to the GCode segments) but on which side of the segments are they? Well the incoming stock line should not cross the
 outcoming GCode segment, and the outcoming stock line should not cross the incoming GCode segment. Thus we are able to
@@ -1102,8 +1072,11 @@ calculate <math xmlns="http://www.w3.org/1998/Math/MathML">
   </mfrac>
 </math></p>
 
-<p>The gap is then: <mrow><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
-  gap <mo>=</mo>
+<p>The gap between the cutter and the cstock corner is then: </p>
+
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>gap</mi>
+  <mo>=</mo>
   <msqrt>
     <msup>
       <mi>dx</mi>
@@ -1121,7 +1094,7 @@ calculate <math xmlns="http://www.w3.org/1998/Math/MathML">
   </msub>
 </math> where dx and dy are the distance between the cutter center and the stock corner</p>
 
-<p>The angle at the corner of the toolpath is calculated with</p>
+<p>The angle at the toolpath is calculated with</p>
 <math display="block">
   <mi>tan(ß)</mi>
   <mo>=</mo>
@@ -1232,10 +1205,9 @@ calculate <math xmlns="http://www.w3.org/1998/Math/MathML">
   </mfrac>
 </math> </p>
 
-<p>So we can calculate xthe gap as well as the orientation of the corner. Theorically a fixup is needed as soon as a
-path "angle" is convex (smaller than 180 degrees). It is up the the user to decide at which threshold fixups should be
-performed. Value of Pi/2 seems acceptable, or maybe Pi/3. So fixups will be perform only for angles smaller than this
-threshold.</p>
+<p>So everything is there to calculate the fixup. Theorically a fixup is needed as soon as a toolpath "angle" is convex
+(smaller than 180 degrees). It is up the the user to decide at which threshold fixups should be performed. Value of
+Pi/2 seems acceptable, or maybe Pi/3. So fixups will be perform only for angles smaller than this threshold.</p>
 
 <p>Let's try our formulas for a sharp angle. Let's say the cutter diamter is 2mm. The GCode encountered is</p>
 <pre><code class="language-gcode">G1 X-1  Y1
