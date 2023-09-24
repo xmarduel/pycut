@@ -789,8 +789,80 @@ G90
 
 <h4>General case / automatic fixups</h4>
 
-<p>Knowing only the GCode, the theoretical corner on the stock has to be calculated in order to evaluate the gap
-between the cutter border and the stock corner. Considering this GCode</p>
+<p>Knowing only the GCode, the theoretical corner on the stock could be calculated in order to evaluate the gap
+between the cutter border and the stock corner. Infact the stock corner does not have to be calculated at all, as
+the gap is infact only function of the cutter diameter and the angle of the corner. The orientation of the corner 
+indeed does not play a role. <p>
+
+  <svg width="140mm" height="200mm" viewBox="0 0 140 200" version="1.1" 
+  id="svg5"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg">
+
+ <g id="angle_60" transform="translate(20 10)">
+   <polyline points="0,30   60,0   120,30" fill="none" stroke="black" stroke-width="0.5"/>
+   <polygon  points="0,30   60,0   120,30  
+                     78,30  60,22   42,30" fill="blue" fill-opacity="0.2"/>
+   <polyline points="20,30  60,11  100,30" fill="none" stroke="red"   stroke-width="0.2"/>                                                                                                                                                                                                                                                       
+   <circle cx="60" cy="11" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+ </g>
+
+ <g id="angle_90" transform="translate(30 50)" >
+   <polyline points=" 0,50  50,0  100,50" fill="none" stroke="black" stroke-width="0.5" />
+   <polygon  points=" 0,50  50,0  100,50
+                     72,50  50,28  28,50" fill="blue" fill-opacity="0.2"/>
+   <polyline points="14,50  50,14  86,50" fill="none" stroke="red"  stroke-width="0.2"/>
+   <circle cx="50" cy="14" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+ </g>
+ 
+ <g id="angle_130" transform="translate(40 100)">
+   <polyline points=" 0,80  40,0   80,80" fill="none" stroke="black" stroke-width="0.5" />
+   <polygon  points=" 0,80  40,0   80,80
+                     56,80  40,45  24,80" fill="blue" fill-opacity="0.2"/>
+   <polyline points="12,80  40,20  68,80" fill="none" stroke="red"   stroke-width="0.2"/>
+   <circle cx="40" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+ </g>
+</svg>
+
+<p>The gap is </p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>gap</mi>
+  <mo>=</mo>
+  <mfrac>
+    <mrow>
+      <msub>
+        <mi>cutter</mi>
+        <mn>R</mn>
+      </msub>
+    </mrow>
+    <mrow>
+      <mi>sin(a)</mi>
+    </mrow>
+  </mfrac> 
+  <mo>-</mo>
+  <msub>
+    <mi>cutter</mi>
+    <mn>R</mn>
+  </msub>
+  <mo>=</mo>
+  <mfrac>
+    <mrow>
+      <mi>1</mi> <mo>-</mo><mi>sin(a)</mi>
+    </mrow>
+    <mrow>
+      <mi>sin(a)</mi>
+    </mrow>
+  </mfrac> 
+  <msub>
+    <mi>cutter</mi>
+    <mn>R</mn>
+  </msub>
+</math>
+<p>where a is the half of the angle. So for a cutter radius of 1:</p>
+<p>Example: a = 60 => gap = 0.15</p>
+<p>Example: a = 45 => gap = 0.41</p>
+<p>Example: a = 30 => gap = 1.0</p>
+</p>Considering this GCode</p>
 <pre><code class="language-gcode">G1 X&lt;x1&gt;  Y&lt;y1&gt;
 G1 X&lt;xm&gt;  Y&lt;ym&gt;
 G1 X&lt;x2&gt;  Y&lt;y2&gt;</code></pre>
