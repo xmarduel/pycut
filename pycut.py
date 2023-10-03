@@ -35,7 +35,10 @@ import svgviewer
 import gcodeviewer.widgets.glwidget_container as glwidget_container
 
 import gcodesimulator_webgl.viewer as gcodesimulator_webgl_viewer
-#import gcodesimulator_python.viewer as gcodesimulator_python_viewer
+import gcodesimulator_python.viewer as gcodesimulator_python_viewer
+import gcodesimulator_python.glviewer as gcodesimulator_python_glviewer
+
+gcodesimulator_python_glviewer.Drawable.set_pycut_prefix()
 
 import operations_tableview
 import tabs_tableview
@@ -114,8 +117,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui = Ui_mainwindow()
         self.ui.setupUi(self)
 
-        # in work...
-        self.ui.tabWidget.setTabVisible(3, False)
+        # simulator: python ON, webgl OFF
+        self.ui.tabWidget.setTabVisible(2, False)
 
         self.setWindowTitle("PyCut")
         self.setWindowIcon(QtGui.QIcon(":/images/tango/32x32/categories/applications-system.png"))
@@ -137,7 +140,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_viewer = self.setup_svg_viewer()
         self.svg_material_viewer = self.setup_material_viewer()
         self.simulator_webgl_viewer = self.setup_simulator_webgl_viewer()
-        #self.simulator_python_viewer = self.setup_simulator_python_viewer()
+        #self.simulator_python_viewer = self.setup_simulator_python_viewer() # no! only with gcode data
         self.candle_viewer = self.setup_candle_viewer()
 
         self.ui.tabsview_manager.set_svg_viewer(self.svg_viewer)
@@ -542,6 +545,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def display_gcode(self, gcode: str):
         '''
         display gcode in webgl!
+        display gcode in python!
+
+        and candle viewer!
         '''
         simulator_data =  {
             "gcode": gcode,
@@ -553,8 +559,19 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         if self.simulator_webgl_viewer is not None:
             self.simulator_webgl_viewer.set_data(simulator_data)
 
-        if self.simulator_python_viewer is not None:
-            self.simulator_python_viewer.set_data(simulator_data)
+        # -----------------------------------------------------------------
+        
+        simulator_data_python =  {
+            "gcode": gcode,
+            "cutter_height": 3 * 4.0,
+            "cutter_diameter": self.ui.doubleSpinBox_Tool_Diameter.value(),
+            "cutter_angle": self.ui.spinBox_Tool_Angle.value(),
+            "use_candle_parser": True
+        }
+         
+        self.setup_simulator_python_viewer(simulator_data_python)
+
+        # -----------------------------------------------------------------
 
         self.candle_viewer.loadData(gcode)
 
@@ -1105,19 +1122,21 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         
         return self.simulator_webgl_viewer
     
-    def setup_simulator_python_viewer(self):
+    def setup_simulator_python_viewer(self, data):
         '''
         '''
         container = self.ui.simulator_python
         layout = container.layout()
 
-        """self.simulator_python_viewer = gcodesimulator_python_viewer.GCodeViewer(container)
+        if self.simulator_python_viewer != None:
+            layout.removeWidget(self.simulator_python_viewer)
+        
+        self.simulator_python_viewer = gcodesimulator_python_viewer.GCodeViewer(container, data)
 
         layout.addWidget(self.simulator_python_viewer)
         layout.setStretch(0, 1)
         
-        return self.simulator_python_viewer"""
-        return None
+        return self.simulator_python_viewer
 
     def display_svg(self, svg_file):
         '''

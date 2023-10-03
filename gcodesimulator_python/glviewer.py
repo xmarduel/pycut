@@ -35,10 +35,10 @@ from OpenGL import GL
 
 from PySide6.QtUiTools import QUiLoader
 
-from gcodeminiparser import GcodeAtomicMvt
-from gcodeminiparser import GcodeMiniParser
+from gcodesimulator_python.gcodeminiparser import GcodeAtomicMvt
+from gcodesimulator_python.gcodeminiparser import GcodeMiniParser
 
-from gcodefileviewer import GCodeFileViewer
+from gcodesimulator_python.gcodefileviewer import GCodeFileViewer
 
 sNaN = float('NaN')
 
@@ -573,6 +573,14 @@ class Drawable:
 
     GPU_COEFF = 1  # SMALL GPU !
 
+    PYCUT_PREFIX = "" # standalone: empty
+
+    @classmethod
+    def set_pycut_prefix(cls):
+        """ inside pycut """
+        cls.PYCUT_PREFIX = "gcodesimulator_python/"
+
+
     def __init__(self, gcode: str, cutter_diameter: float, cutter_height: float, cutter_angle: float, use_candle_parser: bool):
         RESOL = 1024 * Drawable.GPU_COEFF
 
@@ -678,8 +686,8 @@ class Drawable:
 
     def initialize_path(self):
         """ """
-        self.program_path.addShaderFromSourceFile(QOpenGLShader.Vertex, self.path_shader_vs)
-        self.program_path.addShaderFromSourceFile(QOpenGLShader.Fragment, self.path_shader_fs)
+        self.program_path.addShaderFromSourceFile(QOpenGLShader.Vertex, self.PYCUT_PREFIX + self.path_shader_vs)
+        self.program_path.addShaderFromSourceFile(QOpenGLShader.Fragment, self.PYCUT_PREFIX + self.path_shader_fs)
         self.program_path.link()
 
         if not self.program_path.isLinked():
@@ -846,8 +854,8 @@ class Drawable:
     def initialize_heightmap(self):
         """
         """
-        self.program_heightmap.addShaderFromSourceFile(QOpenGLShader.Vertex, self.height_shader_vs)
-        self.program_heightmap.addShaderFromSourceFile(QOpenGLShader.Fragment, self.height_shader_fs)
+        self.program_heightmap.addShaderFromSourceFile(QOpenGLShader.Vertex, self.PYCUT_PREFIX + self.height_shader_vs)
+        self.program_heightmap.addShaderFromSourceFile(QOpenGLShader.Fragment, self.PYCUT_PREFIX + self.height_shader_fs)
         self.program_heightmap.link()
 
         self.program_heightmap.bind()
@@ -970,8 +978,8 @@ class Drawable:
     def initialize_cutter(self):
         """
         """
-        self.program_cutter.addShaderFromSourceFile(QOpenGLShader.Vertex, self.basic_shader_vs)
-        self.program_cutter.addShaderFromSourceFile(QOpenGLShader.Fragment, self.basic_shader_fs)
+        self.program_cutter.addShaderFromSourceFile(QOpenGLShader.Vertex, self.PYCUT_PREFIX + self.basic_shader_vs)
+        self.program_cutter.addShaderFromSourceFile(QOpenGLShader.Fragment, self.PYCUT_PREFIX  + self.basic_shader_fs)
         self.program_cutter.link()
 
         self.program_cutter.bind()
@@ -1346,7 +1354,7 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
         self.drawable.rotate.setToIdentity()
         self.drawable.rotate.rotate(-90, 1.0, 0.0, 0.0)
         self.drawable.rotate.rotate(angX * 180 / math.pi, 1.0, 0.0, 0.0)
-        self.drawable.rotate.rotate(angY * 180 / math.pi, 0.0, 0.0, 1.0)
+        self.drawable.rotate.rotate(-angY * 180 / math.pi, 0.0, 0.0, 1.0)
         # PYCUT WANTS THE ROTATION ONLY
 
     def set_model_position(self, position: QVector3D):
@@ -1574,7 +1582,7 @@ class SimulationControls(QtWidgets.QWidget):
         
         loader = QUiLoader(parent)
 
-        self.control = loader.load("simcontrols.ui")
+        self.control = loader.load(Drawable.PYCUT_PREFIX + "simcontrols.ui")
 
         self.setLayout(QtWidgets.QHBoxLayout())
         self.layout().addWidget(self.control)

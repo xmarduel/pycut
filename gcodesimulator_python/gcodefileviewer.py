@@ -6,8 +6,8 @@ from PySide6 import QtWidgets
 from PySide6 import QtGui
 from PySide6 import QtCore
 
-import gcode_syntaxhighlighter as gcode_syntaxhighlighter
-from gcodeminiparser import GcodeMiniParser
+import gcodesimulator_python.gcode_syntaxhighlighter as gcode_syntaxhighlighter
+from gcodesimulator_python.gcodeminiparser import GcodeMiniParser
 
 
 class GCodeFileViewerLineNumberArea(QtWidgets.QWidget):

@@ -31,6 +31,7 @@ class GCodeViewer(QtWidgets.QWidget):
         self.setLayout(layout)
 
         self.gcode_textbrowser = gcodefileviewer.GCodeFileViewer(self)
+        self.gcode_textbrowser.setMinimumWidth(250)
         self.gcode_textbrowser.load_data(gcode, use_candle_parser)
 
         self.gl_with_controls_layout = QtWidgets.QVBoxLayout()

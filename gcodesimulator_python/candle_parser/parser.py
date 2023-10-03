@@ -9,9 +9,9 @@ from PySide6.QtCore import qIsNaN
 
 from PySide6.QtGui import QVector3D
 
-from candle_parser.gcodeviewparse import GcodeViewParse 
-from candle_parser.gcodepreprocessorutils import  GcodePreprocessorUtils  
-from candle_parser.gcodeparser import  GcodeParser 
+from gcodesimulator_python.candle_parser.gcodeviewparse import GcodeViewParse 
+from gcodesimulator_python.candle_parser.gcodepreprocessorutils import  GcodePreprocessorUtils  
+from gcodesimulator_python.candle_parser.gcodeparser import  GcodeParser 
 
 from gcodeviewer.util.util import qQNaN
 
