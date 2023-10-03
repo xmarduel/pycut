@@ -1,4 +1,3 @@
-
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -6,17 +5,17 @@ import shapely.geometry
 
 
 class MatplotLibUtils:
-    '''
+    """
     Helper functions on Shapely
-    '''
+    """
+
     MAPLOTLIB_DEBUG = False
-    #MAPLOTLIB_DEBUG = True
-    cnt = 1 # matplotlib figures
+    # MAPLOTLIB_DEBUG = True
+    cnt = 1  # matplotlib figures
 
     @classmethod
-    def MatplotlibDisplay(cls, title: str, geom: any, force: bool =False) -> int :
-        '''
-        '''
+    def MatplotlibDisplay(cls, title: str, geom: any, force: bool = False) -> int:
+        """ """
         # a counter
         cls.cnt += 1
 
@@ -24,15 +23,15 @@ class MatplotLibUtils:
             return
 
         # dispatch
-        if geom.geom_type == 'LineString':
+        if geom.geom_type == "LineString":
             cls._MatplotlibDisplayLineString(title, geom)
-        if geom.geom_type == 'MultiLineString':
+        if geom.geom_type == "MultiLineString":
             cls._MatplotlibDisplayMultiLineString(title, geom)
-        if geom.geom_type == 'Polygon':
+        if geom.geom_type == "Polygon":
             cls._MatplotlibDisplayPolygon(title, geom)
-        if geom.geom_type == 'MultiPolygon':
+        if geom.geom_type == "MultiPolygon":
             cls._MatplotlibDisplayMultiPolygon(title, geom)
-        if geom.geom_type == 'GeometryCollection':
+        if geom.geom_type == "GeometryCollection":
             cls._MatplotlibDisplayGeometryCollection(title, geom)
         else:
             pass
@@ -40,7 +39,7 @@ class MatplotLibUtils:
         return cls.cnt
 
     @classmethod
-    def rectify_y(cls, y) :
+    def rectify_y(cls, y):
         yy = []
         for v in y:
             yy.append(-v)
@@ -48,8 +47,7 @@ class MatplotLibUtils:
 
     @classmethod
     def _MatplotlibDisplayLineString(cls, title: str, linestring: shapely.geometry.LineString):
-        '''
-        ''' 
+        """ """
         plt.figure(cls.cnt)
         plt.title(title)
 
@@ -60,29 +58,28 @@ class MatplotLibUtils:
 
         # plot
         style = {
-            0: 'bo-',
+            0: "bo-",
         }
 
-        plt.axis('equal')
-        plt.plot(x,y, style[0])
+        plt.axis("equal")
+        plt.plot(x, y, style[0])
         plt.show()
 
     @classmethod
     def _MatplotlibDisplayMultiLineString(cls, title: str, multilinestring: shapely.geometry.MultiLineString):
-        '''
-        '''    
+        """ """
         plt.figure(cls.cnt)
         plt.title(title)
 
         style = {
-            0: 'ro-',
-            1: 'g+-',
-            2: 'bo-',
-            3: 'r+-',
-            4: 'go-',
-            5: 'b+-',
+            0: "ro-",
+            1: "g+-",
+            2: "bo-",
+            3: "r+-",
+            4: "go-",
+            5: "b+-",
         }
-        
+
         xx = []
         yy = []
 
@@ -95,27 +92,21 @@ class MatplotLibUtils:
             xx.append(ix)
             yy.append(iy)
 
-        for k, (x,y) in enumerate(zip(xx,yy)):
-            plt.plot(x, y, style[k%6])
-      
-        plt.axis('equal')
+        for k, (x, y) in enumerate(zip(xx, yy)):
+            plt.plot(x, y, style[k % 6])
+
+        plt.axis("equal")
         plt.show()
 
     @classmethod
     def _MatplotlibDisplayPolygon(cls, title: str, polygon: shapely.geometry.Polygon):
-        '''
-        '''
+        """ """
         plt.figure(cls.cnt)
         plt.title(title)
 
-        style_ext = {
-            0: 'bo-'
-        }
-        style_int = {
-            0: 'r+--',
-            1: 'go-'
-        }
-        
+        style_ext = {0: "bo-"}
+        style_int = {0: "r+--", 1: "go-"}
+
         x = polygon.exterior.coords.xy[0]
         y = polygon.exterior.coords.xy[1]
 
@@ -135,29 +126,24 @@ class MatplotLibUtils:
             interiors_xx.append(ix)
             interiors_yy.append(iy)
 
-        for k, (ix,iy) in enumerate(zip(interiors_xx,interiors_yy)):
-            plt.plot(ix, iy, style_int[k%2])
+        for k, (ix, iy) in enumerate(zip(interiors_xx, interiors_yy)):
+            plt.plot(ix, iy, style_int[k % 2])
 
-        plt.axis('equal')
+        plt.axis("equal")
         plt.show()
 
     @classmethod
     def _MatplotlibDisplayMultiPolygon(cls, title: str, multipoly: shapely.geometry.MultiPolygon):
-        '''
-        '''
+        """ """
         plt.figure(cls.cnt)
         plt.title(title)
 
         style_ext = {
-            0: 'bo-',
-            1: 'ro-',
-            2: 'go-',
+            0: "bo-",
+            1: "ro-",
+            2: "go-",
         }
-        style_int = {
-            0: 'b+--',
-            1: 'r+--',
-            2: 'g+--'
-        }
+        style_int = {0: "b+--", 1: "r+--", 2: "g+--"}
 
         xx_ext = []
         yy_ext = []
@@ -182,46 +168,35 @@ class MatplotLibUtils:
 
                 xx_int.append(ix)
                 yy_int.append(iy)
-        
-        # plot
-        for k, (x,y) in enumerate(zip(xx_ext,yy_ext)):
-            plt.plot(x,y, style_ext[k%2])
-        for k, (x,y) in enumerate(zip(xx_int,yy_int)):
-            plt.plot(x,y,style_int[k%2])
 
-        plt.axis('equal')
+        # plot
+        for k, (x, y) in enumerate(zip(xx_ext, yy_ext)):
+            plt.plot(x, y, style_ext[k % 2])
+        for k, (x, y) in enumerate(zip(xx_int, yy_int)):
+            plt.plot(x, y, style_int[k % 2])
+
+        plt.axis("equal")
         plt.show()
 
     @classmethod
     def _MatplotlibDisplayGeometryCollection(cls, title: str, collection: shapely.geometry.GeometryCollection):
-        '''
-        '''
+        """ """
         plt.figure(cls.cnt)
         plt.title(title)
 
-        style_ext = {
-            0: 'ro-',
-            1: 'go-',
-            2: 'bo-'
-        }
-        style_int = {
-            0: 'r+-',
-            1: 'g+-',
-            2: 'b+-'
-        }
+        style_ext = {0: "ro-", 1: "go-", 2: "bo-"}
+        style_int = {0: "r+-", 1: "g+-", 2: "b+-"}
 
         pp = 0
 
         for geom in collection.geoms:
-
-            if geom.geom_type == 'MultiPolygon':
-
+            if geom.geom_type == "MultiPolygon":
                 xx_ext = []
                 yy_ext = []
 
                 xx_int = []
                 yy_int = []
-           
+
                 for ch_geom in geom.geoms:
                     x = ch_geom.exterior.coords.xy[0]
                     y = ch_geom.exterior.coords.xy[1]
@@ -241,15 +216,14 @@ class MatplotLibUtils:
                         yy_int.append(iy)
 
                 # plot
-                for x,y in zip(xx_ext,yy_ext):
+                for x, y in zip(xx_ext, yy_ext):
                     pp += 1
-                    plt.plot(x,y, style_ext[pp%3])
-                for x,y in zip(xx_int,yy_int):
+                    plt.plot(x, y, style_ext[pp % 3])
+                for x, y in zip(xx_int, yy_int):
                     pp += 1
-                    plt.plot(x,y,style_int[pp%3])
+                    plt.plot(x, y, style_int[pp % 3])
 
-            if geom.geom_type == 'Polygon':
-        
+            if geom.geom_type == "Polygon":
                 x = geom.exterior.coords.xy[0]
                 y = geom.exterior.coords.xy[1]
 
@@ -269,12 +243,11 @@ class MatplotLibUtils:
                     interiors_xx.append(ix)
                     interiors_yy.append(iy)
 
-                for ix,iy in zip(interiors_xx,interiors_yy):
+                for ix, iy in zip(interiors_xx, interiors_yy):
                     pp += 1
-                    plt.plot(ix, iy, style_int[pp%3])
+                    plt.plot(ix, iy, style_int[pp % 3])
 
-            if geom.geom_type == 'MultiLineString':
-
+            if geom.geom_type == "MultiLineString":
                 xx = []
                 yy = []
 
@@ -287,12 +260,11 @@ class MatplotLibUtils:
                     xx.append(ix)
                     yy.append(iy)
 
-                for x,y in zip(xx,yy):
+                for x, y in zip(xx, yy):
                     pp += 1
-                    plt.plot(x, y, style_ext[pp%3])
+                    plt.plot(x, y, style_ext[pp % 3])
 
-            if geom.geom_type == 'LineString':
-
+            if geom.geom_type == "LineString":
                 x = geom.coords.xy[0]
                 y = geom.coords.xy[1]
 
@@ -300,8 +272,7 @@ class MatplotLibUtils:
 
                 pp += 1
 
-                plt.plot(x,y, style_ext[pp%3], color='black')
+                plt.plot(x, y, style_ext[pp % 3], color="black")
 
-        plt.axis('equal')
+        plt.axis("equal")
         plt.show()
-

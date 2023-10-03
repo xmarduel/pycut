@@ -21,8 +21,9 @@ from val_with_unit import ValWithUnit
 
 # https://stackoverflow.com/questions/53288926/qgraphicssvgitem-event-propagation-interactive-svg-viewer
 
+
 class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
-    def __init__(self, id:str, view: 'SvgViewer', renderer: QtSvg.QSvgRenderer, parent=None):
+    def __init__(self, id: str, view: "SvgViewer", renderer: QtSvg.QSvgRenderer, parent=None):
         super(SvgItem, self).__init__(parent)
         self.view = view
         self.setSharedRenderer(renderer)
@@ -30,8 +31,8 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
 
         # set the position of the item
         bounds = renderer.boundsOnElement(id)
-        #print("bounds on id=", bounds)
-        #print("bounds  rect=", self.boundingRect())
+        # print("bounds on id=", bounds)
+        # print("bounds  rect=", self.boundingRect())
         self.setPos(bounds.topLeft())
 
         # and its flags
@@ -47,13 +48,13 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
             self.selected_effect.setStrength(1)
 
     def mousePressEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
-        print('svg item: ' + self.elementId() + ' - mousePressEvent()  isSelected=' + str(self.isSelected()))
-        print('svg item: ' + str(self.pos()))
+        print("svg item: " + self.elementId() + " - mousePressEvent()  isSelected=" + str(self.isSelected()))
+        print("svg item: " + str(self.pos()))
         super().mousePressEvent(event)
 
     def mouseReleaseEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
-        print('svg item: ' + self.elementId() + ' - mouseReleaseEvent() isSelected=' + str(self.isSelected()))
-        print('svg item: ' + str(self.pos()))
+        print("svg item: " + self.elementId() + " - mouseReleaseEvent() isSelected=" + str(self.isSelected()))
+        print("svg item: " + str(self.pos()))
         if self.elementId().startswith("pycut_tab"):
             # actualize tab object and the mainwindow tabs table
             str_idx = self.elementId().split("pycut_tab_")[1]
@@ -66,14 +67,14 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
             center[1] = center[1] + radius
             tab["center"] = center
             # brutal force - redraw tabs list with new model
-            #self.view.mainwindow.assign_tabs(tabs)
+            # self.view.mainwindow.assign_tabs(tabs)
             # -> strange behaviour, all spinboxes cells are selected
 
             # so update the model
             model = self.view.mainwindow.ui.tabsview_manager.get_model()
             model.tabs[idx].x = center[0]
             model.tabs[idx].y = center[1]
-            model.dataChanged.emit(model.index(idx, 0), model.index(idx,1))
+            model.dataChanged.emit(model.index(idx, 0), model.index(idx, 1))
             # ok, but to avoid event chaining, I 've got this flag "in_dnd"
 
         super().mouseReleaseEvent(event)
@@ -88,7 +89,7 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
 
 
 class SvgViewer(QtWidgets.QGraphicsView):
-    '''
+    """
     The SvgViewer can 'only' load full svg files.
     It cannot increment the view with single "Paths"
 
@@ -96,90 +97,84 @@ class SvgViewer(QtWidgets.QGraphicsView):
     and build a custom svg file on its own with all these new paths.
 
     Note that still only the paths from the original svg are selectable.
-    '''
+    """
+
     zoomChanged = QtCore.Signal()
 
     SVGVIEWER_HIDE_TABS_DISABLED = False
     SVGVIEWER_HIDE_TABS_ALL = False
 
-    TABS_SETTINGS =  {
+    TABS_SETTINGS = {
         "stroke": "#aa4488",
         "stroke-width": "0",
         "fill": "#aa4488",
         "fill-opacity": "1.0",
-        "fill-opacity-disabled": "0.3"
+        "fill-opacity-disabled": "0.3",
     }
 
-    DEFAULT_TABS_SETTINGS =  {
+    DEFAULT_TABS_SETTINGS = {
         "stroke": "#aa4488",
         "stroke-width": "0",
         "fill": "#aa4488",
         "fill-opacity": "1.0",
-        "fill-opacity-disabled": "0.3"
+        "fill-opacity-disabled": "0.3",
     }
 
     # --------------------------------------------------
-     
-    GEOMETRY_PREVIEW_CLOSED_PATHS_DEFAULTS =  {
+
+    GEOMETRY_PREVIEW_CLOSED_PATHS_DEFAULTS = {
         "stroke": "#ff0000",
         "stroke-width": "0",
         "stroke-opacity": "1.0",
         "fill": "#ff0000",
-        "fill-opacity": "1.0"
+        "fill-opacity": "1.0",
     }
 
-    GEOMETRY_PREVIEW_CLOSED_PATHS =  {
+    GEOMETRY_PREVIEW_CLOSED_PATHS = {
         "stroke": "#ff0000",
         "stroke-width": "0",
         "stroke-opacity": "1.0",
         "fill": "#ff0000",
-        "fill-opacity": "1.0"
+        "fill-opacity": "1.0",
     }
 
     # to overwrite temporarely the settings
-    GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM =  {
+    GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM = {
         "stroke": "",
         "stroke-width": "",
         "stroke-opacity": "",
         "fill": "",
-        "fill-opacity": ""
+        "fill-opacity": "",
     }
 
     # --------------------------------------------------
-    
-    GEOMETRY_PREVIEW_OPENED_PATHS_DEFAULTS =  {
+
+    GEOMETRY_PREVIEW_OPENED_PATHS_DEFAULTS = {
         "stroke": "#ff0000",
         "stroke-width": "1.0",
         "stroke-opacity": "1.0",
         "fill": "none",
-        "fill-opacity": "1.0"
+        "fill-opacity": "1.0",
     }
 
-    GEOMETRY_PREVIEW_OPENED_PATHS =  {
+    GEOMETRY_PREVIEW_OPENED_PATHS = {
         "stroke": "#ff0000",
         "stroke-width": "1.0",
         "stroke-opacity": "1.0",
         "fill": "none",
-        "fill-opacity": "1.0"
+        "fill-opacity": "1.0",
     }
 
-    TOOLPATHS =  {
-        "stroke": "#00ff00",
-        "stroke-width": "0.2"
-    }
+    TOOLPATHS = {"stroke": "#00ff00", "stroke-width": "0.2"}
 
-    DEFAULT_TOOLPATHS =  {
-        "stroke": "#00ff00",
-        "stroke-width": "0.2"
-    }
+    DEFAULT_TOOLPATHS = {"stroke": "#00ff00", "stroke-width": "0.2"}
 
     def __init__(self, parent):
-        '''
-        '''
+        """ """
         super(SvgViewer, self).__init__(parent)
         self.mainwindow = None
         self.renderer = QtSvg.QSvgRenderer()
-        
+
         self.setScene(QtWidgets.QGraphicsScene(self))
 
         # a "state" I would like to avoid, between mouse "down" and mouse "up"
@@ -191,18 +186,18 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.tabs = []
 
         # when loading a svg with shapes
-        self.svg_shapes = {} # path id -> SvgPath 
+        self.svg_shapes = {}  # path id -> SvgPath
 
         # the graphical items in the view
-        self.items : List[SvgItem] = []
+        self.items: List[SvgItem] = []
         # ordered list of selected items
-        self.selected_items : List[SvgItem] = []
+        self.selected_items: List[SvgItem] = []
 
         # extra items (geometry selections / tabs / toolpaths)
         self.extra_items = []
         self.extra_renderers = []
 
-        #self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
+        # self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         self.setViewportUpdateMode(QtWidgets.QGraphicsView.FullViewportUpdate)
 
         # keep zoom factor (used when reloading augmented svg: zoom should be kept)
@@ -210,11 +205,11 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
     @classmethod
     def set_settings_geometry_preview_custom_color(cls, color: str):
-        cls.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM[ "fill"] = color
+        cls.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM["fill"] = color
 
     @classmethod
     def set_settings_geometry_preview_custom_color_reset(cls):
-        cls.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM[ "fill"] = ""
+        cls.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM["fill"] = ""
 
     @classmethod
     def set_settings(cls, settings):
@@ -229,14 +224,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
         cls.GEOMETRY_PREVIEW_CLOSED_PATHS = copy.deepcopy(cls.GEOMETRY_PREVIEW_CLOSED_PATHS_DEFAULTS)
         cls.GEOMETRY_PREVIEW_OPENED_PATHS = copy.deepcopy(cls.GEOMETRY_PREVIEW_OPENED_PATHS_DEFAULTS)
         cls.TOOLPATHS = copy.deepcopy(cls.DEFAULT_TOOLPATHS)
-    
+
     def set_mainwindow(self, mainwindow):
         self.mainwindow = mainwindow
 
     def get_svg_size_x(self) -> ValWithUnit:
-        '''
+        """
         get the width of the svg given in units "mm", "cm" or "in" (see Inkscape)
-        '''
+        """
         root = etree.fromstring(self.svg)
 
         width = root.attrib["width"]
@@ -244,19 +239,19 @@ class SvgViewer(QtWidgets.QGraphicsView):
         if "mm" in width:
             w, units = width.split("mm")
             return ValWithUnit(int(w), "mm")
-        elif "in"  in width:
+        elif "in" in width:
             w, units = width.split("in")
             return ValWithUnit(int(w), "inch")
-        elif "cm"  in width:
+        elif "cm" in width:
             w, units = width.split("cm")
-            return ValWithUnit(int(w*10), "mm")
+            return ValWithUnit(int(w * 10), "mm")
 
         return None
 
     def get_svg_size_y(self) -> ValWithUnit:
-        '''
+        """
         get the height of the svg given in units "mm", "cm" or "in" (see Inkscape)
-        '''
+        """
         root = etree.fromstring(self.svg)
 
         height = root.attrib["height"]
@@ -264,57 +259,56 @@ class SvgViewer(QtWidgets.QGraphicsView):
         if "mm" in height:
             h, units = height.split("mm")
             return ValWithUnit(int(h), "mm")
-        elif "in"  in height:
+        elif "in" in height:
             h, units = height.split("in")
             return ValWithUnit(int(h), "inch")
-        elif "cm"  in height:
+        elif "cm" in height:
             h, units = height.split("cm")
-            return ValWithUnit(int(h*10), "mm")
+            return ValWithUnit(int(h * 10), "mm")
 
         return None
 
     def get_selected_items_ids(self) -> List[str]:
-        '''
+        """
         return list of selected svg paths
-        '''
-        return [ item.elementId() for item in self.selected_items ]
+        """
+        return [item.elementId() for item in self.selected_items]
 
     def reset(self):
-        '''
+        """
         Completely clean the scene on new svg
-        '''
+        """
         self.scene().clear()
         self.resetTransform()
 
         self.svg_shapes = {}
 
-        self.items : List[SvgItem] = []
-        self.selected_items : List[SvgItem] = []
+        self.items: List[SvgItem] = []
+        self.selected_items: List[SvgItem] = []
 
-        self.extra_items : List[SvgItem] = []
+        self.extra_items: List[SvgItem] = []
         self.extra_renderers = []
 
     def clean(self):
-        '''
+        """
         Remove only the "extra_items", not the base svg file items
-        '''
+        """
         for svg_item in self.extra_items:
             self.scene().removeItem(svg_item)
-            
+
         self.extra_items = []
         self.extra_renderers = []
-    
+
     def reinit(self):
-        '''
-        '''
+        """ """
         self.clean()
-        #self.fill_svg_viewer(self.svg)
+        # self.fill_svg_viewer(self.svg)
         self.display_tabs(self.tabs)
 
     def set_svg(self, svg: str):
-        '''
+        """
         This sets the 'real' svg file data, not the later 'augmented' svg
-        '''
+        """
         self.reset()
 
         root = etree.fromstring(svg)
@@ -326,8 +320,8 @@ class SvgViewer(QtWidgets.QGraphicsView):
         w = int(viewBox[2])
         h = int(viewBox[3])
 
-        self.scene().setSceneRect(x,y,w,h)
-        self.renderer.setViewBox(QtCore.QRect(x,y,w,h))
+        self.scene().setSceneRect(x, y, w, h)
+        self.renderer.setViewBox(QtCore.QRect(x, y, w, h))
 
         viewbox_size = max(w, h)
         # eval initial zoom factor
@@ -335,18 +329,17 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         # TODO -----------------------------------------------------
         # TODO -----------------------------------------------------
-        
+
         svg = self.svg_text_to_paths(svg)
 
         # TODO -----------------------------------------------------
         # TODO -----------------------------------------------------
-         
+
         self.svg = svg
         self.fill_svg_viewer(self.svg, initial_svg=True)
 
     def fill_svg_viewer(self, svg: str, initial_svg=True):
-        '''
-        '''
+        """ """
         if initial_svg:
             # read all shapes/paths of the svg with svgelement as "paths"
             self.svg_shapes = SvgPath.read_svg_shapes_and_paths(svg)
@@ -354,11 +347,11 @@ class SvgViewer(QtWidgets.QGraphicsView):
         curr_renderer = None
 
         if initial_svg:
-            self.renderer.load(bytes(svg, 'utf-8'))
+            self.renderer.load(bytes(svg, "utf-8"))
             curr_renderer = self.renderer
         else:
             renderer = QtSvg.QSvgRenderer()
-            renderer.load(bytes(svg, 'utf-8'))
+            renderer.load(bytes(svg, "utf-8"))
 
             self.extra_renderers.append(renderer)
 
@@ -366,7 +359,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         # python xml module can load with svg xml header with encoding utf-8
         tree = etree.fromstring(svg)
-        elements = tree.findall('.//*')
+        elements = tree.findall(".//*")
 
         shapes_types = [
             "path",
@@ -378,11 +371,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
             "polyline",
         ]
 
-        images_types = [
-            "image"
-        ]
+        images_types = ["image"]
 
-        images : List[etree.ElementTree] = []
+        images: List[etree.ElementTree] = []
 
         for element in elements:
             tag = element.tag
@@ -390,14 +381,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
             if not tag.startswith("{http://www.w3.org/2000/svg}"):
                 # ignore non svg elements
                 continue
-            
+
             tag = tag.split("{http://www.w3.org/2000/svg}")[1]
-            
+
             if tag in images_types:
                 images.append(element)
 
         for image in images:
-            image_id = image.attrib.get('id', None)
+            image_id = image.attrib.get("id", None)
 
             item = SvgItem(image_id, self, curr_renderer)
             # does not work
@@ -408,22 +399,21 @@ class SvgViewer(QtWidgets.QGraphicsView):
             else:
                 self.extra_items.append(item)
 
+        shapes: List[etree.ElementTree] = []
 
-        shapes : List[etree.ElementTree] = []
-        
         for element in elements:
             if not element.tag.startswith("{http://www.w3.org/2000/svg}"):
                 continue
-            
+
             tag = element.tag.split("{http://www.w3.org/2000/svg}")[1]
-            
+
             if tag in shapes_types:
                 shapes.append(element)
 
         for shape in shapes:
-            shape_id = shape.attrib.get('id', None)
+            shape_id = shape.attrib.get("id", None)
 
-            #print("svg : found shape %s : id='%s'" % (shape.tag, shape_id))
+            # print("svg : found shape %s : id='%s'" % (shape.tag, shape_id))
 
             if shape_id is None:
                 print("    -> ignoring")
@@ -446,19 +436,18 @@ class SvgViewer(QtWidgets.QGraphicsView):
                 item.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, False)
 
         # zoom with the initial zoom factor
-        #self.scale(self.current_zoom, self.current_zoom)
+        # self.scale(self.current_zoom, self.current_zoom)
 
-    def set_tabs(self, tabs: List[Dict[str,any]]):
-        '''
-        '''
+    def set_tabs(self, tabs: List[Dict[str, any]]):
+        """ """
         if not self.in_dnd:
             self.tabs = tabs
             self.display_tabs(self.tabs)
 
-    def mousePressEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
+    def mousePressEvent(self, event: "QtWidgets.QGraphicsSceneMouseEvent"):
         self.in_dnd = True
 
-        print('SvgViewer - mousePressEvent()')
+        print("SvgViewer - mousePressEvent()")
         super().mousePressEvent(event)
 
         # is there a modifier ?
@@ -479,8 +468,8 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         self.update_selected_items_list(do_reset_selection)
 
-    def mouseReleaseEvent(self, event: 'QtWidgets.QGraphicsSceneMouseEvent'):
-        print('SvgViewer - mouseReleaseEvent()')
+    def mouseReleaseEvent(self, event: "QtWidgets.QGraphicsSceneMouseEvent"):
+        print("SvgViewer - mouseReleaseEvent()")
         super().mouseReleaseEvent(event)
 
         # is there a modifier ?
@@ -502,13 +491,13 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.in_dnd = False
 
     def update_selected_items_list(self, do_reset_selection: bool):
-        '''
+        """
         by comparing the current one with the new evaluation of
         the selected items
 
-        when *not** reseting the selection (with modifier), 
+        when *not** reseting the selection (with modifier),
         the selection ordering has to be preserved
-        '''
+        """
         selected_items = []
         for item in self.items:
             if item.isSelected():
@@ -517,11 +506,11 @@ class SvgViewer(QtWidgets.QGraphicsView):
         if len(selected_items) == 0:
             self.selected_items = []
             return
-            
+
         if do_reset_selection:
             self.selected_items = selected_items
-            return 
-    
+            return
+
         # no reseting -> compare old/new to preserve ordering of selections
         oldLen = len(self.selected_items)
         newLen = len(selected_items)
@@ -563,23 +552,22 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.zoomBy(0.5)
 
     def resetZoom(self):
-        if self.zoomFactor() != 1 :
+        if self.zoomFactor() != 1:
             self.resetTransform()
             self.zoomChanged.emit()
 
     def zoomBy(self, factor: float):
-        ''' allow very strong zoom (100)
-        useful when the svg viewBox is very small '''
+        """allow very strong zoom (100)
+        useful when the svg viewBox is very small"""
         current_zoom = self.zoomFactor()
-        if (factor < 1 and current_zoom < 0.1) or (factor > 1 and current_zoom > 100) :
+        if (factor < 1 and current_zoom < 0.1) or (factor > 1 and current_zoom > 100):
             return
         self.scale(factor, factor)
         self.storeZoomFactor()
         self.zoomChanged.emit()
 
-    def make_tabs_svg_paths(self, tabs: List[Dict[str,any]]) -> List[SvgPath]:
-        '''
-        '''
+    def make_tabs_svg_paths(self, tabs: List[Dict[str, any]]) -> List[SvgPath]:
+        """ """
         from gcode_generator import Tab
 
         tabs_svg_paths = []
@@ -594,102 +582,102 @@ class SvgViewer(QtWidgets.QGraphicsView):
             if show == False:
                 continue
 
-            o_tab =  Tab(tab)
+            o_tab = Tab(tab)
 
-            o_tab.svg_path.shape_attrs['stroke'] = self.TABS_SETTINGS["stroke"]
-            o_tab.svg_path.shape_attrs['stroke-width'] = self.TABS_SETTINGS["stroke-width"]
-            o_tab.svg_path.shape_attrs['fill'] = self.TABS_SETTINGS["fill"]
-            o_tab.svg_path.shape_attrs['fill-opacity'] = self.TABS_SETTINGS["fill-opacity"]
+            o_tab.svg_path.shape_attrs["stroke"] = self.TABS_SETTINGS["stroke"]
+            o_tab.svg_path.shape_attrs["stroke-width"] = self.TABS_SETTINGS["stroke-width"]
+            o_tab.svg_path.shape_attrs["fill"] = self.TABS_SETTINGS["fill"]
+            o_tab.svg_path.shape_attrs["fill-opacity"] = self.TABS_SETTINGS["fill-opacity"]
 
             if not tab["enabled"]:
-                o_tab.svg_path.shape_attrs['fill-opacity'] = self.TABS_SETTINGS["fill-opacity-disabled"]
-            
+                o_tab.svg_path.shape_attrs["fill-opacity"] = self.TABS_SETTINGS["fill-opacity-disabled"]
+
             tabs_svg_paths.append(o_tab.svg_path)
 
         return tabs_svg_paths
-    
-    def make_cnc_ops_preview_geometry_svg_paths(self, cnc_ops: List['CncOp']) -> List[SvgPath]:
-        '''
-        '''
+
+    def make_cnc_ops_preview_geometry_svg_paths(self, cnc_ops: List["CncOp"]) -> List[SvgPath]:
+        """ """
         geometry_svg_paths = []
 
         for cnc_op in cnc_ops:
             for geometry_svg_path in cnc_op.geometry_svg_paths:
                 if geometry_svg_path.eval_closed():
                     # polygons
-                    geometry_svg_path.shape_attrs['stroke'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke"]
-                    geometry_svg_path.shape_attrs['stroke-width'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-width"]
-                    geometry_svg_path.shape_attrs['stroke-opacity'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-opacity"]
+                    geometry_svg_path.shape_attrs["stroke"] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke"]
+                    geometry_svg_path.shape_attrs["stroke-width"] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-width"]
+                    geometry_svg_path.shape_attrs["stroke-opacity"] = self.GEOMETRY_PREVIEW_CLOSED_PATHS[
+                        "stroke-opacity"
+                    ]
 
                     if self.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM["fill"] != "":
-                        geometry_svg_path.shape_attrs['fill'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM["fill"]
+                        geometry_svg_path.shape_attrs["fill"] = self.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM["fill"]
                     else:
-                        geometry_svg_path.shape_attrs['fill'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"]
-                    
-                    geometry_svg_path.shape_attrs['fill-opacity'] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill-opacity"]
+                        geometry_svg_path.shape_attrs["fill"] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"]
+
+                    geometry_svg_path.shape_attrs["fill-opacity"] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill-opacity"]
                 else:
                     # lines
-                    geometry_svg_path.shape_attrs['stroke'] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"]
-                    geometry_svg_path.shape_attrs['stroke-width'] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]
-                    geometry_svg_path.shape_attrs['stroke-opacity'] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"]
-                    geometry_svg_path.shape_attrs['fill'] = "none"
-                    geometry_svg_path.shape_attrs['fill-opacity'] = self.GEOMETRY_PREVIEW_OPENED_PATHS["fill-opacity"]
+                    geometry_svg_path.shape_attrs["stroke"] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"]
+                    geometry_svg_path.shape_attrs["stroke-width"] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]
+                    geometry_svg_path.shape_attrs["stroke-opacity"] = self.GEOMETRY_PREVIEW_OPENED_PATHS[
+                        "stroke-opacity"
+                    ]
+                    geometry_svg_path.shape_attrs["fill"] = "none"
+                    geometry_svg_path.shape_attrs["fill-opacity"] = self.GEOMETRY_PREVIEW_OPENED_PATHS["fill-opacity"]
 
             geometry_svg_paths += cnc_op.geometry_svg_paths
 
         return geometry_svg_paths
 
-    def make_toolpaths_svg_paths(self, cnc_ops: List['CncOp']) -> List[SvgPath]:
-        '''
-        '''
+    def make_toolpaths_svg_paths(self, cnc_ops: List["CncOp"]) -> List[SvgPath]:
+        """ """
         cam_paths_svg_paths = []
-        
+
         for cnc_op in cnc_ops:
             for cam_svg_path in cnc_op.cam_paths_svg_paths:
-                cam_svg_path.shape_attrs['stroke'] = self.TOOLPATHS["stroke"]
-                cam_svg_path.shape_attrs['stroke-width'] = self.TOOLPATHS["stroke-width"]
-                cam_svg_path.shape_attrs['fill'] = 'none'
+                cam_svg_path.shape_attrs["stroke"] = self.TOOLPATHS["stroke"]
+                cam_svg_path.shape_attrs["stroke-width"] = self.TOOLPATHS["stroke-width"]
+                cam_svg_path.shape_attrs["fill"] = "none"
 
             cam_paths_svg_paths += cnc_op.cam_paths_svg_paths
 
         return cam_paths_svg_paths
-    
-    def display_tabs(self, tabs: List[Dict[str,any]]):
-        '''
-        '''
+
+    def display_tabs(self, tabs: List[Dict[str, any]]):
+        """ """
         # the tabs as paths
         svg_paths = self.make_tabs_svg_paths(tabs)
 
         self.display_extra_paths(svg_paths)
 
-    def display_job_geometry(self, cnc_ops: List['CncOp']):
-        '''
+    def display_job_geometry(self, cnc_ops: List["CncOp"]):
+        """
         The list of "preview geometries" results of the geometries calculation for given ops
         The resulting geometries will the displayed in black together with the original svg and tabs
-        '''
+        """
         # preview geometries as svg paths
         svg_paths = self.make_cnc_ops_preview_geometry_svg_paths(cnc_ops)
-        
+
         self.display_extra_paths(svg_paths)
 
-    def display_job_toolpaths(self, cnc_ops: List['CncOp']):
-        '''
+    def display_job_toolpaths(self, cnc_ops: List["CncOp"]):
+        """
         The list of svg_paths results of the toolpath calculation for given ops
         The resulting svg_paths will the displayed in green together with the original svg, tabs and preview geometries
-        '''
+        """
         # the toolpaths as svg paths
         svg_paths = self.make_toolpaths_svg_paths(cnc_ops)
 
         self.display_extra_paths(svg_paths)
 
-    def display_job(self, job: 'JobModel'):
-        '''
-        '''
+    def display_job(self, job: "JobModel"):
+        """ """
         self.display_job_geometry(job.operations)
         self.display_job_toolpaths(job.operations)
 
     def display_extra_paths(self, svg_paths: List[SvgPath]):
-        """ to display extra items in the viewer: paths calculated from
+        """to display extra items in the viewer: paths calculated from
         - tabs
         - preview geometries
         - tool paths
@@ -700,13 +688,13 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # done
         self.fill_svg_viewer(extra_items_svg, initial_svg=False)
 
-    def svg_text_to_paths(self, svg: str) -> str :
-        '''
+    def svg_text_to_paths(self, svg: str) -> str:
+        """
         The super mega method: transform all text elements into path elements
-        '''
+        """
         return svg  # TODO
 
-    
+
 class SvgMaker:
     """
     To build a "compatible" svg with calculated svg paths, while the width/height of the svg data
@@ -714,9 +702,9 @@ class SvgMaker:
     """
 
     def __init__(self, svg: str):
-        """ the initial svg"""
+        """the initial svg"""
         self.svg = svg
-     
+
     def build(self, svg_paths: List[SvgPath]) -> str:
         """ """
         paths_str = []
@@ -726,31 +714,34 @@ class SvgMaker:
             d_def = svg_path.p_d
 
             # defaults
-            stroke = svg_path.shape_attrs.get("stroke", '#00ff00')
-            stroke_width = svg_path.shape_attrs.get("stroke-width", '0')
+            stroke = svg_path.shape_attrs.get("stroke", "#00ff00")
+            stroke_width = svg_path.shape_attrs.get("stroke-width", "0")
             fill = svg_path.shape_attrs.get("fill", "#111111")
             fill_opacity = svg_path.shape_attrs.get("fill-opacity", "1.0")
             fill_rule = svg_path.shape_attrs.get("fill-rule", "nonzero")
 
-            # here we append to the default "id" the counter 
-            path_str = '<path id="%(id)s_%(counter)d" style="stroke:%(stroke)s;stroke-width:%(stroke_width)s;fill:%(fill)s;fill-opacity:%(fill_opacity)s;fill-rule:%(fill_rule)s;" \
-              d="%(d_def)s" />' % {
-                'id': p_id, 
-                'counter': k, 
-                'fill': fill,
-                'stroke_width': stroke_width,
-                'stroke': stroke,
-                'fill_opacity': fill_opacity, 
-                'fill_rule': fill_rule, 
-                'd_def': d_def
-            }
+            # here we append to the default "id" the counter
+            path_str = (
+                '<path id="%(id)s_%(counter)d" style="stroke:%(stroke)s;stroke-width:%(stroke_width)s;fill:%(fill)s;fill-opacity:%(fill_opacity)s;fill-rule:%(fill_rule)s;" \
+              d="%(d_def)s" />'
+                % {
+                    "id": p_id,
+                    "counter": k,
+                    "fill": fill,
+                    "stroke_width": stroke_width,
+                    "stroke": stroke,
+                    "fill_opacity": fill_opacity,
+                    "fill_rule": fill_rule,
+                    "d_def": d_def,
+                }
+            )
 
             paths_str.append(path_str)
-        
+
         root = etree.fromstring(self.svg)
         root_attrib = root.attrib
-        
-        svg = '''<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+
+        svg = """<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
                 width="%s"
                 height="%s"
                 viewBox="%s"
@@ -758,10 +749,11 @@ class SvgMaker:
                 <g>
                   %s
                 </g> 
-             </svg>''' % (root_attrib["width"], root_attrib["height"], root_attrib["viewBox"], "\n".join(paths_str))
-        
+             </svg>""" % (
+            root_attrib["width"],
+            root_attrib["height"],
+            root_attrib["viewBox"],
+            "\n".join(paths_str),
+        )
+
         return svg
-
-
-
-

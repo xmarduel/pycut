@@ -60,56 +60,52 @@ from gcode_generator import GcodeGenerator
 import resources_rc
 from ui_mainwindow import Ui_mainwindow
 
+
 class PyCutMainWindow(QtWidgets.QMainWindow):
-    '''
-    '''
+    """ """
+
     default_settings = {
         "svg": {
-            "px_per_inch" : 96,
+            "px_per_inch": 96,
         },
-        "Tabs": {
-            "units"       : "mm",
-            "height"      : 1.0,
-            "tabs"        : []
+        "Tabs": {"units": "mm", "height": 1.0, "tabs": []},
+        "Tool": {
+            "units": "mm",
+            "diameter": 3.0,
+            "angle": 180,
+            "passdepth": 1.0,
+            "overlap": 0.4,
+            "rapid": 500,
+            "plunge": 100,
+            "cut": 250,
         },
-        "Tool" : {
-            "units"       : "mm",
-            "diameter"    : 3.0,
-            "angle"       : 180,
-            "passdepth"   : 1.0,
-            "overlap"     : 0.4,
-            "rapid"       : 500,
-            "plunge"      : 100,
-            "cut"         : 250,
+        "Material": {
+            "units": "mm",
+            "thickness": 10.0,
+            "z_origin": "Top",
+            "clearance": 2.5,
         },
-        "Material" : {
-            "units"       : "mm",
-            "thickness"   : 10.0,
-            "z_origin"    : "Top",
-            "clearance"   : 2.5
+        "CurveToLineConversion": {
+            "minimum_segments": 5,
+            "minimum_segments_length": 0.01,
         },
-        "CurveToLineConversion" : {
-            "minimum_segments"        : 5,
-            "minimum_segments_length" : 0.01,
+        "GCodeConversion": {
+            "units": "mm",
+            "flip_xy": False,
+            "x_offset": 0.0,
+            "y_offset": 0.0,
+            "xy_reference": "ZERO_TOP_LEFT_OF_MATERIAL",
         },
-        "GCodeConversion" : {
-            "units"         : "mm",
-            "flip_xy"       : False,
-            "x_offset"      : 0.0,
-            "y_offset"      : 0.0,
-            "xy_reference"  : "ZERO_TOP_LEFT_OF_MATERIAL"
+        "GCodeGeneration": {
+            "return_to_zero_at_end": True,
+            "spindle_control": True,
+            "spindle_speed": 1000,
+            "program_end": True,
         },
-        "GCodeGeneration" : {
-            "return_to_zero_at_end" : True,
-            "spindle_control"       : True,
-            "spindle_speed"         : 1000,
-            "program_end"           : True 
-        }
     }
-    
+
     def __init__(self, options):
-        '''
-        '''
+        """ """
         super(PyCutMainWindow, self).__init__()
 
         self.recent_jobs = self.read_recent_jobs()
@@ -126,7 +122,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.build_recent_jobs_submenu()
 
         self.operations = []
-        self.tabs : List[Dict[str,any]] = []
+        self.tabs: List[Dict[str, any]] = []
 
         # a job to keep the generated gcode in memory (and save it)
         self.job = None
@@ -140,14 +136,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_viewer = self.setup_svg_viewer()
         self.svg_material_viewer = self.setup_material_viewer()
         self.simulator_webgl_viewer = self.setup_simulator_webgl_viewer()
-        #self.simulator_python_viewer = self.setup_simulator_python_viewer() # no! only with gcode data
+        # self.simulator_python_viewer = self.setup_simulator_python_viewer() # no! only with gcode data
         self.candle_viewer = self.setup_candle_viewer()
 
         self.ui.tabsview_manager.set_svg_viewer(self.svg_viewer)
         self.ui.operationsview_manager.set_svg_viewer(self.svg_viewer)
 
         # callbacks
-        self.ui.pushButton_SaveGcode.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/document-save-as.png'))
+        self.ui.pushButton_SaveGcode.setIcon(QtGui.QIcon(":/images/tango/22x22/actions/document-save-as.png"))
         self.ui.pushButton_SaveGcode.clicked.connect(self.cb_save_gcode)
 
         self.ui.actionOpenSvg.triggered.connect(self.cb_open_svg)
@@ -164,24 +160,28 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.actionAboutQt.triggered.connect(self.cb_show_about_qt)
         self.ui.actionAboutPyCut.triggered.connect(self.cb_show_about_pycut)
 
-        self.aboutQtAct = QtGui.QAction("About &Qt", self,
-                statusTip="Show the Qt library's About box",
-                triggered=QtWidgets.QApplication.instance().aboutQt)
+        self.aboutQtAct = QtGui.QAction(
+            "About &Qt",
+            self,
+            statusTip="Show the Qt library's About box",
+            triggered=QtWidgets.QApplication.instance().aboutQt,
+        )
 
         # display material thickness/clearance
         self.ui.doubleSpinBox_Material_Thickness.valueChanged.connect(self.cb_display_material_thickness)
         self.ui.doubleSpinBox_Material_Clearance.valueChanged.connect(self.cb_display_material_clearance)
 
-
         default_thickness = self.ui.doubleSpinBox_Material_Thickness.value()
         default_clearance = self.ui.doubleSpinBox_Material_Clearance.value()
         self.svg_material_viewer.display_material(thickness=default_thickness, clearance=default_clearance)
-        
+
         self.ui.spinBox_CurveToLineConversion_MinimumNbSegments.valueChanged.connect(self.cb_curve_min_segments)
-        self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.valueChanged.connect(self.cb_curve_min_segments_length)
+        self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.valueChanged.connect(
+            self.cb_curve_min_segments_length
+        )
 
         self.display_svg(None)
-        
+
         self.ui.comboBox_Tabs_Units.currentTextChanged.connect(self.cb_update_tabs_display)
         self.ui.comboBox_Tool_Units.currentTextChanged.connect(self.cb_update_tool_display)
         self.ui.comboBox_Material_Units.currentTextChanged.connect(self.cb_update_material_display)
@@ -194,17 +194,36 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfOp.clicked.connect(self.cb_generate_gcode)
         self.ui.pushButton_GCodeConversion_ZeroCenterOfOp.clicked.connect(self.cb_generate_gcode)
 
+        self.ui.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setIcon(
+            QtGui.QIcon(":/images/tango/22x22/actions/view-refresh.png")
+        )
+        self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setIcon(
+            QtGui.QIcon(":/images/tango/22x22/actions/view-refresh.png")
+        )
+        self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfOp.setIcon(
+            QtGui.QIcon(":/images/tango/22x22/actions/view-refresh.png")
+        )
+        self.ui.pushButton_GCodeConversion_ZeroCenterOfOp.setIcon(
+            QtGui.QIcon(":/images/tango/22x22/actions/view-refresh.png")
+        )
 
-        self.ui.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/view-refresh.png'))
-        self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/view-refresh.png'))
-        self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfOp.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/view-refresh.png'))
-        self.ui.pushButton_GCodeConversion_ZeroCenterOfOp.setIcon(QtGui.QIcon(':/images/tango/22x22/actions/view-refresh.png'))
+        self.ui.buttonGroup_GCodeConversion.setId(
+            self.ui.pushButton_GCodeConversion_ZeroTopLeftOfMaterial,
+            GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL,
+        )
+        self.ui.buttonGroup_GCodeConversion.setId(
+            self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial,
+            GcodeModel.ZERO_LOWER_LEFT_OF_MATERIAL,
+        )
+        self.ui.buttonGroup_GCodeConversion.setId(
+            self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfOp,
+            GcodeModel.ZERO_LOWER_LEFT_OF_OP,
+        )
+        self.ui.buttonGroup_GCodeConversion.setId(
+            self.ui.pushButton_GCodeConversion_ZeroCenterOfOp,
+            GcodeModel.ZERO_CENTER_OF_OP,
+        )
 
-        self.ui.buttonGroup_GCodeConversion.setId(self.ui.pushButton_GCodeConversion_ZeroTopLeftOfMaterial, GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL)
-        self.ui.buttonGroup_GCodeConversion.setId(self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial, GcodeModel.ZERO_LOWER_LEFT_OF_MATERIAL)
-        self.ui.buttonGroup_GCodeConversion.setId(self.ui.pushButton_GCodeConversion_ZeroLowerLeftOfOp, GcodeModel.ZERO_LOWER_LEFT_OF_OP)
-        self.ui.buttonGroup_GCodeConversion.setId(self.ui.pushButton_GCodeConversion_ZeroCenterOfOp, GcodeModel.ZERO_CENTER_OF_OP)
-        
         self.ui.checkBox_Tabs_hideAllTabs.clicked.connect(self.cb_tabs_hide_all)
         self.ui.checkBox_Tabs_hideDisabledTabs.clicked.connect(self.cb_tabs_hide_disabled)
 
@@ -232,54 +251,67 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
                 msgBox.exec()
 
-
-        self.menubarToggleLeftSideButton = QtGui.QAction(QtGui.QIcon(":/images/left-area.png"), "hide/show",
-                self, shortcut=QtGui.QKeySequence.Back,
-                statusTip="Show/Hide Left Side", triggered=self.toggle_left_side)
+        self.menubarToggleLeftSideButton = QtGui.QAction(
+            QtGui.QIcon(":/images/left-area.png"),
+            "hide/show",
+            self,
+            shortcut=QtGui.QKeySequence.Back,
+            statusTip="Show/Hide Left Side",
+            triggered=self.toggle_left_side,
+        )
         self.menubarToggleLeftSideButton.setCheckable(True)
-        self.menubarToggleLeftSideButton.setToolTip("Show/Hide Left Side View") # still not shown
+        self.menubarToggleLeftSideButton.setToolTip("Show/Hide Left Side View")  # still not shown
 
-        self.menubarToggleMiddleAreaButton = QtGui.QAction(QtGui.QIcon(":/images/bellow-area.png"), "hide/show",
-                self, shortcut=QtGui.QKeySequence.Forward,
-                statusTip="Show/Hide Op. Table", triggered=self.toggle_middle_area)
+        self.menubarToggleMiddleAreaButton = QtGui.QAction(
+            QtGui.QIcon(":/images/bellow-area.png"),
+            "hide/show",
+            self,
+            shortcut=QtGui.QKeySequence.Forward,
+            statusTip="Show/Hide Op. Table",
+            triggered=self.toggle_middle_area,
+        )
         self.menubarToggleMiddleAreaButton.setCheckable(True)
-        self.menubarToggleMiddleAreaButton.setToolTip("Show/Hide Op. Table View") # still not shown
+        self.menubarToggleMiddleAreaButton.setToolTip("Show/Hide Op. Table View")  # still not shown
 
-        self.menubarToggleRightSideButton = QtGui.QAction(QtGui.QIcon(":/images/right-area.png"), "hide/show",
-                self, shortcut=QtGui.QKeySequence.Forward,
-                statusTip="Show/Hide Right Side", triggered=self.toggle_right_side)
+        self.menubarToggleRightSideButton = QtGui.QAction(
+            QtGui.QIcon(":/images/right-area.png"),
+            "hide/show",
+            self,
+            shortcut=QtGui.QKeySequence.Forward,
+            statusTip="Show/Hide Right Side",
+            triggered=self.toggle_right_side,
+        )
         self.menubarToggleRightSideButton.setCheckable(True)
-        self.menubarToggleRightSideButton.setToolTip("Show/Hide Right Side View") # still not shown
+        self.menubarToggleRightSideButton.setToolTip("Show/Hide Right Side View")  # still not shown
 
         self.menuBar().addAction(self.menubarToggleLeftSideButton)
         self.menuBar().addAction(self.menubarToggleMiddleAreaButton)
         self.menuBar().addAction(self.menubarToggleRightSideButton)
 
         # some buttons (3) to quickly set/unset the geometry preview color to a predefined "custom" color
-        #self.menubarGeometryPreviewRedColorButton = QtGui.QAction(QtGui.QPixmap(":images/media-record-red.png"), "",
+        # self.menubarGeometryPreviewRedColorButton = QtGui.QAction(QtGui.QPixmap(":images/media-record-red.png"), "",
         #        self, shortcut=QtGui.QKeySequence.Back,
         #        statusTip="Geometry Preview in Red", triggered=self.set_unset_geometry_preview_custom_color_red)
-        #self.menubarGeometryPreviewRedColorButton.setCheckable(True)
-        
-        #self.menubarGeometryPreviewGreenColorButton = QtGui.QAction(QtGui.QIcon(":images/media-record-green.png"), "",
+        # self.menubarGeometryPreviewRedColorButton.setCheckable(True)
+
+        # self.menubarGeometryPreviewGreenColorButton = QtGui.QAction(QtGui.QIcon(":images/media-record-green.png"), "",
         #        self, shortcut=QtGui.QKeySequence.Back,
         #        statusTip="Geometry Preview in Green", triggered=self.set_unset_geometry_preview_custom_color_green)
-        #self.menubarGeometryPreviewGreenColorButton.setCheckable(True)
+        # self.menubarGeometryPreviewGreenColorButton.setCheckable(True)
 
-        #self.menubarGeometryPreviewBlueColorButton = QtGui.QAction(QtGui.QIcon(":images/media-record-blue.png"), "",
+        # self.menubarGeometryPreviewBlueColorButton = QtGui.QAction(QtGui.QIcon(":images/media-record-blue.png"), "",
         #        self, shortcut=QtGui.QKeySequence.Back,
         #        statusTip="Geometry Preview in Blue", triggered=self.set_unset_geometry_preview_custom_color_blue)
-        #self.menubarGeometryPreviewBlueColorButton.setCheckable(True)
+        # self.menubarGeometryPreviewBlueColorButton.setCheckable(True)
 
-        #self.menuBar().addAction(self.menubarGeometryPreviewRedColorButton)
-        #self.menuBar().addAction(self.menubarGeometryPreviewGreenColorButton)
-        #self.menuBar().addAction(self.menubarGeometryPreviewBlueColorButton)
+        # self.menuBar().addAction(self.menubarGeometryPreviewRedColorButton)
+        # self.menuBar().addAction(self.menubarGeometryPreviewGreenColorButton)
+        # self.menuBar().addAction(self.menubarGeometryPreviewBlueColorButton)
 
         # these callbacks only after have loading a job
         self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
         self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode_y_offset)
         self.ui.checkBox_GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
-
 
         self.setWindowState(QtCore.Qt.WindowMaximized)
 
@@ -332,50 +364,62 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.svg_viewer.set_settings_geometry_preview_custom_color_reset()
             self.menubarGeometryPreviewBlueColorButton.setIcon(QtGui.QIcon(":images/media-record-blue.png"))
     """
-    
+
     def toggle_left_side(self):
-        '''
-        '''
+        """ """
         if self.menubarToggleLeftSideButton.isChecked():
             self.ui.scrollArea_left.hide()
         else:
             self.ui.scrollArea_left.show()
 
     def toggle_middle_area(self):
-        '''
-        '''
+        """ """
         if self.menubarToggleMiddleAreaButton.isChecked():
             self.ui.operationsview_manager.hide()
         else:
             self.ui.operationsview_manager.show()
 
     def toggle_right_side(self):
-        '''
-        '''
+        """ """
         if self.menubarToggleRightSideButton.isChecked():
             self.ui.scrollArea_right.hide()
         else:
             self.ui.scrollArea_right.show()
 
     def cb_open_settings_dialog(self):
-        '''
-        '''
+        """ """
         global settings_dialog
 
         def fill_dialog():
             settings_dialog.colorpicker_Tabs_fill.setColor(QtGui.QColor(svgviewer.SvgViewer.TABS_SETTINGS["fill"]))
-            settings_dialog.doubleSpinBox_Tabs_fill_opacity.setValue(float(svgviewer.SvgViewer.TABS_SETTINGS["fill-opacity"]))
-            settings_dialog.doubleSpinBox_Tabs_fill_opacity_disabled.setValue(float(svgviewer.SvgViewer.TABS_SETTINGS["fill-opacity-disabled"]))
+            settings_dialog.doubleSpinBox_Tabs_fill_opacity.setValue(
+                float(svgviewer.SvgViewer.TABS_SETTINGS["fill-opacity"])
+            )
+            settings_dialog.doubleSpinBox_Tabs_fill_opacity_disabled.setValue(
+                float(svgviewer.SvgViewer.TABS_SETTINGS["fill-opacity-disabled"])
+            )
 
             settings_dialog.colorpicker_Toolpath_stroke.setColor(QtGui.QColor(svgviewer.SvgViewer.TOOLPATHS["stroke"]))
-            settings_dialog.doubleSpinBox_Toolpath_stroke_width.setValue(float(svgviewer.SvgViewer.TOOLPATHS["stroke-width"]))
+            settings_dialog.doubleSpinBox_Toolpath_stroke_width.setValue(
+                float(svgviewer.SvgViewer.TOOLPATHS["stroke-width"])
+            )
 
-            settings_dialog.colorpicker_GeometryPreview_fill.setColor(QtGui.QColor(svgviewer.SvgViewer.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"]))
-            settings_dialog.doubleSpinBox_GeometryPreview_fill_opacity.setValue(float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_CLOSED_PATHS["fill-opacity"]))
+            settings_dialog.colorpicker_GeometryPreview_fill.setColor(
+                QtGui.QColor(svgviewer.SvgViewer.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"])
+            )
+            settings_dialog.doubleSpinBox_GeometryPreview_fill_opacity.setValue(
+                float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_CLOSED_PATHS["fill-opacity"])
+            )
 
-            settings_dialog.colorpicker_GeometryPreview_stroke.setColor(QtGui.QColor(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"]))
-            settings_dialog.doubleSpinBox_GeometryPreview_stroke_opacity.setValue(float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"]))
-            settings_dialog.doubleSpinBox_GeometryPreview_stroke_width.setValue(float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]))
+            settings_dialog.colorpicker_GeometryPreview_stroke.setColor(
+                QtGui.QColor(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"])
+            )
+            settings_dialog.doubleSpinBox_GeometryPreview_stroke_opacity.setValue(
+                float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"])
+            )
+            settings_dialog.doubleSpinBox_GeometryPreview_stroke_width.setValue(
+                float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"])
+            )
 
             if gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB == 1:
                 settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.setChecked(True)
@@ -386,41 +430,41 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         def set_defaults():
             self.svg_viewer.set_default_settings()
-            #gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB =  GCodeSimulatorSettings.DEFAULT_OPENGL_FB
+            # gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB =  GCodeSimulatorSettings.DEFAULT_OPENGL_FB
 
             fill_dialog()
 
         def set_ok():
             settings = {
-                "TABS_SETTINGS" : {
+                "TABS_SETTINGS": {
                     "stroke": "#aa4488",
                     "stroke-width": "0",
                     "fill": settings_dialog.colorpicker_Tabs_fill.color().name(),
                     "fill-opacity": str(settings_dialog.doubleSpinBox_Tabs_fill_opacity.value()),
                     "fill-opacity-disabled": str(settings_dialog.doubleSpinBox_Tabs_fill_opacity_disabled.value()),
                 },
-                "GEOMETRY_PREVIEW_CLOSED_PATHS" : {
+                "GEOMETRY_PREVIEW_CLOSED_PATHS": {
                     "stroke": "#ff0000",
                     "stroke-width": "0",
                     "stroke-opacity": "1.0",
                     "fill": settings_dialog.colorpicker_GeometryPreview_fill.color().name(),
                     "fill-opacity": str(settings_dialog.doubleSpinBox_GeometryPreview_fill_opacity.value()),
                 },
-                "GEOMETRY_PREVIEW_OPENED_PATHS" : {
+                "GEOMETRY_PREVIEW_OPENED_PATHS": {
                     "stroke": settings_dialog.colorpicker_GeometryPreview_stroke.color().name(),
                     "stroke-width": str(settings_dialog.doubleSpinBox_GeometryPreview_stroke_width.value()),
                     "stroke-opacity": str(settings_dialog.doubleSpinBox_GeometryPreview_stroke_opacity.value()),
                     "fill": "none",
-                    "fill-opacity": "1.0"
+                    "fill-opacity": "1.0",
                 },
-                "TOOLPATHS" : {
+                "TOOLPATHS": {
                     "stroke": settings_dialog.colorpicker_Toolpath_stroke.color().name(),
                     "stroke-width": str(settings_dialog.doubleSpinBox_Toolpath_stroke_width.value()),
-                }
+                },
             }
             self.svg_viewer.set_settings(settings)
 
-            if settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.isChecked() :
+            if settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.isChecked():
                 gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB = 1
             else:
                 gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB = 2
@@ -441,7 +485,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         settings_dialog.exec()
 
-    '''
+    """
     def cb_show_tutorial_qt(self):
         dlg = QtWidgets.QDialog(self)
 
@@ -462,15 +506,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             view.setHtml(self.notfound % {'message':str(msg)})
 
         dlg.show()
-    '''
+    """
 
     def cb_show_tutorial_qt(self):
-        '''
-        '''
+        """ """
         dlg = QtWidgets.QDialog(self)
 
         htmlView = QtWebEngineWidgets.QWebEngineView(dlg)
-        htmlView.setMinimumSize(1100,600)
+        htmlView.setMinimumSize(1100, 600)
 
         mainLayout = QtWidgets.QVBoxLayout()
         mainLayout.addWidget(htmlView)
@@ -482,7 +525,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         fileName = ":/doc/tutorial_qt.html"
         file = QtCore.QFile(fileName)
         if file.open(QtCore.QIODevice.ReadOnly):
-            data = str(file.readAll(), 'utf-8') # explicit encoding
+            data = str(file.readAll(), "utf-8")  # explicit encoding
         else:
             data = "ERROR"
 
@@ -500,7 +543,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         view = QtWidgets.QTextBrowser(dlg)
         view.setReadOnly(True)
-        view.setMinimumSize(800,500)
+        view.setMinimumSize(800, 500)
 
         mainLayout = QtWidgets.QVBoxLayout()
         mainLayout.addWidget(view)
@@ -512,13 +555,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         try:
             view.setSource(QtCore.QUrl.fromLocalFile(":/doc/about.html"))
         except Exception as msg:
-            view.setHtml(self.notfound % {'message':str(msg)})
+            view.setHtml(self.notfound % {"message": str(msg)})
 
         dlg.show()
 
     def cb_save_gcode(self):
-        '''
-        '''
+        """ """
         if self.job:
             jobname = os.path.basename(self.jobfilename)
             jobname = os.path.splitext(jobname)[0]
@@ -541,35 +583,35 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             fp.close()
 
             # status bar -> msg
-            self.statusBar().showMessage("Saved GCode to \"%s\"" % filename, 3000)
+            self.statusBar().showMessage('Saved GCode to "%s"' % filename, 3000)
 
     def display_gcode(self, gcode: str):
-        '''
+        """
         display gcode in webgl!
         display gcode in python!
 
         and candle viewer!
-        '''
-        simulator_data =  {
+        """
+        simulator_data = {
             "gcode": gcode,
             "cutterHeight": 3 * 4.0,
             "cutterDiameter": self.ui.doubleSpinBox_Tool_Diameter.value(),
             "cutterAngle": self.ui.spinBox_Tool_Angle.value(),
         }
-        
+
         if self.simulator_webgl_viewer is not None:
             self.simulator_webgl_viewer.set_data(simulator_data)
 
         # -----------------------------------------------------------------
-        
-        simulator_data_python =  {
+
+        simulator_data_python = {
             "gcode": gcode,
             "cutter_height": 3 * 4.0,
             "cutter_diameter": self.ui.doubleSpinBox_Tool_Diameter.value(),
             "cutter_angle": self.ui.spinBox_Tool_Angle.value(),
-            "use_candle_parser": True
+            "use_candle_parser": True,
         }
-         
+
         self.setup_simulator_python_viewer(simulator_data_python)
 
         # -----------------------------------------------------------------
@@ -577,87 +619,85 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.candle_viewer.loadData(gcode)
 
     def load_ui(self, uifile: str):
-        '''
+        """
         old method th load ui, not OK when a QMainWindow ui file
         has to be loaded, OK when simple widget.
         Kept here to remember how it works (quite well infact, and
         no need to generate an Ui_XXXX.py file)
-        '''
+        """
         loader = QUiLoader(self)
         loader.registerCustomWidget(operations_tableview.PyCutOperationsTableViewManager)
         loader.registerCustomWidget(tabs_tableview.PyCutTabsTableViewManager)
-        
+
         widget = loader.load(uifile)
 
         return widget
 
     def init_gui(self):
-        '''
-        set the default settings in the gui 
-        '''
+        """
+        set the default settings in the gui
+        """
         self.apply_settings(self.default_settings)
 
-        #self.cb_update_tabs_display()
-        #self.cb_update_tool_display()
-        #self.cb_update_material_display()
-        #self.cb_update_gcodeconversion_display()
-    
+        # self.cb_update_tabs_display()
+        # self.cb_update_tool_display()
+        # self.cb_update_material_display()
+        # self.cb_update_gcodeconversion_display()
+
     def get_current_settings(self):
-        '''
-        '''
+        """ """
         settings = {
             "svg": {
-                "px_per_inch" : 96,
-            }, 
+                "px_per_inch": 96,
+            },
             "Tabs": {
-                "units"      : self.ui.comboBox_Tabs_Units.currentText(),
-                "height"     : self.ui.doubleSpinBox_Tabs_Height.value(),
-                "tabs"       : self.tabs
+                "units": self.ui.comboBox_Tabs_Units.currentText(),
+                "height": self.ui.doubleSpinBox_Tabs_Height.value(),
+                "tabs": self.tabs,
             },
-            "Tool" : {
-                "units"      : self.ui.comboBox_Tool_Units.currentText(),
-                "diameter"   : self.ui.doubleSpinBox_Tool_Diameter.value(),
-                "angle"      : self.ui.spinBox_Tool_Angle.value(),
-                "passdepth"  : self.ui.doubleSpinBox_Tool_PassDepth.value(),
-                "overlap"    : self.ui.doubleSpinBox_Tool_Overlap.value(),
-                "rapid"      : self.ui.spinBox_Tool_Rapid.value(),
-                "plunge"     : self.ui.spinBox_Tool_Plunge.value(),
-                "cut"        : self.ui.spinBox_Tool_Cut.value()
+            "Tool": {
+                "units": self.ui.comboBox_Tool_Units.currentText(),
+                "diameter": self.ui.doubleSpinBox_Tool_Diameter.value(),
+                "angle": self.ui.spinBox_Tool_Angle.value(),
+                "passdepth": self.ui.doubleSpinBox_Tool_PassDepth.value(),
+                "overlap": self.ui.doubleSpinBox_Tool_Overlap.value(),
+                "rapid": self.ui.spinBox_Tool_Rapid.value(),
+                "plunge": self.ui.spinBox_Tool_Plunge.value(),
+                "cut": self.ui.spinBox_Tool_Cut.value(),
             },
-            "Material" : {
-                "units"      : self.ui.comboBox_Material_Units.currentText(),
-                "thickness"  : self.ui.doubleSpinBox_Material_Thickness.value(),
-                "z_origin"    : self.ui.comboBox_Material_ZOrigin.currentText(),
-                "clearance"  : self.ui.doubleSpinBox_Material_Clearance.value(),
+            "Material": {
+                "units": self.ui.comboBox_Material_Units.currentText(),
+                "thickness": self.ui.doubleSpinBox_Material_Thickness.value(),
+                "z_origin": self.ui.comboBox_Material_ZOrigin.currentText(),
+                "clearance": self.ui.doubleSpinBox_Material_Clearance.value(),
             },
-            "CurveToLineConversion" : {
-                "minimum_segments"       : self.ui.spinBox_CurveToLineConversion_MinimumNbSegments.value(),
-                "minimum_segments_length" : self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.value(),
+            "CurveToLineConversion": {
+                "minimum_segments": self.ui.spinBox_CurveToLineConversion_MinimumNbSegments.value(),
+                "minimum_segments_length": self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.value(),
             },
-            "GCodeConversion" : {
-                "units"            : self.ui.comboBox_GCodeConversion_Units.currentText(),
-                "flip_xy"          : self.ui.checkBox_GCodeConversion_FlipXY.isChecked(),
-                "x_offset"         : self.ui.doubleSpinBox_GCodeConversion_XOffset.value(),
-                "y_offset"         : self.ui.doubleSpinBox_GCodeConversion_YOffset.value(),
-                "xy_reference"     : GcodeModel.XYRef[self.ui.buttonGroup_GCodeConversion.checkedId()]
+            "GCodeConversion": {
+                "units": self.ui.comboBox_GCodeConversion_Units.currentText(),
+                "flip_xy": self.ui.checkBox_GCodeConversion_FlipXY.isChecked(),
+                "x_offset": self.ui.doubleSpinBox_GCodeConversion_XOffset.value(),
+                "y_offset": self.ui.doubleSpinBox_GCodeConversion_YOffset.value(),
+                "xy_reference": GcodeModel.XYRef[self.ui.buttonGroup_GCodeConversion.checkedId()],
             },
-            "GCodeGeneration" : {
-                "return_to_zero_at_end" : self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.isChecked(),
-                "spindle_control"    : self.ui.checkBox_GCodeGeneration_SpindleControl.isChecked(),
-                "spindle_speed"      : self.ui.spinBox_GCodeGeneration_SpindleSpeed.value(),
-                "program_end"        : self.ui.checkBox_GCodeGeneration_ProgramEnd.isChecked(),
-            }
+            "GCodeGeneration": {
+                "return_to_zero_at_end": self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.isChecked(),
+                "spindle_control": self.ui.checkBox_GCodeGeneration_SpindleControl.isChecked(),
+                "spindle_speed": self.ui.spinBox_GCodeGeneration_SpindleSpeed.value(),
+                "program_end": self.ui.checkBox_GCodeGeneration_ProgramEnd.isChecked(),
+            },
         }
-        
+
         return settings
 
     def apply_settings(self, settings):
-        '''
-        '''
+        """ """
         # Tabs
         self.ui.comboBox_Tabs_Units.setCurrentText(settings["Tabs"]["units"])
         self.ui.doubleSpinBox_Tabs_Height.setValue(settings["Tabs"]["height"])
-            
+
         # Tool
         self.ui.comboBox_Tool_Units.setCurrentText(settings["Tool"]["units"])
         self.ui.doubleSpinBox_Tool_Diameter.setValue(settings["Tool"]["diameter"])
@@ -667,23 +707,27 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.spinBox_Tool_Rapid.setValue(settings["Tool"]["rapid"])
         self.ui.spinBox_Tool_Plunge.setValue(settings["Tool"]["plunge"])
         self.ui.spinBox_Tool_Cut.setValue(settings["Tool"]["cut"])
-        
+
         # Material
         self.ui.comboBox_Material_Units.setCurrentText(settings["Material"]["units"])
         self.ui.doubleSpinBox_Material_Thickness.setValue(settings["Material"]["thickness"])
         self.ui.comboBox_Material_ZOrigin.setCurrentText(settings["Material"]["z_origin"])
         self.ui.doubleSpinBox_Material_Clearance.setValue(settings["Material"]["clearance"])
-            
-        # CurveToLineConversion 
-        self.ui.spinBox_CurveToLineConversion_MinimumNbSegments.setValue(settings["CurveToLineConversion"]["minimum_segments"]),
-        self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.setValue(settings["CurveToLineConversion"]["minimum_segments_length"]),
-            
+
+        # CurveToLineConversion
+        self.ui.spinBox_CurveToLineConversion_MinimumNbSegments.setValue(
+            settings["CurveToLineConversion"]["minimum_segments"]
+        ),
+        self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.setValue(
+            settings["CurveToLineConversion"]["minimum_segments_length"]
+        ),
+
         # GCodeConversion
         self.ui.comboBox_GCodeConversion_Units.setCurrentText(settings["GCodeConversion"]["units"])
         self.ui.checkBox_GCodeConversion_FlipXY.setChecked(settings["GCodeConversion"]["flip_xy"])
         self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue(settings["GCodeConversion"]["x_offset"])
         self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(settings["GCodeConversion"]["y_offset"])
-            
+
         if settings["GCodeConversion"]["xy_reference"] == "ZERO_TOP_LEFT_OF_MATERIAL":
             self.ui.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setChecked(True)
         elif settings["GCodeConversion"]["xy_reference"] == "ZERO_LOWER_LEFT_OF_MATERIAL":
@@ -693,16 +737,18 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         elif settings["GCodeConversion"]["xy_reference"] == "ZERO_CENTER_OF_OP":
             self.ui.pushButton_GCodeConversion_ZeroCenterOfOp.setChecked(True)
 
-        # GCodeGeneration 
-        self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setChecked(settings["GCodeGeneration"]["return_to_zero_at_end"])
+        # GCodeGeneration
+        self.ui.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setChecked(
+            settings["GCodeGeneration"]["return_to_zero_at_end"]
+        )
         self.ui.checkBox_GCodeGeneration_SpindleControl.setChecked(settings["GCodeGeneration"]["spindle_control"])
         self.ui.spinBox_GCodeGeneration_SpindleSpeed.setValue(settings["GCodeGeneration"]["spindle_speed"])
         self.ui.checkBox_GCodeGeneration_ProgramEnd.setChecked(settings["GCodeGeneration"]["program_end"])
 
     def cb_open_svg(self):
-        '''
+        """
         not a job, a svg only -> no operations
-        '''
+        """
         xfilter = "SVG Files (*.svg)"
         svg_file, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
 
@@ -710,7 +756,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             svg_file = self.minify_path(svg_file)
 
             self.svg_file = svg_file
-            
+
             # clean current job (table)
             self.operations = []
             self.ui.operationsview_manager.set_operations(self.operations)
@@ -718,12 +764,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             # clean current tabs (table)
             self.tabs = []
             self.ui.tabsview_manager.set_tabs(self.tabs)
-            
+
             self.display_svg(self.svg_file)
- 
+
     def cb_new_job(self):
-        '''
-        '''
+        """ """
         self.svg_file = None
         self.display_svg(self.svg_file)
 
@@ -736,8 +781,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.tabsview_manager.set_tabs(self.tabs)
 
     def cb_open_recent_job_file(self):
-        '''
-        '''
+        """ """
         sender = self.sender()
         jobfilename = sender.text()
 
@@ -746,20 +790,19 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.checkBox_GCodeConversion_FlipXY.clicked.disconnect(self.cb_generate_gcode)
 
         self.open_job(jobfilename)
-        
+
         self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
         self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode_y_offset)
         self.ui.checkBox_GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
 
     def cb_open_job(self):
-        '''
-        '''
+        """ """
         # read json
         xfilter = "JSON Files (*.json)"
         jobfilename, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
 
         jobfilename = self.minify_path(jobfilename)
-        
+
         try:
             self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.disconnect(self.cb_generate_gcode_x_offset)
             self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.disconnect(self.cb_generate_gcode_y_offset)
@@ -767,9 +810,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             print(e)
             pass
-        
+
         self.open_job(jobfilename)
-        
+
         self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
         self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode_y_offset)
         self.ui.checkBox_GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
@@ -786,9 +829,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.prepend_recent_jobs(jobfilename)
 
             job = json.load(f)
-        
-            self.svg_file = job["svg_file"] # relativ to job or absolute
-            
+
+            self.svg_file = job["svg_file"]  # relativ to job or absolute
+
             if os.path.isabs(self.svg_file):
                 svg_file = self.svg_file
             else:
@@ -806,14 +849,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 msgBox.setText("Svg File %s not found" % svg_file)
                 msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
                 msgBox.exec()
-                return 
+                return
 
             self.operations = job["operations"]
             self.tabs = job["settings"]["Tabs"].get("tabs", [])
-        
+
             # display
             self.display_svg(svg_file)
-            
+
             # and fill the whole gui
             self.apply_settings(job["settings"])
 
@@ -822,65 +865,62 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             # fill tabs table
             self.ui.tabsview_manager.set_tabs(self.tabs)
-        
+
     def cb_save_job(self):
-        '''
-        '''
+        """ """
         operations = self.ui.operationsview_manager.get_operations()
 
         job = {
-            "svg_file" : self.svg_file,
+            "svg_file": self.svg_file,
             "operations": operations,
-            "settings": self.get_current_settings()
+            "settings": self.get_current_settings(),
         }
-        
-        with open(self.jobfilename, 'w') as json_file:
-            json.dump(job, json_file, indent=2)   
+
+        with open(self.jobfilename, "w") as json_file:
+            json.dump(job, json_file, indent=2)
 
     def cb_save_job_as(self):
-        '''
-        '''
+        """ """
         xfilter = "JSON Files (*.json)"
-        
+
         operations = self.ui.operationsview_manager.get_operations()
 
         job = {
-            "svg_file" : self.svg_file,
+            "svg_file": self.svg_file,
             "operations": operations,
-            "settings": self.get_current_settings()
+            "settings": self.get_current_settings(),
         }
-            
+
         # open file dialog for a file name
         jobfilename, _ = QtWidgets.QFileDialog.getSaveFileName(self, caption="Save As", dir=".", filter=xfilter)
 
         if jobfilename:
             jobfilename = self.minify_path(jobfilename)
 
-            '''
+            """
             get the svg file path relativ to the job file
             if both paths start from the cwd
-            '''
-            if not os.path.isabs(jobfilename) and not os.path.isabs(self.svg_file) :
-                svg_file_fix =  self.get_relpath_relativ_to_the_other(self.svg_file, jobfilename)
+            """
+            if not os.path.isabs(jobfilename) and not os.path.isabs(self.svg_file):
+                svg_file_fix = self.get_relpath_relativ_to_the_other(self.svg_file, jobfilename)
             else:
                 svg_file_fix = self.svg_file
 
             job["svg_file"] = svg_file_fix
 
-            with open(jobfilename, 'w') as json_file:
+            with open(jobfilename, "w") as json_file:
                 json.dump(job, json_file, indent=2)
 
             self.jobfilename = jobfilename
-    
+
     def cb_open_gcode(self, gcodefilename):
-        '''
-        '''
+        """ """
         # read gcode
         xfilter = "GCODE Files (*.nc *.ncc, *.ngc, *.gcode)"
         gcodefilename, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
 
         gcodefilename = self.minify_path(gcodefilename)
-        
+
         self.open_gcode(gcodefilename)
 
     def open_gcode(self, gcodefilename: str):
@@ -906,12 +946,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
                 res = [
                     QRegularExpression(tool_diameter_keyword1),
-                    QRegularExpression(tool_diameter_keyword2)
+                    QRegularExpression(tool_diameter_keyword2),
                 ]
                 pos = 0
                 for line in lines:
                     for re in res:
-                        m =  re.match(line, pos)
+                        m = re.match(line, pos)
                         if m.hasMatch():
                             data = m.captured(1)
                             tool_diameter = float(data)
@@ -928,43 +968,41 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
                 msgBox.exec()
 
-
             self.display_gcode(gcode)
 
     def cb_curve_min_segments(self):
-        '''
+        """
         what is it good for ?
         seems to be redundant with cb_curve_min_segments_length
-        '''
+        """
         value = self.ui.spinBox_CurveToLineConversion_MinimumNbSegments.value()
         shapely_svgpath_io.SvgPathDiscretizer.set_arc_min_nb_segments(value)
 
     def cb_curve_min_segments_length(self):
-        '''
-        '''
+        """ """
         value = self.ui.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.value()
         shapely_svgpath_io.SvgPathDiscretizer.set_arc_precision(value)
 
     def cb_update_tabs_display(self):
-        '''
+        """
         This updates the legends of the tsbs model widget **and** the values
-        '''
+        """
         tabs_units = self.ui.comboBox_Tabs_Units.currentText()
-        
+
         if tabs_units == "inch":
-            self.ui.doubleSpinBox_Tabs_Height.setValue( self.ui.doubleSpinBox_Tabs_Height.value() / 25.4 )
+            self.ui.doubleSpinBox_Tabs_Height.setValue(self.ui.doubleSpinBox_Tabs_Height.value() / 25.4)
             self.ui.doubleSpinBox_Tabs_Height.setSingleStep(0.04)
 
         if tabs_units == "mm":
-            self.ui.doubleSpinBox_Tabs_Height.setValue( self.ui.doubleSpinBox_Tabs_Height.value() * 25.4 )
+            self.ui.doubleSpinBox_Tabs_Height.setValue(self.ui.doubleSpinBox_Tabs_Height.value() * 25.4)
             self.ui.doubleSpinBox_Tabs_Height.setSingleStep(1.0)
 
     def cb_update_tool_display(self):
-        '''
+        """
         This updates the legends of the tool model widget **and** the values
-        '''
+        """
         tool_units = self.ui.comboBox_Tool_Units.currentText()
-        
+
         if tool_units == "inch":
             self.ui.label_Tool_Diameter_UnitsDescr.setText("inch")
             self.ui.label_Tool_Angle_UnitsDescr.setText("degrees")
@@ -974,11 +1012,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.label_Tool_Plunge_UnitsDescr.setText("inch/min")
             self.ui.label_Tool_Cut_UnitsDescr.setText("inch/min")
 
-            self.ui.doubleSpinBox_Tool_Diameter.setValue( self.ui.doubleSpinBox_Tool_Diameter.value() / 25.4 )
-            self.ui.doubleSpinBox_Tool_PassDepth.setValue( self.ui.doubleSpinBox_Tool_PassDepth.value() / 25.4 )
-            self.ui.spinBox_Tool_Rapid.setValue( self.ui.spinBox_Tool_Rapid.value() / 25.4 )
-            self.ui.spinBox_Tool_Plunge.setValue( self.ui.spinBox_Tool_Plunge.value() / 25.4 )
-            self.ui.spinBox_Tool_Cut.setValue( self.ui.spinBox_Tool_Cut.value() / 25.4 )
+            self.ui.doubleSpinBox_Tool_Diameter.setValue(self.ui.doubleSpinBox_Tool_Diameter.value() / 25.4)
+            self.ui.doubleSpinBox_Tool_PassDepth.setValue(self.ui.doubleSpinBox_Tool_PassDepth.value() / 25.4)
+            self.ui.spinBox_Tool_Rapid.setValue(self.ui.spinBox_Tool_Rapid.value() / 25.4)
+            self.ui.spinBox_Tool_Plunge.setValue(self.ui.spinBox_Tool_Plunge.value() / 25.4)
+            self.ui.spinBox_Tool_Cut.setValue(self.ui.spinBox_Tool_Cut.value() / 25.4)
 
         if tool_units == "mm":
             self.ui.label_Tool_Diameter_UnitsDescr.setText("mm")
@@ -989,38 +1027,38 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.label_Tool_Plunge_UnitsDescr.setText("mm/min")
             self.ui.label_Tool_Cut_UnitsDescr.setText("mm/min")
 
-            self.ui.doubleSpinBox_Tool_Diameter.setValue( self.ui.doubleSpinBox_Tool_Diameter.value() * 25.4 )
-            self.ui.doubleSpinBox_Tool_PassDepth.setValue( self.ui.doubleSpinBox_Tool_PassDepth.value() * 25.4 )
-            self.ui.spinBox_Tool_Rapid.setValue( self.ui.spinBox_Tool_Rapid.value() * 25.4 )
-            self.ui.spinBox_Tool_Plunge.setValue( self.ui.spinBox_Tool_Plunge.value() * 25.4 )
-            self.ui.spinBox_Tool_Cut.setValue( self.ui.spinBox_Tool_Cut.value() * 25.4 )
+            self.ui.doubleSpinBox_Tool_Diameter.setValue(self.ui.doubleSpinBox_Tool_Diameter.value() * 25.4)
+            self.ui.doubleSpinBox_Tool_PassDepth.setValue(self.ui.doubleSpinBox_Tool_PassDepth.value() * 25.4)
+            self.ui.spinBox_Tool_Rapid.setValue(self.ui.spinBox_Tool_Rapid.value() * 25.4)
+            self.ui.spinBox_Tool_Plunge.setValue(self.ui.spinBox_Tool_Plunge.value() * 25.4)
+            self.ui.spinBox_Tool_Cut.setValue(self.ui.spinBox_Tool_Cut.value() * 25.4)
 
     def cb_update_material_display(self):
-        '''
+        """
         This updates the legends of the material model widget **and** the values
-        '''
+        """
         material_units = self.ui.comboBox_Material_Units.currentText()
-        
+
         if material_units == "inch":
-            self.ui.doubleSpinBox_Material_Thickness.setValue( self.ui.doubleSpinBox_Material_Thickness.value() / 25.4 )
-            self.ui.doubleSpinBox_Material_Clearance.setValue( self.ui.doubleSpinBox_Material_Clearance.value() / 25.4 )
+            self.ui.doubleSpinBox_Material_Thickness.setValue(self.ui.doubleSpinBox_Material_Thickness.value() / 25.4)
+            self.ui.doubleSpinBox_Material_Clearance.setValue(self.ui.doubleSpinBox_Material_Clearance.value() / 25.4)
 
             self.ui.doubleSpinBox_Material_Thickness.setSingleStep(0.04)
             self.ui.doubleSpinBox_Material_Clearance.setSingleStep(0.04)
 
         if material_units == "mm":
-            self.ui.doubleSpinBox_Material_Thickness.setValue( self.ui.doubleSpinBox_Material_Thickness.value() * 25.4 )
-            self.ui.doubleSpinBox_Material_Clearance.setValue( self.ui.doubleSpinBox_Material_Clearance.value() * 25.4 )
+            self.ui.doubleSpinBox_Material_Thickness.setValue(self.ui.doubleSpinBox_Material_Thickness.value() * 25.4)
+            self.ui.doubleSpinBox_Material_Clearance.setValue(self.ui.doubleSpinBox_Material_Clearance.value() * 25.4)
 
             self.ui.doubleSpinBox_Material_Thickness.setSingleStep(1.0)
             self.ui.doubleSpinBox_Material_Clearance.setSingleStep(1.0)
 
     def cb_update_gcodeconversion_display(self):
-        '''
+        """
         This updates the legends of the gcode_conversion model widget **and** the values
-        '''
+        """
         gcodeconversion_units = self.ui.comboBox_GCodeConversion_Units.currentText()
-        
+
         if gcodeconversion_units == "inch":
             self.ui.label_GCodeConversion_XOffset_UnitsDescr.setText("inch")
             self.ui.label_GCodeConversion_YOffset_UnitsDescr.setText("inch")
@@ -1029,13 +1067,25 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.label_GCodeConversion_MinY_UnitsDescr.setText("inch")
             self.ui.label_GCodeConversion_MaxY_UnitsDescr.setText("inch")
 
-            self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue( self.ui.doubleSpinBox_GCodeConversion_XOffset.value() / 25.4 )
-            self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(self.ui.doubleSpinBox_GCodeConversion_YOffset.value() / 25.4 )
-            self.ui.doubleSpinBox_GCodeConversion_MinX.setValue(self.ui.doubleSpinBox_GCodeConversion_MinX.value() / 25.4 )
-            self.ui.doubleSpinBox_GCodeConversion_MaxX.setValue(self.ui.doubleSpinBox_GCodeConversion_MaxX.value() / 25.4 )
-            self.ui.doubleSpinBox_GCodeConversion_MinY.setValue(self.ui.doubleSpinBox_GCodeConversion_MinY.value() / 25.4 )
-            self.ui.doubleSpinBox_GCodeConversion_MaxY.setValue(self.ui.doubleSpinBox_GCodeConversion_MaxY.value() / 25.4 )
-            
+            self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue(
+                self.ui.doubleSpinBox_GCodeConversion_XOffset.value() / 25.4
+            )
+            self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(
+                self.ui.doubleSpinBox_GCodeConversion_YOffset.value() / 25.4
+            )
+            self.ui.doubleSpinBox_GCodeConversion_MinX.setValue(
+                self.ui.doubleSpinBox_GCodeConversion_MinX.value() / 25.4
+            )
+            self.ui.doubleSpinBox_GCodeConversion_MaxX.setValue(
+                self.ui.doubleSpinBox_GCodeConversion_MaxX.value() / 25.4
+            )
+            self.ui.doubleSpinBox_GCodeConversion_MinY.setValue(
+                self.ui.doubleSpinBox_GCodeConversion_MinY.value() / 25.4
+            )
+            self.ui.doubleSpinBox_GCodeConversion_MaxY.setValue(
+                self.ui.doubleSpinBox_GCodeConversion_MaxY.value() / 25.4
+            )
+
         if gcodeconversion_units == "mm":
             self.ui.label_GCodeConversion_XOffset_UnitsDescr.setText("mm")
             self.ui.label_GCodeConversion_YOffset_UnitsDescr.setText("mm")
@@ -1044,17 +1094,29 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.label_GCodeConversion_MinY_UnitsDescr.setText("mm")
             self.ui.label_GCodeConversion_MaxY_UnitsDescr.setText("mm")
 
-            self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue( self.ui.doubleSpinBox_GCodeConversion_XOffset.value() * 25.4 )
-            self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(self.ui.doubleSpinBox_GCodeConversion_YOffset.value() * 25.4 )
-            self.ui.doubleSpinBox_GCodeConversion_MinX.setValue(self.ui.doubleSpinBox_GCodeConversion_MinX.value() * 25.4 )
-            self.ui.doubleSpinBox_GCodeConversion_MaxX.setValue(self.ui.doubleSpinBox_GCodeConversion_MaxX.value() * 25.4 )
-            self.ui.doubleSpinBox_GCodeConversion_MinY.setValue(self.ui.doubleSpinBox_GCodeConversion_MinY.value() * 25.4 )
-            self.ui.doubleSpinBox_GCodeConversion_MaxY.setValue(self.ui.doubleSpinBox_GCodeConversion_MaxY.value() * 25.4 )
-            
+            self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue(
+                self.ui.doubleSpinBox_GCodeConversion_XOffset.value() * 25.4
+            )
+            self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(
+                self.ui.doubleSpinBox_GCodeConversion_YOffset.value() * 25.4
+            )
+            self.ui.doubleSpinBox_GCodeConversion_MinX.setValue(
+                self.ui.doubleSpinBox_GCodeConversion_MinX.value() * 25.4
+            )
+            self.ui.doubleSpinBox_GCodeConversion_MaxX.setValue(
+                self.ui.doubleSpinBox_GCodeConversion_MaxX.value() * 25.4
+            )
+            self.ui.doubleSpinBox_GCodeConversion_MinY.setValue(
+                self.ui.doubleSpinBox_GCodeConversion_MinY.value() * 25.4
+            )
+            self.ui.doubleSpinBox_GCodeConversion_MaxY.setValue(
+                self.ui.doubleSpinBox_GCodeConversion_MaxY.value() * 25.4
+            )
+
     def cb_display_material_thickness(self):
-        '''
+        """
         svg display only in mm
-        '''
+        """
         material_units = self.ui.comboBox_Material_Units.currentText()
 
         thickness = ValWithUnit(self.ui.doubleSpinBox_Material_Thickness.value(), material_units).toMm()
@@ -1064,9 +1126,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
 
     def cb_display_material_clearance(self):
-        '''
+        """
         svg display only in mm
-        '''
+        """
         material_units = self.ui.comboBox_Material_Units.currentText()
 
         thickness = ValWithUnit(self.ui.doubleSpinBox_Material_Thickness.value(), material_units).toMm()
@@ -1079,68 +1141,63 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.spinBox_GCodeGeneration_SpindleSpeed.setEnabled(val)
 
     def setup_material_viewer(self):
-        '''
-        '''
+        """ """
         return material_widget.MaterialWidget(self.ui.widget_display_material)
 
     def setup_svg_viewer(self):
-        '''
-        '''
+        """ """
         svg = self.ui.svg
         layout = svg.layout()
-        
+
         svg_viewer = svgviewer.SvgViewer(svg)
         svg_viewer.set_mainwindow(self)
-        
+
         layout.addWidget(svg_viewer)
         layout.setStretch(0, 1)
-        
+
         return svg_viewer
 
     def setup_candle_viewer(self):
-        '''
-        '''
+        """ """
         viewer = self.ui.viewer
         layout = viewer.layout()
-        
+
         candle_viewer = glwidget_container.GLWidgetContainer(viewer)
 
         layout.addWidget(candle_viewer)
         layout.setStretch(0, 1)
-        
+
         return candle_viewer
 
     def setup_simulator_webgl_viewer(self):
-        '''
-        '''
+        """ """
         container = self.ui.simulator_webgl
         layout = container.layout()
-        
+
         self.simulator_webgl_viewer = gcodesimulator_webgl_viewer.GCodeViewer(container)
-        
+
         layout.addWidget(self.simulator_webgl_viewer)
         layout.setStretch(0, 1)
-        
+
         return self.simulator_webgl_viewer
-    
+
     def setup_simulator_python_viewer(self, data):
-        '''
-        '''
+        """ """
         container = self.ui.simulator_python
         layout = container.layout()
 
         if self.simulator_python_viewer != None:
             layout.removeWidget(self.simulator_python_viewer)
-        
+
         self.simulator_python_viewer = gcodesimulator_python_viewer.GCodeViewer(container, data)
 
         layout.addWidget(self.simulator_python_viewer)
         layout.setStretch(0, 1)
-        
+
         return self.simulator_python_viewer
 
     def display_svg(self, svg_file):
-        '''
+        """
         em 	The default font size - usually the height of a character.
         ex 	The height of the character x
         px 	Pixels
@@ -1149,19 +1206,19 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         cm 	Centimeters
         mm 	Millimeters
         in Inches
-        '''
+        """
         if svg_file is None:
             return
-        
+
         fp = open(svg_file, "r")
         svg = fp.read()
         fp.close()
-            
+
         def extract_svg_dimensions(svg: str) -> Tuple[int, int]:
-            '''
-            Dimension of the svg are of importance when making gcode from the lower left 
+            """
+            Dimension of the svg are of importance when making gcode from the lower left
             side of the material
-            '''
+            """
             tree = etree.fromstring(svg)
             tree_attrib = tree.attrib
 
@@ -1174,7 +1231,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         size_xstr, size_ystr = extract_svg_dimensions(svg)
 
         suffix = ""
-            
+
         if "mm" in size_xstr:
             suffix = "mm"
             size_x, size_y = float(size_xstr.split("mm")[0]), float(size_ystr.split("mm")[0])
@@ -1205,14 +1262,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_viewer.set_tabs(self.tabs)
 
     def assign_tabs(self, tabs: List[Tab]):
-        '''
-        '''
+        """ """
         self.tabs = tabs
         self.ui.tabsview_manager.set_tabs(self.tabs)
-    
+
     def display_cnc_tabs(self, tabs: List[Tab]):
-        '''
-        '''
+        """ """
         self.tabs = tabs
         self.svg_viewer.set_tabs(self.tabs)
 
@@ -1227,11 +1282,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_viewer.reinit()
 
     def display_cnc_ops_geometry(self, operations: List[operations_tableview.OpItem]):
-        '''
-        '''
+        """ """
         settings = self.get_current_settings()
 
-        tool_model = ToolModel() 
+        tool_model = ToolModel()
         tool_model.units = settings["Tool"]["units"]
         tool_model.diameter = ValWithUnit(settings["Tool"]["diameter"], tool_model.units)
         tool_model.angle = settings["Tool"]["angle"]
@@ -1248,24 +1302,23 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 continue
 
             cnc_op = CncOp(
-            {
-                "units": op_model.units,
-                "name": op_model.name,
-                "paths": op_model.paths,
-                "combinaison": op_model.combinaison,
-                "ramp_plunge": op_model.ramp_plunge,
-                "type": op_model.cam_op,
-                "direction": op_model.direction,
-                "cut_depth": op_model.cut_depth,
-                "margin": op_model.margin,
-                "width": op_model.width,
-
-                "enabled": op_model.enabled
-            })
+                {
+                    "units": op_model.units,
+                    "name": op_model.name,
+                    "paths": op_model.paths,
+                    "combinaison": op_model.combinaison,
+                    "ramp_plunge": op_model.ramp_plunge,
+                    "type": op_model.cam_op,
+                    "direction": op_model.direction,
+                    "cut_depth": op_model.cut_depth,
+                    "margin": op_model.margin,
+                    "width": op_model.width,
+                    "enabled": op_model.enabled,
+                }
+            )
 
             cnc_ops.append(cnc_op)
 
-        
         for cnc_op in cnc_ops:
             cnc_op.setup(self.svg_viewer)
             cnc_op.calculate_geometry(tool_model)
@@ -1274,37 +1327,35 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_viewer.display_job_geometry(cnc_ops)
 
     def get_jobmodel_operations(self) -> List[CncOp]:
-        '''
-        '''
-        cnc_ops : List[CncOp] = []
+        """ """
+        cnc_ops: List[CncOp] = []
 
         for op_model in self.ui.operationsview_manager.get_model_operations():
             if not op_model.enabled:
                 continue
 
             cnc_op = CncOp(
-            {
-                "units": op_model.units,
-                "name": op_model.name,
-                "paths": op_model.paths,
-                "combinaison": op_model.combinaison,
-                "ramp_plunge": op_model.ramp_plunge,
-                "type": op_model.cam_op,
-                "direction": op_model.direction,
-                "cut_depth": op_model.cut_depth,
-                "margin": op_model.margin,
-                "width": op_model.width,
-
-                "enabled": op_model.enabled
-            })
+                {
+                    "units": op_model.units,
+                    "name": op_model.name,
+                    "paths": op_model.paths,
+                    "combinaison": op_model.combinaison,
+                    "ramp_plunge": op_model.ramp_plunge,
+                    "type": op_model.cam_op,
+                    "direction": op_model.direction,
+                    "cut_depth": op_model.cut_depth,
+                    "margin": op_model.margin,
+                    "width": op_model.width,
+                    "enabled": op_model.enabled,
+                }
+            )
 
             cnc_ops.append(cnc_op)
 
         return cnc_ops
 
     def get_jobmodel(self) -> JobModel:
-        '''
-        '''
+        """ """
         settings = self.get_current_settings()
 
         svg_model = SvgModel()
@@ -1327,7 +1378,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         tool_model.rapidRate = ValWithUnit(settings["Tool"]["rapid"], tool_model.units)
         tool_model.plungeRate = ValWithUnit(settings["Tool"]["plunge"], tool_model.units)
         tool_model.cutRate = ValWithUnit(settings["Tool"]["cut"], tool_model.units)
-        
+
         tabsmodel = TabsModel([tab for tab in self.tabs if tab["enabled"] == True])
         tabsmodel.units = settings["Tabs"]["units"]
         tabsmodel.height = ValWithUnit(settings["Tabs"]["height"], tabsmodel.units)
@@ -1341,7 +1392,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         gcode_model.spindleControl = settings["GCodeGeneration"]["spindle_control"]
         gcode_model.spindleSpeed = settings["GCodeGeneration"]["spindle_speed"]
         gcode_model.programEnd = settings["GCodeGeneration"]["program_end"]
-        
+
         gcode_model.gcodeZero = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
         if self.ui.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.isChecked():
             gcode_model.gcodeZero = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
@@ -1354,13 +1405,20 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         cnc_ops = self.get_jobmodel_operations()
 
-        job = JobModel(self.svg_viewer, cnc_ops, material_model, svg_model, tool_model, tabsmodel, gcode_model)
+        job = JobModel(
+            self.svg_viewer,
+            cnc_ops,
+            material_model,
+            svg_model,
+            tool_model,
+            tabsmodel,
+            gcode_model,
+        )
 
-        return job  
+        return job
 
     def cb_generate_gcode(self):
-        '''
-        '''
+        """ """
         self.job = job = self.get_jobmodel()
 
         ok = self.jobmodel_check_operations()
@@ -1377,8 +1435,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.after_gcode_generation(generator)
 
     def cb_generate_gcode_x_offset(self):
-        '''
-        '''
+        """ """
         self.job = job = self.get_jobmodel()
 
         ok = self.jobmodel_check_toolpaths()
@@ -1387,13 +1444,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         generator = GcodeGenerator(job)
         generator.setXOffset(self.ui.doubleSpinBox_GCodeConversion_XOffset.value())
-        #generator.generateGcode()
+        # generator.generateGcode()
 
         self.after_gcode_generation(generator)
 
     def cb_generate_gcode_y_offset(self):
-        '''
-        '''
+        """ """
         self.job = job = self.get_jobmodel()
 
         ok = self.jobmodel_check_toolpaths()
@@ -1402,13 +1458,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         generator = GcodeGenerator(job)
         generator.setYOffset(self.ui.doubleSpinBox_GCodeConversion_YOffset.value())
-        #generator.generateGcode()
+        # generator.generateGcode()
 
         self.after_gcode_generation(generator)
 
     def jobmodel_check_operations(self):
-        '''
-        '''
+        """ """
         has_operations = len(self.job.operations) > 0
 
         if not has_operations:
@@ -1418,12 +1473,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             msgBox.setText("The Job has no operations!")
             msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
             msgBox.exec()
-            
+
         return has_operations
 
     def jobmodel_check_toolpaths(self):
-        '''
-        '''
+        """ """
         has_toolpaths = False
         for op in self.job.operations:
             if len(op.cam_paths) > 0:
@@ -1437,19 +1491,18 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             msgBox.setInformativeText("Maybe is the geometry too narrow for the cutter?")
             msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
             msgBox.exec()
-            
+
         return has_toolpaths
 
     def after_gcode_generation(self, generator: GcodeGenerator):
-        '''
-        '''
+        """ """
         # with the resulting calculation, we can fill the min/max in X/Y as well as the offsets
         self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.disconnect(self.cb_generate_gcode_x_offset)
         self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.disconnect(self.cb_generate_gcode_y_offset)
 
         self.ui.doubleSpinBox_GCodeConversion_XOffset.setValue(generator.offsetX)
         self.ui.doubleSpinBox_GCodeConversion_YOffset.setValue(generator.offsetY)
-        
+
         self.ui.doubleSpinBox_GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
         self.ui.doubleSpinBox_GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode_y_offset)
 
@@ -1459,20 +1512,20 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.doubleSpinBox_GCodeConversion_MaxY.setValue(generator.maxY)
 
         self.svg_viewer.display_job(generator.job)
-        
+
         # gcode viewer/simulator
         gcode = generator.gcode
         self.display_gcode(gcode)
 
     def read_recent_jobs(self):
-        '''
+        """
         Returns the list of recent jobs fron the setting file
-        '''
+        """
         self.recent_jobs = []
 
         if not os.path.exists("./recent_jobs.json"):
             fp = open("./recent_jobs.json", "w")
-            json.dump([], fp, indent=2)  
+            json.dump([], fp, indent=2)
             fp.close()
 
         with open("./recent_jobs.json", "r") as f:
@@ -1481,15 +1534,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         return self.recent_jobs
 
     def write_recent_jobs(self):
-        '''
+        """
         Write the list of recent jobs to the settings file
-        '''
-        with open("./recent_jobs.json", 'w') as json_file:
-            json.dump(self.recent_jobs, json_file, indent=2)   
+        """
+        with open("./recent_jobs.json", "w") as json_file:
+            json.dump(self.recent_jobs, json_file, indent=2)
 
     def prepend_recent_jobs(self, jobfile):
-        '''
-        '''
+        """ """
         # consider unix style if not absolute
         if not os.path.isabs(jobfile):
             jobfile_unix = jobfile.replace(ntpath.sep, posixpath.sep)
@@ -1510,11 +1562,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def closeEvent(self, event):
         # do stuff
         self.write_recent_jobs()
-        event.accept() # let the window close
+        event.accept()  # let the window close
 
     def build_recent_jobs_submenu(self):
-        '''
-        '''
+        """ """
         for jobfilename in self.recent_jobs:
             icon = QtGui.QIcon.fromTheme("edit-paste")
             item = QtGui.QAction(icon, jobfilename, self.ui.menuOpen_Recent_Jobs)
@@ -1522,8 +1573,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.menuOpen_Recent_Jobs.addAction(item)
 
     def minify_path(self, apath):
-        '''
-        '''
+        """ """
         cwd = os.getcwd()
         cwd = pathlib.PurePath(cwd).as_posix()
 
@@ -1534,10 +1584,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         return apath
 
     def get_relpath_relativ_to_the_other(self, p1, p2):
-        '''
+        """
         Both paths are relativ to cwd
 
-        ex: 
+        ex:
           p1 = 'misc_private/cnc1310/test_svgs/backlash.svg'
           p2 = 'jobs/jj.json'
 
@@ -1548,29 +1598,37 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
           p2 = 'misc_private/jobs/jj.json'
 
           => pp1 = '../cnc1310/test_svgs/backlash.svg'
-        '''
+        """
         common_prefix = os.path.commonprefix([p1, p2])
-       
+
         p1_from_common_prefix = os.path.relpath(p1, common_prefix)
         p2_from_common_prefix = os.path.relpath(p2, common_prefix)
 
         p1_from_common_prefix = pathlib.PurePath(p1_from_common_prefix).as_posix()
         p2_from_common_prefix = pathlib.PurePath(p2_from_common_prefix).as_posix()
-        
-        p2_nb_slashes = p2_from_common_prefix.count('/')
-        relative_p1 = "/".join(p2_nb_slashes*[".."]) + "/" + p1_from_common_prefix
+
+        p2_nb_slashes = p2_from_common_prefix.count("/")
+        relative_p1 = "/".join(p2_nb_slashes * [".."]) + "/" + p1_from_common_prefix
 
         return relative_p1
+
 
 def main():
     parser = argparse.ArgumentParser(prog="PyCut", description="PyCut CAM program - Read the doc!")
 
     # argument
-    parser.add_argument("-j", "--job", dest="job", nargs='?', default=None, help="load job file | empty")
-    parser.add_argument("-g", "--gcode", dest="gcode", nargs='?', default=None, help="load gcode file | empty")
+    parser.add_argument("-j", "--job", dest="job", nargs="?", default=None, help="load job file | empty")
+    parser.add_argument(
+        "-g",
+        "--gcode",
+        dest="gcode",
+        nargs="?",
+        default=None,
+        help="load gcode file | empty",
+    )
 
     # version info
-    parser.add_argument("--version", action='version', version='%s' % VERSION)
+    parser.add_argument("--version", action="version", version="%s" % VERSION)
 
     options = parser.parse_args()
 
@@ -1581,34 +1639,34 @@ def main():
     mainwindow.show()
     sys.exit(app.exec())
 
+
 def main_profiled():
-    """
-    """
+    """ """
     import profile
     import pstats
 
-    outfile = 'prof_pycut.bin'
+    outfile = "prof_pycut.bin"
 
     profile.run("main()", filename=outfile)
     p = pstats.Stats(outfile)
 
     # 1.
-    p.sort_stats('cumulative')
-    p.print_stats(100) # p.print_stats(50)
+    p.sort_stats("cumulative")
+    p.print_stats(100)  # p.print_stats(50)
 
     # 2.
-    p.sort_stats('time')
-    p.print_stats(100) # p.print_stats(50)
+    p.sort_stats("time")
+    p.print_stats(100)  # p.print_stats(50)
 
     # 3.
-    p.sort_stats('time', 'cumulative').print_stats(.5) # (.5, 'init')
+    p.sort_stats("time", "cumulative").print_stats(0.5)  # (.5, 'init')
 
 
-if __name__ =='__main__':
-    '''
+if __name__ == "__main__":
+    """
     python -m cProfile -o test_parser.prof test_parser.py
-    '''
+    """
     filename = "pycut_cnc_all_letters_op.nc"
 
     main()
-    #main_profiled()
+    # main_profiled()
