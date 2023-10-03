@@ -27,7 +27,7 @@ from PySide6.QtOpenGL import (
     QOpenGLBuffer,
     QOpenGLFramebufferObject,
     QOpenGLShaderProgram,
-    QOpenGLShader
+    QOpenGLShader,
 )
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 
@@ -40,21 +40,22 @@ from gcodesimulator_python.gcodeminiparser import GcodeMiniParser
 
 from gcodesimulator_python.gcodefileviewer import GCodeFileViewer
 
-sNaN = float('NaN')
+sNaN = float("NaN")
 
 ZOOMSTEP = 1.1
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
 
+
 @jit(nopython=True)
-def make_scene_numba(resolution) -> np.array :
+def make_scene_numba(resolution) -> np.array:
     print("START NUMBA!")
 
     meshNumVertexes = resolution * (resolution - 1)
     meshStride = 9
 
-    arraySize = meshNumVertexes *  3 * meshStride
+    arraySize = meshNumVertexes * 3 * meshStride
     array = np.zeros(arraySize, dtype=np.float32)
 
     pos = 0
@@ -90,12 +91,12 @@ def make_scene_numba(resolution) -> np.array :
                         pos += 1
                         array[pos] = y
                         pos += 1
-                    else :
+                    else:
                         array[pos] = right
                         pos += 1
                         array[pos] = y + 1
                         pos += 1
-                        
+
                     array[pos] = i
                     pos += 1
             else:
@@ -122,17 +123,18 @@ def make_scene_numba(resolution) -> np.array :
                         pos += 1
                         array[pos] = y
                         pos += 1
-                    else :
+                    else:
                         array[pos] = x
                         pos += 1
                         array[pos] = y + 1
                         pos += 1
-                        
+
                     array[pos] = i
                     pos += 1
-                    
+
     print("DONE!")
     return array
+
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
@@ -140,13 +142,13 @@ def make_scene_numba(resolution) -> np.array :
 
 class Scene:
     class VertexData:
-        #NB_FLOATS_PER_VERTEX = 12
-        NB_FLOATS_PER_VERTEX = 9 
+        # NB_FLOATS_PER_VERTEX = 12
+        NB_FLOATS_PER_VERTEX = 9
 
         def __init__(self):
             self.pos1 = QVector3D()
             self.pos2 = QVector3D()
-        
+
             self.startTime = sNaN
             self.endTime = sNaN
             self.command = sNaN
@@ -154,7 +156,9 @@ class Scene:
             # VBit
             # self.rawPos = QVector3D()
 
-    def __init__(self, gcode: str, cutterDiameter: float, cutterHeight: float, cutterAngle: float, useCandleParser: bool):
+    def __init__(
+        self, gcode: str, cutterDiameter: float, cutterHeight: float, cutterAngle: float, useCandleParser: bool
+    ):
         """ """
         self.gcode = gcode
         self.parser = GcodeMiniParser()
@@ -175,7 +179,7 @@ class Scene:
         self.pathStride = 9
         self.pathVertexesPerLine = 18
         self.pathNumVertexes = 0
-    
+
         self.totalTime = 0.0
 
         self.pathXOffset = 0.0
@@ -189,9 +193,9 @@ class Scene:
         self.array = None  # all vertices as np float array
         # fill the numpy array from the scene ("path") and gets its buffer
         self.pathBufferContent = self.make_buffer()
-    
+
     def make_scene(self):
-        vertices : List[Scene.VertexData] = []
+        vertices: List[Scene.VertexData] = []
 
         # fill the numpy array - each vertex is composed of 9 float
         startTime = time.time()
@@ -203,9 +207,9 @@ class Scene:
         cutterAngleRad = self.cutterAngle * math.pi / 180
         self.isVBit = isVBit = self.cutterAngle < 180
         cutterH = self.cutterHeight
-        
+
         inputStride = 4
-        
+
         self.pathNumPoints = len(self.parser.path)
 
         numHalfCircleSegments = 5
@@ -218,7 +222,7 @@ class Scene:
             self.pathVertexesPerLine = 18
 
         self.pathNumVertexes = self.pathNumPoints * self.pathVertexesPerLine
-        #self.pathBufferContent = bufferContent = np.empty(self.pathNumVertexes, dtype=np.float32)
+        # self.pathBufferContent = bufferContent = np.empty(self.pathNumVertexes, dtype=np.float32)
 
         path = self.parser.path
 
@@ -232,16 +236,16 @@ class Scene:
         for idx, point in enumerate(path):
             prevIdx = max(idx - 1, 0)
             prevPoint = path[prevIdx]
-           
+
             x = point.pos.x()
             y = point.pos.y()
             z = point.pos.z()
             feedrate = point.feedrate
-            
+
             prevX = prevPoint.pos.x()
             prevY = prevPoint.pos.y()
             prevZ = prevPoint.pos.z()
-            
+
             dist = math.sqrt((x - prevX) * (x - prevX) + (y - prevY) * (y - prevY) + (z - prevZ) * (z - prevZ))
             beginTime = total_time
             total_time = total_time + dist / feedrate * 60
@@ -260,36 +264,39 @@ class Scene:
                     rotAngle = 0
                 else:
                     rotAngle = math.atan2(y - prevY, x - prevX)
-                
+
                 xyDist = math.sqrt((x - prevX) * (x - prevX) + (y - prevY) * (y - prevY))
 
                 # --------------------------------------------------------------------------------------------------
                 def f(command, rawX, rawY, rawZ, rotCos, rotSin, zOffset=None):
                     if zOffset is None:
                         zOffset = 0
-                   
+
                     vertex = Scene.VertexData()
                     vertex.pos1 = QVector3D(prevX, prevY, prevZ + zOffset)
                     vertex.pos2 = QVector3D(x, y, z + zOffset)
                     vertex.startTime = beginTime
                     vertex.endTime = total_time
                     vertex.command = command
-                    
+
                     if isVBit:
                         vertex.rawPos = QVector3D(rawX * rotCos - rawY * rotSin, rawY * rotCos + rawX * rotSin, rawZ)
-                
+
                     vertices.append(vertex)
+
                 # --------------------------------------------------------------------------------------------------
 
-                if math.abs(z - prevZ) >= xyDist * math.pi / 2 * math.cos(cutterAngleRad / 2) / math.sin(cutterAngleRad / 2):
-                    #console.log("plunge or retract")
-                    #plunge or retract
+                if math.abs(z - prevZ) >= xyDist * math.pi / 2 * math.cos(cutterAngleRad / 2) / math.sin(
+                    cutterAngleRad / 2
+                ):
+                    # console.log("plunge or retract")
+                    # plunge or retract
                     index = 0
 
                     command = 100 if prevZ < z else 101
-                    for circleIndex in range(1, numHalfCircleSegments*2):
-                        a1 = 2 * math.pi * circleIndex / numHalfCircleSegments/2
-                        a2 = 2 * math.pi * (circleIndex + 1) / numHalfCircleSegments/2
+                    for circleIndex in range(1, numHalfCircleSegments * 2):
+                        a1 = 2 * math.pi * circleIndex / numHalfCircleSegments / 2
+                        a2 = 2 * math.pi * (circleIndex + 1) / numHalfCircleSegments / 2
                         f(command, coneDia / 2 * math.cos(a2), coneDia / 2 * math.sin(a2), coneHeight, 1, 0)
                         index += 1
                         f(command, 0, 0, 0, 1, 0)
@@ -300,46 +307,103 @@ class Scene:
                     while index < self.pathVertexesPerLine:
                         f(200, 0, 0, 0, 1, 0)
                         index += 1
-        
+
                 else:
                     # cut
-                    planeContactAngle = math.asin((prevZ - z) / xyDist * math.sin(cutterAngleRad / 2) / math.cos(cutterAngleRad / 2))
+                    planeContactAngle = math.asin(
+                        (prevZ - z) / xyDist * math.sin(cutterAngleRad / 2) / math.cos(cutterAngleRad / 2)
+                    )
 
                     index = 0
                     if True:
-                        f(100, 0, -coneDia / 2, coneHeight, math.cos(rotAngle - planeContactAngle), math.sin(rotAngle - planeContactAngle))
-                        f(101, 0, -coneDia / 2, coneHeight, math.cos(rotAngle - planeContactAngle), math.sin(rotAngle - planeContactAngle))
+                        f(
+                            100,
+                            0,
+                            -coneDia / 2,
+                            coneHeight,
+                            math.cos(rotAngle - planeContactAngle),
+                            math.sin(rotAngle - planeContactAngle),
+                        )
+                        f(
+                            101,
+                            0,
+                            -coneDia / 2,
+                            coneHeight,
+                            math.cos(rotAngle - planeContactAngle),
+                            math.sin(rotAngle - planeContactAngle),
+                        )
                         f(100, 0, 0, 0, 1, 0)
                         f(100, 0, 0, 0, 1, 0)
-                        f(101, 0, -coneDia / 2, coneHeight, math.cos(rotAngle - planeContactAngle), math.sin(rotAngle - planeContactAngle))
+                        f(
+                            101,
+                            0,
+                            -coneDia / 2,
+                            coneHeight,
+                            math.cos(rotAngle - planeContactAngle),
+                            math.sin(rotAngle - planeContactAngle),
+                        )
                         f(101, 0, 0, 0, 1, 0)
                         f(100, 0, 0, 0, 1, 0)
                         f(101, 0, 0, 0, 1, 0)
-                        f(100, 0, coneDia / 2, coneHeight, math.cos(rotAngle + planeContactAngle), math.sin(rotAngle + planeContactAngle))
-                        f(100, 0, coneDia / 2, coneHeight, math.cos(rotAngle + planeContactAngle), math.sin(rotAngle + planeContactAngle))
+                        f(
+                            100,
+                            0,
+                            coneDia / 2,
+                            coneHeight,
+                            math.cos(rotAngle + planeContactAngle),
+                            math.sin(rotAngle + planeContactAngle),
+                        )
+                        f(
+                            100,
+                            0,
+                            coneDia / 2,
+                            coneHeight,
+                            math.cos(rotAngle + planeContactAngle),
+                            math.sin(rotAngle + planeContactAngle),
+                        )
                         f(101, 0, 0, 0, 1, 0)
-                        f(101, 0, coneDia / 2, coneHeight, math.cos(rotAngle + planeContactAngle), math.sin(rotAngle + planeContactAngle))
-                     
+                        f(
+                            101,
+                            0,
+                            coneDia / 2,
+                            coneHeight,
+                            math.cos(rotAngle + planeContactAngle),
+                            math.sin(rotAngle + planeContactAngle),
+                        )
+
                         index += 12
-       
+
                     startAngle = rotAngle + math.pi / 2 - planeContactAngle
                     endAngle = rotAngle + 3 * math.pi / 2 + planeContactAngle
-                    for circleIndex in range(1,numHalfCircleSegments):
+                    for circleIndex in range(1, numHalfCircleSegments):
                         a1 = startAngle + circleIndex / numHalfCircleSegments * (endAngle - startAngle)
                         a2 = startAngle + (circleIndex + 1) / numHalfCircleSegments * (endAngle - startAngle)
-                        #console.log("a1,a2: " + (a1 * 180 / math.pi) + ", " + (a2 * 180 / math.pi))
+                        # console.log("a1,a2: " + (a1 * 180 / math.pi) + ", " + (a2 * 180 / math.pi))
 
                         f(100, coneDia / 2 * math.cos(a2), coneDia / 2 * math.sin(a2), coneHeight, 1, 0)
                         f(100, 0, 0, 0, 1, 0)
                         f(100, coneDia / 2 * math.cos(a1), coneDia / 2 * math.sin(a1), coneHeight, 1, 0)
-                        f(101, coneDia / 2 * math.cos(a2 + math.pi), coneDia / 2 * math.sin(a2 + math.pi), coneHeight, 1, 0)
+                        f(
+                            101,
+                            coneDia / 2 * math.cos(a2 + math.pi),
+                            coneDia / 2 * math.sin(a2 + math.pi),
+                            coneHeight,
+                            1,
+                            0,
+                        )
                         f(101, 0, 0, 0, 1, 0)
-                        f(101, coneDia / 2 * math.cos(a1 + math.pi), coneDia / 2 * math.sin(a1 + math.pi), coneHeight, 1, 0)
+                        f(
+                            101,
+                            coneDia / 2 * math.cos(a1 + math.pi),
+                            coneDia / 2 * math.sin(a1 + math.pi),
+                            coneHeight,
+                            1,
+                            0,
+                        )
 
                         index += 16
-                
-            else :
 
+            else:
                 for virtex in range(self.pathVertexesPerLine):
                     vertex = Scene.VertexData()
                     vertex.pos1 = QVector3D(prevX, prevY, prevZ)
@@ -357,7 +421,7 @@ class Scene:
         size = max(maxX - minX + 4 * cutterDia, maxY - minY + 4 * cutterDia)
         self.pathScale = 2 / size
         self.pathMinZ = minZ
-        
+
         return vertices
 
     def make_buffer(self):
@@ -374,7 +438,7 @@ class Scene:
             self.array[9 * k + 7] = vertex.endTime
             self.array[9 * k + 8] = float(vertex.command)
 
-        return self.array.tobytes() 
+        return self.array.tobytes()
 
     def buffer_size(self) -> int:
         """in bytes"""
@@ -385,7 +449,9 @@ class SceneHeightMap:
     class VertexData:
         NB_FLOATS_PER_VERTEX = 9
 
-        def __init__(self, x0: float, y0: float, x1: float, y1: float, x2: float, y2: float, x3: float, y3: float, idx: int):
+        def __init__(
+            self, x0: float, y0: float, x1: float, y1: float, x2: float, y2: float, x3: float, y3: float, idx: int
+        ):
             self.vPos0 = QVector2D(x0, y0)
             self.vPos1 = QVector2D(x1, y1)
             self.vPos2 = QVector2D(x2, y2)
@@ -475,9 +541,9 @@ class SceneCutter:
             self.vColor = QVector3D()
 
     def __init__(self, cutterDiameter, cutterHeight, cutterAngle):
-        """ infact mormalize dim here """
+        """infact mormalize dim here"""
         self.cutterDiameter = cutterDiameter  # not used here
-        self.cutterAngle = cutterAngle # not used
+        self.cutterAngle = cutterAngle  # not used
         self.cutterHeight = cutterHeight  # not used here
 
         self.numDivisions = 40
@@ -490,8 +556,8 @@ class SceneCutter:
         self.buffer = self.make_buffer()
 
     def make_scene(self) -> List[VertexData]:
-        Color = namedtuple('color', ['r', 'g', 'b'])
-        
+        Color = namedtuple("color", ["r", "g", "b"])
+
         cyl_color = Color(0.2, 0.5, 0.3)
         top_color = Color(0.0, 0.0, 0.0)
 
@@ -506,7 +572,7 @@ class SceneCutter:
             vertex.vColor.setX(color.r)
             vertex.vColor.setY(color.g)
             vertex.vColor.setZ(color.b)
-        
+
             vertices.append(vertex)
 
         # define vertices
@@ -518,7 +584,7 @@ class SceneCutter:
                 j = 0
             x = 0.5 * math.cos(j * 2 * math.pi / self.numDivisions)
             y = 0.5 * math.sin(j * 2 * math.pi / self.numDivisions)
- 
+
             # 2 triangles for the cylinder "wall"
             addVertex(lastX, lastY, 0.0)
             addVertex(x, y, 0.0)
@@ -573,15 +639,16 @@ class Drawable:
 
     GPU_COEFF = 1  # SMALL GPU !
 
-    PYCUT_PREFIX = "" # standalone: empty
+    PYCUT_PREFIX = ""  # standalone: empty
 
     @classmethod
     def set_pycut_prefix(cls):
-        """ inside pycut """
+        """inside pycut"""
         cls.PYCUT_PREFIX = "gcodesimulator_python/"
 
-
-    def __init__(self, gcode: str, cutter_diameter: float, cutter_height: float, cutter_angle: float, use_candle_parser: bool):
+    def __init__(
+        self, gcode: str, cutter_diameter: float, cutter_height: float, cutter_angle: float, use_candle_parser: bool
+    ):
         RESOL = 1024 * Drawable.GPU_COEFF
 
         self.gpuMem = 2 * RESOL * RESOL
@@ -595,7 +662,7 @@ class Drawable:
         self.cutter_angle = cutter_angle
 
         self.use_candle_parser = use_candle_parser
-        
+
         print("Scene path...")
         self.scene = Scene(gcode, cutter_diameter, cutter_height, cutter_angle, use_candle_parser)
         print("Scene cutter...")
@@ -661,8 +728,7 @@ class Drawable:
         self.program_heightmap = None
 
     def initialize(self):
-        """
-        """
+        """ """
         self.initialize_path()
         self.initialize_heightmap()
         self.initialize_cutter()
@@ -670,15 +736,15 @@ class Drawable:
     def draw(self, gl: "GLView"):
         rc1 = self.pathFramebuffer.bind()
         gl.glEnable(GL.GL_DEPTH_TEST)
-        
+
         self.create_path_texture(gl)
 
         rc2 = self.pathFramebuffer.bindDefault()
 
         # SAVE IMAGE: PATH
-        #img = self.pathFramebuffer.toImage()
-        #img.save("framebuffer_tex.jpg")
-        
+        # img = self.pathFramebuffer.toImage()
+        # img.save("framebuffer_tex.jpg")
+
         self.draw_heightmap(gl)
         self.draw_cutter(gl)
 
@@ -692,7 +758,7 @@ class Drawable:
 
         if not self.program_path.isLinked():
             print("Failed to link program_path")
-            raise RuntimeError('Linking error')
+            raise RuntimeError("Linking error")
 
         self.program_path.bind()
 
@@ -739,42 +805,46 @@ class Drawable:
 
         stride = Scene.VertexData.NB_FLOATS_PER_VERTEX * np.float32().itemsize
 
-        self.program_path.setAttributeBuffer(self.pos1Location, GL.GL_FLOAT,      0                        , 3, stride)
+        self.program_path.setAttributeBuffer(self.pos1Location, GL.GL_FLOAT, 0, 3, stride)
         self.program_path.enableAttributeArray(self.pos1Location)
 
-        self.program_path.setAttributeBuffer(self.pos2Location, GL.GL_FLOAT,      3 * np.float32().itemsize, 3, stride)
+        self.program_path.setAttributeBuffer(self.pos2Location, GL.GL_FLOAT, 3 * np.float32().itemsize, 3, stride)
         self.program_path.enableAttributeArray(self.pos2Location)
 
         self.program_path.setAttributeBuffer(self.startTimeLocation, GL.GL_FLOAT, 6 * np.float32().itemsize, 1, stride)
         self.program_path.enableAttributeArray(self.startTimeLocation)
 
-        self.program_path.setAttributeBuffer(self.endTimeLocation, GL.GL_FLOAT,   7 * np.float32().itemsize, 1, stride)
+        self.program_path.setAttributeBuffer(self.endTimeLocation, GL.GL_FLOAT, 7 * np.float32().itemsize, 1, stride)
         self.program_path.enableAttributeArray(self.endTimeLocation)
 
-        self.program_path.setAttributeBuffer(self.commandLocation, GL.GL_FLOAT,   8 * np.float32().itemsize, 1, stride)
-        self.program_path.enableAttributeArray(self.commandLocation)      
+        self.program_path.setAttributeBuffer(self.commandLocation, GL.GL_FLOAT, 8 * np.float32().itemsize, 1, stride)
+        self.program_path.enableAttributeArray(self.commandLocation)
 
-        #if self.isVBit:
+        # if self.isVBit:
         #    self.program_path.setAttributeBuffer(self.rawPosLocation, GL.GL_FLOAT,   9* np.float32().itemsize, 3, stride)
         #    self.program_path.enableAttributeArray(self.rawPosLocation)
 
-        #self.vbo_path.release()
+        # self.vbo_path.release()
 
         vao_binder = None
 
-        #self.vbo_path.release()
+        # self.vbo_path.release()
 
     def create_path_texture(self, gl: "GLView"):
         """ """
         gl.glClearColor(0.0, 1.0, 0.0, 1.0)
         gl.glEnable(GL.GL_DEPTH_TEST)
-        gl.glViewport(0, 0, self.resolution * GCodeSimulatorSettings.OPENGL_FB, self.resolution * GCodeSimulatorSettings.OPENGL_FB)
+        gl.glViewport(
+            0, 0, self.resolution * GCodeSimulatorSettings.OPENGL_FB, self.resolution * GCodeSimulatorSettings.OPENGL_FB
+        )
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
         self.program_path.bind()
         self.vbo_path.bind()
 
-        self.program_path.setUniformValue1f(self.resolutionLocation, float(self.resolution * GCodeSimulatorSettings.OPENGL_FB))
+        self.program_path.setUniformValue1f(
+            self.resolutionLocation, float(self.resolution * GCodeSimulatorSettings.OPENGL_FB)
+        )
         self.program_path.setUniformValue1f(self.cutterDiaLocation, float(self.cutterDia))
         self.program_path.setUniformValue(self.pathXYOffsetLocation, float(self.pathXOffset), float(self.pathYOffset))
         self.program_path.setUniformValue1f(self.pathScaleLocation, float(self.pathScale))
@@ -791,7 +861,7 @@ class Drawable:
             self.program_path.enableAttributeArray(self.rawPosLocation)
 
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_path)
-        
+
         numTriangles = self.scene.pathNumVertexes // 3
         lastTriangle = 0
         maxTriangles = self.gpuMem // (self.scene.pathStride * 3 * np.float32().itemsize)
@@ -810,10 +880,10 @@ class Drawable:
 
             # TRANSLATES TO
 
-            start = lastTriangle * self.scene.pathStride * 3 # in float
-            length = n * self.scene.pathStride * 3 # in float
+            start = lastTriangle * self.scene.pathStride * 3  # in float
+            length = n * self.scene.pathStride * 3  # in float
 
-            array_window = self.scene.array[start: start + length]
+            array_window = self.scene.array[start : start + length]
 
             """
             for k, vertexdata in enumerate(self.scene.vertices):
@@ -822,28 +892,28 @@ class Drawable:
                 print(f"{k} -> start/end time 2 = {vertexdata.startTime} - {vertexdata.endTime}")
                 print(f"{k} -> command = {vertexdata.command}")
             """
-            
+
             """for k in range(array_window.size):
                 print(f"{k} -> byte = {array_window[k]}")
             """
 
             # PROTO write(offset, data, size) all in bytes
             self.vbo_path.write(0, array_window.tobytes(), array_window.size * np.float32().itemsize)
-                
+
             # draw
             gl.glDrawArrays(GL.GL_TRIANGLES, 0, n * 3)  # n*3 "strides"
-            
+
             lastTriangle += n
-    
-        #self.program_path.disableAttributeArray(self.pos1Location)
-        #self.program_path.disableAttributeArray(self.pos2Location)
-        #self.program_path.disableAttributeArray(self.startTimeLocation)
-        #self.program_path.disableAttributeArray(self.endTimeLocation)
-        #self.program_path.disableAttributeArray(self.commandLocation)
-        #if self.isVBit:
+
+        # self.program_path.disableAttributeArray(self.pos1Location)
+        # self.program_path.disableAttributeArray(self.pos2Location)
+        # self.program_path.disableAttributeArray(self.startTimeLocation)
+        # self.program_path.disableAttributeArray(self.endTimeLocation)
+        # self.program_path.disableAttributeArray(self.commandLocation)
+        # if self.isVBit:
         #    self.program_path.disableAttributeArray(self.rawPosLocation)
 
-        #self.vbo_path.release()
+        # self.vbo_path.release()
         vao_binder = None
 
         self.program_path.release()
@@ -852,10 +922,11 @@ class Drawable:
     # -----------------------------------------------------------------
 
     def initialize_heightmap(self):
-        """
-        """
+        """ """
         self.program_heightmap.addShaderFromSourceFile(QOpenGLShader.Vertex, self.PYCUT_PREFIX + self.height_shader_vs)
-        self.program_heightmap.addShaderFromSourceFile(QOpenGLShader.Fragment, self.PYCUT_PREFIX + self.height_shader_fs)
+        self.program_heightmap.addShaderFromSourceFile(
+            QOpenGLShader.Fragment, self.PYCUT_PREFIX + self.height_shader_fs
+        )
         self.program_heightmap.link()
 
         self.program_heightmap.bind()
@@ -892,30 +963,40 @@ class Drawable:
 
         stride = SceneHeightMap.VertexData.NB_FLOATS_PER_VERTEX * np.float32().itemsize
 
-        self.program_heightmap.setAttributeBuffer(self.program_heightmap_pos0Location, GL.GL_FLOAT, 0,                         2, stride)
+        self.program_heightmap.setAttributeBuffer(self.program_heightmap_pos0Location, GL.GL_FLOAT, 0, 2, stride)
         self.program_heightmap.enableAttributeArray(self.program_heightmap_pos0Location)
 
-        self.program_heightmap.setAttributeBuffer(self.program_heightmap_pos1Location, GL.GL_FLOAT, 2 * np.float32().itemsize, 2, stride)
+        self.program_heightmap.setAttributeBuffer(
+            self.program_heightmap_pos1Location, GL.GL_FLOAT, 2 * np.float32().itemsize, 2, stride
+        )
         self.program_heightmap.enableAttributeArray(self.program_heightmap_pos1Location)
 
-        self.program_heightmap.setAttributeBuffer(self.program_heightmap_pos2Location, GL.GL_FLOAT, 4 * np.float32().itemsize, 2, stride)
+        self.program_heightmap.setAttributeBuffer(
+            self.program_heightmap_pos2Location, GL.GL_FLOAT, 4 * np.float32().itemsize, 2, stride
+        )
         self.program_heightmap.enableAttributeArray(self.program_heightmap_pos2Location)
 
-        self.program_heightmap.setAttributeBuffer(self.program_heightmap_thisPos,      GL.GL_FLOAT, 6 * np.float32().itemsize, 2, stride)
+        self.program_heightmap.setAttributeBuffer(
+            self.program_heightmap_thisPos, GL.GL_FLOAT, 6 * np.float32().itemsize, 2, stride
+        )
         self.program_heightmap.enableAttributeArray(self.program_heightmap_thisPos)
 
-        self.program_heightmap.setAttributeBuffer(self.program_heightmap_vertex,       GL.GL_FLOAT, 8 * np.float32().itemsize, 1, stride)
-        #self.program_heightmap.enableAttributeArray(self.program_heightmap_vertex)
+        self.program_heightmap.setAttributeBuffer(
+            self.program_heightmap_vertex, GL.GL_FLOAT, 8 * np.float32().itemsize, 1, stride
+        )
+        # self.program_heightmap.enableAttributeArray(self.program_heightmap_vertex)
 
-        #self.vbo_heightmap.release()
+        # self.vbo_heightmap.release()
 
         vao_binder = None
-        #self.vbo_heightmap.release()
+        # self.vbo_heightmap.release()
 
     def create_heightmap_texture(self):
         self.pathFramebuffer = QOpenGLFramebufferObject(
-            QSize(self.resolution * GCodeSimulatorSettings.OPENGL_FB, self.resolution * GCodeSimulatorSettings.OPENGL_FB),
-            QOpenGLFramebufferObject.CombinedDepthStencil
+            QSize(
+                self.resolution * GCodeSimulatorSettings.OPENGL_FB, self.resolution * GCodeSimulatorSettings.OPENGL_FB
+            ),
+            QOpenGLFramebufferObject.CombinedDepthStencil,
         )
         # --------------------------------- the texture ------------------------------------------
         self.textureLocationID = self.program_heightmap.uniformLocation("heightMap")
@@ -923,11 +1004,12 @@ class Drawable:
         # --------------------------------- the texture ------------------------------------------
 
     def draw_heightmap(self, gl: "GLView"):
-
         gl.glDisable(GL.GL_DEPTH_TEST)  # the "standard" framebuffer draw.... (learnopengl.com)
-        gl.glEnable(GL.GL_DEPTH_TEST) # as in jsCut! strange but so it is!
-        gl.glClearColor(0.7, 0.2, 0.2, 0.0)  
-        gl.glViewport(0, 0, self.SIZE_X * GCodeSimulatorSettings.OPENGL_FB, self.SIZE_Y * GCodeSimulatorSettings.OPENGL_FB)
+        gl.glEnable(GL.GL_DEPTH_TEST)  # as in jsCut! strange but so it is!
+        gl.glClearColor(0.7, 0.2, 0.2, 0.0)
+        gl.glViewport(
+            0, 0, self.SIZE_X * GCodeSimulatorSettings.OPENGL_FB, self.SIZE_Y * GCodeSimulatorSettings.OPENGL_FB
+        )
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
         self.program_heightmap.bind()
@@ -936,7 +1018,7 @@ class Drawable:
         gl.glBindTexture(GL.GL_TEXTURE_2D, self.pathFramebuffer.texture())
 
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_heightmap)
-        #self.vao_heightmap.bind()
+        # self.vao_heightmap.bind()
         self.vbo_heightmap.bind()
 
         self.program_heightmap.setUniformValue1f(self.program_heightmap_resolutionLocation, self.resolution)
@@ -950,36 +1032,34 @@ class Drawable:
         self.program_heightmap.enableAttributeArray(self.program_heightmap_pos1Location)
         self.program_heightmap.enableAttributeArray(self.program_heightmap_pos2Location)
         self.program_heightmap.enableAttributeArray(self.program_heightmap_thisPos)
-        #self.program_heightmap.enableAttributeArray(self.program_heightmap_vertex)
+        # self.program_heightmap.enableAttributeArray(self.program_heightmap_vertex)
 
-       
         gl.glDrawArrays(GL.GL_TRIANGLES, 0, self.scene_heightmap.meshNumVertexes)
 
         self.program_heightmap.disableAttributeArray(self.program_heightmap_pos0Location)
         self.program_heightmap.disableAttributeArray(self.program_heightmap_pos1Location)
         self.program_heightmap.disableAttributeArray(self.program_heightmap_pos2Location)
         self.program_heightmap.disableAttributeArray(self.program_heightmap_thisPos)
-        #self.program_heightmap.disableAttributeArray(self.program_heightmap_vertex)
+        # self.program_heightmap.disableAttributeArray(self.program_heightmap_vertex)
 
         vao_binder = None
-        #self.vao_heightmap.release()
+        # self.vao_heightmap.release()
 
         gl.glBindTexture(GL.GL_TEXTURE_2D, 0)
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0)
 
-        #self.vbo_heightmap.release()
+        # self.vbo_heightmap.release()
 
         self.program_heightmap.release()
 
         self.needToDrawHeightMap = False
 
- # -----------------------------------------------------------------
+    # -----------------------------------------------------------------
 
     def initialize_cutter(self):
-        """
-        """
+        """ """
         self.program_cutter.addShaderFromSourceFile(QOpenGLShader.Vertex, self.PYCUT_PREFIX + self.basic_shader_vs)
-        self.program_cutter.addShaderFromSourceFile(QOpenGLShader.Fragment, self.PYCUT_PREFIX  + self.basic_shader_fs)
+        self.program_cutter.addShaderFromSourceFile(QOpenGLShader.Fragment, self.PYCUT_PREFIX + self.basic_shader_fs)
         self.program_cutter.link()
 
         self.program_cutter.bind()
@@ -1002,8 +1082,18 @@ class Drawable:
         self.translateLocation = self.program_cutter.uniformLocation("translate")
         self.rotateLocation = self.program_cutter.uniformLocation("rotate")
 
-        self.program_cutter.setUniformValue(self.scaleLocation, self.cutterDia * self.pathScale, self.cutterDia * self.pathScale, self.cutterH * self.pathScale)
-        self.program_cutter.setUniformValue(self.translateLocation, (0 + self.pathXOffset) * self.pathScale, (0 + self.pathYOffset) * self.pathScale, (0 - self.pathTopZ) * self.pathScale)
+        self.program_cutter.setUniformValue(
+            self.scaleLocation,
+            self.cutterDia * self.pathScale,
+            self.cutterDia * self.pathScale,
+            self.cutterH * self.pathScale,
+        )
+        self.program_cutter.setUniformValue(
+            self.translateLocation,
+            (0 + self.pathXOffset) * self.pathScale,
+            (0 + self.pathYOffset) * self.pathScale,
+            (0 - self.pathTopZ) * self.pathScale,
+        )
         self.program_cutter.setUniformValue(self.rotateLocation, self.rotate)
 
         self.vbo_cutter.bind()
@@ -1013,19 +1103,19 @@ class Drawable:
 
         stride = SceneCutter.VertexData.NB_FLOATS_PER_VERTEX * np.float32().itemsize
 
-        self.program_cutter.setAttributeBuffer(self.posLocation, GL.GL_FLOAT, 0,                         3, stride)
+        self.program_cutter.setAttributeBuffer(self.posLocation, GL.GL_FLOAT, 0, 3, stride)
         self.program_cutter.enableAttributeArray(self.posLocation)
-        
+
         self.program_cutter.setAttributeBuffer(self.colLocation, GL.GL_FLOAT, 3 * np.float32().itemsize, 3, stride)
         self.program_cutter.enableAttributeArray(self.colLocation)
 
-        #self.vbo_cutter.release()
+        # self.vbo_cutter.release()
 
         vao_binder = None
 
     def draw_cutter(self, gl: "GLView"):
-        """
-        """
+        """ """
+
         def lowerBound(data, offset: int, stride: int, begin: int, end: int, value: float):
             while begin < end:
                 i = math.floor((begin + end) / 2)
@@ -1034,14 +1124,20 @@ class Drawable:
                     begin = i + 1
                 else:
                     end = i
-        
+
             return end
-        
+
         def mix(v0, v1, a):
             return v0 + (v1 - v0) * a
-    
-        
-        i = lowerBound(self.scene.array, 7, self.scene.pathStride * self.scene.pathVertexesPerLine, 0, self.scene.pathNumPoints, self.stopAtTime)
+
+        i = lowerBound(
+            self.scene.array,
+            7,
+            self.scene.pathStride * self.scene.pathVertexesPerLine,
+            0,
+            self.scene.pathNumPoints,
+            self.stopAtTime,
+        )
         x = 0.0
         y = 0.0
         z = 0.0
@@ -1058,9 +1154,9 @@ class Drawable:
             x = mix(self.scene.array[offset + 0], self.scene.array[offset + 3], ratio)
             y = mix(self.scene.array[offset + 1], self.scene.array[offset + 4], ratio)
             z = mix(self.scene.array[offset + 2], self.scene.array[offset + 5], ratio)
-        
+
         else:
-            offset = (i-1) * self.scene.pathStride * self.scene.pathVertexesPerLine
+            offset = (i - 1) * self.scene.pathStride * self.scene.pathVertexesPerLine
             x = self.scene.array[offset + 3]
             y = self.scene.array[offset + 4]
             z = self.scene.array[offset + 5]
@@ -1070,8 +1166,18 @@ class Drawable:
         self.program_cutter.bind()
         self.vbo_cutter.bind()
 
-        self.program_cutter.setUniformValue(self.scaleLocation, self.cutterDia * self.pathScale, self.cutterDia * self.pathScale, self.cutterH * self.pathScale)
-        self.program_cutter.setUniformValue(self.translateLocation, (x + self.pathXOffset) * self.pathScale, (y + self.pathYOffset) * self.pathScale, (z - self.pathTopZ) * self.pathScale)
+        self.program_cutter.setUniformValue(
+            self.scaleLocation,
+            self.cutterDia * self.pathScale,
+            self.cutterDia * self.pathScale,
+            self.cutterH * self.pathScale,
+        )
+        self.program_cutter.setUniformValue(
+            self.translateLocation,
+            (x + self.pathXOffset) * self.pathScale,
+            (y + self.pathYOffset) * self.pathScale,
+            (z - self.pathTopZ) * self.pathScale,
+        )
         self.program_cutter.setUniformValue(self.rotateLocation, self.rotate)
 
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_cutter)
@@ -1081,8 +1187,8 @@ class Drawable:
 
         gl.glDrawArrays(GL.GL_TRIANGLES, 0, len(self.scene_cutter.vertices))
 
-        #self.program_cutter.disableAttributeArray(self.posLocation)
-        #self.program_cutter.disableAttributeArray(self.colLocation)
+        # self.program_cutter.disableAttributeArray(self.posLocation)
+        # self.program_cutter.disableAttributeArray(self.colLocation)
 
         vao_binder = None
 
@@ -1096,7 +1202,9 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
     rotationChanged = QtCore.Signal()
     resized = QtCore.Signal()
 
-    def __init__(self, gcode: str, cutter_diameter: float, cutter_height: float, cutter_angle: float, use_candle_parser: bool):
+    def __init__(
+        self, gcode: str, cutter_diameter: float, cutter_height: float, cutter_angle: float, use_candle_parser: bool
+    ):
         QOpenGLWidget.__init__(self)
         QOpenGLFunctions.__init__(self)
 
@@ -1105,7 +1213,7 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
         self.drawable = Drawable(gcode, cutter_diameter, cutter_height, cutter_angle, use_candle_parser)
 
         self.m_xRot = 90.0
-        self.m_xRot = 0.0 # PYCUT
+        self.m_xRot = 0.0  # PYCUT
         self.m_yRot = 0.0
         self.m_xLastRot = 0.0
         self.m_yLastRot = 0.0
@@ -1161,7 +1269,7 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
         self.cmdFront.setToolTip("Front view")
         self.cmdLeft.setToolTip("Left view")
 
-        if Drawable.PYCUT_PREFIX  == "":
+        if Drawable.PYCUT_PREFIX == "":
             self.cmdFit.setIcon(QtGui.QIcon("./pics/fit_1.png"))
             self.cmdIsometric.setIcon(QtGui.QIcon("./pics/cube.png"))
             self.cmdTop.setIcon(QtGui.QIcon("./pics/cubeTop.png"))
@@ -1175,8 +1283,8 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
             self.cmdLeft.setIcon(QtGui.QIcon(":/images/candle/cubeLeft.png"))
 
         self.cmdFit.setVisible(False)
-        
-        #self.cmdFit.clicked.connect(self.on_cmdFit_clicked)
+
+        # self.cmdFit.clicked.connect(self.on_cmdFit_clicked)
         self.cmdIsometric.clicked.connect(self.on_cmdIsometric_clicked)
         self.cmdTop.clicked.connect(self.on_cmdTop_clicked)
         self.cmdFront.clicked.connect(self.on_cmdFront_clicked)
@@ -1189,9 +1297,7 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
 
     def placeVisualizerButtons(self):
         self.cmdIsometric.move(self.width() - self.cmdIsometric.width() - 8, 8)
-        self.cmdTop.move(
-            self.cmdIsometric.geometry().left() - self.cmdTop.width() - 8, 8
-        )
+        self.cmdTop.move(self.cmdIsometric.geometry().left() - self.cmdTop.width() - 8, 8)
         self.cmdLeft.move(
             self.width() - self.cmdLeft.width() - 8,
             self.cmdIsometric.geometry().bottom() + 8,
@@ -1200,9 +1306,7 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
             self.cmdLeft.geometry().left() - self.cmdFront.width() - 8,
             self.cmdIsometric.geometry().bottom() + 8,
         )
-        self.cmdFit.move(
-            self.width() - self.cmdFit.width() - 8, self.cmdLeft.geometry().bottom() + 8
-        )
+        self.cmdFit.move(self.width() - self.cmdFit.width() - 8, self.cmdLeft.geometry().bottom() + 8)
 
     def on_cmdTop_clicked(self):
         self.setTopView()
@@ -1238,10 +1342,7 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
         self.updateExtremes()
 
         a = self.m_ySize / 2 / 0.25 * 1.3 + (self.m_zMax - self.m_zMin) / 2
-        b = (
-            self.m_xSize / 2 / 0.25 * 1.3 / (self.width() / self.height())
-            + (self.m_zMax - self.m_zMin) / 2
-        )
+        b = self.m_xSize / 2 / 0.25 * 1.3 / (self.width() / self.height()) + (self.m_zMax - self.m_zMin) / 2
 
         self.m_distance = max(a, b)
 
@@ -1379,15 +1480,10 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
 
     def mouseMoveEvent(self, event: QtGui.QMouseEvent):
         if (
-            event.buttons() & QtGui.Qt.MiddleButton
-            and (not (event.modifiers() & QtGui.Qt.ShiftModifier))
+            event.buttons() & QtGui.Qt.MiddleButton and (not (event.modifiers() & QtGui.Qt.ShiftModifier))
         ) or event.buttons() & QtCore.Qt.LeftButton:
-            self.m_yRot = self.normalizeAngle(
-                self.m_yLastRot - (event.position().x() - self.m_lastPos.x()) * 0.5
-            )
-            self.m_xRot = (
-                self.m_xLastRot + (event.position().y() - self.m_lastPos.y()) * 0.5
-            )
+            self.m_yRot = self.normalizeAngle(self.m_yLastRot - (event.position().x() - self.m_lastPos.x()) * 0.5)
+            self.m_xRot = self.m_xLastRot + (event.position().y() - self.m_lastPos.y()) * 0.5
 
             if self.m_xRot < -90:
                 self.m_xRot = -90
@@ -1398,15 +1494,10 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
             self.rotationChanged.emit()
 
         if (
-            event.buttons() & QtCore.Qt.MiddleButton
-            and event.modifiers() & QtGui.Qt.ShiftModifier
+            event.buttons() & QtCore.Qt.MiddleButton and event.modifiers() & QtGui.Qt.ShiftModifier
         ) or event.buttons() & QtCore.Qt.RightButton:
-            self.m_xPan = self.m_xLastPan - (
-                event.position().x() - self.m_lastPos.x()
-            ) * 1 / (float)(self.width())
-            self.m_yPan = self.m_yLastPan + (
-                event.position().y() - self.m_lastPos.y()
-            ) * 1 / (float)(self.height())
+            self.m_xPan = self.m_xLastPan - (event.position().x() - self.m_lastPos.x()) * 1 / (float)(self.width())
+            self.m_yPan = self.m_yLastPan + (event.position().y() - self.m_lastPos.y()) * 1 / (float)(self.height())
 
             self.updateProjection()
 
@@ -1414,31 +1505,23 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
 
     def wheelEvent(self, we: QtGui.QWheelEvent):
         if self.m_zoom > 0.001 and we.angleDelta().y() < 0:
-            self.m_xPan -= (
-                (float)(we.position().x() / self.width() - 0.5 + self.m_xPan)
-            ) * (1 - 1 / ZOOMSTEP)
-            self.m_yPan += (
-                (float)(we.position().y() / self.height() - 0.5 - self.m_yPan)
-            ) * (1 - 1 / ZOOMSTEP)
+            self.m_xPan -= ((float)(we.position().x() / self.width() - 0.5 + self.m_xPan)) * (1 - 1 / ZOOMSTEP)
+            self.m_yPan += ((float)(we.position().y() / self.height() - 0.5 - self.m_yPan)) * (1 - 1 / ZOOMSTEP)
 
             self.m_zoom /= ZOOMSTEP
 
             # XAM
-            self.drawable.pathScale  /= ZOOMSTEP
+            self.drawable.pathScale /= ZOOMSTEP
             # XAM
 
         elif self.m_zoom < 10 and we.angleDelta().y() > 0:
-            self.m_xPan -= (
-                (float)(we.position().x() / self.width() - 0.5 + self.m_xPan)
-            ) * (1 - ZOOMSTEP)
-            self.m_yPan += (
-                (float)(we.position().y() / self.height() - 0.5 - self.m_yPan)
-            ) * (1 - ZOOMSTEP)
+            self.m_xPan -= ((float)(we.position().x() / self.width() - 0.5 + self.m_xPan)) * (1 - ZOOMSTEP)
+            self.m_yPan += ((float)(we.position().y() / self.height() - 0.5 - self.m_yPan)) * (1 - ZOOMSTEP)
 
             self.m_zoom *= ZOOMSTEP
 
             # XAM
-            self.drawable.pathScale  *= ZOOMSTEP
+            self.drawable.pathScale *= ZOOMSTEP
             # XAM
 
         self.updateProjection()
@@ -1477,7 +1560,7 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
         self.updateProjection()
         self.updateView()
 
-        #self.update()
+        # self.update()
 
     def resizeGL(self, width, height):
         quadra_size = min(width, height)
@@ -1485,7 +1568,12 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
         xoffset = width - quadra_size // 2
         yoffset = height - quadra_size // 2
 
-        self.glViewport(xoffset, yoffset, quadra_size * GCodeSimulatorSettings.OPENGL_FB, quadra_size * GCodeSimulatorSettings.OPENGL_FB)
+        self.glViewport(
+            xoffset,
+            yoffset,
+            quadra_size * GCodeSimulatorSettings.OPENGL_FB,
+            quadra_size * GCodeSimulatorSettings.OPENGL_FB,
+        )
 
         ratio = width / float(height)
         self.drawable.resize(quadra_size, quadra_size)
@@ -1499,13 +1587,14 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
 
 
 class SimulationControls(QtWidgets.QWidget):
-    '''
-    '''
+    """ """
+
     simtime_changed = QtCore.Signal(float)
 
     # -----------------------------------------------------------------------------
     class SimulatorRunner(QtCore.QObject):
         """ """
+
         current_tick_changed = QtCore.Signal(int)
 
         def __init__(self, parent: "SimulationControls", init_tick: int, end_tick: int):
@@ -1516,7 +1605,7 @@ class SimulationControls(QtWidgets.QWidget):
             self.base_speed = 1
             self.speed = 1
 
-            self.direction = 'forward' # 'backward
+            self.direction = "forward"  # 'backward
 
             self.init_tick = init_tick
             self.end_tick = end_tick
@@ -1570,32 +1659,32 @@ class SimulationControls(QtWidgets.QWidget):
             """
             callback on timer
             """
-            if self.direction == 'forward':
+            if self.direction == "forward":
                 current_tick = self.current_tick + 1 * self.speed
 
                 if current_tick >= self.end_tick:
                     current_tick = self.init_tick
 
             else:
-
                 current_tick = self.current_tick - 1 * self.speed
 
                 if current_tick < 0:
                     current_tick = self.end_tick
 
             self.set_current_tick(current_tick)
+
     # -----------------------------------------------------------------------------
 
     def __init__(self, parent, gl_widget: GLView, gcode_textviewer: GCodeFileViewer):
         QtWidgets.QWidget.__init__(self)
-        
+
         loader = QUiLoader(parent)
 
         self.control = loader.load(Drawable.PYCUT_PREFIX + "simcontrols.ui")
 
         self.setLayout(QtWidgets.QHBoxLayout())
         self.layout().addWidget(self.control)
-        
+
         self.gl_widget = gl_widget
         self.gcode_textviewer = gcode_textviewer
 
@@ -1665,11 +1754,11 @@ class SimulationControls(QtWidgets.QWidget):
         self.simulation_runner.step_forward()
 
     def OnSimRunForward(self):
-        self.simulation_runner.direction = 'forward'
+        self.simulation_runner.direction = "forward"
         self.simulation_runner.start_timer()
 
     def OnSimRunBackward(self):
-        self.simulation_runner.direction = 'backward'
+        self.simulation_runner.direction = "backward"
         self.simulation_runner.start_timer()
 
     def OnSimStepBackward(self):
@@ -1684,6 +1773,7 @@ class SimulationControls(QtWidgets.QWidget):
 
 class GCodeSimulator(QtWidgets.QWidget):
     """ """
+
     def __init__(self, parent: QtWidgets.QWidget, options: Dict[str, str]):
         QtWidgets.QWidget.__init__(self)
 
@@ -1716,12 +1806,13 @@ class GCodeSimulator(QtWidgets.QWidget):
         layout.setStretch(1, 0)
 
     def set_simtime_from_textbrowser(self, simtime: float):
-        """ slot on signal from gcode text browser "select line" """
+        """slot on signal from gcode text browser "select line" """
         tick = math.floor(simtime * 1000)
         self.controls.OnSimAtTickFromTextBrowser(tick)
 
 
 class GCodeSimulatorSettings:
     """ """
+
     DEFAULT_OPENGL_FB = 2
     OPENGL_FB = 2

@@ -1,4 +1,3 @@
-
 """
 the viewer includes
 - the gcode simulator - in pyside6-opengl + its controls
@@ -16,6 +15,7 @@ from gcodesimulator_python import gcodefileviewer
 
 class GCodeViewer(QtWidgets.QWidget):
     """ """
+
     def __init__(self, parent: QtWidgets.QWidget, options: Dict[str, str]):
         QtWidgets.QWidget.__init__(self)
 
@@ -25,7 +25,6 @@ class GCodeViewer(QtWidgets.QWidget):
         self.cutter_angle = cutter_angle = options["cutter_angle"]
 
         self.use_candle_parser = use_candle_parser = options["use_candle_parser"]
-
 
         layout = QtWidgets.QHBoxLayout()
         self.setLayout(layout)
@@ -52,6 +51,6 @@ class GCodeViewer(QtWidgets.QWidget):
         layout.setStretch(1, 0)
 
     def set_simtime_from_textbrowser(self, simtime: float):
-        """ slot on signal from gcode text browser "select line" """
+        """slot on signal from gcode text browser "select line" """
         tick = math.floor(simtime * 1000)
         self.controls.OnSimAtTickFromTextBrowser(tick)

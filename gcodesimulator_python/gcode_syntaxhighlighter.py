@@ -1,4 +1,3 @@
-
 from PySide6.QtCore import QRegularExpression
 
 from PySide6.QtGui import QColor
@@ -7,61 +6,56 @@ from PySide6.QtGui import QFont
 from PySide6.QtGui import QSyntaxHighlighter
 
 
-def format(color, style=''):
-    """Return a QTextCharFormat with the given attributes.
-    """
+def format(color, style=""):
+    """Return a QTextCharFormat with the given attributes."""
     _color = QColor()
     _color.setNamedColor(color)
 
     _format = QTextCharFormat()
     _format.setForeground(_color)
-    if 'bold' in style:
+    if "bold" in style:
         _format.setFontWeight(QFont.Bold)
-    if 'italic' in style:
+    if "italic" in style:
         _format.setFontItalic(True)
 
     return _format
 
 
 STYLES = {
-    'comment': format('darkGreen', 'italic'),
-    'keyword': format('blue', 'bold'),
-    'toolchange': format('red', 'bold'),
-    'poskeyword': format('blue'),
-    'numbers': format('brown'),
-    'numbersZ': format('magenta'),
+    "comment": format("darkGreen", "italic"),
+    "keyword": format("blue", "bold"),
+    "toolchange": format("red", "bold"),
+    "poskeyword": format("blue"),
+    "numbers": format("brown"),
+    "numbersZ": format("magenta"),
 }
 
 
-class GCodeSyntaxHighlighter (QSyntaxHighlighter):
+class GCodeSyntaxHighlighter(QSyntaxHighlighter):
     """
     Syntax highlighter for the GCode language.
     """
+
     def __init__(self, document):
         super(GCodeSyntaxHighlighter, self).__init__(document)
 
         # The rules
         rules = [
-
             # From ';' until a newline
-            (r'[;(][^\n]*', 0, STYLES['comment']),
-
+            (r"[;(][^\n]*", 0, STYLES["comment"]),
             # Positions Numeric literals
-            (r'\b[XY][+-]?[0-9]+(?:\.[0-9]+)?\b', 0, STYLES['numbers']),
-            (r'\b[Z][+-]?[0-9]+(?:\.[0-9]+)?\b', 0, STYLES['numbersZ']),
-
+            (r"\b[XY][+-]?[0-9]+(?:\.[0-9]+)?\b", 0, STYLES["numbers"]),
+            (r"\b[Z][+-]?[0-9]+(?:\.[0-9]+)?\b", 0, STYLES["numbersZ"]),
             # Others Positional Numeric literals
-            (r'\b[R][0-9]+(?:\.[0-9]+)?\b', 0, STYLES['poskeyword']),
-
+            (r"\b[R][0-9]+(?:\.[0-9]+)?\b", 0, STYLES["poskeyword"]),
             # Others Numeric literals
-            (r'\b[GSMFH][0-9]+(?:\.[0-9]+)?\b', 0, STYLES['keyword']),
-
+            (r"\b[GSMFH][0-9]+(?:\.[0-9]+)?\b", 0, STYLES["keyword"]),
             # Tool Change
-            (r'\b[T][0-9]+(?:\.[0-9]+)?\b', 0, STYLES['toolchange'])
+            (r"\b[T][0-9]+(?:\.[0-9]+)?\b", 0, STYLES["toolchange"]),
         ]
 
         # Build a QRegularExpression for each pattern
-        self.rules = [ (QRegularExpression(pat), index, fmt) for (pat, index, fmt) in rules ]
+        self.rules = [(QRegularExpression(pat), index, fmt) for (pat, index, fmt) in rules]
 
     def highlightBlock(self, text):
         """
@@ -85,6 +79,5 @@ class GCodeSyntaxHighlighter (QSyntaxHighlighter):
         self.setCurrentBlockState(0)
 
     def match_multiline(self, text, delimiter, in_state, style):
-        """
-        """
+        """ """
         return False
