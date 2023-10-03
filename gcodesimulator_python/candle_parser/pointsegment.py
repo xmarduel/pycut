@@ -15,16 +15,15 @@ from gcodeviewer.parser.arcproperties import ArcProperties
 
 
 class PointSegment:
-    '''
-    '''
+    """ """
+
     class Plane(Enum):
         XY = 0
         ZX = 1
         YZ = 2
 
     def __init__(self):
-        '''
-        '''
+        """ """
         self.m_toolhead = 0
         self.m_isMetric = True
         self.m_isAbsolute = True
@@ -41,7 +40,7 @@ class PointSegment:
         self.m_point = None
 
     @classmethod
-    def PointSegment_FromSegment(cls, ps: 'PointSegment'):
+    def PointSegment_FromSegment(cls, ps: "PointSegment"):
         this = cls.PointSegment_FromQVector3D(ps.point(), ps.getLineNumber())
 
         this.m_toolhead = ps.getToolhead()
@@ -56,7 +55,7 @@ class PointSegment:
             this.setRadius(ps.getRadius())
             this.setIsClockwise(ps.isClockwise())
             this.m_plane = ps.plane()
-    
+
         return this
 
     @classmethod
@@ -68,15 +67,17 @@ class PointSegment:
         return this
 
     @classmethod
-    def PointSegment_FromVectorQVector3DQVector3D(cls, point: QVector3D, num: int, center: QVector3D, radius: float, clockwise: bool):
+    def PointSegment_FromVectorQVector3DQVector3D(
+        cls, point: QVector3D, num: int, center: QVector3D, radius: float, clockwise: bool
+    ):
         this = PointSegment(point, num)
-        
+
         this.m_isArc = True
         this.m_arcProperties = ArcProperties()
         this.m_arcProperties.center = QVector3D(center.x(), center.y(), center.z())
         this.m_arcProperties.radius = radius
         this.m_arcProperties.isClockwise = clockwise
-    
+
     def setPoint(self, m_point: QVector3D):
         self.m_point = m_point
 
@@ -87,7 +88,7 @@ class PointSegment:
         points = []
         points.append(self.m_point.x())
         points.append(self.m_point.y())
-    
+
         return points
 
     def setToolHead(self, head: int):
@@ -99,7 +100,7 @@ class PointSegment:
     def setLineNumber(self, num: int):
         self.m_lineNumber = num
 
-    def getLineNumber(self) -> int :
+    def getLineNumber(self) -> int:
         return self.m_lineNumber
 
     def setSpeed(self, s: float):
@@ -110,34 +111,34 @@ class PointSegment:
 
     def setIsZMovement(self, isZ: bool):
         self.m_isZMovement = isZ
-    
+
     def isZMovement(self) -> bool:
         return self.m_isZMovement
-    
+
     def setIsMetric(self, m_isMetric: bool):
         self.m_isMetric = m_isMetric
-    
+
     def isMetric(self) -> bool:
         return self.m_isMetric
-    
+
     def setIsArc(self, isA: bool):
         self.m_isArc = isA
-    
-    def isArc(self) -> bool :
+
+    def isArc(self) -> bool:
         return self.m_isArc
-    
+
     def setIsFastTraverse(self, isF: bool):
         self.m_isFastTraverse = isF
-    
-    def isFastTraverse(self) -> bool :
+
+    def isFastTraverse(self) -> bool:
         return self.m_isFastTraverse
-    
+
     def setArcCenter(self, center: QVector3D):
         if self.m_arcProperties is None:
             self.m_arcProperties = ArcProperties()
 
         self.m_arcProperties.center = center
-    
+
     def centerPoints(self) -> List[float]:
         points = []
 
@@ -145,38 +146,38 @@ class PointSegment:
             points.append(self.m_arcProperties.center.x())
             points.append(self.m_arcProperties.center.y())
             points.append(self.m_arcProperties.center.z())
-    
+
         return points
-    
+
     def center(self) -> QVector3D:
         if self.m_arcProperties != None and self.m_arcProperties.center != None:
             return self.m_arcProperties.center
         return None
-    
+
     def setIsClockwise(self, clockwise: bool):
-        if self.m_arcProperties == None: 
+        if self.m_arcProperties == None:
             self.m_arcProperties = ArcProperties()
 
         self.m_arcProperties.isClockwise = clockwise
-    
-    def isClockwise(self) -> bool :
+
+    def isClockwise(self) -> bool:
         if self.m_arcProperties != None and self.m_arcProperties.center != None:
             return self.m_arcProperties.isClockwise
-        
+
         return False
-    
+
     def setRadius(self, rad: float):
         if self.m_arcProperties == None:
             self.m_arcProperties = ArcProperties()
 
         self.m_arcProperties.radius = rad
-    
+
     def getRadius(self) -> float:
         if self.m_arcProperties != None and self.m_arcProperties.center != None:
             return self.m_arcProperties.radius
-       
+
         return 0
-   
+
     def convertToMetric(self):
         if self.m_isMetric:
             return
@@ -191,27 +192,27 @@ class PointSegment:
             self.m_arcProperties.center.setY(self.m_arcProperties.center.y() * 25.4)
             self.m_arcProperties.center.setZ(self.m_arcProperties.center.z() * 25.4)
             self.m_arcProperties.radius *= 25.4
-    
-    def isAbsolute(self) -> bool :
+
+    def isAbsolute(self) -> bool:
         return self.m_isAbsolute
-    
+
     def setIsAbsolute(self, isAbsolute: bool):
         self.m_isAbsolute = isAbsolute
-    
-    def plane(self) -> 'PointSegment.Plane':
+
+    def plane(self) -> "PointSegment.Plane":
         return self.m_plane
-    
-    def setPlane(self, plane: 'PointSegment.Plane'):
+
+    def setPlane(self, plane: "PointSegment.Plane"):
         self.m_plane = plane
-    
+
     def getSpindleSpeed(self) -> float:
         return self.m_spindleSpeed
-    
+
     def setSpindleSpeed(self, spindleSpeed: float):
         self.m_spindleSpeed = spindleSpeed
 
     def getDwell(self) -> float:
         return self.m_dwell
-    
+
     def setDwell(self, dwell: float):
         self.m_dwell = dwell

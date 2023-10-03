@@ -14,8 +14,8 @@ from gcodeviewer.parser.pointsegment import PointSegment
 
 
 class LineSegment:
-    '''
-    '''
+    """ """
+
     def __init__(self):
         self.m_toolhead = 0  # DEFAULT TOOLHEAD ASSUMED TO BE 0!
         self.m_speed = 0.0
@@ -143,7 +143,7 @@ class LineSegment:
     def setSpindleSpeed(self, spindleSpeed: float):
         self.m_spindleSpeed = spindleSpeed
 
-    def getDwell(self)  -> float:
+    def getDwell(self) -> float:
         return self.m_dwell
 
     def setDwell(self, dwell: float):
@@ -155,10 +155,8 @@ class LineSegment:
     def setIsClockwise(self, isClockwise: bool):
         self.isClockwise = isClockwise
 
-    def plane(self) -> PointSegment.Plane :
+    def plane(self) -> PointSegment.Plane:
         return self.m_plane
 
     def setPlane(self, plane: PointSegment.Plane):
         self.m_plane = plane
-
-

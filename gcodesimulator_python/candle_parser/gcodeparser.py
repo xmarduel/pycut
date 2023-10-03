@@ -20,12 +20,12 @@ from gcodeviewer.parser.gcodepreprocessorutils import GcodePreprocessorUtils
 
 from gcodeviewer.util.util import qQNaN
 
-class GcodeParser : 
-    '''
-    '''
-    def __init__(self, parent = None):
-        '''
-        '''
+
+class GcodeParser:
+    """ """
+
+    def __init__(self, parent=None):
+        """ """
         # Current state
         self.m_isMetric = True
         self.m_inAbsoluteMode = True
@@ -49,17 +49,17 @@ class GcodeParser :
         self.m_lastSpindleSpeed = 0
 
         # The gcode.
-        self.m_points : List[PointSegment] = []
+        self.m_points: List[PointSegment] = []
 
         self.reset()
 
-    def getConvertArcsToLines(self) -> bool :
+    def getConvertArcsToLines(self) -> bool:
         return self.m_convertArcsToLines
 
     def setConvertArcsToLines(self, convertArcsToLines: bool):
         self.m_convertArcsToLines = convertArcsToLines
 
-    def getRemoveAllWhitespace(self) -> bool :
+    def getRemoveAllWhitespace(self) -> bool:
         return self.m_removeAllWhitespace
 
     def setRemoveAllWhitespace(self, removeAllWhitespace: bool):
@@ -89,15 +89,15 @@ class GcodeParser :
     def setTruncateDecimalLength(self, truncateDecimalLength: int):
         self.m_truncateDecimalLength = truncateDecimalLength
 
-    def reset(self, initialPoint : QVector3D = None):
-        #print("reseting gp %s" % initialPoint)
+    def reset(self, initialPoint: QVector3D = None):
+        # print("reseting gp %s" % initialPoint)
 
         if initialPoint is None:
-            #initialPoint = QVector3D(qQNaN(), qQNaN(), qQNaN()) # CANDLE: this line!
+            # initialPoint = QVector3D(qQNaN(), qQNaN(), qQNaN()) # CANDLE: this line!
             initialPoint = QVector3D(0.0, 0.0, 0.0)
-            
+
         self.m_points = []
-        
+
         # The unspoken home location.
         self.m_currentPoint = initialPoint
         self.m_currentPlane = PointSegment.Plane.XY
@@ -117,7 +117,7 @@ class GcodeParser :
     def _(self, command: list) -> PointSegment:
         if len(command) == 0:
             return None
-    
+
         return self.processCommand(command)
 
     def getCurrentPoint(self) -> QVector3D:
@@ -145,15 +145,9 @@ class GcodeParser :
         # Start expansion.
         #
 
-        expandedPoints = GcodePreprocessorUtils.generatePointsAlongArcBDring(plane, 
-                start, 
-                end, 
-                center, 
-                clockwise, 
-                radius, 
-                self.m_smallArcThreshold, 
-                self.m_smallArcSegmentLength, 
-                False)
+        expandedPoints = GcodePreprocessorUtils.generatePointsAlongArcBDring(
+            plane, start, end, center, clockwise, radius, self.m_smallArcThreshold, self.m_smallArcSegmentLength, False
+        )
 
         # Validate output of expansion.
         if len(expandedPoints) == 0:
@@ -169,8 +163,8 @@ class GcodeParser :
         # Create line segments from points.
 
         # skip first element.
-        for k in range(1, len(expandedPoints)-1):
-            temp = PointSegment.PointSegment_FromQVector3D(expandedPoints[k+1], self.m_commandNumber)
+        for k in range(1, len(expandedPoints) - 1):
+            temp = PointSegment.PointSegment_FromQVector3D(expandedPoints[k + 1], self.m_commandNumber)
             self.m_commandNumber += 1
             temp.setIsMetric(lastSegment.isMetric())
             self.m_points.append(temp)
@@ -198,7 +192,7 @@ class GcodeParser :
         # Remove comments from command.
         newCommand = GcodePreprocessorUtils.removeComment(command)
         rawCommand = newCommand
-        hasComment = (len(newCommand) != len(command))
+        hasComment = len(newCommand) != len(command)
 
         if self.m_removeAllWhitespace:
             newCommand = GcodePreprocessorUtils.removeAllWhitespace(newCommand)
@@ -212,19 +206,19 @@ class GcodeParser :
                 newCommand = GcodePreprocessorUtils.truncateDecimals(self.m_truncateDecimalLength, newCommand)
 
             # If this is enabled we need to parse the gcode as we go along.
-            if self.m_convertArcsToLines: # || this.expandCannedCycles) {
+            if self.m_convertArcsToLines:  # || this.expandCannedCycles) {
                 arcLines = self.convertArcsToLines(newCommand)
                 if len(arcLines) > 0:
                     result.append(arcLines)
                 else:
                     result.append(newCommand)
-                
+
             elif hasComment:
                 # Maintain line level comment.
                 result.append(command.replace(rawCommand, newCommand))
             else:
                 result.append(newCommand)
-            
+
         elif hasComment:
             # Reinsert comment-only lines.
             result.append(command)
@@ -245,12 +239,16 @@ class GcodeParser :
 
         if len(psl) == 0:
             return result
-    
+
         # Create an array of new commands out of the of the segments in psl.
         # Don't add them to the gcode parser since it is who expanded them.
         for segment in psl:
             end = segment.point()
-            result.append(GcodePreprocessorUtils.generateG1FromPoints(start, end, self.m_inAbsoluteMode, self.m_truncateDecimalLength))
+            result.append(
+                GcodePreprocessorUtils.generateG1FromPoints(
+                    start, end, self.m_inAbsoluteMode, self.m_truncateDecimalLength
+                )
+            )
             start = segment.point()
 
         return result
@@ -260,7 +258,7 @@ class GcodeParser :
 
     def getTraverseSpeed(self) -> float:
         return self.m_traverseSpeed
-    
+
     def setTraverseSpeed(self, traverseSpeed: float):
         self.m_traverseSpeed = traverseSpeed
 
@@ -272,7 +270,7 @@ class GcodeParser :
         ps = None
 
         # Handle F code
-        speed = GcodePreprocessorUtils.parseCoord(args, 'F')
+        speed = GcodePreprocessorUtils.parseCoord(args, "F")
         if not qIsNaN(speed):
             if self.m_isMetric:
                 self.m_lastSpeed = speed
@@ -280,29 +278,29 @@ class GcodeParser :
                 self.m_lastSpeed = speed * 25.4
 
         # Handle S code
-        spindleSpeed = GcodePreprocessorUtils.parseCoord(args, 'S')
+        spindleSpeed = GcodePreprocessorUtils.parseCoord(args, "S")
         if not qIsNaN(spindleSpeed):
-             self.m_lastSpindleSpeed = spindleSpeed
+            self.m_lastSpindleSpeed = spindleSpeed
 
         # Handle P code
-        dwell = GcodePreprocessorUtils.parseCoord(args, 'P')
+        dwell = GcodePreprocessorUtils.parseCoord(args, "P")
         if not qIsNaN(dwell):
             self.m_points[-1].setDwell(dwell)
 
         # handle G codes.
-        gCodes = GcodePreprocessorUtils.parseCodes(args, 'G')
+        gCodes = GcodePreprocessorUtils.parseCodes(args, "G")
 
         # If there was no command, add the implicit one to the party.
         if len(gCodes) == 0 and self.m_lastGcodeCommand != -1:
             gCodes.append(self.m_lastGcodeCommand)
-        
+
         for code in gCodes:
             ps = self.handleGCode(code, args)
 
         return ps
 
     def handleMCode(self, code: float, args: List[str]):
-        spindleSpeed = GcodePreprocessorUtils.parseCoord(args, 'S')
+        spindleSpeed = GcodePreprocessorUtils.parseCoord(args, "S")
         if not qIsNaN(spindleSpeed):
             self.m_lastSpindleSpeed = spindleSpeed
 
@@ -311,33 +309,33 @@ class GcodeParser :
 
         nextPoint = GcodePreprocessorUtils.updatePointWithCommand(args, self.m_currentPoint, self.m_inAbsoluteMode)
 
-        if code == 0.0: 
+        if code == 0.0:
             ps = self.addLinearPointSegment(nextPoint, True)
-        elif code == 1.0: 
+        elif code == 1.0:
             ps = self.addLinearPointSegment(nextPoint, False)
-        elif code == 38.2: 
+        elif code == 38.2:
             ps = self.addLinearPointSegment(nextPoint, False)
         elif code == 2.0:
             ps = self.addArcPointSegment(nextPoint, True, args)
         elif code == 3.0:
             ps = self.addArcPointSegment(nextPoint, False, args)
-        elif code == 17.0: 
+        elif code == 17.0:
             self.m_currentPlane = PointSegment.Plane.XY
-        elif code == 18.0: 
+        elif code == 18.0:
             self.m_currentPlane = PointSegment.Plane.ZX
-        elif code == 19.0: 
+        elif code == 19.0:
             self.m_currentPlane = PointSegment.Plane.YZ
-        elif code == 20.0: 
+        elif code == 20.0:
             self.m_isMetric = False
-        elif code == 21.0: 
+        elif code == 21.0:
             self.m_isMetric = True
-        elif code == 90.0: 
+        elif code == 90.0:
             self.m_inAbsoluteMode = True
-        elif code == 90.1: 
+        elif code == 90.1:
             self.m_inAbsoluteIJKMode = True
-        elif code == 91.0: 
+        elif code == 91.0:
             self.m_inAbsoluteMode = False
-        elif code == 91.1: 
+        elif code == 91.1:
             self.m_inAbsoluteIJKMode = False
 
         if code == 0.0 or code == 1.0 or code == 2.0 or code == 3.0 or code == 38.2:
@@ -353,9 +351,11 @@ class GcodeParser :
         zOnly = False
 
         # Check for z-only
-        if (self.m_currentPoint.x() == nextPoint.x()) and \
-           (self.m_currentPoint.y() == nextPoint.y()) and \
-           (self.m_currentPoint.z() != nextPoint.z()) : \
+        if (
+            (self.m_currentPoint.x() == nextPoint.x())
+            and (self.m_currentPoint.y() == nextPoint.y())
+            and (self.m_currentPoint.z() != nextPoint.z())
+        ):
             zOnly = True
 
         ps.setIsMetric(self.m_isMetric)
@@ -376,8 +376,10 @@ class GcodeParser :
 
         self.m_commandNumber += 1
 
-        center = GcodePreprocessorUtils.updateCenterWithCommand(args, self.m_currentPoint, nextPoint, self.m_inAbsoluteIJKMode, clockwise)
-        radius = GcodePreprocessorUtils.parseCoord(args, 'R')
+        center = GcodePreprocessorUtils.updateCenterWithCommand(
+            args, self.m_currentPoint, nextPoint, self.m_inAbsoluteIJKMode, clockwise
+        )
+        radius = GcodePreprocessorUtils.parseCoord(args, "R")
 
         # Calculate radius if necessary.
         if qIsNaN(radius):
@@ -391,9 +393,10 @@ class GcodeParser :
             elif self.m_currentPlane == PointSegment.Plane.YZ:
                 m.rotate(-90, 0.0, 1.0, 0.0)
 
-            radius = math.sqrt( \
-                math.pow(((m * self.m_currentPoint).x() - (m * center).x()), 2.0) + \
-                math.pow(((m * self.m_currentPoint).y() - (m * center).y()), 2.0))
+            radius = math.sqrt(
+                math.pow(((m * self.m_currentPoint).x() - (m * center).x()), 2.0)
+                + math.pow(((m * self.m_currentPoint).y() - (m * center).y()), 2.0)
+            )
 
         ps.setIsMetric(self.m_isMetric)
         ps.setArcCenter(center)
