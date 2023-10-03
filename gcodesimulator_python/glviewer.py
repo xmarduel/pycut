@@ -1161,13 +1161,22 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
         self.cmdFront.setToolTip("Front view")
         self.cmdLeft.setToolTip("Left view")
 
-        self.cmdFit.setIcon(QtGui.QIcon("./pics/fit_1.png"))
-        self.cmdIsometric.setIcon(QtGui.QIcon("./pics/cube.png"))
-        self.cmdTop.setIcon(QtGui.QIcon("./pics/cubeTop.png"))
-        self.cmdFront.setIcon(QtGui.QIcon("./pics/cubeFront.png"))
-        self.cmdLeft.setIcon(QtGui.QIcon("./pics/cubeLeft.png"))
+        if Drawable.PYCUT_PREFIX  == "":
+            self.cmdFit.setIcon(QtGui.QIcon("./pics/fit_1.png"))
+            self.cmdIsometric.setIcon(QtGui.QIcon("./pics/cube.png"))
+            self.cmdTop.setIcon(QtGui.QIcon("./pics/cubeTop.png"))
+            self.cmdFront.setIcon(QtGui.QIcon("./pics/cubeFront.png"))
+            self.cmdLeft.setIcon(QtGui.QIcon("./pics/cubeLeft.png"))
+        else:
+            self.cmdFit.setIcon(QtGui.QIcon(":/images/candle/fit_1.png"))
+            self.cmdIsometric.setIcon(QtGui.QIcon(":/images/candle/cube.png"))
+            self.cmdTop.setIcon(QtGui.QIcon(":/images/candle/cubeTop.png"))
+            self.cmdFront.setIcon(QtGui.QIcon(":/images/candle/cubeFront.png"))
+            self.cmdLeft.setIcon(QtGui.QIcon(":/images/candle/cubeLeft.png"))
 
-        self.cmdFit.clicked.connect(self.on_cmdFit_clicked)
+        self.cmdFit.setVisible(False)
+        
+        #self.cmdFit.clicked.connect(self.on_cmdFit_clicked)
         self.cmdIsometric.clicked.connect(self.on_cmdIsometric_clicked)
         self.cmdTop.clicked.connect(self.on_cmdTop_clicked)
         self.cmdFront.clicked.connect(self.on_cmdFront_clicked)
