@@ -15,6 +15,7 @@ start the program from the installation folder
 > python pycut.py
 > python pycut.py -h
 > python pycut.py [<path_to_job>]
+> python pycut.py -g <path_to_gcode>
 ```
 
 Dependencies
@@ -26,7 +27,7 @@ Dependencies
 - lxml (latest)
 - freetype-py (latest) - used in svgtext2svpath.py utility
 - matplotlib 3.6.2 (to debug/view shapely offsets ops)
-- numba (latest) - for optimisation
+- numba (latest) - for python simulator optimisation
 
 
 Features
@@ -45,7 +46,7 @@ Features
 - toolpaths displayed in svg viewer
 - gcode produced
 - gcode viewer (as in Candle)
-- gcode simulator (as in jsCut)
+- gcode simulator (as in jsCut, but with candle parser)
 
 Main Improvments over JsCut
 ---------------------------
