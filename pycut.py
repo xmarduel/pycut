@@ -377,16 +377,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             settings_dialog.doubleSpinBox_GeometryPreview_stroke_opacity.setValue(float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"]))
             settings_dialog.doubleSpinBox_GeometryPreview_stroke_width.setValue(float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]))
 
-            #if GCodeSimulatorSettings.OPENGL_FB == 1:
-            #    settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.setChecked(True)
-            #    settings_dialog.radioButton_GCODE_SIMULATOR_FB_2.setChecked(False)
-            #else:
-            #    settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.setChecked(False)
-            #    settings_dialog.radioButton_GCODE_SIMULATOR_FB_2.setChecked(True)
+            if gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB == 1:
+                settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.setChecked(True)
+                settings_dialog.radioButton_GCODE_SIMULATOR_FB_2.setChecked(False)
+            else:
+                settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.setChecked(False)
+                settings_dialog.radioButton_GCODE_SIMULATOR_FB_2.setChecked(True)
 
         def set_defaults():
             self.svg_viewer.set_default_settings()
-            #GCodeSimulatorSettings.OPENGL_FB =  GCodeSimulatorSettings.DEFAULT_OPENGL_FB
+            #gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB =  GCodeSimulatorSettings.DEFAULT_OPENGL_FB
 
             fill_dialog()
 
@@ -419,10 +419,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 }
             }
             self.svg_viewer.set_settings(settings)
-            #if settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.isChecked() :
-            #    GCodeSimulatorSettings.OPENGL_FB = 1
-            #else:
-            #    GCodeSimulatorSettings.OPENGL_FB = 2
+
+            if settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.isChecked() :
+                gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB = 1
+            else:
+                gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB = 2
 
             settings_dialog.close()
 
