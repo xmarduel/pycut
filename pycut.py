@@ -1618,17 +1618,10 @@ def main():
 
     # argument
     parser.add_argument("-j", "--job", dest="job", nargs="?", default=None, help="load job file | empty")
-    parser.add_argument(
-        "-g",
-        "--gcode",
-        dest="gcode",
-        nargs="?",
-        default=None,
-        help="load gcode file | empty",
-    )
+    parser.add_argument("-g", "--gcode", dest="gcode", nargs="?", default=None, help="load gcode file | empty")
 
     # version info
-    parser.add_argument("--version", action="version", version="%s" % VERSION)
+    parser.add_argument("--version", action="version", version="f{VERSION}")
 
     options = parser.parse_args()
 

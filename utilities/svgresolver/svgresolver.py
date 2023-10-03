@@ -10,16 +10,15 @@ import svgelements
 
 
 class SvgResolver:
-    '''
-    '''
+    """ """
+
     lf_format = "%.3f"
 
     def __init__(self, options):
-        '''
-        '''
+        """ """
         self.filename = options.svg
-        self.resolved_filename = os.path.splitext(self.filename)[0] + '.resolved.svg'
-        
+        self.resolved_filename = os.path.splitext(self.filename)[0] + ".resolved.svg"
+
         self.drop_defs = options.drop_defs
 
         self.shapes = []
@@ -30,20 +29,22 @@ class SvgResolver:
         # - defined in "px" -> use ppi=svgelements.DEFAULT_PPI (96)
         # - defined in "mm" -> use ppi=25.4
         # - defined in "in" -> use ppi=1
-        
+
         if options.units == "px":
-            self.svg = svgelements.SVG.parse(self.filename, reify=True, ppi=svgelements.DEFAULT_PPI)  
+            self.svg = svgelements.SVG.parse(self.filename, reify=True, ppi=svgelements.DEFAULT_PPI)
         if options.units == "mm":
-            self.svg = svgelements.SVG.parse(self.filename, reify=True, ppi=25.4)  # so that there is no "scaling" : 1 inch = 25.4 mm
+            self.svg = svgelements.SVG.parse(
+                self.filename, reify=True, ppi=25.4
+            )  # so that there is no "scaling" : 1 inch = 25.4 mm
         if options.units == "in":
-            self.svg = svgelements.SVG.parse(self.filename, reify=True, ppi=1)  # so that there is no "scaling" : 1 inch <-> 96 px
-        
+            self.svg = svgelements.SVG.parse(
+                self.filename, reify=True, ppi=1
+            )  # so that there is no "scaling" : 1 inch <-> 96 px
 
-        #print("======================================")
-        #for e in list(self.svg.elements()):
+        # print("======================================")
+        # for e in list(self.svg.elements()):
         #    print(f"ID: {e.id} / {e.__class__.__name__}: {e}")
-        #print("======================================")
-
+        # print("======================================")
 
         # to use the right id in the <use> stuff and the right style
         self.id_mapping = {}
@@ -54,11 +55,11 @@ class SvgResolver:
         self.tree = etree.parse(self.filename, parser)
 
     def resolve(self):
-        '''
+        """
         The main routine
 
         It replaces the xml elements with the ones resolved by svgelements module
-        '''
+        """
         self.collect_shapes()
         self.collect_id_mapping()
         self.collect_style_mapping()
@@ -71,20 +72,19 @@ class SvgResolver:
         self.write_result(root)
 
     def collect_shapes(self):
-        '''
-        '''
+        """ """
         self.shapes = []
         self.groups = []
 
         for e in self.svg.elements():
             if isinstance(e, svgelements.Text):
-                #print("text")
+                # print("text")
                 self.shapes.append(e)
             elif isinstance(e, svgelements.Path):
-                #print("path")
+                # print("path")
                 self.shapes.append(e)
             elif isinstance(e, svgelements.Shape):
-                #print("shape")
+                # print("shape")
                 self.shapes.append(e)
             elif isinstance(e, svgelements.Group):
                 self.groups.append(e)
@@ -92,18 +92,18 @@ class SvgResolver:
                 print("processing svg #id:", e.id)
 
     def collect_id_mapping(self):
-        '''
+        """
         every <use ...> item with an id is set into the mapping
-        '''
+        """
         for e in self.svg.elements():
             try:
                 if e.values["tag"] == svgelements.SVG_TAG_USE:
-                    '''
+                    """
                     'e' is not a Shape as in collect_shapes
                     but a SVGElement. This object helds the 'raw'
                     xml data and thus the initial 'id' of the xml element
-                    '''
-                    id_ref = e.values["href"][1:] # remove the '#'
+                    """
+                    id_ref = e.values["href"][1:]  # remove the '#'
                     print('... <use href="#%s" id="%s" ...> ' % (id_ref, e.id))
                     self.id_mapping.setdefault(id_ref, []).append(e.id)
             except Exception as e:
@@ -112,19 +112,19 @@ class SvgResolver:
         print("ID MAPPING", self.id_mapping)
 
     def collect_style_mapping(self):
-        '''
+        """
         every <use ...> item with a style is set into the mapping
-        '''
+        """
         for e in self.svg.elements():
             try:
                 if e.values["tag"] == svgelements.SVG_TAG_USE:
-                    '''
+                    """
                     'e' is not a Shape as in collect_shapes
                     but a SVGElement. This object helds the 'raw'
                     xml data and thus the initial 'id' of the xml element
-                    '''
-                    #print("... found a '<use>' tag !")
-                    id_ref = e.values["href"][1:] # remove the '#'
+                    """
+                    # print("... found a '<use>' tag !")
+                    id_ref = e.values["href"][1:]  # remove the '#'
                     self.id_style.setdefault(id_ref, []).append(e.values.get("style", {}))
             except Exception as e:
                 pass
@@ -132,13 +132,11 @@ class SvgResolver:
         print("STYLE MAPPING", self.id_style)
 
     def replace_elements(self, item: etree.Element):
-        '''
-        '''
+        """ """
         shape = self.get_svg_shape_for_use_item(item)
         group = self.get_svg_group_for_use_item(item)
 
         if shape:
-            
             try:
                 print("replacing shape for etree elt =", item.attrib["id"])
             except Exception as e:
@@ -169,7 +167,7 @@ class SvgResolver:
                 self.make_xml_text(item, shape)
 
             else:
-                print ("shape not recognized!", shape.__class__)
+                print("shape not recognized!", shape.__class__)
 
         if group:
             try:
@@ -193,9 +191,8 @@ class SvgResolver:
 
             self.replace_elements(ch)
 
-    def remove_defs(self, root:etree.ElementTree):
-        '''
-        '''
+    def remove_defs(self, root: etree.ElementTree):
+        """ """
         NS = "{http://www.w3.org/2000/svg}"
 
         defs = None
@@ -204,45 +201,40 @@ class SvgResolver:
             print("child", ch.tag)
             if ch.tag == NS + "defs":
                 defs = ch
-            
+
         if defs is not None:
             root.remove(defs)
         else:
             print("defs not found")
-    
-    
-    def write_result(self, root:etree.ElementTree):
-        '''
-        '''
+
+    def write_result(self, root: etree.ElementTree):
+        """ """
         if self.drop_defs:
             self.remove_defs(root)
 
         doc = etree.ElementTree(root)
 
-        doc.write(self.resolved_filename, 
-                pretty_print=True, 
-                xml_declaration=True, 
-                encoding='utf-8')
-        
-        # maybe an extra formatter - needs xmllint  
+        doc.write(self.resolved_filename, pretty_print=True, xml_declaration=True, encoding="utf-8")
+
+        # maybe an extra formatter - needs xmllint
         tree = etree.parse(self.resolved_filename)
         tree_str = etree.tostring(tree, pretty_print=True)
         f = open(self.resolved_filename, "w")
-        f.write(tree_str.decode('utf-8'))
+        f.write(tree_str.decode("utf-8"))
         f.close()
 
-        #formatted = self.resolved_filename + ".x"
-        #os.system("xmllint --format %s > %s" % (self.resolved_filename, formatted))
-        #shutil.move(formatted, self.resolved_filename)
+        # formatted = self.resolved_filename + ".x"
+        # os.system("xmllint --format %s > %s" % (self.resolved_filename, formatted))
+        # shutil.move(formatted, self.resolved_filename)
 
-    def resolve_id(self, shape: svgelements.Shape) -> str|None:
-        '''
+    def resolve_id(self, shape: svgelements.Shape) -> str | None:
+        """
         if not in "id_mapping":
             - return the id of the shape
         else:
             - return the id of the shape id mapping and remove this value
             from the mapping because just used
-        '''
+        """
         if shape.id in self.id_mapping:
             # in <use> hopefully
             return self.id_mapping[shape.id].pop(0)
@@ -251,13 +243,13 @@ class SvgResolver:
         return shape.id
 
     def resolve_style(self, shape: svgelements.Shape):
-        '''
+        """
         if not in "id_style":
             - return the style of the shape
         else:
             - return the style of the shape id style and remove this value
             from the mapping because just used
-        '''
+        """
         if shape.id in self.id_style:
             # in <use> hopefully
             return self.id_style[shape.id].pop(0)
@@ -265,9 +257,8 @@ class SvgResolver:
         # was not a <use> but a normal element
         return shape.values.get("style", "")
 
-    def merge_styles(self, ref_style:str, style: str) -> str:
-        '''
-        '''
+    def merge_styles(self, ref_style: str, style: str) -> str:
+        """ """
         if len(style) == 0:
             return ref_style
 
@@ -288,40 +279,37 @@ class SvgResolver:
             # only the opacity styles should be merged!
             the_style_opacity_items = {}
             for key in the_style:
-                if key == 'opacity':
+                if key == "opacity":
                     the_style_opacity_items[key] = the_style[key]
-                if key == 'stroke-opacity':
+                if key == "stroke-opacity":
                     the_style_opacity_items[key] = the_style[key]
-             
+
             # merge dict
             the_ref_style.update(the_style_opacity_items)
 
             merge_style = []
             for key in the_ref_style:
                 merge_style.append("%s:%s" % (key, the_ref_style[key]))
-     
+
             return ";".join(merge_style)
 
         except:
-            return ref_style 
+            return ref_style
 
     @classmethod
     def eval_pt_transform(cls, pt, transform):
-        '''
-        '''
+        """ """
         xx = transform.a * pt[0] + transform.b * pt[1] + transform.e
-        yy = transform.c * pt[0] + transform.d * pt[1] + transform.f 
+        yy = transform.c * pt[0] + transform.d * pt[1] + transform.f
 
         return (xx, yy)
-    
+
     def make_xml_group(self, item: etree.Element, group: svgelements.Group):
-        '''
-        '''
+        """ """
         print("replacing group items for etree elt =", group.id)
 
         def resolve_group_items(item, group_e):
-            '''
-            '''
+            """ """
             for svge in group_e:
                 if isinstance(svge, svgelements.Circle):
                     self.make_xml_circle(item, svge)
@@ -350,14 +338,12 @@ class SvgResolver:
                 elif isinstance(svge, list):
                     resolve_group_items(item, svge)
 
-        
         resolve_group_items(item, group)
 
         item.getparent().remove(item)
 
     def make_xml_circle(self, item: etree.Element, shape: svgelements.Shape):
-        '''
-        '''
+        """ """
         print("Circle!")
 
         c = etree.Element("circle")
@@ -367,12 +353,12 @@ class SvgResolver:
 
         if the_id != None:
             c.attrib["id"] = the_id
-        #else:
+        # else:
         #    c.attrib["id"] = shape.id
 
-        # SHIT! when rotating, the cx,cy are not evaluated, but transformation matrix is given ! 
-        cx, cy = self.eval_pt_transform( (shape.cx, shape.cy), shape.transform)
-        
+        # SHIT! when rotating, the cx,cy are not evaluated, but transformation matrix is given !
+        cx, cy = self.eval_pt_transform((shape.cx, shape.cy), shape.transform)
+
         c.attrib["cx"] = self.lf_format % cx
         c.attrib["cy"] = self.lf_format % cy
 
@@ -387,8 +373,7 @@ class SvgResolver:
         item.getparent().remove(item)
 
     def make_xml_rect(self, item: etree.Element, shape: svgelements.Shape):
-        '''
-        '''
+        """ """
         print("Rect!")
 
         r = etree.Element("rect")
@@ -398,10 +383,10 @@ class SvgResolver:
 
         if the_id != None:
             r.attrib["id"] = the_id
-        #else:
+        # else:
         #    c.attrib["id"] = shape.id
 
-        # SHIT! when rotating, it is no more a rectangle! 
+        # SHIT! when rotating, it is no more a rectangle!
         r.attrib["width"] = self.lf_format % shape.width
         r.attrib["height"] = self.lf_format % shape.height
         r.attrib["x"] = self.lf_format % shape.x
@@ -418,8 +403,7 @@ class SvgResolver:
         item.getparent().remove(item)
 
     def make_xml_ellipse(self, item: etree.Element, shape: svgelements.Shape):
-        '''
-        '''
+        """ """
         print("Ellipse!")
 
         e = etree.Element("ellipse")
@@ -444,8 +428,7 @@ class SvgResolver:
         item.getparent().remove(item)
 
     def make_xml_polygon(self, item: etree.Element, shape: svgelements.Shape):
-        '''
-        '''
+        """ """
         print("Polygon!")
 
         p = etree.Element("polygon")
@@ -456,8 +439,8 @@ class SvgResolver:
         if the_id != None:
             p.attrib["id"] = the_id
 
-        p.attrib["points"] =  " ".join(["%.3f,%.3f" % (pt.x, pt.y) for pt in shape.points])
-            
+        p.attrib["points"] = " ".join(["%.3f,%.3f" % (pt.x, pt.y) for pt in shape.points])
+
         # merge style of ref item with used item
         style = self.merge_styles(shape.values.get("style", {}), the_style)
         if style:
@@ -467,13 +450,11 @@ class SvgResolver:
         item.getparent().remove(item)
 
     def make_xml_line(self, item: etree.Element, shape: svgelements.Shape):
-        '''
-        '''
+        """ """
         print("SimpleLine!")
 
         the_id = self.resolve_id(shape)
 
-        
         l = etree.Element("line")
 
         the_id = self.resolve_id(shape)
@@ -496,8 +477,7 @@ class SvgResolver:
         item.getparent().remove(item)
 
     def make_xml_polyline(self, item: etree.Element, shape: svgelements.Shape):
-        '''
-        '''
+        """ """
         print("Polyline!")
 
         p = etree.Element("polyline")
@@ -508,8 +488,8 @@ class SvgResolver:
         if the_id != None:
             p.attrib["id"] = the_id
 
-        p.attrib["points"] =  " ".join(["%.3f,%.3f" %(pt.x, pt.y) for pt in shape.points])
-            
+        p.attrib["points"] = " ".join(["%.3f,%.3f" % (pt.x, pt.y) for pt in shape.points])
+
         # merge style of ref item with used item
         style = self.merge_styles(shape.values.get("style", {}), the_style)
         if style:
@@ -519,8 +499,7 @@ class SvgResolver:
         item.getparent().remove(item)
 
     def make_xml_path(self, item: etree.Element, shape: svgelements.Shape):
-        '''
-        '''
+        """ """
         print("Path!")
 
         p = etree.Element("path")
@@ -537,14 +516,14 @@ class SvgResolver:
         style = self.merge_styles(shape.values.get("style", {}), the_style)
         if style:
             p.attrib["style"] = style
-        
+
         item.addnext(p)
         item.getparent().remove(item)
 
     def make_xml_text(self, item: etree.Element, shape: svgelements.Shape):
-        '''
+        """
         BUG: svgelements : shape.x and shape.y are **NOT** calculated!
-        '''
+        """
         print("Text!")
 
         t = etree.SubElement(item.getparent(), "text")
@@ -558,7 +537,7 @@ class SvgResolver:
         t.attrib["x"] = self.lf_format % shape.x  # bug!
         t.attrib["y"] = self.lf_format % shape.y  # bug!
 
-        #print(shape)
+        # print(shape)
 
         t.text = shape.text
 
@@ -571,16 +550,14 @@ class SvgResolver:
         item.getparent().remove(item)
 
     def get_svg_shape_for_use_item(self, item: etree.Element) -> svgelements.Shape | None:
-        '''
-        '''
+        """ """
         if item.tag == "{http://www.w3.org/2000/svg}svg":
             return None
         if item.tag == "{http://www.w3.org/2000/svg}defs":
             return None
 
         if item.tag.endswith("use"):
-        
-            id_ref = item.attrib["href"][1:] # not the '#'
+            id_ref = item.attrib["href"][1:]  # not the '#'
 
             # get related shape
             for idx, shape in enumerate(self.shapes):
@@ -597,22 +574,19 @@ class SvgResolver:
                     # remove it from the list of shapes and give back
                     self.shapes.pop(idx)
                     return shape
-        
-        
+
         return None
 
     def get_svg_group_for_use_item(self, item: etree.Element) -> svgelements.Shape | None:
-        '''
-        '''
+        """ """
         if item.tag == "{http://www.w3.org/2000/svg}svg":
             return None
         if item.tag == "{http://www.w3.org/2000/svg}defs":
             return None
 
         if item.tag.endswith("use"):
-        
-            id_ref = item.attrib["href"][1:] # not the '#'
-                
+            id_ref = item.attrib["href"][1:]  # not the '#'
+
             # get related group
             for idx, group in enumerate(self.groups):
                 if group.id == id_ref:
@@ -622,18 +596,26 @@ class SvgResolver:
 
         return None
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="svgresolver", description="svg defs-use / transformations resolver")
 
     # argument
     parser.add_argument("svg", help="svg to resolve")
     parser.add_argument("-u", "--units", dest="units", default="mm", help='viewbox units ("px", "mm" or "in")')
-    parser.add_argument("--z","--drop-defs", action='store_true', dest="drop_defs", default=False, help='do not keep defs in resolved svg')
+    parser.add_argument(
+        "--z",
+        "--drop-defs",
+        action="store_true",
+        dest="drop_defs",
+        default=False,
+        help="do not keep defs in resolved svg",
+    )
 
     # version info
-    parser.add_argument("--version", action='version', version='%s' % VERSION)
+    parser.add_argument("--version", action="version", version="%s" % VERSION)
 
     options = parser.parse_args()
-    
+
     resolver = SvgResolver(options)
     resolver.resolve()
