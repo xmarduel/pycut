@@ -12,9 +12,9 @@ Usage
 start the program from the installation folder
 
 ```
-> python pycut.py
 > python pycut.py -h
-> python pycut.py [<path_to_job>]
+> python pycut.py
+> python pycut.py -j <path_to_job>
 > python pycut.py -g <path_to_gcode>
 ```
 
@@ -22,12 +22,12 @@ Dependencies
 ------------
 - Python 3.10
 - PySide6 6.4.3
-- shapely 1.8.4 with PyOpenGL
+- shapely 1.8.4 with PyOpenGL (latest)
 - svgelements (latest)
 - lxml (latest)
 - freetype-py (latest) - used in svgtext2svpath.py utility
-- matplotlib 3.6.2 (to debug/view shapely offsets ops)
-- numba (latest) - for python simulator optimisation
+- matplotlib 3.6.2 - to debug/view shapely offsets ops
+- numba (latest) - for python simulator optimization
 
 
 Features
@@ -40,7 +40,7 @@ Features
    + engrave  YES
    + vPocket   NO  (will never be implemented - I do not need this -)
    + drill or peck YES (for circle of radius smaller than the cutter radius)
-- svg items selection and new op with combinaison Union/Diff/Inter/Xor (geometry calculated)
+- svg items selection and op creation with combinaison Union/Diff/Inter/Xor (geometry calculated)
 - preview geom displayed in svg viewer
 - tabs
 - toolpaths displayed in svg viewer

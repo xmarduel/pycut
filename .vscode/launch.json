@@ -4,8 +4,14 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
-
+        {
+            "name": "TEST DRESSUP",
+            "type": "python",
+            "request": "launch",
+            "program": "gcode_dressup.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\RESOURCES\\doc",
+        },
         {
             "name": "TEST SIMULATOR",
             "type": "python",
@@ -13,7 +19,9 @@
             "program": "RenderPath.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator_python",
-            "args": ["jscut.gcode"]
+            "args": [
+                "jscut.gcode"
+            ]
         },
         {
             "name": "TEST SIMULATOR_DEBUG",
@@ -57,7 +65,9 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["./jobs/cnc_control_panel.json"]
+            "args": [
+                "./jobs/cnc_control_panel.json"
+            ]
         },
         {
             "name": "PYCUT EMPTY",
@@ -75,7 +85,9 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["jobs\\cnc_polyline.json"]
+            "args": [
+                "jobs\\cnc_polyline.json"
+            ]
         },
         {
             "name": "PYCUT JOB CONTROL PANEL",
@@ -84,7 +96,9 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["jobs\\cnc_control_panel.json"]
+            "args": [
+                "jobs\\cnc_control_panel.json"
+            ]
         },
         {
             "name": "PYCUT JOB KASTEN",
@@ -93,7 +107,9 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["misc_private\\others_stuff\\kasten.json"]
+            "args": [
+                "misc_private\\others_stuff\\kasten.json"
+            ]
         },
         {
             "name": "PYCUT JOB SMALL KASTEN",
@@ -102,7 +118,9 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["misc_private\\others_stuff\\small_kasten.json"]
+            "args": [
+                "misc_private\\others_stuff\\small_kasten.json"
+            ]
         },
         {
             "name": "PYCUT JOB CLAMP PARTS",
@@ -111,7 +129,9 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["misc_private\\qkg38\\qkg38.json"]
+            "args": [
+                "misc_private\\qkg38\\qkg38.json"
+            ]
         },
         {
             "name": "PYCUT CNC1310 HORI PLATE",
@@ -120,7 +140,9 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["jobs\\cnc1310_horizontal_plate.json"]
+            "args": [
+                "jobs\\cnc1310_horizontal_plate.json"
+            ]
         },
         {
             "name": "PYCUT BEARING TEST",
@@ -129,7 +151,9 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["jobs\\cnc_test_bearing.json"]
+            "args": [
+                "jobs\\cnc_test_bearing.json"
+            ]
         },
         {
             "name": "PYCUT BACKLASH TEST",
@@ -138,7 +162,9 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["jobs\\cnc1310_backlash_test.json"]
+            "args": [
+                "jobs\\cnc1310_backlash_test.json"
+            ]
         },
         {
             "name": "PYCUT JOB ALL LETTERS",
@@ -147,7 +173,9 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["jobs\\cnc_all_letters.json"]
+            "args": [
+                "jobs\\cnc_all_letters.json"
+            ]
         },
         {
             "name": "PYCUT JOB ALL LETTERS TUDORS",
@@ -156,7 +184,9 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["jobs\\cnc_all_letters_tudor.json"]
+            "args": [
+                "jobs\\cnc_all_letters_tudor.json"
+            ]
         },
         {
             "name": "PYCUT GEAR 40",
@@ -165,7 +195,9 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["misc_private\\svg\\hobbymat\\hobbymat_gear_40.json"]
+            "args": [
+                "misc_private\\svg\\hobbymat\\hobbymat_gear_40.json"
+            ]
         },
         {
             "name": "GCODE PARSER",
