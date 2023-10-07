@@ -32,7 +32,6 @@ class GCodePatternDressUp:
         G1 X<xc> Y<yc>
         G1 X<x2> Y<y2>
 
-
         segment [X1:C]:  a1.x + b1.y + c1 = 0
         segment [X2:C]:  a2.x + b2.y + c2 = 0
 
@@ -49,14 +48,22 @@ class GCodePatternDressUp:
 
         # slopes of the segments : y = mx + b  or ax + by + c = 0
         if xc != x1:
-            self.m1 = (yc - y1) / (xc - x1)
+            self.a1 = (yc - y1) / (xc - x1)
+            self.b1 = -1.0
+            self.c1 = -(self.a1 * self.xc + self.b1 * self.yc)
         else:
-            self.m1 = 999999999 if yc > y1 else -999999999
+            self.a1 = 1.0
+            self.b1 = 0.0
+            self.c1 = -(self.a1 * self.xc + self.b1 * self.yc)
 
         if x2 != xc:
-            self.m2 = (y2 - yc) / (x2 - xc)
+            self.a2 = (y2 - yc) / (x2 - xc)
+            self.b2 = -1.0
+            self.c2 = -(self.a2 * self.xc + self.b2 * self.yc)
         else:
-            self.m2 = 999999999 if yc > y2 else -999999999
+            self.a2 = 1.0
+            self.b2 = 0.0
+            self.c2 = -(self.a2 * self.xc + self.b2 * self.yc)
 
         self.corner_angle = self.calc_corner_angle()
         self.gap = self.calc_gap()
@@ -103,24 +110,28 @@ class GCodePatternDressUp:
 
     def calc_bisection_angles(self) -> Tuple[float, float]:
         """
-        (a1x + b1y + c2 ) / k1 = +/- (a2x + b2y + c2 ) / k2
+        (a1x + b1y + c1 ) / k1 = +/- (a2x + b2y + c2 ) / k2
 
         The 2 angles are in [-PI/2 : +PI/2]
         """
-        a1 = self.m1
-        b1 = -1
+        a1 = self.a1
+        b1 = self.b1
+        c1 = self.c1
 
-        a2 = self.m2
-        b2 = -1
+        a2 = self.a2
+        b2 = self.b2
+        c2 = self.c1
 
         k1 = sqrt(a1 * a1 + b1 * b1)
         k2 = sqrt(a2 * a2 + b2 * b2)
 
         aa1 = a1 / k1 - a2 / k2
         bb1 = b1 / k1 - b2 / k2
+        cc1 = c1 / k1 - c2 / k2
 
         aa2 = a1 / k1 + a2 / k2
         bb2 = b1 / k1 + b2 / k2
+        cc2 = c1 / k1 + c2 / k2
 
         if bb1 == 0:
             slope_b1 = 99999999
