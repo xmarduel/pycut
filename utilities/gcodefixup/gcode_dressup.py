@@ -51,6 +51,7 @@ class GCodePatternDressUp:
             self.a1 = (yc - y1) / (xc - x1)
             self.b1 = -1.0
             self.c1 = -(self.a1 * self.xc + self.b1 * self.yc)
+
         else:
             self.a1 = 1.0
             self.b1 = 0.0
@@ -120,7 +121,7 @@ class GCodePatternDressUp:
 
         a2 = self.a2
         b2 = self.b2
-        c2 = self.c1
+        c2 = self.c2
 
         k1 = sqrt(a1 * a1 + b1 * b1)
         k2 = sqrt(a2 * a2 + b2 * b2)
@@ -133,22 +134,27 @@ class GCodePatternDressUp:
         bb2 = b1 / k1 + b2 / k2
         cc2 = c1 / k1 + c2 / k2
 
+        # print("C on bisect1: ", self.xc * aa1 + self.yc * bb1 + cc1)
+        # print("C on bisect2: ", self.xc * aa2 + self.yc * bb2 + cc2)
+
         if bb1 == 0:
-            slope_b1 = 99999999
-            bisect1 = pi / 2.0
-            if -aa1 < 0:
+            if aa1 > 0:
                 slope_b1 = -99999999
                 bisect1 = -pi / 2.0
+            else:
+                slope_b1 = 99999999
+                bisect1 = pi / 2.0
         else:
             slope_b1 = -aa1 / bb1
             bisect1 = atan(-aa1 / bb1)
 
         if bb2 == 0:
-            slope_b2 = 99999999
-            bisect2 = pi / 2.0
-            if -aa2 < 0:
+            if aa2 > 0:
                 slope_b2 = -99999999
                 bisect2 = -pi / 2.0
+            else:
+                slope_b2 = 99999999
+                bisect2 = pi / 2.0
         else:
             slope_b2 = -aa2 / bb2
             bisect2 = atan(-aa2 / bb2)
