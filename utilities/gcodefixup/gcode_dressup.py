@@ -1,3 +1,6 @@
+VERSION = "0_1_0"
+
+import argparse
 from math import *
 from typing import Tuple
 
@@ -9,7 +12,7 @@ def RAD_TO_DEG(val):
     return val * 180.0 / pi
 
 
-class GCodeDressUp:
+class GCodePatternDressUp:
     """ """
 
     def __init__(
@@ -29,9 +32,14 @@ class GCodeDressUp:
         G1 X<xc> Y<yc>
         G1 X<x2> Y<y2>
 
+
+        segment [X1:C]:  a1.x + b1.y + c1 = 0
+        segment [X2:C]:  a2.x + b2.y + c2 = 0
+
         """
         self.cutter_radius = cutter_radius
 
+        # the points
         self.x1 = x1
         self.y1 = y1
         self.xc = xc
@@ -50,9 +58,6 @@ class GCodeDressUp:
         else:
             self.m2 = 999999999 if yc > y2 else -999999999
 
-        self.c1 = self.xc - self.m1 * self.xc
-        self.c2 = self.xc - self.m2 * self.xc
-
         self.corner_angle = self.calc_corner_angle()
         self.gap = self.calc_gap()
 
@@ -70,10 +75,12 @@ class GCodeDressUp:
 
     def calc_corner_angle(self) -> float:
         """ """
-        u = [self.xc - self.x1, self.yc - self.y1]
-        v = [self.xc - self.x2, self.yc - self.y2]
+        u = [self.xc - self.x1, self.yc - self.y1]  #  vector C-A1
+        v = [self.xc - self.x2, self.yc - self.y2]  #  vector C-A2
 
-        cos_beta = GCodeDressUp.prod_vec(u, v) / (GCodeDressUp.norm_vec(u) * GCodeDressUp.norm_vec(v))
+        cos_beta = GCodePatternDressUp.prod_vec(u, v) / (
+            GCodePatternDressUp.norm_vec(u) * GCodePatternDressUp.norm_vec(v)
+        )
 
         beta = acos(cos_beta)
 
@@ -102,11 +109,9 @@ class GCodeDressUp:
         """
         a1 = self.m1
         b1 = -1
-        c1 = self.c1
 
         a2 = self.m2
         b2 = -1
-        c2 = self.c2
 
         k1 = sqrt(a1 * a1 + b1 * b1)
         k2 = sqrt(a2 * a2 + b2 * b2)
@@ -204,53 +209,22 @@ G90
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(prog="gcode_dressup", description="add dogbones for gcode")
+
+    # argument
+    parser.add_argument("gcode", help="gcode to dressup")
+    parser.add_argument("-r", "--cutter-radius", dest="cutter_radius", default=1.0, help="cutter radius")
+
+    # version info
+    parser.add_argument("--version", action="version", version="%s" % VERSION)
+
+    options = parser.parse_args()
+
     cutter_radius = 1.0
 
     if True:
-        v = [-2.0, 2.0, 4.0, 4.0, 2.0, -2.0]
-        ff = GCodeDressUp(cutter_radius, v[0], v[1], v[2], v[3], v[4], v[5])
-        res = ff.make_dressup()
-
-        print(res)
-
-    if True:
-        v = [2.0, 2.0, -4.0, 4.0, -2.0, -2.0]
-        ff = GCodeDressUp(cutter_radius, v[0], v[1], v[2], v[3], v[4], v[5])
-        res = ff.make_dressup()
-
-        print(res)
-
-    if True:
-        v = [+0.01, 0.0, 0.0, 4.0, 4.0, 4.0]
-        ff = GCodeDressUp(cutter_radius, v[0], v[1], v[2], v[3], v[4], v[5])
-        res = ff.make_dressup()
-
-        print(res)
-
-    if True:
-        v = [-0.01, 0.0, 0.0, 4.0, 4.0, 4.0]
-        ff = GCodeDressUp(cutter_radius, v[0], v[1], v[2], v[3], v[4], v[5])
-        res = ff.make_dressup()
-
-        print(res)
-
-    if True:
         v = [-0.0, 0.0, 0.0, 4.0, 4.0, 4.0]
-        ff = GCodeDressUp(cutter_radius, v[0], v[1], v[2], v[3], v[4], v[5])
-        res = ff.make_dressup()
-
-        print(res)
-
-    if True:
-        v = [-4.0, 0.0, 0.0, 4.0, 4.0, 0.0]
-        ff = GCodeDressUp(cutter_radius, v[0], v[1], v[2], v[3], v[4], v[5])
-        res = ff.make_dressup()
-
-        print(res)
-
-    if True:
-        v = [-4.0, 0.0, 0.0, -4.0, 4.0, 0.0]
-        ff = GCodeDressUp(cutter_radius, v[0], v[1], v[2], v[3], v[4], v[5])
+        ff = GCodePatternDressUp(cutter_radius, v[0], v[1], v[2], v[3], v[4], v[5])
         res = ff.make_dressup()
 
         print(res)
