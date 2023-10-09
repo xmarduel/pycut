@@ -134,27 +134,16 @@ class GCodePatternDressUp:
         bb2 = b1 / k1 + b2 / k2
         cc2 = c1 / k1 + c2 / k2
 
-        # print("C on bisect1: ", self.xc * aa1 + self.yc * bb1 + cc1)
-        # print("C on bisect2: ", self.xc * aa2 + self.yc * bb2 + cc2)
-
         if bb1 == 0:
-            if aa1 > 0:
-                slope_b1 = -99999999
-                bisect1 = -pi / 2.0
-            else:
-                slope_b1 = 99999999
-                bisect1 = pi / 2.0
+            slope_b1 = 99999999
+            bisect1 = pi / 2.0
         else:
             slope_b1 = -aa1 / bb1
             bisect1 = atan(-aa1 / bb1)
 
         if bb2 == 0:
-            if aa2 > 0:
-                slope_b2 = -99999999
-                bisect2 = -pi / 2.0
-            else:
-                slope_b2 = 99999999
-                bisect2 = pi / 2.0
+            slope_b2 = 99999999
+            bisect2 = pi / 2.0
         else:
             slope_b2 = -aa2 / bb2
             bisect2 = atan(-aa2 / bb2)
@@ -165,19 +154,19 @@ class GCodePatternDressUp:
         max_slope = max(abs(slope_b1), abs(slope_b2))
         coeff = min(0.1, 1.0 / max_slope)
 
-        cc_dir1 = [self.xc + coeff, self.yc + coeff * slope_b1]
-        cc_dir2 = [self.xc - coeff, self.yc - coeff * slope_b1]
+        cc_dir_slope1_1 = [self.xc + coeff, self.yc + coeff * slope_b1]
+        cc_dir_slope1_2 = [self.xc - coeff, self.yc - coeff * slope_b1]
 
-        cc_dir3 = [self.xc + coeff, self.yc + coeff * slope_b2]
-        cc_dir4 = [self.xc - coeff, self.yc - coeff * slope_b2]
+        cc_dir_slope2_1 = [self.xc + coeff, self.yc + coeff * slope_b2]
+        cc_dir_slope2_2 = [self.xc - coeff, self.yc - coeff * slope_b2]
 
         triangles = ((self.x1, self.y1), (self.xc, self.yc), (self.x2, self.y2))
         polygon = shapely.geometry.Polygon(triangles)
 
-        pt1 = shapely.geometry.Point(cc_dir1)
-        pt2 = shapely.geometry.Point(cc_dir2)
-        pt3 = shapely.geometry.Point(cc_dir3)
-        pt4 = shapely.geometry.Point(cc_dir4)
+        pt1 = shapely.geometry.Point(cc_dir_slope1_1)
+        pt2 = shapely.geometry.Point(cc_dir_slope1_2)
+        pt3 = shapely.geometry.Point(cc_dir_slope2_1)
+        pt4 = shapely.geometry.Point(cc_dir_slope2_2)
 
         if polygon.contains(pt1):
             bisect_ok = bisect1 + pi
