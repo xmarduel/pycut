@@ -2,7 +2,7 @@ VERSION = "0_1_0"
 
 import argparse
 from math import *
-from typing import Tuple
+from typing import List, Tuple
 
 import shapely.geometry
 import shapely.ops
@@ -12,59 +12,74 @@ def RAD_TO_DEG(val):
     return val * 180.0 / pi
 
 
+class Point:
+    """ """
+
+    def __init__(self, x: float, y: float):
+        self.x = x
+        self.y = y
+
+    def translate(self, u: "Point") -> "Point":
+        """translate with a vector"""
+        return Point(self.x + u.x, self.y + u.y)
+
+    def transport(self, slope: float, coeff: float) -> "Point":
+        """translate with a vector of dim (1, <slope>) scaled with <coeff>"""
+        u = Point(1.0, slope).scale(coeff)
+        return self.translate(u)
+
+    def scale(self, coeff: float) -> "Point":
+        """scale as a vector"""
+        return Point(self.x * coeff, self.y * coeff)
+
+    def norm(self) -> float:
+        return sqrt(self.x * self.x + self.y * self.y)
+
+    def coordinates(self) -> List[float]:
+        return [self.x, self.y]
+
+
 class GCodePatternDressUp:
     """ """
 
-    def __init__(
-        self,
-        cutter_radius: float,
-        x1: float,
-        y1: float,
-        xc: float,
-        yc: float,
-        x2: float,
-        y2: float,
-    ):
+    def __init__(self, cutter_radius: float, pt1: Point, ptc: Point, pt2: Point):
         """
         From
 
-        G1 X<xo> Y<yo>
-        G1 X<xc> Y<yc>
+        G1 X<x1> Y<y1>
+        G1 X<ptc.x> Y<ptc.y>
         G1 X<x2> Y<y2>
 
-        segment [X1:C]:  a1.x + b1.y + c1 = 0
-        segment [X2:C]:  a2.x + b2.y + c2 = 0
+        segment [pt1.x:C]:  a1.x + b1.y + c1 = 0
+        segment [pt2.x:C]:  a2.x + b2.y + c2 = 0
 
         """
         self.cutter_radius = cutter_radius
 
         # the points
-        self.x1 = x1
-        self.y1 = y1
-        self.xc = xc
-        self.yc = yc
-        self.x2 = x2
-        self.y2 = y2
+        self.pt1 = pt1
+        self.ptc = ptc
+        self.pt2 = pt2
 
         # slopes of the segments : y = mx + b  or ax + by + c = 0
-        if xc != x1:
-            self.a1 = (yc - y1) / (xc - x1)
+        if ptc.x != pt1.x:
+            self.a1 = (ptc.y - pt1.y) / (ptc.x - pt1.x)
             self.b1 = -1.0
-            self.c1 = -(self.a1 * self.xc + self.b1 * self.yc)
+            self.c1 = -(self.a1 * self.ptc.x + self.b1 * self.ptc.y)
 
         else:
             self.a1 = 1.0
             self.b1 = 0.0
-            self.c1 = -(self.a1 * self.xc + self.b1 * self.yc)
+            self.c1 = -(self.a1 * self.ptc.x + self.b1 * self.ptc.y)
 
-        if x2 != xc:
-            self.a2 = (y2 - yc) / (x2 - xc)
+        if pt2.x != ptc.x:
+            self.a2 = (pt2.y - ptc.y) / (pt2.x - ptc.x)
             self.b2 = -1.0
-            self.c2 = -(self.a2 * self.xc + self.b2 * self.yc)
+            self.c2 = -(self.a2 * self.ptc.x + self.b2 * self.ptc.y)
         else:
             self.a2 = 1.0
             self.b2 = 0.0
-            self.c2 = -(self.a2 * self.xc + self.b2 * self.yc)
+            self.c2 = -(self.a2 * self.ptc.x + self.b2 * self.ptc.y)
 
         self.corner_angle = self.calc_corner_angle()
         self.gap = self.calc_gap()
@@ -83,8 +98,8 @@ class GCodePatternDressUp:
 
     def calc_corner_angle(self) -> float:
         """ """
-        u = [self.xc - self.x1, self.yc - self.y1]  #  vector C-A1
-        v = [self.xc - self.x2, self.yc - self.y2]  #  vector C-A2
+        u = [self.ptc.x - self.pt1.x, self.ptc.y - self.pt1.y]  #  vector C-A1
+        v = [self.ptc.x - self.pt2.x, self.ptc.y - self.pt2.y]  #  vector C-A2
 
         cos_beta = GCodePatternDressUp.prod_vec(u, v) / (
             GCodePatternDressUp.norm_vec(u) * GCodePatternDressUp.norm_vec(v)
@@ -151,22 +166,44 @@ class GCodePatternDressUp:
         print("bisects angles:", RAD_TO_DEG(bisect1), " and ", RAD_TO_DEG(bisect2))
 
         # get the correct bisection with the correct orientation
-        max_slope = max(abs(slope_b1), abs(slope_b2))
-        coeff = min(0.1, 1.0 / max_slope)
 
-        cc_dir_slope1_1 = [self.xc + coeff, self.yc + coeff * slope_b1]
-        cc_dir_slope1_2 = [self.xc - coeff, self.yc - coeff * slope_b1]
+        # the point on a given bisection in the given orientation (not too far!) is inside the triangle defined by the 3 points ?
+        # then this bisection is the right one and the right orientation is this orientation + Pi (the opposite!)
 
-        cc_dir_slope2_1 = [self.xc + coeff, self.yc + coeff * slope_b2]
-        cc_dir_slope2_2 = [self.xc - coeff, self.yc - coeff * slope_b2]
+        u = Point(self.ptc.x - self.pt1.x, self.ptc.y - self.pt1.y)  #  vector C-A1
+        v = Point(self.ptc.x - self.pt2.x, self.ptc.y - self.pt2.y)  #  vector C-A2
 
-        triangles = ((self.x1, self.y1), (self.xc, self.yc), (self.x2, self.y2))
-        polygon = shapely.geometry.Polygon(triangles)
+        norm_u = u.norm()
+        norm_v = v.norm()
 
-        pt1 = shapely.geometry.Point(cc_dir_slope1_1)
-        pt2 = shapely.geometry.Point(cc_dir_slope1_2)
-        pt3 = shapely.geometry.Point(cc_dir_slope2_1)
-        pt4 = shapely.geometry.Point(cc_dir_slope2_2)
+        norm_min = min(norm_u, norm_v)
+
+        norm_u_slope_1 = Point(1.0, slope_b1).norm()
+        norm_u_slope_2 = Point(1.0, slope_b2).norm()
+
+        norm_u_slope_max = max(norm_u_slope_1, norm_u_slope_2)
+
+        coeff = 0.25 * norm_min / norm_u_slope_max
+        # print("coeff [1]", coeff)
+
+        pt_slope1_dir1 = self.ptc.transport(slope_b1, coeff)
+        pt_slope1_dir2 = self.ptc.transport(slope_b1, -coeff)
+
+        pt_slope2_dir1 = self.ptc.transport(slope_b2, coeff)
+        pt_slope2_dir2 = self.ptc.transport(slope_b2, -coeff)
+
+        polygon = shapely.geometry.Polygon(
+            (
+                shapely.geometry.Point(self.pt1.coordinates()),
+                shapely.geometry.Point(self.ptc.coordinates()),
+                shapely.geometry.Point(self.pt2.coordinates()),
+            )
+        )
+
+        pt1 = shapely.geometry.Point(pt_slope1_dir1.coordinates())
+        pt2 = shapely.geometry.Point(pt_slope1_dir2.coordinates())
+        pt3 = shapely.geometry.Point(pt_slope2_dir1.coordinates())
+        pt4 = shapely.geometry.Point(pt_slope2_dir2.coordinates())
 
         if polygon.contains(pt1):
             bisect_ok = bisect1 + pi
@@ -215,11 +252,15 @@ G90
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog="gcode_dressup", description="add dogbones for gcode")
+    parser = argparse.ArgumentParser(
+        prog="gcode_dressup", description="add dogbones for gcode"
+    )
 
     # argument
     parser.add_argument("gcode", help="gcode to dressup")
-    parser.add_argument("-r", "--cutter-radius", dest="cutter_radius", default=1.0, help="cutter radius")
+    parser.add_argument(
+        "-r", "--cutter-radius", dest="cutter_radius", default=1.0, help="cutter radius"
+    )
 
     # version info
     parser.add_argument("--version", action="version", version="%s" % VERSION)
@@ -229,8 +270,11 @@ if __name__ == "__main__":
     cutter_radius = 1.0
 
     if True:
-        v = [-0.0, 0.0, 0.0, 4.0, 4.0, 4.0]
-        ff = GCodePatternDressUp(cutter_radius, v[0], v[1], v[2], v[3], v[4], v[5])
+        pt1 = Point(0.0, 0.0)
+        ptc = Point(0.0, 4.0)
+        pt2 = Point(4.0, 4.0)
+
+        ff = GCodePatternDressUp(cutter_radius, pt1, ptc, pt2)
         res = ff.make_dressup()
 
         print(res)
