@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- 
+the holes to screw the vise fixed part on the machine.
+
+Note: 
+if the part is 20 mm high, the 9 mm large pockets have to be 11 mm deep, 
+and this leaves an height of 9 mm for the holes ("cut through") themselves 
+(the screws themselves are a bit longer) 
+so that the screws themselves get attached in the T-nuts of the T-slots of the machine
+-->
+<svg version="1.1" width="160mm" height="25mm" viewBox="0 0 160 25" id="vise1419-fixed-part" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+    <g id="root">  
+	    <rect                 style="fill:black;fill-opacity:0.4" x="0" y="0" width="160" height="20" />
+		
+	    <!-- cut through -->
+	    <circle  id="pocket-10.00mm" style="fill:black;fill-opacity:0.4" cx="10" cy="10" r="5.0" />
+		<circle  id="pocket-10.05mm" style="fill:black;fill-opacity:0.4" cx="25" cy="10" r="5.025" />
+		<circle  id="pocket-10.10mm" style="fill:black;fill-opacity:0.4" cx="40" cy="10" r="5.05" />
+		<circle  id="pocket-10.15mm" style="fill:black;fill-opacity:0.4" cx="55" cy="10" r="5.075" />
+		<circle  id="pocket-10.20mm" style="fill:black;fill-opacity:0.4" cx="70" cy="10" r="5.10" />
+		<circle  id="pocket-10.25mm" style="fill:black;fill-opacity:0.4" cx="85" cy="10" r="5.125" />
+		<circle  id="pocket-10.30mm" style="fill:black;fill-opacity:0.4" cx="100" cy="10" r="5.15" />
+		<circle  id="pocket-10.35mm" style="fill:black;fill-opacity:0.4" cx="115" cy="10" r="5.175" />
+		<circle  id="pocket-10.40mm" style="fill:black;fill-opacity:0.4" cx="130" cy="10" r="5.2" />
+	</g>
+</svg>

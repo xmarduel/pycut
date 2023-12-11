@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg version="1.1" width="160mm" height="100mm" viewBox="0 0 160 100" id="unitmat-cnc-kit" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+	
+  <defs id="defs">
+    <circle id="motor_screw_4.0mm"  style="fill:#00ffff;fill-opacity:1.0"  cx="0" cy="0" r="2.0" />
+  </defs>
+	
+  <g id="root" transform="translate(10 10)">	
+    <path id="workpiece" d="M 0 0 h 110 a 1 1 0 1 1 0 67 h -110  z" 
+	     style="fill:none;stroke:blue; stroke-width:0.2"/>
+    
+	<!-- servo motor -->
+	<g id="motor" transform="translate(5 5)">
+	  <rect id="motor_base" x="0" y="0" width="57" height="57" rx="2" ry="2" style="fill:none;stroke:blue;stroke-width:0.2"	/> 
+	  <g transform="translate(28.5 28.5)">
+	    <circle id="motor_hole" cx="0" cy="0" r="18"/>
+	    <use href="#motor_screw_4.0mm" transform="translate(23.57 23.57)"   id="motor_screw_3.0mm_NW" />
+        <use href="#motor_screw_4.0mm" transform="translate(23.57 -23.57)"  id="motor_screw_3.0mm_NE" />
+        <use href="#motor_screw_4.0mm" transform="translate(-23.57 -23.57)" id="motor_screw_3.0mm_SW" />
+        <use href="#motor_screw_4.0mm" transform="translate(-23.57 23.57)"  id="motor_screw_3.0mm_SE" /> 
+	  </g>
+	</g>
+	
+	<!-- unimat spindle -->
+	<g id="spindle" transform="translate(110 33.5)">
+	  <circle id="spindle_hole" cx="0" cy="0" r="22"/>
+	  <circle id="spindle_reinforcement" cx="0" cy="0" r="33.5" 
+	        style="fill:none;stroke:red; stroke-width:0.2"/>
+	</g>
+	
+	<!-- spacer -->
+	<rect id="belt-tightener"  x="57.5" y="45" width="5" height="15" rx="2" ry="2" style="fill:none;stroke:blue;stroke-width:0.2"	/> 
+	 <circle id="tightener" cx="60" cy="50" r="10" style="fill:none;stroke:red; stroke-width:0.2"/>
+  </g>
+</svg>

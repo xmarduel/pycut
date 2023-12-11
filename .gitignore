@@ -6,7 +6,7 @@ __pycache__/
 gcode/
 
 misc_private/cnc1310/backlash.mp4
-misc_private/cnc1419
+#misc_private/cnc1419
 #misc_private/cnc3018-frames-parts
 #misc_private/others_stuff
 misc_private/images
