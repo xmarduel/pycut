@@ -10,7 +10,15 @@
             "request": "launch",
             "program": "gcode_dressup.py",
             "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\RESOURCES\\doc",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\gcodefixup",
+        },
+        {
+            "name": "UNITTEST DRESSUP",
+            "type": "python",
+            "request": "launch",
+            "program": "test_dressup.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\gcodefixup",
         },
         {
             "name": "TEST SIMULATOR",

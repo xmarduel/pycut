@@ -89,13 +89,13 @@ class Ui_mainwindow(object):
 
         self.horizontalLayout.addWidget(self.label_PxPerInch)
 
-        self.doubleSpinBox_PxPerInch = QDoubleSpinBox(self.scrollAreaWidgetContents)
-        self.doubleSpinBox_PxPerInch.setObjectName(u"doubleSpinBox_PxPerInch")
-        self.doubleSpinBox_PxPerInch.setEnabled(False)
-        self.doubleSpinBox_PxPerInch.setMaximum(999.990000000000009)
-        self.doubleSpinBox_PxPerInch.setValue(1.000000000000000)
+        self.PxPerInch = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.PxPerInch.setObjectName(u"PxPerInch")
+        self.PxPerInch.setEnabled(False)
+        self.PxPerInch.setMaximum(999.990000000000009)
+        self.PxPerInch.setValue(1.000000000000000)
 
-        self.horizontalLayout.addWidget(self.doubleSpinBox_PxPerInch)
+        self.horizontalLayout.addWidget(self.PxPerInch)
 
 
         self.verticalLayoutSettingsContent.addLayout(self.horizontalLayout)
@@ -109,12 +109,12 @@ class Ui_mainwindow(object):
 
         self.horizontalLayout_4.addWidget(self.label_SvgModelWidth)
 
-        self.doubleSpinBox_SvgModelWidth = QDoubleSpinBox(self.scrollAreaWidgetContents)
-        self.doubleSpinBox_SvgModelWidth.setObjectName(u"doubleSpinBox_SvgModelWidth")
-        self.doubleSpinBox_SvgModelWidth.setEnabled(False)
-        self.doubleSpinBox_SvgModelWidth.setMaximum(999.990000000000009)
+        self.SvgModelWidth = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.SvgModelWidth.setObjectName(u"SvgModelWidth")
+        self.SvgModelWidth.setEnabled(False)
+        self.SvgModelWidth.setMaximum(999.990000000000009)
 
-        self.horizontalLayout_4.addWidget(self.doubleSpinBox_SvgModelWidth)
+        self.horizontalLayout_4.addWidget(self.SvgModelWidth)
 
 
         self.verticalLayoutSettingsContent.addLayout(self.horizontalLayout_4)
@@ -128,12 +128,12 @@ class Ui_mainwindow(object):
 
         self.horizontalLayout_3.addWidget(self.label_SvgModelHeight)
 
-        self.doubleSpinBox_SvgModelHeight = QDoubleSpinBox(self.scrollAreaWidgetContents)
-        self.doubleSpinBox_SvgModelHeight.setObjectName(u"doubleSpinBox_SvgModelHeight")
-        self.doubleSpinBox_SvgModelHeight.setEnabled(False)
-        self.doubleSpinBox_SvgModelHeight.setMaximum(999.990000000000009)
+        self.SvgModelHeight = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.SvgModelHeight.setObjectName(u"SvgModelHeight")
+        self.SvgModelHeight.setEnabled(False)
+        self.SvgModelHeight.setMaximum(999.990000000000009)
 
-        self.horizontalLayout_3.addWidget(self.doubleSpinBox_SvgModelHeight)
+        self.horizontalLayout_3.addWidget(self.SvgModelHeight)
 
 
         self.verticalLayoutSettingsContent.addLayout(self.horizontalLayout_3)
@@ -170,12 +170,12 @@ class Ui_mainwindow(object):
 
         self.gridLayout_Tool.addWidget(self.label_Tool_Overlap, 4, 0, 1, 1)
 
-        self.spinBox_Tool_Rapid = QSpinBox(self.scrollAreaWidgetContents)
-        self.spinBox_Tool_Rapid.setObjectName(u"spinBox_Tool_Rapid")
-        self.spinBox_Tool_Rapid.setMaximum(1000)
-        self.spinBox_Tool_Rapid.setValue(500)
+        self.Tool_Rapid = QSpinBox(self.scrollAreaWidgetContents)
+        self.Tool_Rapid.setObjectName(u"Tool_Rapid")
+        self.Tool_Rapid.setMaximum(1000)
+        self.Tool_Rapid.setValue(500)
 
-        self.gridLayout_Tool.addWidget(self.spinBox_Tool_Rapid, 5, 2, 1, 1)
+        self.gridLayout_Tool.addWidget(self.Tool_Rapid, 5, 2, 1, 1)
 
         self.label_Tool_Units = QLabel(self.scrollAreaWidgetContents)
         self.label_Tool_Units.setObjectName(u"label_Tool_Units")
@@ -222,26 +222,26 @@ class Ui_mainwindow(object):
 
         self.gridLayout_Tool.addWidget(self.label_Tool_Rapid, 5, 0, 1, 1)
 
-        self.spinBox_Tool_Angle = QSpinBox(self.scrollAreaWidgetContents)
-        self.spinBox_Tool_Angle.setObjectName(u"spinBox_Tool_Angle")
-        self.spinBox_Tool_Angle.setMaximum(180)
-        self.spinBox_Tool_Angle.setValue(180)
+        self.Tool_Angle = QSpinBox(self.scrollAreaWidgetContents)
+        self.Tool_Angle.setObjectName(u"Tool_Angle")
+        self.Tool_Angle.setMaximum(180)
+        self.Tool_Angle.setValue(180)
 
-        self.gridLayout_Tool.addWidget(self.spinBox_Tool_Angle, 2, 2, 1, 1)
+        self.gridLayout_Tool.addWidget(self.Tool_Angle, 2, 2, 1, 1)
 
         self.label_Tool_Overlap_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
         self.label_Tool_Overlap_UnitsDescr.setObjectName(u"label_Tool_Overlap_UnitsDescr")
 
         self.gridLayout_Tool.addWidget(self.label_Tool_Overlap_UnitsDescr, 4, 1, 1, 1)
 
-        self.doubleSpinBox_Tool_Diameter = QDoubleSpinBox(self.scrollAreaWidgetContents)
-        self.doubleSpinBox_Tool_Diameter.setObjectName(u"doubleSpinBox_Tool_Diameter")
-        self.doubleSpinBox_Tool_Diameter.setDecimals(3)
-        self.doubleSpinBox_Tool_Diameter.setMaximum(32.000000000000000)
-        self.doubleSpinBox_Tool_Diameter.setSingleStep(0.100000000000000)
-        self.doubleSpinBox_Tool_Diameter.setValue(1.000000000000000)
+        self.Tool_Diameter = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.Tool_Diameter.setObjectName(u"Tool_Diameter")
+        self.Tool_Diameter.setDecimals(3)
+        self.Tool_Diameter.setMaximum(32.000000000000000)
+        self.Tool_Diameter.setSingleStep(0.100000000000000)
+        self.Tool_Diameter.setValue(1.000000000000000)
 
-        self.gridLayout_Tool.addWidget(self.doubleSpinBox_Tool_Diameter, 1, 2, 1, 1)
+        self.gridLayout_Tool.addWidget(self.Tool_Diameter, 1, 2, 1, 1)
 
         self.label_Tool_Diameter = QLabel(self.scrollAreaWidgetContents)
         self.label_Tool_Diameter.setObjectName(u"label_Tool_Diameter")
@@ -249,12 +249,12 @@ class Ui_mainwindow(object):
 
         self.gridLayout_Tool.addWidget(self.label_Tool_Diameter, 1, 0, 1, 1)
 
-        self.spinBox_Tool_Plunge = QSpinBox(self.scrollAreaWidgetContents)
-        self.spinBox_Tool_Plunge.setObjectName(u"spinBox_Tool_Plunge")
-        self.spinBox_Tool_Plunge.setMaximum(1000)
-        self.spinBox_Tool_Plunge.setValue(100)
+        self.Tool_Plunge = QSpinBox(self.scrollAreaWidgetContents)
+        self.Tool_Plunge.setObjectName(u"Tool_Plunge")
+        self.Tool_Plunge.setMaximum(1000)
+        self.Tool_Plunge.setValue(100)
 
-        self.gridLayout_Tool.addWidget(self.spinBox_Tool_Plunge, 6, 2, 1, 1)
+        self.gridLayout_Tool.addWidget(self.Tool_Plunge, 6, 2, 1, 1)
 
         self.label_Tool_PassDepth_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
         self.label_Tool_PassDepth_UnitsDescr.setObjectName(u"label_Tool_PassDepth_UnitsDescr")
@@ -267,37 +267,37 @@ class Ui_mainwindow(object):
 
         self.gridLayout_Tool.addWidget(self.label_Tool_Cut, 7, 0, 1, 1)
 
-        self.doubleSpinBox_Tool_Overlap = QDoubleSpinBox(self.scrollAreaWidgetContents)
-        self.doubleSpinBox_Tool_Overlap.setObjectName(u"doubleSpinBox_Tool_Overlap")
-        self.doubleSpinBox_Tool_Overlap.setDecimals(3)
-        self.doubleSpinBox_Tool_Overlap.setMaximum(1.000000000000000)
-        self.doubleSpinBox_Tool_Overlap.setSingleStep(0.010000000000000)
-        self.doubleSpinBox_Tool_Overlap.setValue(0.400000000000000)
+        self.Tool_Overlap = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.Tool_Overlap.setObjectName(u"Tool_Overlap")
+        self.Tool_Overlap.setDecimals(3)
+        self.Tool_Overlap.setMaximum(1.000000000000000)
+        self.Tool_Overlap.setSingleStep(0.010000000000000)
+        self.Tool_Overlap.setValue(0.400000000000000)
 
-        self.gridLayout_Tool.addWidget(self.doubleSpinBox_Tool_Overlap, 4, 2, 1, 1)
+        self.gridLayout_Tool.addWidget(self.Tool_Overlap, 4, 2, 1, 1)
 
-        self.comboBox_Tool_Units = QComboBox(self.scrollAreaWidgetContents)
-        self.comboBox_Tool_Units.addItem("")
-        self.comboBox_Tool_Units.addItem("")
-        self.comboBox_Tool_Units.setObjectName(u"comboBox_Tool_Units")
+        self.Tool_Units = QComboBox(self.scrollAreaWidgetContents)
+        self.Tool_Units.addItem("")
+        self.Tool_Units.addItem("")
+        self.Tool_Units.setObjectName(u"Tool_Units")
 
-        self.gridLayout_Tool.addWidget(self.comboBox_Tool_Units, 0, 1, 1, 1)
+        self.gridLayout_Tool.addWidget(self.Tool_Units, 0, 1, 1, 1)
 
-        self.doubleSpinBox_Tool_PassDepth = QDoubleSpinBox(self.scrollAreaWidgetContents)
-        self.doubleSpinBox_Tool_PassDepth.setObjectName(u"doubleSpinBox_Tool_PassDepth")
-        self.doubleSpinBox_Tool_PassDepth.setDecimals(3)
-        self.doubleSpinBox_Tool_PassDepth.setMaximum(10.000000000000000)
-        self.doubleSpinBox_Tool_PassDepth.setSingleStep(0.500000000000000)
-        self.doubleSpinBox_Tool_PassDepth.setValue(0.200000000000000)
+        self.Tool_PassDepth = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.Tool_PassDepth.setObjectName(u"Tool_PassDepth")
+        self.Tool_PassDepth.setDecimals(3)
+        self.Tool_PassDepth.setMaximum(10.000000000000000)
+        self.Tool_PassDepth.setSingleStep(0.500000000000000)
+        self.Tool_PassDepth.setValue(0.200000000000000)
 
-        self.gridLayout_Tool.addWidget(self.doubleSpinBox_Tool_PassDepth, 3, 2, 1, 1)
+        self.gridLayout_Tool.addWidget(self.Tool_PassDepth, 3, 2, 1, 1)
 
-        self.spinBox_Tool_Cut = QSpinBox(self.scrollAreaWidgetContents)
-        self.spinBox_Tool_Cut.setObjectName(u"spinBox_Tool_Cut")
-        self.spinBox_Tool_Cut.setMaximum(1000)
-        self.spinBox_Tool_Cut.setValue(200)
+        self.Tool_Cut = QSpinBox(self.scrollAreaWidgetContents)
+        self.Tool_Cut.setObjectName(u"Tool_Cut")
+        self.Tool_Cut.setMaximum(1000)
+        self.Tool_Cut.setValue(200)
 
-        self.gridLayout_Tool.addWidget(self.spinBox_Tool_Cut, 7, 2, 1, 1)
+        self.gridLayout_Tool.addWidget(self.Tool_Cut, 7, 2, 1, 1)
 
 
         self.verticalLayoutToolContent.addLayout(self.gridLayout_Tool)
@@ -327,13 +327,13 @@ class Ui_mainwindow(object):
 
         self.formLayoutCurveToLineConversion.setWidget(0, QFormLayout.LabelRole, self.label_CurveToLineConversion_MinimumNbSegments)
 
-        self.spinBox_CurveToLineConversion_MinimumNbSegments = QSpinBox(self.scrollAreaWidgetContents)
-        self.spinBox_CurveToLineConversion_MinimumNbSegments.setObjectName(u"spinBox_CurveToLineConversion_MinimumNbSegments")
-        self.spinBox_CurveToLineConversion_MinimumNbSegments.setEnabled(True)
-        self.spinBox_CurveToLineConversion_MinimumNbSegments.setMinimum(1)
-        self.spinBox_CurveToLineConversion_MinimumNbSegments.setValue(5)
+        self.CurveToLineConversion_MinimumNbSegments = QSpinBox(self.scrollAreaWidgetContents)
+        self.CurveToLineConversion_MinimumNbSegments.setObjectName(u"CurveToLineConversion_MinimumNbSegments")
+        self.CurveToLineConversion_MinimumNbSegments.setEnabled(True)
+        self.CurveToLineConversion_MinimumNbSegments.setMinimum(1)
+        self.CurveToLineConversion_MinimumNbSegments.setValue(5)
 
-        self.formLayoutCurveToLineConversion.setWidget(0, QFormLayout.FieldRole, self.spinBox_CurveToLineConversion_MinimumNbSegments)
+        self.formLayoutCurveToLineConversion.setWidget(0, QFormLayout.FieldRole, self.CurveToLineConversion_MinimumNbSegments)
 
         self.label_CurveToLineConversion_MinimumSegmentsLength = QLabel(self.scrollAreaWidgetContents)
         self.label_CurveToLineConversion_MinimumSegmentsLength.setObjectName(u"label_CurveToLineConversion_MinimumSegmentsLength")
@@ -341,13 +341,13 @@ class Ui_mainwindow(object):
 
         self.formLayoutCurveToLineConversion.setWidget(1, QFormLayout.LabelRole, self.label_CurveToLineConversion_MinimumSegmentsLength)
 
-        self.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength = QDoubleSpinBox(self.scrollAreaWidgetContents)
-        self.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.setObjectName(u"doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength")
-        self.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.setMaximum(1.000000000000000)
-        self.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.setSingleStep(0.010000000000000)
-        self.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength.setValue(0.010000000000000)
+        self.CurveToLineConversion_MinimumSegmentsLength = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.CurveToLineConversion_MinimumSegmentsLength.setObjectName(u"CurveToLineConversion_MinimumSegmentsLength")
+        self.CurveToLineConversion_MinimumSegmentsLength.setMaximum(1.000000000000000)
+        self.CurveToLineConversion_MinimumSegmentsLength.setSingleStep(0.010000000000000)
+        self.CurveToLineConversion_MinimumSegmentsLength.setValue(0.010000000000000)
 
-        self.formLayoutCurveToLineConversion.setWidget(1, QFormLayout.FieldRole, self.doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength)
+        self.formLayoutCurveToLineConversion.setWidget(1, QFormLayout.FieldRole, self.CurveToLineConversion_MinimumSegmentsLength)
 
 
         self.verticalLayoutCurveToLineConversion.addLayout(self.formLayoutCurveToLineConversion)
@@ -382,13 +382,13 @@ class Ui_mainwindow(object):
 
         self.formLayout_Tabs.setWidget(0, QFormLayout.LabelRole, self.label_TabsUnits)
 
-        self.comboBox_Tabs_Units = QComboBox(self.tabsGlobals)
-        self.comboBox_Tabs_Units.addItem("")
-        self.comboBox_Tabs_Units.addItem("")
-        self.comboBox_Tabs_Units.setObjectName(u"comboBox_Tabs_Units")
-        self.comboBox_Tabs_Units.setEnabled(True)
+        self.Tabs_Units = QComboBox(self.tabsGlobals)
+        self.Tabs_Units.addItem("")
+        self.Tabs_Units.addItem("")
+        self.Tabs_Units.setObjectName(u"Tabs_Units")
+        self.Tabs_Units.setEnabled(True)
 
-        self.formLayout_Tabs.setWidget(0, QFormLayout.FieldRole, self.comboBox_Tabs_Units)
+        self.formLayout_Tabs.setWidget(0, QFormLayout.FieldRole, self.Tabs_Units)
 
         self.label_Tabs_Height = QLabel(self.tabsGlobals)
         self.label_Tabs_Height.setObjectName(u"label_Tabs_Height")
@@ -396,29 +396,29 @@ class Ui_mainwindow(object):
 
         self.formLayout_Tabs.setWidget(1, QFormLayout.LabelRole, self.label_Tabs_Height)
 
-        self.doubleSpinBox_Tabs_Height = QDoubleSpinBox(self.tabsGlobals)
-        self.doubleSpinBox_Tabs_Height.setObjectName(u"doubleSpinBox_Tabs_Height")
-        self.doubleSpinBox_Tabs_Height.setEnabled(True)
-        self.doubleSpinBox_Tabs_Height.setDecimals(3)
+        self.Tabs_Height = QDoubleSpinBox(self.tabsGlobals)
+        self.Tabs_Height.setObjectName(u"Tabs_Height")
+        self.Tabs_Height.setEnabled(True)
+        self.Tabs_Height.setDecimals(3)
 
-        self.formLayout_Tabs.setWidget(1, QFormLayout.FieldRole, self.doubleSpinBox_Tabs_Height)
+        self.formLayout_Tabs.setWidget(1, QFormLayout.FieldRole, self.Tabs_Height)
 
         self.label = QLabel(self.tabsGlobals)
         self.label.setObjectName(u"label")
 
         self.formLayout_Tabs.setWidget(2, QFormLayout.LabelRole, self.label)
 
-        self.checkBox_Tabs_hideAllTabs = QCheckBox(self.tabsGlobals)
-        self.checkBox_Tabs_hideAllTabs.setObjectName(u"checkBox_Tabs_hideAllTabs")
-        self.checkBox_Tabs_hideAllTabs.setFont(font1)
+        self.Tabs_hideAllTabs = QCheckBox(self.tabsGlobals)
+        self.Tabs_hideAllTabs.setObjectName(u"Tabs_hideAllTabs")
+        self.Tabs_hideAllTabs.setFont(font1)
 
-        self.formLayout_Tabs.setWidget(2, QFormLayout.FieldRole, self.checkBox_Tabs_hideAllTabs)
+        self.formLayout_Tabs.setWidget(2, QFormLayout.FieldRole, self.Tabs_hideAllTabs)
 
-        self.checkBox_Tabs_hideDisabledTabs = QCheckBox(self.tabsGlobals)
-        self.checkBox_Tabs_hideDisabledTabs.setObjectName(u"checkBox_Tabs_hideDisabledTabs")
-        self.checkBox_Tabs_hideDisabledTabs.setFont(font1)
+        self.Tabs_hideDisabledTabs = QCheckBox(self.tabsGlobals)
+        self.Tabs_hideDisabledTabs.setObjectName(u"Tabs_hideDisabledTabs")
+        self.Tabs_hideDisabledTabs.setFont(font1)
 
-        self.formLayout_Tabs.setWidget(3, QFormLayout.FieldRole, self.checkBox_Tabs_hideDisabledTabs)
+        self.formLayout_Tabs.setWidget(3, QFormLayout.FieldRole, self.Tabs_hideDisabledTabs)
 
 
         self.verticalLayout_4.addLayout(self.formLayout_Tabs)
@@ -485,10 +485,10 @@ class Ui_mainwindow(object):
 
         self.verticalLayout.addWidget(self.splitter)
 
-        self.pushButton_SaveGcode = QPushButton(self.centralArea)
-        self.pushButton_SaveGcode.setObjectName(u"pushButton_SaveGcode")
+        self.SaveGcode = QPushButton(self.centralArea)
+        self.SaveGcode.setObjectName(u"SaveGcode")
 
-        self.verticalLayout.addWidget(self.pushButton_SaveGcode)
+        self.verticalLayout.addWidget(self.SaveGcode)
 
 
         self.horizontalLayout_2.addWidget(self.centralArea)
@@ -542,12 +542,12 @@ class Ui_mainwindow(object):
 
         self.formLayout_Material.setWidget(0, QFormLayout.LabelRole, self.label_Material_Units)
 
-        self.comboBox_Material_Units = QComboBox(self.scrollAreaWidgetContents_2)
-        self.comboBox_Material_Units.addItem("")
-        self.comboBox_Material_Units.addItem("")
-        self.comboBox_Material_Units.setObjectName(u"comboBox_Material_Units")
+        self.Material_Units = QComboBox(self.scrollAreaWidgetContents_2)
+        self.Material_Units.addItem("")
+        self.Material_Units.addItem("")
+        self.Material_Units.setObjectName(u"Material_Units")
 
-        self.formLayout_Material.setWidget(0, QFormLayout.FieldRole, self.comboBox_Material_Units)
+        self.formLayout_Material.setWidget(0, QFormLayout.FieldRole, self.Material_Units)
 
         self.label_Material_Thickness = QLabel(self.scrollAreaWidgetContents_2)
         self.label_Material_Thickness.setObjectName(u"label_Material_Thickness")
@@ -555,12 +555,12 @@ class Ui_mainwindow(object):
 
         self.formLayout_Material.setWidget(1, QFormLayout.LabelRole, self.label_Material_Thickness)
 
-        self.doubleSpinBox_Material_Thickness = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
-        self.doubleSpinBox_Material_Thickness.setObjectName(u"doubleSpinBox_Material_Thickness")
-        self.doubleSpinBox_Material_Thickness.setMaximum(100.000000000000000)
-        self.doubleSpinBox_Material_Thickness.setValue(50.000000000000000)
+        self.Material_Thickness = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
+        self.Material_Thickness.setObjectName(u"Material_Thickness")
+        self.Material_Thickness.setMaximum(100.000000000000000)
+        self.Material_Thickness.setValue(50.000000000000000)
 
-        self.formLayout_Material.setWidget(1, QFormLayout.FieldRole, self.doubleSpinBox_Material_Thickness)
+        self.formLayout_Material.setWidget(1, QFormLayout.FieldRole, self.Material_Thickness)
 
         self.label_Material_ZOrigin = QLabel(self.scrollAreaWidgetContents_2)
         self.label_Material_ZOrigin.setObjectName(u"label_Material_ZOrigin")
@@ -568,17 +568,17 @@ class Ui_mainwindow(object):
 
         self.formLayout_Material.setWidget(2, QFormLayout.LabelRole, self.label_Material_ZOrigin)
 
-        self.comboBox_Material_ZOrigin = QComboBox(self.scrollAreaWidgetContents_2)
-        self.comboBox_Material_ZOrigin.addItem("")
-        self.comboBox_Material_ZOrigin.addItem("")
-        self.comboBox_Material_ZOrigin.setObjectName(u"comboBox_Material_ZOrigin")
+        self.Material_ZOrigin = QComboBox(self.scrollAreaWidgetContents_2)
+        self.Material_ZOrigin.addItem("")
+        self.Material_ZOrigin.addItem("")
+        self.Material_ZOrigin.setObjectName(u"Material_ZOrigin")
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.comboBox_Material_ZOrigin.sizePolicy().hasHeightForWidth())
-        self.comboBox_Material_ZOrigin.setSizePolicy(sizePolicy)
+        sizePolicy.setHeightForWidth(self.Material_ZOrigin.sizePolicy().hasHeightForWidth())
+        self.Material_ZOrigin.setSizePolicy(sizePolicy)
 
-        self.formLayout_Material.setWidget(2, QFormLayout.FieldRole, self.comboBox_Material_ZOrigin)
+        self.formLayout_Material.setWidget(2, QFormLayout.FieldRole, self.Material_ZOrigin)
 
         self.label_Material_Clearance = QLabel(self.scrollAreaWidgetContents_2)
         self.label_Material_Clearance.setObjectName(u"label_Material_Clearance")
@@ -587,12 +587,12 @@ class Ui_mainwindow(object):
 
         self.formLayout_Material.setWidget(3, QFormLayout.LabelRole, self.label_Material_Clearance)
 
-        self.doubleSpinBox_Material_Clearance = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
-        self.doubleSpinBox_Material_Clearance.setObjectName(u"doubleSpinBox_Material_Clearance")
-        self.doubleSpinBox_Material_Clearance.setMaximum(100.000000000000000)
-        self.doubleSpinBox_Material_Clearance.setValue(20.000000000000000)
+        self.Material_Clearance = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
+        self.Material_Clearance.setObjectName(u"Material_Clearance")
+        self.Material_Clearance.setMaximum(100.000000000000000)
+        self.Material_Clearance.setValue(20.000000000000000)
 
-        self.formLayout_Material.setWidget(3, QFormLayout.FieldRole, self.doubleSpinBox_Material_Clearance)
+        self.formLayout_Material.setWidget(3, QFormLayout.FieldRole, self.Material_Clearance)
 
 
         self.verticalLayoutMaterial.addLayout(self.formLayout_Material)
@@ -623,13 +623,13 @@ class Ui_mainwindow(object):
 
         self.gridLayout_GCodeConversion.addWidget(self.label_GCodeConversion_YOffset, 7, 0, 1, 1)
 
-        self.doubleSpinBox_GCodeConversion_MinY = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
-        self.doubleSpinBox_GCodeConversion_MinY.setObjectName(u"doubleSpinBox_GCodeConversion_MinY")
-        self.doubleSpinBox_GCodeConversion_MinY.setEnabled(False)
-        self.doubleSpinBox_GCodeConversion_MinY.setMinimum(-1000.000000000000000)
-        self.doubleSpinBox_GCodeConversion_MinY.setMaximum(1000.000000000000000)
+        self.GCodeConversion_MinY = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
+        self.GCodeConversion_MinY.setObjectName(u"GCodeConversion_MinY")
+        self.GCodeConversion_MinY.setEnabled(False)
+        self.GCodeConversion_MinY.setMinimum(-1000.000000000000000)
+        self.GCodeConversion_MinY.setMaximum(1000.000000000000000)
 
-        self.gridLayout_GCodeConversion.addWidget(self.doubleSpinBox_GCodeConversion_MinY, 10, 2, 1, 1)
+        self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_MinY, 10, 2, 1, 1)
 
         self.label_GCodeConversion_GCodeUnits = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeConversion_GCodeUnits.setObjectName(u"label_GCodeConversion_GCodeUnits")
@@ -637,13 +637,13 @@ class Ui_mainwindow(object):
 
         self.gridLayout_GCodeConversion.addWidget(self.label_GCodeConversion_GCodeUnits, 0, 0, 1, 1)
 
-        self.doubleSpinBox_GCodeConversion_MaxX = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
-        self.doubleSpinBox_GCodeConversion_MaxX.setObjectName(u"doubleSpinBox_GCodeConversion_MaxX")
-        self.doubleSpinBox_GCodeConversion_MaxX.setEnabled(False)
-        self.doubleSpinBox_GCodeConversion_MaxX.setMinimum(-1000.000000000000000)
-        self.doubleSpinBox_GCodeConversion_MaxX.setMaximum(1000.000000000000000)
+        self.GCodeConversion_MaxX = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
+        self.GCodeConversion_MaxX.setObjectName(u"GCodeConversion_MaxX")
+        self.GCodeConversion_MaxX.setEnabled(False)
+        self.GCodeConversion_MaxX.setMinimum(-1000.000000000000000)
+        self.GCodeConversion_MaxX.setMaximum(1000.000000000000000)
 
-        self.gridLayout_GCodeConversion.addWidget(self.doubleSpinBox_GCodeConversion_MaxX, 9, 2, 1, 1)
+        self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_MaxX, 9, 2, 1, 1)
 
         self.label_GCodeConversion_MaxY = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeConversion_MaxY.setObjectName(u"label_GCodeConversion_MaxY")
@@ -656,32 +656,32 @@ class Ui_mainwindow(object):
 
         self.gridLayout_GCodeConversion.addWidget(self.label_GCodeConversion_MinX_UnitsDescr, 8, 1, 1, 1)
 
-        self.checkBox_GCodeConversion_FlipXY = QCheckBox(self.scrollAreaWidgetContents_2)
-        self.checkBox_GCodeConversion_FlipXY.setObjectName(u"checkBox_GCodeConversion_FlipXY")
-        self.checkBox_GCodeConversion_FlipXY.setEnabled(True)
+        self.GCodeConversion_FlipXY = QCheckBox(self.scrollAreaWidgetContents_2)
+        self.GCodeConversion_FlipXY.setObjectName(u"GCodeConversion_FlipXY")
+        self.GCodeConversion_FlipXY.setEnabled(True)
         font2 = QFont()
         font2.setBold(True)
         font2.setKerning(False)
-        self.checkBox_GCodeConversion_FlipXY.setFont(font2)
+        self.GCodeConversion_FlipXY.setFont(font2)
 
-        self.gridLayout_GCodeConversion.addWidget(self.checkBox_GCodeConversion_FlipXY, 5, 0, 1, 2)
+        self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_FlipXY, 5, 0, 1, 2)
 
-        self.doubleSpinBox_GCodeConversion_MinX = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
-        self.doubleSpinBox_GCodeConversion_MinX.setObjectName(u"doubleSpinBox_GCodeConversion_MinX")
-        self.doubleSpinBox_GCodeConversion_MinX.setEnabled(False)
-        self.doubleSpinBox_GCodeConversion_MinX.setMinimum(-1000.000000000000000)
-        self.doubleSpinBox_GCodeConversion_MinX.setMaximum(1000.000000000000000)
+        self.GCodeConversion_MinX = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
+        self.GCodeConversion_MinX.setObjectName(u"GCodeConversion_MinX")
+        self.GCodeConversion_MinX.setEnabled(False)
+        self.GCodeConversion_MinX.setMinimum(-1000.000000000000000)
+        self.GCodeConversion_MinX.setMaximum(1000.000000000000000)
 
-        self.gridLayout_GCodeConversion.addWidget(self.doubleSpinBox_GCodeConversion_MinX, 8, 2, 1, 1)
+        self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_MinX, 8, 2, 1, 1)
 
-        self.doubleSpinBox_GCodeConversion_MaxY = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
-        self.doubleSpinBox_GCodeConversion_MaxY.setObjectName(u"doubleSpinBox_GCodeConversion_MaxY")
-        self.doubleSpinBox_GCodeConversion_MaxY.setEnabled(False)
-        self.doubleSpinBox_GCodeConversion_MaxY.setMinimum(-1000.000000000000000)
-        self.doubleSpinBox_GCodeConversion_MaxY.setMaximum(1000.000000000000000)
-        self.doubleSpinBox_GCodeConversion_MaxY.setValue(0.000000000000000)
+        self.GCodeConversion_MaxY = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
+        self.GCodeConversion_MaxY.setObjectName(u"GCodeConversion_MaxY")
+        self.GCodeConversion_MaxY.setEnabled(False)
+        self.GCodeConversion_MaxY.setMinimum(-1000.000000000000000)
+        self.GCodeConversion_MaxY.setMaximum(1000.000000000000000)
+        self.GCodeConversion_MaxY.setValue(0.000000000000000)
 
-        self.gridLayout_GCodeConversion.addWidget(self.doubleSpinBox_GCodeConversion_MaxY, 11, 2, 1, 1)
+        self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_MaxY, 11, 2, 1, 1)
 
         self.label_GCodeConversion_MinX = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeConversion_MinX.setObjectName(u"label_GCodeConversion_MinX")
@@ -710,24 +710,24 @@ class Ui_mainwindow(object):
 
         self.gridLayout_GCodeConversion.addWidget(self.label_GCodeConversion_MaxX_UnitsDescr, 9, 1, 1, 1)
 
-        self.doubleSpinBox_GCodeConversion_YOffset = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
-        self.doubleSpinBox_GCodeConversion_YOffset.setObjectName(u"doubleSpinBox_GCodeConversion_YOffset")
-        self.doubleSpinBox_GCodeConversion_YOffset.setMinimum(-100.000000000000000)
-        self.doubleSpinBox_GCodeConversion_YOffset.setMaximum(100.000000000000000)
+        self.GCodeConversion_YOffset = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
+        self.GCodeConversion_YOffset.setObjectName(u"GCodeConversion_YOffset")
+        self.GCodeConversion_YOffset.setMinimum(-100.000000000000000)
+        self.GCodeConversion_YOffset.setMaximum(100.000000000000000)
 
-        self.gridLayout_GCodeConversion.addWidget(self.doubleSpinBox_GCodeConversion_YOffset, 7, 2, 1, 1)
+        self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_YOffset, 7, 2, 1, 1)
 
         self.label_GCodeConversion_MinY_UnitsDescr = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeConversion_MinY_UnitsDescr.setObjectName(u"label_GCodeConversion_MinY_UnitsDescr")
 
         self.gridLayout_GCodeConversion.addWidget(self.label_GCodeConversion_MinY_UnitsDescr, 10, 1, 1, 1)
 
-        self.doubleSpinBox_GCodeConversion_XOffset = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
-        self.doubleSpinBox_GCodeConversion_XOffset.setObjectName(u"doubleSpinBox_GCodeConversion_XOffset")
-        self.doubleSpinBox_GCodeConversion_XOffset.setMinimum(-100.000000000000000)
-        self.doubleSpinBox_GCodeConversion_XOffset.setMaximum(100.000000000000000)
+        self.GCodeConversion_XOffset = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
+        self.GCodeConversion_XOffset.setObjectName(u"GCodeConversion_XOffset")
+        self.GCodeConversion_XOffset.setMinimum(-100.000000000000000)
+        self.GCodeConversion_XOffset.setMaximum(100.000000000000000)
 
-        self.gridLayout_GCodeConversion.addWidget(self.doubleSpinBox_GCodeConversion_XOffset, 6, 2, 1, 1)
+        self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_XOffset, 6, 2, 1, 1)
 
         self.label_GCodeConversion_MinY = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeConversion_MinY.setObjectName(u"label_GCodeConversion_MinY")
@@ -741,19 +741,19 @@ class Ui_mainwindow(object):
 
         self.gridLayout_GCodeConversion.addWidget(self.label_GCodeConversion_XOffset, 6, 0, 1, 1)
 
-        self.comboBox_GCodeConversion_Units = QComboBox(self.scrollAreaWidgetContents_2)
-        self.comboBox_GCodeConversion_Units.addItem("")
-        self.comboBox_GCodeConversion_Units.addItem("")
-        self.comboBox_GCodeConversion_Units.setObjectName(u"comboBox_GCodeConversion_Units")
+        self.GCodeConversion_Units = QComboBox(self.scrollAreaWidgetContents_2)
+        self.GCodeConversion_Units.addItem("")
+        self.GCodeConversion_Units.addItem("")
+        self.GCodeConversion_Units.setObjectName(u"GCodeConversion_Units")
 
-        self.gridLayout_GCodeConversion.addWidget(self.comboBox_GCodeConversion_Units, 0, 1, 1, 1)
+        self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_Units, 0, 1, 1, 1)
 
-        self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial = QPushButton(self.scrollAreaWidgetContents_2)
+        self.GCodeConversion_ZeroTopLeftOfMaterial = QPushButton(self.scrollAreaWidgetContents_2)
         self.buttonGroup_GCodeConversion = QButtonGroup(mainwindow)
         self.buttonGroup_GCodeConversion.setObjectName(u"buttonGroup_GCodeConversion")
-        self.buttonGroup_GCodeConversion.addButton(self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial)
-        self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setObjectName(u"pushButton_GCodeConversion_ZeroTopLeftOfMaterial")
-        self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setFont(font1)
+        self.buttonGroup_GCodeConversion.addButton(self.GCodeConversion_ZeroTopLeftOfMaterial)
+        self.GCodeConversion_ZeroTopLeftOfMaterial.setObjectName(u"GCodeConversion_ZeroTopLeftOfMaterial")
+        self.GCodeConversion_ZeroTopLeftOfMaterial.setFont(font1)
         icon = QIcon()
         iconThemeName = u":/images/tango/22x22/actions/view-refresh.png"
         if QIcon.hasThemeIcon(iconThemeName):
@@ -761,38 +761,38 @@ class Ui_mainwindow(object):
         else:
             icon.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
 
-        self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setIcon(icon)
-        self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setCheckable(True)
-        self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setChecked(True)
+        self.GCodeConversion_ZeroTopLeftOfMaterial.setIcon(icon)
+        self.GCodeConversion_ZeroTopLeftOfMaterial.setCheckable(True)
+        self.GCodeConversion_ZeroTopLeftOfMaterial.setChecked(True)
 
-        self.gridLayout_GCodeConversion.addWidget(self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial, 1, 0, 1, 3)
+        self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_ZeroTopLeftOfMaterial, 1, 0, 1, 3)
 
-        self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial = QPushButton(self.scrollAreaWidgetContents_2)
-        self.buttonGroup_GCodeConversion.addButton(self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial)
-        self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setObjectName(u"pushButton_GCodeConversion_ZeroLowerLeftOfMaterial")
-        self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setFont(font1)
-        self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setIcon(icon)
-        self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setCheckable(True)
+        self.GCodeConversion_ZeroLowerLeftOfMaterial = QPushButton(self.scrollAreaWidgetContents_2)
+        self.buttonGroup_GCodeConversion.addButton(self.GCodeConversion_ZeroLowerLeftOfMaterial)
+        self.GCodeConversion_ZeroLowerLeftOfMaterial.setObjectName(u"GCodeConversion_ZeroLowerLeftOfMaterial")
+        self.GCodeConversion_ZeroLowerLeftOfMaterial.setFont(font1)
+        self.GCodeConversion_ZeroLowerLeftOfMaterial.setIcon(icon)
+        self.GCodeConversion_ZeroLowerLeftOfMaterial.setCheckable(True)
 
-        self.gridLayout_GCodeConversion.addWidget(self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial, 2, 0, 1, 3)
+        self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_ZeroLowerLeftOfMaterial, 2, 0, 1, 3)
 
-        self.pushButton_GCodeConversion_ZeroLowerLeftOfOp = QPushButton(self.scrollAreaWidgetContents_2)
-        self.buttonGroup_GCodeConversion.addButton(self.pushButton_GCodeConversion_ZeroLowerLeftOfOp)
-        self.pushButton_GCodeConversion_ZeroLowerLeftOfOp.setObjectName(u"pushButton_GCodeConversion_ZeroLowerLeftOfOp")
-        self.pushButton_GCodeConversion_ZeroLowerLeftOfOp.setFont(font1)
-        self.pushButton_GCodeConversion_ZeroLowerLeftOfOp.setIcon(icon)
-        self.pushButton_GCodeConversion_ZeroLowerLeftOfOp.setCheckable(True)
+        self.GCodeConversion_ZeroLowerLeftOfOp = QPushButton(self.scrollAreaWidgetContents_2)
+        self.buttonGroup_GCodeConversion.addButton(self.GCodeConversion_ZeroLowerLeftOfOp)
+        self.GCodeConversion_ZeroLowerLeftOfOp.setObjectName(u"GCodeConversion_ZeroLowerLeftOfOp")
+        self.GCodeConversion_ZeroLowerLeftOfOp.setFont(font1)
+        self.GCodeConversion_ZeroLowerLeftOfOp.setIcon(icon)
+        self.GCodeConversion_ZeroLowerLeftOfOp.setCheckable(True)
 
-        self.gridLayout_GCodeConversion.addWidget(self.pushButton_GCodeConversion_ZeroLowerLeftOfOp, 3, 0, 1, 3)
+        self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_ZeroLowerLeftOfOp, 3, 0, 1, 3)
 
-        self.pushButton_GCodeConversion_ZeroCenterOfOp = QPushButton(self.scrollAreaWidgetContents_2)
-        self.buttonGroup_GCodeConversion.addButton(self.pushButton_GCodeConversion_ZeroCenterOfOp)
-        self.pushButton_GCodeConversion_ZeroCenterOfOp.setObjectName(u"pushButton_GCodeConversion_ZeroCenterOfOp")
-        self.pushButton_GCodeConversion_ZeroCenterOfOp.setFont(font1)
-        self.pushButton_GCodeConversion_ZeroCenterOfOp.setIcon(icon)
-        self.pushButton_GCodeConversion_ZeroCenterOfOp.setCheckable(True)
+        self.GCodeConversion_ZeroCenterOfOp = QPushButton(self.scrollAreaWidgetContents_2)
+        self.buttonGroup_GCodeConversion.addButton(self.GCodeConversion_ZeroCenterOfOp)
+        self.GCodeConversion_ZeroCenterOfOp.setObjectName(u"GCodeConversion_ZeroCenterOfOp")
+        self.GCodeConversion_ZeroCenterOfOp.setFont(font1)
+        self.GCodeConversion_ZeroCenterOfOp.setIcon(icon)
+        self.GCodeConversion_ZeroCenterOfOp.setCheckable(True)
 
-        self.gridLayout_GCodeConversion.addWidget(self.pushButton_GCodeConversion_ZeroCenterOfOp, 4, 0, 1, 3)
+        self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_ZeroCenterOfOp, 4, 0, 1, 3)
 
 
         self.verticalLayoutGCodeConversion.addLayout(self.gridLayout_GCodeConversion)
@@ -819,10 +819,10 @@ class Ui_mainwindow(object):
 
         self.formLayout_GCodeGeneration.setWidget(0, QFormLayout.LabelRole, self.label_GCodeGeneration_ReturnToZeroAtEnd)
 
-        self.checkBox_GCodeGeneration_ReturnToZeroAtEnd = QCheckBox(self.scrollAreaWidgetContents_2)
-        self.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setObjectName(u"checkBox_GCodeGeneration_ReturnToZeroAtEnd")
+        self.GCodeGeneration_ReturnToZeroAtEnd = QCheckBox(self.scrollAreaWidgetContents_2)
+        self.GCodeGeneration_ReturnToZeroAtEnd.setObjectName(u"GCodeGeneration_ReturnToZeroAtEnd")
 
-        self.formLayout_GCodeGeneration.setWidget(0, QFormLayout.FieldRole, self.checkBox_GCodeGeneration_ReturnToZeroAtEnd)
+        self.formLayout_GCodeGeneration.setWidget(0, QFormLayout.FieldRole, self.GCodeGeneration_ReturnToZeroAtEnd)
 
         self.label_GCodeGeneration_SpindleControl = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeGeneration_SpindleControl.setObjectName(u"label_GCodeGeneration_SpindleControl")
@@ -830,11 +830,11 @@ class Ui_mainwindow(object):
 
         self.formLayout_GCodeGeneration.setWidget(1, QFormLayout.LabelRole, self.label_GCodeGeneration_SpindleControl)
 
-        self.checkBox_GCodeGeneration_SpindleControl = QCheckBox(self.scrollAreaWidgetContents_2)
-        self.checkBox_GCodeGeneration_SpindleControl.setObjectName(u"checkBox_GCodeGeneration_SpindleControl")
-        self.checkBox_GCodeGeneration_SpindleControl.setFont(font1)
+        self.GCodeGeneration_SpindleControl = QCheckBox(self.scrollAreaWidgetContents_2)
+        self.GCodeGeneration_SpindleControl.setObjectName(u"GCodeGeneration_SpindleControl")
+        self.GCodeGeneration_SpindleControl.setFont(font1)
 
-        self.formLayout_GCodeGeneration.setWidget(1, QFormLayout.FieldRole, self.checkBox_GCodeGeneration_SpindleControl)
+        self.formLayout_GCodeGeneration.setWidget(1, QFormLayout.FieldRole, self.GCodeGeneration_SpindleControl)
 
         self.label_GCodeGeneration_SpindleSpeed = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeGeneration_SpindleSpeed.setObjectName(u"label_GCodeGeneration_SpindleSpeed")
@@ -842,12 +842,12 @@ class Ui_mainwindow(object):
 
         self.formLayout_GCodeGeneration.setWidget(2, QFormLayout.LabelRole, self.label_GCodeGeneration_SpindleSpeed)
 
-        self.spinBox_GCodeGeneration_SpindleSpeed = QSpinBox(self.scrollAreaWidgetContents_2)
-        self.spinBox_GCodeGeneration_SpindleSpeed.setObjectName(u"spinBox_GCodeGeneration_SpindleSpeed")
-        self.spinBox_GCodeGeneration_SpindleSpeed.setMaximum(25000)
-        self.spinBox_GCodeGeneration_SpindleSpeed.setSingleStep(50)
+        self.GCodeGeneration_SpindleSpeed = QSpinBox(self.scrollAreaWidgetContents_2)
+        self.GCodeGeneration_SpindleSpeed.setObjectName(u"GCodeGeneration_SpindleSpeed")
+        self.GCodeGeneration_SpindleSpeed.setMaximum(25000)
+        self.GCodeGeneration_SpindleSpeed.setSingleStep(50)
 
-        self.formLayout_GCodeGeneration.setWidget(2, QFormLayout.FieldRole, self.spinBox_GCodeGeneration_SpindleSpeed)
+        self.formLayout_GCodeGeneration.setWidget(2, QFormLayout.FieldRole, self.GCodeGeneration_SpindleSpeed)
 
         self.label_GCodeGeneration_ProgramEnd = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeGeneration_ProgramEnd.setObjectName(u"label_GCodeGeneration_ProgramEnd")
@@ -855,11 +855,11 @@ class Ui_mainwindow(object):
 
         self.formLayout_GCodeGeneration.setWidget(3, QFormLayout.LabelRole, self.label_GCodeGeneration_ProgramEnd)
 
-        self.checkBox_GCodeGeneration_ProgramEnd = QCheckBox(self.scrollAreaWidgetContents_2)
-        self.checkBox_GCodeGeneration_ProgramEnd.setObjectName(u"checkBox_GCodeGeneration_ProgramEnd")
-        self.checkBox_GCodeGeneration_ProgramEnd.setFont(font1)
+        self.GCodeGeneration_ProgramEnd = QCheckBox(self.scrollAreaWidgetContents_2)
+        self.GCodeGeneration_ProgramEnd.setObjectName(u"GCodeGeneration_ProgramEnd")
+        self.GCodeGeneration_ProgramEnd.setFont(font1)
 
-        self.formLayout_GCodeGeneration.setWidget(3, QFormLayout.FieldRole, self.checkBox_GCodeGeneration_ProgramEnd)
+        self.formLayout_GCodeGeneration.setWidget(3, QFormLayout.FieldRole, self.GCodeGeneration_ProgramEnd)
 
 
         self.verticalLayoutGCodeGeneration.addLayout(self.formLayout_GCodeGeneration)
@@ -939,15 +939,15 @@ class Ui_mainwindow(object):
         self.label_SvgSettings.setText(QCoreApplication.translate("mainwindow", u" Svg Settings", None))
         self.label_PxPerInch.setText(QCoreApplication.translate("mainwindow", u"user units scale factor", None))
         self.label_SvgModelWidth.setText(QCoreApplication.translate("mainwindow", u"width", None))
-        self.doubleSpinBox_SvgModelWidth.setSuffix(QCoreApplication.translate("mainwindow", u"mm", None))
+        self.SvgModelWidth.setSuffix(QCoreApplication.translate("mainwindow", u"mm", None))
         self.label_SvgModelHeight.setText(QCoreApplication.translate("mainwindow", u"height", None))
-        self.doubleSpinBox_SvgModelHeight.setSuffix(QCoreApplication.translate("mainwindow", u"mm", None))
+        self.SvgModelHeight.setSuffix(QCoreApplication.translate("mainwindow", u"mm", None))
         self.label_Tool.setText(QCoreApplication.translate("mainwindow", u" Tool (shared for all operations)", None))
         self.label_Tool_Plunge_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_Tool_Diameter_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_Tool_Overlap.setText(QCoreApplication.translate("mainwindow", u"Overlap", None))
 #if QT_CONFIG(tooltip)
-        self.spinBox_Tool_Rapid.setToolTip(QCoreApplication.translate("mainwindow", u"The speed the tool moves while not cutting", None))
+        self.Tool_Rapid.setToolTip(QCoreApplication.translate("mainwindow", u"The speed the tool moves while not cutting", None))
 #endif // QT_CONFIG(tooltip)
         self.label_Tool_Units.setText(QCoreApplication.translate("mainwindow", u"Units", None))
         self.label_Tool_PassDepth.setText(QCoreApplication.translate("mainwindow", u"Pass Depth", None))
@@ -960,42 +960,42 @@ class Ui_mainwindow(object):
         self.label_Tool_Overlap_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_Tool_Diameter.setText(QCoreApplication.translate("mainwindow", u"Diameter", None))
 #if QT_CONFIG(tooltip)
-        self.spinBox_Tool_Plunge.setToolTip(QCoreApplication.translate("mainwindow", u"The speed the tool plunges downwards into the material", None))
+        self.Tool_Plunge.setToolTip(QCoreApplication.translate("mainwindow", u"The speed the tool plunges downwards into the material", None))
 #endif // QT_CONFIG(tooltip)
         self.label_Tool_PassDepth_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_Tool_Cut.setText(QCoreApplication.translate("mainwindow", u"Cut", None))
-        self.comboBox_Tool_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
-        self.comboBox_Tool_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
+        self.Tool_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
+        self.Tool_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
 
 #if QT_CONFIG(tooltip)
-        self.spinBox_Tool_Cut.setToolTip(QCoreApplication.translate("mainwindow", u"The speed the tool moves horizontally during cutting", None))
+        self.Tool_Cut.setToolTip(QCoreApplication.translate("mainwindow", u"The speed the tool moves horizontally during cutting", None))
 #endif // QT_CONFIG(tooltip)
         self.labelCurveToLineConversion.setText(QCoreApplication.translate("mainwindow", u" Curve To Line Conversion", None))
         self.label_CurveToLineConversion_MinimumNbSegments.setText(QCoreApplication.translate("mainwindow", u"Minimum Segments", None))
         self.label_CurveToLineConversion_MinimumSegmentsLength.setText(QCoreApplication.translate("mainwindow", u"Minimum Segments Length                ", None))
         self.label_Tabs.setText(QCoreApplication.translate("mainwindow", u" Tabs", None))
         self.label_TabsUnits.setText(QCoreApplication.translate("mainwindow", u"Units", None))
-        self.comboBox_Tabs_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
-        self.comboBox_Tabs_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
+        self.Tabs_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
+        self.Tabs_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
 
         self.label_Tabs_Height.setText(QCoreApplication.translate("mainwindow", u"Height", None))
         self.label.setText("")
-        self.checkBox_Tabs_hideAllTabs.setText(QCoreApplication.translate("mainwindow", u"Hide all Tabs", None))
-        self.checkBox_Tabs_hideDisabledTabs.setText(QCoreApplication.translate("mainwindow", u"Hide disabled Tabs", None))
+        self.Tabs_hideAllTabs.setText(QCoreApplication.translate("mainwindow", u"Hide all Tabs", None))
+        self.Tabs_hideDisabledTabs.setText(QCoreApplication.translate("mainwindow", u"Hide disabled Tabs", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.svg), QCoreApplication.translate("mainwindow", u"SVG", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.viewer), QCoreApplication.translate("mainwindow", u"GCode Viewer", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.simulator_webgl), QCoreApplication.translate("mainwindow", u"GCode Simulator", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.simulator_python), QCoreApplication.translate("mainwindow", u"GCode Simulator", None))
-        self.pushButton_SaveGcode.setText(QCoreApplication.translate("mainwindow", u"Save Gcode", None))
+        self.SaveGcode.setText(QCoreApplication.translate("mainwindow", u"Save Gcode", None))
         self.labelMaterial.setText(QCoreApplication.translate("mainwindow", u" Material", None))
         self.label_Material_Units.setText(QCoreApplication.translate("mainwindow", u"Units", None))
-        self.comboBox_Material_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
-        self.comboBox_Material_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
+        self.Material_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
+        self.Material_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
 
         self.label_Material_Thickness.setText(QCoreApplication.translate("mainwindow", u"Thickness", None))
         self.label_Material_ZOrigin.setText(QCoreApplication.translate("mainwindow", u"Z Origin", None))
-        self.comboBox_Material_ZOrigin.setItemText(0, QCoreApplication.translate("mainwindow", u"Top", None))
-        self.comboBox_Material_ZOrigin.setItemText(1, QCoreApplication.translate("mainwindow", u"Bottom", None))
+        self.Material_ZOrigin.setItemText(0, QCoreApplication.translate("mainwindow", u"Top", None))
+        self.Material_ZOrigin.setItemText(1, QCoreApplication.translate("mainwindow", u"Bottom", None))
 
         self.label_Material_Clearance.setText(QCoreApplication.translate("mainwindow", u"Cleareance                                     ", None))
         self.label_GCcodeConversion.setText(QCoreApplication.translate("mainwindow", u" GCode Conversion", None))
@@ -1004,7 +1004,7 @@ class Ui_mainwindow(object):
         self.label_GCodeConversion_GCodeUnits.setText(QCoreApplication.translate("mainwindow", u"Gcode Units", None))
         self.label_GCodeConversion_MaxY.setText(QCoreApplication.translate("mainwindow", u"Max Y", None))
         self.label_GCodeConversion_MinX_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
-        self.checkBox_GCodeConversion_FlipXY.setText(QCoreApplication.translate("mainwindow", u"Flip X/Y", None))
+        self.GCodeConversion_FlipXY.setText(QCoreApplication.translate("mainwindow", u"Flip X/Y", None))
         self.label_GCodeConversion_MinX.setText(QCoreApplication.translate("mainwindow", u"Min X", None))
         self.label_GCodeConversion_MaxX.setText(QCoreApplication.translate("mainwindow", u"Max X", None))
         self.label_GCodeConversion_XOffset_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
@@ -1013,21 +1013,21 @@ class Ui_mainwindow(object):
         self.label_GCodeConversion_MinY_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_GCodeConversion_MinY.setText(QCoreApplication.translate("mainwindow", u"Min Y", None))
         self.label_GCodeConversion_XOffset.setText(QCoreApplication.translate("mainwindow", u"X Offset", None))
-        self.comboBox_GCodeConversion_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
-        self.comboBox_GCodeConversion_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
+        self.GCodeConversion_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
+        self.GCodeConversion_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
 
-        self.pushButton_GCodeConversion_ZeroTopLeftOfMaterial.setText(QCoreApplication.translate("mainwindow", u"Zero top left Material       ", None))
-        self.pushButton_GCodeConversion_ZeroLowerLeftOfMaterial.setText(QCoreApplication.translate("mainwindow", u"Zero lower left (Material)", None))
-        self.pushButton_GCodeConversion_ZeroLowerLeftOfOp.setText(QCoreApplication.translate("mainwindow", u"Zero lower left (Op)         ", None))
-        self.pushButton_GCodeConversion_ZeroCenterOfOp.setText(QCoreApplication.translate("mainwindow", u"Zero center (Op)               ", None))
+        self.GCodeConversion_ZeroTopLeftOfMaterial.setText(QCoreApplication.translate("mainwindow", u"Zero top left Material       ", None))
+        self.GCodeConversion_ZeroLowerLeftOfMaterial.setText(QCoreApplication.translate("mainwindow", u"Zero lower left (Material)", None))
+        self.GCodeConversion_ZeroLowerLeftOfOp.setText(QCoreApplication.translate("mainwindow", u"Zero lower left (Op)         ", None))
+        self.GCodeConversion_ZeroCenterOfOp.setText(QCoreApplication.translate("mainwindow", u"Zero center (Op)               ", None))
         self.labelGCodeGeneration.setText(QCoreApplication.translate("mainwindow", u" GCode Generation", None))
         self.label_GCodeGeneration_ReturnToZeroAtEnd.setText(QCoreApplication.translate("mainwindow", u"Return to 0,0 at end", None))
-        self.checkBox_GCodeGeneration_ReturnToZeroAtEnd.setText("")
+        self.GCodeGeneration_ReturnToZeroAtEnd.setText("")
         self.label_GCodeGeneration_SpindleControl.setText(QCoreApplication.translate("mainwindow", u"Spindle automatic", None))
-        self.checkBox_GCodeGeneration_SpindleControl.setText(QCoreApplication.translate("mainwindow", u"[M3/M5]", None))
+        self.GCodeGeneration_SpindleControl.setText(QCoreApplication.translate("mainwindow", u"[M3/M5]", None))
         self.label_GCodeGeneration_SpindleSpeed.setText(QCoreApplication.translate("mainwindow", u"Spindle speed", None))
         self.label_GCodeGeneration_ProgramEnd.setText(QCoreApplication.translate("mainwindow", u"Program End", None))
-        self.checkBox_GCodeGeneration_ProgramEnd.setText(QCoreApplication.translate("mainwindow", u"[M2]", None))
+        self.GCodeGeneration_ProgramEnd.setText(QCoreApplication.translate("mainwindow", u"[M2]", None))
         self.menuSvg.setTitle(QCoreApplication.translate("mainwindow", u"SVG", None))
         self.menuFile.setTitle(QCoreApplication.translate("mainwindow", u"File", None))
         self.menuOpen_Recent_Jobs.setTitle(QCoreApplication.translate("mainwindow", u"Open Recent Jobs", None))

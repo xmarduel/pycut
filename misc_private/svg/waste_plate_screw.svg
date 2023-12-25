@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg id="wate_plate_screw"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="30mm"
+   height="30mm"
+   viewBox="0 0 30 30"
+   version="1.1">
+  <g id="layer1">
+    <!-- for a plate of 8mm, the right depth for the screw holes seems to be 4.0 mm (see json project -->
+    <circle id="hole_10mm" cx="15" cy="15" r="5.0" style="fill:blue"/>
+	<circle id="screw_5mm" cx="15" cy="15" r="2.5" style="fill:red"/>
+  </g>
+</svg>

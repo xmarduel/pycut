@@ -1,10 +1,10 @@
 {
-  "svg_file": "../misc_private/cnc1419/holes.svg",
+  "svg_file": "./svg/holes.svg",
   "operations": [
     {
-      "name": "op",
+      "name": "op_hole_10.0mm",
       "type": "Inside",
-      "cut_depth": 21,
+      "cut_depth": 21.0,
       "paths": [
         "pocket-10.00mm"
       ],
@@ -16,23 +16,9 @@
       "width": 0.0
     },
     {
-      "name": "op",
+      "name": "op_hole_10.1mm",
       "type": "Inside",
-      "cut_depth": 21,
-      "paths": [
-        "pocket-10.05mm"
-      ],
-      "ramp_plunge": false,
-      "combinaison": "Union",
-      "direction": "Conventional",
-      "units": "mm",
-      "margin": 0.0,
-      "width": 0.0
-    },
-    {
-      "name": "op",
-      "type": "Inside",
-      "cut_depth": 21,
+      "cut_depth": 16.0,
       "paths": [
         "pocket-10.10mm"
       ],
@@ -44,23 +30,9 @@
       "width": 0.0
     },
     {
-      "name": "op",
+      "name": "op_hole_10.2mm",
       "type": "Inside",
-      "cut_depth": 21,
-      "paths": [
-        "pocket-10.15mm"
-      ],
-      "ramp_plunge": false,
-      "combinaison": "Union",
-      "direction": "Conventional",
-      "units": "mm",
-      "margin": 0.0,
-      "width": 0.0
-    },
-    {
-      "name": "op",
-      "type": "Inside",
-      "cut_depth": 21,
+      "cut_depth": 16.0,
       "paths": [
         "pocket-10.20mm"
       ],
@@ -72,23 +44,9 @@
       "width": 0.0
     },
     {
-      "name": "op",
+      "name": "op_hole_10.3mm",
       "type": "Inside",
-      "cut_depth": 21,
-      "paths": [
-        "pocket-10.25mm"
-      ],
-      "ramp_plunge": false,
-      "combinaison": "Union",
-      "direction": "Conventional",
-      "units": "mm",
-      "margin": 0.0,
-      "width": 0.0
-    },
-    {
-      "name": "op",
-      "type": "Inside",
-      "cut_depth": 21,
+      "cut_depth": 16.0,
       "paths": [
         "pocket-10.30mm"
       ],
@@ -100,23 +58,9 @@
       "width": 0.0
     },
     {
-      "name": "op",
+      "name": "op_hole_10.4mm",
       "type": "Inside",
-      "cut_depth": 21,
-      "paths": [
-        "pocket-10.35mm"
-      ],
-      "ramp_plunge": false,
-      "combinaison": "Union",
-      "direction": "Conventional",
-      "units": "mm",
-      "margin": 0.0,
-      "width": 0.0
-    },
-    {
-      "name": "op",
-      "type": "Inside",
-      "cut_depth": 21,
+      "cut_depth": 16.0,
       "paths": [
         "pocket-10.40mm"
       ],
@@ -162,7 +106,7 @@
       "flip_xy": false,
       "x_offset": -10.0,
       "y_offset": 10.0,
-      "xy_reference": "ZERO_TOP_LEFT_OF_MATERIAL"
+      "xy_reference": "ZERO_CENTER_OF_OP"
     },
     "GCodeGeneration": {
       "return_to_zero_at_end": true,
