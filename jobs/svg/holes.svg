@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- 
+test holes of different size (10mm or a little more) for the vise-A  shafts (size 10mm)
+
+- moving part has holes of exactly 10mm
+- fixed part has holes of a little more than 10mm so that the shafts move smoothly in the holes 
+when screwing the lead screw (but not too large)
+
+RESULTS: 10.20 mm seems a little too large, so we will take 10.10mm
+-->
+<svg version="1.1" width="100mm" height="25mm" viewBox="0 0 100 25" id="vise1419-fixed-part" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+    <g id="root">  
+	    <rect style="fill:black;fill-opacity:0.4" x="0" y="0" width="160" height="20" />
+		
+	    <!-- cut through -->
+	    <circle  id="pocket-10.00mm" style="fill:black;fill-opacity:0.4" cx="10" cy="10" r="5.0" />
+		<circle  id="pocket-10.10mm" style="fill:black;fill-opacity:0.4" cx="30" cy="10" r="5.05" />
+		<circle  id="pocket-10.20mm" style="fill:black;fill-opacity:0.4" cx="50" cy="10" r="5.10" />
+		<circle  id="pocket-10.30mm" style="fill:black;fill-opacity:0.4" cx="70" cy="10" r="5.15" />
+		<circle  id="pocket-10.40mm" style="fill:black;fill-opacity:0.4" cx="90" cy="10" r="5.15" />
+	</g>
+</svg>

@@ -81,7 +81,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_PxPerInch">
+             <widget class="QDoubleSpinBox" name="PxPerInch">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -113,7 +113,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_SvgModelWidth">
+             <widget class="QDoubleSpinBox" name="SvgModelWidth">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -145,7 +145,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_SvgModelHeight">
+             <widget class="QDoubleSpinBox" name="SvgModelHeight">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -220,7 +220,7 @@
              </widget>
             </item>
             <item row="5" column="2">
-             <widget class="QSpinBox" name="spinBox_Tool_Rapid">
+             <widget class="QSpinBox" name="Tool_Rapid">
               <property name="toolTip">
                <string>The speed the tool moves while not cutting</string>
               </property>
@@ -314,7 +314,7 @@
              </widget>
             </item>
             <item row="2" column="2">
-             <widget class="QSpinBox" name="spinBox_Tool_Angle">
+             <widget class="QSpinBox" name="Tool_Angle">
               <property name="maximum">
                <number>180</number>
               </property>
@@ -331,7 +331,7 @@
              </widget>
             </item>
             <item row="1" column="2">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_Diameter">
+             <widget class="QDoubleSpinBox" name="Tool_Diameter">
               <property name="decimals">
                <number>3</number>
               </property>
@@ -359,7 +359,7 @@
              </widget>
             </item>
             <item row="6" column="2">
-             <widget class="QSpinBox" name="spinBox_Tool_Plunge">
+             <widget class="QSpinBox" name="Tool_Plunge">
               <property name="toolTip">
                <string>The speed the tool plunges downwards into the material</string>
               </property>
@@ -391,7 +391,7 @@
              </widget>
             </item>
             <item row="4" column="2">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_Overlap">
+             <widget class="QDoubleSpinBox" name="Tool_Overlap">
               <property name="decimals">
                <number>3</number>
               </property>
@@ -407,7 +407,7 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QComboBox" name="comboBox_Tool_Units">
+             <widget class="QComboBox" name="Tool_Units">
               <item>
                <property name="text">
                 <string>inch</string>
@@ -421,7 +421,7 @@
              </widget>
             </item>
             <item row="3" column="2">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_Tool_PassDepth">
+             <widget class="QDoubleSpinBox" name="Tool_PassDepth">
               <property name="decimals">
                <number>3</number>
               </property>
@@ -437,7 +437,7 @@
              </widget>
             </item>
             <item row="7" column="2">
-             <widget class="QSpinBox" name="spinBox_Tool_Cut">
+             <widget class="QSpinBox" name="Tool_Cut">
               <property name="toolTip">
                <string>The speed the tool moves horizontally during cutting</string>
               </property>
@@ -504,7 +504,7 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QSpinBox" name="spinBox_CurveToLineConversion_MinimumNbSegments">
+             <widget class="QSpinBox" name="CurveToLineConversion_MinimumNbSegments">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -529,7 +529,7 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_CurveToLineConversion_MinimumSegmentsLength">
+             <widget class="QDoubleSpinBox" name="CurveToLineConversion_MinimumSegmentsLength">
               <property name="maximum">
                <double>1.000000000000000</double>
               </property>
@@ -611,7 +611,7 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QComboBox" name="comboBox_Tabs_Units">
+                <widget class="QComboBox" name="Tabs_Units">
                  <property name="enabled">
                   <bool>true</bool>
                  </property>
@@ -640,7 +640,7 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QDoubleSpinBox" name="doubleSpinBox_Tabs_Height">
+                <widget class="QDoubleSpinBox" name="Tabs_Height">
                  <property name="enabled">
                   <bool>true</bool>
                  </property>
@@ -657,7 +657,7 @@
                 </widget>
                </item>
                <item row="2" column="1">
-                <widget class="QCheckBox" name="checkBox_Tabs_hideAllTabs">
+                <widget class="QCheckBox" name="Tabs_hideAllTabs">
                  <property name="font">
                   <font>
                    <bold>true</bold>
@@ -669,7 +669,7 @@
                 </widget>
                </item>
                <item row="3" column="1">
-                <widget class="QCheckBox" name="checkBox_Tabs_hideDisabledTabs">
+                <widget class="QCheckBox" name="Tabs_hideDisabledTabs">
                  <property name="font">
                   <font>
                    <bold>true</bold>
@@ -801,7 +801,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_SaveGcode">
+        <widget class="QPushButton" name="SaveGcode">
          <property name="text">
           <string>Save Gcode</string>
          </property>
@@ -919,7 +919,7 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QComboBox" name="comboBox_Material_Units">
+             <widget class="QComboBox" name="Material_Units">
               <item>
                <property name="text">
                 <string>inch</string>
@@ -945,7 +945,7 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_Material_Thickness">
+             <widget class="QDoubleSpinBox" name="Material_Thickness">
               <property name="maximum">
                <double>100.000000000000000</double>
               </property>
@@ -967,7 +967,7 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QComboBox" name="comboBox_Material_ZOrigin">
+             <widget class="QComboBox" name="Material_ZOrigin">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -1002,7 +1002,7 @@
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_Material_Clearance">
+             <widget class="QDoubleSpinBox" name="Material_Clearance">
               <property name="maximum">
                <double>100.000000000000000</double>
               </property>
@@ -1058,7 +1058,7 @@
              </widget>
             </item>
             <item row="10" column="2">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MinY">
+             <widget class="QDoubleSpinBox" name="GCodeConversion_MinY">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -1083,7 +1083,7 @@
              </widget>
             </item>
             <item row="9" column="2">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MaxX">
+             <widget class="QDoubleSpinBox" name="GCodeConversion_MaxX">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -1115,7 +1115,7 @@
              </widget>
             </item>
             <item row="5" column="0" colspan="2">
-             <widget class="QCheckBox" name="checkBox_GCodeConversion_FlipXY">
+             <widget class="QCheckBox" name="GCodeConversion_FlipXY">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -1131,7 +1131,7 @@
              </widget>
             </item>
             <item row="8" column="2">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MinX">
+             <widget class="QDoubleSpinBox" name="GCodeConversion_MinX">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -1144,7 +1144,7 @@
              </widget>
             </item>
             <item row="11" column="2">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_MaxY">
+             <widget class="QDoubleSpinBox" name="GCodeConversion_MaxY">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -1205,7 +1205,7 @@
              </widget>
             </item>
             <item row="7" column="2">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_YOffset">
+             <widget class="QDoubleSpinBox" name="GCodeConversion_YOffset">
               <property name="minimum">
                <double>-100.000000000000000</double>
               </property>
@@ -1222,7 +1222,7 @@
              </widget>
             </item>
             <item row="6" column="2">
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_GCodeConversion_XOffset">
+             <widget class="QDoubleSpinBox" name="GCodeConversion_XOffset">
               <property name="minimum">
                <double>-100.000000000000000</double>
               </property>
@@ -1256,7 +1256,7 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QComboBox" name="comboBox_GCodeConversion_Units">
+             <widget class="QComboBox" name="GCodeConversion_Units">
               <item>
                <property name="text">
                 <string>inch</string>
@@ -1270,7 +1270,7 @@
              </widget>
             </item>
             <item row="1" column="0" colspan="3">
-             <widget class="QPushButton" name="pushButton_GCodeConversion_ZeroTopLeftOfMaterial">
+             <widget class="QPushButton" name="GCodeConversion_ZeroTopLeftOfMaterial">
               <property name="font">
                <font>
                 <bold>true</bold>
@@ -1295,7 +1295,7 @@
              </widget>
             </item>
             <item row="2" column="0" colspan="3">
-             <widget class="QPushButton" name="pushButton_GCodeConversion_ZeroLowerLeftOfMaterial">
+             <widget class="QPushButton" name="GCodeConversion_ZeroLowerLeftOfMaterial">
               <property name="font">
                <font>
                 <bold>true</bold>
@@ -1317,7 +1317,7 @@
              </widget>
             </item>
             <item row="3" column="0" colspan="3">
-             <widget class="QPushButton" name="pushButton_GCodeConversion_ZeroLowerLeftOfOp">
+             <widget class="QPushButton" name="GCodeConversion_ZeroLowerLeftOfOp">
               <property name="font">
                <font>
                 <bold>true</bold>
@@ -1339,7 +1339,7 @@
              </widget>
             </item>
             <item row="4" column="0" colspan="3">
-             <widget class="QPushButton" name="pushButton_GCodeConversion_ZeroCenterOfOp">
+             <widget class="QPushButton" name="GCodeConversion_ZeroCenterOfOp">
               <property name="font">
                <font>
                 <bold>true</bold>
@@ -1403,7 +1403,7 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QCheckBox" name="checkBox_GCodeGeneration_ReturnToZeroAtEnd">
+             <widget class="QCheckBox" name="GCodeGeneration_ReturnToZeroAtEnd">
               <property name="text">
                <string/>
               </property>
@@ -1422,7 +1422,7 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QCheckBox" name="checkBox_GCodeGeneration_SpindleControl">
+             <widget class="QCheckBox" name="GCodeGeneration_SpindleControl">
               <property name="font">
                <font>
                 <bold>true</bold>
@@ -1446,7 +1446,7 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QSpinBox" name="spinBox_GCodeGeneration_SpindleSpeed">
+             <widget class="QSpinBox" name="GCodeGeneration_SpindleSpeed">
               <property name="maximum">
                <number>25000</number>
               </property>
@@ -1468,7 +1468,7 @@
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QCheckBox" name="checkBox_GCodeGeneration_ProgramEnd">
+             <widget class="QCheckBox" name="GCodeGeneration_ProgramEnd">
               <property name="font">
                <font>
                 <bold>true</bold>

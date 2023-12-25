@@ -2,11 +2,11 @@
   "svg_file": "../misc_private/cnc1419/vise1-1419.resolved.svg",
   "operations": [
     {
-      "name": "op",
+      "name": "op_part1_shaft_A",
       "type": "Pocket",
-      "cut_depth": 20.1,
+      "cut_depth": 21.0,
       "paths": [
-        "part_1_shaft_hole_1_nc"
+        "part_1_shaft_hole_A"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -16,11 +16,11 @@
       "width": 0.0
     },
     {
-      "name": "op",
+      "name": "op_part2_shaft_A",
       "type": "Pocket",
       "cut_depth": 14.0,
       "paths": [
-        "part_2_shaft_pocket_1_nc"
+        "part_2_shaft_pocket_A"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -30,11 +30,11 @@
       "width": 0.0
     },
     {
-      "name": "op",
+      "name": "op_part1_shaft_B",
       "type": "Pocket",
-      "cut_depth": 20.1,
+      "cut_depth": 21.0,
       "paths": [
-        "part_1_shaft_hole_2_nc"
+        "part_1_shaft_hole_B"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -44,11 +44,25 @@
       "width": 0.0
     },
     {
-      "name": "op",
+      "name": "op_part2_shaft_B",
       "type": "Pocket",
       "cut_depth": 14.0,
       "paths": [
-        "part_2_shaft_pocket_2_nc"
+        "part_2_shaft_pocket_B"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
+    },
+    {
+      "name": "op_leadscrew_hole",
+      "type": "Pocket",
+      "cut_depth": 20.1,
+      "paths": [
+        "leadscrew_hole"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -71,7 +85,7 @@
       "units": "mm",
       "diameter": 6.0,
       "angle": 180,
-      "passdepth": 1.0,
+      "passdepth": 0.1,
       "overlap": 0.4,
       "rapid": 500,
       "plunge": 100,
@@ -81,7 +95,7 @@
       "units": "mm",
       "thickness": 10.0,
       "z_origin": "Top",
-      "clearance": 2.5
+      "clearance": 1.5
     },
     "CurveToLineConversion": {
       "minimum_segments": 5,
@@ -89,10 +103,10 @@
     },
     "GCodeConversion": {
       "units": "mm",
-      "flip_xy": false,
-      "x_offset": -20.0,
-      "y_offset": 40.0,
-      "xy_reference": "ZERO_TOP_LEFT_OF_MATERIAL"
+      "flip_xy": true,
+      "x_offset": -10.0,
+      "y_offset": 30.0,
+      "xy_reference": "ZERO_CENTER_OF_OP"
     },
     "GCodeGeneration": {
       "return_to_zero_at_end": true,

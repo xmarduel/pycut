@@ -445,9 +445,10 @@ top-left postion.</p>
 
 <p>Note that these 4 buttons act as radio buttons.</p>
 
-<p>These four references points set the XOffset and YOffset of the GCode calculation. After a GCode generation, it is
+<p>These four references options set the XOffset and YOffset of the GCode calculation. After a GCode generation, it is
 still possible to modify the XOffset and YOffset to fit at best how to user wants to have the origin be located with
-the help of the 2 spin boxes. </p>
+the help of the 2 spin boxes. Infact, modifying "per hand" the X or Y offset recalculate the GCode, so this is a costly
+operation.</p>
 
 <div class="warning">
 <p><strong>Info</strong>: The option "Center of the Gcode area" is particularely usefull when the user wants to run 2
@@ -456,6 +457,26 @@ the operations are the same, at the end of the first operation (first GCode file
 machine and load/start the second G-Code file. This occurs when some holes have to be drilled in the first operation
 and a contour or pocket operation has to be performed in the second operation with a much larger tool. </p>
 </div>
+
+<p>Lets give an example: in a SVG file, two circles are defined, one has to be pocketed with 10mm , the other with 5
+mm. So two operation are needed. Imagine the center of the first circle is at (10,15) and the center of the second
+circle is at (20,25). If boths operations are relative from the "Zero top-Left material" reference, no problem. You
+have to position your bit exactly at the "top-left" of your material in order to mill the first hole at exactly (10,15)
+from this initial position. </p>
+
+<p>But imagine you want the reference to be the center of the first circle. After having generated the GCode for the
+first circle, click on "Zero Center (Op)" and observe and meorize what are the resulting X an Y offsets (it will be
+(-10, 15)). Now select the 2 operations and generate the GCode. The offsets will certainly chande, but then type in the
+offsets the memerized X and Y offsets. The GCode will be reevaluated with the offsets (-10,15) and thus the GCode 0,0
+position will be the center of the first circle.</p>
+
+<p>But why would you want to have as reference of the GCode the center of the first circle ? Well when milling the two
+holes in your workpiece maybe you may want to position the bit at a given position on the workpiece and from this
+location mill the second holes, the first hole beeing milled exactly when you have positioned your bit. Bacause what
+was important was the relative position of the two holes, while the absolute position of the first hole was to be
+determinated by yourself on the workpiece.</p>
+
+<p></p>
 
 <p>And further:</p>
 <ul>
@@ -556,8 +577,8 @@ round). </p>
     <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                    <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                        <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                                                                                                                                                                                                                                                                                                                                                                                                                        -->
     <circle cx="66.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </g>
   <g id="layer1" transform="translate(120 0)">
@@ -569,8 +590,8 @@ round). </p>
     <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                  <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                  -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                      <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                                                                                                                                                                                                                                                                                                                                                                                                                      -->
     <circle cx="65.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </g>
 </svg>
@@ -637,12 +658,12 @@ tool path (and the standart cutter position at the toolpath corner).</p>
               stroke-opacity="0.8"/>
     <circle cx="20" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
     <!-- 
-                                                                                                                                                                                                                                                                                                                                                                                                                                 D = sqrt(10*10 + 10*10) = 14.14
-                                                                                                                                                                                                                                                                                                                                                                                                                                 d = 14.14 -10 = 4.14
-                                                                                                                                                                                                                                                                                                                                                                                                                                 
-                                                                                                                                                                                                                                                                                                                                                                                                                                 dx = dy =  d / sqrt(2) = 2.93
-                                                                                                                                                                                                                                                                                                                                                                                                                                 
-                                                                                                                                                                                                                                                                                                                                                                                                                                 -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                     D = sqrt(10*10 + 10*10) = 14.14
+                                                                                                                                                                                                                                                                                                                                                                                                                                     d = 14.14 -10 = 4.14
+                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                     dx = dy =  d / sqrt(2) = 2.93
+                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                     -->
     <polyline id="dog-bone-path1" points="20,20 17.07,17.07" fill="none" stroke="blue" stroke-linejoin="round"
               stroke-width="0.3" stroke-opacity="0.2"/>
     <circle id="dog-bone-path1-material" cx="17.07" cy="17.07" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2"

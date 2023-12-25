@@ -3,51 +3,60 @@
 	The vise has 3 parts, but here we only handle the two parts "joined" by the 2 shafts of 10mm diameter.
 	
 	The holes for these 2 shafts must be perfectly aligned, while it is not that important for the middle 
-	hole where the "lead screw" go through, as on the other part for this leadscrew no hoe is needed.
+	hole where the "lead screw" go through, as on the other part for this leadscrew no hole is needed.
 	
 	For the "base" part, the holes go through the piece, while they **DO NOT** for the moving part (we will
-	glue them to the middle part). So for a piece width of 20mm, we will only bore 13mm.
+	glue the shafts to the middle part). So for a piece thickness of 20mm, we will bore only 13mm in the
+	moving part.
 	
 	Note that for the leadscrew the hole must be a little translated in direction of the top of the bar, because 
-	the hand handle (where the human hand acts in order to screw/unscrew) has a diameter of 2cm so it has to be 
-	"elevated" sonce the handle will be very unpracticable.
+	the hand handle (where the human hand acts in order to screw/unscrew the main screw) has a diameter of 2cm
+	so it has to be "elevated" sonce the handle will be very unpracticable has would touch the base of the plate
+	where the vise parts seat.
 	
-	The leadscrew passes through a backlash item so we name this hole the backlash hole
+	The leadscrew passes through a backlash item so we name this hole the leadscrew hole
 	
 	We also display the plan for a fixed part (there are 2 of them) which are screwed to the machine.
 	The view for this part is from above, while the view for the two parts with shaft is from the side. 
+	
+	WARNING: about the leadscrew "backlash item:
+	  Each item (round, rectangular etc) has a different diameter
+	
+	  For the "vise0" type (the small one) the backlash items (there a two) are the rectangular ones,
+	  with a diameter of 10.15 mm.
+	
 	-->
   <g id="root">
-    <!-- part to be "g-coded" -->
-    <rect id="three_parts_together" width="60.000" height="160.000" x="10.000" y="10.000" rx="0.000" ry="0.000" style="fill:black;fill-opacity:0.4"/>
-    <line id="part12" x1="30.000" y1="10.000" x2="30.000" y2="170.000" style="fill:none;stroke-width:0.1;stroke:black"/>
-    <line id="part23" x1="50.000" y1="10.000" x2="50.000" y2="170.000" style="fill:none;stroke-width:0.1;stroke:black"/>
-    <rect id="from_above" width="20.000" height="160.000" x="90.000" y="10.000" rx="0.000" ry="0.000" style="fill:black;fill-opacity:0.4"/>
+    <rect id="part1" width="20.000" height="160.000" x="0.000" y="0.000" rx="0.000" ry="0.000" style="fill:black;fill-opacity:0.4;stroke-width:0.1;stroke:black"/>
+    <rect id="part2" width="20.000" height="160.000" x="20.000" y="0.000" rx="0.000" ry="0.000" style="fill:black;fill-opacity:0.4;stroke-width:0.1;stroke:black"/>
+    <rect id="part3" width="20.000" height="160.000" x="40.000" y="0.000" rx="0.000" ry="0.000" style="fill:black;fill-opacity:0.4;stroke-width:0.1;stroke:black"/>
+    <rect id="part3_from_above" width="20.000" height="160.000" x="80.000" y="0.000" rx="0.000" ry="0.000" style="fill:black;fill-opacity:0.4;stroke-width:0.1;stroke:black"/>
     <!-- part 1 depth = 20mm , width 20mm, cut through depth 20mm   -->
-    <circle id="part_1_shaft_hole_1_nc" cx="20.000" cy="40.000" r="5.000" style="fill:#008080;fill-opacity:1"/>
-    <circle id="part_1_shaft_hole_2_nc" cx="20.000" cy="140.000" r="5.000" style="fill:#008080;fill-opacity:1"/>
+    <circle id="part_1_shaft_hole_A" cx="10.000" cy="30.000" r="5.050" style="fill:#008080;fill-opacity:1"/>
+    <circle id="part_1_shaft_hole_B" cx="10.000" cy="130.000" r="5.050" style="fill:#008080;fill-opacity:1"/>
     <!-- part 2 depth = 20mm , width 20mm , pocket depth 13mm   -->
-    <circle id="part_2_shaft_pocket_1_nc" cx="40.000" cy="40.000" r="5.000" style="fill:#008080;fill-opacity:1"/>
-    <circle id="part_2_shaft_pocket_2_nc" cx="40.000" cy="140.000" r="5.000" style="fill:#008080;fill-opacity:1"/>
+    <circle id="part_2_shaft_pocket_A" cx="30.000" cy="30.000" r="5.000" style="fill:#008080;fill-opacity:1"/>
+    <circle id="part_2_shaft_pocket_B" cx="30.000" cy="130.000" r="5.000" style="fill:#008080;fill-opacity:1"/>
     <g id="backlash">
       <!-- cut through -->
-      <circle id="backlash_item_hole" cx="22.000" cy="90.000" r="5.150" style="fill:#ff00ff;fill-opacity:1"/>
+      <circle id="leadscrew_hole" cx="12.000" cy="80.000" r="5.075" style="fill:#ff00ff;fill-opacity:1"/>
       <!-- cut through -->
-      <circle id="backlash_item_screw_3.0mm_E" cx="22.000" cy="98.000" r="1.250" style="fill:#ff00ff;fill-opacity:1"/>
-      <circle id="backlash_item_screw_3.0mm_W" cx="22.000" cy="82.000" r="1.250" style="fill:#ff00ff;fill-opacity:1"/>
-      <circle id="reference" cx="22.000" cy="90.000" r="3.000" style="fill:blue;stroke-width:0.1;stroke:blue"/>
+      <circle id="backlash_item_screw_3.0mm_A" cx="12.000" cy="88.000" r="1.250" style="fill:#ff00ff;fill-opacity:1"/>
+      <circle id="backlash_item_screw_3.0mm_B" cx="12.000" cy="72.000" r="1.250" style="fill:#ff00ff;fill-opacity:1"/>
+      <!-- the leadscrew -->
+	  <circle id="leadscrew" cx="12.000" cy="80.000" r="3.000" style="fill:blue;stroke-width:0.1;stroke:blue"/>
     </g>
-    <g id="fixing_screws_holes">
+    <g id="parts_1_3_fixing_screws_holes">
       <!-- 20 mm depth: cut through -->
-      <circle id="hole1-5mm" cx="100.000" cy="20.000" r="2.500" style="fill:black;fill-opacity:0.4"/>
-      <circle id="hole2-5mm" cx="100.000" cy="60.000" r="2.500" style="fill:black;fill-opacity:0.4"/>
-      <circle id="hole3-5mm" cx="100.000" cy="120.000" r="2.500" style="fill:black;fill-opacity:0.4"/>
-      <circle id="hole4-5mm" cx="100.000" cy="160.000" r="2.500" style="fill:black;fill-opacity:0.4"/>
+      <circle id="hole1-5mm" cx="90.000" cy="10.000" r="2.500" style="fill:black;fill-opacity:0.4"/>
+      <circle id="hole2-5mm" cx="90.000" cy="50.000" r="2.500" style="fill:black;fill-opacity:0.4"/>
+      <circle id="hole3-5mm" cx="90.000" cy="110.000" r="2.500" style="fill:black;fill-opacity:0.4"/>
+      <circle id="hole4-5mm" cx="90.000" cy="150.000" r="2.500" style="fill:black;fill-opacity:0.4"/>
       <!-- 11 mm depth -->
-      <circle id="pocket1-9mm" cx="100.000" cy="20.000" r="4.500" style="fill:black;fill-opacity:0.4"/>
-      <circle id="pocket2-9mm" cx="100.000" cy="60.000" r="4.500" style="fill:black;fill-opacity:0.4"/>
-      <circle id="pocket3-9mm" cx="100.000" cy="120.000" r="4.500" style="fill:black;fill-opacity:0.4"/>
-      <circle id="pocket4-9mm" cx="100.000" cy="160.000" r="4.500" style="fill:black;fill-opacity:0.4"/>
+      <circle id="pocket1-9mm" cx="90.000" cy="10.000" r="4.500" style="fill:black;fill-opacity:0.4"/>
+      <circle id="pocket2-9mm" cx="90.000" cy="50.000" r="4.500" style="fill:black;fill-opacity:0.4"/>
+      <circle id="pocket3-9mm" cx="90.000" cy="110.000" r="4.500" style="fill:black;fill-opacity:0.4"/>
+      <circle id="pocket4-9mm" cx="90.000" cy="150.000" r="4.500" style="fill:black;fill-opacity:0.4"/>
     </g>
   </g>
 </svg>
