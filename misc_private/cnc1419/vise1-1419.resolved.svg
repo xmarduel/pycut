@@ -19,11 +19,11 @@
 	We also display the plan for a fixed part (there are 2 of them) which are screwed to the machine.
 	The view for this part is from above, while the view for the two parts with shaft is from the side. 
 	
-	WARNING: about the leadscrew "backlash item:
+	WARNING: about the leadscrew "backlash item":
 	  Each item (round, rectangular etc) has a different diameter
 	
-	  For the "vise0" type (the small one) the backlash items (there a two) are the rectangular ones,
-	  with a diameter of 10.15 mm.
+	  For the "vise1" type (the small one) the backlash items (there a two) are the rectangular ones,
+	  with a diameter of 10.20 mm.
 	
 	-->
   <g id="root">
@@ -39,7 +39,7 @@
     <circle id="part_2_shaft_pocket_B" cx="30.000" cy="130.000" r="5.000" style="fill:#008080;fill-opacity:1"/>
     <g id="backlash">
       <!-- cut through -->
-      <circle id="leadscrew_hole" cx="12.000" cy="80.000" r="5.075" style="fill:#ff00ff;fill-opacity:1"/>
+      <circle id="leadscrew_hole" cx="12.000" cy="80.000" r="5.1" style="fill:#ff00ff;fill-opacity:1"/>
       <!-- cut through -->
       <circle id="backlash_item_screw_3.0mm_A" cx="12.000" cy="88.000" r="1.250" style="fill:#ff00ff;fill-opacity:1"/>
       <circle id="backlash_item_screw_3.0mm_B" cx="12.000" cy="72.000" r="1.250" style="fill:#ff00ff;fill-opacity:1"/>

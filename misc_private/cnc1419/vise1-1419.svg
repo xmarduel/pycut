@@ -20,18 +20,18 @@
 	We also display the plan for a fixed part (there are 2 of them) which are screwed to the machine.
 	The view for this part is from above, while the view for the two parts with shaft is from the side. 
 	
-	WARNING: about the leadscrew "backlash item:
+	WARNING: about the leadscrew "backlash item":
 	  Each item (round, rectangular etc) has a different diameter
 	
-	  For the "vise0" type (the small one) the backlash items (there a two) are the rectangular ones,
-	  with a diameter of 10.15 mm.
+	  For the "vise1" type (the small one) the backlash items (there a two) are the rectangular ones,
+	  with a diameter of 10.20 mm.
 	
 	-->
 	<defs id="defs">
-		<circle id="shaft_hole_10.0mm"         style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="5.0" />
+		<circle id="shaft_hole_10.0mm"         style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="5.00" />
 		<circle id="shaft_hole_10.1mm"         style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="5.05" />
-		<circle id="leadscrew_hole_10.15mm"    style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.075" />
-		<circle id="backlash_item_screw_3.0mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="1.5" />
+		<circle id="leadscrew_hole_10.2mm"     style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.10" />
+		<circle id="backlash_item_screw_3.0mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="1.50" />
 		<!-- ... the kernhole for a scree aof d=3mm is 2.5mm ==> need a bit of 2.5mm diameter -->
 		<circle id="backlash_item_screw_3.0mm_threaded" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="1.25" />
 	</defs>

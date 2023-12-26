@@ -60,7 +60,7 @@
     {
       "name": "op_leadscrew_hole",
       "type": "Pocket",
-      "cut_depth": 20.1,
+      "cut_depth": 20.5,
       "paths": [
         "leadscrew_hole"
       ],
