@@ -543,6 +543,9 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         for k in range(self.model().rowCount(None)):
             self.openPersistentEditor(self.model().index(k, 1))  # cam_op
             self.openPersistentEditor(self.model().index(k, 2))  #   enabled
+
+            # self.openPersistentEditor(self.model().index(k, 3))  #   paths
+
             self.openPersistentEditor(self.model().index(k, 4))  # units
             self.openPersistentEditor(self.model().index(k, 5))  #       cut_depth
             self.openPersistentEditor(self.model().index(k, 6))  #   ramp
@@ -782,7 +785,11 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
         attr = self.get_operation_attr(index)
 
         if role == QtCore.Qt.EditRole:
-            setattr(op, attr, value)
+            if index.column() != 3:
+                setattr(op, attr, value)
+            else:
+                items = eval(value)  # string to list
+                setattr(op, attr, items)
 
     def data(self, index: QtCore.QModelIndex, role: QtCore.Qt.EditRole):
         op = self.get_operation(index)
@@ -812,6 +819,7 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
                 val = str(val)
 
             return val
+
         if role == QtCore.Qt.EditRole:
             val = getattr(op, attr)
 
@@ -820,6 +828,11 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
                 val = str(val)
 
             return val
+
+        # if role == QtCore.Qt.ToolTipRole:
+        #    if col == 3:
+        #        val = getattr(op, attr)
+        #        return val
 
         return None
 
@@ -843,14 +856,14 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
         self.operations.append(op)
         self.endInsertRows()
 
-    def delItem(self, idx):
+    def delItem(self, idx: int):
         op = self.operations[idx]
 
         self.beginRemoveRows(QtCore.QModelIndex(), idx, idx)
         self.operations.remove(op)
         self.endRemoveRows()
 
-    def swapItems(self, idx1, idx2):
+    def swapItems(self, idx1: int, idx2: int):
         self.beginResetModel()
         self.operations[idx1], self.operations[idx2] = (
             self.operations[idx2],
@@ -858,8 +871,8 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
         )
         self.endResetModel()
 
-    def get_operation(self, index):
+    def get_operation(self, index: QtCore.QModelIndex):
         return self.operations[index.row()]
 
-    def get_operation_attr(self, index):
+    def get_operation_attr(self, index: QtCore.QModelIndex):
         return self.header[index.column()]
