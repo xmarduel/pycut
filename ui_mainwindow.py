@@ -63,11 +63,12 @@ class Ui_mainwindow(object):
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
         self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 318, 986))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout_2.setSpacing(22)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(9, -1, 9, -1)
         self.verticalLayoutSettingsContent = QVBoxLayout()
+        self.verticalLayoutSettingsContent.setSpacing(6)
         self.verticalLayoutSettingsContent.setObjectName(u"verticalLayoutSettingsContent")
-        self.verticalLayoutSettingsContent.setContentsMargins(-1, -1, -1, 20)
         self.label_SvgSettings = QLabel(self.scrollAreaWidgetContents)
         self.label_SvgSettings.setObjectName(u"label_SvgSettings")
         font = QFont()
@@ -142,8 +143,8 @@ class Ui_mainwindow(object):
         self.verticalLayout_2.addLayout(self.verticalLayoutSettingsContent)
 
         self.verticalLayoutToolContent = QVBoxLayout()
+        self.verticalLayoutToolContent.setSpacing(6)
         self.verticalLayoutToolContent.setObjectName(u"verticalLayoutToolContent")
-        self.verticalLayoutToolContent.setContentsMargins(-1, -1, -1, 20)
         self.label_Tool = QLabel(self.scrollAreaWidgetContents)
         self.label_Tool.setObjectName(u"label_Tool")
         self.label_Tool.setFont(font)
@@ -153,7 +154,7 @@ class Ui_mainwindow(object):
 
         self.gridLayout_Tool = QGridLayout()
         self.gridLayout_Tool.setObjectName(u"gridLayout_Tool")
-        self.gridLayout_Tool.setContentsMargins(8, 0, -1, 0)
+        self.gridLayout_Tool.setContentsMargins(8, -1, -1, -1)
         self.label_Tool_Plunge_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
         self.label_Tool_Plunge_UnitsDescr.setObjectName(u"label_Tool_Plunge_UnitsDescr")
 
@@ -306,8 +307,8 @@ class Ui_mainwindow(object):
         self.verticalLayout_2.addLayout(self.verticalLayoutToolContent)
 
         self.verticalLayoutCurveToLineConversion = QVBoxLayout()
+        self.verticalLayoutCurveToLineConversion.setSpacing(6)
         self.verticalLayoutCurveToLineConversion.setObjectName(u"verticalLayoutCurveToLineConversion")
-        self.verticalLayoutCurveToLineConversion.setContentsMargins(-1, -1, -1, 20)
         self.labelCurveToLineConversion = QLabel(self.scrollAreaWidgetContents)
         self.labelCurveToLineConversion.setObjectName(u"labelCurveToLineConversion")
         self.labelCurveToLineConversion.setFont(font)
@@ -323,6 +324,7 @@ class Ui_mainwindow(object):
         self.formLayoutCurveToLineConversion.setContentsMargins(8, 0, -1, -1)
         self.label_CurveToLineConversion_MinimumNbSegments = QLabel(self.scrollAreaWidgetContents)
         self.label_CurveToLineConversion_MinimumNbSegments.setObjectName(u"label_CurveToLineConversion_MinimumNbSegments")
+        self.label_CurveToLineConversion_MinimumNbSegments.setMinimumSize(QSize(189, 0))
         self.label_CurveToLineConversion_MinimumNbSegments.setFont(font1)
 
         self.formLayoutCurveToLineConversion.setWidget(0, QFormLayout.LabelRole, self.label_CurveToLineConversion_MinimumNbSegments)
@@ -356,6 +358,7 @@ class Ui_mainwindow(object):
         self.verticalLayout_2.addLayout(self.verticalLayoutCurveToLineConversion)
 
         self.verticalLayoutTabsContent = QVBoxLayout()
+        self.verticalLayoutTabsContent.setSpacing(6)
         self.verticalLayoutTabsContent.setObjectName(u"verticalLayoutTabsContent")
         self.verticalLayoutTabsContent.setContentsMargins(-1, -1, -1, 0)
         self.label_Tabs = QLabel(self.scrollAreaWidgetContents)
@@ -428,6 +431,11 @@ class Ui_mainwindow(object):
 
         self.tabsview_manager = PyCutTabsTableViewManager(self.scrollAreaWidgetContents)
         self.tabsview_manager.setObjectName(u"tabsview_manager")
+        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.tabsview_manager.sizePolicy().hasHeightForWidth())
+        self.tabsview_manager.setSizePolicy(sizePolicy)
         self.tabsview_manager.setMinimumSize(QSize(0, 200))
 
         self.verticalLayoutTabsContent.addWidget(self.tabsview_manager)
@@ -436,6 +444,11 @@ class Ui_mainwindow(object):
 
         self.verticalLayout_2.addLayout(self.verticalLayoutTabsContent)
 
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_2.addItem(self.verticalSpacer)
+
+        self.verticalLayout_2.setStretch(4, 1)
         self.scrollArea_left.setWidget(self.scrollAreaWidgetContents)
 
         self.horizontalLayout_2.addWidget(self.scrollArea_left)
@@ -501,10 +514,11 @@ class Ui_mainwindow(object):
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
         self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 314, 986))
         self.verticalLayout_5 = QVBoxLayout(self.scrollAreaWidgetContents_2)
+        self.verticalLayout_5.setSpacing(22)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.verticalLayoutMaterial = QVBoxLayout()
+        self.verticalLayoutMaterial.setSpacing(6)
         self.verticalLayoutMaterial.setObjectName(u"verticalLayoutMaterial")
-        self.verticalLayoutMaterial.setContentsMargins(-1, -1, -1, 20)
         self.labelMaterial = QLabel(self.scrollAreaWidgetContents_2)
         self.labelMaterial.setObjectName(u"labelMaterial")
         self.labelMaterial.setFont(font)
@@ -572,9 +586,6 @@ class Ui_mainwindow(object):
         self.Material_ZOrigin.addItem("")
         self.Material_ZOrigin.addItem("")
         self.Material_ZOrigin.setObjectName(u"Material_ZOrigin")
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Material_ZOrigin.sizePolicy().hasHeightForWidth())
         self.Material_ZOrigin.setSizePolicy(sizePolicy)
 
@@ -601,8 +612,8 @@ class Ui_mainwindow(object):
         self.verticalLayout_5.addLayout(self.verticalLayoutMaterial)
 
         self.verticalLayoutGCodeConversion = QVBoxLayout()
+        self.verticalLayoutGCodeConversion.setSpacing(6)
         self.verticalLayoutGCodeConversion.setObjectName(u"verticalLayoutGCodeConversion")
-        self.verticalLayoutGCodeConversion.setContentsMargins(-1, -1, -1, 20)
         self.label_GCcodeConversion = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCcodeConversion.setObjectName(u"label_GCcodeConversion")
         self.label_GCcodeConversion.setFont(font)
@@ -801,6 +812,7 @@ class Ui_mainwindow(object):
         self.verticalLayout_5.addLayout(self.verticalLayoutGCodeConversion)
 
         self.verticalLayoutGCodeGeneration = QVBoxLayout()
+        self.verticalLayoutGCodeGeneration.setSpacing(6)
         self.verticalLayoutGCodeGeneration.setObjectName(u"verticalLayoutGCodeGeneration")
         self.labelGCodeGeneration = QLabel(self.scrollAreaWidgetContents_2)
         self.labelGCodeGeneration.setObjectName(u"labelGCodeGeneration")
@@ -972,7 +984,7 @@ class Ui_mainwindow(object):
 #endif // QT_CONFIG(tooltip)
         self.labelCurveToLineConversion.setText(QCoreApplication.translate("mainwindow", u" Curve To Line Conversion", None))
         self.label_CurveToLineConversion_MinimumNbSegments.setText(QCoreApplication.translate("mainwindow", u"Minimum Segments", None))
-        self.label_CurveToLineConversion_MinimumSegmentsLength.setText(QCoreApplication.translate("mainwindow", u"Minimum Segments Length                ", None))
+        self.label_CurveToLineConversion_MinimumSegmentsLength.setText(QCoreApplication.translate("mainwindow", u"Minimum Segments Length", None))
         self.label_Tabs.setText(QCoreApplication.translate("mainwindow", u" Tabs", None))
         self.label_TabsUnits.setText(QCoreApplication.translate("mainwindow", u"Units", None))
         self.Tabs_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))

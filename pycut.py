@@ -123,7 +123,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.tabWidget.setTabVisible(3, False)
 
         self.setWindowTitle("PyCut")
-        self.setWindowIcon(QtGui.QIcon(":/images/tango/32x32/categories/applications-system.png"))
+        self.setWindowIcon(
+            QtGui.QIcon(":/images/tango/32x32/categories/applications-system.png")
+        )
 
         self.build_recent_jobs_submenu()
 
@@ -149,7 +151,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.operationsview_manager.set_svg_viewer(self.svg_viewer)
 
         # callbacks
-        self.ui.SaveGcode.setIcon(QtGui.QIcon(":/images/tango/22x22/actions/document-save-as.png"))
+        self.ui.SaveGcode.setIcon(
+            QtGui.QIcon(":/images/tango/22x22/actions/document-save-as.png")
+        )
         self.ui.SaveGcode.clicked.connect(self.cb_save_gcode)
 
         self.ui.actionOpenSvg.triggered.connect(self.cb_open_svg)
@@ -174,28 +178,48 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         )
 
         # display material thickness/clearance
-        self.ui.Material_Thickness.valueChanged.connect(self.cb_display_material_thickness)
-        self.ui.Material_Clearance.valueChanged.connect(self.cb_display_material_clearance)
+        self.ui.Material_Thickness.valueChanged.connect(
+            self.cb_display_material_thickness
+        )
+        self.ui.Material_Clearance.valueChanged.connect(
+            self.cb_display_material_clearance
+        )
 
         default_thickness = self.ui.Material_Thickness.value()
         default_clearance = self.ui.Material_Clearance.value()
-        self.svg_material_viewer.display_material(thickness=default_thickness, clearance=default_clearance)
+        self.svg_material_viewer.display_material(
+            thickness=default_thickness, clearance=default_clearance
+        )
 
-        self.ui.CurveToLineConversion_MinimumNbSegments.valueChanged.connect(self.cb_curve_min_segments)
-        self.ui.CurveToLineConversion_MinimumSegmentsLength.valueChanged.connect(self.cb_curve_min_segments_length)
+        self.ui.CurveToLineConversion_MinimumNbSegments.valueChanged.connect(
+            self.cb_curve_min_segments
+        )
+        self.ui.CurveToLineConversion_MinimumSegmentsLength.valueChanged.connect(
+            self.cb_curve_min_segments_length
+        )
 
         self.display_svg(None)
 
         self.ui.Tabs_Units.currentTextChanged.connect(self.cb_update_tabs_display)
         self.ui.Tool_Units.currentTextChanged.connect(self.cb_update_tool_display)
-        self.ui.Material_Units.currentTextChanged.connect(self.cb_update_material_display)
-        self.ui.GCodeConversion_Units.currentTextChanged.connect(self.cb_update_gcodeconversion_display)
+        self.ui.Material_Units.currentTextChanged.connect(
+            self.cb_update_material_display
+        )
+        self.ui.GCodeConversion_Units.currentTextChanged.connect(
+            self.cb_update_gcodeconversion_display
+        )
 
         self.ui.GCodeGeneration_SpindleControl.clicked.connect(self.cb_spindle_control)
 
-        self.ui.GCodeConversion_ZeroTopLeftOfMaterial.clicked.connect(self.cb_generate_gcode)
-        self.ui.GCodeConversion_ZeroLowerLeftOfMaterial.clicked.connect(self.cb_generate_gcode)
-        self.ui.GCodeConversion_ZeroLowerLeftOfOp.clicked.connect(self.cb_generate_gcode)
+        self.ui.GCodeConversion_ZeroTopLeftOfMaterial.clicked.connect(
+            self.cb_generate_gcode
+        )
+        self.ui.GCodeConversion_ZeroLowerLeftOfMaterial.clicked.connect(
+            self.cb_generate_gcode
+        )
+        self.ui.GCodeConversion_ZeroLowerLeftOfOp.clicked.connect(
+            self.cb_generate_gcode
+        )
         self.ui.GCodeConversion_ZeroCenterOfOp.clicked.connect(self.cb_generate_gcode)
 
         self.ui.GCodeConversion_ZeroTopLeftOfMaterial.setIcon(
@@ -204,8 +228,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.GCodeConversion_ZeroLowerLeftOfMaterial.setIcon(
             QtGui.QIcon(":/images/tango/22x22/actions/view-refresh.png")
         )
-        self.ui.GCodeConversion_ZeroLowerLeftOfOp.setIcon(QtGui.QIcon(":/images/tango/22x22/actions/view-refresh.png"))
-        self.ui.GCodeConversion_ZeroCenterOfOp.setIcon(QtGui.QIcon(":/images/tango/22x22/actions/view-refresh.png"))
+        self.ui.GCodeConversion_ZeroLowerLeftOfOp.setIcon(
+            QtGui.QIcon(":/images/tango/22x22/actions/view-refresh.png")
+        )
+        self.ui.GCodeConversion_ZeroCenterOfOp.setIcon(
+            QtGui.QIcon(":/images/tango/22x22/actions/view-refresh.png")
+        )
 
         self.ui.buttonGroup_GCodeConversion.setId(
             self.ui.GCodeConversion_ZeroTopLeftOfMaterial,
@@ -260,7 +288,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             triggered=self.toggle_left_side,
         )
         self.menubarToggleLeftSideButton.setCheckable(True)
-        self.menubarToggleLeftSideButton.setToolTip("Show/Hide Left Side View")  # still not shown
+        self.menubarToggleLeftSideButton.setToolTip(
+            "Show/Hide Left Side View"
+        )  # still not shown
 
         self.menubarToggleMiddleAreaButton = QtGui.QAction(
             QtGui.QIcon(":/images/bellow-area.png"),
@@ -271,7 +301,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             triggered=self.toggle_middle_area,
         )
         self.menubarToggleMiddleAreaButton.setCheckable(True)
-        self.menubarToggleMiddleAreaButton.setToolTip("Show/Hide Op. Table View")  # still not shown
+        self.menubarToggleMiddleAreaButton.setToolTip(
+            "Show/Hide Op. Table View"
+        )  # still not shown
 
         self.menubarToggleRightSideButton = QtGui.QAction(
             QtGui.QIcon(":/images/right-area.png"),
@@ -282,7 +314,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             triggered=self.toggle_right_side,
         )
         self.menubarToggleRightSideButton.setCheckable(True)
-        self.menubarToggleRightSideButton.setToolTip("Show/Hide Right Side View")  # still not shown
+        self.menubarToggleRightSideButton.setToolTip(
+            "Show/Hide Right Side View"
+        )  # still not shown
 
         self.menuBar().addAction(self.menubarToggleLeftSideButton)
         self.menuBar().addAction(self.menubarToggleMiddleAreaButton)
@@ -309,8 +343,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # self.menuBar().addAction(self.menubarGeometryPreviewBlueColorButton)
 
         # these callbacks only after have loading a job
-        self.ui.GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
-        self.ui.GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode_y_offset)
+        self.ui.GCodeConversion_XOffset.valueChanged.connect(
+            self.cb_generate_gcode_x_offset
+        )
+        self.ui.GCodeConversion_YOffset.valueChanged.connect(
+            self.cb_generate_gcode_y_offset
+        )
         self.ui.GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
 
         self.setWindowState(QtCore.Qt.WindowMaximized)
@@ -391,14 +429,22 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         global settings_dialog
 
         def fill_dialog():
-            settings_dialog.colorpicker_Tabs_fill.setColor(QtGui.QColor(svgviewer.SvgViewer.TABS_SETTINGS["fill"]))
-            settings_dialog.Tabs_fill_opacity.setValue(float(svgviewer.SvgViewer.TABS_SETTINGS["fill-opacity"]))
+            settings_dialog.colorpicker_Tabs_fill.setColor(
+                QtGui.QColor(svgviewer.SvgViewer.TABS_SETTINGS["fill"])
+            )
+            settings_dialog.Tabs_fill_opacity.setValue(
+                float(svgviewer.SvgViewer.TABS_SETTINGS["fill-opacity"])
+            )
             settings_dialog.Tabs_fill_opacity_disabled.setValue(
                 float(svgviewer.SvgViewer.TABS_SETTINGS["fill-opacity-disabled"])
             )
 
-            settings_dialog.colorpicker_Toolpath_stroke.setColor(QtGui.QColor(svgviewer.SvgViewer.TOOLPATHS["stroke"]))
-            settings_dialog.Toolpath_stroke_width.setValue(float(svgviewer.SvgViewer.TOOLPATHS["stroke-width"]))
+            settings_dialog.colorpicker_Toolpath_stroke.setColor(
+                QtGui.QColor(svgviewer.SvgViewer.TOOLPATHS["stroke"])
+            )
+            settings_dialog.Toolpath_stroke_width.setValue(
+                float(svgviewer.SvgViewer.TOOLPATHS["stroke-width"])
+            )
 
             settings_dialog.colorpicker_GeometryPreview_fill.setColor(
                 QtGui.QColor(svgviewer.SvgViewer.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"])
@@ -408,10 +454,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             )
 
             settings_dialog.colorpicker_GeometryPreview_stroke.setColor(
-                QtGui.QColor(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"])
+                QtGui.QColor(
+                    svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"]
+                )
             )
             settings_dialog.GeometryPreview_stroke_opacity.setValue(
-                float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"])
+                float(
+                    svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"]
+                )
             )
             settings_dialog.GeometryPreview_stroke_width.setValue(
                 float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"])
@@ -437,19 +487,27 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                     "stroke-width": "0",
                     "fill": settings_dialog.colorpicker_Tabs_fill.color().name(),
                     "fill-opacity": str(settings_dialog.Tabs_fill_opacity.value()),
-                    "fill-opacity-disabled": str(settings_dialog.Tabs_fill_opacity_disabled.value()),
+                    "fill-opacity-disabled": str(
+                        settings_dialog.Tabs_fill_opacity_disabled.value()
+                    ),
                 },
                 "GEOMETRY_PREVIEW_CLOSED_PATHS": {
                     "stroke": "#ff0000",
                     "stroke-width": "0",
                     "stroke-opacity": "1.0",
                     "fill": settings_dialog.colorpicker_GeometryPreview_fill.color().name(),
-                    "fill-opacity": str(settings_dialog.GeometryPreview_fill_opacity.value()),
+                    "fill-opacity": str(
+                        settings_dialog.GeometryPreview_fill_opacity.value()
+                    ),
                 },
                 "GEOMETRY_PREVIEW_OPENED_PATHS": {
                     "stroke": settings_dialog.colorpicker_GeometryPreview_stroke.color().name(),
-                    "stroke-width": str(settings_dialog.GeometryPreview_stroke_width.value()),
-                    "stroke-opacity": str(settings_dialog.GeometryPreview_stroke_opacity.value()),
+                    "stroke-width": str(
+                        settings_dialog.GeometryPreview_stroke_width.value()
+                    ),
+                    "stroke-opacity": str(
+                        settings_dialog.GeometryPreview_stroke_opacity.value()
+                    ),
                     "fill": "none",
                     "fill-opacity": "1.0",
                 },
@@ -622,7 +680,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         no need to generate an Ui_XXXX.py file)
         """
         loader = QUiLoader(self)
-        loader.registerCustomWidget(operations_tableview.PyCutOperationsTableViewManager)
+        loader.registerCustomWidget(
+            operations_tableview.PyCutOperationsTableViewManager
+        )
         loader.registerCustomWidget(tabs_tableview.PyCutTabsTableViewManager)
 
         widget = loader.load(uifile)
@@ -676,7 +736,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "flip_xy": self.ui.GCodeConversion_FlipXY.isChecked(),
                 "x_offset": self.ui.GCodeConversion_XOffset.value(),
                 "y_offset": self.ui.GCodeConversion_YOffset.value(),
-                "xy_reference": GcodeModel.XYRef[self.ui.buttonGroup_GCodeConversion.checkedId()],
+                "xy_reference": GcodeModel.XYRef[
+                    self.ui.buttonGroup_GCodeConversion.checkedId()
+                ],
             },
             "GCodeGeneration": {
                 "return_to_zero_at_end": self.ui.GCodeGeneration_ReturnToZeroAtEnd.isChecked(),
@@ -711,20 +773,32 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.Material_Clearance.setValue(settings["Material"]["clearance"])
 
         # CurveToLineConversion
-        self.ui.CurveToLineConversion_MinimumNbSegments.setValue(settings["CurveToLineConversion"]["minimum_segments"])
+        self.ui.CurveToLineConversion_MinimumNbSegments.setValue(
+            settings["CurveToLineConversion"]["minimum_segments"]
+        )
         self.ui.CurveToLineConversion_MinimumSegmentsLength.setValue(
             settings["CurveToLineConversion"]["minimum_segments_length"]
         )
 
         # GCodeConversion
-        self.ui.GCodeConversion_Units.setCurrentText(settings["GCodeConversion"]["units"])
-        self.ui.GCodeConversion_FlipXY.setChecked(settings["GCodeConversion"]["flip_xy"])
-        self.ui.GCodeConversion_XOffset.setValue(settings["GCodeConversion"]["x_offset"])
-        self.ui.GCodeConversion_YOffset.setValue(settings["GCodeConversion"]["y_offset"])
+        self.ui.GCodeConversion_Units.setCurrentText(
+            settings["GCodeConversion"]["units"]
+        )
+        self.ui.GCodeConversion_FlipXY.setChecked(
+            settings["GCodeConversion"]["flip_xy"]
+        )
+        self.ui.GCodeConversion_XOffset.setValue(
+            settings["GCodeConversion"]["x_offset"]
+        )
+        self.ui.GCodeConversion_YOffset.setValue(
+            settings["GCodeConversion"]["y_offset"]
+        )
 
         if settings["GCodeConversion"]["xy_reference"] == "ZERO_TOP_LEFT_OF_MATERIAL":
             self.ui.GCodeConversion_ZeroTopLeftOfMaterial.setChecked(True)
-        elif settings["GCodeConversion"]["xy_reference"] == "ZERO_LOWER_LEFT_OF_MATERIAL":
+        elif (
+            settings["GCodeConversion"]["xy_reference"] == "ZERO_LOWER_LEFT_OF_MATERIAL"
+        ):
             self.ui.GCodeConversion_ZeroLowerLeftOfMaterial.setChecked(True)
         elif settings["GCodeConversion"]["xy_reference"] == "ZERO_LOWER_LEFT_OF_OP":
             self.ui.GCodeConversion_ZeroLowerLeftOfOp.setChecked(True)
@@ -732,17 +806,27 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.GCodeConversion_ZeroCenterOfOp.setChecked(True)
 
         # GCodeGeneration
-        self.ui.GCodeGeneration_ReturnToZeroAtEnd.setChecked(settings["GCodeGeneration"]["return_to_zero_at_end"])
-        self.ui.GCodeGeneration_SpindleControl.setChecked(settings["GCodeGeneration"]["spindle_control"])
-        self.ui.GCodeGeneration_SpindleSpeed.setValue(settings["GCodeGeneration"]["spindle_speed"])
-        self.ui.GCodeGeneration_ProgramEnd.setChecked(settings["GCodeGeneration"]["program_end"])
+        self.ui.GCodeGeneration_ReturnToZeroAtEnd.setChecked(
+            settings["GCodeGeneration"]["return_to_zero_at_end"]
+        )
+        self.ui.GCodeGeneration_SpindleControl.setChecked(
+            settings["GCodeGeneration"]["spindle_control"]
+        )
+        self.ui.GCodeGeneration_SpindleSpeed.setValue(
+            settings["GCodeGeneration"]["spindle_speed"]
+        )
+        self.ui.GCodeGeneration_ProgramEnd.setChecked(
+            settings["GCodeGeneration"]["program_end"]
+        )
 
     def cb_open_svg(self):
         """
         not a job, a svg only -> no operations
         """
         xfilter = "SVG Files (*.svg)"
-        svg_file, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
+        svg_file, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, caption="open file", dir=".", filter=xfilter
+        )
 
         if svg_file:
             svg_file = self.minify_path(svg_file)
@@ -777,27 +861,41 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         sender = self.sender()
         jobfilename = sender.text()
 
-        self.ui.GCodeConversion_XOffset.valueChanged.disconnect(self.cb_generate_gcode_x_offset)
-        self.ui.GCodeConversion_YOffset.valueChanged.disconnect(self.cb_generate_gcode_y_offset)
+        self.ui.GCodeConversion_XOffset.valueChanged.disconnect(
+            self.cb_generate_gcode_x_offset
+        )
+        self.ui.GCodeConversion_YOffset.valueChanged.disconnect(
+            self.cb_generate_gcode_y_offset
+        )
         self.ui.GCodeConversion_FlipXY.clicked.disconnect(self.cb_generate_gcode)
 
         self.open_job(jobfilename)
 
-        self.ui.GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
-        self.ui.GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode_y_offset)
+        self.ui.GCodeConversion_XOffset.valueChanged.connect(
+            self.cb_generate_gcode_x_offset
+        )
+        self.ui.GCodeConversion_YOffset.valueChanged.connect(
+            self.cb_generate_gcode_y_offset
+        )
         self.ui.GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
 
     def cb_open_job(self):
         """ """
         # read json
         xfilter = "JSON Files (*.json)"
-        jobfilename, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
+        jobfilename, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, caption="open file", dir=".", filter=xfilter
+        )
 
         jobfilename = self.minify_path(jobfilename)
 
         try:
-            self.ui.GCodeConversion_XOffset.valueChanged.disconnect(self.cb_generate_gcode_x_offset)
-            self.ui.GCodeConversion_YOffset.valueChanged.disconnect(self.cb_generate_gcode_y_offset)
+            self.ui.GCodeConversion_XOffset.valueChanged.disconnect(
+                self.cb_generate_gcode_x_offset
+            )
+            self.ui.GCodeConversion_YOffset.valueChanged.disconnect(
+                self.cb_generate_gcode_y_offset
+            )
             self.ui.GCodeConversion_FlipXY.clicked.disconnect(self.cb_generate_gcode)
         except Exception as e:
             print(e)
@@ -805,8 +903,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.open_job(jobfilename)
 
-        self.ui.GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
-        self.ui.GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode_y_offset)
+        self.ui.GCodeConversion_XOffset.valueChanged.connect(
+            self.cb_generate_gcode_x_offset
+        )
+        self.ui.GCodeConversion_YOffset.valueChanged.connect(
+            self.cb_generate_gcode_y_offset
+        )
         self.ui.GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
 
     def open_job(self, jobfilename: str):
@@ -884,7 +986,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         }
 
         # open file dialog for a file name
-        jobfilename, _ = QtWidgets.QFileDialog.getSaveFileName(self, caption="Save As", dir=".", filter=xfilter)
+        jobfilename, _ = QtWidgets.QFileDialog.getSaveFileName(
+            self, caption="Save As", dir=".", filter=xfilter
+        )
 
         if jobfilename:
             jobfilename = self.minify_path(jobfilename)
@@ -894,7 +998,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             if both paths start from the cwd
             """
             if not os.path.isabs(jobfilename) and not os.path.isabs(self.svg_file):
-                svg_file_fix = self.get_relpath_relativ_to_the_other(self.svg_file, jobfilename)
+                svg_file_fix = self.get_relpath_relativ_to_the_other(
+                    self.svg_file, jobfilename
+                )
             else:
                 svg_file_fix = self.svg_file
 
@@ -909,7 +1015,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         """ """
         # read gcode
         xfilter = "GCODE Files (*.nc *.ncc, *.ngc, *.gcode)"
-        gcodefilename, _ = QtWidgets.QFileDialog.getOpenFileName(self, caption="open file", dir=".", filter=xfilter)
+        gcodefilename, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, caption="open file", dir=".", filter=xfilter
+        )
 
         gcodefilename = self.minify_path(gcodefilename)
 
@@ -956,7 +1064,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             if not found:
                 msgBox = QtWidgets.QMessageBox()
                 msgBox.setWindowTitle("PyCut")
-                msgBox.setText("No tool diameter found in file, using current tool diameter for GCode Simulator")
+                msgBox.setText(
+                    "No tool diameter found in file, using current tool diameter for GCode Simulator"
+                )
                 msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
                 msgBox.exec()
 
@@ -1032,15 +1142,23 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         material_units = self.ui.Material_Units.currentText()
 
         if material_units == "inch":
-            self.ui.Material_Thickness.setValue(self.ui.Material_Thickness.value() / 25.4)
-            self.ui.Material_Clearance.setValue(self.ui.Material_Clearance.value() / 25.4)
+            self.ui.Material_Thickness.setValue(
+                self.ui.Material_Thickness.value() / 25.4
+            )
+            self.ui.Material_Clearance.setValue(
+                self.ui.Material_Clearance.value() / 25.4
+            )
 
             self.ui.Material_Thickness.setSingleStep(0.04)
             self.ui.Material_Clearance.setSingleStep(0.04)
 
         if material_units == "mm":
-            self.ui.Material_Thickness.setValue(self.ui.Material_Thickness.value() * 25.4)
-            self.ui.Material_Clearance.setValue(self.ui.Material_Clearance.value() * 25.4)
+            self.ui.Material_Thickness.setValue(
+                self.ui.Material_Thickness.value() * 25.4
+            )
+            self.ui.Material_Clearance.setValue(
+                self.ui.Material_Clearance.value() * 25.4
+            )
 
             self.ui.Material_Thickness.setSingleStep(1.0)
             self.ui.Material_Clearance.setSingleStep(1.0)
@@ -1059,12 +1177,24 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.label_GCodeConversion_MinY_UnitsDescr.setText("inch")
             self.ui.label_GCodeConversion_MaxY_UnitsDescr.setText("inch")
 
-            self.ui.GCodeConversion_XOffset.setValue(self.ui.GCodeConversion_XOffset.value() / 25.4)
-            self.ui.GCodeConversion_YOffset.setValue(self.ui.GCodeConversion_YOffset.value() / 25.4)
-            self.ui.GCodeConversion_MinX.setValue(self.ui.GCodeConversion_MinX.value() / 25.4)
-            self.ui.GCodeConversion_MaxX.setValue(self.ui.GCodeConversion_MaxX.value() / 25.4)
-            self.ui.GCodeConversion_MinY.setValue(self.ui.GCodeConversion_MinY.value() / 25.4)
-            self.ui.GCodeConversion_MaxY.setValue(self.ui.GCodeConversion_MaxY.value() / 25.4)
+            self.ui.GCodeConversion_XOffset.setValue(
+                self.ui.GCodeConversion_XOffset.value() / 25.4
+            )
+            self.ui.GCodeConversion_YOffset.setValue(
+                self.ui.GCodeConversion_YOffset.value() / 25.4
+            )
+            self.ui.GCodeConversion_MinX.setValue(
+                self.ui.GCodeConversion_MinX.value() / 25.4
+            )
+            self.ui.GCodeConversion_MaxX.setValue(
+                self.ui.GCodeConversion_MaxX.value() / 25.4
+            )
+            self.ui.GCodeConversion_MinY.setValue(
+                self.ui.GCodeConversion_MinY.value() / 25.4
+            )
+            self.ui.GCodeConversion_MaxY.setValue(
+                self.ui.GCodeConversion_MaxY.value() / 25.4
+            )
 
         if gcodeconversion_units == "mm":
             self.ui.label_GCodeConversion_XOffset_UnitsDescr.setText("mm")
@@ -1074,12 +1204,24 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.label_GCodeConversion_MinY_UnitsDescr.setText("mm")
             self.ui.label_GCodeConversion_MaxY_UnitsDescr.setText("mm")
 
-            self.ui.GCodeConversion_XOffset.setValue(self.ui.GCodeConversion_XOffset.value() * 25.4)
-            self.ui.GCodeConversion_YOffset.setValue(self.ui.GCodeConversion_YOffset.value() * 25.4)
-            self.ui.GCodeConversion_MinX.setValue(self.ui.GCodeConversion_MinX.value() * 25.4)
-            self.ui.GCodeConversion_MaxX.setValue(self.ui.GCodeConversion_MaxX.value() * 25.4)
-            self.ui.GCodeConversion_MinY.setValue(self.ui.GCodeConversion_MinY.value() * 25.4)
-            self.ui.GCodeConversion_MaxY.setValue(self.ui.GCodeConversion_MaxY.value() * 25.4)
+            self.ui.GCodeConversion_XOffset.setValue(
+                self.ui.GCodeConversion_XOffset.value() * 25.4
+            )
+            self.ui.GCodeConversion_YOffset.setValue(
+                self.ui.GCodeConversion_YOffset.value() * 25.4
+            )
+            self.ui.GCodeConversion_MinX.setValue(
+                self.ui.GCodeConversion_MinX.value() * 25.4
+            )
+            self.ui.GCodeConversion_MaxX.setValue(
+                self.ui.GCodeConversion_MaxX.value() * 25.4
+            )
+            self.ui.GCodeConversion_MinY.setValue(
+                self.ui.GCodeConversion_MinY.value() * 25.4
+            )
+            self.ui.GCodeConversion_MaxY.setValue(
+                self.ui.GCodeConversion_MaxY.value() * 25.4
+            )
 
     def cb_display_material_thickness(self):
         """
@@ -1087,11 +1229,17 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         """
         material_units = self.ui.Material_Units.currentText()
 
-        thickness = ValWithUnit(self.ui.Material_Thickness.value(), material_units).toMm()
-        clearance = ValWithUnit(self.ui.Material_Clearance.value(), material_units).toMm()
+        thickness = ValWithUnit(
+            self.ui.Material_Thickness.value(), material_units
+        ).toMm()
+        clearance = ValWithUnit(
+            self.ui.Material_Clearance.value(), material_units
+        ).toMm()
 
         self.svg_material_viewer.display_unit(material_units)
-        self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
+        self.svg_material_viewer.display_material(
+            thickness=thickness, clearance=clearance
+        )
 
     def cb_display_material_clearance(self):
         """
@@ -1099,10 +1247,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         """
         material_units = self.ui.Material_Units.currentText()
 
-        thickness = ValWithUnit(self.ui.Material_Thickness.value(), material_units).toMm()
-        clearance = ValWithUnit(self.ui.Material_Clearance.value(), material_units).toMm()
+        thickness = ValWithUnit(
+            self.ui.Material_Thickness.value(), material_units
+        ).toMm()
+        clearance = ValWithUnit(
+            self.ui.Material_Clearance.value(), material_units
+        ).toMm()
 
-        self.svg_material_viewer.display_material(thickness=thickness, clearance=clearance)
+        self.svg_material_viewer.display_material(
+            thickness=thickness, clearance=clearance
+        )
 
     def cb_spindle_control(self):
         val = self.ui.GCodeGeneration_SpindleControl.isChecked()
@@ -1164,7 +1318,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.simulator_python_viewer.setVisible(False)
             layout.removeWidget(self.simulator_python_viewer)
 
-        self.simulator_python_viewer = gcodesimulator_python_viewer.GCodeViewer(container, data)
+        self.simulator_python_viewer = gcodesimulator_python_viewer.GCodeViewer(
+            container, data
+        )
 
         layout.addWidget(self.simulator_python_viewer)
         layout.setStretch(0, 1)
@@ -1209,16 +1365,24 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         if "mm" in size_xstr:
             suffix = "mm"
-            size_x, size_y = float(size_xstr.split("mm")[0]), float(size_ystr.split("mm")[0])
+            size_x, size_y = float(size_xstr.split("mm")[0]), float(
+                size_ystr.split("mm")[0]
+            )
         elif "cm" in size_xstr:
             suffix = "mm"
-            size_x, size_y = 10 * float(size_xstr.split("cm")[0]), 10 * float(size_ystr.split("cm")[0])
+            size_x, size_y = 10 * float(size_xstr.split("cm")[0]), 10 * float(
+                size_ystr.split("cm")[0]
+            )
         elif "in" in size_xstr:
             suffix = "in"
-            size_x, size_y = float(size_xstr.split("in")[0]), float(size_ystr.split("in")[0])
+            size_x, size_y = float(size_xstr.split("in")[0]), float(
+                size_ystr.split("in")[0]
+            )
         elif "px" in size_xstr:
             suffix = "mm"
-            size_x, size_y = float(size_xstr.split("px")[0]), float(size_ystr.split("px")[0])
+            size_x, size_y = float(size_xstr.split("px")[0]), float(
+                size_ystr.split("px")[0]
+            )
         else:
             suffix = "mm"
             size_x, size_y = float(size_xstr), float(size_ystr)
@@ -1262,12 +1426,18 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         tool_model = ToolModel()
         tool_model.units = settings["Tool"]["units"]
-        tool_model.diameter = ValWithUnit(settings["Tool"]["diameter"], tool_model.units)
+        tool_model.diameter = ValWithUnit(
+            settings["Tool"]["diameter"], tool_model.units
+        )
         tool_model.angle = settings["Tool"]["angle"]
-        tool_model.passdepth = ValWithUnit(settings["Tool"]["passdepth"], tool_model.units)
+        tool_model.passdepth = ValWithUnit(
+            settings["Tool"]["passdepth"], tool_model.units
+        )
         tool_model.overlap = settings["Tool"]["overlap"]
         tool_model.rapidRate = ValWithUnit(settings["Tool"]["rapid"], tool_model.units)
-        tool_model.plungeRate = ValWithUnit(settings["Tool"]["plunge"], tool_model.units)
+        tool_model.plungeRate = ValWithUnit(
+            settings["Tool"]["plunge"], tool_model.units
+        )
         tool_model.cutRate = ValWithUnit(settings["Tool"]["cut"], tool_model.units)
 
         cnc_ops = []
@@ -1337,21 +1507,31 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         svg_model.pxPerInch = 96
         material_model = MaterialModel()
         material_model.mat_units = settings["Material"]["units"]
-        material_model.mat_thickness = ValWithUnit(settings["Material"]["thickness"], material_model.mat_units)
+        material_model.mat_thickness = ValWithUnit(
+            settings["Material"]["thickness"], material_model.mat_units
+        )
         material_model.mat_z_origin = settings["Material"]["z_origin"]
-        material_model.mat_clearance = ValWithUnit(settings["Material"]["clearance"], material_model.mat_units)
+        material_model.mat_clearance = ValWithUnit(
+            settings["Material"]["clearance"], material_model.mat_units
+        )
         # the SVG dimensions
         material_model.set_material_size_x(self.svg_viewer.get_svg_size_x())
         material_model.set_material_size_y(self.svg_viewer.get_svg_size_y())
 
         tool_model = ToolModel()
         tool_model.units = settings["Tool"]["units"]
-        tool_model.diameter = ValWithUnit(settings["Tool"]["diameter"], tool_model.units)
+        tool_model.diameter = ValWithUnit(
+            settings["Tool"]["diameter"], tool_model.units
+        )
         tool_model.angle = settings["Tool"]["angle"]
-        tool_model.passdepth = ValWithUnit(settings["Tool"]["passdepth"], tool_model.units)
+        tool_model.passdepth = ValWithUnit(
+            settings["Tool"]["passdepth"], tool_model.units
+        )
         tool_model.overlap = settings["Tool"]["overlap"]
         tool_model.rapidRate = ValWithUnit(settings["Tool"]["rapid"], tool_model.units)
-        tool_model.plungeRate = ValWithUnit(settings["Tool"]["plunge"], tool_model.units)
+        tool_model.plungeRate = ValWithUnit(
+            settings["Tool"]["plunge"], tool_model.units
+        )
         tool_model.cutRate = ValWithUnit(settings["Tool"]["cut"], tool_model.units)
 
         tabsmodel = TabsModel([tab for tab in self.tabs if tab["enabled"] == True])
@@ -1463,7 +1643,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             msgBox = QtWidgets.QMessageBox()
             msgBox.setWindowTitle("PyCut")
             msgBox.setText("The Job has no toolpaths!")
-            msgBox.setInformativeText("Maybe is the geometry too narrow for the cutter?")
+            msgBox.setInformativeText(
+                "Maybe is the geometry too narrow for the cutter?"
+            )
             msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
             msgBox.exec()
 
@@ -1472,14 +1654,22 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def after_gcode_generation(self, generator: GcodeGenerator):
         """ """
         # with the resulting calculation, we can fill the min/max in X/Y as well as the offsets
-        self.ui.GCodeConversion_XOffset.valueChanged.disconnect(self.cb_generate_gcode_x_offset)
-        self.ui.GCodeConversion_YOffset.valueChanged.disconnect(self.cb_generate_gcode_y_offset)
+        self.ui.GCodeConversion_XOffset.valueChanged.disconnect(
+            self.cb_generate_gcode_x_offset
+        )
+        self.ui.GCodeConversion_YOffset.valueChanged.disconnect(
+            self.cb_generate_gcode_y_offset
+        )
 
         self.ui.GCodeConversion_XOffset.setValue(generator.offsetX)
         self.ui.GCodeConversion_YOffset.setValue(generator.offsetY)
 
-        self.ui.GCodeConversion_XOffset.valueChanged.connect(self.cb_generate_gcode_x_offset)
-        self.ui.GCodeConversion_YOffset.valueChanged.connect(self.cb_generate_gcode_y_offset)
+        self.ui.GCodeConversion_XOffset.valueChanged.connect(
+            self.cb_generate_gcode_x_offset
+        )
+        self.ui.GCodeConversion_YOffset.valueChanged.connect(
+            self.cb_generate_gcode_y_offset
+        )
 
         self.ui.GCodeConversion_MinX.setValue(generator.minX)
         self.ui.GCodeConversion_MinY.setValue(generator.minY)
@@ -1589,11 +1779,22 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
 
 def main():
-    parser = argparse.ArgumentParser(prog="PyCut", description="PyCut CAM program - Read the doc!")
+    parser = argparse.ArgumentParser(
+        prog="PyCut", description="PyCut CAM program - Read the doc!"
+    )
 
     # argument
-    parser.add_argument("-j", "--job", dest="job", nargs="?", default=None, help="load job file | empty")
-    parser.add_argument("-g", "--gcode", dest="gcode", nargs="?", default=None, help="load gcode file | empty")
+    parser.add_argument(
+        "-j", "--job", dest="job", nargs="?", default=None, help="load job file | empty"
+    )
+    parser.add_argument(
+        "-g",
+        "--gcode",
+        dest="gcode",
+        nargs="?",
+        default=None,
+        help="load gcode file | empty",
+    )
 
     # version info
     parser.add_argument("--version", action="version", version="f{VERSION}")

@@ -35,7 +35,10 @@
          <height>986</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0">
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,1">
+        <property name="spacing">
+         <number>22</number>
+        </property>
         <property name="leftMargin">
          <number>9</number>
         </property>
@@ -44,8 +47,8 @@
         </property>
         <item>
          <layout class="QVBoxLayout" name="verticalLayoutSettingsContent">
-          <property name="bottomMargin">
-           <number>20</number>
+          <property name="spacing">
+           <number>6</number>
           </property>
           <item>
            <widget class="QLabel" name="label_SvgSettings">
@@ -163,8 +166,8 @@
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayoutToolContent">
-          <property name="bottomMargin">
-           <number>20</number>
+          <property name="spacing">
+           <number>6</number>
           </property>
           <item>
            <widget class="QLabel" name="label_Tool">
@@ -186,12 +189,6 @@
            <layout class="QGridLayout" name="gridLayout_Tool">
             <property name="leftMargin">
              <number>8</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
             </property>
             <item row="6" column="1">
              <widget class="QLabel" name="label_Tool_Plunge_UnitsDescr">
@@ -455,8 +452,8 @@
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayoutCurveToLineConversion">
-          <property name="bottomMargin">
-           <number>20</number>
+          <property name="spacing">
+           <number>6</number>
           </property>
           <item>
            <widget class="QLabel" name="labelCurveToLineConversion">
@@ -493,6 +490,12 @@
             </property>
             <item row="0" column="0">
              <widget class="QLabel" name="label_CurveToLineConversion_MinimumNbSegments">
+              <property name="minimumSize">
+               <size>
+                <width>189</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <bold>true</bold>
@@ -524,7 +527,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Minimum Segments Length                </string>
+               <string>Minimum Segments Length</string>
               </property>
              </widget>
             </item>
@@ -547,6 +550,9 @@
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayoutTabsContent" stretch="0,0,1">
+          <property name="spacing">
+           <number>6</number>
+          </property>
           <property name="bottomMargin">
            <number>0</number>
           </property>
@@ -687,6 +693,12 @@
           </item>
           <item>
            <widget class="PyCutTabsTableViewManager" name="tabsview_manager" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -696,6 +708,22 @@
            </widget>
           </item>
          </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Expanding</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -831,10 +859,13 @@
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,0,0,1">
+        <property name="spacing">
+         <number>22</number>
+        </property>
         <item>
          <layout class="QVBoxLayout" name="verticalLayoutMaterial">
-          <property name="bottomMargin">
-           <number>20</number>
+          <property name="spacing">
+           <number>6</number>
           </property>
           <item>
            <widget class="QLabel" name="labelMaterial">
@@ -1017,8 +1048,8 @@
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayoutGCodeConversion" stretch="0,0">
-          <property name="bottomMargin">
-           <number>20</number>
+          <property name="spacing">
+           <number>6</number>
           </property>
           <item>
            <widget class="QLabel" name="label_GCcodeConversion">
@@ -1366,6 +1397,9 @@
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayoutGCodeGeneration">
+          <property name="spacing">
+           <number>6</number>
+          </property>
           <item>
            <widget class="QLabel" name="labelGCodeGeneration">
             <property name="font">

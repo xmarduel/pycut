@@ -93,7 +93,7 @@ QGroupBox {
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_Tabs_fill_opacity">
+          <widget class="QDoubleSpinBox" name="Tabs_fill_opacity">
            <property name="maximum">
             <double>1.000000000000000</double>
            </property>
@@ -110,7 +110,7 @@ QGroupBox {
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_Tabs_fill_opacity_disabled">
+          <widget class="QDoubleSpinBox" name="Tabs_fill_opacity_disabled">
            <property name="maximum">
             <double>1.000000000000000</double>
            </property>
@@ -166,7 +166,7 @@ QGroupBox {
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_Toolpath_stroke_width"/>
+          <widget class="QDoubleSpinBox" name="Toolpath_stroke_width"/>
          </item>
         </layout>
        </item>
@@ -192,7 +192,7 @@ QGroupBox {
           <number>20</number>
          </property>
          <item row="5" column="1">
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_GeometryPreview_stroke_opacity">
+          <widget class="QDoubleSpinBox" name="GeometryPreview_stroke_opacity">
            <property name="decimals">
             <number>2</number>
            </property>
@@ -205,7 +205,7 @@ QGroupBox {
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_GeometryPreview_fill_opacity">
+          <widget class="QDoubleSpinBox" name="GeometryPreview_fill_opacity">
            <property name="decimals">
             <number>2</number>
            </property>
@@ -295,7 +295,7 @@ QGroupBox {
           </widget>
          </item>
          <item row="6" column="1">
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_GeometryPreview_stroke_width"/>
+          <widget class="QDoubleSpinBox" name="GeometryPreview_stroke_width"/>
          </item>
         </layout>
        </item>
@@ -325,7 +325,7 @@ QGroupBox {
           <number>0</number>
          </property>
          <item>
-          <widget class="QLabel" name="label_doubleSpinBox_GCODEVIEWER_linewidth">
+          <widget class="QLabel" name="label_GCODEVIEWER_linewidth">
            <property name="minimumSize">
             <size>
              <width>150</width>
@@ -338,7 +338,7 @@ QGroupBox {
           </widget>
          </item>
          <item>
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_GCODEVIEWER_linewidth">
+          <widget class="QDoubleSpinBox" name="GCODEVIEWER_linewidth">
            <property name="decimals">
             <number>1</number>
            </property>

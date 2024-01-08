@@ -49,7 +49,8 @@
     </ul>
   </li>
   <li><a href="#P-05">GCode DressUp</a> </li>
-  <li><a href="#P-06">Appendix-1: SVG Editors</a></li>
+  <li><a href="#APPENCIDE-01">Appendix-1: SVG Editors</a></li>
+  <li><a href="#APPENCIDE-02">Appendix-2: GCODE Viewers</a></li>
 </ul>
 <script type="text/javascript">
       var tree = document.querySelectorAll('ul.tree a:not(:last-child)');
@@ -586,8 +587,8 @@ round). </p>
     <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                -->
     <circle cx="66.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </g>
   <g id="layer1" transform="translate(120 0)">
@@ -599,8 +600,8 @@ round). </p>
     <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                  <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                  -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                              <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                              -->
     <circle cx="65.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </g>
 </svg>
@@ -667,12 +668,12 @@ tool path (and the standart cutter position at the toolpath corner).</p>
               stroke-opacity="0.8"/>
     <circle cx="20" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
     <!-- 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                 D = sqrt(10*10 + 10*10) = 14.14
-                                                                                                                                                                                                                                                                                                                                                                                                                                                 d = 14.14 -10 = 4.14
-                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                 dx = dy =  d / sqrt(2) = 2.93
-                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                 -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             D = sqrt(10*10 + 10*10) = 14.14
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             d = 14.14 -10 = 4.14
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             dx = dy =  d / sqrt(2) = 2.93
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             -->
     <polyline id="dog-bone-path1" points="20,20 17.07,17.07" fill="none" stroke="blue" stroke-linejoin="round"
               stroke-width="0.3" stroke-opacity="0.2"/>
     <circle id="dog-bone-path1-material" cx="17.07" cy="17.07" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2"
@@ -1026,7 +1027,7 @@ the comment lines </p>
 "Outside" operations, and not for the "Pocket" operations (TODO). This in because, for pocket operations, the toolpaths
 which are not adjacents to the stock borders may have sharp corners which do not need dogbones at all.</strong></p>
 
-<h3 id="P-06">Appendix-1: SVG Editors</h3>
+<h3 id="APPENDICE-01">Appendix-1: SVG Editors</h3>
 
 <p>It seems there are plenty of free SVG editors around there. Well, let me share my opinion about a few of them... </p>
 
@@ -1221,6 +1222,25 @@ these items repeatidly with transformations with the <code>&lt;use&gt;</code> ta
 perfect toolchain I admit, but well my svgs are not that complicated</strong>. You have to understand how to write an
 arc/bezier curve per hand, it is not that difficult. And yours svgs are then "<strong>clean</strong>" and easily
 modificable. </p>
+
+<p></p>
+
+<h3 id="APPENDICE-02">Appendix-2: GCODE Viewers</h3>
+
+<p>Of course, CANDLE offers a GCODE viewer. There nevertheless a few ones (to my knowledge) worth a mention:</p>
+<ul>
+  <li>NCnetics</li>
+  <li>PlanetCNC</li>
+  <li>what else ?</li>
+</ul>
+
+<p>Just search in the iÍnternet for them.</p>
+
+<p>Real GCODE simulators (I mean simulation with material removal) are on the other way seldom.</p>
+<ul>
+  <li>Camotics: unfortunately very resources intensive</li>
+  <li>what else ?</li>
+</ul>
 
 <p></p>
 </div>
