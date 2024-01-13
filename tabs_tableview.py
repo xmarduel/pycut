@@ -110,11 +110,15 @@ class PyCutDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
     def setEditorData(self, spinBox: PyCutDoubleSpinBox, index: QtCore.QModelIndex):
         spinBox.set_value()
 
-    def setModelData(self, spinBox: PyCutDoubleSpinBox, model, index: QtCore.QModelIndex):
+    def setModelData(
+        self, spinBox: PyCutDoubleSpinBox, model, index: QtCore.QModelIndex
+    ):
         model.handleNewvalue(index, spinBox.value())
         return
 
-    def updateEditorGeometry(self, editor: PyCutDoubleSpinBox, option, index: QtCore.QModelIndex):
+    def updateEditorGeometry(
+        self, editor: PyCutDoubleSpinBox, option, index: QtCore.QModelIndex
+    ):
         editor.setGeometry(option.rect)
 
 
@@ -150,7 +154,9 @@ class PyCutCheckBox(QtWidgets.QCheckBox):
         """ """
         self.cb_disconnect()
 
-        uival = {True: QtCore.Qt.Checked, False: QtCore.Qt.Unchecked}[getattr(self.o, self.attribute)]
+        uival = {True: QtCore.Qt.Checked, False: QtCore.Qt.Unchecked}[
+            getattr(self.o, self.attribute)
+        ]
 
         self.setCheckState(uival)
 
@@ -197,7 +203,9 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
         checkBox: PyCutCheckBox = checkBoxItem.widget()
         checkBox.set_value()
 
-    def setModelData(self, checkWidget: QtWidgets.QWidget, model, index: QtCore.QModelIndex):
+    def setModelData(
+        self, checkWidget: QtWidgets.QWidget, model, index: QtCore.QModelIndex
+    ):
         checkBoxItem = checkWidget.layout().itemAt(0)
         checkBox: PyCutCheckBox = checkBoxItem.widget()
 
@@ -345,6 +353,10 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         delegate = PyCutCheckBoxDelegate(self)
         self.setItemDelegateForColumn(3, delegate)
 
+        self.setup_persistent_editors()
+
+    def setup_persistent_editors(self):
+        """ """
         # Make the combo boxes / check boxes / others specials always displayed.
         for k in range(self.model().rowCount(None)):
             self.openPersistentEditor(self.model().index(k, 0))  # x
@@ -355,7 +367,9 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         for row in range(self.model().rowCount(None)):
             btn_del_tab = QtWidgets.QPushButton()
             btn_del_tab.setText("")
-            btn_del_tab.setIcon(QtGui.QIcon(":/images/tango/22x22/actions/edit-clear.png"))
+            btn_del_tab.setIcon(
+                QtGui.QIcon(":/images/tango/22x22/actions/edit-clear.png")
+            )
             btn_del_tab.setToolTip("DeleteTab")
             btn_del_tab.clicked.connect(self.cb_delete_tab)
             self.setIndexWidget(self.model().index(row, 4), btn_del_tab)
@@ -392,7 +406,8 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
 
     def addItem(self, tab_data):
         self.model().addItem(tab_data)
-        self.setup()  # to show the editors on a new item
+        # do not make a "full" setup when adding a new item
+        self.setup_persistent_editors()  # to show the editors on a new item
 
 
 class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
@@ -443,7 +458,9 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
         for tab in self.tabs:
             print(tab)
 
-    def headerData(self, col: int, orientation: QtCore.Qt.Orientation, role: QtCore.Qt.EditRole):
+    def headerData(
+        self, col: int, orientation: QtCore.Qt.Orientation, role: QtCore.Qt.EditRole
+    ):
         if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
             return self.header[col]
         return None

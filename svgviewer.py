@@ -474,6 +474,10 @@ class SvgViewer(QtWidgets.QGraphicsView):
     def set_tabs(self, tabs: List[Dict[str, any]]):
         """ """
         if not self.in_dnd:
+            # remove tabs
+            self.clean()
+
+            # redraw tabs
             self.tabs = tabs
             self.display_tabs(self.tabs)
 
