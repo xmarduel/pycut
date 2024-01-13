@@ -94,19 +94,19 @@ Hopefully you will find <strong>PyCut</strong> usefull when learning CNC and pro
 
 <p>Starting point of <strong>PyCut</strong> are <strong>SVG</strong> files, your designs. In the following, we will use
 <strong>Inkscape</strong> to produce/explain <strong>SVG</strong> files and will shortly point out what has to be taken
-into consideration when creating "usable" <strong>SVG</strong> files for <strong>PyCut</strong>. </p>
+into consideration when creating "usable" <strong>SVG</strong> files for <strong>PyCut</strong>.</p>
 
 <h3 id="P-01-01">SVG Documents</h3>
 
 <p><strong>PyCut</strong>, in order to work acurately, need the SVG document to define its standart
 <strong>width</strong> and <strong>height</strong> with units "<strong>mm</strong>" or "<strong>in</strong>". The
-<strong>viewbox</strong> needs to be defined as well. More on this later. </p>
+<strong>viewbox</strong> needs to be defined as well. More on this later.</p>
 
 <h3 id="P-01-011">SVG Shapes and Paths</h3>
 
 <p>The SVG standard is very large, and <strong>PyCut</strong> cannot simply read a svg file, display it, and allow the
 user to define cnc operations on the "shapes" defined inside the svg file. Of course, the goal of
-<strong>PyCut</strong> is to process as many svg data as possible. </p>
+<strong>PyCut</strong> is to process as many svg data as possible.</p>
 
 <p>The shapes inside a svg file are the following:</p>
 <ul>
@@ -129,8 +129,10 @@ user to define cnc operations on the "shapes" defined inside the svg file. Of co
 read out of the box all kind of shapes, so there is <strong>no need</strong> to convert your svg files into "paths
 only" svgs.</p>
 
+<p>In the following, we will employ the term "shapes" for svg shapes as well as for svg paths.</p>
+
 <div class="warning">
-<p><strong>Warning:</strong> PyCut will only display shapes/paths in its viewer which have an id.</p>
+<p><strong>Warning:</strong> PyCut will only display shapes in its viewer which have an id.</p>
 </div>
 
 <p>Finally, the user will maybe also want to process the strings written in the svg file:</p>
@@ -140,22 +142,22 @@ only" svgs.</p>
 
 <p>For these strings to be imported, however, they have to be first converted to path.</p>
 
-<p><strong>PyCut</strong> will import these shapes/paths either as (shapely) "<span
-style="color:#0000ff">Polygon</span>" (i.e. <strong>closed items</strong>) or as (shapely) "<span
-style="color:#0000ff">LineString</span>" (i.e. <strong>opened items</strong>). Of course, svg <span
-style="color:#0000ff">&lt;rect&gt;</span>, <span style="color:#0000ff">&lt;circle&gt;</span>, <span
-style="color:#0000ff">&lt;ellipse&gt;</span> and <span style="color:#0000ff">&lt;polygon&gt;</span> are closed items,
-while <span style="color:#0000ff">&lt;line&gt;</span> and <span style="color:#0000ff">&lt;polyline&gt;</span> are
-opened items. When importing a <span style="color:#0000ff">&lt;path&gt;</span>, things are more complicated, as a path
-can be composed of many subpaths (starting with [<strong>Mm</strong>]) and every subpath can be closed or not (ending
-with [<strong>Zz</strong>]). <strong>PyCut</strong> will try to import these paths definitions right, and in case of
-closed paths will also try to import them as shapely polygons "<strong>with holes</strong>" even if this concept does
-not exist in SVG. Moreover <strong>PyCut</strong> will try to import a svg path as a valid (shapely) <span
-style="color:#0000ff">MultiPolygon </span> in the shapely sense, or as a list of valid MultiPolygons if one single
-valid MultiPolygon is not possible. For example, the letters "i" or "j" are defined with a single svg path, defining
-two separates polygons, and it makes sense to consider these paths as a single shapely MultiPolygon entity. The letter
-"a" is a polygon with one hole, the letter "g" is a polygon with two holes (for some fonts). In the freetype
-vocabulary, "a" is formed by 2 "contours", "g" by three "contours".</p>
+<p><strong>PyCut</strong> will import these shapes either as (shapely) "<span style="color:#0000ff">Polygon</span>"
+(i.e. <strong>closed items</strong>) or as (shapely) "<span style="color:#0000ff">LineString</span>" (i.e.
+<strong>opened items</strong>). Of course, svg <span style="color:#0000ff">&lt;rect&gt;</span>, <span
+style="color:#0000ff">&lt;circle&gt;</span>, <span style="color:#0000ff">&lt;ellipse&gt;</span> and <span
+style="color:#0000ff">&lt;polygon&gt;</span> are closed items, while <span style="color:#0000ff">&lt;line&gt;</span>
+and <span style="color:#0000ff">&lt;polyline&gt;</span> are opened items. When importing a <span
+style="color:#0000ff">&lt;path&gt;</span>, things are more complicated, as a path can be composed of many subpaths
+(starting with [<strong>Mm</strong>]) and every subpath can be closed or not (ending with [<strong>Zz</strong>]).
+<strong>PyCut</strong> will try to import these paths definitions right, and in case of closed paths will also try to
+import them as shapely polygons "<strong>with holes</strong>" even if this concept does not exist in SVG. Moreover
+<strong>PyCut</strong> will try to import a svg path as a valid (shapely) <span style="color:#0000ff">MultiPolygon
+</span> in the shapely sense, or as a list of valid MultiPolygons if one single valid MultiPolygon is not possible. For
+example, the letters "i" or "j" are defined with a single svg path, defining two separates polygons, and it makes sense
+to consider these paths as a single shapely MultiPolygon entity. The letter "a" is a polygon with one hole, the letter
+"g" is a polygon with two holes (for some fonts). In the freetype vocabulary, "a" is formed by 2 "contours", "g" by
+three "contours".</p>
 
 <p><strong>PyCut</strong> cannot process yet <span style="color:#0000ff">&lt;text&gt;</span> items directly.
 Fortunately, <span style="color:#0000ff">&lt;text&gt;</span> items can to be converted into <span
@@ -168,7 +170,7 @@ the result of a <span style="color:#0000ff">&lt;text&gt;</span> conversion into 
 will only occurs if the <span style="color:#0000ff">&lt;text&gt;</span> item is simple enough: the text "value" should
 not be splitted into several <span style="color:#0000ff">&lt;tspan&gt;</span> items with different fonts. No <span
 style="color:#0000ff">&lt;tspan&gt;</span> tag at all is also possible (and simpler). <strong><span
-style="color:#8000ff">IN PROGRESS</span></strong>. </p>
+style="color:#8000ff">IN PROGRESS</span></strong>.</p>
 
 <p>All in all, if <strong>PyCut</strong> were to display text strings at the wrong positions, the user can always
 export the svg from <strong>Inkscape</strong> (and write <strong>PyCut</strong> a ticket).</p>
@@ -180,8 +182,8 @@ subpath contains the annotation <strong>"Z"</strong> or <strong>"z"</strong> at 
 path is equal to its last point, the path is only considered as closed with the ending "Z/z".</p>
 
 <div class="warning">
-<p><strong>Warning:</strong> PyCut strongly relies on this <strong>Z</strong> annotation to decide if the path is
-closed or not. When not closed, "Pocket" operations will not be allowed for this path.</p>
+<p><strong>Warning:</strong> PyCut strongly relies on the <strong>Z</strong> annotation to decide if the path is closed
+or not. When not closed, "Pocket" operations will not be allowed for this path.</p>
 </div>
 
 <p><strong>PyCut</strong> imports closed paths as shapely "Polygon" (infact "MultiPolygon"), while opened paths are
@@ -189,12 +191,12 @@ imported as "LineString" (infact "MultiLineString").</p>
 
 <h4>Transformations</h4>
 
-<p><strong>PyCut</strong> cannot handle "out of the box" svg datas where shapes/paths are defined with "transform"
-operations (translate, rotate etc.).</p>
+<p><strong>PyCut</strong> cannot handle "out of the box" svg datas where shapes are defined with "transform" operations
+(translate, rotate etc.).</p>
 
 <p>Nevertheless, it is possible to "resolve" the shapes transformations, as <strong>PyCut</strong> also comes with the
-utility <strong>svgresolver.py</strong>. The <strong>svgresolver.py</strong> program reads any svg data and outputs a
-new svg data with all transformations resolved, while keeping the<strong>"id"</strong>s right. It work best in
+utility <strong>svgresolver.py</strong>. The <strong>svgresolver.py</strong> program reads any svg file and outputs a
+new svg file with all transformations resolved, while keeping the<strong>"id"</strong>s right. It work best in
 combinaison of the <code>&lt;use&gt;</code> tag in the <code>&lt;defs&gt;</code> section, as a single item defined in
 the <code>&lt;defs&gt;</code> section can then be re-used at many locations. Obviously, not everything is possible: for
 example, transforming a <code>&lt;rect&gt;</code> element with a rotate transformation does not result in a
@@ -205,8 +207,8 @@ the folder "<strong>utilities/svgresolver</strong>". </p>
 
 <h2 id="P-02">Svg Documents</h2>
 
-<p>Svg datas can be written with basic text editors (vi, emacs etc..) or with graphical applications, like
-<strong>Inkscape</strong>. In both cases, the svg datas should contains (and <strong>Inkscape</strong> does it
+<p>Svg files can be written with basic text editors (vi, emacs etc..) or with graphical applications, like
+<strong>Inkscape</strong>. In both cases, the svg files should contains (and <strong>Inkscape</strong> does it
 automatically) a <strong>viewBox</strong> as well as a <strong>width</strong> and an <strong>height</strong>. These 2
 important attributes should be given with a unit, i.e "<strong>mm</strong>" or "<strong>in</strong>" as we are editing
 data in order to later generate gcode (with "mm" or "in" units).</p>
@@ -216,12 +218,12 @@ data in order to later generate gcode (with "mm" or "in" units).</p>
 <strong>PyCut</strong> option "Zero Lower Left of Material" as reference.</p>
 </div>
 
-<h4>Shapes and Paths"id"</h4>
+<h4>Shapes "id"</h4>
 
-<p>In order to reference the shapes or paths, the shapes/paths must have their own <strong>"id"</strong>, hopefully
-unique inside the svg document.</p>
+<p>In order to reference the shapes, the shapes must have their own <strong>"id"</strong>, hopefully unique inside the
+svg document.</p>
 
-<p>If the user has edited the svg "per hand", then he should not forget to give the shapes he wishes to process an
+<p>If the user has edited the svg file "per hand", then he should not forget to give the shapes he wishes to process an
 unique id. If the user has created the svg with <strong>Inkscape</strong>, then "id"s are automatically given, but
 maybe the user will want to edit them and give them meaningfull name.</p>
 
@@ -239,7 +241,7 @@ text editor. </p>
 <p>This way, it is easy for example to define shapes in the <strong>&lt;def&gt;</strong> paragraph and reuse theses
 shapes in the main body of the svg file with the help of the <strong>&lt;use&gt;</strong> tag and some transformations.
 Unfortunately <strong>PyCut</strong> cannot imported such construct. The utility <strong>svgresolver.py</strong>
-delivered with PyCutwill have to be used. It takes as input the SVG file defined with <code>&lt;defs&gt;</code> and
+delivered with PyCut will have to be used. It takes as input the SVG file defined with <code>&lt;defs&gt;</code> and
 outputs a new SVG where all <code>&lt;defs&gt;/&lt;use&gt;</code> have been resolved.</p>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
@@ -262,16 +264,17 @@ job is opened.</p>
 <p>A GCode file can also be loaded with the argument <code>--gcode</code>. Hopefully PyCut can parse it (roughly: what
 <strong>Candle</strong> can parse - <strong>PyCut</strong> uses a similar parser). The toolpaths can then be viewed in
 the GCode viewer and GCode simulator. For the GCode simulator, the tool diameter is needed for an accurate simulation.
-PyCut saves its generated gcode files with a comment line </p>
+PyCut saves its generated gcode files with a comment line of the form</p>
 <pre><code class="language-gcode">; Diameter   &lt;value&gt;</code></pre>
 
 <p>that is parsed to retrieve the right tool diameter. </p>
 
-<p>For the very first time, start pycut without job.</p>
+<p>For the very first time, start <strong>PyCut</strong> without job.</p>
 
 <h3 id="P-03-01">Loading a SVG file</h3>
 
-<p>So import your svg into <strong>PyCut</strong>: The SVG content should be displayed in the central area. </p>
+<p>Import your svg into <strong>PyCut</strong>. The menubar contains such a commnd. The SVG content should be displayed
+in the central area. </p>
 
 <div class="info">
 <p><strong>Note:</strong> text is not displayed inside the <strong>PyCut</strong> svg viewer. It has to be converted as
@@ -353,7 +356,7 @@ the "physical units" when choosing a scale of 1.</p>
 units</strong>. <strong>PyCut</strong> will calculate toolpaths in the same order of magnitude of the user units values
 of the svg. If you choose "<strong>mm</strong>" for the gcode output, you would have set your svg document size in
 "<strong>mm</strong>", and the <strong>user unit scale to 1</strong>. Because of this, the gcode X,Y and Z values are
-the same as the one of the paths values. </p>
+the same as the one of the paths values.</p>
 
 <p>If you choose "<strong>in</strong>" for the gcode output, then certainly you have set your svg document size in
 "<strong>in</strong>", and the <strong>with user unit scale equals to 1</strong>,no conversion is either needed. </p>
@@ -587,8 +590,8 @@ round). </p>
     <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
     <circle cx="66.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </g>
   <g id="layer1" transform="translate(120 0)">
@@ -600,8 +603,8 @@ round). </p>
     <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                              <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                              -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                  -->
     <circle cx="65.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </g>
 </svg>
@@ -668,12 +671,12 @@ tool path (and the standart cutter position at the toolpath corner).</p>
               stroke-opacity="0.8"/>
     <circle cx="20" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
     <!-- 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                             D = sqrt(10*10 + 10*10) = 14.14
-                                                                                                                                                                                                                                                                                                                                                                                                                                                             d = 14.14 -10 = 4.14
-                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-                                                                                                                                                                                                                                                                                                                                                                                                                                                             dx = dy =  d / sqrt(2) = 2.93
-                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-                                                                                                                                                                                                                                                                                                                                                                                                                                                             -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                 D = sqrt(10*10 + 10*10) = 14.14
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                 d = 14.14 -10 = 4.14
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                 dx = dy =  d / sqrt(2) = 2.93
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                 -->
     <polyline id="dog-bone-path1" points="20,20 17.07,17.07" fill="none" stroke="blue" stroke-linejoin="round"
               stroke-width="0.3" stroke-opacity="0.2"/>
     <circle id="dog-bone-path1-material" cx="17.07" cy="17.07" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2"
@@ -999,6 +1002,7 @@ bisections are \( -1\) and \(1\). The correct bisection is the first one, and it
 
 <p>\( dy = 0.88 \)</p>
 
+
 <p><strong>PyCut GCode Dressup GUI</strong></p>
 
 <p>How to integrate this handling into <strong>PyCut</strong> ? There is a setting option "<strong>GCode Dressup
@@ -1026,6 +1030,8 @@ the comment lines </p>
 <p><strong>It is worth noting that in a first implemetation step, the fixups will be calculated only for "Inside" or
 "Outside" operations, and not for the "Pocket" operations (TODO). This in because, for pocket operations, the toolpaths
 which are not adjacents to the stock borders may have sharp corners which do not need dogbones at all.</strong></p>
+
+
 
 <h3 id="APPENDICE-01">Appendix-1: SVG Editors</h3>
 
@@ -1223,6 +1229,7 @@ perfect toolchain I admit, but well my svgs are not that complicated</strong>. Y
 arc/bezier curve per hand, it is not that difficult. And yours svgs are then "<strong>clean</strong>" and easily
 modificable. </p>
 
+
 <p></p>
 
 <h3 id="APPENDICE-02">Appendix-2: GCODE Viewers</h3>
@@ -1230,11 +1237,11 @@ modificable. </p>
 <p>Of course, CANDLE offers a GCODE viewer. There nevertheless a few ones (to my knowledge) worth a mention:</p>
 <ul>
   <li>NCnetics</li>
-  <li>PlanetCNC</li>
+  <li>PlanetCNC (which is a GCode sender -with dedicated hardware- as well)</li>
   <li>what else ?</li>
 </ul>
 
-<p>Just search in the iÍnternet for them.</p>
+<p>Just search in the Internet for them.</p>
 
 <p>Real GCODE simulators (I mean simulation with material removal) are on the other way seldom.</p>
 <ul>
