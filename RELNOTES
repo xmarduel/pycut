@@ -2,6 +2,10 @@
 
 - gcode dressup (dogbones)  TODO
 
+# 0.6.1
+
+misc fixes
+
 # 0.6.0
 
 - gcode simulator in python + qt-opengl with candle gcode parser.
