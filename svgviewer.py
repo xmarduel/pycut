@@ -23,7 +23,9 @@ from val_with_unit import ValWithUnit
 
 
 class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
-    def __init__(self, id: str, view: "SvgViewer", renderer: QtSvg.QSvgRenderer, parent=None):
+    def __init__(
+        self, id: str, view: "SvgViewer", renderer: QtSvg.QSvgRenderer, parent=None
+    ):
         super(SvgItem, self).__init__(parent)
         self.view = view
         self.setSharedRenderer(renderer)
@@ -48,12 +50,22 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
             self.selected_effect.setStrength(1)
 
     def mousePressEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
-        print("svg item: " + self.elementId() + " - mousePressEvent()  isSelected=" + str(self.isSelected()))
+        print(
+            "svg item: "
+            + self.elementId()
+            + " - mousePressEvent()  isSelected="
+            + str(self.isSelected())
+        )
         print("svg item: " + str(self.pos()))
         super().mousePressEvent(event)
 
     def mouseReleaseEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
-        print("svg item: " + self.elementId() + " - mouseReleaseEvent() isSelected=" + str(self.isSelected()))
+        print(
+            "svg item: "
+            + self.elementId()
+            + " - mouseReleaseEvent() isSelected="
+            + str(self.isSelected())
+        )
         print("svg item: " + str(self.pos()))
         if self.elementId().startswith("pycut_tab"):
             # actualize tab object and the mainwindow tabs table
@@ -214,16 +226,33 @@ class SvgViewer(QtWidgets.QGraphicsView):
     @classmethod
     def set_settings(cls, settings):
         cls.TABS_SETTINGS = copy.deepcopy(settings["TABS_SETTINGS"])
-        cls.GEOMETRY_PREVIEW_CLOSED_PATHS = copy.deepcopy(settings["GEOMETRY_PREVIEW_CLOSED_PATHS"])
-        cls.GEOMETRY_PREVIEW_OPENED_PATHS = copy.deepcopy(settings["GEOMETRY_PREVIEW_OPENED_PATHS"])
+        cls.GEOMETRY_PREVIEW_CLOSED_PATHS = copy.deepcopy(
+            settings["GEOMETRY_PREVIEW_CLOSED_PATHS"]
+        )
+        cls.GEOMETRY_PREVIEW_OPENED_PATHS = copy.deepcopy(
+            settings["GEOMETRY_PREVIEW_OPENED_PATHS"]
+        )
         cls.TOOLPATHS = copy.deepcopy(settings["TOOLPATHS"])
 
     @classmethod
     def set_default_settings(cls):
         cls.TABS_SETTINGS = copy.deepcopy(cls.DEFAULT_TABS_SETTINGS)
-        cls.GEOMETRY_PREVIEW_CLOSED_PATHS = copy.deepcopy(cls.GEOMETRY_PREVIEW_CLOSED_PATHS_DEFAULTS)
-        cls.GEOMETRY_PREVIEW_OPENED_PATHS = copy.deepcopy(cls.GEOMETRY_PREVIEW_OPENED_PATHS_DEFAULTS)
+        cls.GEOMETRY_PREVIEW_CLOSED_PATHS = copy.deepcopy(
+            cls.GEOMETRY_PREVIEW_CLOSED_PATHS_DEFAULTS
+        )
+        cls.GEOMETRY_PREVIEW_OPENED_PATHS = copy.deepcopy(
+            cls.GEOMETRY_PREVIEW_OPENED_PATHS_DEFAULTS
+        )
         cls.TOOLPATHS = copy.deepcopy(cls.DEFAULT_TOOLPATHS)
+
+    @classmethod
+    def get_settings(cls):
+        return {
+            "TABS_SETTINGS": cls.TABS_SETTINGS,
+            "GEOMETRY_PREVIEW_CLOSED_PATHS": cls.GEOMETRY_PREVIEW_CLOSED_PATHS,
+            "GEOMETRY_PREVIEW_OPENED_PATHS": cls.GEOMETRY_PREVIEW_OPENED_PATHS,
+            "TOOLPATHS": cls.TOOLPATHS,
+        }
 
     def set_mainwindow(self, mainwindow):
         self.mainwindow = mainwindow
@@ -429,11 +458,15 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
             # tabs can be dragged
             if shape_id.startswith("pycut_tab"):
-                item.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsMovable, True)
+                item.setFlag(
+                    QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsMovable, True
+                )
 
             # pycut generated paths cannot be selected
             if shape_id.startswith("pycut"):
-                item.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, False)
+                item.setFlag(
+                    QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, False
+                )
 
         # zoom with the initial zoom factor
         # self.scale(self.current_zoom, self.current_zoom)
@@ -585,18 +618,26 @@ class SvgViewer(QtWidgets.QGraphicsView):
             o_tab = Tab(tab)
 
             o_tab.svg_path.shape_attrs["stroke"] = self.TABS_SETTINGS["stroke"]
-            o_tab.svg_path.shape_attrs["stroke-width"] = self.TABS_SETTINGS["stroke-width"]
+            o_tab.svg_path.shape_attrs["stroke-width"] = self.TABS_SETTINGS[
+                "stroke-width"
+            ]
             o_tab.svg_path.shape_attrs["fill"] = self.TABS_SETTINGS["fill"]
-            o_tab.svg_path.shape_attrs["fill-opacity"] = self.TABS_SETTINGS["fill-opacity"]
+            o_tab.svg_path.shape_attrs["fill-opacity"] = self.TABS_SETTINGS[
+                "fill-opacity"
+            ]
 
             if not tab["enabled"]:
-                o_tab.svg_path.shape_attrs["fill-opacity"] = self.TABS_SETTINGS["fill-opacity-disabled"]
+                o_tab.svg_path.shape_attrs["fill-opacity"] = self.TABS_SETTINGS[
+                    "fill-opacity-disabled"
+                ]
 
             tabs_svg_paths.append(o_tab.svg_path)
 
         return tabs_svg_paths
 
-    def make_cnc_ops_preview_geometry_svg_paths(self, cnc_ops: List["CncOp"]) -> List[SvgPath]:
+    def make_cnc_ops_preview_geometry_svg_paths(
+        self, cnc_ops: List["CncOp"]
+    ) -> List[SvgPath]:
         """ """
         geometry_svg_paths = []
 
@@ -604,27 +645,43 @@ class SvgViewer(QtWidgets.QGraphicsView):
             for geometry_svg_path in cnc_op.geometry_svg_paths:
                 if geometry_svg_path.eval_closed():
                     # polygons
-                    geometry_svg_path.shape_attrs["stroke"] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke"]
-                    geometry_svg_path.shape_attrs["stroke-width"] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-width"]
-                    geometry_svg_path.shape_attrs["stroke-opacity"] = self.GEOMETRY_PREVIEW_CLOSED_PATHS[
+                    geometry_svg_path.shape_attrs[
+                        "stroke"
+                    ] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke"]
+                    geometry_svg_path.shape_attrs[
+                        "stroke-width"
+                    ] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-width"]
+                    geometry_svg_path.shape_attrs[
                         "stroke-opacity"
-                    ]
+                    ] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-opacity"]
 
                     if self.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM["fill"] != "":
-                        geometry_svg_path.shape_attrs["fill"] = self.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM["fill"]
+                        geometry_svg_path.shape_attrs[
+                            "fill"
+                        ] = self.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM["fill"]
                     else:
-                        geometry_svg_path.shape_attrs["fill"] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"]
+                        geometry_svg_path.shape_attrs[
+                            "fill"
+                        ] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"]
 
-                    geometry_svg_path.shape_attrs["fill-opacity"] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill-opacity"]
+                    geometry_svg_path.shape_attrs[
+                        "fill-opacity"
+                    ] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill-opacity"]
                 else:
                     # lines
-                    geometry_svg_path.shape_attrs["stroke"] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"]
-                    geometry_svg_path.shape_attrs["stroke-width"] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]
-                    geometry_svg_path.shape_attrs["stroke-opacity"] = self.GEOMETRY_PREVIEW_OPENED_PATHS[
+                    geometry_svg_path.shape_attrs[
+                        "stroke"
+                    ] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"]
+                    geometry_svg_path.shape_attrs[
+                        "stroke-width"
+                    ] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]
+                    geometry_svg_path.shape_attrs[
                         "stroke-opacity"
-                    ]
+                    ] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"]
                     geometry_svg_path.shape_attrs["fill"] = "none"
-                    geometry_svg_path.shape_attrs["fill-opacity"] = self.GEOMETRY_PREVIEW_OPENED_PATHS["fill-opacity"]
+                    geometry_svg_path.shape_attrs[
+                        "fill-opacity"
+                    ] = self.GEOMETRY_PREVIEW_OPENED_PATHS["fill-opacity"]
 
             geometry_svg_paths += cnc_op.geometry_svg_paths
 
@@ -637,7 +694,9 @@ class SvgViewer(QtWidgets.QGraphicsView):
         for cnc_op in cnc_ops:
             for cam_svg_path in cnc_op.cam_paths_svg_paths:
                 cam_svg_path.shape_attrs["stroke"] = self.TOOLPATHS["stroke"]
-                cam_svg_path.shape_attrs["stroke-width"] = self.TOOLPATHS["stroke-width"]
+                cam_svg_path.shape_attrs["stroke-width"] = self.TOOLPATHS[
+                    "stroke-width"
+                ]
                 cam_svg_path.shape_attrs["fill"] = "none"
 
             cam_paths_svg_paths += cnc_op.cam_paths_svg_paths

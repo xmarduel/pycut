@@ -424,133 +424,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         else:
             self.ui.scrollArea_right.show()
 
-    def cb_open_viewers_settings_dialog(self):
-        """ """
-        global viewers_settings_dialog
-
-        def fill_dialog():
-            viewers_settings_dialog.colorpicker_Tabs_fill.setColor(
-                QtGui.QColor(svgviewer.SvgViewer.TABS_SETTINGS["fill"])
-            )
-            viewers_settings_dialog.Tabs_fill_opacity.setValue(
-                float(svgviewer.SvgViewer.TABS_SETTINGS["fill-opacity"])
-            )
-            viewers_settings_dialog.Tabs_fill_opacity_disabled.setValue(
-                float(svgviewer.SvgViewer.TABS_SETTINGS["fill-opacity-disabled"])
-            )
-
-            viewers_settings_dialog.colorpicker_Toolpath_stroke.setColor(
-                QtGui.QColor(svgviewer.SvgViewer.TOOLPATHS["stroke"])
-            )
-            viewers_settings_dialog.Toolpath_stroke_width.setValue(
-                float(svgviewer.SvgViewer.TOOLPATHS["stroke-width"])
-            )
-
-            viewers_settings_dialog.colorpicker_GeometryPreview_fill.setColor(
-                QtGui.QColor(svgviewer.SvgViewer.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"])
-            )
-            viewers_settings_dialog.GeometryPreview_fill_opacity.setValue(
-                float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_CLOSED_PATHS["fill-opacity"])
-            )
-
-            viewers_settings_dialog.colorpicker_GeometryPreview_stroke.setColor(
-                QtGui.QColor(
-                    svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"]
-                )
-            )
-            viewers_settings_dialog.GeometryPreview_stroke_opacity.setValue(
-                float(
-                    svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"]
-                )
-            )
-            viewers_settings_dialog.GeometryPreview_stroke_width.setValue(
-                float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"])
-            )
-
-            if gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB == 1:
-                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.setChecked(
-                    True
-                )
-                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_2.setChecked(
-                    False
-                )
-            else:
-                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.setChecked(
-                    False
-                )
-                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_2.setChecked(
-                    True
-                )
-
-        def set_defaults():
-            self.svg_viewer.set_default_settings()
-            # gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB =  GCodeSimulatorSettings.DEFAULT_OPENGL_FB
-
-            fill_dialog()
-
-        def set_ok():
-            settings = {
-                "TABS_SETTINGS": {
-                    "stroke": "#aa4488",
-                    "stroke-width": "0",
-                    "fill": viewers_settings_dialog.colorpicker_Tabs_fill.color().name(),
-                    "fill-opacity": str(
-                        viewers_settings_dialog.Tabs_fill_opacity.value()
-                    ),
-                    "fill-opacity-disabled": str(
-                        viewers_settings_dialog.Tabs_fill_opacity_disabled.value()
-                    ),
-                },
-                "GEOMETRY_PREVIEW_CLOSED_PATHS": {
-                    "stroke": "#ff0000",
-                    "stroke-width": "0",
-                    "stroke-opacity": "1.0",
-                    "fill": viewers_settings_dialog.colorpicker_GeometryPreview_fill.color().name(),
-                    "fill-opacity": str(
-                        viewers_settings_dialog.GeometryPreview_fill_opacity.value()
-                    ),
-                },
-                "GEOMETRY_PREVIEW_OPENED_PATHS": {
-                    "stroke": viewers_settings_dialog.colorpicker_GeometryPreview_stroke.color().name(),
-                    "stroke-width": str(
-                        viewers_settings_dialog.GeometryPreview_stroke_width.value()
-                    ),
-                    "stroke-opacity": str(
-                        viewers_settings_dialog.GeometryPreview_stroke_opacity.value()
-                    ),
-                    "fill": "none",
-                    "fill-opacity": "1.0",
-                },
-                "TOOLPATHS": {
-                    "stroke": viewers_settings_dialog.colorpicker_Toolpath_stroke.color().name(),
-                    "stroke-width": str(
-                        viewers_settings_dialog.Toolpath_stroke_width.value()
-                    ),
-                },
-            }
-            self.svg_viewer.set_settings(settings)
-
-            if viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.isChecked():
-                gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB = 1
-            else:
-                gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB = 2
-
-            viewers_settings_dialog.close()
-
-        def set_cancel():
-            viewers_settings_dialog.close()
-
-        loader = QUiLoader(None)
-        loader.registerCustomWidget(colorpicker.ColorPicker)
-
-        viewers_settings_dialog = loader.load("./viewers_settings/viewers_settings.ui")
-        fill_dialog()
-        viewers_settings_dialog.cmdDefaults.clicked.connect(set_defaults)
-        viewers_settings_dialog.cmdOK.clicked.connect(set_ok)
-        viewers_settings_dialog.cmdCancel.clicked.connect(set_cancel)
-
-        viewers_settings_dialog.exec()
-
     """
     def cb_show_tutorial_qt(self):
         dlg = QtWidgets.QDialog(self)
@@ -712,6 +585,18 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # self.cb_update_material_display()
         # self.cb_update_gcodeconversion_display()
 
+    def get_current_viewers_settings(self):
+        """ """
+        viewers_settings = {
+            "svg_viewer": self.svg_viewer.get_settings(),
+            "gcode_viewer": {},
+            "gcode_simulator": {
+                gcodesimulator_python_glviewer.GCodeSimulatorSettings.get_settings()
+            },
+        }
+
+        return viewers_settings
+
     def get_current_settings(self):
         """ """
         settings = {
@@ -830,6 +715,141 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.GCodeGeneration_ProgramEnd.setChecked(
             settings["GCodeGeneration"]["program_end"]
         )
+
+    def apply_viewers_settings(self, viewers_settings):
+        """ """
+        self.svg_viewer.set_settings(viewers_settings["svg_viewer"])
+
+        gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB = (
+            viewers_settings["gcode_simulator"]["fb"]
+        )
+
+    def cb_open_viewers_settings_dialog(self):
+        """ """
+        global viewers_settings_dialog
+
+        def fill_dialog():
+            viewers_settings_dialog.colorpicker_Tabs_fill.setColor(
+                QtGui.QColor(svgviewer.SvgViewer.TABS_SETTINGS["fill"])
+            )
+            viewers_settings_dialog.Tabs_fill_opacity.setValue(
+                float(svgviewer.SvgViewer.TABS_SETTINGS["fill-opacity"])
+            )
+            viewers_settings_dialog.Tabs_fill_opacity_disabled.setValue(
+                float(svgviewer.SvgViewer.TABS_SETTINGS["fill-opacity-disabled"])
+            )
+
+            viewers_settings_dialog.colorpicker_Toolpath_stroke.setColor(
+                QtGui.QColor(svgviewer.SvgViewer.TOOLPATHS["stroke"])
+            )
+            viewers_settings_dialog.Toolpath_stroke_width.setValue(
+                float(svgviewer.SvgViewer.TOOLPATHS["stroke-width"])
+            )
+
+            viewers_settings_dialog.colorpicker_GeometryPreview_fill.setColor(
+                QtGui.QColor(svgviewer.SvgViewer.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"])
+            )
+            viewers_settings_dialog.GeometryPreview_fill_opacity.setValue(
+                float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_CLOSED_PATHS["fill-opacity"])
+            )
+
+            viewers_settings_dialog.colorpicker_GeometryPreview_stroke.setColor(
+                QtGui.QColor(
+                    svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"]
+                )
+            )
+            viewers_settings_dialog.GeometryPreview_stroke_opacity.setValue(
+                float(
+                    svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"]
+                )
+            )
+            viewers_settings_dialog.GeometryPreview_stroke_width.setValue(
+                float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"])
+            )
+
+            if gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB == 1:
+                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.setChecked(
+                    True
+                )
+                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_2.setChecked(
+                    False
+                )
+            else:
+                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.setChecked(
+                    False
+                )
+                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_2.setChecked(
+                    True
+                )
+
+        def set_defaults():
+            self.svg_viewer.set_default_settings()
+            # gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB =  GCodeSimulatorSettings.DEFAULT_OPENGL_FB
+
+            fill_dialog()
+
+        def set_ok():
+            settings = {
+                "TABS_SETTINGS": {
+                    "stroke": "#aa4488",
+                    "stroke-width": "0",
+                    "fill": viewers_settings_dialog.colorpicker_Tabs_fill.color().name(),
+                    "fill-opacity": str(
+                        viewers_settings_dialog.Tabs_fill_opacity.value()
+                    ),
+                    "fill-opacity-disabled": str(
+                        viewers_settings_dialog.Tabs_fill_opacity_disabled.value()
+                    ),
+                },
+                "GEOMETRY_PREVIEW_CLOSED_PATHS": {
+                    "stroke": "#ff0000",
+                    "stroke-width": "0",
+                    "stroke-opacity": "1.0",
+                    "fill": viewers_settings_dialog.colorpicker_GeometryPreview_fill.color().name(),
+                    "fill-opacity": str(
+                        viewers_settings_dialog.GeometryPreview_fill_opacity.value()
+                    ),
+                },
+                "GEOMETRY_PREVIEW_OPENED_PATHS": {
+                    "stroke": viewers_settings_dialog.colorpicker_GeometryPreview_stroke.color().name(),
+                    "stroke-width": str(
+                        viewers_settings_dialog.GeometryPreview_stroke_width.value()
+                    ),
+                    "stroke-opacity": str(
+                        viewers_settings_dialog.GeometryPreview_stroke_opacity.value()
+                    ),
+                    "fill": "none",
+                    "fill-opacity": "1.0",
+                },
+                "TOOLPATHS": {
+                    "stroke": viewers_settings_dialog.colorpicker_Toolpath_stroke.color().name(),
+                    "stroke-width": str(
+                        viewers_settings_dialog.Toolpath_stroke_width.value()
+                    ),
+                },
+            }
+            self.svg_viewer.set_settings(settings)
+
+            if viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.isChecked():
+                gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB = 1
+            else:
+                gcodesimulator_python_glviewer.GCodeSimulatorSettings.OPENGL_FB = 2
+
+            viewers_settings_dialog.close()
+
+        def set_cancel():
+            viewers_settings_dialog.close()
+
+        loader = QUiLoader(None)
+        loader.registerCustomWidget(colorpicker.ColorPicker)
+
+        viewers_settings_dialog = loader.load("./viewers_settings/viewers_settings.ui")
+        fill_dialog()
+        viewers_settings_dialog.cmdDefaults.clicked.connect(set_defaults)
+        viewers_settings_dialog.cmdOK.clicked.connect(set_ok)
+        viewers_settings_dialog.cmdCancel.clicked.connect(set_cancel)
+
+        viewers_settings_dialog.exec()
 
     def cb_open_svg(self):
         """
@@ -965,6 +985,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             # and fill the whole gui
             self.apply_settings(job["settings"])
+            if "viewers_settings" in job:
+                self.apply_viewers_settings(job["viewers_settings"])
 
             # fill operations table
             self.ui.operationsview_manager.set_operations(self.operations)
@@ -980,6 +1002,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "svg_file": self.svg_file,
             "operations": operations,
             "settings": self.get_current_settings(),
+            "viewers_settings": self.get_current_viewers_settings(),
         }
 
         with open(self.jobfilename, "w") as json_file:
@@ -995,6 +1018,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "svg_file": self.svg_file,
             "operations": operations,
             "settings": self.get_current_settings(),
+            "viewers_settings": self.get_current_viewers_settings(),
         }
 
         # open file dialog for a file name

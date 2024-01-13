@@ -1636,7 +1636,7 @@
   </action>
   <action name="actionSettings">
    <property name="text">
-    <string>Settings...</string>
+    <string>Viewers Settings...</string>
    </property>
   </action>
   <action name="actionOpenGCode">

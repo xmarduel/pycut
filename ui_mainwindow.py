@@ -946,7 +946,7 @@ class Ui_mainwindow(object):
         self.actionTutorial.setText(QCoreApplication.translate("mainwindow", u"Tutorial", None))
         self.actionAboutQt.setText(QCoreApplication.translate("mainwindow", u"About &Qt", None))
         self.actionAboutPyCut.setText(QCoreApplication.translate("mainwindow", u"About PyCut", None))
-        self.actionSettings.setText(QCoreApplication.translate("mainwindow", u"Settings...", None))
+        self.actionSettings.setText(QCoreApplication.translate("mainwindow", u"Viewers Settings...", None))
         self.actionOpenGCode.setText(QCoreApplication.translate("mainwindow", u"Load GCode", None))
         self.label_SvgSettings.setText(QCoreApplication.translate("mainwindow", u" Svg Settings", None))
         self.label_PxPerInch.setText(QCoreApplication.translate("mainwindow", u"user units scale factor", None))
