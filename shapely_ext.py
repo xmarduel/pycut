@@ -87,7 +87,9 @@ class ShapelyMultiPolygonOffset:
             exterior_multipoly = ShapelyUtils.buildMultiPolyFromOffsets([ext_offset])
             # print("exterior_multipoly VALID ? ", exterior_multipoly.is_valid)
 
-            # MatplotLibUtils.MatplotlibDisplay("geom multipoly from ext offset", exterior_multipoly, force=True)
+            # MatplotLibUtils.MatplotlibDisplay(
+            #    "geom multipoly from ext offset", exterior_multipoly, force=True
+            # )
 
             # now consider the interiors
             if poly.interiors:
@@ -103,21 +105,31 @@ class ShapelyMultiPolygonOffset:
 
                     interior_polys.append(ipoly)
 
-                interior_multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(interior_polys)
+                interior_multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(
+                    interior_polys
+                )
 
-                MatplotLibUtils.MatplotlibDisplay("starting interior offset from", interior_multipoly, force=False)
+                MatplotLibUtils.MatplotlibDisplay(
+                    "starting interior offset from", interior_multipoly, force=False
+                )
 
                 # consider interiors offsets
                 if consider_interiors_offsets == True:
-                    interior_multipoly = ShapelyUtils.offsetMultiPolygon(interior_multipoly, amount, "right")
+                    interior_multipoly = ShapelyUtils.offsetMultiPolygon(
+                        interior_multipoly, amount, "right"
+                    )
 
-                    MatplotLibUtils.MatplotlibDisplay("interior first offset", interior_multipoly, force=False)
+                    MatplotLibUtils.MatplotlibDisplay(
+                        "interior first offset", interior_multipoly, force=False
+                    )
 
                 # the diff is the solution
                 try:
                     sol_poly = exterior_multipoly.difference(interior_multipoly)
 
-                    MatplotLibUtils.MatplotlibDisplay("diff of interior offseting", sol_poly)
+                    MatplotLibUtils.MatplotlibDisplay(
+                        "diff of interior offseting", sol_poly
+                    )
 
                 except Exception as e:
                     print("ERROR difference")
@@ -206,7 +218,9 @@ class ShapelyMultiPolygonOffsetInteriors:
             # from the offseted lines, build a multipolygon that we will diff with the exterior
             interior_multipoly = ShapelyUtils.buildMultiPolyFromOffsets(int_offsets)
 
-            MatplotLibUtils.MatplotlibDisplay("interior_multipoly", interior_multipoly, force=False)
+            MatplotLibUtils.MatplotlibDisplay(
+                "interior_multipoly", interior_multipoly, force=False
+            )
 
             if not interior_multipoly.is_valid:
                 interior_multipoly = ShapelyUtils.fixMultipoly(interior_multipoly)
@@ -215,21 +229,29 @@ class ShapelyMultiPolygonOffsetInteriors:
                 self.multipoly, amount, "left", consider_interiors_offsets=True
             )
 
-            MatplotLibUtils.MatplotlibDisplay("exterior_multipoly", exterior_multipoly, force=False)
+            MatplotLibUtils.MatplotlibDisplay(
+                "exterior_multipoly", exterior_multipoly, force=False
+            )
 
             # only exterior
             exterior_multipoly = ShapelyUtils.removeHolesMultipoly(exterior_multipoly)
 
             # this simplify may be important so that the offset becomes Ok (example: letter "B")
-            exterior_multipoly = ShapelyUtils.simplifyMultiPoly(exterior_multipoly, 0.001)
+            exterior_multipoly = ShapelyUtils.simplifyMultiPoly(
+                exterior_multipoly, 0.001
+            )
             exterior_multipoly = ShapelyUtils.orientMultiPolygon(exterior_multipoly)
 
-            MatplotLibUtils.MatplotlibDisplay("exterior_multipoly", exterior_multipoly, force=False)
+            MatplotLibUtils.MatplotlibDisplay(
+                "exterior_multipoly", exterior_multipoly, force=False
+            )
 
             if consider_exteriors_offsets == True:
                 # the diff ** with ~POLY ** is the solution
                 try:
-                    o_interior_is_contained_in_o_exterior = exterior_multipoly.contains(interior_multipoly)
+                    o_interior_is_contained_in_o_exterior = exterior_multipoly.contains(
+                        interior_multipoly
+                    )
                     print(
                         "XXXXXX offset -> interior_offset_is_contained_in_exterior_offset",
                         o_interior_is_contained_in_o_exterior,
@@ -239,7 +261,9 @@ class ShapelyMultiPolygonOffsetInteriors:
                         sol_poly = exterior_multipoly.intersection(interior_multipoly)
                     else:
                         # big problem!
-                        sol_poly = interior_multipoly  # bug: can cut outside the exterior...
+                        sol_poly = (
+                            interior_multipoly  # bug: can cut outside the exterior...
+                        )
                         sol_poly = exterior_multipoly  # TEST -> GOOD !
 
                 except Exception as e:

@@ -3,24 +3,57 @@
   "operations": [
     {
       "name": "op",
-      "type": "Outside",
+      "type": "Inside",
       "cut_depth": 10.0,
       "paths": [
-        "contour"
+        "hole"
       ],
-      "ramp_plunge": false,
+      "ramp_plunge": true,
       "combinaison": "Union",
       "direction": "Conventional",
       "units": "mm",
-      "margin": 2.1,
+      "margin": 0.0,
       "width": 0.0
     },
     {
       "name": "op",
-      "type": "Engrave",
-      "cut_depth": 3.175,
+      "type": "Inside",
+      "cut_depth": 10.0,
       "paths": [
-        "c0"
+        "motor_screw_5.0mm_E",
+        "motor_screw_5.0mm_S",
+        "motor_screw_5.0mm_W",
+        "motor_screw_5.0mm_N"
+      ],
+      "ramp_plunge": true,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
+    },
+    {
+      "name": "op",
+      "type": "Pocket",
+      "cut_depth": 3.0,
+      "paths": [
+        "inner_plate",
+        "hole"
+      ],
+      "ramp_plunge": true,
+      "combinaison": "Difference",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
+    },
+    {
+      "name": "op",
+      "type": "Peck",
+      "cut_depth": 10.0,
+      "paths": [
+        "holder_screw_4.1mm_NW",
+        "holder_screw_4.1mm_SE"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -31,12 +64,12 @@
     },
     {
       "name": "op",
-      "type": "Engrave",
-      "cut_depth": 3.175,
+      "type": "Outside",
+      "cut_depth": 10.0,
       "paths": [
-        "outer_circle"
+        "contour"
       ],
-      "ramp_plunge": false,
+      "ramp_plunge": true,
       "combinaison": "Union",
       "direction": "Conventional",
       "units": "mm",
@@ -50,17 +83,42 @@
     },
     "Tabs": {
       "units": "mm",
-      "height": 1.0,
-      "tabs": []
+      "height": 0.5,
+      "tabs": [
+        {
+          "center": [
+            24.0,
+            24.0
+          ],
+          "radius": 4.0,
+          "enabled": true
+        },
+        {
+          "center": [
+            76.0,
+            24.0
+          ],
+          "radius": 4.0,
+          "enabled": true
+        },
+        {
+          "center": [
+            76.0,
+            76.0
+          ],
+          "radius": 4.0,
+          "enabled": true
+        }
+      ]
     },
     "Tool": {
       "units": "mm",
-      "diameter": 6.0,
+      "diameter": 4.0,
       "angle": 180,
       "passdepth": 1.2,
       "overlap": 0.4,
       "rapid": 500,
-      "plunge": 100,
+      "plunge": 10,
       "cut": 250
     },
     "Material": {

@@ -51,7 +51,9 @@ class cam:
     """ """
 
     @classmethod
-    def drill(cls, multipoint: shapely.geometry.MultiPoint, cutter_dia: float) -> List[CamPath]:
+    def drill(
+        cls, multipoint: shapely.geometry.MultiPoint, cutter_dia: float
+    ) -> List[CamPath]:
         """
         Compute paths for drill operation on Shapely multipoint
         """
@@ -66,7 +68,9 @@ class cam:
         return camPaths
 
     @classmethod
-    def peck(cls, multipoint: shapely.geometry.MultiPoint, cutter_dia: float) -> List[CamPath]:
+    def peck(
+        cls, multipoint: shapely.geometry.MultiPoint, cutter_dia: float
+    ) -> List[CamPath]:
         """
         Compute paths for peck operation on Shapely multipoint
         """
@@ -128,7 +132,9 @@ class cam:
         if is_inside:
             # because we always start from the outer ring -> we go "inside"
             current = ShapelyUtils.offsetMultiLine(multiline, cutter_dia / 2, "left")
-            offset = ShapelyUtils.offsetMultiLine(multiline, width - cutter_dia / 2, "left")
+            offset = ShapelyUtils.offsetMultiLine(
+                multiline, width - cutter_dia / 2, "left"
+            )
             # bounds = ShapelyUtils.diff(current, offset)
             bounds = current
             eachOffset = eachWidth
@@ -139,14 +145,22 @@ class cam:
 
             if direction == "inner2outer":
                 # because we always start from the inner ring -> we go "outside"
-                current = ShapelyUtils.offsetMultiLine(multiline, cutter_dia / 2, "right")
-                offset = ShapelyUtils.offsetMultiLine(multiline, width - cutter_dia / 2, "right")
+                current = ShapelyUtils.offsetMultiLine(
+                    multiline, cutter_dia / 2, "right"
+                )
+                offset = ShapelyUtils.offsetMultiLine(
+                    multiline, width - cutter_dia / 2, "right"
+                )
                 # bounds = ShapelyUtils.diff(current, offset)
                 bounds = current
             else:
                 # because we always start from the outer ring -> we go "inside"
-                current = ShapelyUtils.offsetMultiLine(multiline, cutter_dia / 2, "left")
-                offset = ShapelyUtils.offsetMultiLine(multiline, width - cutter_dia / 2, "left")
+                current = ShapelyUtils.offsetMultiLine(
+                    multiline, cutter_dia / 2, "left"
+                )
+                offset = ShapelyUtils.offsetMultiLine(
+                    multiline, width - cutter_dia / 2, "left"
+                )
                 # bounds = ShapelyUtils.diff(current, offset)
                 bounds = current
 
@@ -160,12 +174,18 @@ class cam:
             if needReverse:
                 reversed = []
                 for path in current.geoms:
-                    coords = list(path.coords)  # is a tuple!  JSCUT current reversed in place
+                    coords = list(
+                        path.coords
+                    )  # is a tuple!  JSCUT current reversed in place
                     coords.reverse()
                     reversed.append(shapely.geometry.LineString(coords))
-                allPaths = reversed + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+                allPaths = (
+                    reversed + allPaths
+                )  # JSCUT: allPaths = current.concat(allPaths)
             else:
-                allPaths = [p for p in current.geoms] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+                allPaths = [
+                    p for p in current.geoms
+                ] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
 
             nextWidth = currentWidth + eachWidth
             if nextWidth > width and (width - currentWidth) > 0:
@@ -180,12 +200,18 @@ class cam:
                     if needReverse:
                         reversed = []
                         for path in current.geoms:
-                            coords = list(path.coords)  # is a tuple!  JSCUT current reversed in place
+                            coords = list(
+                                path.coords
+                            )  # is a tuple!  JSCUT current reversed in place
                             coords.reverse()
                             reversed.append(shapely.geometry.LineString(coords))
-                        allPaths = reversed + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+                        allPaths = (
+                            reversed + allPaths
+                        )  # JSCUT: allPaths = current.concat(allPaths)
                     else:
-                        allPaths = [p for p in current.geoms] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+                        allPaths = [
+                            p for p in current.geoms
+                        ] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
                     break
 
             currentWidth = nextWidth
@@ -193,7 +219,9 @@ class cam:
             if not current:
                 break
 
-            current = ShapelyUtils.offsetMultiLine(current, eachOffset, "left", resolution=16)
+            current = ShapelyUtils.offsetMultiLine(
+                current, eachOffset, "left", resolution=16
+            )
             if current:
                 current = ShapelyUtils.simplifyMultiLine(current, 0.01)
                 print("--- next toolpath")
@@ -269,12 +297,18 @@ class cam:
             if needReverse:
                 reversed = []
                 for path in current.geoms:
-                    coords = list(path.coords)  # is a tuple!  JSCUT current reversed in place
+                    coords = list(
+                        path.coords
+                    )  # is a tuple!  JSCUT current reversed in place
                     coords.reverse()
                     reversed.append(shapely.geometry.LineString(coords))
-                allPaths = reversed + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+                allPaths = (
+                    reversed + allPaths
+                )  # JSCUT: allPaths = current.concat(allPaths)
             else:
-                allPaths = [p for p in current.geoms] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+                allPaths = [
+                    p for p in current.geoms
+                ] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
 
             nextWidth = currentWidth + eachWidth
             if nextWidth > width and (width - currentWidth) > 0:
@@ -289,12 +323,18 @@ class cam:
                     if needReverse:
                         reversed = []
                         for path in current.geoms:
-                            coords = list(path.coords)  # is a tuple!  JSCUT current reversed in place
+                            coords = list(
+                                path.coords
+                            )  # is a tuple!  JSCUT current reversed in place
                             coords.reverse()
                             reversed.append(shapely.geometry.LineString(coords))
-                        allPaths = reversed + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+                        allPaths = (
+                            reversed + allPaths
+                        )  # JSCUT: allPaths = current.concat(allPaths)
                     else:
-                        allPaths = [p for p in current.geoms] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+                        allPaths = [
+                            p for p in current.geoms
+                        ] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
                     break
 
             currentWidth = nextWidth
@@ -302,7 +342,9 @@ class cam:
             if not current:
                 break
 
-            current = ShapelyUtils.offsetMultiLine(current, eachOffset, "left", resolution=16)
+            current = ShapelyUtils.offsetMultiLine(
+                current, eachOffset, "left", resolution=16
+            )
             if current:
                 current = ShapelyUtils.simplifyMultiLine(current, 0.01)
                 print("--- next toolpath")
@@ -319,7 +361,9 @@ class cam:
         return cls.merge_paths(bounds, allPaths, closed_path=False)
 
     @classmethod
-    def engrave(cls, geometry: shapely.geometry.MultiPolygon, climb: bool) -> List[CamPath]:
+    def engrave(
+        cls, geometry: shapely.geometry.MultiPolygon, climb: bool
+    ) -> List[CamPath]:
         """
         Compute paths for engrave operation on Shapely multipolygon.
 
@@ -329,7 +373,9 @@ class cam:
         multiline_ext = ShapelyUtils.multiPolyToMultiLine(geometry)
         multiline_int = ShapelyUtils.multiPolyIntToMultiLine(geometry)
 
-        full_line = shapely.ops.linemerge(list(multiline_ext.geoms) + list(multiline_int.geoms))
+        full_line = shapely.ops.linemerge(
+            list(multiline_ext.geoms) + list(multiline_int.geoms)
+        )
 
         if full_line.geom_type == "LineString":
             camPaths = [CamPath(full_line, False)]
@@ -348,7 +394,9 @@ class cam:
         return camPaths
 
     @classmethod
-    def engrave_opened_paths(cls, geometry: shapely.geometry.MultiLineString, climb: bool) -> List[CamPath]:
+    def engrave_opened_paths(
+        cls, geometry: shapely.geometry.MultiLineString, climb: bool
+    ) -> List[CamPath]:
         """
         Compute paths for engrave operation on Shapely multiplinestring.
 
@@ -411,7 +459,10 @@ class cam:
 
         # close if start/end points not equal - in case of closed_path geometry -
         if closed_path == True:
-            if pathEndPoint[0] != pathStartPoint[0] or pathEndPoint[1] != pathStartPoint[1]:
+            if (
+                pathEndPoint[0] != pathStartPoint[0]
+                or pathEndPoint[1] != pathStartPoint[1]
+            ):
                 currentPath = currentPath + [pathStartPoint]
 
         currentPoint = currentPath[-1]
@@ -435,9 +486,13 @@ class cam:
             path = paths[closestPathIndex]
             paths[closestPathIndex] = []  # empty
             numLeft -= 1
-            needNew = ShapelyUtils.crosses(ext_lines, currentPoint, path[closestPointIndex])
+            needNew = ShapelyUtils.crosses(
+                ext_lines, currentPoint, path[closestPointIndex]
+            )
             if (not needNew) and int_multipoly:
-                needNew = ShapelyUtils.crosses(int_multipoly, currentPoint, path[closestPointIndex])
+                needNew = ShapelyUtils.crosses(
+                    int_multipoly, currentPoint, path[closestPointIndex]
+                )
 
             # JSCUT path = path.slice(closestPointIndex, len(path)).concat(path.slice(0, closestPointIndex))
             path = path[closestPointIndex:] + path[:closestPointIndex]
@@ -531,13 +586,22 @@ class cam:
 
         flipXY = args["flipXY"]
 
-        gcode = ""
+        gcode = []
 
-        retractGcode = "; Retract\n" + f"G1 Z" + safeZ.toFixed(decimal) + f"{rapidFeedGcode}\n"
+        retractGcode = [
+            "; Retract",
+            "G1 Z" + safeZ.toFixed(decimal) + f"{rapidFeedGcode}",
+        ]
 
-        retractForTabGcode = "; Retract for tab\n" + f"G1 Z" + tabZ.toFixed(decimal) + f"{rapidFeedGcode}\n"
+        retractForTabGcode = [
+            "; Retract for tab",
+            "G1 Z" + tabZ.toFixed(decimal) + f"{rapidFeedGcode}",
+        ]
 
-        retractForPeck = "; Retract for peck\n" + f"G1 Z" + peckZ.toFixed(decimal) + f"{rapidFeedGcode}\n"
+        retractForPeck = [
+            "; Retract for peck",
+            "G1 Z" + peckZ.toFixed(decimal) + f"{rapidFeedGcode}",
+        ]
 
         def getX(p: Tuple[int, int]):
             return p[0] * scale + offsetX
@@ -550,9 +614,19 @@ class cam:
             y = -p[1] * scale + offsetY
 
             if flipXY is False:
-                result = " X" + ValWithUnit(x, "-").toFixed(decimal) + " Y" + ValWithUnit(y, "-").toFixed(decimal)
+                result = (
+                    " X"
+                    + ValWithUnit(x, "-").toFixed(decimal)
+                    + " Y"
+                    + ValWithUnit(y, "-").toFixed(decimal)
+                )
             else:
-                result = " X" + ValWithUnit(-y, "-").toFixed(decimal) + " Y" + ValWithUnit(x, "-").toFixed(decimal)
+                result = (
+                    " X"
+                    + ValWithUnit(-y, "-").toFixed(decimal)
+                    + " Y"
+                    + ValWithUnit(x, "-").toFixed(decimal)
+                )
 
             return result
 
@@ -572,7 +646,8 @@ class cam:
             separated_paths = tab_separator.separated_paths
             crosses_tabs = tab_separator.crosses_tabs
 
-            gcode += f"\n" + f"; Path {pathIndex+1}\n"
+            gcode.append("")
+            gcode.append(f"; Path {pathIndex+1}")
 
             currentZ = safeZ
             finishedZ = topZ
@@ -594,17 +669,17 @@ class cam:
 
                 if currentZ <= tabZ and ((not path.safe_to_close) or crosses_tabs):
                     if optype == "Peck":
-                        gcode += retractForPeck
+                        gcode.extend(retractForPeck)
                         currentZ = peckZ
                     else:
-                        gcode += retractGcode
+                        gcode.extend(retractGcode)
                         currentZ = safeZ
                 elif currentZ < safeZ and (not path.safe_to_close):
                     if optype == "Peck":
-                        gcode += retractForPeck
+                        gcode.extend(retractForPeck)
                         currentZ = peckZ
                     else:
-                        gcode += retractGcode
+                        gcode.extend(retractGcode)
                         currentZ = safeZ
 
                 # check this - what does it mean ???
@@ -613,12 +688,9 @@ class cam:
                 else:
                     currentZ = max(finishedZ, tabZ)
 
-                gcode += (
-                    "; Rapid to initial position\n"
-                    + "G1"
-                    + convertPoint(list(origPath.coords)[0])
-                    + rapidFeedGcode
-                    + "\n"
+                gcode.append("; Rapid to initial position")
+                gcode.append(
+                    "G1" + convertPoint(list(origPath.coords)[0]) + rapidFeedGcode
                 )
 
                 inTabsHeight = False
@@ -626,12 +698,14 @@ class cam:
                 if not crosses_tabs:
                     inTabsHeight = False
                     selectedPaths = [origPath]
-                    gcode += "G1 Z" + ValWithUnit(currentZ, "-").toFixed(decimal) + "\n"
+                    gcode.append("G1 Z" + ValWithUnit(currentZ, "-").toFixed(decimal))
                 else:
                     if nextZ >= tabZ:
                         inTabsHeight = False
                         selectedPaths = [origPath]
-                        gcode += "G1 Z" + ValWithUnit(currentZ, "-").toFixed(decimal) + "\n"
+                        gcode.append(
+                            "G1 Z" + ValWithUnit(currentZ, "-").toFixed(decimal)
+                        )
                     else:
                         inTabsHeight = True
                         selectedPaths = separated_paths
@@ -652,20 +726,39 @@ class cam:
 
                             pt1 = list(selectedPath.coords)[end - 1]
                             pt2 = list(selectedPath.coords)[end]
-                            totalDist += 2 * cam.dist(getX(pt1), getY(pt1), getX(pt2), getY(pt2))
+                            totalDist += 2 * cam.dist(
+                                getX(pt1), getY(pt1), getX(pt2), getY(pt2)
+                            )
 
                         if totalDist > 0:
-                            gcode += "; ramp\n"
-                            executedRamp = True
-
                             # rampPath = selectedPath.slice(0, end)
-                            rampPath = [list(selectedPath.coords)[k] for k in range(0, end)]
+                            rampPath = [
+                                list(selectedPath.coords)[k] for k in range(0, end)
+                            ]
 
                             # rampPathEnd = selectedPath.slice(0, end - 1).reverse()
-                            rampPathEnd = [list(selectedPath.coords)[k] for k in range(0, end - 1)]
+                            rampPathEnd = [
+                                list(selectedPath.coords)[k] for k in range(0, end - 1)
+                            ]
                             rampPathEnd.reverse()
 
                             rampPath = rampPath + rampPathEnd
+
+                            if inTabsHeight:
+                                # move to initial point of partial path
+                                gcode.append(
+                                    "; Tab: move to first point of partial path at safe height"
+                                )
+                                gcode.append("G1" + convertPoint(rampPath[1]))
+                                gcode.append("; plunge")
+                                gcode.append(
+                                    "G1 Z"
+                                    + ValWithUnit(nextZ, "-").toFixed(decimal)
+                                    + plungeFeedGcode
+                                )
+
+                            gcode.append("; ramp")
+                            executedRamp = True
 
                             distTravelled = 0
                             for i in range(1, len(rampPath)):
@@ -675,61 +768,72 @@ class cam:
                                     getX(rampPath[i]),
                                     getY(rampPath[i]),
                                 )
-                                newZ = currentZ + distTravelled / totalDist * (nextZ - currentZ)
-                                gcode += (
-                                    "G1" + convertPoint(rampPath[i]) + " Z" + ValWithUnit(newZ, "-").toFixed(decimal)
+                                newZ = currentZ + distTravelled / totalDist * (
+                                    nextZ - currentZ
+                                )
+                                gcode_line_start = (
+                                    "G1"
+                                    + convertPoint(rampPath[i])
+                                    + " Z"
+                                    + ValWithUnit(newZ, "-").toFixed(decimal)
                                 )
                                 if i == 1:
-                                    gcode += (
-                                        " F"
-                                        + ValWithUnit(min(totalDist / minPlungeTime, cutFeed), "-").toFixed(decimal)
-                                        + "\n"
+                                    gcode.append(
+                                        gcode_line_start
+                                        + " F"
+                                        + ValWithUnit(
+                                            min(totalDist / minPlungeTime, cutFeed), "-"
+                                        ).toFixed(decimal)
                                     )
                                 else:
-                                    gcode += "\n"
+                                    gcode.append(gcode_line_start)
 
                     if not inTabsHeight:
                         if not executedRamp:
-                            gcode += (
-                                "; plunge\n"
-                                + "G1 Z"
+                            gcode.append("; plunge")
+                            gcode.append(
+                                "G1 Z"
                                 + ValWithUnit(nextZ, "-").toFixed(decimal)
                                 + plungeFeedGcode
-                                + "\n"
                             )
 
                     if inTabsHeight:
                         # move to initial point of partial path
-                        gcode += "; Tab: move to first point of partial path at safe height \n"
-                        gcode += "G1" + convertPoint(list(selectedPath.coords)[0]) + "\n"
-                        gcode += (
-                            "; plunge\n" + "G1 Z" + ValWithUnit(nextZ, "-").toFixed(decimal) + plungeFeedGcode + "\n"
+                        gcode.append(
+                            "; Tab: move to first point of partial path at safe height"
+                        )
+                        gcode.append("G1" + convertPoint(list(selectedPath.coords)[0]))
+                        gcode.append("; plunge")
+                        gcode.append(
+                            "G1 Z"
+                            + ValWithUnit(nextZ, "-").toFixed(decimal)
+                            + plungeFeedGcode
                         )
 
                     currentZ = nextZ
 
-                    gcode += "; cut\n"
+                    gcode.append("; cut")
 
                     # on a given height, generate series of G1
                     for i, pt in enumerate(selectedPath.coords):
                         if i == 0:
                             continue
 
-                        gcode += "G1" + convertPoint(pt)
+                        gcode_line_start = "G1" + convertPoint(pt)
                         if i == 1:
-                            gcode += cutFeedGcode + "\n"
+                            gcode.append(gcode_line_start + " " + cutFeedGcode)
                         else:
-                            gcode += "\n"
+                            gcode.append(gcode_line_start)
 
                     if inTabsHeight:
                         # retract to safeZ before processing next separated_paths item
-                        gcode += retractGcode
+                        gcode.extend(retractGcode)
 
                 finishedZ = nextZ
 
-            gcode += retractGcode
+            gcode.extend(retractGcode)
 
-        return gcode
+        return "\n".join(gcode)
 
 
 class TabsSeparator:
@@ -790,7 +894,9 @@ class TabsSeparator:
         # print("splitted_paths", shapely_splitted_paths)
 
         if shapely_splitted_paths.geom_type == "LineString":
-            shapely_splitted_paths = shapely.geometry.MultiLineString([shapely_splitted_paths])
+            shapely_splitted_paths = shapely.geometry.MultiLineString(
+                [shapely_splitted_paths]
+            )
 
         paths: List[shapely.geometry.LineString] = list(shapely_splitted_paths.geoms)
 
@@ -800,19 +906,23 @@ class TabsSeparator:
 
         self.separated_paths = paths
 
-    def mergeCompatiblePaths(self, paths: List[shapely.geometry.LineString]) -> List[shapely.geometry.LineString]:
+    def mergeCompatiblePaths(
+        self, paths: List[shapely.geometry.LineString]
+    ) -> List[shapely.geometry.LineString]:
         """
         This is a post-processing step to shapely where calculated separated paths can be merged together,
         leading to less separated paths
         """
 
         # ------------------------------------------------------------------------------------------------
-        def pathsAreCompatible(path1: shapely.geometry.LineString, path2: shapely.geometry.LineString) -> bool:
+        def pathsAreCompatible(
+            path1: shapely.geometry.LineString, path2: shapely.geometry.LineString
+        ) -> bool:
             """
             test if the 2 paths have their end point/start point compatible (the same)
             """
-            boundary1_len = len(list(path1.boundary))
-            boundary2_len = len(list(path2.boundary))
+            boundary1_len = len(list(path1.boundary.geoms))
+            boundary2_len = len(list(path2.boundary.geoms))
 
             # print("boundary1_len =", boundary1_len)
             # print("boundary2_len =", boundary2_len)
@@ -820,8 +930,8 @@ class TabsSeparator:
             if boundary1_len == 0 or boundary2_len == 0:
                 return False
 
-            endPoint = path1.boundary[1]
-            startPoint = path2.boundary[0]
+            endPoint = path1.boundary.geoms[1]
+            startPoint = path2.boundary.geoms[0]
 
             return endPoint == startPoint
 
@@ -928,7 +1038,9 @@ class PocketCalculator:
         # MatplotLibUtils.MatplotlibDisplay("multipoly pocket init", self.multipoly, force=True)
 
         # the exterior
-        current = self.offsetMultiPolygon(multipoly, self.cutter_dia / 2, "left", consider_interiors_offsets=True)
+        current = self.offsetMultiPolygon(
+            multipoly, self.cutter_dia / 2, "left", consider_interiors_offsets=True
+        )
 
         # MatplotLibUtils.MatplotlibDisplay("multipoly pocket first offset", current, force=True)
 
@@ -1132,9 +1244,13 @@ class PocketCalculator:
             path = paths[closestPathIndex]
             paths[closestPathIndex] = []  # empty
             numLeft -= 1
-            needNew = ShapelyUtils.crosses(ext_lines, currentPoint, path[closestPointIndex])
+            needNew = ShapelyUtils.crosses(
+                ext_lines, currentPoint, path[closestPointIndex]
+            )
             if (not needNew) and int_multipoly:
-                needNew = ShapelyUtils.crosses(int_multipoly, currentPoint, path[closestPointIndex])
+                needNew = ShapelyUtils.crosses(
+                    int_multipoly, currentPoint, path[closestPointIndex]
+                )
 
             # JSCUT path = path.slice(closestPointIndex, len(path)).concat(path.slice(0, closestPointIndex))
             path = path[closestPointIndex:] + path[:closestPointIndex]

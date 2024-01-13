@@ -36,53 +36,53 @@ from val_with_unit import ValWithUnit
 
 
 class UnitConverter:
-    '''
-    '''
+    """ """
+
     def __init__(self, units: str):
-        '''
-        '''
+        """ """
         self.units = units
 
     def to_inch(self, x: float):
-        '''
+        """
         Convert x from the current unit to inch
-        '''
+        """
         if self.units == "inch":
             return x
         else:
             return x / 25.4
 
     def from_inch(self, x: float):
-        '''
+        """
         Convert x from inch to the current unit
-        '''
+        """
         if self.units == "inch":
             return ValWithUnit(x, "inch")
         else:
             return ValWithUnit(x * 25.4, "mm")
 
     def from_mm(self, x: float):
-        '''
+        """
         Convert x from mm to the current unit
-        '''
+        """
         if self.units == "inch":
             return ValWithUnit(x / 25.4, "inch")
         else:
             return ValWithUnit(x, "mm")
 
+
 class GcodeModel:
-    '''
-    '''
+    """ """
+
     ZERO_TOP_LEFT_OF_MATERIAL = 1
     ZERO_LOWER_LEFT_OF_MATERIAL = 2
     ZERO_LOWER_LEFT_OF_OP = 3
     ZERO_CENTER_OF_OP = 4
 
     XYRef = {
-        ZERO_TOP_LEFT_OF_MATERIAL : "ZERO_TOP_LEFT_OF_MATERIAL",
-        ZERO_LOWER_LEFT_OF_MATERIAL : "ZERO_LOWER_LEFT_OF_MATERIAL",
-        ZERO_LOWER_LEFT_OF_OP : "ZERO_LOWER_LEFT_OF_OP",
-        ZERO_CENTER_OF_OP : "ZERO_CENTER_OF_OP",
+        ZERO_TOP_LEFT_OF_MATERIAL: "ZERO_TOP_LEFT_OF_MATERIAL",
+        ZERO_LOWER_LEFT_OF_MATERIAL: "ZERO_LOWER_LEFT_OF_MATERIAL",
+        ZERO_LOWER_LEFT_OF_OP: "ZERO_LOWER_LEFT_OF_OP",
+        ZERO_CENTER_OF_OP: "ZERO_CENTER_OF_OP",
     }
 
     def __init__(self):
@@ -103,9 +103,10 @@ class GcodeModel:
 
         self.programEnd = False
 
+
 class SvgModel:
-    '''
-    '''
+    """ """
+
     # FIXME : read from the size file
     size_x = 100.0
     size_y = 100.0
@@ -113,9 +114,10 @@ class SvgModel:
     def __init__(self):
         self.pxPerInch = 96
 
+
 class ToolModel:
-    '''
-    '''
+    """ """
+
     def __init__(self):
         self.units = "inch"
         self.diameter = ValWithUnit(0.125, self.units)
@@ -127,20 +129,21 @@ class ToolModel:
         self.cutRate = ValWithUnit(40, self.units)
 
     def get_cam_data(self):
-        ''' 
-        convert to the gcode units FIXME actual per default mm 
-        '''
+        """
+        convert to the gcode units FIXME actual per default mm
+        """
         result = {
             "diameterTool": self.diameter.toMm(),
             "passdepth": self.passdepth.toMm(),
-            "overlap": self.overlap
+            "overlap": self.overlap,
         }
 
         return result
 
+
 class MaterialModel:
-    '''
-    '''
+    """ """
+
     def __init__(self):
         self.mat_units = "inch"
         self.mat_thickness = ValWithUnit(1.0, self.mat_units)
@@ -148,8 +151,8 @@ class MaterialModel:
         self.mat_clearance = ValWithUnit(0.1, self.mat_units)
 
         # from the svg size, the dimension of the material in mm
-        self.size_x = ValWithUnit(SvgModel.size_x, "mm") # default
-        self.size_y = ValWithUnit(SvgModel.size_x, "mm") # default
+        self.size_x = ValWithUnit(SvgModel.size_x, "mm")  # default
+        self.size_y = ValWithUnit(SvgModel.size_x, "mm")  # default
 
     def set_material_size_x(self, x: ValWithUnit):
         self.size_x = x.toMm()
@@ -162,7 +165,7 @@ class MaterialModel:
         if self.mat_z_origin == "Bottom":
             return 0
         else:
-            return - self.mat_thickness
+            return -self.mat_thickness
 
     @property
     def matTopZ(self):
@@ -178,20 +181,21 @@ class MaterialModel:
         else:
             return self.mat_thickness + self.mat_clearance
 
+
 class Tab:
-    '''
+    """
     a Tab is defined by a circle with position (x,y)
     and height from the buttom of the material
 
-    it's svg_path will be intersected with the toolpaths 
+    it's svg_path will be intersected with the toolpaths
     in case of 'Inside','Outside' and 'Engrave' - but ignored
     for 'Pocket'
-    '''
+    """
+
     height = ValWithUnit(2.0, "mm")
 
-    def __init__(self, tab: Dict[str, Any]) :
-        '''
-        '''
+    def __init__(self, tab: Dict[str, Any]):
+        """ """
         self.center = tab["center"]
         self.radius = tab["radius"]
 
@@ -201,13 +205,13 @@ class Tab:
 
     @classmethod
     def set_height(cls, heigth: float, units: str):
-        '''
+        """
         from the TabsModel, common for all the tabs
-        '''
+        """
         cls.height = ValWithUnit(heigth, units)
 
     def pos_inside_tab(self, x: float, y: float, z: float, op_cut_depth: float):
-        '''
+        """
         ---------------------- 0
 
                           ---- z is negativ
@@ -215,7 +219,7 @@ class Tab:
         ---------------------- height = 2
         ---------------------- op_cut_depth = 10
 
-        '''
+        """
         if op_cut_depth + z > self.height:
             # still above the tab
             return False
@@ -223,17 +227,17 @@ class Tab:
         dx = self.center.x - x
         dy = self.center.y - y
 
-        return (dx*dx + dy*dy <= self.radius*self.radius)
+        return dx * dx + dy * dy <= self.radius * self.radius
+
 
 class TabsModel:
-    '''
-    '''
-    def __init__(self, tabs: List[Dict[str, any]]):
+    """ """
 
+    def __init__(self, tabs: List[Dict[str, any]]):
         self.tabs: List[Dict[str, any]] = tabs
 
         self.units = "mm"  # default
-        self.height = ValWithUnit(2.0, self.units) # default
+        self.height = ValWithUnit(2.0, self.units)  # default
 
         Tab.set_height(self.height, self.units)
 
@@ -253,14 +257,15 @@ class TabsModel:
 
         return False
 
+
 class CncOp:
-    '''
-    '''
-    def __init__(self, operation: Dict[str,Any]):
-        self.units : str = operation["units"]
-        self.name : List[str] = operation["name"]
-        self.paths : List[str] = operation["paths"]
-        self.combinaison : str = operation["combinaison"]
+    """ """
+
+    def __init__(self, operation: Dict[str, Any]):
+        self.units: str = operation["units"]
+        self.name: List[str] = operation["name"]
+        self.paths: List[str] = operation["paths"]
+        self.combinaison: str = operation["combinaison"]
         self.ramp_plunge = operation["ramp_plunge"]
         self.cam_op = operation["type"]
         self.direction = operation["direction"]
@@ -279,45 +284,49 @@ class CncOp:
             self.width = None
 
         # the input
-        self.svg_paths : List[SvgPath] = [] # to fill at "setup"
+        self.svg_paths: List[SvgPath] = []  # to fill at "setup"
         # and the resulting svg paths from the combinaison, to be displayed in the svg viewer
-        self.geometry_svg_paths : List[SvgPath] = []
-        
+        self.geometry_svg_paths: List[SvgPath] = []
+
         # the resulting paths from the op type & combinaison setting + enabled svg paths
-        self.geometry : shapely.geometry.MultiPolygon | shapely.geometry.MultiLineString | shapely.geometry.MultiPoint = None
-        
+        self.geometry: shapely.geometry.MultiPolygon | shapely.geometry.MultiLineString | shapely.geometry.MultiPoint = (
+            None
+        )
+
         # the resulting tool paths
-        self.cam_paths : List[CamPath] = []
+        self.cam_paths: List[CamPath] = []
         # and the resulting tool paths, to be displayed in the svg viewer
-        self.cam_paths_svg_paths : List[SvgPath] = []
+        self.cam_paths_svg_paths: List[SvgPath] = []
 
     def put_value(self, attr: str, value: Any):
-        '''
-        '''
+        """ """
         setattr(self, attr, value)
 
     def __str__(self):
-        '''
-        '''
-        return "op: %s %s [%f] %s" % (self.name, self.cam_op, self.cut_depth, self.enabled)
+        """ """
+        return "op: %s %s [%f] %s" % (
+            self.name,
+            self.cam_op,
+            self.cut_depth,
+            self.enabled,
+        )
 
     def setup(self, svg_viewer: SvgViewer):
-        '''
-        '''
-        self.svg_paths = [ svg_viewer.svg_shapes[svg_path_id] for svg_path_id in self.paths ]
+        """ """
+        self.svg_paths = [
+            svg_viewer.svg_shapes[svg_path_id] for svg_path_id in self.paths
+        ]
 
-    def is_closed_paths_op(self) -> bool :
-        '''
-        '''
+    def is_closed_paths_op(self) -> bool:
+        """ """
         for svgpath in self.svg_paths:
             if not svgpath.closed:
                 return False
-        
+
         return True
-    
+
     def is_opened_paths_op(self) -> bool:
-        '''
-        '''
+        """ """
         for svgpath in self.svg_paths:
             if svgpath.closed:
                 return False
@@ -325,29 +334,29 @@ class CncOp:
         return True
 
     def combine_as_drill_or_peck(self):
-        '''
+        """
         generate the combinaison of the selected paths
 
         the generated geometry is a MultiPoint
-        '''
-        shapely_points : List[shapely.geometry.Point] = []
+        """
+        shapely_points: List[shapely.geometry.Point] = []
 
         for svgpath in self.svg_paths:
             # consider only circles
-            if svgpath.shape_tag == 'circle':
+            if svgpath.shape_tag == "circle":
                 shapely_point = svgpath.import_as_point()
                 shapely_points.append(shapely_point)
-        
+
         self.geometry = shapely.geometry.MultiPoint(shapely_points)
 
     def combine(self) -> None:
-        '''
+        """
         generate the combinaison of the selected paths
 
         the generated geometry is a MultiPolygon
-        '''
-        self.shapely_polygons : List[shapely.geometry.Polygon] = []
-        self.shapely_lines : List[shapely.geometry.LineString] = []
+        """
+        self.shapely_polygons: List[shapely.geometry.Polygon] = []
+        self.shapely_lines: List[shapely.geometry.LineString] = []
 
         for svg_path in self.svg_paths:
             shapely_polygons = svg_path.import_as_polygons_list()
@@ -355,7 +364,7 @@ class CncOp:
 
         if len(self.shapely_polygons) == 0:
             return
-        
+
         if len(self.shapely_polygons) == 1:
             self.geometry = shapely.geometry.MultiPolygon(self.shapely_polygons)
             return
@@ -371,11 +380,11 @@ class CncOp:
             geometry = o.difference(other)
         if self.combinaison == "Xor":
             geometry = o.symmetric_difference(other)
-        
+
         self.geometry = geometry
 
         # what!! result may be not well orienteted!!
-        if self.geometry.geom_type == 'Polygon':
+        if self.geometry.geom_type == "Polygon":
             # fix orientation
             self.geometry = ShapelyUtils.reorder_poly_points(self.geometry)
 
@@ -385,7 +394,7 @@ class CncOp:
             # fix orientation
             fixed_polys = []
             for poly in self.geometry.geoms:
-                if not poly.geom_type == 'Polygon':
+                if not poly.geom_type == "Polygon":
                     continue
                 # fix - do not start a poly from a convex corner
                 poly = ShapelyUtils.reorder_poly_points(poly)
@@ -395,18 +404,18 @@ class CncOp:
             self.geometry = shapely.geometry.MultiPolygon(fixed_polys)
 
     def combine_opened_paths(self) -> None:
-        '''
+        """
         generate the combinaison of the selected paths
 
         the generated geometry is a MultiPolygon
-        '''
-        self.shapely_polygons : List[shapely.geometry.Polygon] = []
-        self.shapely_lines : List[shapely.geometry.LineString] = []
+        """
+        self.shapely_polygons: List[shapely.geometry.Polygon] = []
+        self.shapely_lines: List[shapely.geometry.LineString] = []
 
         for svg_path in self.svg_paths:
             shapely_lines = svg_path.import_as_lines_list()
             self.shapely_lines += shapely_lines
-        
+
         if len(self.shapely_lines) == 1:
             self.geometry = shapely.geometry.MultiLineString(self.shapely_lines)
             return
@@ -422,15 +431,18 @@ class CncOp:
             geometry = o.difference(other)
         if self.combinaison == "Xor":
             geometry = o.symmetric_difference(other)
-        
+
         self.geometry = geometry
 
     def calculate_geometry(self, tool_model: ToolModel):
-        '''
-        '''
+        """ """
         if self.is_closed_paths_op():
-
-            if self.cam_op == "Pocket" or self.cam_op == "Inside" or self.cam_op == "Outside" or self.cam_op == "Engrave" :
+            if (
+                self.cam_op == "Pocket"
+                or self.cam_op == "Inside"
+                or self.cam_op == "Outside"
+                or self.cam_op == "Engrave"
+            ):
                 self.combine()
             if self.cam_op == "Drill" or self.cam_op == "Peck":
                 self.combine_as_drill_or_peck()
@@ -447,7 +459,6 @@ class CncOp:
                 self.calculate_preview_geometry_drill(tool_model)
 
         if self.is_opened_paths_op():
-
             self.combine_opened_paths()
 
             if self.cam_op == "Engrave":
@@ -458,130 +469,153 @@ class CncOp:
                 self.calculate_opened_paths_preview_geometry_outside(tool_model)
 
     def calculate_opened_paths_preview_geometry_engrave(self):
-        '''
-        '''
+        """ """
         for line in self.geometry.geoms:
-            svg_path = SvgPath.from_shapely_linestring("pycut_geometry_engrave", line, False)
+            svg_path = SvgPath.from_shapely_linestring(
+                "pycut_geometry_engrave", line, False
+            )
             self.geometry_svg_paths.append(svg_path)
 
     def calculate_opened_paths_preview_geometry_inside(self, tool_model: ToolModel):
-        '''
-        '''
+        """ """
         if self.geometry is not None:
             margin = self.margin.toMm()
 
             if margin != 0:
-                self.preview_geometry = ShapelyUtils.offsetMultiLine(self.geometry, margin, 'left')
+                self.preview_geometry = ShapelyUtils.offsetMultiLine(
+                    self.geometry, margin, "left"
+                )
             else:
                 self.preview_geometry = self.geometry
 
-            if self.preview_geometry.geom_type == 'LineString':
-                self.preview_geometry = shapely.geometry.MultiLineString([self.preview_geometry])
+            if self.preview_geometry.geom_type == "LineString":
+                self.preview_geometry = shapely.geometry.MultiLineString(
+                    [self.preview_geometry]
+                )
 
         self.geometry_svg_paths = []
-         
+
         for line in self.preview_geometry.geoms:
-            geometry_svg_path = SvgPath.from_shapely_linestring("pycut_geometry_inside", line, False)
+            geometry_svg_path = SvgPath.from_shapely_linestring(
+                "pycut_geometry_inside", line, False
+            )
             self.geometry_svg_paths.append(geometry_svg_path)
-        
+
     def calculate_opened_paths_preview_geometry_outside(self, tool_model: ToolModel):
-        '''
-        '''
+        """ """
         if self.geometry is not None:
             margin = self.margin.toMm()
 
             if margin != 0:
-                self.preview_geometry = ShapelyUtils.offsetMultiLine(self.geometry, margin, 'right')
+                self.preview_geometry = ShapelyUtils.offsetMultiLine(
+                    self.geometry, margin, "right"
+                )
             else:
                 self.preview_geometry = self.geometry
 
             # 'right' in 'inside', and 'left' is 'outside'  hopefully
-            if self.preview_geometry.geom_type == 'LineString':
-                self.preview_geometry = shapely.geometry.MultiLineString([self.preview_geometry])
+            if self.preview_geometry.geom_type == "LineString":
+                self.preview_geometry = shapely.geometry.MultiLineString(
+                    [self.preview_geometry]
+                )
 
         self.geometry_svg_paths = []
-         
+
         # should have 2 paths, one inner, one outer -> show the "ring"
         for line in self.preview_geometry.geoms:
-            geometry_svg_path = SvgPath.from_shapely_linestring("pycut_geometry_outside", line, False)
+            geometry_svg_path = SvgPath.from_shapely_linestring(
+                "pycut_geometry_outside", line, False
+            )
             self.geometry_svg_paths.append(geometry_svg_path)
 
     def calculate_preview_geometry_drill(self, tool_model: ToolModel):
-        '''
+        """
         as a pocket of diameter exactly cutter_dia
-        '''
+        """
         if self.geometry is not None:
-            shapely_polygons : List[shapely.geometry.Polygon] = []
+            shapely_polygons: List[shapely.geometry.Polygon] = []
             for pt in self.geometry.geoms:
                 center = pt.coords[0]
                 radius = tool_model.diameter / 2.0
 
-                svgpath =  SvgPath.from_circle_def(center, radius)
+                svgpath = SvgPath.from_circle_def(center, radius)
                 shapely_polygons += svgpath.import_as_polygons_list()
-            
+
             self.preview_geometry = shapely.geometry.MultiPolygon(shapely_polygons)
 
-
             for poly in self.preview_geometry.geoms:
-                geometry_svg_path = SvgPath.from_shapely_polygon("pycut_geometry_drill", poly)
+                geometry_svg_path = SvgPath.from_shapely_polygon(
+                    "pycut_geometry_drill", poly
+                )
                 self.geometry_svg_paths.append(geometry_svg_path)
 
     def calculate_preview_geometry_pocket(self):
-        '''
-        '''
+        """ """
         if self.geometry is not None:
             offset = self.margin.toMm()
 
             # 'left' in 'inside', and 'right' is 'outside'
             self.geometry = ShapelyUtils.orientMultiPolygon(self.geometry)
-            self.preview_geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, offset, 'left', consider_interiors_offsets=True)
-            
-            MatplotLibUtils.MatplotlibDisplay("preview pocket", self.preview_geometry)
-            
-            self.preview_geometry = ShapelyUtils.orientMultiPolygon(self.preview_geometry)
+            self.preview_geometry = ShapelyUtils.offsetMultiPolygon(
+                self.geometry, offset, "left", consider_interiors_offsets=True
+            )
 
-            MatplotLibUtils.MatplotlibDisplay("preview pocket - oriented", self.preview_geometry)
+            MatplotLibUtils.MatplotlibDisplay("preview pocket", self.preview_geometry)
+
+            self.preview_geometry = ShapelyUtils.orientMultiPolygon(
+                self.preview_geometry
+            )
+
+            MatplotLibUtils.MatplotlibDisplay(
+                "preview pocket - oriented", self.preview_geometry
+            )
 
             self.geometry_svg_paths = []
 
             for poly in self.preview_geometry.geoms:
-                geometry_svg_path = SvgPath.from_shapely_polygon("pycut_geometry_pocket", poly)
+                geometry_svg_path = SvgPath.from_shapely_polygon(
+                    "pycut_geometry_pocket", poly
+                )
                 self.geometry_svg_paths.append(geometry_svg_path)
-        
+
     def calculate_preview_geometry_inside(self, tool_model: ToolModel):
-        '''
-        '''
+        """ """
         toolData = tool_model.get_cam_data()
 
         if self.geometry is not None:
             margin = self.margin.toMm()
 
             width = self.width.toMm()
-  
+
             if width < toolData["diameterTool"]:
                 width = toolData["diameterTool"]
 
             if margin != 0:
-                geometry = ShapelyUtils.offsetMultiPolygon(self.geometry, margin, 'left')
+                geometry = ShapelyUtils.offsetMultiPolygon(
+                    self.geometry, margin, "left"
+                )
             else:
                 geometry = self.geometry
 
-            innergeometry = ShapelyUtils.offsetMultiPolygon(geometry, width, 'left')
+            innergeometry = ShapelyUtils.offsetMultiPolygon(geometry, width, "left")
             self.preview_geometry = geometry.difference(innergeometry)
 
-            if self.preview_geometry.geom_type == 'Polygon':
-                self.preview_geometry = shapely.geometry.MultiPolygon([self.preview_geometry])
+            if self.preview_geometry.geom_type == "Polygon":
+                self.preview_geometry = shapely.geometry.MultiPolygon(
+                    [self.preview_geometry]
+                )
 
         self.geometry_svg_paths = []
-         
+
         # should have 2 paths, one inner, one outer -> show the "ring"
         for poly in self.preview_geometry.geoms:
-            geometry_svg_path = SvgPath.from_shapely_polygon("pycut_geometry_pocket", poly)
+            geometry_svg_path = SvgPath.from_shapely_polygon(
+                "pycut_geometry_pocket", poly
+            )
             self.geometry_svg_paths.append(geometry_svg_path)
-        
+
     def calculate_preview_geometry_outside(self, tool_model: ToolModel):
-        '''
-        '''
+        """ """
         # shapely: first the outer, then the inner hole
         toolData = tool_model.get_cam_data()
 
@@ -595,38 +629,60 @@ class CncOp:
             margin_plus_width = margin + width
 
             # 'right' in 'inside', and 'left' is 'outside'  hopefully
-            geometry_outer = ShapelyUtils.offsetMultiPolygon(self.geometry, margin_plus_width, 'right', resolution=16, join_style=1, mitre_limit=5)
-            geometry_inner = ShapelyUtils.offsetMultiPolygon(self.geometry, margin           , 'right', resolution=16, join_style=1, mitre_limit=5)
-            
+            geometry_outer = ShapelyUtils.offsetMultiPolygon(
+                self.geometry,
+                margin_plus_width,
+                "right",
+                resolution=16,
+                join_style=1,
+                mitre_limit=5,
+            )
+            geometry_inner = ShapelyUtils.offsetMultiPolygon(
+                self.geometry,
+                margin,
+                "right",
+                resolution=16,
+                join_style=1,
+                mitre_limit=5,
+            )
+
             self.preview_geometry = geometry_outer.difference(geometry_inner)
 
-            if self.preview_geometry.geom_type == 'Polygon':
-                self.preview_geometry = shapely.geometry.MultiPolygon([self.preview_geometry])
+            ## DEBUG
+            # self.preview_geometry = geometry_outer
+            ## DEBUG
+
+            if self.preview_geometry.geom_type == "Polygon":
+                self.preview_geometry = shapely.geometry.MultiPolygon(
+                    [self.preview_geometry]
+                )
 
         self.geometry_svg_paths = []
-         
+
         # should have 2 paths, one inner, one outer -> show the "ring"
         for poly in self.preview_geometry.geoms:
-            geometry_svg_path = SvgPath.from_shapely_polygon("pycut_geometry_pocket", poly)
+            geometry_svg_path = SvgPath.from_shapely_polygon(
+                "pycut_geometry_pocket", poly
+            )
             self.geometry_svg_paths.append(geometry_svg_path)
 
     def calculate_preview_geometry_engrave(self):
-        '''
-        '''
+        """ """
         for poly in self.geometry.geoms:
             svg_path = SvgPath.from_shapely_polygon("pycut_geometry_engrave", poly)
             self.geometry_svg_paths.append(svg_path)
 
-    def calculate_toolpaths(self, svg_model: SvgModel, tool_model: ToolModel, material_model: MaterialModel):
-        '''
-        '''
+    def calculate_toolpaths(
+        self, svg_model: SvgModel, tool_model: ToolModel, material_model: MaterialModel
+    ):
+        """ """
         toolData = tool_model.get_cam_data()
 
-        #name = self.name
-        #ramp_plunge = self.ramp_plunge
+        # name = self.name
+        # ramp_plunge = self.ramp_plunge
         cam_op = self.cam_op
         direction = self.direction
-        #cut_depth = self.cut_depth
+        # cut_depth = self.cut_depth
         margin = self.margin
         width = self.width
 
@@ -634,7 +690,7 @@ class CncOp:
 
         offset = margin.toMm()
 
-        #if cam_op == "Outside" :
+        # if cam_op == "Outside" :
         #    #direction = "outer2inner"
         #    direction = "inner2outer"
         #    if direction == "outer2inner":
@@ -645,61 +701,88 @@ class CncOp:
         #        offset += width
         #    else:
         #        # start from the inner ring and cam in the outside dir
-        #        pass 
+        #        pass
 
-        if self.geometry.geom_type == 'MultiPoint':
-
+        if self.geometry.geom_type == "MultiPoint":
             if cam_op == "Drill":
                 self.cam_paths = cam.drill(geometry, toolData["diameterTool"])
-            elif cam_op == "Peck": 
+            elif cam_op == "Peck":
                 self.cam_paths = cam.peck(geometry, toolData["diameterTool"])
-        
-        if self.geometry.geom_type == 'MultiPolygon':
 
-            if cam_op != "Engrave" :
+        if self.geometry.geom_type == "MultiPolygon":
+            if cam_op != "Engrave":
                 # 'left' for Inside OR pocket, 'right' for Outside
-                geometry = ShapelyUtils.offsetMultiPolygon(geometry, offset, 'right' if cam_op == 'Outside' else 'left', consider_interiors_offsets = True)
+                geometry = ShapelyUtils.offsetMultiPolygon(
+                    geometry,
+                    offset,
+                    "right" if cam_op == "Outside" else "left",
+                    consider_interiors_offsets=True,
+                )
 
             if cam_op == "Pocket":
-                self.cam_paths = cam.pocket(geometry, toolData["diameterTool"], toolData["overlap"], direction == "Climb")
+                self.cam_paths = cam.pocket(
+                    geometry,
+                    toolData["diameterTool"],
+                    toolData["overlap"],
+                    direction == "Climb",
+                )
             elif cam_op == "Inside" or cam_op == "Outside":
                 width = width.toMm()
                 if width < toolData["diameterTool"]:
                     width = toolData["diameterTool"]
-                self.cam_paths = cam.outline(geometry, toolData["diameterTool"], cam_op == "Inside", width, toolData["overlap"], direction == "Climb")
+                self.cam_paths = cam.outline(
+                    geometry,
+                    toolData["diameterTool"],
+                    cam_op == "Inside",
+                    width,
+                    toolData["overlap"],
+                    direction == "Climb",
+                )
             elif cam_op == "Engrave":
                 self.cam_paths = cam.engrave(geometry, direction == "Climb")
 
-        if self.geometry.geom_type == 'MultiLineString':
-
+        if self.geometry.geom_type == "MultiLineString":
             if cam_op == "Engrave":
-                self.cam_paths = cam.engrave_opened_paths(geometry, direction == "Climb")
+                self.cam_paths = cam.engrave_opened_paths(
+                    geometry, direction == "Climb"
+                )
             elif cam_op == "Inside" or cam_op == "Outside":
                 geometry = self.preview_geometry
 
                 width = width.toMm()
                 if width < toolData["diameterTool"]:
                     width = toolData["diameterTool"]
-                self.cam_paths = cam.outline_opened_paths(geometry, toolData["diameterTool"], cam_op == "Inside", width, toolData["overlap"], direction == "Climb")
+                self.cam_paths = cam.outline_opened_paths(
+                    geometry,
+                    toolData["diameterTool"],
+                    cam_op == "Inside",
+                    width,
+                    toolData["overlap"],
+                    direction == "Climb",
+                )
 
         # -------------------------------------------------------------------------------------
 
         for cam_path in self.cam_paths:
-            svg_path = SvgPath.from_shapely_linestring("pycut_toolpath", cam_path.path, cam_path.safe_to_close)
+            svg_path = SvgPath.from_shapely_linestring(
+                "pycut_toolpath", cam_path.path, cam_path.safe_to_close
+            )
             self.cam_paths_svg_paths.append(svg_path)
 
+
 class JobModel:
-    '''
-    '''
-    def __init__(self,
+    """ """
+
+    def __init__(
+        self,
         svg_viewer: SvgViewer,
         cnc_ops: List[CncOp],
         material_model: MaterialModel,
         svg_model: SvgModel,
         tool_model: ToolModel,
         tabs_model: TabsModel,
-        gcode_model: GcodeModel):
-
+        gcode_model: GcodeModel,
+    ):
         self.svg_viewer = svg_viewer
 
         self.operations = cnc_ops
@@ -722,10 +805,12 @@ class JobModel:
 
     def calculate_operation_cam_paths(self):
         for op in self.operations:
-            if op.enabled :
+            if op.enabled:
                 op.setup(self.svg_viewer)
                 op.calculate_geometry(self.tool_model)
-                op.calculate_toolpaths(self.svg_model, self.tool_model, self.material_model)
+                op.calculate_toolpaths(
+                    self.svg_model, self.tool_model, self.material_model
+                )
 
     def find_min_max(self):
         minX = 0
@@ -735,7 +820,7 @@ class JobModel:
         foundFirst = False
 
         for op in self.operations:
-            if op.enabled and op.cam_paths != None :
+            if op.enabled and op.cam_paths != None:
                 for cam_path in op.cam_paths:
                     toolPath = cam_path.path
                     for point in toolPath.coords:
@@ -757,10 +842,9 @@ class JobModel:
         self.maxY = maxY
 
 
-
 class GcodeGenerator:
-    '''
-    '''
+    """ """
+
     def __init__(self, job: JobModel):
         self.job = job
 
@@ -781,9 +865,9 @@ class GcodeGenerator:
 
     @property
     def minX(self):
-        '''
+        """
         only display value after gcode generation
-        '''
+        """
         if self.flipXY == False:
             # normal case
             return self.unit_converter.from_mm(self.job.minX) + self.offsetX
@@ -793,9 +877,9 @@ class GcodeGenerator:
 
     @property
     def maxX(self):
-        '''
+        """
         only display value after gcode generation
-        '''
+        """
         if self.flipXY == False:
             # normal case
             return self.unit_converter.from_mm(self.job.maxX) + self.offsetX
@@ -805,24 +889,24 @@ class GcodeGenerator:
 
     @property
     def minY(self):
-        '''
+        """
         only display value after gcode generation
-        '''
+        """
         if self.flipXY == False:
             # normal case
-            return  -self.unit_converter.from_mm(self.job.maxY) + self.offsetY
+            return -self.unit_converter.from_mm(self.job.maxY) + self.offsetY
         else:
             # as flipped: is minX when "no flip"
             return self.unit_converter.from_mm(self.job.minX) + self.offsetX
 
     @property
     def maxY(self):
-        '''
+        """
         only display value after gcode generation
-        '''
+        """
         if self.flipXY == False:
             # normal case
-            return  -self.unit_converter.from_mm(self.job.minY) + self.offsetY
+            return -self.unit_converter.from_mm(self.job.minY) + self.offsetY
         else:
             # as flipped: is maxX when "no flip"
             return self.unit_converter.from_mm(self.job.maxX) + self.offsetX
@@ -848,13 +932,15 @@ class GcodeGenerator:
         self.generateGcodeAction()
 
     def generateGcode_zeroLowerLeftOfOp(self):
-        self.offsetX = - self.unit_converter.from_mm(self.job.minX)
-        self.offsetY = - self.unit_converter.from_mm(-self.job.maxY)
+        self.offsetX = -self.unit_converter.from_mm(self.job.minX)
+        self.offsetY = -self.unit_converter.from_mm(-self.job.maxY)
         self.generateGcodeAction()
 
     def generateGcode_zeroCenterOfOp(self):
-        self.offsetX = - self.unit_converter.from_mm((self.job.minX + self.job.maxX) / 2)
-        self.offsetY = - self.unit_converter.from_mm(-(self.job.minY + self.job.maxY) / 2)
+        self.offsetX = -self.unit_converter.from_mm((self.job.minX + self.job.maxX) / 2)
+        self.offsetY = -self.unit_converter.from_mm(
+            -(self.job.minY + self.job.maxY) / 2
+        )
         self.generateGcodeAction()
 
     def setXOffset(self, value: float):
@@ -870,7 +956,7 @@ class GcodeGenerator:
         self.generateGcodeAction()
 
     def generateGcodeAction(self):
-        cnc_ops: List['CncOp'] = []
+        cnc_ops: List["CncOp"] = []
         for cnc_op in self.job.operations:
             if cnc_op.enabled:
                 if len(cnc_op.cam_paths) > 0:
@@ -889,9 +975,9 @@ class GcodeGenerator:
         tabHeight = self.unit_converter.from_mm(self.tabs_model.height.toMm())
         peckZ = self.unit_converter.from_mm(1.0)
 
-        #if self.units == "inch":
+        # if self.units == "inch":
         #    scale = 1.0
-        #else:
+        # else:
         #    scale = 25.4
         scale = 1
 
@@ -901,7 +987,10 @@ class GcodeGenerator:
         else:
             gcode += "G21         ; Set units to mm\n"
         gcode += "G90         ; Absolute positioning\n"
-        gcode += "G1 Z%s    F%d      ; Move to clearance level\n" % (safeZ.toFixed(4), rapidRate)
+        gcode += "G1 Z%s    F%d      ; Move to clearance level\n" % (
+            safeZ.toFixed(4),
+            rapidRate,
+        )
 
         if self.gcode_model.spindleControl:
             gcode += f"\n; Start the spindle\n"
@@ -916,7 +1005,9 @@ class GcodeGenerator:
         for idx, cnc_op in enumerate(cnc_ops):
             cut_depth = self.unit_converter.from_mm(cnc_op.cut_depth.toMm())
             botZ = ValWithUnit(topZ - cut_depth, self.units)
-            tabZ = self.unit_converter.from_mm(topZ.toMm() - cut_depth.toMm() + tabHeight.toMm())
+            tabZ = self.unit_converter.from_mm(
+                topZ.toMm() - cut_depth.toMm() + tabHeight.toMm()
+            )
 
             nb_paths = len(cnc_op.cam_paths)  # in use!
 
@@ -934,31 +1025,33 @@ class GcodeGenerator:
 
             tabs = self.tabs_model.tabs
 
-            if cnc_op.cam_op == 'Pocket':
+            if cnc_op.cam_op == "Pocket":
                 # ignore tabs in pocket op
                 tabs = []
 
-            gcode += cam.getGcode({
-                "optype":         cnc_op.cam_op,
-                "paths":          cnc_op.cam_paths,
-                "ramp":           cnc_op.ramp_plunge,
-                "scale":          scale,
-                "offsetX":        self.offsetX,
-                "offsetY":        self.offsetY,
-                "decimal":        4,
-                "topZ":           topZ,
-                "botZ":           botZ,
-                "safeZ":          safeZ,
-                "passdepth":      passdepth,
-                "plungeFeed":     plungeRate,
-                "retractFeed":    rapidRate,
-                "cutFeed":        cutRate,
-                "rapidFeed":      rapidRate,
-                "tabs":           tabs,
-                "tabZ":           tabZ,
-                "peckZ":          peckZ,
-                "flipXY":         self.flipXY
-            })
+            gcode += cam.getGcode(
+                {
+                    "optype": cnc_op.cam_op,
+                    "paths": cnc_op.cam_paths,
+                    "ramp": cnc_op.ramp_plunge,
+                    "scale": scale,
+                    "offsetX": self.offsetX,
+                    "offsetY": self.offsetY,
+                    "decimal": 4,
+                    "topZ": topZ,
+                    "botZ": botZ,
+                    "safeZ": safeZ,
+                    "passdepth": passdepth,
+                    "plungeFeed": plungeRate,
+                    "retractFeed": rapidRate,
+                    "cutFeed": cutRate,
+                    "rapidFeed": rapidRate,
+                    "tabs": tabs,
+                    "tabZ": tabZ,
+                    "peckZ": peckZ,
+                    "flipXY": self.flipXY,
+                }
+            )
 
         if self.gcode_model.spindleControl:
             gcode += f"\n; Stop the spindle\n"
@@ -974,4 +1067,3 @@ class GcodeGenerator:
 
         self.gcode = gcode
         self.job.gcode = gcode
-
