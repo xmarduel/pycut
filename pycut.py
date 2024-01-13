@@ -42,7 +42,7 @@ gcodesimulator_python_glviewer.Drawable.set_pycut_prefix()
 
 import operations_tableview
 import tabs_tableview
-import settings.colorpicker as colorpicker
+import view_settings.colorpicker as colorpicker
 
 import material_widget
 
