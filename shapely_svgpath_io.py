@@ -77,7 +77,9 @@ class SvgPath:
         """
         data = io.StringIO(svg_str)
 
-        svg = svgelements.SVG.parse(data, reify=True, ppi=25.4)  # so that there is no "scaling" : 1 inch = 25.4 mm
+        svg = svgelements.SVG.parse(
+            data, reify=True, ppi=25.4
+        )  # so that there is no "scaling" : 1 inch = 25.4 mm
 
         paths = []
 
@@ -126,7 +128,9 @@ class SvgPath:
         return paths_map
 
     @classmethod
-    def from_svg_path_def(cls, d_def: str, p_id: str, shape_tag: str, shape_attrs: Dict[str, str]) -> "SvgPath":
+    def from_svg_path_def(
+        cls, d_def: str, p_id: str, shape_tag: str, shape_attrs: Dict[str, str]
+    ) -> "SvgPath":
         """
         Create a SvgPath
         """
@@ -324,7 +328,9 @@ class SvgPath:
                 # a new, independent multipoly
                 polyss_well_separated.append([poly])
 
-        multipolys = [shapely.geometry.MultiPolygon(polys) for polys in polyss_well_separated]
+        multipolys = [
+            shapely.geometry.MultiPolygon(polys) for polys in polyss_well_separated
+        ]
 
         return multipolys
 
@@ -473,7 +479,9 @@ class SvgPath:
         return path
 
     @classmethod
-    def from_shapely_polygon(cls, prefix: str, polygon: shapely.geometry.Polygon) -> "SvgPath":
+    def from_shapely_polygon(
+        cls, prefix: str, polygon: shapely.geometry.Polygon
+    ) -> "SvgPath":
         """ """
         path_str = polygon.svg(scale_factor=0.1)
         # gives an id
@@ -516,7 +524,9 @@ class SvgPath:
         return path
 
     @classmethod
-    def fix_simple_polygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon:
+    def fix_simple_polygon(
+        cls, polygon: shapely.geometry.Polygon
+    ) -> shapely.geometry.Polygon:
         """
         A simple polygon is a polygon without holes!
         """
@@ -565,7 +575,9 @@ class SvgPath:
         return None
 
     @classmethod
-    def fix_complex_poly(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon:
+    def fix_complex_poly(
+        cls, polygon: shapely.geometry.Polygon
+    ) -> shapely.geometry.Polygon:
         """
         A complex polygon is a polygon with holes!
         """
@@ -594,9 +606,14 @@ class SvgPath:
                 fixed_interiors.append(int_poly)
 
             ext_linestring = shapely.geometry.LineString(ext_poly.exterior)
-            holes_linestrings = [shapely.geometry.LineString(int_poly.exterior) for int_poly in fixed_interiors]
+            holes_linestrings = [
+                shapely.geometry.LineString(int_poly.exterior)
+                for int_poly in fixed_interiors
+            ]
 
-            fixed_poly = shapely.geometry.Polygon(ext_linestring, holes=holes_linestrings)
+            fixed_poly = shapely.geometry.Polygon(
+                ext_linestring, holes=holes_linestrings
+            )
 
         return fixed_poly
 
@@ -604,7 +621,9 @@ class SvgPath:
 class SvgPathDiscretizer:
     """ """
 
-    PYCUT_SAMPLE_LEN_COEFF = 10  # 10 points per "svg unit" ie arc of len 10 -> 100 pts discretization
+    PYCUT_SAMPLE_LEN_COEFF = (
+        10  # 10 points per "svg unit" ie arc of len 10 -> 100 pts discretization
+    )
     PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5  # is in jsCut 1
 
     def __init__(self, svg_path: svgelements.Path):
