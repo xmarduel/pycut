@@ -25,6 +25,8 @@ class MatplotLibUtils:
         # dispatch
         if geom.geom_type == "LineString":
             cls._MatplotlibDisplayLineString(title, geom)
+        if geom.geom_type == "LinearRing":
+            cls._MatplotlibDisplayLineString(title, geom)
         if geom.geom_type == "MultiLineString":
             cls._MatplotlibDisplayMultiLineString(title, geom)
         if geom.geom_type == "Polygon":
@@ -46,7 +48,9 @@ class MatplotLibUtils:
         return np.array(yy)
 
     @classmethod
-    def _MatplotlibDisplayLineString(cls, title: str, linestring: shapely.geometry.LineString):
+    def _MatplotlibDisplayLineString(
+        cls, title: str, linestring: shapely.geometry.LineString
+    ):
         """ """
         plt.figure(cls.cnt)
         plt.title(title)
@@ -66,7 +70,9 @@ class MatplotLibUtils:
         plt.show()
 
     @classmethod
-    def _MatplotlibDisplayMultiLineString(cls, title: str, multilinestring: shapely.geometry.MultiLineString):
+    def _MatplotlibDisplayMultiLineString(
+        cls, title: str, multilinestring: shapely.geometry.MultiLineString
+    ):
         """ """
         plt.figure(cls.cnt)
         plt.title(title)
@@ -133,7 +139,9 @@ class MatplotLibUtils:
         plt.show()
 
     @classmethod
-    def _MatplotlibDisplayMultiPolygon(cls, title: str, multipoly: shapely.geometry.MultiPolygon):
+    def _MatplotlibDisplayMultiPolygon(
+        cls, title: str, multipoly: shapely.geometry.MultiPolygon
+    ):
         """ """
         plt.figure(cls.cnt)
         plt.title(title)
@@ -179,7 +187,9 @@ class MatplotLibUtils:
         plt.show()
 
     @classmethod
-    def _MatplotlibDisplayGeometryCollection(cls, title: str, collection: shapely.geometry.GeometryCollection):
+    def _MatplotlibDisplayGeometryCollection(
+        cls, title: str, collection: shapely.geometry.GeometryCollection
+    ):
         """ """
         plt.figure(cls.cnt)
         plt.title(title)

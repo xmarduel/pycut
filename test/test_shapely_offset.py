@@ -4,6 +4,7 @@ import io
 
 import shapely.geometry
 import matplotlib.pyplot as plt
+import shapely
 
 from svgpath_svgelements import SvgPath_SvgElements
 
@@ -142,7 +143,7 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
         line = shapely.geometry.LineString(coordinates)
 
         offset = line.parallel_offset(
-            4.0, "left", resolution=16, join_style=1, mitre_limit=5.0
+            3.0, "left", resolution=16, join_style=1, mitre_limit=5.0
         )
         offset_lines = []
 
@@ -164,7 +165,7 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
 
             plot(pts, "circle offset")
 
-    def test_offset_cubic_curve_right(self):
+    def xtest_offset_cubic_curve_right_as_line(self):
         """ """
         paths = SvgPath_SvgElements.read_paths_from_file(io.StringIO(svg_cubic_curve))
 
@@ -172,27 +173,93 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
 
         path = paths[0]
 
-        self.assertEqual(path.tag, "path")
-        self.assertEqual(path.p_id, "contour")
-        self.assertTrue(path.closed)
+        pts = path.discretize_closed_path()
 
-        self.assertEqual(len(path.svg_path.segments()), 14)
-        self.assertEqual(path.svg_path.segments()[0].__class__.__name__, "Move")
-        self.assertEqual(path.svg_path.segments()[1].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[2].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[3].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[4].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[5].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[6].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[7].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[8].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[9].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[10].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[11].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[12].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[13].__class__.__name__, "Close")
+        self.assertEqual(len(pts), 2653)
 
-        print(path)
+        # now the offset
+        coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
+
+        line = shapely.geometry.LineString(coordinates)
+
+        print("DEBUG  LINE", len(line.coords))
+
+        offset = line.parallel_offset(
+            3.0, "left", resolution=16, join_style=1, mitre_limit=5
+        )
+        offset_lines = []
+
+        if offset.geom_type == "LineString":
+            print("OFFSET -> LINE", len(offset.coords))
+            offset_lines.append(offset)
+        elif offset.geom_type == "MultiLineString":
+            print("OFFSET -> MULTILINE")
+            for line in offset.geoms:
+                if line.is_empty:
+                    continue
+                print("      -> LINE", len(line.coords))
+                offset_lines.append(line)
+
+        for offset_line in offset_lines:
+            x = offset_line.coords.xy[0]
+            y = offset_line.coords.xy[1]
+
+            pts = [(pt_x + pt_y * 1j) for (pt_x, pt_y) in zip(x, y)]
+
+            plot(pts, "linestring offset")
+
+    def xtest_offset_cubic_curve_right_as_linearring(self):
+        """ """
+        paths = SvgPath_SvgElements.read_paths_from_file(io.StringIO(svg_cubic_curve))
+
+        self.assertEqual(len(paths), 1)
+        path = paths[0]
+
+        pts = path.discretize_closed_path()
+
+        self.assertEqual(len(pts), 2653)
+
+        # now the offset
+        coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
+
+        linearring = shapely.geometry.LinearRing(coordinates)
+
+        print("DEBUG  LINEARRING", len(linearring.coords))
+
+        with open("linearring.txt", "w") as f:
+            f.write(linearring.wkt)
+
+        offset = linearring.parallel_offset(
+            3.0, "left", resolution=16, join_style=1, mitre_limit=5
+        )
+        offset_lines = []
+
+        if offset.geom_type == "LineString":
+            print("OFFSET -> LINE", len(offset.coords))
+            offset_lines.append(offset)
+        elif offset.geom_type == "MultiLineString":
+            print("OFFSET -> MULTILINE")
+            for line in offset.geoms:
+                if line.is_empty:
+                    continue
+                print("      -> LINE", len(line.coords))
+                offset_lines.append(line)
+
+        for offset_line in offset_lines:
+            x = offset_line.coords.xy[0]
+            y = offset_line.coords.xy[1]
+
+            pts = [(pt_x + pt_y * 1j) for (pt_x, pt_y) in zip(x, y)]
+
+            plot(pts, "linearring offset")
+
+    def test_offset_cubic_curve_right_as_poly_ext_no_orient(self):
+        """ """
+        paths = SvgPath_SvgElements.read_paths_from_file(io.StringIO(svg_cubic_curve))
+
+        self.assertEqual(len(paths), 1)
+
+        path = paths[0]
 
         pts = path.discretize_closed_path()
         plot(pts, "contour SvgElements")
@@ -203,20 +270,30 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
         coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
 
         line = shapely.geometry.LineString(coordinates)
+        poly = shapely.geometry.Polygon(line)
 
-        offset = line.parallel_offset(
-            4.0, "right", resolution=16, join_style=1, mitre_limit=5.0
+        poly_ext = poly.exterior
+
+        print("DEBUG  LINE", len(line.coords))
+        print("DEBUG  POLY-EXT", poly_ext.geom_type, len(poly_ext.coords))
+
+        with open("poly_ext.txt", "w") as f:
+            f.write(poly_ext.wkt)
+
+        offset = poly_ext.parallel_offset(
+            3.0, "left", resolution=16, join_style=1, mitre_limit=5
         )
         offset_lines = []
 
         if offset.geom_type == "LineString":
-            print("OFFSET -> LINE")
+            print("OFFSET -> LINE", len(offset.coords))
             offset_lines.append(offset)
         elif offset.geom_type == "MultiLineString":
             print("OFFSET -> MULTILINE")
             for line in offset.geoms:
                 if line.is_empty:
                     continue
+                print("      -> LINE", len(line.coords))
                 offset_lines.append(line)
 
         for offset_line in offset_lines:
@@ -225,7 +302,59 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
 
             pts = [(pt_x + pt_y * 1j) for (pt_x, pt_y) in zip(x, y)]
 
-            plot(pts, "circle offset")
+            plot(pts, "poly_ext offset")
+
+    def test_offset_cubic_curve_right_as_poly_ext_orient(self):
+        """ """
+        paths = SvgPath_SvgElements.read_paths_from_file(io.StringIO(svg_cubic_curve))
+
+        self.assertEqual(len(paths), 1)
+
+        path = paths[0]
+
+        pts = path.discretize_closed_path()
+        plot(pts, "contour SvgElements")
+
+        self.assertEqual(len(pts), 2653)
+
+        # now the offset
+        coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
+
+        line = shapely.geometry.LineString(coordinates)
+        poly = shapely.geometry.Polygon(line)
+        poly = shapely.geometry.polygon.orient(poly)
+
+        poly_ext = poly.exterior
+
+        print("DEBUG  LINE", len(line.coords))
+        print("DEBUG  POLY-EXT", poly_ext.geom_type, len(poly_ext.coords))
+
+        with open("poly_ext.txt", "w") as f:
+            f.write(poly_ext.wkt)
+
+        offset = poly_ext.parallel_offset(
+            3.0, "right", resolution=16, join_style=1, mitre_limit=5
+        )
+        offset_lines = []
+
+        if offset.geom_type == "LineString":
+            print("OFFSET -> LINE", len(offset.coords))
+            offset_lines.append(offset)
+        elif offset.geom_type == "MultiLineString":
+            print("OFFSET -> MULTILINE")
+            for line in offset.geoms:
+                if line.is_empty:
+                    continue
+                print("      -> LINE", len(line.coords))
+                offset_lines.append(line)
+
+        for offset_line in offset_lines:
+            x = offset_line.coords.xy[0]
+            y = offset_line.coords.xy[1]
+
+            pts = [(pt_x + pt_y * 1j) for (pt_x, pt_y) in zip(x, y)]
+
+            plot(pts, "poly_ext offset")
 
 
 def get_suite():

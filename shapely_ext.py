@@ -52,7 +52,9 @@ class ShapelyMultiPolygonOffset:
         for poly in self.multipoly.geoms:
             linestring = shapely.geometry.LineString(poly.exterior)
 
-            # cnt = MatplotLibUtils.MatplotlibDisplay("offset - linestring to offset", linestring, force=True)
+            # cnt = MatplotLibUtils.MatplotlibDisplay(
+            #    "linestring to offset", linestring, force=True
+            # )
 
             # shapely 2.0 fix : if amount = 0
             if amount != 0.0:
@@ -66,7 +68,11 @@ class ShapelyMultiPolygonOffset:
             else:
                 ext_offset = shapely.geometry.LineString(linestring)
 
-            # cnt = MatplotLibUtils.MatplotlibDisplay("offset - as LineString|MultiLineString (from linestring)", ext_offset, force=True)
+            # cnt = MatplotLibUtils.MatplotlibDisplay(
+            #    "offset - as LineString|MultiLineString (from linestring)",
+            #    ext_offset,
+            #    force=True,
+            # )
 
             # simplfy resulting offset  !WICHTIG!
             # print("offset: ", ext_offset)
