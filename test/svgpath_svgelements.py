@@ -148,9 +148,8 @@ class SvgPath_SvgElements:
                     for p in range(1, nb_samples + 1):
                         _pts.append(segment.point(float(p) / float(nb_samples)))
 
-                _pts_complex = [complex(_pt.x, +_pt.y) for _pt in _pts]
-
-                pts = np.array(_pts_complex, dtype=np.complex128)
+                _pts = [complex(_pt.x, +_pt.y) for _pt in _pts]
+                pts = np.array(_pts, dtype=np.complex128)
 
             else:  # 'QuadraticBezier', 'CubicBezier'
                 seg_length = segment.length()
@@ -168,8 +167,7 @@ class SvgPath_SvgElements:
                     for p in range(1, nb_samples + 1):
                         _pts.append(segment.point(float(p) / float(nb_samples)))
 
-                _pts_complex = [complex(_pt.x, +_pt.y) for _pt in _pts]
-
+                _pts = [complex(_pt.x, +_pt.y) for _pt in _pts]
                 pts = np.array(_pts, dtype=np.complex128)
 
             points = np.concatenate((points, pts))
@@ -194,7 +192,7 @@ class SvgPath_SvgElements:
 
     def discretize_open_path(self) -> np.array:
         """
-        Transform the svg_path (a list of svgelement Path Segments) into a list of 'complex' points
+        Transform the svg_path (a list of svgelement Segments) into a list of 'complex' points
         - Line: only 2 points
         - Arc: discretize per hand
         - QuadraticBezier, CubicBezier: discretize per hand
@@ -274,6 +272,7 @@ class SvgPath_SvgElements:
                     for p in range(1, nb_samples + 1):
                         _pts.append(segment.point(float(p) / float(nb_samples)))
 
+                _pts = [complex(_pt.x, +_pt.y) for _pt in _pts]
                 pts = np.array(_pts, dtype=np.complex128)
 
             else:  # 'QuadraticBezier', 'CubicBezier'
@@ -292,6 +291,7 @@ class SvgPath_SvgElements:
                     for p in range(1, nb_samples + 1):
                         _pts.append(segment.point(float(p) / float(nb_samples)))
 
+                _pts = [complex(_pt.x, +_pt.y) for _pt in _pts]
                 pts = np.array(_pts, dtype=np.complex128)
 
             points = np.concatenate((points, pts))
