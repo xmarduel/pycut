@@ -590,9 +590,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         viewers_settings = {
             "svg_viewer": self.svg_viewer.get_settings(),
             "gcode_viewer": {},
-            "gcode_simulator": {
-                gcodesimulator_python_glviewer.GCodeSimulatorSettings.get_settings()
-            },
+            "gcode_simulator": gcodesimulator_python_glviewer.GCodeSimulatorSettings.get_settings(),
         }
 
         return viewers_settings
