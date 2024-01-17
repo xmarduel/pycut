@@ -25,7 +25,7 @@ Dependencies
 - shapely 1.8.4 with PyOpenGL (latest)
 - svgelements (latest)
 - lxml (latest)
-- freetype-py (latest) - used in svgtext2svpath.py utility
+- freetype-py (latest) - used in svgtext2svgpath.py utility
 - matplotlib 3.6.2 - to debug/view shapely offsets ops
 - numba (latest) - for python simulator optimization
 
