@@ -65,7 +65,7 @@ class SvgPath:
     - a svg path can describe 1 or more Polygons, Polygons may have holes
 
     Convention:
-    - a (instance) path from svgelements is noted: svg_path
+    - a (instance) path from svgelements is noted: svgelt_path
     - a (string) svg <path> definition is noted: svg_path_d
 
     """
@@ -161,20 +161,20 @@ class SvgPath:
 
         return path
 
-    def __init__(self, svg_path: svgelements.Path, orig_svg_str=None):
+    def __init__(self, svgelt_path: svgelements.Path, orig_svg_str=None):
         """ """
-        self.svg_path = svg_path
+        self.svgelt_path = svgelt_path
 
-        self.p_d = svg_path.d()
-        self.p_id = svg_path.values.get("id", "?")
+        self.p_d = svgelt_path.d()
+        self.p_id = svgelt_path.values.get("id", "?")
         self.closed = self.eval_closed()
 
-        self.shape_tag = svg_path.values["tag"]
+        self.shape_tag = svgelt_path.values["tag"]
 
         # I do not quite understand how the 'real' attributes are got from
         # They are **not** the xml attributes in all cases...
 
-        self.shape_attrs = copy.deepcopy(svg_path.values["attributes"])
+        self.shape_attrs = copy.deepcopy(svgelt_path.values["attributes"])
 
         if "tag" in self.shape_attrs:
             del self.shape_attrs["tag"]
@@ -201,15 +201,15 @@ class SvgPath:
 
     def eval_closed(self):
         """ """
-        return self.svg_path.segments()[-1].__class__.__name__ == "Close"
+        return self.svgelt_path.segments()[-1].__class__.__name__ == "Close"
 
     def discretize_closed_path(self) -> np.array:
         """ """
-        return SvgPathDiscretizer(self.svg_path).discretize_closed_path()
+        return SvgPathDiscretizer(self.svgelt_path).discretize_closed_path()
 
     def discretize_open_path(self) -> np.array:
         """ """
-        return SvgPathDiscretizer(self.svg_path).discretize_open_path()
+        return SvgPathDiscretizer(self.svgelt_path).discretize_open_path()
 
     def _is_simple_path(self) -> bool:
         """
@@ -238,7 +238,7 @@ class SvgPath:
         where all subpaths of the object list are a 'simple' paths
         """
         # make all "m" -> "M" for the subpaths
-        path_abs = self.svg_path.d(relative=False)  # thanks svgelements!
+        path_abs = self.svgelt_path.d(relative=False)  # thanks svgelements!
 
         # it's easy now
         subpaths = path_abs.split("M")
@@ -626,9 +626,9 @@ class SvgPathDiscretizer:
     )
     PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5  # is in jsCut 1
 
-    def __init__(self, svg_path: svgelements.Path):
+    def __init__(self, svgelt_path: svgelements.Path):
         """ """
-        self.svg_path = svg_path
+        self.svgelt_path = svgelt_path
 
     @classmethod
     def set_arc_precision(cls, arc_precision: float):
@@ -642,14 +642,14 @@ class SvgPathDiscretizer:
 
     def discretize(self) -> np.array:
         """ """
-        if self.svg_path.closed:
+        if self.svgelt_path.closed:
             return self.discretize_closed_path()
         else:
             return self.discretize_open_path()
 
     def discretize_closed_path(self) -> np.array:
         """
-        Transform the svg_path (a list of svgelement Segments) into a list of 'complex' points
+        Transform the svgelt_path (a list of svgelement Segments) into a list of 'complex' points
         - Line: only 2 points
         - Arc: discretize per hand
         - QuadraticBezier, CubicBezier: discretize per hand
@@ -695,7 +695,7 @@ class SvgPathDiscretizer:
 
         first_seg = True
 
-        for k, segment in enumerate(self.svg_path):
+        for k, segment in enumerate(self.svgelt_path):
             if segment.__class__.__name__ == "Move":
                 continue
             if segment.__class__.__name__ == "Close":
@@ -775,7 +775,7 @@ class SvgPathDiscretizer:
 
     def discretize_open_path(self) -> np.array:
         """
-        Transform the svg_path (a list of svgelement Segments) into a list of 'complex' points
+        Transform the svgelt_path (a list of svgelement Segments) into a list of 'complex' points
         - Line: only 2 points
         - Arc: discretize per hand
         - QuadraticBezier, CubicBezier: discretize per hand
@@ -818,7 +818,7 @@ class SvgPathDiscretizer:
 
         first_seg = True
 
-        for k, segment in enumerate(self.svg_path):
+        for k, segment in enumerate(self.svgelt_path):
             if segment.__class__.__name__ == "Move":
                 continue
             if segment.__class__.__name__ == "Close":

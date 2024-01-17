@@ -129,7 +129,7 @@
     },
     "CurveToLineConversion": {
       "minimum_segments": 5,
-      "minimum_segments_length": 0.01
+      "minimum_segments_length": 0.15
     },
     "GCodeConversion": {
       "units": "mm",

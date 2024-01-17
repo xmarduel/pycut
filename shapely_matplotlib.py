@@ -14,6 +14,25 @@ class MatplotLibUtils:
     cnt = 1  # matplotlib figures
 
     @classmethod
+    def plot(cls, pts: any, title: str, style: str = "ro-"):
+        """ """
+        plt.figure(cls.cnt)
+        plt.title(title)
+
+        xx = [pt.real for pt in pts]
+        yy = [pt.imag for pt in pts]
+
+        plt.plot(xx, yy, style)
+
+        plt.axis("equal")
+        plt.show()
+
+    @classmethod
+    def plot_geom(cls, title: str, geom: any, force: bool = False) -> int:
+        """ """
+        return cls.MatplotlibDisplay(title, geom, force)
+
+    @classmethod
     def MatplotlibDisplay(cls, title: str, geom: any, force: bool = False) -> int:
         """ """
         # a counter
@@ -52,22 +71,15 @@ class MatplotLibUtils:
         cls, title: str, linestring: shapely.geometry.LineString
     ):
         """ """
-        plt.figure(cls.cnt)
-        plt.title(title)
+        xs = linestring.coords.xy[0]
+        ys = linestring.coords.xy[1]
 
-        x = linestring.coords.xy[0]
-        y = linestring.coords.xy[1]
+        ys = cls.rectify_y(ys)
 
-        y = cls.rectify_y(y)
+        _pts = [complex(x, y) for x, y in zip(xs, ys)]
+        pts = np.array(_pts, dtype=np.complex128)
 
-        # plot
-        style = {
-            0: "bo-",
-        }
-
-        plt.axis("equal")
-        plt.plot(x, y, style[0])
-        plt.show()
+        cls.plot(pts, title, "bo-")
 
     @classmethod
     def _MatplotlibDisplayMultiLineString(
