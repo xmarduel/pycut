@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "TEST DRESSUP",
             "type": "python",
@@ -241,6 +242,15 @@
             "type": "python",
             "request": "launch",
             "program": "test_svgpath_discretisation.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\test",
+            "args": []
+        },
+        {
+            "name": "PYCUT UNITTEST OFFSET",
+            "type": "python",
+            "request": "launch",
+            "program": "test_shapely_offset.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\test",
             "args": []

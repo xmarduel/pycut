@@ -1,7 +1,7 @@
 [
+  "misc_private/unimat_cnc_kit/dc_motor_holder_contour.json",
   "misc_private/unimat_cnc_kit/dc_motor_holder.json",
   "jobs/cnc1419_vise1_2shafts.json",
   "jobs/holes.json",
-  "jobs/cnc1419-vise1-fixed-part-screws.json",
-  "jobs/cnc_three_rects.json"
+  "jobs/cnc1419-vise1-fixed-part-screws.json"
 ]

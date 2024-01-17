@@ -77,8 +77,8 @@
 	    </g>
 		
 		<g id="backlash_hoöe_part_middle" transform="translate(37.5,100)">
-		  <!-- 25mm large => pocket 15mm deep -->
-		  <circle  id="leadscrew-middle" r="7.5"/>
+		   <!-- 15mm large => pocket 20mm deep -->
+		  <circle  id="leadscrew-middle" r="7.0" style="fill:green"/>
 		</g>
 		  
 	  </g>
@@ -88,17 +88,18 @@
 		<rect id="part_2" style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.2" width="25" height="200" x="25" y="0" />
 		<rect id="part_3" style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.2" width="25" height="200" x="50" y="0" />
 		<line id="part2_schlitz_A" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="44" y1="0"  x2="44"  y2="200"/>
-		<line id="part2_schlitz_B" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="47" y1="25"  x2="47"  y2="175"/>
-		<line id="part2_schlitz_B1" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="50" y1="25"  x2="47"  y2="25"/>
-		<line id="part2_schlitz_B2" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="50" y1="175"  x2="47"  y2="175"/>
+		<line id="part2_schlitz_B" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="47" y1="30"  x2="47"  y2="170"/>
+		<line id="part2_schlitz_B1" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="50" y1="30"  x2="47"  y2="30"/>
+		<line id="part2_schlitz_B2" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="50" y1="170"  x2="47"  y2="170"/>
 		<line id="part3_schlitz_A" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="56" y1="0"  x2="56"  y2="200"/>
-		<line id="part3_schlitz_B" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="53" y1="25"  x2="53"  y2="175"/>
-		<line id="part3_schlitz_B1" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="50" y1="25"  x2="53"  y2="25"/>
-		<line id="part3_schlitz_B2" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="50" y1="175"  x2="53"  y2="175"/>
+		<line id="part3_schlitz_B" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="53" y1="30"  x2="53"  y2="170"/>
+		<line id="part3_schlitz_B1" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="50" y1="30"  x2="53"  y2="30"/>
+		<line id="part3_schlitz_B2" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="50" y1="170"  x2="53"  y2="170"/>
 		
+		<!--
 		<line id="indic1" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="-55" y1="21"  x2="50"  y2="21"/>
 		<line id="indic2" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="-55" y1="179"  x2="50"  y2="179"/>
-		
+		-->
 		
   	    <g id="fixing_screws_holes_part1" transform="translate(12.5,0)">
 	      <!-- 25 mm depth: cut through -->
