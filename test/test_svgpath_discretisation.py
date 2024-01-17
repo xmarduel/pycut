@@ -115,23 +115,23 @@ class SvgElementsTests(unittest.TestCase):
         self.assertEqual(len(paths), 1)
         path = paths[0]
 
-        self.assertEqual(path.svg_path.values["tag"], "rect")
+        self.assertEqual(path.shape_tag, "rect")
         self.assertEqual(path.p_id, "rect")
         self.assertEqual(path.closed, True)
 
-        print("RECT len = ", path.svg_path.length())
+        print("RECT len = ", path.svgelt_path.length())
 
-        self.assertEqual(len(path.svg_path.segments()), 10)
-        self.assertEqual(path.svg_path.segments()[0].__class__.__name__, "Move")
-        self.assertEqual(path.svg_path.segments()[1].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path.segments()[2].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[3].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path.segments()[4].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[5].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path.segments()[6].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[7].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path.segments()[8].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[9].__class__.__name__, "Close")
+        self.assertEqual(len(path.svgelt_path.segments()), 10)
+        self.assertEqual(path.svgelt_path.segments()[0].__class__.__name__, "Move")
+        self.assertEqual(path.svgelt_path.segments()[1].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path.segments()[2].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path.segments()[3].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path.segments()[4].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path.segments()[5].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path.segments()[6].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path.segments()[7].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path.segments()[8].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path.segments()[9].__class__.__name__, "Close")
 
         pts = path.discretize_closed_path()
 
@@ -144,19 +144,19 @@ class SvgElementsTests(unittest.TestCase):
         self.assertEqual(len(paths), 1)
         path = paths[0]
 
-        self.assertEqual(path.svg_path.values["tag"], "circle")
+        self.assertEqual(path.shape_tag, "circle")
         self.assertEqual(path.p_id, "circle")
         self.assertEqual(path.closed, True)
 
-        print("CIRCLE len = ", path.svg_path.length())
+        print("CIRCLE len = ", path.svgelt_path.length())
 
-        self.assertEqual(len(path.svg_path.segments()), 6)
-        self.assertEqual(path.svg_path.segments()[0].__class__.__name__, "Move")
-        self.assertEqual(path.svg_path.segments()[1].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[2].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[3].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[4].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[5].__class__.__name__, "Close")
+        self.assertEqual(len(path.svgelt_path.segments()), 6)
+        self.assertEqual(path.svgelt_path.segments()[0].__class__.__name__, "Move")
+        self.assertEqual(path.svgelt_path.segments()[1].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path.segments()[2].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path.segments()[3].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path.segments()[4].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path.segments()[5].__class__.__name__, "Close")
 
         pts = path.discretize_closed_path()
 
@@ -172,19 +172,19 @@ class SvgElementsTests(unittest.TestCase):
         self.assertEqual(len(paths), 1)
         path = paths[0]
 
-        self.assertEqual(path.svg_path.values["tag"], "ellipse")
+        self.assertEqual(path.shape_tag, "ellipse")
         self.assertEqual(path.p_id, "ellipse")
         self.assertEqual(path.closed, True)
 
-        print("ELLIPSE len = ", path.svg_path.length())
+        print("ELLIPSE len = ", path.svgelt_path.length())
 
-        self.assertEqual(len(path.svg_path.segments()), 6)
-        self.assertEqual(path.svg_path.segments()[0].__class__.__name__, "Move")
-        self.assertEqual(path.svg_path.segments()[1].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[2].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[3].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[4].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[5].__class__.__name__, "Close")
+        self.assertEqual(len(path.svgelt_path.segments()), 6)
+        self.assertEqual(path.svgelt_path.segments()[0].__class__.__name__, "Move")
+        self.assertEqual(path.svgelt_path.segments()[1].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path.segments()[2].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path.segments()[3].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path.segments()[4].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path.segments()[5].__class__.__name__, "Close")
 
         pts = path.discretize_closed_path()
 
@@ -197,15 +197,15 @@ class SvgElementsTests(unittest.TestCase):
         self.assertEqual(len(paths), 1)
         path = paths[0]
 
-        self.assertEqual(path.svg_path.values["tag"], "line")
+        self.assertEqual(path.shape_tag, "line")
         self.assertEqual(path.p_id, "line")
         self.assertEqual(path.closed, False)
 
-        print("LINE len = ", path.svg_path.length())
+        print("LINE len = ", path.svgelt_path.length())
 
-        self.assertEqual(len(path.svg_path.segments()), 2)
-        self.assertEqual(path.svg_path.segments()[0].__class__.__name__, "Move")
-        self.assertEqual(path.svg_path.segments()[1].__class__.__name__, "Line")
+        self.assertEqual(len(path.svgelt_path.segments()), 2)
+        self.assertEqual(path.svgelt_path.segments()[0].__class__.__name__, "Move")
+        self.assertEqual(path.svgelt_path.segments()[1].__class__.__name__, "Line")
 
         pts = path.discretize_open_path()
 
@@ -218,17 +218,17 @@ class SvgElementsTests(unittest.TestCase):
         self.assertEqual(len(paths), 1)
         path = paths[0]
 
-        self.assertEqual(path.svg_path.values["tag"], "polyline")
+        self.assertEqual(path.shape_tag, "polyline")
         self.assertEqual(path.p_id, "polyline")
         self.assertEqual(path.closed, False)
 
-        print("POLYLINE len = ", path.svg_path.length())
+        print("POLYLINE len = ", path.svgelt_path.length())
 
-        self.assertEqual(len(path.svg_path.segments()), 4)
-        self.assertEqual(path.svg_path.segments()[0].__class__.__name__, "Move")
-        self.assertEqual(path.svg_path.segments()[1].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path.segments()[2].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path.segments()[3].__class__.__name__, "Line")
+        self.assertEqual(len(path.svgelt_path.segments()), 4)
+        self.assertEqual(path.svgelt_path.segments()[0].__class__.__name__, "Move")
+        self.assertEqual(path.svgelt_path.segments()[1].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path.segments()[2].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path.segments()[3].__class__.__name__, "Line")
 
         pts = path.discretize_open_path()
 
@@ -241,18 +241,18 @@ class SvgElementsTests(unittest.TestCase):
         self.assertEqual(len(paths), 1)
         path = paths[0]
 
-        self.assertEqual(path.svg_path.values["tag"], "polygon")
+        self.assertEqual(path.shape_tag, "polygon")
         self.assertEqual(path.p_id, "polygon1")
         self.assertEqual(path.closed, True)
 
-        print("POLYGON-1 len = ", path.svg_path.length())
+        print("POLYGON-1 len = ", path.svgelt_path.length())
 
-        self.assertEqual(len(path.svg_path.segments()), 5)
-        self.assertEqual(path.svg_path.segments()[0].__class__.__name__, "Move")
-        self.assertEqual(path.svg_path.segments()[1].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path.segments()[2].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path.segments()[3].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path.segments()[4].__class__.__name__, "Close")
+        self.assertEqual(len(path.svgelt_path.segments()), 5)
+        self.assertEqual(path.svgelt_path.segments()[0].__class__.__name__, "Move")
+        self.assertEqual(path.svgelt_path.segments()[1].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path.segments()[2].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path.segments()[3].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path.segments()[4].__class__.__name__, "Close")
 
         pts = path.discretize_closed_path()
         """
@@ -267,18 +267,18 @@ class SvgElementsTests(unittest.TestCase):
         self.assertEqual(len(paths), 1)
         path = paths[0]
 
-        self.assertEqual(path.svg_path.values["tag"], "polygon")
+        self.assertEqual(path.shape_tag, "polygon")
         self.assertEqual(path.p_id, "polygon2")
         self.assertEqual(path.closed, True)
 
-        print("POLYGON-2 len = ", path.svg_path.length())
+        print("POLYGON-2 len = ", path.svgelt_path.length())
 
-        self.assertEqual(len(path.svg_path.segments()), 4)
+        self.assertEqual(len(path.svgelt_path.segments()), 4)
         # yes , only 2 lines, hopefully the discretisation is ok...
-        self.assertEqual(path.svg_path.segments()[0].__class__.__name__, "Move")
-        self.assertEqual(path.svg_path.segments()[1].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path.segments()[2].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path.segments()[3].__class__.__name__, "Close")
+        self.assertEqual(path.svgelt_path.segments()[0].__class__.__name__, "Move")
+        self.assertEqual(path.svgelt_path.segments()[1].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path.segments()[2].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path.segments()[3].__class__.__name__, "Close")
 
         pts = path.discretize_closed_path()
         """
@@ -295,33 +295,33 @@ class SvgElementsTests(unittest.TestCase):
         self.assertEqual(len(paths), 1)
         path = paths[0]
 
-        self.assertEqual(path.svg_path.values["tag"], "path")
+        self.assertEqual(path.shape_tag, "path")
         self.assertEqual(path.p_id, "contour")
         self.assertEqual(path.closed, True)
 
-        print("PATH len = ", path.svg_path.length())
+        print("PATH len = ", path.svgelt_path.length())
 
-        self.assertEqual(len(path.svg_path.segments()), 20)
-        self.assertEqual(path.svg_path[0].__class__.__name__, "Move")
-        self.assertEqual(path.svg_path[1].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path[2].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path[3].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path[4].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path[5].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path[6].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path[7].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path[8].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path[9].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path[10].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path[11].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path[12].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path[13].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path[14].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path[15].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path[16].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path[17].__class__.__name__, "Line")
-        self.assertEqual(path.svg_path[18].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path[19].__class__.__name__, "Close")
+        self.assertEqual(len(path.svgelt_path.segments()), 20)
+        self.assertEqual(path.svgelt_path[0].__class__.__name__, "Move")
+        self.assertEqual(path.svgelt_path[1].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path[2].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path[3].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path[4].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path[5].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path[6].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path[7].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path[8].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path[9].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path[10].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path[11].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path[12].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path[13].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path[14].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path[15].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path[16].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path[17].__class__.__name__, "Line")
+        self.assertEqual(path.svgelt_path[18].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path[19].__class__.__name__, "Close")
 
         pts = path.discretize_closed_path()
         self.assertEqual(len(pts), 1085)
@@ -337,27 +337,43 @@ class SvgElementsTests(unittest.TestCase):
         self.assertEqual(len(paths), 1)
         path = paths[0]
 
-        self.assertEqual(path.svg_path.values["tag"], "path")
+        self.assertEqual(path.shape_tag, "path")
         self.assertEqual(path.p_id, "contour")
         self.assertEqual(path.closed, True)
 
-        print("CUBIC-CURVE len = ", path.svg_path.length())
+        print("CUBIC-CURVE len = ", path.svgelt_path.length())
 
-        self.assertEqual(len(path.svg_path.segments()), 14)
-        self.assertEqual(path.svg_path.segments()[0].__class__.__name__, "Move")
-        self.assertEqual(path.svg_path.segments()[1].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[2].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[3].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[4].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[5].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[6].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[7].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[8].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[9].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[10].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[11].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[12].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[13].__class__.__name__, "Close")
+        self.assertEqual(len(path.svgelt_path.segments()), 14)
+        self.assertEqual(path.svgelt_path.segments()[0].__class__.__name__, "Move")
+        self.assertEqual(
+            path.svgelt_path.segments()[1].__class__.__name__, "CubicBezier"
+        )
+        self.assertEqual(
+            path.svgelt_path.segments()[2].__class__.__name__, "CubicBezier"
+        )
+        self.assertEqual(path.svgelt_path.segments()[3].__class__.__name__, "Arc")
+        self.assertEqual(
+            path.svgelt_path.segments()[4].__class__.__name__, "CubicBezier"
+        )
+        self.assertEqual(
+            path.svgelt_path.segments()[5].__class__.__name__, "CubicBezier"
+        )
+        self.assertEqual(path.svgelt_path.segments()[6].__class__.__name__, "Arc")
+        self.assertEqual(
+            path.svgelt_path.segments()[7].__class__.__name__, "CubicBezier"
+        )
+        self.assertEqual(
+            path.svgelt_path.segments()[8].__class__.__name__, "CubicBezier"
+        )
+        self.assertEqual(path.svgelt_path.segments()[9].__class__.__name__, "Arc")
+        self.assertEqual(
+            path.svgelt_path.segments()[10].__class__.__name__, "CubicBezier"
+        )
+        self.assertEqual(
+            path.svgelt_path.segments()[11].__class__.__name__, "CubicBezier"
+        )
+        self.assertEqual(path.svgelt_path.segments()[12].__class__.__name__, "Arc")
+        self.assertEqual(path.svgelt_path.segments()[13].__class__.__name__, "Close")
 
         pts = path.discretize_closed_path()
         self.assertEqual(len(pts), 2653)

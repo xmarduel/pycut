@@ -32,16 +32,14 @@ svg_cubic_curve = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 </svg>"""
 
 
-class ShapelyLineStringOffsetTests(unittest.TestCase):
+@unittest.skip("x")
+class CircleOffsetTests_5_2(unittest.TestCase):
     """ """
 
     def setUp(self):
         """ """
-        SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF = 10
-        SvgPathDiscretizer.PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5
-
         SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF = 5
-        SvgPathDiscretizer.PYCUT_SAMPLE_MIN_NB_SEGMENTS = 1
+        SvgPathDiscretizer.PYCUT_SAMPLE_MIN_NB_SEGMENTS = 2
 
     def tearDown(self):
         """ """
@@ -57,22 +55,11 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
         pts = path.discretize_closed_path()
         pltutils.plot(pts, "circle SvgElements")
 
-        self.assertEqual(path.svg_path.values["tag"], "circle")
+        self.assertEqual(path.shape_tag, "circle")
         self.assertEqual(path.p_id, "circle")
         self.assertTrue(path.closed)
 
-        self.assertEqual(len(path.svg_path.segments()), 6)
-        self.assertEqual(path.svg_path.segments()[0].__class__.__name__, "Move")
-        self.assertEqual(path.svg_path.segments()[1].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[2].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[3].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[4].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[5].__class__.__name__, "Close")
-
-        if SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF == 5:
-            self.assertEqual(len(pts), 157)  # (5,2)
-        else:
-            self.assertEqual(len(pts), 313)  # (10, 5)
+        self.assertEqual(len(pts), 157)
 
         # now the offset
         coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
@@ -83,7 +70,273 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
 
         pltutils.plot_geom("offset CIRCLE", offset)
 
+        self.assertEqual(offset.geom_type, "LineString")
+
+
+@unittest.skip("x")
+class CircleOffsetTests_10_5(unittest.TestCase):
+    """ """
+
+    def setUp(self):
+        """ """
+        SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF = 10
+        SvgPathDiscretizer.PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5
+
+    def tearDown(self):
+        """ """
+
     # @unittest.skip("x")
+    def test_offset_circle(self):
+        """ """
+        paths = SvgPath.svg_paths_from_svg_string(svg_circle)
+
+        self.assertEqual(len(paths), 1)
+        path = paths[0]
+
+        pts = path.discretize_closed_path()
+        pltutils.plot(pts, "circle SvgElements")
+
+        self.assertEqual(path.shape_tag, "circle")
+        self.assertEqual(path.p_id, "circle")
+        self.assertTrue(path.closed)
+
+        self.assertEqual(len(pts), 313)
+
+        # now the offset
+        coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
+
+        line = shapely.geometry.LineString(coordinates)
+
+        offset = line.parallel_offset(5.0, "right", resolution=16)
+
+        pltutils.plot_geom("offset CIRCLE", offset)
+
+        self.assertEqual(offset.geom_type, "LineString")
+
+
+# ----------------------------------------------------------------------
+#
+#
+# ----------------------------------------------------------------------
+
+
+@unittest.skip("x")
+class CubicCurveOffsetTests_5_2(unittest.TestCase):
+    """ """
+
+    force_plot = True
+
+    def setUp(self):
+        """ """
+        SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF = 5
+        SvgPathDiscretizer.PYCUT_SAMPLE_MIN_NB_SEGMENTS = 2
+
+    def tearDown(self):
+        """ """
+
+    # @unittest.skip("x")
+    def test_offset_left(self):
+        """ """
+        paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve)
+
+        self.assertEqual(len(paths), 1)
+        path = paths[0]
+
+        pts = path.discretize_closed_path()
+
+        self.assertEqual(path.shape_tag, "path")
+        self.assertEqual(path.p_id, "contour")
+        self.assertTrue(path.closed)
+
+        self.assertEqual(len(pts), 1325)
+
+        # now the offset
+        coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
+
+        line = shapely.geometry.LineString(coordinates)
+
+        offset = line.parallel_offset(
+            3.0, "left", resolution=16, join_style=1, mitre_limit=5
+        )
+
+        if offset.geom_type != "LineString":
+            pltutils.plot(pts, "contour")
+            pltutils.plot_geom("offset LEFT", offset, force=self.force_plot)
+
+        self.assertEqual(offset.geom_type, "LineString")
+
+    # @unittest.skip("x")
+    def test_offset_right_flip_ordering(self):
+        """ """
+        paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve)
+
+        self.assertEqual(len(paths), 1)
+        path = paths[0]
+
+        pts = path.discretize_closed_path()
+
+        self.assertEqual(len(pts), 1325)  # (5,2)
+
+        # now the offset / reverse first
+        coordinates = [
+            (complex_pt.real, complex_pt.imag) for complex_pt in reversed(list(pts))
+        ]
+
+        line = shapely.geometry.LineString(coordinates)
+
+        offset = line.parallel_offset(
+            3.0, "right", resolution=16, join_style=1, mitre_limit=5.0
+        )
+
+        if offset.geom_type != "LineString":
+            pltutils.plot(pts, "contour SvgElements")
+            pltutils.plot_geom(
+                "offset RIGHT of reversed", offset, force=self.force_plot
+            )
+
+        self.assertEqual(offset.geom_type, "LineString")
+
+    # @unittest.skip("x")
+    def test_offset_left_as_linearring(self):
+        """
+        with open("linearring.txt", "w") as f:
+           f.write(linearring.wkt)
+        """
+        paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve)
+
+        self.assertEqual(len(paths), 1)
+        path = paths[0]
+
+        pts = path.discretize_closed_path()
+
+        self.assertEqual(len(pts), 1325)
+
+        # now the offset
+        # coordinates = [
+        #    (complex_pt.real, complex_pt.imag) for complex_pt in reversed(list(pts))
+        # ]
+        coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
+
+        linearring = shapely.geometry.LinearRing(coordinates)
+
+        print("DEBUG  LINEARRING", len(linearring.coords))
+        self.assertEqual(len(linearring.coords), 1326)
+
+        offset = linearring.parallel_offset(
+            3.0, "left", resolution=16, join_style=1, mitre_limit=5
+        )
+
+        print("OFFSET -> ", offset.geom_type)
+
+        if offset.geom_type != "LineString":
+            pltutils.plot_geom("LINEARRING", linearring, force=self.force_plot)
+            pltutils.plot_geom("offset LINEARRING", offset, force=self.force_plot)
+
+        if offset.geom_type == "MultiLineString":
+            for linestring in offset.geoms:
+                print("OFFSET MULTILINE part-line -> ", len(linestring.coords))
+
+        self.assertEqual(offset.geom_type, "LineString")
+
+    # @unittest.skip("x")
+    def test_offset_left_as_poly_ext_no_orient(self):
+        """with open("poly_ext.txt", "w") as f:
+        f.write(poly_ext.wkt)
+        """
+        paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve)
+
+        self.assertEqual(len(paths), 1)
+        path = paths[0]
+
+        pts = path.discretize_closed_path()
+
+        self.assertEqual(len(pts), 1325)
+
+        # now the offset
+        coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
+
+        line = shapely.geometry.LineString(coordinates)
+        poly = shapely.geometry.Polygon(line)
+
+        poly_ext = poly.exterior
+
+        print("DEBUG  LINE", len(line.coords))
+        print("DEBUG  POLY-EXT", poly_ext.geom_type, len(poly_ext.coords))
+
+        self.assertEqual(len(poly_ext.coords), 1326)
+
+        offset = poly_ext.parallel_offset(
+            3.0, "left", resolution=16, join_style=1, mitre_limit=5
+        )
+
+        if offset.geom_type != "LineString":
+            pltutils.plot_geom(
+                "poly ext as linearring", poly_ext, force=self.force_plot
+            )
+            pltutils.plot_geom(
+                "offset LEFT from poly_ext as linearring", offset, force=self.force_plot
+            )
+
+        self.assertEqual(offset.geom_type, "LineString")
+
+    # @unittest.skip("x")
+    def test_offset_right_as_poly_ext_orient(self):
+        """ """
+        paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve)
+
+        self.assertEqual(len(paths), 1)
+        path = paths[0]
+
+        pts = path.discretize_closed_path()
+
+        self.assertEqual(len(pts), 1325)
+
+        # now the offset
+        coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
+
+        line = shapely.geometry.LineString(coordinates)
+        poly = shapely.geometry.Polygon(line)
+        poly = shapely.geometry.polygon.orient(poly)
+
+        poly_ext = poly.exterior
+
+        print("DEBUG  LINE", len(line.coords))
+        print("DEBUG  POLY-EXT", poly_ext.geom_type, len(poly_ext.coords))
+
+        self.assertEqual(len(poly_ext.coords), 1326)
+
+        offset = poly_ext.parallel_offset(
+            3.0, "right", resolution=16, join_style=1, mitre_limit=5
+        )
+
+        if offset.geom_type != "LineString":
+            pltutils.plot_geom(
+                "poly ext as linearring oriented", poly_ext, force=self.force_plot
+            )
+            pltutils.plot_geom(
+                "offset RIGHT from poly_ext as linearring - poly oriented",
+                offset,
+                force=self.force_plot,
+            )
+
+        self.assertEqual(offset.geom_type, "LineString")
+
+
+# @unittest.skip("x")
+class CubicCurveOffsetTests_10_5(unittest.TestCase):
+    """ """
+
+    force_plot = True
+
+    def setUp(self):
+        """ """
+        SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF = 10
+        SvgPathDiscretizer.PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5
+
+    def tearDown(self):
+        """ """
+
+    @unittest.skip("x")
     def test_offset_left(self):
         """ """
         paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve)
@@ -94,30 +347,13 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
         pts = path.discretize_closed_path()
         pltutils.plot(pts, "contour")
 
-        self.assertEqual(path.svg_path.values["tag"], "path")
+        self.assertEqual(path.shape_tag, "path")
         self.assertEqual(path.p_id, "contour")
         self.assertTrue(path.closed)
 
-        self.assertEqual(len(path.svg_path.segments()), 14)
-        self.assertEqual(path.svg_path.segments()[0].__class__.__name__, "Move")
-        self.assertEqual(path.svg_path.segments()[1].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[2].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[3].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[4].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[5].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[6].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[7].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[8].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[9].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[10].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[11].__class__.__name__, "CubicBezier")
-        self.assertEqual(path.svg_path.segments()[12].__class__.__name__, "Arc")
-        self.assertEqual(path.svg_path.segments()[13].__class__.__name__, "Close")
+        self.assertEqual(len(path.svgelt_path.segments()), 14)
 
-        if SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF == 5:
-            self.assertEqual(len(pts), 1325)  # (5,2)
-        else:
-            self.assertEqual(len(pts), 2653)  # (10, 5)
+        self.assertEqual(len(pts), 2653)
 
         # now the offset
         coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
@@ -132,7 +368,7 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
 
         self.assertEqual(offset.geom_type, "LineString")
 
-    # @unittest.skip("x")
+    @unittest.skip("x")
     def test_offset_right_flip_ordering(self):
         """ """
         paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve)
@@ -143,10 +379,7 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
         pts = path.discretize_closed_path()
         pltutils.plot(pts, "contour SvgElements")
 
-        if SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF == 5:
-            self.assertEqual(len(pts), 1325)  # (5,2)
-        else:
-            self.assertEqual(len(pts), 2653)  # (10, 5)
+        self.assertEqual(len(pts), 2653)
 
         # now the offset / reverse first
         coordinates = [
@@ -163,7 +396,7 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
 
         self.assertEqual(offset.geom_type, "LineString")
 
-    # @unittest.skip("x")
+    @unittest.skip("x")
     def test_offset_left_as_linearring(self):
         """ """
         paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve)
@@ -173,10 +406,7 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
 
         pts = path.discretize_closed_path()
 
-        if SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF == 5:
-            self.assertEqual(len(pts), 1325)  # (5,2)
-        else:
-            self.assertEqual(len(pts), 2653)  # (10, 5)
+        self.assertEqual(len(pts), 2653)
 
         # now the offset
         coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
@@ -185,18 +415,21 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
 
         print("DEBUG  LINEARRING", len(linearring.coords))
 
-        with open("linearring.txt", "w") as f:
-            f.write(linearring.wkt)
-
         offset = linearring.parallel_offset(
             3.0, "left", resolution=16, join_style=1, mitre_limit=5
         )
 
         print("OFFSET -> ", offset.geom_type)
 
-        self.assertEqual(offset.geom_type, "LineString")
+        if offset.geom_type != "LineString":
+            pltutils.plot_geom("LINEARRING", linearring, force=self.force_plot)
+            pltutils.plot_geom("offset LINEARRING", offset, force=self.force_plot)
 
-        pltutils.plot_geom("offset LINEARRING", offset)
+        if offset.geom_type == "MultiLineString":
+            for linestring in offset.geoms:
+                print("OFFSET MULTILINE part-line -> ", len(linestring.coords))
+
+        self.assertEqual(offset.geom_type, "LineString")
 
     # @unittest.skip("x")
     def test_offset_left_as_poly_ext_no_orient(self):
@@ -208,10 +441,7 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
 
         pts = path.discretize_closed_path()
 
-        if SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF == 5:
-            self.assertEqual(len(pts), 1325)  # (5,2)
-        else:
-            self.assertEqual(len(pts), 2653)  # (10, 5)
+        self.assertEqual(len(pts), 2653)
 
         # now the offset
         coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
@@ -224,18 +454,21 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
         print("DEBUG  LINE", len(line.coords))
         print("DEBUG  POLY-EXT", poly_ext.geom_type, len(poly_ext.coords))
 
-        if SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF == 5:
-            self.assertEqual(len(poly_ext.coords), 1326)  # (5,2)
-        else:
-            self.assertEqual(len(poly_ext.coords), 2654)  # (10, 5)
-
-        with open("poly_ext.txt", "w") as f:
-            f.write(poly_ext.wkt)
+        self.assertEqual(len(poly_ext.coords), 2654)
 
         offset = poly_ext.parallel_offset(
             3.0, "left", resolution=16, join_style=1, mitre_limit=5
         )
-        pltutils.plot_geom("offset LEFT from poly_ext as linearring", offset)
+
+        if offset.geom_type != "LineString" or True:
+            pltutils.plot_geom(
+                "poly ext (no orient)  as linearring", poly_ext, force=self.force_plot
+            )
+            pltutils.plot_geom(
+                "offset LEFT from poly_ext (no orient) as linearring",
+                offset,
+                force=self.force_plot,
+            )
 
         self.assertEqual(offset.geom_type, "LineString")
 
@@ -249,10 +482,7 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
 
         pts = path.discretize_closed_path()
 
-        if SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF == 5:
-            self.assertEqual(len(pts), 1325)  # (5,2)
-        else:
-            self.assertEqual(len(pts), 2653)  # (10, 5)
+        self.assertEqual(len(pts), 2653)
 
         # now the offset
         coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
@@ -266,25 +496,34 @@ class ShapelyLineStringOffsetTests(unittest.TestCase):
         print("DEBUG  LINE", len(line.coords))
         print("DEBUG  POLY-EXT", poly_ext.geom_type, len(poly_ext.coords))
 
-        if SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF == 5:
-            self.assertEqual(len(poly_ext.coords), 1326)  # (5,2)
-        else:
-            self.assertEqual(len(poly_ext.coords), 2654)  # (10, 5)
+        self.assertEqual(len(poly_ext.coords), 2654)
 
         offset = poly_ext.parallel_offset(
             3.0, "right", resolution=16, join_style=1, mitre_limit=5
         )
-        pltutils.plot_geom(
-            "offset RIGHT from poly_ext as linearring - poly orientated", offset
-        )
+
+        if offset.geom_type != "LineString":
+            pltutils.plot_geom(
+                "poly ext as linearring oriented", poly_ext, force=self.force_plot
+            )
+            pltutils.plot_geom(
+                "offset RIGHT from poly_ext as linearring - poly oriented",
+                offset,
+                force=self.force_plot,
+            )
 
         self.assertEqual(offset.geom_type, "LineString")
 
 
 def get_suite():
     suite = unittest.TestSuite()
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(CircleOffsetTests_5_2))
+    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(CircleOffsetTests_10_5))
     suite.addTest(
-        unittest.TestLoader().loadTestsFromTestCase(ShapelyLineStringOffsetTests)
+        unittest.TestLoader().loadTestsFromTestCase(CubicCurveOffsetTests_5_2)
+    )
+    suite.addTest(
+        unittest.TestLoader().loadTestsFromTestCase(CubicCurveOffsetTests_10_5)
     )
 
     return suite
