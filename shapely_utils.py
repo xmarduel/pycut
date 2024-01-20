@@ -577,6 +577,20 @@ class ShapelyUtils:
         xs = linearring.coords.xy[0]
         ys = linearring.coords.xy[1]
 
-        coordinates = list(zip(xs[:-1], ys[:-1]))
+        first = (xs[0], ys[0])
+        last = (xs[-1], ys[-1])
 
-        return shapely.geometry.LineString(coordinates)
+        dd = ShapelyUtils.dist(first, last)
+
+        if dd < 1.0e-4:
+            coordinates = list(zip(xs[:-1], ys[:-1]))
+
+            return shapely.geometry.LineString(coordinates)
+
+        return shapely.geometry.LineString(linearring)
+
+    @classmethod
+    def dist(cls, p1: Tuple[float, float], p2: Tuple[float, float]) -> float:
+        dx = p2[0] - p1[0]
+        dy = p2[1] - p1[1]
+        return dx * dx + dy * dy
