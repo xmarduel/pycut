@@ -532,7 +532,7 @@ class cam:
         return dx * dx + dy * dy
 
     @classmethod
-    def getGcode(cls, args):
+    def getGcode(cls, args) -> List[str]:
         """
         Convert paths to gcode. getGcode() assumes that the current Z position is at safeZ.
         getGcode()'s gcode returns Z to this position at the end.
@@ -833,7 +833,7 @@ class cam:
 
             gcode.extend(retractGcode)
 
-        return "\n".join(gcode)
+        return gcode
 
 
 class TabsSeparator:

@@ -133,8 +133,8 @@ class ToolModel:
         convert to the gcode units FIXME actual per default mm
         """
         result = {
-            "diameterTool": self.diameter.toMm(),
-            "passdepth": self.passdepth.toMm(),
+            "diameterTool": self.diameter.to_mm(),
+            "passdepth": self.passdepth.to_mm(),
             "overlap": self.overlap,
         }
 
@@ -155,10 +155,10 @@ class MaterialModel:
         self.size_y = ValWithUnit(SvgModel.size_x, "mm")  # default
 
     def set_material_size_x(self, x: ValWithUnit):
-        self.size_x = x.toMm()
+        self.size_x = x.to_mm()
 
     def set_material_size_y(self, y: ValWithUnit):
-        self.size_y = y.toMm()
+        self.size_y = y.to_mm()
 
     @property
     def matBotZ(self):
@@ -479,7 +479,7 @@ class CncOp:
     def calculate_opened_paths_preview_geometry_inside(self, tool_model: ToolModel):
         """ """
         if self.geometry is not None:
-            margin = self.margin.toMm()
+            margin = self.margin.to_mm()
 
             if margin != 0:
                 self.preview_geometry = ShapelyUtils.offsetMultiLine(
@@ -504,7 +504,7 @@ class CncOp:
     def calculate_opened_paths_preview_geometry_outside(self, tool_model: ToolModel):
         """ """
         if self.geometry is not None:
-            margin = self.margin.toMm()
+            margin = self.margin.to_mm()
 
             if margin != 0:
                 self.preview_geometry = ShapelyUtils.offsetMultiLine(
@@ -552,7 +552,7 @@ class CncOp:
     def calculate_preview_geometry_pocket(self):
         """ """
         if self.geometry is not None:
-            offset = self.margin.toMm()
+            offset = self.margin.to_mm()
 
             # 'left' in 'inside', and 'right' is 'outside'
             self.geometry = ShapelyUtils.orientMultiPolygon(self.geometry)
@@ -583,9 +583,9 @@ class CncOp:
         toolData = tool_model.get_cam_data()
 
         if self.geometry is not None:
-            margin = self.margin.toMm()
+            margin = self.margin.to_mm()
 
-            width = self.width.toMm()
+            width = self.width.to_mm()
 
             if width < toolData["diameterTool"]:
                 width = toolData["diameterTool"]
@@ -620,12 +620,12 @@ class CncOp:
         toolData = tool_model.get_cam_data()
 
         if self.geometry is not None:
-            width = self.width.toMm()
+            width = self.width.to_mm()
 
             if width < toolData["diameterTool"]:
                 width = toolData["diameterTool"]
 
-            margin = self.margin.toMm()
+            margin = self.margin.to_mm()
             margin_plus_width = margin + width
 
             # 'right' in 'inside', and 'left' is 'outside'  hopefully
@@ -688,14 +688,14 @@ class CncOp:
 
         geometry = self.geometry
 
-        offset = margin.toMm()
+        offset = margin.to_mm()
 
         # if cam_op == "Outside" :
         #    #direction = "outer2inner"
         #    direction = "inner2outer"
         #    if direction == "outer2inner":
         #        # start from the outer ring and cam in the inside dir
-        #        width = self.width.toMm()
+        #        width = self.width.to_mm()
         #        if width < toolData["diameterTool"]:
         #            width = toolData["diameterTool"]
         #        offset += width
@@ -727,7 +727,7 @@ class CncOp:
                     direction == "Climb",
                 )
             elif cam_op == "Inside" or cam_op == "Outside":
-                width = width.toMm()
+                width = width.to_mm()
                 if width < toolData["diameterTool"]:
                     width = toolData["diameterTool"]
                 self.cam_paths = cam.outline(
@@ -749,7 +749,7 @@ class CncOp:
             elif cam_op == "Inside" or cam_op == "Outside":
                 geometry = self.preview_geometry
 
-                width = width.toMm()
+                width = width.to_mm()
                 if width < toolData["diameterTool"]:
                     width = toolData["diameterTool"]
                 self.cam_paths = cam.outline_opened_paths(
@@ -965,14 +965,16 @@ class GcodeGenerator:
         if len(cnc_ops) == 0:
             return
 
-        safeZ = self.unit_converter.from_mm(self.material_model.matZSafeMove.toMm())
-        rapidRate = int(self.unit_converter.from_mm(self.tool_model.rapidRate.toMm()))
-        plungeRate = int(self.unit_converter.from_mm(self.tool_model.plungeRate.toMm()))
-        cutRate = int(self.unit_converter.from_mm(self.tool_model.cutRate.toMm()))
-        passdepth = self.unit_converter.from_mm(self.tool_model.passdepth.toMm())
-        toolDiameter = self.unit_converter.from_mm(self.tool_model.diameter.toMm())
-        topZ = self.unit_converter.from_mm(self.material_model.matTopZ.toMm())
-        tabHeight = self.unit_converter.from_mm(self.tabs_model.height.toMm())
+        safeZ = self.unit_converter.from_mm(self.material_model.matZSafeMove.to_mm())
+        rapidRate = int(self.unit_converter.from_mm(self.tool_model.rapidRate.to_mm()))
+        plungeRate = int(
+            self.unit_converter.from_mm(self.tool_model.plungeRate.to_mm())
+        )
+        cutRate = int(self.unit_converter.from_mm(self.tool_model.cutRate.to_mm()))
+        passdepth = self.unit_converter.from_mm(self.tool_model.passdepth.to_mm())
+        toolDiameter = self.unit_converter.from_mm(self.tool_model.diameter.to_mm())
+        topZ = self.unit_converter.from_mm(self.material_model.matTopZ.to_mm())
+        tabHeight = self.unit_converter.from_mm(self.tabs_model.height.to_mm())
         peckZ = self.unit_converter.from_mm(1.0)
 
         # if self.units == "inch":
@@ -981,47 +983,49 @@ class GcodeGenerator:
         #    scale = 25.4
         scale = 1
 
-        gcode = ""
+        gcode = []
         if self.units == "inch":
-            gcode += "G20         ; Set units to inches\n"
+            gcode.append("G20         ; Set units to inches")
         else:
-            gcode += "G21         ; Set units to mm\n"
-        gcode += "G90         ; Absolute positioning\n"
-        gcode += "G1 Z%s    F%d      ; Move to clearance level\n" % (
-            safeZ.toFixed(4),
-            rapidRate,
+            gcode.append("G21         ; Set units to mm")
+        gcode.append("G90         ; Absolute positioning")
+        gcode.append(
+            f"G1 {safeZ.toFixed(4)}    F{rapidRate}      ; Move to clearance level"
         )
 
         if self.gcode_model.spindleControl:
-            gcode += f"\n; Start the spindle\n"
-            gcode += f"M3 S{self.gcode_model.spindleSpeed}\n"
+            gcode.append("")
+            gcode.append("; Start the spindle")
+            gcode.append(f"M3 S{self.gcode_model.spindleSpeed}")
 
-        gcode += f"\n"
-        gcode += f";\n"
-        gcode += f"; Tool Info\n"
-        gcode += f"; Diameter:    {toolDiameter}"
-        gcode += f"\n"
+        gcode.append("")
+        gcode.append(";")
+        gcode.append("; Tool Info")
+        gcode.append(f"; Diameter:    {toolDiameter}")
+        gcode.append("")
 
         for idx, cnc_op in enumerate(cnc_ops):
-            cut_depth = self.unit_converter.from_mm(cnc_op.cut_depth.toMm())
+            cut_depth = self.unit_converter.from_mm(cnc_op.cut_depth.to_mm())
             botZ = ValWithUnit(topZ - cut_depth, self.units)
             tabZ = self.unit_converter.from_mm(
-                topZ.toMm() - cut_depth.toMm() + tabHeight.toMm()
+                topZ.to_mm() - cut_depth.to_mm() + tabHeight.to_mm()
             )
 
             nb_paths = len(cnc_op.cam_paths)  # in use!
 
-            gcode += f"\n;"
-            gcode += f"\n; Operation:    {idx}"
-            gcode += f"\n; Name:         {cnc_op.name}"
-            gcode += f"\n; Type:         {cnc_op.cam_op}"
-            gcode += f"\n; Paths:        {nb_paths}"
-            gcode += f"\n; Direction:    {cnc_op.direction}"
-            gcode += f"\n; Cut Depth:    {cut_depth}"
-            gcode += f"\n; Pass Depth:   {passdepth}"
-            gcode += f"\n; Plunge rate:  {plungeRate}"
-            gcode += f"\n; Cut rate:     {cutRate}"
-            gcode += f"\n;\n"
+            gcode.append("")
+            gcode.append(";")
+            gcode.append(f"; Operation:    {idx+1}")
+            gcode.append(f"; Name:         {cnc_op.name}")
+            gcode.append(f"; Type:         {cnc_op.cam_op}")
+            gcode.append(f"; Paths:        {nb_paths}")
+            gcode.append(f"; Direction:    {cnc_op.direction}")
+            gcode.append(f"; Cut Depth:    {cut_depth}")
+            gcode.append(f"; Pass Depth:   {passdepth}")
+            gcode.append(f"; Plunge rate:  {plungeRate}")
+            gcode.append(f"; Cut rate:     {cutRate}")
+            gcode.append(";")
+            gcode.append("")
 
             tabs = self.tabs_model.tabs
 
@@ -1029,41 +1033,48 @@ class GcodeGenerator:
                 # ignore tabs in pocket op
                 tabs = []
 
-            gcode += cam.getGcode(
-                {
-                    "optype": cnc_op.cam_op,
-                    "paths": cnc_op.cam_paths,
-                    "ramp": cnc_op.ramp_plunge,
-                    "scale": scale,
-                    "offsetX": self.offsetX,
-                    "offsetY": self.offsetY,
-                    "decimal": 4,
-                    "topZ": topZ,
-                    "botZ": botZ,
-                    "safeZ": safeZ,
-                    "passdepth": passdepth,
-                    "plungeFeed": plungeRate,
-                    "retractFeed": rapidRate,
-                    "cutFeed": cutRate,
-                    "rapidFeed": rapidRate,
-                    "tabs": tabs,
-                    "tabZ": tabZ,
-                    "peckZ": peckZ,
-                    "flipXY": self.flipXY,
-                }
+            gcode.extend(
+                cam.getGcode(
+                    {
+                        "optype": cnc_op.cam_op,
+                        "paths": cnc_op.cam_paths,
+                        "ramp": cnc_op.ramp_plunge,
+                        "scale": scale,
+                        "offsetX": self.offsetX,
+                        "offsetY": self.offsetY,
+                        "decimal": 4,
+                        "topZ": topZ,
+                        "botZ": botZ,
+                        "safeZ": safeZ,
+                        "passdepth": passdepth,
+                        "plungeFeed": plungeRate,
+                        "retractFeed": rapidRate,
+                        "cutFeed": cutRate,
+                        "rapidFeed": rapidRate,
+                        "tabs": tabs,
+                        "tabZ": tabZ,
+                        "peckZ": peckZ,
+                        "flipXY": self.flipXY,
+                    }
+                )
             )
 
         if self.gcode_model.spindleControl:
-            gcode += f"\n; Stop the spindle\n"
-            gcode += f"M5 \n"
+            gcode.append("")
+            gcode.append("; Stop the spindle")
+            gcode.append("M5")
 
         if self.gcode_model.returnTo00:
-            gcode += f"\n; Return to 0,0\n"
-            gcode += f"G0 X0 Y0 F{rapidRate}\n"
+            gcode.append("")
+            gcode.append("; Return to 0,0")
+            gcode.append(f"G0 X0 Y0 F{rapidRate}")
 
         if self.gcode_model.programEnd:
-            gcode += f"\n; Program End\n"
-            gcode += f"M2 \n"
+            gcode.append("")
+            gcode.append("; Program End")
+            gcode.append("M2")
+
+        gcode = "\n".join(gcode)
 
         self.gcode = gcode
         self.job.gcode = gcode

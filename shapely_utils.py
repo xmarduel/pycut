@@ -29,7 +29,10 @@ class ShapelyUtils:
         """
         Return difference between to Clipper geometries. Returns new geometry.
         """
-        diffs = [path1.difference(path2) for (path1, path2) in zip(paths1.geoms, paths2.geoms)]
+        diffs = [
+            path1.difference(path2)
+            for (path1, path2) in zip(paths1.geoms, paths2.geoms)
+        ]
 
         return shapely.geometry.MultiLineString(diffs)
 
@@ -169,7 +172,8 @@ class ShapelyUtils:
     ) -> shapely.geometry.MultiLineString:
         """ """
         offseted_lines = [
-            cls.offsetLine(line, amount, side, resolution, join_style, mitre_limit) for line in multiline.geoms
+            cls.offsetLine(line, amount, side, resolution, join_style, mitre_limit)
+            for line in multiline.geoms
         ]
 
         # resulting linestring can be empty
@@ -194,7 +198,9 @@ class ShapelyUtils:
         return offsetted
 
     @classmethod
-    def orientMultiPolygon(cls, multipoly: shapely.geometry.MultiPolygon) -> shapely.geometry.MultiPolygon:
+    def orientMultiPolygon(
+        cls, multipoly: shapely.geometry.MultiPolygon
+    ) -> shapely.geometry.MultiPolygon:
         """ """
         geoms = []
         for geom in multipoly.geoms:
@@ -260,7 +266,9 @@ class ShapelyUtils:
     @classmethod
     def buildMultiPolyFromOffsets(
         cls,
-        multi_offset: List[shapely.geometry.LineString | shapely.geometry.MultiLineString],
+        multi_offset: List[
+            shapely.geometry.LineString | shapely.geometry.MultiLineString
+        ],
     ) -> shapely.geometry.MultiPolygon:
         """
         offset is the direct result of an parallel_offset operation -> can be of various type
@@ -355,7 +363,9 @@ class ShapelyUtils:
         return multipoly
 
     @classmethod
-    def multiPolyToMultiLine(cls, multipoly: shapely.geometry.MultiPolygon) -> shapely.geometry.MultiLineString:
+    def multiPolyToMultiLine(
+        cls, multipoly: shapely.geometry.MultiPolygon
+    ) -> shapely.geometry.MultiLineString:
         """ """
         lines = []
 
@@ -368,7 +378,9 @@ class ShapelyUtils:
         return multiline
 
     @classmethod
-    def multiPolyIntToMultiLine(cls, multipoly: shapely.geometry.MultiPolygon) -> shapely.geometry.MultiLineString:
+    def multiPolyIntToMultiLine(
+        cls, multipoly: shapely.geometry.MultiPolygon
+    ) -> shapely.geometry.MultiLineString:
         """ """
         lines = []
 
@@ -382,7 +394,9 @@ class ShapelyUtils:
         return multiline
 
     @classmethod
-    def multiLineToMultiPoly(cls, multiline: shapely.geometry.MultiLineString) -> shapely.geometry.MultiPolygon:
+    def multiLineToMultiPoly(
+        cls, multiline: shapely.geometry.MultiLineString
+    ) -> shapely.geometry.MultiPolygon:
         """ """
         polys = []
 
@@ -396,7 +410,9 @@ class ShapelyUtils:
         return multipoly
 
     @classmethod
-    def removeHolesMultipoly(cls, multipoly: shapely.geometry.MultiPolygon) -> shapely.geometry.MultiPolygon:
+    def removeHolesMultipoly(
+        cls, multipoly: shapely.geometry.MultiPolygon
+    ) -> shapely.geometry.MultiPolygon:
         epolys = []
 
         for poly in multipoly.geoms:
@@ -408,7 +424,9 @@ class ShapelyUtils:
         return shapely.geometry.MultiPolygon(epolys)
 
     @classmethod
-    def reorder_poly_points(cls, poly: shapely.geometry.Polygon) -> shapely.geometry.Polygon:
+    def reorder_poly_points(
+        cls, poly: shapely.geometry.Polygon
+    ) -> shapely.geometry.Polygon:
         """
         Problem: shapely bug when outsiding a polygon where the starting point
         is a convex corner: at that point, the offset line 'outside' is uncorrect.
@@ -449,7 +467,9 @@ class ShapelyUtils:
         return poly
 
     @classmethod
-    def fixMultipoly(cls, multipoly: shapely.geometry.MultiPolygon) -> shapely.geometry.MultiPolygon:
+    def fixMultipoly(
+        cls, multipoly: shapely.geometry.MultiPolygon
+    ) -> shapely.geometry.MultiPolygon:
         """ """
         valid_polys = []
 
@@ -463,7 +483,9 @@ class ShapelyUtils:
         return shapely.geometry.MultiPolygon(valid_polys)
 
     @classmethod
-    def fixSimplePolygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon:
+    def fixSimplePolygon(
+        cls, polygon: shapely.geometry.Polygon
+    ) -> shapely.geometry.Polygon:
         """ """
         valid = make_valid(polygon)
 
@@ -503,7 +525,9 @@ class ShapelyUtils:
         return None
 
     @classmethod
-    def fixGenericPolygon(cls, polygon: shapely.geometry.Polygon) -> shapely.geometry.Polygon:
+    def fixGenericPolygon(
+        cls, polygon: shapely.geometry.Polygon
+    ) -> shapely.geometry.Polygon:
         """
         fix exterior and interiors if not valid
         """
@@ -532,8 +556,27 @@ class ShapelyUtils:
                 fixed_interiors.append(int_poly)
 
             ext_linestring = shapely.geometry.LineString(ext_poly.exterior)
-            holes_linestrings = [shapely.geometry.LineString(int_poly.exterior) for int_poly in fixed_interiors]
+            holes_linestrings = [
+                shapely.geometry.LineString(int_poly.exterior)
+                for int_poly in fixed_interiors
+            ]
 
-            fixed_poly = shapely.geometry.Polygon(ext_linestring, holes=holes_linestrings)
+            fixed_poly = shapely.geometry.Polygon(
+                ext_linestring, holes=holes_linestrings
+            )
 
         return fixed_poly
+
+    @classmethod
+    def linearRingToLineString(
+        cls, linearring: shapely.geometry.LinearRing
+    ) -> shapely.geometry.LineString:
+        """
+        remove duplicated last point
+        """
+        xs = linearring.coords.xy[0]
+        ys = linearring.coords.xy[1]
+
+        coordinates = list(zip(xs[:-1], ys[:-1]))
+
+        return shapely.geometry.LineString(coordinates)

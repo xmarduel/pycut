@@ -50,7 +50,9 @@ class ShapelyMultiPolygonOffset:
         polys = []
 
         for poly in self.multipoly.geoms:
-            linestring = shapely.geometry.LineString(poly.exterior)
+            linearring = shapely.geometry.LineString(poly.exterior)
+            # offset of a linearring is !BUGGY!
+            linestring = ShapelyUtils.linearRingToLineString(linearring)
 
             # cnt = MatplotLibUtils.MatplotlibDisplay(
             #    "linestring to offset", linestring, force=True

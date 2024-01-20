@@ -622,7 +622,7 @@ class SvgPathDiscretizer:
     """ """
 
     PYCUT_SAMPLE_LEN_COEFF = (
-        10  # 10 points per "svg unit" ie arc of len 10 -> 100 pts discretization
+        10  # 10 points per "svg unit" ie arc of len 10 mm -> 100 pts discretization
     )
     PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5  # is in jsCut 1
 

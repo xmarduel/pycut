@@ -5,7 +5,7 @@ class ValWithUnit(float):
     >>> x = ValWithUnit(22, "mm")
     >>> x
     >>> x.to_inch()
-    >>> x.toMm()
+    >>> x.to_mm()
     >>> x.to_inch().toFixed(5)
 
     Unfortunately, cannot say
@@ -31,7 +31,7 @@ class ValWithUnit(float):
         else:
             return ValWithUnit(self / 25.4, "inch")
 
-    def toMm(self):
+    def to_mm(self):
         if self.units == "inch":
             return ValWithUnit(self * 25.4, "mm")
         else:

@@ -1117,7 +1117,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def cb_curve_min_segments_length(self):
         """ """
         value = self.ui.CurveToLineConversion_MinimumSegmentsLength.value()
-        shapely_svgpath_io.SvgPathDiscretizer.set_arc_precision(value)
+        if value != 0:
+            shapely_svgpath_io.SvgPathDiscretizer.set_arc_precision(value)
 
     def cb_update_tabs_display(self):
         """
@@ -1265,10 +1266,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         thickness = ValWithUnit(
             self.ui.Material_Thickness.value(), material_units
-        ).toMm()
+        ).to_mm()
         clearance = ValWithUnit(
             self.ui.Material_Clearance.value(), material_units
-        ).toMm()
+        ).to_mm()
 
         self.svg_material_viewer.display_unit(material_units)
         self.svg_material_viewer.display_material(
@@ -1283,10 +1284,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         thickness = ValWithUnit(
             self.ui.Material_Thickness.value(), material_units
-        ).toMm()
+        ).to_mm()
         clearance = ValWithUnit(
             self.ui.Material_Clearance.value(), material_units
-        ).toMm()
+        ).to_mm()
 
         self.svg_material_viewer.display_material(
             thickness=thickness, clearance=clearance
