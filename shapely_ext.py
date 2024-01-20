@@ -53,6 +53,8 @@ class ShapelyMultiPolygonOffset:
             linearring = shapely.geometry.LineString(poly.exterior)
             # offset of a linearring is !BUGGY!
             linestring = ShapelyUtils.linearRingToLineString(linearring)
+            # unfortunately this generates others PYCUT bugs !!  (pocketing - FIXME -)
+            linestring = linearring
 
             # cnt = MatplotLibUtils.MatplotlibDisplay(
             #    "linestring to offset", linestring, force=True
@@ -118,7 +120,7 @@ class ShapelyMultiPolygonOffset:
                 )
 
                 MatplotLibUtils.MatplotlibDisplay(
-                    "starting interior offset from", interior_multipoly, force=False
+                    "starting interior offset from", interior_multipoly, force=True
                 )
 
                 # consider interiors offsets
@@ -128,7 +130,7 @@ class ShapelyMultiPolygonOffset:
                     )
 
                     MatplotLibUtils.MatplotlibDisplay(
-                        "interior first offset", interior_multipoly, force=False
+                        "interior first offset", interior_multipoly, force=True
                     )
 
                 # the diff is the solution
