@@ -129,13 +129,13 @@
     },
     "CurveToLineConversion": {
       "minimum_segments": 5,
-      "minimum_segments_length": 0.15
+      "minimum_segments_length": 0.02
     },
     "GCodeConversion": {
       "units": "mm",
       "flip_xy": false,
       "x_offset": -50.0,
-      "y_offset": 50.01,
+      "y_offset": 50.0,
       "xy_reference": "ZERO_CENTER_OF_OP"
     },
     "GCodeGeneration": {
@@ -158,7 +158,7 @@
         "stroke": "#ff0000",
         "stroke-width": "0",
         "stroke-opacity": "1.0",
-        "fill": "#55ffff",
+        "fill": "#000000",
         "fill-opacity": "1.0"
       },
       "GEOMETRY_PREVIEW_OPENED_PATHS": {
