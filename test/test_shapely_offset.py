@@ -33,6 +33,9 @@ svg_cubic_curve = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 </svg>"""
 
 
+OFFSET = 3.0
+
+
 @unittest.skip("x")
 class CircleOffsetTests_5_2(unittest.TestCase):
     """ """
@@ -67,7 +70,7 @@ class CircleOffsetTests_5_2(unittest.TestCase):
 
         line = shapely.geometry.LineString(coordinates)
 
-        offset = line.parallel_offset(5.0, "right", resolution=16)
+        offset = line.parallel_offset(OFFSET, "right", resolution=16)
 
         pltutils.plot_geom("offset CIRCLE", offset)
 
@@ -108,7 +111,7 @@ class CircleOffsetTests_10_5(unittest.TestCase):
 
         line = shapely.geometry.LineString(coordinates)
 
-        offset = line.parallel_offset(5.0, "right", resolution=16)
+        offset = line.parallel_offset(OFFSET, "right", resolution=16)
 
         pltutils.plot_geom("offset CIRCLE", offset)
 
@@ -157,7 +160,7 @@ class CubicCurveOffsetTests_5_2(unittest.TestCase):
         line = shapely.geometry.LineString(coordinates)
 
         offset = line.parallel_offset(
-            3.0, "left", resolution=16, join_style=1, mitre_limit=5
+            OFFSET, "left", resolution=16, join_style=1, mitre_limit=5
         )
 
         if offset.geom_type != "LineString":
@@ -186,7 +189,7 @@ class CubicCurveOffsetTests_5_2(unittest.TestCase):
         line = shapely.geometry.LineString(coordinates)
 
         offset = line.parallel_offset(
-            3.0, "right", resolution=16, join_style=1, mitre_limit=5.0
+            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5.0
         )
 
         if offset.geom_type != "LineString" or True:
@@ -224,7 +227,7 @@ class CubicCurveOffsetTests_5_2(unittest.TestCase):
         self.assertEqual(len(linearring.coords), 1326)
 
         offset = linearring.parallel_offset(
-            3.0, "left", resolution=16, join_style=1, mitre_limit=5
+            OFFSET, "left", resolution=16, join_style=1, mitre_limit=5
         )
 
         print("OFFSET -> ", offset.geom_type)
@@ -267,7 +270,7 @@ class CubicCurveOffsetTests_5_2(unittest.TestCase):
         self.assertEqual(len(poly_ext.coords), 1326)
 
         offset = poly_ext.parallel_offset(
-            3.0, "left", resolution=16, join_style=1, mitre_limit=5
+            OFFSET, "left", resolution=16, join_style=1, mitre_limit=5
         )
 
         if offset.geom_type != "LineString" or True:
@@ -307,7 +310,7 @@ class CubicCurveOffsetTests_5_2(unittest.TestCase):
         self.assertEqual(len(poly_ext.coords), 1326)
 
         offset = poly_ext.parallel_offset(
-            3.0, "right", resolution=16, join_style=1, mitre_limit=5
+            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
         )
 
         if offset.geom_type != "LineString" or True:
@@ -381,7 +384,7 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
             f.write(linestring.wkt)
 
         offset = linestring.parallel_offset(
-            6.0, "left", resolution=16, join_style=1, mitre_limit=5
+            OFFSET, "left", resolution=16, join_style=1, mitre_limit=5
         )
 
         pltutils.plot_geom("offset LEFT", offset, force=True)
@@ -428,7 +431,7 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
             f.write(linestring.wkt)
 
         offset = linestring.parallel_offset(
-            6.0, "right", resolution=16, join_style=1, mitre_limit=5.0
+            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5.0
         )
 
         pltutils.plot_geom("offset RIGHT of reversed", offset, force=True)
@@ -455,7 +458,7 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
         print("DEBUG  LINEARRING", len(linearring.coords))
 
         offset = linearring.parallel_offset(
-            3.0, "left", resolution=16, join_style=1, mitre_limit=5
+            OFFSET, "left", resolution=16, join_style=1, mitre_limit=5
         )
 
         print("OFFSET -> ", offset.geom_type)
@@ -499,7 +502,7 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
         #    f.write(poly_ext.wkt)
 
         offset = poly_ext.parallel_offset(
-            6.0, "left", resolution=16, join_style=1, mitre_limit=5
+            OFFSET, "left", resolution=16, join_style=1, mitre_limit=5
         )
 
         if offset.geom_type != "LineString" or True:
@@ -546,7 +549,7 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
         #    f.write(poly_ext.wkt)
 
         offset = poly_ext.parallel_offset(
-            3.0, "right", resolution=16, join_style=1, mitre_limit=5
+            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
         )
 
         if offset.geom_type != "LineString" or True:
@@ -595,10 +598,10 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
 
         linestring = ShapelyUtils.linearRingToLineString(poly_ext)
 
-        self.assertEqual(len(poly_ext.linestring), 2653)
+        self.assertEqual(len(linestring.coords), 2653)
 
         offset = linestring.parallel_offset(
-            3.0, "right", resolution=16, join_style=1, mitre_limit=5
+            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
         )
 
         if offset.geom_type != "LineString" or True:
