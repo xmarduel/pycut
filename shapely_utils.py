@@ -58,14 +58,14 @@ class ShapelyUtils:
 
         if bounds.geom_type == "MultiPolygon":
             compound = shapely.geometry.GeometryCollection([bounds, p1_p2])
-            MatplotLibUtils.MatplotlibDisplay(
+            MatplotLibUtils.display(
                 "mergePath bounds check crosses (multipoly) : %d" % cls.cnt,
                 compound,
                 force=False,
             )
         if bounds.geom_type == "MultiLineString":
             compound = shapely.geometry.GeometryCollection([bounds, p1_p2])
-            MatplotLibUtils.MatplotlibDisplay(
+            MatplotLibUtils.display(
                 "mergePath bounds check crosses (multilines) : %d" % cls.cnt,
                 compound,
                 force=False,
@@ -309,6 +309,7 @@ class ShapelyUtils:
                 if polygon.is_valid:
                     polygons.append(polygon)
                 else:
+                    print("buildMultiPolyFromOffsets: " + explain_validity(polygon))
                     res = make_valid(polygon)
                     # hoping the result is valid!
                     if res.geom_type == "Polygon":
@@ -330,6 +331,8 @@ class ShapelyUtils:
             if polygon.is_valid:
                 # tudor 'D' fix - sonce unary_union exception
                 polygons_ok.append(polygon)
+            else:
+                print("buildMultiPolyFromOffsets: " + explain_validity(polygon))
 
         multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(polygons_ok)
 

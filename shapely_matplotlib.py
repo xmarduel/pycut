@@ -6,18 +6,19 @@ import shapely.geometry
 
 class MatplotLibUtils:
     """
-    Helper functions on Shapely
+    Plot Shapely objects
     """
 
     MAPLOTLIB_DEBUG = False
     # MAPLOTLIB_DEBUG = True
-    cnt = 1  # matplotlib figures
+
+    cnt = 0  # matplotlib figures
 
     @classmethod
     def plot(cls, pts: any, title: str, style: str = "ro-"):
         """ """
         plt.figure(cls.cnt)
-        plt.title(title)
+        plt.title(title + f" [{cls.cnt}]")
 
         xx = [pt.real for pt in pts]
         yy = [pt.imag for pt in pts]
@@ -26,14 +27,15 @@ class MatplotLibUtils:
 
         plt.axis("equal")
         plt.show()
+        plt.pause(1)
 
     @classmethod
     def plot_geom(cls, title: str, geom: any, force: bool = False) -> int:
         """ """
-        return cls.MatplotlibDisplay(title, geom, force)
+        return cls.display(title, geom, force)
 
     @classmethod
-    def MatplotlibDisplay(cls, title: str, geom: any, force: bool = False) -> int:
+    def display(cls, title: str, geom: any, force: bool = False) -> int:
         """ """
         # a counter
         cls.cnt += 1
@@ -43,17 +45,17 @@ class MatplotLibUtils:
 
         # dispatch
         if geom.geom_type == "LineString":
-            cls._MatplotlibDisplayLineString(title, geom)
+            cls._display_linestring(title, geom)
         if geom.geom_type == "LinearRing":
-            cls._MatplotlibDisplayLineString(title, geom)
+            cls._display_linestring(title, geom)
         if geom.geom_type == "MultiLineString":
-            cls._MatplotlibDisplayMultiLineString(title, geom)
+            cls._display_multilinestring(title, geom)
         if geom.geom_type == "Polygon":
-            cls._MatplotlibDisplayPolygon(title, geom)
+            cls._display_polygon(title, geom)
         if geom.geom_type == "MultiPolygon":
-            cls._MatplotlibDisplayMultiPolygon(title, geom)
+            cls._display_multipolygon(title, geom)
         if geom.geom_type == "GeometryCollection":
-            cls._MatplotlibDisplayGeometryCollection(title, geom)
+            cls._display_geometrycollection(title, geom)
         else:
             pass
 
@@ -67,9 +69,7 @@ class MatplotLibUtils:
         return np.array(yy)
 
     @classmethod
-    def _MatplotlibDisplayLineString(
-        cls, title: str, linestring: shapely.geometry.LineString
-    ):
+    def _display_linestring(cls, title: str, linestring: shapely.geometry.LineString):
         """ """
         xs = linestring.coords.xy[0]
         ys = linestring.coords.xy[1]
@@ -82,12 +82,12 @@ class MatplotLibUtils:
         cls.plot(pts, title, "bo-")
 
     @classmethod
-    def _MatplotlibDisplayMultiLineString(
+    def _display_multilinestring(
         cls, title: str, multilinestring: shapely.geometry.MultiLineString
     ):
         """ """
         plt.figure(cls.cnt)
-        plt.title(title)
+        plt.title(title + f" [{cls.cnt}]")
 
         style = {
             0: "ro-",
@@ -115,12 +115,13 @@ class MatplotLibUtils:
 
         plt.axis("equal")
         plt.show()
+        plt.pause(1)
 
     @classmethod
-    def _MatplotlibDisplayPolygon(cls, title: str, polygon: shapely.geometry.Polygon):
+    def _display_polygon(cls, title: str, polygon: shapely.geometry.Polygon):
         """ """
         plt.figure(cls.cnt)
-        plt.title(title)
+        plt.title(title + f" [{cls.cnt}]")
 
         style_ext = {0: "bo-"}
         style_int = {0: "r+--", 1: "go-"}
@@ -149,14 +150,15 @@ class MatplotLibUtils:
 
         plt.axis("equal")
         plt.show()
+        plt.pause(1)
 
     @classmethod
-    def _MatplotlibDisplayMultiPolygon(
+    def _display_multipolygon(
         cls, title: str, multipoly: shapely.geometry.MultiPolygon
     ):
         """ """
         plt.figure(cls.cnt)
-        plt.title(title)
+        plt.title(title + f" [{cls.cnt}]")
 
         style_ext = {
             0: "bo-",
@@ -197,14 +199,15 @@ class MatplotLibUtils:
 
         plt.axis("equal")
         plt.show()
+        plt.pause(1)
 
     @classmethod
-    def _MatplotlibDisplayGeometryCollection(
+    def _display_geometrycollection(
         cls, title: str, collection: shapely.geometry.GeometryCollection
     ):
         """ """
         plt.figure(cls.cnt)
-        plt.title(title)
+        plt.title(title + f" [{cls.cnt}]")
 
         style_ext = {0: "ro-", 1: "go-", 2: "bo-"}
         style_int = {0: "r+-", 1: "g+-", 2: "b+-"}
@@ -298,3 +301,4 @@ class MatplotLibUtils:
 
         plt.axis("equal")
         plt.show()
+        plt.pause(1)

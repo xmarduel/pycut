@@ -560,13 +560,13 @@ class CncOp:
                 self.geometry, offset, "left", consider_interiors_offsets=True
             )
 
-            MatplotLibUtils.MatplotlibDisplay("preview pocket", self.preview_geometry)
+            cnt = MatplotLibUtils.display("preview pocket", self.preview_geometry)
 
             self.preview_geometry = ShapelyUtils.orientMultiPolygon(
                 self.preview_geometry
             )
 
-            MatplotLibUtils.MatplotlibDisplay(
+            cnt = MatplotLibUtils.display(
                 "preview pocket - oriented", self.preview_geometry
             )
 

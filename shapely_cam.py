@@ -424,7 +424,7 @@ class cam:
         """
         Try to merge paths. A merged path doesn't cross outside of bounds AND the interior polygons
         """
-        # MatplotLibUtils.MatplotlibDisplay("mergePath", shapely.geometry.MultiLineString(paths), force=True)
+        # cnt = MatplotLibUtils.display("mergePath", shapely.geometry.MultiLineString(paths), force=True)
 
         if _bounds and len(_bounds.geoms) > 0:
             bounds = _bounds
@@ -975,7 +975,7 @@ class TabsSeparator:
             return paths
 
         # mlines = shapely.geometry.MultiLineString(paths)
-        # cnt = MatplotLibUtils.MatplotlibDisplay("offset - as LineString|MultiLineString (from linestring)", mlines, force=True)
+        # cnt = MatplotLibUtils.display("offset - as LineString|MultiLineString (from linestring)", mlines, force=True)
 
         compatibility_table = buildPathsCompatibilityTable(paths)
 
@@ -1035,14 +1035,16 @@ class PocketCalculator:
         # use polygons exteriors lines - offset them and and diff with the offseted interiors if any
         multipoly = ShapelyUtils.orientMultiPolygon(self.multipoly)
 
-        # MatplotLibUtils.MatplotlibDisplay("multipoly pocket init", self.multipoly, force=True)
+        # cnt = MatplotLibUtils.display("multipoly pocket init", multipoly, force=True)
 
         # the exterior
         current = self.offsetMultiPolygon(
             multipoly, self.cutter_dia / 2, "left", consider_interiors_offsets=True
         )
 
-        # MatplotLibUtils.MatplotlibDisplay("multipoly pocket first offset", current, force=True)
+        # cnt = MatplotLibUtils.display(
+        #    "multipoly pocket first offset", current, force=True
+        # )
 
         if len(current.geoms) == 0:
             # cannot offset ! maybe geometry too narrow for the cutter
@@ -1191,7 +1193,7 @@ class PocketCalculator:
         """
         Try to merge paths. A merged path doesn't cross outside of bounds AND the interior polygons
         """
-        # MatplotLibUtils.MatplotlibDisplay("mergePath", shapely.geometry.MultiLineString(paths), force=True)
+        # cnt = MatplotLibUtils.display("mergePath", shapely.geometry.MultiLineString(paths), force=True)
 
         if _bounds and len(_bounds.geoms) > 0:
             bounds = _bounds
