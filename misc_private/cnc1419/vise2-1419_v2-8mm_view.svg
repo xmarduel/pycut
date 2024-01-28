@@ -16,18 +16,25 @@
     <g id="oben">
 	  <rect  id="shaft1"    style="fill:black;fill-opacity:0.2" width="100" height="8" x="0" y="11" />
 	  <rect  id="shaft2"    style="fill:black;fill-opacity:0.2" width="100" height="8" x="0" y="181" />
-	  <rect  id="leadscrew" style="fill:black;fill-opacity:0.4" width="56" height="10" x="-10" y="95" />
 	  
+	  <rect  id="leadscrew_hole" style="fill:#ff0000;fill-opacity:0.4" width="25" height="10" x="0" y="95" />
+	  <rect  id="leadscrew"      style="fill:black;fill-opacity:0.4" width="59" height="8" x="-10" y="96" />
 	  
+	  <rect  id="leadscrew_blocking_ring" x="40" y="92.5" width="10" height="15" style="fill:blue" /> 
+	  <rect  id="leadscrew_blocking_nut"  x="30" y="92.5" width="10" height="15" style="fill:green" /> 
+	  
+
 	  <rect  id="shaft1_bearing"    style="fill:black;fill-opacity:0.2" width="25" height="15" x="30" y="7.5" />
 	  <rect  id="shaft2_bearing"    style="fill:black;fill-opacity:0.2" width="25" height="15" x="30" y="177.5" />
 		   
       <g id="part-1" transform="translate(0,0)">
-        <rect                     id="part-l-bar"  style="fill:black;fill-opacity:0.1;stroke-width:0.1;stroke:black" width="25" height="200" x="0" y="0" rx="1" ry="1" />
+		<rect                     id="part-l-bar"  style="fill:black;fill-opacity:0.1;stroke-width:0.1;stroke:black" width="25" height="200" x="0" y="0" rx="1" ry="1" />
 		<use href="#screw_5.0mm"  id="part-l_screw_5.0mm_1" transform="translate(12.5,30)" />
 		<use href="#screw_3.0mm"  id="part-l_screw_3.0mm_2" transform="translate(12.5,15)" />
 		<use href="#screw_3.0mm"  id="part-l_screw_3.0mm_5" transform="translate(12.5,185)" />
 		<use href="#screw_5.0mm"  id="part-l_screw_5.0mm_6" transform="translate(12.5,170)" />
+		
+		
 	  </g>
 	   
 	  <g id="part-mid" transform="translate(30,0)">
