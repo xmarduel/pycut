@@ -1,19 +1,18 @@
-
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QColor
 
 from PySide6.QtCore import qIsNaN
 
+
 def qQNaN():
-    return float('NaN')
+    return float("NaN")
+
 
 def qBound(amin, val, amax):
     return max(amin, min(val, amax))
 
-    
-    
-class Util:
 
+class Util:
     @classmethod
     def nMin(cls, v1: float, v2: float) -> float:
         if (not qIsNaN(v1)) and (not qIsNaN(v2)):
@@ -42,6 +41,5 @@ class Util:
 
     @classmethod
     def cloneQVector3D(cls, v: QVector3D) -> QVector3D:
-        ''' faster as deepcopy '''
+        """faster as deepcopy"""
         return QVector3D(v.x(), v.y(), v.z())
-

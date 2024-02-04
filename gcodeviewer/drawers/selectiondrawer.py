@@ -1,44 +1,43 @@
-
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QColor
 
 from gcodeviewer.drawers.shaderdrawable import ShaderDrawable, VertexData
 from gcodeviewer.util.util import Util
 
-sNaN = float('NaN')
+sNaN = float("NaN")
 
 
 class SelectionDrawer(ShaderDrawable):
-    '''
-    '''
+    """ """
+
     def __init__(self):
         super(SelectionDrawer, self).__init__()
 
         self.m_points = []
 
-        self.m_startPosition = QVector3D(0,0,0)
-        self.m_endPosition = QVector3D(0,0,0)
-        self.m_color = QColor(120,200,200)
+        self.m_startPosition = QVector3D(0, 0, 0)
+        self.m_endPosition = QVector3D(0, 0, 0)
+        self.m_color = QColor(120, 200, 200)
 
-    def startPosition(self) -> QVector3D: 
+    def startPosition(self) -> QVector3D:
         return self.m_startPosition
 
     def setStartPosition(self, startPosition: QVector3D):
         self.m_startPosition = startPosition
 
-    def color(self) -> QColor :
+    def color(self) -> QColor:
         return self.m_color
 
-    def setColor(self, color: QColor) :
+    def setColor(self, color: QColor):
         self.m_color = color
 
-    def endPosition(self) -> QVector3D :
+    def endPosition(self) -> QVector3D:
         return self.m_endPosition
 
-    def setEndPosition(self, endPosition: QVector3D) :
+    def setEndPosition(self, endPosition: QVector3D):
         self.m_endPosition = endPosition
 
-    def updateData(self) -> bool :
+    def updateData(self) -> bool:
         self.m_points = []
 
         vertex = VertexData()
@@ -49,4 +48,3 @@ class SelectionDrawer(ShaderDrawable):
         self.m_points.append(vertex)
 
         return True
-

@@ -1,4 +1,3 @@
-
 from typing import List
 
 from PySide6.QtCore import QElapsedTimer
@@ -24,9 +23,9 @@ from gcodeviewer.drawers.origindrawer import OriginDrawer
 from gcodeviewer.drawers.tooldrawer import ToolDrawer
 from gcodeviewer.drawers.selectiondrawer import SelectionDrawer
 
-from gcodeviewer.parser.gcodeviewparse import GcodeViewParse 
-from gcodeviewer.parser.gcodepreprocessorutils import  GcodePreprocessorUtils  
-from gcodeviewer.parser.gcodeparser import  GcodeParser 
+from gcodeviewer.parser.gcodeviewparse import GcodeViewParse
+from gcodeviewer.parser.gcodepreprocessorutils import GcodePreprocessorUtils
+from gcodeviewer.parser.gcodeparser import GcodeParser
 from gcodeviewer.parser.linesegment import LineSegment
 
 from gcodeviewer.tables.gcodetableview import GCodeTableView
@@ -36,15 +35,15 @@ from gcodeviewer.tables.gcodetablemodel import GCodeTableModel
 from gcodeviewer.widgets.glwidget import GLWidget
 from gcodeviewer.widgets.glcontrolswidget import GCodeControlsWidget
 
-sNan = float('NaN')
+sNan = float("NaN")
 
 PROGRESSMINLINES = 10000
-PROGRESSSTEP     =  1000
+PROGRESSSTEP = 1000
 
 
 class GLWidgetContainer(QtWidgets.QWidget):
-    '''
-    '''
+    """ """
+
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
 
@@ -64,7 +63,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.view_with_controls.setLayout(self.vbox)
 
         self.splitter = QtWidgets.QSplitter(self)
-        self.splitter.setObjectName(u"splitter")
+        self.splitter.setObjectName("splitter")
         self.splitter.setOrientation(Qt.Horizontal)
         self.splitter.setHandleWidth(6)
 
@@ -108,23 +107,27 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.m_selectionDrawer = SelectionDrawer()
         self.m_selectionDrawer.update()
 
-
-
         self.glwVisualizer.addDrawable(self.m_originDrawer)
         self.glwVisualizer.addDrawable(self.m_codeDrawer)
-        #self.glwVisualizer.addDrawable(self.m_probeDrawer)
+        # self.glwVisualizer.addDrawable(self.m_probeDrawer)
         self.glwVisualizer.addDrawable(self.m_toolDrawer)
         self.glwVisualizer.addDrawable(self.m_selectionDrawer)
-        #self.glwVisualizer.addDrawable(self.m_heightMapBorderDrawer)
-        #self.glwVisualizer.addDrawable(self.m_heightMapGridDrawer)
-        #self.glwVisualizer.addDrawable(self.m_heightMapInterpolationDrawer)
-        
+        # self.glwVisualizer.addDrawable(self.m_heightMapBorderDrawer)
+        # self.glwVisualizer.addDrawable(self.m_heightMapGridDrawer)
+        # self.glwVisualizer.addDrawable(self.m_heightMapInterpolationDrawer)
+
         self.glwVisualizer.fitDrawable()
 
         self.tblProgram.setModel(self.m_programModel)
-        self.tblProgram.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-        self.tblProgram.verticalScrollBar().actionTriggered.connect(self.onScrollBarAction)
-        self.tblProgram.selectionModel().currentChanged.connect(self.onTableCurrentChanged)    
+        self.tblProgram.horizontalHeader().setSectionResizeMode(
+            1, QtWidgets.QHeaderView.Stretch
+        )
+        self.tblProgram.verticalScrollBar().actionTriggered.connect(
+            self.onScrollBarAction
+        )
+        self.tblProgram.selectionModel().currentChanged.connect(
+            self.onTableCurrentChanged
+        )
         self.tblProgram.setup()
 
         self.tblProgram.hideColumn(0)
@@ -133,8 +136,8 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.tblProgram.hideColumn(4)
         self.tblProgram.hideColumn(5)
 
-        self.controls.setTblProgram(self.tblProgram) # renew the slider range
-    
+        self.controls.setTblProgram(self.tblProgram)  # renew the slider range
+
         self.clearTable()
 
     def loadFile(self, fileName):
@@ -156,13 +159,13 @@ class GLWidgetContainer(QtWidgets.QWidget):
 
         # Reset tables
         self.clearTable()
-        #self.m_probeModel.clear()
-        #self.m_programHeightmapModel.clear()
+        # self.m_probeModel.clear()
+        # self.m_programHeightmapModel.clear()
         self.m_currentModel = self.m_programModel
 
         # Reset parsers
         self.m_viewParser.reset()
-        #self.m_probeParser.reset()
+        # self.m_probeParser.reset()
 
         # Reset code drawer
         self.m_currentDrawer = self.m_codeDrawer
@@ -171,10 +174,10 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.updateProgramEstimatedTime([])
 
         # Update interface
-        #self.chkHeightMapUse.setChecked(False)
-        #self.grpHeightMap.setProperty("overrided", False)
-        #self.style().unpolish(self.grpHeightMap)
-        #self.grpHeightMap.ensurePolished()
+        # self.chkHeightMapUse.setChecked(False)
+        # self.grpHeightMap.setProperty("overrided", False)
+        # self.style().unpolish(self.grpHeightMap)
+        # self.grpHeightMap.ensurePolished()
 
         # Reset tableview
         headerState = self.tblProgram.horizontalHeader().saveState()
@@ -185,7 +188,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         ####gp.setTraverseSpeed(self.m_settings.rapidSpeed())
         gp.setTraverseSpeed(100)
 
-        if self.m_codeDrawer.getIgnoreZ(): 
+        if self.m_codeDrawer.getIgnoreZ():
             gp.reset(QVector3D(sNan, sNan, 0))
 
         print("Prepared to load: %s" % time.elapsed())
@@ -198,15 +201,16 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.m_programModel.m_data.clear()
         self.m_programModel.m_data = []
 
-        progress = QProgressDialog ("Parsing GCode...", "Abort", 0, len(data), self)
+        progress = QProgressDialog("Parsing GCode...", "Abort", 0, len(data), self)
         progress.setWindowModality(Qt.WindowModal)
         progress.setFixedSize(progress.sizeHint())
         if len(data) > PROGRESSMINLINES:
             progress.show()
-            progress.setStyleSheet("QProgressBar {text-align: center qproperty-format: \"\"}")
+            progress.setStyleSheet(
+                'QProgressBar {text-align: center qproperty-format: ""}'
+            )
 
         while len(data) > 0:
-    
             command = data.pop(0)
 
             # Trim command
@@ -228,12 +232,12 @@ class GLWidgetContainer(QtWidgets.QWidget):
 
                 self.m_programModel.m_data.append(item)
 
-            if progress.isVisible() and (len(data) % PROGRESSSTEP == 0) :
+            if progress.isVisible() and (len(data) % PROGRESSSTEP == 0):
                 progress.setValue(progress.maximum() - len(data))
                 QApplication.instance().processEvents()
-                if progress.wasCanceled() :
+                if progress.wasCanceled():
                     break
-            
+
         progress.close()
 
         self.m_programModel.insertRow(self.m_programModel.rowCount())
@@ -241,10 +245,12 @@ class GLWidgetContainer(QtWidgets.QWidget):
 
         time.start()
 
-        arcPrecision = 0.0 # TODO self.m_settings.arcPrecision()
-        arcDegreeMode = True # TODO self.m_settings.arcDegreeMode()
+        arcPrecision = 0.0  # TODO self.m_settings.arcPrecision()
+        arcDegreeMode = True  # TODO self.m_settings.arcDegreeMode()
 
-        all_lines = self.m_viewParser.getLinesFromParser(gp, arcPrecision, arcDegreeMode)
+        all_lines = self.m_viewParser.getLinesFromParser(
+            gp, arcPrecision, arcDegreeMode
+        )
 
         self.updateProgramEstimatedTime(all_lines)
         print("view parser filled: %s ms" % time.elapsed())
@@ -257,7 +263,9 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.tblProgram.setup()
 
         # connect this model
-        self.tblProgram.selectionModel().currentChanged.connect(self.onTableCurrentChanged) 
+        self.tblProgram.selectionModel().currentChanged.connect(
+            self.onTableCurrentChanged
+        )
 
         # Update tableview
         self.tblProgram.selectRow(0)
@@ -266,10 +274,10 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.m_codeDrawer.update()
         self.glwVisualizer.fitDrawable(self.m_codeDrawer)
 
-        #self.resetHeightmap()
-        #self.updateControlsState()
+        # self.resetHeightmap()
+        # self.updateControlsState()
 
-        self.controls.setTblProgram(self.tblProgram) # renew the slider range
+        self.controls.setTblProgram(self.tblProgram)  # renew the slider range
 
         self.update()
 
@@ -283,10 +291,10 @@ class GLWidgetContainer(QtWidgets.QWidget):
         for ls in lines:
             length = (ls.getEnd() - ls.getStart()).length()
 
-            if not qIsNaN(length) and not qIsNaN(ls.getSpeed()) and ls.getSpeed() != 0 :
+            if not qIsNaN(length) and not qIsNaN(ls.getSpeed()) and ls.getSpeed() != 0:
                 speed = ls.getSpeed()
-                
-                '''
+
+                """
                 cond1 = self.slbFeedOverride.isChecked() and not ls.isFastTraverse()
                 cond2 = self.slbRapidOverride.isChecked() and ls.isFastTraverse()
                 
@@ -297,7 +305,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
                     speed = val1
                 elif cond2:
                     speed = val2
-                '''
+                """
                 time += length / speed
 
         time *= 60
@@ -313,11 +321,10 @@ class GLWidgetContainer(QtWidgets.QWidget):
         return t
 
     def onScrollBarAction(self):
-        '''
-        '''
-        pass 
-    
-    def onTableCurrentChanged(self, idx1: QtCore.QModelIndex, idx2: QtCore.QModelIndex) :
+        """ """
+        pass
+
+    def onTableCurrentChanged(self, idx1: QtCore.QModelIndex, idx2: QtCore.QModelIndex):
         # Update toolpath hightlighting
         if idx1.row() > self.m_currentModel.rowCount() - 2:
             idx1 = self.m_currentModel.index(self.m_currentModel.rowCount() - 2, 0)
@@ -332,19 +339,25 @@ class GLWidgetContainer(QtWidgets.QWidget):
         if not self.m_currentDrawer.geometryUpdated():
             for i in range(len(list)):
                 jdx1 = list[i].getLineNumber()
-                jdx2 = int(self.m_currentModel.data(self.m_currentModel.index(idx1.row(), 4)))
+                jdx2 = int(
+                    self.m_currentModel.data(self.m_currentModel.index(idx1.row(), 4))
+                )
                 list[i].setIsHightlight(jdx1 <= jdx2)
-            
+
         # Update vertices on current cell changed
         else:
-            lineFirst = int(self.m_currentModel.data(self.m_currentModel.index(idx1.row(), 4)))
-            lineLast = int(self.m_currentModel.data(self.m_currentModel.index(idx2.row(), 4)))
+            lineFirst = int(
+                self.m_currentModel.data(self.m_currentModel.index(idx1.row(), 4))
+            )
+            lineLast = int(
+                self.m_currentModel.data(self.m_currentModel.index(idx2.row(), 4))
+            )
             if lineLast < lineFirst:
                 lineLast, lineFirst = lineFirst, lineLast
 
             indexes = []
-            for i in range(lineFirst + 1, lineLast+1):
-                for l in  lineIndexes[i]:
+            for i in range(lineFirst + 1, lineLast + 1):
+                for l in lineIndexes[i]:
                     list[l].setIsHightlight(idx1.row() > idx2.row())
                     indexes.append(l)
 
@@ -352,19 +365,22 @@ class GLWidgetContainer(QtWidgets.QWidget):
                 self.m_selectionDrawer.setEndPosition(QVector3D(sNan, sNan, sNan))
             else:
                 if self.m_codeDrawer.getIgnoreZ():
-                    self.m_selectionDrawer.setEndPosition(QVector3D( \
-                        list[indexes[-1]].getEnd().x(), \
-                        list[indexes[-1]].getEnd().y(), \
-                        0))
+                    self.m_selectionDrawer.setEndPosition(
+                        QVector3D(
+                            list[indexes[-1]].getEnd().x(),
+                            list[indexes[-1]].getEnd().y(),
+                            0,
+                        )
+                    )
                 else:
                     self.m_selectionDrawer.setEndPosition(list[indexes[-1]].getEnd())
             self.m_selectionDrawer.update()
 
             if len(indexes) > 0:
                 self.m_currentDrawer.update_indexes(indexes)
-        
+
         # Update selection marker
-        
+
         line = int(self.m_currentModel.data(self.m_currentModel.index(idx1.row(), 4)))
         if line > 0 and lineIndexes[line] != "":
             pos = list[lineIndexes[line][-1]].getEnd()
@@ -380,9 +396,8 @@ class GLWidgetContainer(QtWidgets.QWidget):
 
         else:
             self.m_selectionDrawer.setEndPosition(QVector3D(sNan, sNan, sNan))
-        
+
         self.m_selectionDrawer.update()
 
         # and update the controls widget slider
         self.controls.set_slider_pos(idx1.row())
-

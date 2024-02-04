@@ -22,10 +22,10 @@ from gcodeviewer.util.util import Util
 from gcodeviewer.util.util import qQNaN
 
 
-class GcodeViewParse : 
-    '''
-    '''
-    def __init__(self, parent = None):
+class GcodeViewParse:
+    """ """
+
+    def __init__(self, parent=None):
         self.absoluteMode = True
         self.absoluteIJK = False
 
@@ -34,42 +34,47 @@ class GcodeViewParse :
         self.m_max = QVector3D(qQNaN(), qQNaN(), qQNaN())
         self.m_minLength = qQNaN()
 
-        self.m_lines : List[LineSegment] = []
-        self.m_lineIndexes : List[List[int]] = [[]]   
+        self.m_lines: List[LineSegment] = []
+        self.m_lineIndexes: List[List[int]] = [[]]
 
         # Parsing state.
-        self.lastPoint : QVector3D = None
-        self.currentLine  = 0  # for assigning line numbers to segments.
+        self.lastPoint: QVector3D = None
+        self.currentLine = 0  # for assigning line numbers to segments.
 
         # Debug
-        self.debug = True 
-    
-    def getMinimumExtremes(self) -> QVector3D : 
+        self.debug = True
+
+    def getMinimumExtremes(self) -> QVector3D:
         return self.m_min
 
-    def getMaximumExtremes(self) -> QVector3D :
+    def getMaximumExtremes(self) -> QVector3D:
         return self.m_max
 
-    def getMinLength(self) -> float :
+    def getMinLength(self) -> float:
         return self.m_minLength
 
-    def getResolution(self) -> QtCore.QSize :
-        return QtCore.QSize( \
-                ((self.m_max.x() - self.m_min.x()) / self.m_minLength) + 1,  \
-                ((self.m_max.y() - self.m_min.y()) / self.m_minLength) + 1)
+    def getResolution(self) -> QtCore.QSize:
+        return QtCore.QSize(
+            ((self.m_max.x() - self.m_min.x()) / self.m_minLength) + 1,
+            ((self.m_max.y() - self.m_min.y()) / self.m_minLength) + 1,
+        )
 
-    def toObjRedux(self, gcode: List[str], arcPrecision: float, arcDegreeMode: bool) -> List[LineSegment]:
+    def toObjRedux(
+        self, gcode: List[str], arcPrecision: float, arcDegreeMode: bool
+    ) -> List[LineSegment]:
         gp = GcodeParser()
 
         for s in gcode:
             gp.addCommand(s)
 
         return self.getLinesFromParser(gp, arcPrecision, arcDegreeMode)
-    
+
     def getLineSegmentList(self) -> List[LineSegment]:
         return self.m_lines
 
-    def getLinesFromParser(self, gp: GcodeParser, arcPrecision: float, arcDegreeMode: bool) -> List[LineSegment]:
+    def getLinesFromParser(
+        self, gp: GcodeParser, arcPrecision: float, arcDegreeMode: bool
+    ) -> List[LineSegment]:
         psl = gp.getPointSegmentList()
         # For a line segment list ALL arcs must be converted to lines.
         minArcLength = 0.1
@@ -78,7 +83,7 @@ class GcodeViewParse :
         end = None
 
         # Prepare segments indexes
-        self.m_lineIndexes = [ [] for _ in range(len(psl)) ]
+        self.m_lineIndexes = [[] for _ in range(len(psl))]
 
         lineIndex = 0
         for segment in psl:
@@ -89,17 +94,20 @@ class GcodeViewParse :
             end = ps.point()
 
             # start is null for the first iteration.
-            if start != None:           
-                # Expand arc for graphics.            
+            if start != None:
+                # Expand arc for graphics.
                 if ps.isArc():
-                    points = GcodePreprocessorUtils.generatePointsAlongArcBDring(ps.plane(),
-                        start, end, 
-                        ps.center(), 
-                        ps.isClockwise(), 
-                        ps.getRadius(), 
-                        minArcLength, 
-                        arcPrecision, 
-                        arcDegreeMode)
+                    points = GcodePreprocessorUtils.generatePointsAlongArcBDring(
+                        ps.plane(),
+                        start,
+                        end,
+                        ps.center(),
+                        ps.isClockwise(),
+                        ps.getRadius(),
+                        minArcLength,
+                        arcPrecision,
+                        arcDegreeMode,
+                    )
                     # Create line segments from points.
                     if len(points) > 0:
                         startPoint = start
@@ -107,17 +115,17 @@ class GcodeViewParse :
                             if nextPoint == startPoint:
                                 continue
                             ls = LineSegment()
-                            #ls.setIsArc(ps.isArc())
-                            #ls.setIsClockwise(ps.isClockwise())
-                            #ls.setPlane(ps.plane())
-                            #ls.setIsFastTraverse(ps.isFastTraverse())
-                            #ls.setIsZMovement(ps.isZMovement())
-                            #ls.setIsMetric(isMetric)
-                            #ls.setIsAbsolute(ps.isAbsolute())
-                            #ls.setSpeed(ps.getSpeed())
-                            #ls.setSpindleSpeed(ps.getSpindleSpeed())
-                            #ls.setDwell(ps.getDwell())
-                            #self.testExtremes(nextPoint)
+                            # ls.setIsArc(ps.isArc())
+                            # ls.setIsClockwise(ps.isClockwise())
+                            # ls.setPlane(ps.plane())
+                            # ls.setIsFastTraverse(ps.isFastTraverse())
+                            # ls.setIsZMovement(ps.isZMovement())
+                            # ls.setIsMetric(isMetric)
+                            # ls.setIsAbsolute(ps.isAbsolute())
+                            # ls.setSpeed(ps.getSpeed())
+                            # ls.setSpindleSpeed(ps.getSpindleSpeed())
+                            # ls.setDwell(ps.getDwell())
+                            # self.testExtremes(nextPoint)
 
                             ls.m_isArc = ps.m_isArc
                             ls.m_isClockwise = ps.isClockwise()
@@ -129,16 +137,18 @@ class GcodeViewParse :
                             ls.m_speed = ps.m_speed
                             ls.m_spindleSpeed = ps.m_spindleSpeed
                             ls.m_dwell = ps.m_dwell
-                            
+
                             ls.m_first = startPoint
                             ls.m_second = nextPoint
                             ls.m_lineNumber = lineIndex
 
                             self.testExtremes(nextPoint)
                             self.m_lines.append(ls)
-                            self.m_lineIndexes[ps.getLineNumber()].append(len(self.m_lines) - 1)
+                            self.m_lineIndexes[ps.getLineNumber()].append(
+                                len(self.m_lines) - 1
+                            )
                             startPoint = nextPoint
-                        
+
                         lineIndex += 1
 
                 # Line
@@ -147,16 +157,16 @@ class GcodeViewParse :
                     ls.m_first = start
                     ls.m_second = end
                     ls.m_lineNumber = lineIndex
-    
+
                     lineIndex += 1
-                    #ls.setIsArc(ps.isArc())
-                    #ls.setIsFastTraverse(ps.isFastTraverse())
-                    #ls.setIsZMovement(ps.isZMovement())
-                    #ls.setIsMetric(isMetric)
-                    #ls.setIsAbsolute(ps.isAbsolute())
-                    #ls.setSpeed(ps.getSpeed())
-                    #ls.setSpindleSpeed(ps.getSpindleSpeed())
-                    #ls.setDwell(ps.getDwell())
+                    # ls.setIsArc(ps.isArc())
+                    # ls.setIsFastTraverse(ps.isFastTraverse())
+                    # ls.setIsZMovement(ps.isZMovement())
+                    # ls.setIsMetric(isMetric)
+                    # ls.setIsAbsolute(ps.isAbsolute())
+                    # ls.setSpeed(ps.getSpeed())
+                    # ls.setSpindleSpeed(ps.getSpindleSpeed())
+                    # ls.setDwell(ps.getDwell())
 
                     ls.m_isArc = ps.m_isArc
                     ls.m_isFastTraverse = ps.m_isFastTraverse
@@ -171,7 +181,7 @@ class GcodeViewParse :
                     self.testLength(start, end)
                     self.m_lines.append(ls)
                     self.m_lineIndexes[ps.getLineNumber()].append(len(self.m_lines) - 1)
-        
+
             start = end
 
         return self.m_lines
@@ -179,13 +189,13 @@ class GcodeViewParse :
     def getLines(self) -> List[LineSegment]:
         return self.m_lines
 
-    def getLinesIndexes(self) -> List[List[int]]: 
+    def getLinesIndexes(self) -> List[List[int]]:
         return self.m_lineIndexes
 
     def reset(self):
         self.m_lines = []
         self.m_lineIndexes = []
-    
+
         self.currentLine = 0
         self.m_min = QVector3D(qQNaN(), qQNaN(), qQNaN())
         self.m_max = QVector3D(qQNaN(), qQNaN(), qQNaN())
@@ -216,4 +226,3 @@ class GcodeViewParse :
                 self.m_minLength = length
             else:
                 self.m_minLength = min(self.m_minLength, length)
-
