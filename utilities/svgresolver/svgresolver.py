@@ -4,9 +4,79 @@ VERSION = "1_1_0_alpha"
 
 import os
 import argparse
+import io
 
 from lxml import etree
 import svgelements
+
+
+class SvgSetMissingIds:
+    """ """
+
+    cnt = 1
+    prefix = "pycut-xxx"
+
+    NS = "{http://www.w3.org/2000/svg}"
+
+    def __init__(self, filename: str):
+        """ """
+        self.filename = filename
+        self.filename_id = os.path.splitext(self.filename)[0] + ".with_ids.svg"
+
+        self.svg = None
+        self.tree = None
+
+    def process(self):
+        parser = etree.XMLParser(remove_blank_text=True)
+        self.tree = etree.parse(self.filename, parser)
+
+        root = self.tree.getroot()
+
+        self.add_id_to_elements(root)
+        self.write(root)
+
+    def clean(self):
+        """ """
+        pass
+        # shutil.rmtree(self.filename_id)
+
+    def add_id_to_elements(self, item: etree.Element):
+        """ """
+        for child in item:
+            if "id" not in child.attrib and child.tag.split(self.NS)[1] in [
+                "circle",
+                "ellipse",
+                "line",
+                "point",
+                "polygone",
+                "polyline",
+                "rect",
+                "path",
+            ]:
+                child.attrib["id"] = f"{self.prefix}-{self.cnt}"
+                self.cnt += 1
+
+            self.add_id_to_elements(child)
+
+    def write(self, root: etree.Element):
+        doc = etree.ElementTree(root)
+
+        doc.write(
+            self.filename_id, pretty_print=True, xml_declaration=True, encoding="utf-8"
+        )
+
+        # maybe an extra formatter - needs xmllint
+        tree = etree.parse(self.filename_id)
+        tree_str = etree.tostring(tree, pretty_print=True)
+        f = open(self.filename_id, "w")
+        f.write(tree_str.decode("utf-8"))
+        f.close()
+
+        # re-read
+        svg_str = open(self.filename_id, "r").read()
+        self.svg = io.StringIO(svg_str)
+
+        # and delete temp file TODO
 
 
 class SvgResolver:
@@ -18,6 +88,9 @@ class SvgResolver:
         """ """
         self.filename = options.svg
         self.resolved_filename = os.path.splitext(self.filename)[0] + ".resolved.svg"
+
+        self.handle = SvgSetMissingIds(self.filename)
+        self.handle.process()  # use handle.data as "new" source
 
         self.drop_defs = options.drop_defs
 
@@ -31,16 +104,27 @@ class SvgResolver:
         # - defined in "in" -> use ppi=1
 
         if options.units == "px":
+            # self.svg = svgelements.SVG.parse(
+            #    self.filename, reify=True, ppi=svgelements.DEFAULT_PPI
+            # )
             self.svg = svgelements.SVG.parse(
-                self.filename, reify=True, ppi=svgelements.DEFAULT_PPI
+                self.handle.svg, reify=True, ppi=svgelements.DEFAULT_PPI
             )
         if options.units == "mm":
+            # self.svg = svgelements.SVG.parse(
+            #    self.filename, reify=True, ppi=25.4
+            # )  # so that there is no "scaling" : 1 inch = 25.4 mm
+
             self.svg = svgelements.SVG.parse(
-                self.filename, reify=True, ppi=25.4
+                self.handle.svg, reify=True, ppi=25.4
             )  # so that there is no "scaling" : 1 inch = 25.4 mm
         if options.units == "in":
+            # self.svg = svgelements.SVG.parse(
+            #    self.filename, reify=True, ppi=1
+            # )  # so that there is no "scaling" : 1 inch <-> 96 px
+
             self.svg = svgelements.SVG.parse(
-                self.filename, reify=True, ppi=1
+                self.handle.svg, reify=True, ppi=1
             )  # so that there is no "scaling" : 1 inch <-> 96 px
 
         # print("======================================")
@@ -53,8 +137,9 @@ class SvgResolver:
         self.id_style = {}
 
         # we will write the resolved svg from the initial svg
-        parser = etree.XMLParser(remove_blank_text=True)
-        self.tree = etree.parse(self.filename, parser)
+        # parser = etree.XMLParser(remove_blank_text=True)
+        # self.tree = etree.parse(self.filename, parser)
+        self.tree = self.handle.tree
 
     def resolve(self):
         """
@@ -211,10 +296,22 @@ class SvgResolver:
         else:
             print("defs not found")
 
+    def remove_auto_ids(self, item: etree.Element):
+        """"""
+        for child in item:
+            if "id" in child.attrib:
+                e_id: str = child.attrib["id"]
+                if e_id.startswith(SvgSetMissingIds.prefix):
+                    del child.attrib["id"]
+
+            self.remove_auto_ids(child)
+
     def write_result(self, root: etree.ElementTree):
         """ """
         if self.drop_defs:
             self.remove_defs(root)
+
+        self.remove_auto_ids(root)
 
         doc = etree.ElementTree(root)
 
