@@ -132,13 +132,18 @@ class SvgTextObject:
 
     def to_paths(self) -> List[PathWithAttribs]:
         """ """
-        fontfile = FontFiles.get_fontfile(self.font_family, self.font_style, self.font_weight, self.font_stretch)
+        fontfile = FontFiles.get_fontfile(
+            self.font_family, self.font_style, self.font_weight, self.font_stretch
+        )
 
         if fontfile:
             converter = String2SvgPaths(self.text, fontfile)
             all_paths = converter.calc_paths(self.font_size_float, self.position)
 
-            return [PathWithAttribs(path, self.elt, self.id, self.elt_style) for path in all_paths]
+            return [
+                PathWithAttribs(path, self.elt, self.id, self.elt_style)
+                for path in all_paths
+            ]
 
         return []
 
@@ -695,7 +700,9 @@ class Char2SvgPath:
         # load font
         self.face = freetype.Face(self.font)
 
-        self.face.set_char_size(self.CHAR_SIZE, self.CHAR_SIZE)  # -> x_ppem = y_ppem = 32
+        self.face.set_char_size(
+            self.CHAR_SIZE, self.CHAR_SIZE
+        )  # -> x_ppem = y_ppem = 32
 
         """
         The character widths and heights are specified in 1/64th of points. 
@@ -714,12 +721,17 @@ class Char2SvgPath:
         """
         # initialize a character - option FT_LOAD_NO_SCALE mandatory
         self.face.load_char(
-            self.char, freetype.FT_LOAD_NO_SCALE | freetype.FT_LOAD_NO_BITMAP | freetype.FT_KERNING_UNSCALED
+            self.char,
+            freetype.FT_LOAD_NO_SCALE
+            | freetype.FT_LOAD_NO_BITMAP
+            | freetype.FT_KERNING_UNSCALED,
         )
 
         # glyph info
         self.glyph_index = self.face.get_char_index(self.char)
-        self.glyph_adv = self.face.get_advance(self.glyph_index, freetype.FT_LOAD_NO_SCALE | freetype.FT_LOAD_NO_BITMAP)
+        self.glyph_adv = self.face.get_advance(
+            self.glyph_index, freetype.FT_LOAD_NO_SCALE | freetype.FT_LOAD_NO_BITMAP
+        )
 
         self.bbox = self.face.glyph.outline.get_bbox()
 
@@ -869,7 +881,9 @@ class Char2SvgPath:
             if self.gpos:
                 # Only getting x-advance for first glyph.
                 next_cc = Char2SvgPath(next_ch, self.font, load_gpos_table=False)
-                adv = self.gpos.kern(self.glyph_index, next_cc.glyph_index)[0].get("xadvance", 0)
+                adv = self.gpos.kern(self.glyph_index, next_cc.glyph_index)[0].get(
+                    "xadvance", 0
+                )
             else:
                 vector = self.face.get_kerning(self.char, next_ch)
                 adv = vector.x
@@ -904,7 +918,10 @@ class Char2SvgPath:
         outline: freetype.Outline = self.face.glyph.outline
 
         # shift and flip the points
-        outline_points = [((pt[0] - xshift) * scaling, (yflip - pt[1]) * scaling) for pt in outline.points]
+        outline_points = [
+            ((pt[0] - xshift) * scaling, (yflip - pt[1]) * scaling)
+            for pt in outline.points
+        ]
 
         """
         The face has three lists of interest: the points, the tags, and the contours. 
@@ -949,7 +966,12 @@ class Char2SvgPath:
             for k, segment in enumerate(segments):
                 # print("segment (len=%d)" % len(segment))
                 if len(segment) == 2:
-                    path_segments.append(Line(start=tuple2complex(segment[0]), end=tuple2complex(segment[1])))
+                    path_segments.append(
+                        Line(
+                            start=tuple2complex(segment[0]),
+                            end=tuple2complex(segment[1]),
+                        )
+                    )
 
                 elif len(segment) == 3:
                     C12 = segment[1]
@@ -958,7 +980,11 @@ class Char2SvgPath:
                     P2 = segment[2]
 
                     path_segments.append(
-                        QuadraticBezier(start=tuple2complex(P1), control=tuple2complex(C12), end=tuple2complex(P2))
+                        QuadraticBezier(
+                            start=tuple2complex(P1),
+                            control=tuple2complex(C12),
+                            end=tuple2complex(P2),
+                        )
                     )
 
                 elif len(segment) == 4:
@@ -966,14 +992,25 @@ class Char2SvgPath:
                     C23 = segment[2]
 
                     P1 = segment[0]
-                    P2 = ((segment[1][0] + segment[2][0]) / 2.0, (segment[1][1] + segment[2][1]) / 2.0)
+                    P2 = (
+                        (segment[1][0] + segment[2][0]) / 2.0,
+                        (segment[1][1] + segment[2][1]) / 2.0,
+                    )
                     P3 = segment[3]
 
                     path_segments.append(
-                        QuadraticBezier(start=tuple2complex(P1), control=tuple2complex(C12), end=tuple2complex(P2))
+                        QuadraticBezier(
+                            start=tuple2complex(P1),
+                            control=tuple2complex(C12),
+                            end=tuple2complex(P2),
+                        )
                     )
                     path_segments.append(
-                        QuadraticBezier(start=tuple2complex(P2), control=tuple2complex(C23), end=tuple2complex(P3))
+                        QuadraticBezier(
+                            start=tuple2complex(P2),
+                            control=tuple2complex(C23),
+                            end=tuple2complex(P3),
+                        )
                     )
 
                 elif len(segment) == 5:
@@ -982,18 +1019,36 @@ class Char2SvgPath:
                     C34 = segment[3]
 
                     P1 = segment[0]
-                    P2 = ((segment[1][0] + segment[2][0]) / 2.0, (segment[1][1] + segment[2][1]) / 2.0)
-                    P3 = ((segment[2][0] + segment[3][0]) / 2.0, (segment[2][1] + segment[3][1]) / 2.0)
+                    P2 = (
+                        (segment[1][0] + segment[2][0]) / 2.0,
+                        (segment[1][1] + segment[2][1]) / 2.0,
+                    )
+                    P3 = (
+                        (segment[2][0] + segment[3][0]) / 2.0,
+                        (segment[2][1] + segment[3][1]) / 2.0,
+                    )
                     P4 = segment[4]
 
                     path_segments.append(
-                        QuadraticBezier(start=tuple2complex(P1), control=tuple2complex(C12), end=tuple2complex(P2))
+                        QuadraticBezier(
+                            start=tuple2complex(P1),
+                            control=tuple2complex(C12),
+                            end=tuple2complex(P2),
+                        )
                     )
                     path_segments.append(
-                        QuadraticBezier(start=tuple2complex(P2), control=tuple2complex(C23), end=tuple2complex(P3))
+                        QuadraticBezier(
+                            start=tuple2complex(P2),
+                            control=tuple2complex(C23),
+                            end=tuple2complex(P3),
+                        )
                     )
                     path_segments.append(
-                        QuadraticBezier(start=tuple2complex(P3), control=tuple2complex(C34), end=tuple2complex(P4))
+                        QuadraticBezier(
+                            start=tuple2complex(P3),
+                            control=tuple2complex(C34),
+                            end=tuple2complex(P4),
+                        )
                     )
 
                 else:
@@ -1003,29 +1058,53 @@ class Char2SvgPath:
                     # first
                     Ps = segment[0]
                     Ctrl = segment[1]
-                    Pe = ((segment[1][0] + segment[2][0]) / 2.0, (segment[1][1] + segment[2][1]) / 2.0)
+                    Pe = (
+                        (segment[1][0] + segment[2][0]) / 2.0,
+                        (segment[1][1] + segment[2][1]) / 2.0,
+                    )
 
                     path_segments.append(
-                        QuadraticBezier(start=tuple2complex(Ps), control=tuple2complex(Ctrl), end=tuple2complex(Pe))
+                        QuadraticBezier(
+                            start=tuple2complex(Ps),
+                            control=tuple2complex(Ctrl),
+                            end=tuple2complex(Pe),
+                        )
                     )
 
                     # second - ...
                     for k in range(2, len(segment) - 2):
-                        Ps = ((segment[k - 1][0] + segment[k][0]) / 2.0, (segment[k - 1][1] + segment[k][1]) / 2.0)
+                        Ps = (
+                            (segment[k - 1][0] + segment[k][0]) / 2.0,
+                            (segment[k - 1][1] + segment[k][1]) / 2.0,
+                        )
                         Ctrl = segment[k]
-                        Pe = ((segment[k][0] + segment[k + 1][0]) / 2.0, (segment[k][1] + segment[k + 1][1]) / 2.0)
+                        Pe = (
+                            (segment[k][0] + segment[k + 1][0]) / 2.0,
+                            (segment[k][1] + segment[k + 1][1]) / 2.0,
+                        )
 
                         path_segments.append(
-                            QuadraticBezier(start=tuple2complex(Ps), control=tuple2complex(Ctrl), end=tuple2complex(Pe))
+                            QuadraticBezier(
+                                start=tuple2complex(Ps),
+                                control=tuple2complex(Ctrl),
+                                end=tuple2complex(Pe),
+                            )
                         )
 
                     # last
-                    Ps = ((segment[N - 2][0] + segment[N - 1][0]) / 2.0, (segment[N - 2][1] + segment[N - 1][1]) / 2.0)
+                    Ps = (
+                        (segment[N - 2][0] + segment[N - 1][0]) / 2.0,
+                        (segment[N - 2][1] + segment[N - 1][1]) / 2.0,
+                    )
                     Ctrl = segment[N - 1]
                     Pe = segment[N]
 
                     path_segments.append(
-                        QuadraticBezier(start=tuple2complex(Ps), control=tuple2complex(Ctrl), end=tuple2complex(Pe))
+                        QuadraticBezier(
+                            start=tuple2complex(Ps),
+                            control=tuple2complex(Ctrl),
+                            end=tuple2complex(Pe),
+                        )
                     )
 
             """
@@ -1059,7 +1138,9 @@ class Char2SvgPath:
 
         ctx: List[str] = []
 
-        outline.decompose(ctx, move_to=move_to, line_to=line_to, conic_to=conic_to, cubic_to=cubic_to)
+        outline.decompose(
+            ctx, move_to=move_to, line_to=line_to, conic_to=conic_to, cubic_to=cubic_to
+        )
 
         path_str = " ".join(ctx)
 
@@ -1276,7 +1357,9 @@ def test_char(char: str, font: str):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog="svgtext2svgpath", description="svg text to svg path")
+    parser = argparse.ArgumentParser(
+        prog="svgtext2svgpath", description="svg text to svg path"
+    )
 
     # argument
     parser.add_argument("svg", help="svg to transform")
@@ -1290,14 +1373,21 @@ if __name__ == "__main__":
     paths = converter.convert_texts()
 
     for text_as_paths in paths.values():
-        print("-------------------------------------------------------------------------------")
-        print("-------------------------------------------------------------------------------")
+        print(
+            "-------------------------------------------------------------------------------"
+        )
+        print(
+            "-------------------------------------------------------------------------------"
+        )
         for p, path_with_attribs in enumerate(text_as_paths):
             attribs = path_with_attribs.attribs
             path = path_with_attribs.path
             elt_id = path_with_attribs.id
 
-            style = "fill:%s;fill-opacity:%s;" % (attribs.get("fill", "#000000"), attribs.get("fill-opacity", "1.0"))
+            style = "fill:%s;fill-opacity:%s;" % (
+                attribs.get("fill", "#000000"),
+                attribs.get("fill-opacity", "1.0"),
+            )
 
             d = ""
             if path.isclosedac():
@@ -1309,9 +1399,15 @@ if __name__ == "__main__":
 
     # or the full svg with the paths
     svg = converter.convert_svg()
-    print("-------------------------------------------------------------------------------")
-    print("---------------------------------- SVG   --------------------------------------")
-    print("-------------------------------------------------------------------------------")
+    print(
+        "-------------------------------------------------------------------------------"
+    )
+    print(
+        "---------------------------------- SVG   --------------------------------------"
+    )
+    print(
+        "-------------------------------------------------------------------------------"
+    )
     print(svg)
     svg_name = os.path.basename(options.svg) + ".paths.svg"
 

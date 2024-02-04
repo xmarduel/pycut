@@ -31,7 +31,9 @@ class SvgResolver:
         # - defined in "in" -> use ppi=1
 
         if options.units == "px":
-            self.svg = svgelements.SVG.parse(self.filename, reify=True, ppi=svgelements.DEFAULT_PPI)
+            self.svg = svgelements.SVG.parse(
+                self.filename, reify=True, ppi=svgelements.DEFAULT_PPI
+            )
         if options.units == "mm":
             self.svg = svgelements.SVG.parse(
                 self.filename, reify=True, ppi=25.4
@@ -125,7 +127,9 @@ class SvgResolver:
                     """
                     # print("... found a '<use>' tag !")
                     id_ref = e.values["href"][1:]  # remove the '#'
-                    self.id_style.setdefault(id_ref, []).append(e.values.get("style", {}))
+                    self.id_style.setdefault(id_ref, []).append(
+                        e.values.get("style", {})
+                    )
             except Exception as e:
                 pass
 
@@ -214,7 +218,12 @@ class SvgResolver:
 
         doc = etree.ElementTree(root)
 
-        doc.write(self.resolved_filename, pretty_print=True, xml_declaration=True, encoding="utf-8")
+        doc.write(
+            self.resolved_filename,
+            pretty_print=True,
+            xml_declaration=True,
+            encoding="utf-8",
+        )
 
         # maybe an extra formatter - needs xmllint
         tree = etree.parse(self.resolved_filename)
@@ -439,7 +448,9 @@ class SvgResolver:
         if the_id != None:
             p.attrib["id"] = the_id
 
-        p.attrib["points"] = " ".join(["%.3f,%.3f" % (pt.x, pt.y) for pt in shape.points])
+        p.attrib["points"] = " ".join(
+            ["%.3f,%.3f" % (pt.x, pt.y) for pt in shape.points]
+        )
 
         # merge style of ref item with used item
         style = self.merge_styles(shape.values.get("style", {}), the_style)
@@ -488,7 +499,9 @@ class SvgResolver:
         if the_id != None:
             p.attrib["id"] = the_id
 
-        p.attrib["points"] = " ".join(["%.3f,%.3f" % (pt.x, pt.y) for pt in shape.points])
+        p.attrib["points"] = " ".join(
+            ["%.3f,%.3f" % (pt.x, pt.y) for pt in shape.points]
+        )
 
         # merge style of ref item with used item
         style = self.merge_styles(shape.values.get("style", {}), the_style)
@@ -549,7 +562,9 @@ class SvgResolver:
         item.addnext(t)
         item.getparent().remove(item)
 
-    def get_svg_shape_for_use_item(self, item: etree.Element) -> svgelements.Shape | None:
+    def get_svg_shape_for_use_item(
+        self, item: etree.Element
+    ) -> svgelements.Shape | None:
         """ """
         if item.tag == "{http://www.w3.org/2000/svg}svg":
             return None
@@ -577,7 +592,9 @@ class SvgResolver:
 
         return None
 
-    def get_svg_group_for_use_item(self, item: etree.Element) -> svgelements.Shape | None:
+    def get_svg_group_for_use_item(
+        self, item: etree.Element
+    ) -> svgelements.Shape | None:
         """ """
         if item.tag == "{http://www.w3.org/2000/svg}svg":
             return None
@@ -598,11 +615,19 @@ class SvgResolver:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog="svgresolver", description="svg defs-use / transformations resolver")
+    parser = argparse.ArgumentParser(
+        prog="svgresolver", description="svg defs-use / transformations resolver"
+    )
 
     # argument
     parser.add_argument("svg", help="svg to resolve")
-    parser.add_argument("-u", "--units", dest="units", default="mm", help='viewbox units ("px", "mm" or "in")')
+    parser.add_argument(
+        "-u",
+        "--units",
+        dest="units",
+        default="mm",
+        help='viewbox units ("px", "mm" or "in")',
+    )
     parser.add_argument(
         "--z",
         "--drop-defs",
