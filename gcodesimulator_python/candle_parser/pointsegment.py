@@ -68,7 +68,12 @@ class PointSegment:
 
     @classmethod
     def PointSegment_FromVectorQVector3DQVector3D(
-        cls, point: QVector3D, num: int, center: QVector3D, radius: float, clockwise: bool
+        cls,
+        point: QVector3D,
+        num: int,
+        center: QVector3D,
+        radius: float,
+        clockwise: bool,
     ):
         this = PointSegment(point, num)
 

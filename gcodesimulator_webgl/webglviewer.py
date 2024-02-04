@@ -12,13 +12,14 @@ from PySide6 import QtWebChannel
 
 
 class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
-    '''
+    """
     usage:
         w = PyCutWebGlWrapper()
         w.set_webgl_data(data)
         w.show_gcode()
-    '''
-    notfound = '''<html>
+    """
+
+    notfound = """<html>
 <head>
 <title>A Sample Page</title>
 </head>
@@ -26,46 +27,56 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
 <h1>Html Display failed</h1>
 <p>%(message)s</p>
 </body>
-</html>'''
-
+</html>"""
 
     simtime_received_from_js = QtCore.Signal(float)
 
     def __init__(self, parent: QtWidgets.QWidget):
-        '''
-        '''
+        """ """
         super(WebGlViewer, self).__init__(parent)
 
-        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+        )
 
-        shader_basicFragmentShader = self.get_shader_source(":/javascript/js/shaders/basicFragmentShader.txt")
-        shader_basicVertexShader = self.get_shader_source(":/javascript/js/shaders/basicVertexShader.txt")
-        shader_rasterizePathFragmentShader = self.get_shader_source(":/javascript/js/shaders/rasterizePathFragmentShader.txt")
-        shader_rasterizePathVertexShader = self.get_shader_source(":/javascript/js/shaders/rasterizePathVertexShader.txt")
-        shader_renderHeightMapFragmentShader = self.get_shader_source(":/javascript/js/shaders/renderHeightMapFragmentShader.txt")
-        shader_renderHeightMapVertexShader = self.get_shader_source(":/javascript/js/shaders/renderHeightMapVertexShader.txt")
+        shader_basicFragmentShader = self.get_shader_source(
+            ":/javascript/js/shaders/basicFragmentShader.txt"
+        )
+        shader_basicVertexShader = self.get_shader_source(
+            ":/javascript/js/shaders/basicVertexShader.txt"
+        )
+        shader_rasterizePathFragmentShader = self.get_shader_source(
+            ":/javascript/js/shaders/rasterizePathFragmentShader.txt"
+        )
+        shader_rasterizePathVertexShader = self.get_shader_source(
+            ":/javascript/js/shaders/rasterizePathVertexShader.txt"
+        )
+        shader_renderHeightMapFragmentShader = self.get_shader_source(
+            ":/javascript/js/shaders/renderHeightMapFragmentShader.txt"
+        )
+        shader_renderHeightMapVertexShader = self.get_shader_source(
+            ":/javascript/js/shaders/renderHeightMapVertexShader.txt"
+        )
 
         self.data = {
             "width": 500,
-            "height" : 500,
+            "height": 500,
             "gcode": "",
-            "cutterDiameter" : 3.175, 
-            "cutterHeight" : 2 * 25.4,
-            "cutterAngle" : 180,
-            #"elementsUrl" : "http://api.jscut.org/js",
-            #"elementsUrl" : ":/javascript/js/shaders", # CORS problem by "get"
-
-            #"simulation_strategy" : "with_number_of_steps",
+            "cutterDiameter": 3.175,
+            "cutterHeight": 2 * 25.4,
+            "cutterAngle": 180,
+            # "elementsUrl" : "http://api.jscut.org/js",
+            # "elementsUrl" : ":/javascript/js/shaders", # CORS problem by "get"
+            # "simulation_strategy" : "with_number_of_steps",
             "simulation_strategy": "with_step_size",
-            "simulation_step_size" : 0.05,
+            "simulation_step_size": 0.05,
             "simulation_nb_steps": 10000,
-
             "basicFragmentShader": shader_basicFragmentShader,
             "basicVertexShader": shader_basicVertexShader,
             "rasterizePathFragmentShader": shader_rasterizePathFragmentShader,
             "rasterizePathVertexShader": shader_rasterizePathVertexShader,
             "renderHeightMapFragmentShader": shader_renderHeightMapFragmentShader,
-            "renderHeightMapVertexShader": shader_renderHeightMapVertexShader
+            "renderHeightMapVertexShader": shader_renderHeightMapVertexShader,
         }
 
         # communication between qt and javascript html editor
@@ -91,30 +102,27 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
 
         self.data["width"] = square_size - 100
         self.data["height"] = square_size - 100
-        
+
         self.show_gcode()
 
         return super().resizeEvent(event)
-    
+
     def set_data(self, data: Dict[str, Any]):
-        '''
-        '''
+        """ """
         self.data["gcode"] = data["gcode"]
         self.data["cutterDiameter"] = data["cutterDiameter"]
         self.data["cutterHeight"] = data["cutterHeight"]
         self.data["cutterAngle"] = data["cutterAngle"]
 
     def show_gcode(self):
-        '''
-        '''
+        """ """
         try:
             self.setHtml(jscut_webgl)
         except Exception as err:
-            self.setHtml(self.notfound % {'message': str(err)})
+            self.setHtml(self.notfound % {"message": str(err)})
 
     def get_shader_source(self, shader_filename: str) -> str:
-        '''
-        '''
+        """ """
         fd = QtCore.QFile(shader_filename)
 
         shader_source = ""
@@ -126,13 +134,11 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
         return shader_source
 
     def set_simtime(self, simtime: float):
-        '''
-        '''
+        """ """
         self.talkie.set_simtime(simtime)
 
     def received_simtime_from_js_side(self, simtime: float):
-        '''
-        '''
+        """ """
         # set cursor on gcode file browser
         self.simtime_received_from_js.emit(simtime)
 
@@ -569,39 +575,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 class TalkyTalky(QtCore.QObject):
-    '''
-    '''
+    """ """
+
     send_data_js_side = QtCore.Signal(str)
     send_simtime_js_side = QtCore.Signal(float)
 
     def __init__(self, widget: WebGlViewer):
         super().__init__()
         self.widget = widget
-  
-    @QtCore.Slot() 
+
+    @QtCore.Slot()
     def fill_webgl(self):
-        '''
+        """
         js is waiting for a json structure
-        '''
-        jsondata = json.dumps(self.widget.data, indent = 4) 
-        
+        """
+        jsondata = json.dumps(self.widget.data, indent=4)
+
         self.send_data_js_side.emit(jsondata)
 
-    @QtCore.Slot() 
+    @QtCore.Slot()
     def set_simtime(self, simtime: float):
-        '''
+        """
         set the sim time from the outside into js (from the gcode file browser per example)
-        '''
-        #print("TalkyTalky::set_simtime", simtine)
+        """
+        # print("TalkyTalky::set_simtime", simtine)
 
         self.send_simtime_js_side.emit(simtime)
 
-    @QtCore.Slot(float) 
+    @QtCore.Slot(float)
     def js_inform_python_for_simtime(self, simtime: float):
-        '''
+        """
         get the sim time from the js and send it to "listeners" (to the gcode file browser per example)
-        '''
-        #print("TalkyTalky::js_inform_python_for_simtime", simtime)
+        """
+        # print("TalkyTalky::js_inform_python_for_simtime", simtime)
 
         # inform listeners
         self.widget.received_simtime_from_js_side(simtime)

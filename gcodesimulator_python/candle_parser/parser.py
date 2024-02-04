@@ -9,7 +9,9 @@ from PySide6.QtCore import qIsNaN
 from PySide6.QtGui import QVector3D
 
 from gcodesimulator_python.candle_parser.gcodeviewparse import GcodeViewParse
-from gcodesimulator_python.candle_parser.gcodepreprocessorutils import GcodePreprocessorUtils
+from gcodesimulator_python.candle_parser.gcodepreprocessorutils import (
+    GcodePreprocessorUtils,
+)
 from gcodesimulator_python.candle_parser.gcodeparser import GcodeParser
 
 from gcodeviewer.util.util import qQNaN
@@ -90,4 +92,6 @@ class CandleParser:
         arcPrecision = 0.2  # TODO self.m_settings.arcPrecision()  # default is 0.1
         arcDegreeMode = False  # TODO self.m_settings.arcDegreeMode()
 
-        self.linesegments = self.m_viewParser.getLinesFromParser(gp, arcPrecision, arcDegreeMode)
+        self.linesegments = self.m_viewParser.getLinesFromParser(
+            gp, arcPrecision, arcDegreeMode
+        )

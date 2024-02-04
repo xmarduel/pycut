@@ -1,4 +1,3 @@
-
 VERSION = "1_0_0"
 
 import argparse
@@ -44,12 +43,30 @@ if __name__ == "__main__":
     # argument
     parser.add_argument("gcodefile", help="gcode file")
     # options
-    parser.add_argument("--cutterdiameter", dest="cutter_diameter", type=float, default=6.0, help="cutter diameter (mm)")
-    parser.add_argument("--cutterheight",   dest="cutter_height", type=float, default=30.0, help="cutter height (mm)")
-    parser.add_argument("--cutterangle",   dest="cutter_angle", type=float, default=180.0, help="cutter angle (degree) - not used yet")
-    
+    parser.add_argument(
+        "--cutterdiameter",
+        dest="cutter_diameter",
+        type=float,
+        default=6.0,
+        help="cutter diameter (mm)",
+    )
+    parser.add_argument(
+        "--cutterheight",
+        dest="cutter_height",
+        type=float,
+        default=30.0,
+        help="cutter height (mm)",
+    )
+    parser.add_argument(
+        "--cutterangle",
+        dest="cutter_angle",
+        type=float,
+        default=180.0,
+        help="cutter angle (degree) - not used yet",
+    )
+
     # version info
-    parser.add_argument("--version", action='version', version=f"{VERSION}")
+    parser.add_argument("--version", action="version", version=f"{VERSION}")
 
     options = parser.parse_args()
 

@@ -154,7 +154,9 @@ class GcodePreprocessorUtils:
         return codes
 
     @classmethod
-    def updatePointWithCommand(cls, command: str, initial: QVector3D, absoluteMode: bool) -> QVector3D:
+    def updatePointWithCommand(
+        cls, command: str, initial: QVector3D, absoluteMode: bool
+    ) -> QVector3D:
         """
         Update a point given the arguments of a command.
         """
@@ -162,7 +164,9 @@ class GcodePreprocessorUtils:
             l = cls.splitCommand(command)
             return cls.updatePointWithCommand(l, initial, absoluteMode)
         else:
-            return cls.updatePointWithCommand_FromStringList(command, initial, absoluteMode)
+            return cls.updatePointWithCommand_FromStringList(
+                command, initial, absoluteMode
+            )
 
     @classmethod
     def updatePointWithCommand_FromStringList(
@@ -217,7 +221,12 @@ class GcodePreprocessorUtils:
 
     @classmethod
     def updateCenterWithCommand(
-        cls, commandArgs: List[str], initial: QVector3D, nextPoint: QVector3D, absoluteIJKMode: bool, clockwise: bool
+        cls,
+        commandArgs: List[str],
+        initial: QVector3D,
+        nextPoint: QVector3D,
+        absoluteIJKMode: bool,
+        clockwise: bool,
     ) -> QVector3D:
         i = qQNaN()
         j = qQNaN()
@@ -239,12 +248,18 @@ class GcodePreprocessorUtils:
                     r = float(t[1:])
 
         if qIsNaN(i) and qIsNaN(j) and qIsNaN(k):
-            return cls.convertRToCenter(initial, nextPoint, r, absoluteIJKMode, clockwise)
+            return cls.convertRToCenter(
+                initial, nextPoint, r, absoluteIJKMode, clockwise
+            )
 
-        return cls.updatePointWithCommand_FromVector3D(initial, i, j, k, absoluteIJKMode)
+        return cls.updatePointWithCommand_FromVector3D(
+            initial, i, j, k, absoluteIJKMode
+        )
 
     @classmethod
-    def generateG1FromPoints(cls, start: QVector3D, end: QVector3D, absoluteMode: bool, precision: int) -> str:
+    def generateG1FromPoints(
+        cls, start: QVector3D, end: QVector3D, absoluteMode: bool, precision: int
+    ) -> str:
         sb = "G1"
 
         if absoluteMode:
@@ -311,7 +326,12 @@ class GcodePreprocessorUtils:
 
     @classmethod
     def convertRToCenter(
-        cls, start: QVector3D, end: QVector3D, radius: float, absoluteIJK: bool, clockwise: bool
+        cls,
+        start: QVector3D,
+        end: QVector3D,
+        radius: float,
+        absoluteIJK: bool,
+        clockwise: bool,
     ) -> QVector3D:
         R = radius
         center = QVector3D()
@@ -422,11 +442,27 @@ class GcodePreprocessorUtils:
         """
         if isinstance(LAST_ARG, bool):
             return cls.generatePointsAlongArcBDring_Arc(
-                plane, start, end, center, clockwise, R, minArcLength, arcPrecision, LAST_ARG
+                plane,
+                start,
+                end,
+                center,
+                clockwise,
+                R,
+                minArcLength,
+                arcPrecision,
+                LAST_ARG,
             )
         else:
             return cls.generatePointsAlongArcBDring_Num(
-                plane, start, end, center, clockwise, R, minArcLength, arcPrecision, LAST_ARG
+                plane,
+                start,
+                end,
+                center,
+                clockwise,
+                R,
+                minArcLength,
+                arcPrecision,
+                LAST_ARG,
             )
 
     @classmethod
@@ -467,7 +503,11 @@ class GcodePreprocessorUtils:
 
         # Calculate radius if necessary.
         if radius == 0:
-            radius = math.sqrt(math.pow((start.x() - center.x(), 2.0) + math.pow(end.y() - center.y(), 2.0)))
+            radius = math.sqrt(
+                math.pow(
+                    (start.x() - center.x(), 2.0) + math.pow(end.y() - center.y(), 2.0)
+                )
+            )
 
         startAngle = cls.getAngle(center, start)
         endAngle = cls.getAngle(center, end)
@@ -523,7 +563,10 @@ class GcodePreprocessorUtils:
 
         # Calculate radius if necessary.
         if radius == 0:
-            radius = math.sqrt(math.pow((p1.x() - center.x()), 2.0) + math.pow((p1.y() - center.y()), 2.0))
+            radius = math.sqrt(
+                math.pow((p1.x() - center.x()), 2.0)
+                + math.pow((p1.y() - center.y()), 2.0)
+            )
 
         zIncrement = (p2.z() - p1.z()) / numPoints
 

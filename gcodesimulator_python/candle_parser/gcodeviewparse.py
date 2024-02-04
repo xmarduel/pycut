@@ -59,7 +59,9 @@ class GcodeViewParse:
             ((self.m_max.y() - self.m_min.y()) / self.m_minLength) + 1,
         )
 
-    def toObjRedux(self, gcode: List[str], arcPrecision: float, arcDegreeMode: bool) -> List[LineSegment]:
+    def toObjRedux(
+        self, gcode: List[str], arcPrecision: float, arcDegreeMode: bool
+    ) -> List[LineSegment]:
         gp = GcodeParser()
 
         for s in gcode:
@@ -70,7 +72,9 @@ class GcodeViewParse:
     def getLineSegmentList(self) -> List[LineSegment]:
         return self.m_lines
 
-    def getLinesFromParser(self, gp: GcodeParser, arcPrecision: float, arcDegreeMode: bool) -> List[LineSegment]:
+    def getLinesFromParser(
+        self, gp: GcodeParser, arcPrecision: float, arcDegreeMode: bool
+    ) -> List[LineSegment]:
         psl = gp.getPointSegmentList()
         # For a line segment list ALL arcs must be converted to lines.
         minArcLength = 0.1
@@ -140,7 +144,9 @@ class GcodeViewParse:
 
                             self.testExtremes(nextPoint)
                             self.m_lines.append(ls)
-                            self.m_lineIndexes[ps.getLineNumber()].append(len(self.m_lines) - 1)
+                            self.m_lineIndexes[ps.getLineNumber()].append(
+                                len(self.m_lines) - 1
+                            )
                             startPoint = nextPoint
 
                         lineIndex += 1

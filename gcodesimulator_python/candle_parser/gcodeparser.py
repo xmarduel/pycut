@@ -101,7 +101,9 @@ class GcodeParser:
         # The unspoken home location.
         self.m_currentPoint = initialPoint
         self.m_currentPlane = PointSegment.Plane.XY
-        self.m_points.append(PointSegment.PointSegment_FromQVector3D(self.m_currentPoint, -1))
+        self.m_points.append(
+            PointSegment.PointSegment_FromQVector3D(self.m_currentPoint, -1)
+        )
 
     @singledispatchmethod
     def addCommand(self, command) -> PointSegment:
@@ -146,7 +148,15 @@ class GcodeParser:
         #
 
         expandedPoints = GcodePreprocessorUtils.generatePointsAlongArcBDring(
-            plane, start, end, center, clockwise, radius, self.m_smallArcThreshold, self.m_smallArcSegmentLength, False
+            plane,
+            start,
+            end,
+            center,
+            clockwise,
+            radius,
+            self.m_smallArcThreshold,
+            self.m_smallArcSegmentLength,
+            False,
         )
 
         # Validate output of expansion.
@@ -164,7 +174,9 @@ class GcodeParser:
 
         # skip first element.
         for k in range(1, len(expandedPoints) - 1):
-            temp = PointSegment.PointSegment_FromQVector3D(expandedPoints[k + 1], self.m_commandNumber)
+            temp = PointSegment.PointSegment_FromQVector3D(
+                expandedPoints[k + 1], self.m_commandNumber
+            )
             self.m_commandNumber += 1
             temp.setIsMetric(lastSegment.isMetric())
             self.m_points.append(temp)
@@ -200,10 +212,14 @@ class GcodeParser:
         if len(newCommand) > 0:
             # Override feed speed
             if self.m_speedOverride > 0:
-                newCommand = GcodePreprocessorUtils.overrideSpeed(newCommand, self.m_speedOverride)
+                newCommand = GcodePreprocessorUtils.overrideSpeed(
+                    newCommand, self.m_speedOverride
+                )
 
             if self.m_truncateDecimalLength > 0:
-                newCommand = GcodePreprocessorUtils.truncateDecimals(self.m_truncateDecimalLength, newCommand)
+                newCommand = GcodePreprocessorUtils.truncateDecimals(
+                    self.m_truncateDecimalLength, newCommand
+                )
 
             # If this is enabled we need to parse the gcode as we go along.
             if self.m_convertArcsToLines:  # || this.expandCannedCycles) {
@@ -307,7 +323,9 @@ class GcodeParser:
     def handleGCode(self, code: float, args: List[str]) -> PointSegment:
         ps = None
 
-        nextPoint = GcodePreprocessorUtils.updatePointWithCommand(args, self.m_currentPoint, self.m_inAbsoluteMode)
+        nextPoint = GcodePreprocessorUtils.updatePointWithCommand(
+            args, self.m_currentPoint, self.m_inAbsoluteMode
+        )
 
         if code == 0.0:
             ps = self.addLinearPointSegment(nextPoint, True)
@@ -343,7 +361,9 @@ class GcodeParser:
 
         return ps
 
-    def addLinearPointSegment(self, nextPoint: QVector3D, fastTraverse: bool) -> PointSegment:
+    def addLinearPointSegment(
+        self, nextPoint: QVector3D, fastTraverse: bool
+    ) -> PointSegment:
         ps = PointSegment.PointSegment_FromQVector3D(nextPoint, self.m_commandNumber)
 
         self.m_commandNumber += 1
@@ -371,7 +391,9 @@ class GcodeParser:
 
         return ps
 
-    def addArcPointSegment(self, nextPoint: QVector3D, clockwise: bool, args: List[str]) -> PointSegment:
+    def addArcPointSegment(
+        self, nextPoint: QVector3D, clockwise: bool, args: List[str]
+    ) -> PointSegment:
         ps = PointSegment.PointSegment_FromQVector3D(nextPoint, self.m_commandNumber)
 
         self.m_commandNumber += 1

@@ -11,20 +11,20 @@ from PySide6.QtCore import qIsNaN
 
 from PySide6.QtGui import QVector3D
 
-from gcodeviewer.parser.gcodeviewparse import GcodeViewParse 
-from gcodeviewer.parser.gcodepreprocessorutils import  GcodePreprocessorUtils  
-from gcodeviewer.parser.gcodeparser import  GcodeParser 
+from gcodeviewer.parser.gcodeviewparse import GcodeViewParse
+from gcodeviewer.parser.gcodepreprocessorutils import GcodePreprocessorUtils
+from gcodeviewer.parser.gcodeparser import GcodeParser
 
 from gcodeviewer.util.util import qQNaN
 
 
 PROGRESSMINLINES = 10000
-PROGRESSSTEP     =  1000
+PROGRESSSTEP = 1000
 
 
 class CandleParser:
-    '''
-    '''
+    """ """
+
     def __init__(self, filename: str):
         self.filename = filename
         self.m_viewParser = GcodeViewParse()
@@ -64,7 +64,6 @@ class CandleParser:
         time.start()
 
         while len(data) > 0:
-
             command = data.pop(0)
 
             # Trim command
@@ -77,32 +76,35 @@ class CandleParser:
 
                 gp.addCommand(args)
 
-        arcPrecision = 0.2 # TODO self.m_settings.arcPrecision()  # default is 0.1
-        arcDegreeMode = False # TODO self.m_settings.arcDegreeMode()
+        arcPrecision = 0.2  # TODO self.m_settings.arcPrecision()  # default is 0.1
+        arcDegreeMode = False  # TODO self.m_settings.arcDegreeMode()
 
-        self.linesegments = self.m_viewParser.getLinesFromParser(gp, arcPrecision, arcDegreeMode)
+        self.linesegments = self.m_viewParser.getLinesFromParser(
+            gp, arcPrecision, arcDegreeMode
+        )
 
 
 def main(filename):
-    '''
-    '''
+    """ """
     codeLoader = CandleParser(filename)
     codeLoader.loadFile()
-    
+
     print("DONE!")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog="gcode_candle_parser", description="Parse gcode")
+    parser = argparse.ArgumentParser(
+        prog="gcode_candle_parser", description="Parse gcode"
+    )
 
     # argument
     parser.add_argument("gcodefile", help="gcode file")
-    
+
     options = parser.parse_args()
 
     main(options.gcodefile)
     sys.exit(0)
 
-'''
+"""
 python -m cProfile -o test_gcodeparser.prof test_gcodeparser.py
-'''
+"""

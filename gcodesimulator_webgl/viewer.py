@@ -1,4 +1,3 @@
-
 """
 the viewer includes
 - the gcode simulator - in webgl + its controls
@@ -15,6 +14,7 @@ from gcodesimulator_webgl import gcodefileviewer
 
 class GCodeViewer(QtWidgets.QWidget):
     """ """
+
     def __init__(self, parent):
         QtWidgets.QWidget.__init__(self)
 
@@ -22,7 +22,9 @@ class GCodeViewer(QtWidgets.QWidget):
         self.setLayout(layout)
 
         self.gcode_glviewer = webglviewer.WebGlViewer(self)
-        self.gcode_textbrowser = gcodefileviewer.GCodeFileViewer(self, self.gcode_glviewer)
+        self.gcode_textbrowser = gcodefileviewer.GCodeFileViewer(
+            self, self.gcode_glviewer
+        )
 
         layout.addWidget(self.gcode_glviewer)
         layout.addWidget(self.gcode_textbrowser)
@@ -35,6 +37,3 @@ class GCodeViewer(QtWidgets.QWidget):
         self.gcode_glviewer.show_gcode()
 
         self.gcode_textbrowser.load_data(simulator_data["gcode"])
-
-
-
