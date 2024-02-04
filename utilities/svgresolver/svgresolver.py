@@ -33,22 +33,18 @@ class SvgSetMissingIds:
         root = self.tree.getroot()
 
         self.add_id_to_elements(root)
-        self.write(root)
-
-    def clean(self):
-        """ """
-        pass
-        # shutil.rmtree(self.filename_id)
+        # self.write(root)
+        self.get_svg_data(root)
 
     def add_id_to_elements(self, item: etree.Element):
-        """ """
+        """for all shaped without "id", gives one "id" """
         for child in item:
             if "id" not in child.attrib and child.tag.split(self.NS)[1] in [
                 "circle",
                 "ellipse",
                 "line",
                 "point",
-                "polygone",
+                "polygon",
                 "polyline",
                 "rect",
                 "path",
@@ -58,30 +54,25 @@ class SvgSetMissingIds:
 
             self.add_id_to_elements(child)
 
+    def get_svg_data(self, root: etree.Element):
+        """Get tree as StringIO"""
+        tree_bytes = etree.tostring(self.tree, pretty_print=True)
+
+        self.svg = io.StringIO(tree_bytes.decode())
+
     def write(self, root: etree.Element):
+        """DEBUG"""
         doc = etree.ElementTree(root)
 
         doc.write(
             self.filename_id, pretty_print=True, xml_declaration=True, encoding="utf-8"
         )
 
-        # maybe an extra formatter - needs xmllint
-        tree = etree.parse(self.filename_id)
-        tree_str = etree.tostring(tree, pretty_print=True)
-        f = open(self.filename_id, "w")
-        f.write(tree_str.decode("utf-8"))
-        f.close()
-
-        # re-read
-        svg_str = open(self.filename_id, "r").read()
-        self.svg = io.StringIO(svg_str)
-
-        # and delete temp file TODO
-
 
 class SvgResolver:
     """ """
 
+    NS = "{http://www.w3.org/2000/svg}"
     lf_format = "%.3f"
 
     def __init__(self, options):
@@ -90,7 +81,7 @@ class SvgResolver:
         self.resolved_filename = os.path.splitext(self.filename)[0] + ".resolved.svg"
 
         self.handle = SvgSetMissingIds(self.filename)
-        self.handle.process()  # use handle.data as "new" source
+        self.handle.process()  # use handle.svg as the source data
 
         self.drop_defs = options.drop_defs
 
@@ -103,28 +94,20 @@ class SvgResolver:
         # - defined in "mm" -> use ppi=25.4
         # - defined in "in" -> use ppi=1
 
+        source_data = self.filename
+        source_data = self.handle.svg
+
         if options.units == "px":
-            # self.svg = svgelements.SVG.parse(
-            #    self.filename, reify=True, ppi=svgelements.DEFAULT_PPI
-            # )
             self.svg = svgelements.SVG.parse(
-                self.handle.svg, reify=True, ppi=svgelements.DEFAULT_PPI
+                source_data, reify=True, ppi=svgelements.DEFAULT_PPI
             )
         if options.units == "mm":
-            # self.svg = svgelements.SVG.parse(
-            #    self.filename, reify=True, ppi=25.4
-            # )  # so that there is no "scaling" : 1 inch = 25.4 mm
-
             self.svg = svgelements.SVG.parse(
-                self.handle.svg, reify=True, ppi=25.4
+                source_data, reify=True, ppi=25.4
             )  # so that there is no "scaling" : 1 inch = 25.4 mm
         if options.units == "in":
-            # self.svg = svgelements.SVG.parse(
-            #    self.filename, reify=True, ppi=1
-            # )  # so that there is no "scaling" : 1 inch <-> 96 px
-
             self.svg = svgelements.SVG.parse(
-                self.handle.svg, reify=True, ppi=1
+                source_data, reify=True, ppi=1
             )  # so that there is no "scaling" : 1 inch <-> 96 px
 
         # print("======================================")
@@ -282,13 +265,11 @@ class SvgResolver:
 
     def remove_defs(self, root: etree.ElementTree):
         """ """
-        NS = "{http://www.w3.org/2000/svg}"
-
         defs = None
 
         for ch in root:
             print("child", ch.tag)
-            if ch.tag == NS + "defs":
+            if ch.tag == self.NS + "defs":
                 defs = ch
 
         if defs is not None:
@@ -299,10 +280,28 @@ class SvgResolver:
     def remove_auto_ids(self, item: etree.Element):
         """"""
         for child in item:
-            if "id" in child.attrib:
-                e_id: str = child.attrib["id"]
-                if e_id.startswith(SvgSetMissingIds.prefix):
-                    del child.attrib["id"]
+            print("tag", child.tag, child.attrib["id"])
+
+            ns_tag = child.tag.split(self.NS)
+            if len(ns_tag) == 1:
+                tag = ns_tag[0]
+            else:
+                tag = ns_tag[1]
+
+            if tag in [
+                "circle",
+                "ellipse",
+                "line",
+                "point",
+                "polygon",
+                "polyline",
+                "rect",
+                "path",
+            ]:
+                if "id" in child.attrib:
+                    e_id: str = child.attrib["id"]
+                    if e_id.startswith(SvgSetMissingIds.prefix):
+                        del child.attrib["id"]
 
             self.remove_auto_ids(child)
 

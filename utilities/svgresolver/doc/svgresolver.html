@@ -80,7 +80,7 @@ properties. There is also a strange (to me) dependency between opacity
 and stroke-opacity that I do not completely understand... So the rule(s)
 concerning the style in use elements remain a somehow mystery for me.</em></p>
 
-<p><em>Finally, the utility will only overwrite in the Shapes the <code>opacity</code>
+<p><em>Finally, the utility will only overwrite in the shapes the <code>opacity</code>
         and <code>stroke-opacity</code>, but for the stroke opacity **only** in
         the case it is defined in the def element and if it is different from
         the normal <code>opacity</code> (seems to be the rule!).</em></p>
@@ -90,7 +90,7 @@ concerning the style in use elements remain a somehow mystery for me.</em></p>
 <p>From the command line</p>
 
 <pre><code class="language-shell">&gt; python svgresolver.py -h
-&gt; python svgresolver.py test_basic.svg</code></pre>
+&gt; python svgresolver.py --drop-defs test_basic.svg</code></pre>
 
 <p>A file named <code>test_basic.resolved.svg</code> is created</p>
 
@@ -121,7 +121,7 @@ Also note how the opacity values in the styles are merged in the resolved items'
 
 <ul>
   <li><p>can only process "translate" transformations!</p></li>
-  <li><p>rotate -> ok for circles, other shapes are not processes at all</p>
+  <li><p>rotate -> NOP for circles, other shapes are not processes at all</p>
     <ul>
 	    <li>rectangle -> polygon TODO</li>
 	    <li>polygon -> polygon TODO</li>
