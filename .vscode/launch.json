@@ -5,6 +5,7 @@
     "version": "0.2.0",
     "configurations": [
 
+
         {
             "name": "TEST DRESSUP",
             "type": "python",
@@ -88,15 +89,22 @@
             "args": []
         },
         {
+            "name": "PYCUT HOLDER",
+            "type": "python",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": ["-j", "misc_private\\unimat_cnc_kit\\dc_motor_holder.json"]
+        },
+        {
             "name": "PYCUT JOB OPENED PATH",
             "type": "python",
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": [
-                "jobs\\cnc_polyline.json"
-            ]
+            "args": ["-j", "jobs\\cnc_polyline.json" ]
         },
         {
             "name": "PYCUT JOB CONTROL PANEL",
@@ -105,9 +113,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": [
-                "jobs\\cnc_control_panel.json"
-            ]
+            "args": ["-j", "jobs\\cnc_control_panel.json" ]
         },
         {
             "name": "PYCUT JOB KASTEN",
@@ -116,9 +122,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": [
-                "misc_private\\others_stuff\\kasten.json"
-            ]
+            "args": ["-j", "misc_private\\others_stuff\\kasten.json" ]
         },
         {
             "name": "PYCUT JOB SMALL KASTEN",
@@ -127,9 +131,8 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": [
-                "misc_private\\others_stuff\\small_kasten.json"
-            ]
+            "args": ["-j", "misc_private\\others_stuff\\small_kasten.json"]
+            
         },
         {
             "name": "PYCUT JOB CLAMP PARTS",
@@ -149,7 +152,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": [
+            "args": ["-j", 
                 "jobs\\cnc1310_horizontal_plate.json"
             ]
         },
@@ -160,7 +163,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": [
+            "args": ["-j", 
                 "jobs\\cnc_test_bearing.json"
             ]
         },
@@ -182,7 +185,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": [
+            "args": ["-j", 
                 "jobs\\cnc_all_letters.json"
             ]
         },
@@ -204,7 +207,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": [
+            "args": ["-j", 
                 "misc_private\\svg\\hobbymat\\hobbymat_gear_40.json"
             ]
         },
@@ -215,7 +218,7 @@
             "program": "test_gcodeparser.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodeviewer",
-            "args": [
+            "args": ["-g", 
                 "../gcode/ZZZ1.gcode"
             ]
         },
