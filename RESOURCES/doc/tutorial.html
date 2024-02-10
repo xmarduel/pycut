@@ -471,6 +471,12 @@ machine and load/start the second G-Code file. This occurs when some holes have 
 and a contour or pocket operation has to be performed in the second operation with a much larger tool. </p>
 </div>
 
+<div class="warning">
+<p><strong>Info</strong>: The two entries are "debounced" when entering the values from the keyboard, 
+as each change of value calls the GCode generator, which is a costly operation. WIth "Enter", the GCode 
+generator is then called. Utilizing the spin boxes arrows is not debounced.</p>
+</div>
+
 <p>Lets give an example: in a SVG file, two circles are defined, one has to be pocketed with 10mm , the other with 5
 mm. So two operation are needed. Imagine the center of the first circle is at (10,15) and the center of the second
 circle is at (20,25). If boths operations are relative from the "Zero top-Left material" reference, no problem. You
