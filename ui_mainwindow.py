@@ -723,8 +723,9 @@ class Ui_mainwindow(object):
 
         self.GCodeConversion_YOffset = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
         self.GCodeConversion_YOffset.setObjectName(u"GCodeConversion_YOffset")
-        self.GCodeConversion_YOffset.setMinimum(-100.000000000000000)
-        self.GCodeConversion_YOffset.setMaximum(100.000000000000000)
+        self.GCodeConversion_YOffset.setKeyboardTracking(False)
+        self.GCodeConversion_YOffset.setMinimum(-150.000000000000000)
+        self.GCodeConversion_YOffset.setMaximum(150.000000000000000)
 
         self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_YOffset, 7, 2, 1, 1)
 
@@ -735,8 +736,10 @@ class Ui_mainwindow(object):
 
         self.GCodeConversion_XOffset = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
         self.GCodeConversion_XOffset.setObjectName(u"GCodeConversion_XOffset")
-        self.GCodeConversion_XOffset.setMinimum(-100.000000000000000)
-        self.GCodeConversion_XOffset.setMaximum(100.000000000000000)
+        self.GCodeConversion_XOffset.setKeyboardTracking(False)
+        self.GCodeConversion_XOffset.setDecimals(1)
+        self.GCodeConversion_XOffset.setMinimum(-150.000000000000000)
+        self.GCodeConversion_XOffset.setMaximum(150.000000000000000)
 
         self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_XOffset, 6, 2, 1, 1)
 

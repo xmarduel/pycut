@@ -39,6 +39,9 @@ class SvgSetMissingIds:
     def add_id_to_elements(self, item: etree.Element):
         """for all shaped without "id", gives one "id" """
         for child in item:
+            if not isinstance(child.tag, str):  # a comment ?
+                continue
+
             if "id" not in child.attrib and child.tag.split(self.NS)[1] in [
                 "circle",
                 "ellipse",
@@ -280,8 +283,14 @@ class SvgResolver:
     def remove_auto_ids(self, item: etree.Element):
         """"""
         for child in item:
-            print("tag", child.tag, child.attrib["id"])
-
+            if not isinstance(child.tag, str):  # a comment ?
+                continue
+                
+            print("tag", child.tag)
+            
+            if "id" not in child.attrib:
+                continue
+          
             ns_tag = child.tag.split(self.NS)
             if len(ns_tag) == 1:
                 tag = ns_tag[0]

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" width="200mm" height="220mm" viewBox="0 0 200 220" id="vise1-1419">
+  <!--
+	The vise has 3 parts, all joined by 2 shafts (8mm diameter), where in the middle part
+	the shafts are enclosed with bearings (15mm diameter).
+	
+	The middle part is "floating" while the two others parts are fixed by screws to the base.
+	
+	The holes for these 2 shafts must be perfectly aligned on the 3 parts, 
+	as well as the 2 holes in parts 1 and 2 for the leadscrew.
+	
+	The holes for the shafts are not centered, as the middle part must be cut-off (as the last part) 
+	to clamp the workpiece of a height of 3 mm (and a width of 6mm).
+	The "secondary clamp" has a width of 3 mm and an height of 20mm. 
+	
+	Note that for the leadscrew the hole must be a little translated in direction of the top of the bar, because 
+	the hand handle (where the human hand acts in order to screw/unscrew) has a diameter of 2cm so it has to be 
+	"elevated" sonce the handle will be very unpracticable.
+	
+	The leadscrew passes through a backlash item so we name this hole the backlash hole.
+	the leadscrew hole is 10.3 mm diameter for the part1 and 15mm for the middle part.
+	
+	We also display the plan for a fixed part (there are 2 of them) which are screwed to the machine.
+	The view for this part is from above, while the view for the two parts with shaft is from the side.	
+	-->
+  <!-- middle part to be "g-coded" -->
+  <rect id="part_2" width="25.000" height="200.000" x="0.000" y="0.000" rx="0.000" ry="0.000" style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.1"/>
+  <circle id="part_middle_shaft_1_bearing_hole" cx="11.500" cy="15.000" r="7.500" style="fill:#808000;fill-opacity:1"/>
+  <circle id="part_middle_shaft_2_bearing_hole" cx="11.500" cy="185.000" r="7.500" style="fill:#808000;fill-opacity:1"/>
+  <circle id="part_middle_shaft_1_hole" cx="11.500" cy="15.000" r="4.000" style="fill:#008080;fill-opacity:1"/>
+  <circle id="part_middle_shaft_2_hole" cx="11.500" cy="185.000" r="4.000" style="fill:#008080;fill-opacity:1"/>
+  <g id="backlash_hole_part_middle">
+    <!-- 15mm diameter => pocket 20mm deep -->
+    <circle id="leadscrew-middle" cx="12.500" cy="100.000" r="7.500" style="fill:green"/>
+  </g>
+  <line id="part2_cut" x1="1.000" y1="0.000" x2="1.000" y2="200.000" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"/>
+  <line id="part2_schlitz" x1="22.000" y1="0.000" x2="22.000" y2="200.000" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"/>
+</svg>

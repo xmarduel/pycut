@@ -1237,11 +1237,14 @@
             </item>
             <item row="7" column="2">
              <widget class="QDoubleSpinBox" name="GCodeConversion_YOffset">
+              <property name="keyboardTracking">
+               <bool>false</bool>
+              </property>
               <property name="minimum">
-               <double>-100.000000000000000</double>
+               <double>-150.000000000000000</double>
               </property>
               <property name="maximum">
-               <double>100.000000000000000</double>
+               <double>150.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -1254,11 +1257,17 @@
             </item>
             <item row="6" column="2">
              <widget class="QDoubleSpinBox" name="GCodeConversion_XOffset">
+              <property name="keyboardTracking">
+               <bool>false</bool>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
               <property name="minimum">
-               <double>-100.000000000000000</double>
+               <double>-150.000000000000000</double>
               </property>
               <property name="maximum">
-               <double>100.000000000000000</double>
+               <double>150.000000000000000</double>
               </property>
              </widget>
             </item>

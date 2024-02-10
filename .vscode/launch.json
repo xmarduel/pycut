@@ -7,6 +7,17 @@
 
 
         {
+            "name": "SVG RESOLVER",
+            "type": "python",
+            "request": "launch",
+            "program": "svgresolver.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
+            "args": [
+                "test\\simple.svg"
+            ]
+        },
+        {
             "name": "TEST DRESSUP",
             "type": "python",
             "request": "launch",
