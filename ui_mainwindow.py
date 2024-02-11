@@ -512,7 +512,7 @@ class Ui_mainwindow(object):
         self.scrollArea_right.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 314, 986))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 300, 998))
         self.verticalLayout_5 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_5.setSpacing(22)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
@@ -612,7 +612,7 @@ class Ui_mainwindow(object):
         self.verticalLayout_5.addLayout(self.verticalLayoutMaterial)
 
         self.verticalLayoutGCodeConversion = QVBoxLayout()
-        self.verticalLayoutGCodeConversion.setSpacing(6)
+        self.verticalLayoutGCodeConversion.setSpacing(3)
         self.verticalLayoutGCodeConversion.setObjectName(u"verticalLayoutGCodeConversion")
         self.label_GCcodeConversion = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCcodeConversion.setObjectName(u"label_GCcodeConversion")
@@ -882,11 +882,43 @@ class Ui_mainwindow(object):
 
         self.verticalLayout_5.addLayout(self.verticalLayoutGCodeGeneration)
 
+        self.verticalLayoutGCodeStatistics = QVBoxLayout()
+        self.verticalLayoutGCodeStatistics.setSpacing(6)
+        self.verticalLayoutGCodeStatistics.setObjectName(u"verticalLayoutGCodeStatistics")
+        self.labelGCodeStatistics = QLabel(self.scrollAreaWidgetContents_2)
+        self.labelGCodeStatistics.setObjectName(u"labelGCodeStatistics")
+        self.labelGCodeStatistics.setFont(font)
+        self.labelGCodeStatistics.setStyleSheet(u"background-color: rgb(188, 188, 188);")
+
+        self.verticalLayoutGCodeStatistics.addWidget(self.labelGCodeStatistics)
+
+        self.formLayout_GCodeStatistics = QFormLayout()
+        self.formLayout_GCodeStatistics.setObjectName(u"formLayout_GCodeStatistics")
+        self.formLayout_GCodeStatistics.setFormAlignment(Qt.AlignCenter)
+        self.label_GCodeStatistics_RunTime = QLabel(self.scrollAreaWidgetContents_2)
+        self.label_GCodeStatistics_RunTime.setObjectName(u"label_GCodeStatistics_RunTime")
+        self.label_GCodeStatistics_RunTime.setMinimumSize(QSize(120, 0))
+        self.label_GCodeStatistics_RunTime.setFont(font1)
+        self.label_GCodeStatistics_RunTime.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+
+        self.formLayout_GCodeStatistics.setWidget(0, QFormLayout.LabelRole, self.label_GCodeStatistics_RunTime)
+
+        self.GCodeStatistics_RunTime = QLabel(self.scrollAreaWidgetContents_2)
+        self.GCodeStatistics_RunTime.setObjectName(u"GCodeStatistics_RunTime")
+
+        self.formLayout_GCodeStatistics.setWidget(0, QFormLayout.FieldRole, self.GCodeStatistics_RunTime)
+
+
+        self.verticalLayoutGCodeStatistics.addLayout(self.formLayout_GCodeStatistics)
+
+
+        self.verticalLayout_5.addLayout(self.verticalLayoutGCodeStatistics)
+
         self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_5.addItem(self.verticalSpacer_2)
 
-        self.verticalLayout_5.setStretch(3, 1)
+        self.verticalLayout_5.setStretch(4, 1)
         self.scrollArea_right.setWidget(self.scrollAreaWidgetContents_2)
 
         self.horizontalLayout_2.addWidget(self.scrollArea_right)
@@ -1043,6 +1075,9 @@ class Ui_mainwindow(object):
         self.label_GCodeGeneration_SpindleSpeed.setText(QCoreApplication.translate("mainwindow", u"Spindle speed", None))
         self.label_GCodeGeneration_ProgramEnd.setText(QCoreApplication.translate("mainwindow", u"Program End", None))
         self.GCodeGeneration_ProgramEnd.setText(QCoreApplication.translate("mainwindow", u"[M2]", None))
+        self.labelGCodeStatistics.setText(QCoreApplication.translate("mainwindow", u" GCode Statistics", None))
+        self.label_GCodeStatistics_RunTime.setText(QCoreApplication.translate("mainwindow", u"Run Time", None))
+        self.GCodeStatistics_RunTime.setText("")
         self.menuSvg.setTitle(QCoreApplication.translate("mainwindow", u"SVG", None))
         self.menuFile.setTitle(QCoreApplication.translate("mainwindow", u"File", None))
         self.menuOpen_Recent_Jobs.setTitle(QCoreApplication.translate("mainwindow", u"Open Recent Jobs", None))

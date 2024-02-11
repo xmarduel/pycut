@@ -7,6 +7,7 @@ import os
 import json
 import argparse
 import pathlib
+import math
 
 import posixpath
 import ntpath
@@ -37,6 +38,7 @@ import gcodeviewer.widgets.glwidget_container as glwidget_container
 import gcodesimulator_webgl.viewer as gcodesimulator_webgl_viewer
 import gcodesimulator_python.viewer as gcodesimulator_python_viewer
 import gcodesimulator_python.glviewer as gcodesimulator_python_glviewer
+from gcodesimulator_python.gcodeminiparser import GcodeMiniParser
 
 gcodesimulator_python_glviewer.Drawable.set_pycut_prefix()
 
@@ -1715,6 +1717,15 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         # gcode viewer/simulator
         gcode = generator.gcode
+
+        # quick stats
+        miniparser = GcodeMiniParser()
+        miniparser.parse_gcode(gcode)
+        path_time = math.floor(miniparser.path_time)
+        self.ui.GCodeStatistics_RunTime.setText(
+            f"{path_time//60} [min] {path_time%60} [s]"
+        )
+
         self.display_gcode(gcode)
 
     def read_recent_jobs(self):
