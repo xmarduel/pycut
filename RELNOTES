@@ -8,7 +8,8 @@ misc fixes
 
 # 0.6.0
 
-- gcode simulator in python + qt-opengl with candle gcode parser.
+- gcode simulator in python + qt-opengl
+- load and display external gcode possible with candle gcode parser.
 - jscut WebGL stuff kept but invisible
 
 # 0.5.1
