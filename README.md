@@ -21,12 +21,12 @@ start the program from the installation folder
 Dependencies
 ------------
 - Python 3.10
-- PySide6 6.4.3
+- PySide6 6.6.1
 - shapely 1.8.4 with PyOpenGL (latest)
 - svgelements (latest)
 - lxml (latest)
 - freetype-py (latest) - used in svgtext2svgpath.py utility
-- matplotlib 3.6.2 - to debug/view shapely offsets ops
+- matplotlib (latest) - to debug/view shapely offsets ops
 - numba (latest) - for python simulator optimization
 
 
