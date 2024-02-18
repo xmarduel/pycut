@@ -24,23 +24,23 @@
 	-->
   <!-- parts front and back to be "g-coded" -->
   <g>
-    <rect id="part_1" width="25.100" height="200.000" x="0.000" y="0.000" rx="0.000" ry="0.000" style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.1"/>
+    <rect id="part_1" width="25.100" height="200.000" x="25.100" y="0.000" rx="0.000" ry="0.000" style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.1"/>
     <!-- 8mm diameter => cut 15mm deep -->
-    <circle id="part_1_shaft_1_hole" cx="11.500" cy="15.000" r="4.000" style="fill:#008080;fill-opacity:1"/>
-    <circle id="part_1_shaft_2_hole" cx="11.500" cy="185.000" r="4.000" style="fill:#008080;fill-opacity:1"/>
+    <circle id="part_1_shaft_1_hole" cx="38.600" cy="15.000" r="4.000" style="fill:#008080;fill-opacity:1"/>
+    <circle id="part_1_shaft_2_hole" cx="38.600" cy="185.000" r="4.000" style="fill:#008080;fill-opacity:1"/>
     <g id="lead_screw_hole">
       <!-- 10.3 diameter => cut through -->
-      <circle id="backlash_item_hole" cx="12.500" cy="100.000" r="5.150" style="fill:#ff00ff;fill-opacity:1"/>
+      <circle id="backlash_item_hole" cx="38.600" cy="100.000" r="5.150" style="fill:#ff00ff;fill-opacity:1"/>
       <!-- no cut, done per hand -->
-      <circle id="backlash_item_screw_3.0mm_E" cx="12.500" cy="108.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
-      <circle id="backlash_item_screw_3.0mm_W" cx="12.500" cy="92.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
-      <circle id="leadscrew" cx="12.500" cy="100.000" r="4.000" style="fill:blue;stroke-width:0.1;stroke:blue"/>
+      <circle id="backlash_item_screw_3.0mm_E" cx="38.600" cy="108.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
+      <circle id="backlash_item_screw_3.0mm_W" cx="38.600" cy="92.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
+      <circle id="leadscrew" cx="38.600" cy="100.000" r="4.000" style="fill:blue;stroke-width:0.1;stroke:blue"/>
     </g>
   </g>
   <g>
-    <rect id="part_3" width="25.100" height="200.000" x="25.100" y="0.000" rx="0.000" ry="0.000" style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.1"/>
+    <rect id="part_3" width="25.100" height="200.000" x="0.000" y="0.000" rx="0.000" ry="0.000" style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.1"/>
     <!-- 8mm diameter => cut 15mm deep -->
-    <circle id="part_3_shaft_1_hole" cx="36.600" cy="15.000" r="4.000" style="fill:#008080;fill-opacity:1"/>
-    <circle id="part_3_shaft_2_hole" cx="36.600" cy="185.000" r="4.000" style="fill:#008080;fill-opacity:1"/>
+    <circle id="part_3_shaft_1_hole" cx="13.500" cy="15.000" r="4.000" style="fill:#008080;fill-opacity:1"/>
+    <circle id="part_3_shaft_2_hole" cx="13.500" cy="185.000" r="4.000" style="fill:#008080;fill-opacity:1"/>
   </g>
 </svg>

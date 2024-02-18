@@ -43,7 +43,7 @@
 	<use   href="#shaft_8.0mm"      id="part_middle_shaft_1_hole"   transform="translate(11.5,15)" />
 	<use   href="#shaft_8.0mm"      id="part_middle_shaft_2_hole"   transform="translate(11.5,185)" />
 		  
-	<g id="backlash_hole_part_middle" transform="translate(12.5,100)">
+	<g id="backlash_hole_part_middle" transform="translate(11.5,100)">
 	  <!-- 15mm diameter => pocket 20mm deep -->
 	  <circle  id="leadscrew-middle" r="7.5" style="fill:green"/>
 	</g>

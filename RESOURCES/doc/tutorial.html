@@ -472,9 +472,9 @@ and a contour or pocket operation has to be performed in the second operation wi
 </div>
 
 <div class="warning">
-<p><strong>Info</strong>: The two entries are "debounced" when entering the values from the keyboard, 
-as each change of value calls the GCode generator, which is a costly operation. WIth "Enter", the GCode 
-generator is then called. Utilizing the spin boxes arrows is not debounced.</p>
+<p><strong>Info</strong>: The two entries are "debounced" when entering the values from the keyboard, as each change of
+value calls the GCode generator, which is a costly operation. WIth "Enter", the GCode generator is then called.
+Utilizing the spin boxes arrows is not debounced.</p>
 </div>
 
 <p>Lets give an example: in a SVG file, two circles are defined, one has to be pocketed with 10mm , the other with 5
@@ -596,8 +596,8 @@ round). </p>
     <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        -->
     <circle cx="66.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </g>
   <g id="layer1" transform="translate(120 0)">
@@ -609,8 +609,8 @@ round). </p>
     <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                  -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      -->
     <circle cx="65.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </g>
 </svg>
@@ -677,12 +677,12 @@ tool path (and the standart cutter position at the toolpath corner).</p>
               stroke-opacity="0.8"/>
     <circle cx="20" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
     <!-- 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                 D = sqrt(10*10 + 10*10) = 14.14
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                 d = 14.14 -10 = 4.14
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                 dx = dy =  d / sqrt(2) = 2.93
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                 -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                     D = sqrt(10*10 + 10*10) = 14.14
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                     d = 14.14 -10 = 4.14
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                     dx = dy =  d / sqrt(2) = 2.93
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                     -->
     <polyline id="dog-bone-path1" points="20,20 17.07,17.07" fill="none" stroke="blue" stroke-linejoin="round"
               stroke-width="0.3" stroke-opacity="0.2"/>
     <circle id="dog-bone-path1-material" cx="17.07" cy="17.07" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2"
@@ -1008,7 +1008,6 @@ bisections are \( -1\) and \(1\). The correct bisection is the first one, and it
 
 <p>\( dy = 0.88 \)</p>
 
-
 <p><strong>PyCut GCode Dressup GUI</strong></p>
 
 <p>How to integrate this handling into <strong>PyCut</strong> ? There is a setting option "<strong>GCode Dressup
@@ -1036,8 +1035,6 @@ the comment lines </p>
 <p><strong>It is worth noting that in a first implemetation step, the fixups will be calculated only for "Inside" or
 "Outside" operations, and not for the "Pocket" operations (TODO). This in because, for pocket operations, the toolpaths
 which are not adjacents to the stock borders may have sharp corners which do not need dogbones at all.</strong></p>
-
-
 
 <h3 id="APPENDICE-01">Appendix-1: SVG Editors</h3>
 
@@ -1235,7 +1232,6 @@ perfect toolchain I admit, but well my svgs are not that complicated</strong>. Y
 arc/bezier curve per hand, it is not that difficult. And yours svgs are then "<strong>clean</strong>" and easily
 modificable. </p>
 
-
 <p></p>
 
 <h3 id="APPENDICE-02">Appendix-2: GCODE Viewers</h3>
@@ -1254,6 +1250,36 @@ modificable. </p>
   <li>Camotics: unfortunately very resources intensive</li>
   <li>what else ?</li>
 </ul>
+
+<p></p>
+
+<h3>Appendix-3 : Idee: Pocket as spiral</h3>
+
+<p>Actually the pocket algorithm is the so-called "<strong>contour</strong>" algorithm. Starting from the outside,
+offset curves are generated one after the other until the whole pocket "space" is processed.</p>
+
+<p>There are others algorithms, for example the "<strong>spiral</strong>" algorithm. Here we start from the center of
+the pocket and go in the outside direction in spiralse, hence the name.</p>
+
+<p><strong>PyCut</strong> will try to implement this algorithm for <strong>circles</strong> and
+<strong>squares</strong> shapes only -something admittidly rather restrictive- because these cases are more or less
+trivial. Ther eis then no need to process the "isles" that neccessarely occurs in the corners of the pocket for
+non-trivila pocket geometries.</p>
+
+<p>So there will be in the operations table a new column, activated only for pocket operations when the (svg) shape is
+a circle or a rectangle.</p>
+
+<p>By the way, this spiral pocketing will start with a drill operation in the center of the pocket until the full depth
+of the operation. After this, the spirales will only cut into the material "sideways". It seems it is a better way to
+mill pockets, as the bit then minly used from the side, preserving its drilling bottom side. (Is it true ?). At best,
+the use can first drill the neccessarely holes with a drill machine to spare the milling bit.</p>
+
+<p>It seems that the spirales only "attack" the material on a rather limited side surface, thus preserving the bit and
+allowing greather depth passes. This is the opposite of the "<strong>contour</strong>" algorithm where the attacking
+side is roughly half the circomference of the bit, at least when starting the operation. Thus, a (very) shallow depth
+of cut has to be chosen. (please correct me if wrong).</p>
+
+<p>  </p>
 
 <p></p>
 </div>

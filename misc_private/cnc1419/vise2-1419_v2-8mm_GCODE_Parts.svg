@@ -36,14 +36,14 @@
 	</defs>
 	
 	<!-- parts front and back to be "g-coded" -->	  
-	<g transform="translate(0,0)">
+	<g transform="translate(25.1,0)">
 	  <rect  id="part_1" style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.1" width="25.1" height="200" x="0" y="0" />
 		
 	  <!-- 8mm diameter => cut 15mm deep -->
-	  <use   href="#shaft_8.0mm"      id="part_1_shaft_1_hole"   transform="translate(11.5,15)" />
-	  <use   href="#shaft_8.0mm"      id="part_1_shaft_2_hole"   transform="translate(11.5,185)" />
+	  <use   href="#shaft_8.0mm"      id="part_1_shaft_1_hole"   transform="translate(13.5,15)" />
+	  <use   href="#shaft_8.0mm"      id="part_1_shaft_2_hole"   transform="translate(13.5,185)" />
 		  
-	  <g id="lead_screw_hole" transform="translate(12.5,100)">
+	  <g id="lead_screw_hole" transform="translate(13.5,100)">
 	    <!-- 10.3 diameter => cut through -->  
 	    <use href="#backlash_item_hole_10.3mm" id="backlash_item_hole" />
 	    <!-- no cut, done per hand -->
@@ -53,11 +53,11 @@
 	    <circle id="leadscrew" style="fill:blue;stroke-width:0.1;stroke:blue"   cx="0" cy="0" r="4.0"/>
 	  </g>
 	</g>
-    <g transform="translate(25.1,0)">
+    <g transform="translate(0,0)">
 	  <rect  id="part_3" style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.1" width="25.1" height="200" x="0" y="0" />
 	
       <!-- 8mm diameter => cut 15mm deep -->
-	  <use   href="#shaft_8.0mm"      id="part_3_shaft_1_hole"   transform="translate(11.5,15)" />
-	  <use   href="#shaft_8.0mm"      id="part_3_shaft_2_hole"   transform="translate(11.5,185)" />
+	  <use   href="#shaft_8.0mm"      id="part_3_shaft_1_hole"   transform="translate(13.5,15)" />
+	  <use   href="#shaft_8.0mm"      id="part_3_shaft_2_hole"   transform="translate(13.5,185)" />
 	</g>
 </svg>

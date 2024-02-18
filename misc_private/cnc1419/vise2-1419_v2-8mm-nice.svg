@@ -4,7 +4,8 @@
 	  <circle id="plate_screw_pocket" x="0" y="0" r="5.0" fill="red" />
 	  <circle id="plate_screw"        x="0" y="0" r="2.5" fill="black" />
 	  
-	  <circle id="lead_screw_jaw_screw" x="0" y="0" r="2.5" fill="cyan" />  
+	  <circle id="lead_screw_jaw_screw" x="0" y="0" r="2.0" fill="cyan" />  
+	  <circle id="lead_screw_jaw_screw2" x="0" y="0" r="1.5" fill="cyan" />  
 	</defs>
 	
 	<g id="bars">
@@ -35,8 +36,14 @@
 	</g> 
 		
 	<g id="shafts">
-	  <rect id="shaft_left"  width="8" height="203" x="11"  y="0" style="fill:rgb(160, 160, 160)" />
-	  <rect id="shaft_right" width="8" height="203" x="181" y="0" style="fill:rgb(160, 160, 160)" />
+	  <rect id="shaft_left"  width="8" height="183" x="11"  y="10" style="fill:rgb(160, 160, 160)" />
+	  <rect id="shaft_right" width="8" height="183" x="181" y="10" style="fill:rgb(160, 160, 160)" />
+	  
+	  <rect id="shaft_left_p3_screwhole1"  width="8" height="5" x="11"  y="0" style="fill:rgb(160, 160, 160)" />
+	  <rect id="shaft_right_p3_screwhole2" width="8" height="5" x="181" y="0" style="fill:rgb(160, 160, 160)" />
+	  
+	  <rect id="shaft_left_p1_screwhole1"  width="8" height="5" x="11"  y="198" style="fill:rgb(160, 160, 160)" />
+	  <rect id="shaft_right_p1_screwhole2" width="8" height="5" x="181" y="198" style="fill:rgb(160, 160, 160)" />
 	</g>
 		
 	<g>
@@ -48,7 +55,7 @@
 	   <line id="lead_screw"  x1="100"  y1="71" x2="100"  y2="220" style="stroke:rgb(100, 100, 100);stroke-width:8" />
 	   
 	   <!-- blocking items are 15mm diameters, blocking ring can be only 9 mm high, blocking nut10mm -->
-	   <rect id="lead_screw_blocking_ring"  x="92.5" y="71" rx="0" ry="0" width="15" height="10" fill="blue" />	
+	   <rect id="lead_screw_blocking_ring"  x="92.5" y="74" rx="0" ry="0" width="15" height="6" fill="blue" />	
 	   <path id="lead_screw_blocking_nut"  d="M 92.5,80 h 15 v 1 l-5,4 l 5,4 v 1 h -15 v -1  l 5,-4 l -5,-4 v-1 z" fill="green" />
     </g>
 
@@ -56,7 +63,7 @@
         <use href="#lead_screw_jaw_screw"      x="93" y="85"  />
 		<use href="#lead_screw_jaw_screw"      x="107" y="85"  />
 		
-		<use href="#lead_screw_jaw_screw"      x="100" y="76"  />
+		<use href="#lead_screw_jaw_screw2"      x="100" y="77"  />
     </g>	
 	
 </svg>

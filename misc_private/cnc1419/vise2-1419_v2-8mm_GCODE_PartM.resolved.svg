@@ -30,7 +30,7 @@
   <circle id="part_middle_shaft_2_hole" cx="11.500" cy="185.000" r="4.000" style="fill:#008080;fill-opacity:1"/>
   <g id="backlash_hole_part_middle">
     <!-- 15mm diameter => pocket 20mm deep -->
-    <circle id="leadscrew-middle" cx="12.500" cy="100.000" r="7.500" style="fill:green"/>
+    <circle id="leadscrew-middle" cx="11.500" cy="100.000" r="7.500" style="fill:green"/>
   </g>
   <line id="part2_cut" x1="1.000" y1="0.000" x2="1.000" y2="200.000" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"/>
   <line id="part2_schlitz" x1="22.000" y1="0.000" x2="22.000" y2="200.000" style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"/>
