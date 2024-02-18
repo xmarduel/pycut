@@ -194,8 +194,8 @@ class Spiral:
         # because the angles progression is of sqrt, so has to be the
         # progression of the radiuses!
 
-        x = r * np.sin(t)
-        y = r * np.cos(t)
+        x = r * np.cos(t)
+        y = r * np.sin(t)
 
         # last circle
         dt = t[-1] - t[-2]
@@ -217,8 +217,8 @@ class Spiral:
         r_circle = np.linspace(POCKET_RADIUS_M_CUTTER, POCKET_RADIUS_M_CUTTER, N)
         t_circle = t[-1] + np.linspace(0, 2 * pi, N)
 
-        dx = r_circle * np.sin(t_circle)
-        dy = r_circle * np.cos(t_circle)
+        dx = r_circle * np.cos(t_circle)
+        dy = r_circle * np.sin(t_circle)
 
         x = np.concatenate([x, dx])
         y = np.concatenate([y, dy])
@@ -265,7 +265,10 @@ G1 Z{clearance} F{RAPID_RATE}
 M5
 
 ; Return to 0,0
-G0 X0 Y0 F{RAPID_RATE} 
+;G0 X0 Y0 F{RAPID_RATE} 
+
+G0 Y0 F{RAPID_RATE}          ; move along Y axis
+G0 X0 F{RAPID_RATE}          ; move along X axis
 
 ; Program End
 M2
@@ -461,7 +464,7 @@ if __name__ == "__main__":
 
     ops = [
         {"center": [0.0, 0.0], "cut_depth": 25.0, "pass_depth": 10.0},
-        #    {"center": [0.0, 170.0], "cut_depth": 25.0, "pass_depth": 10.0},
+        {"center": [0.0, 170.0], "cut_depth": 25.0, "pass_depth": 10.0},
         #    {"center": [0.0, 85.0], "cut_depth": 17.0, "pass_depth": 10.0},
     ]
 
