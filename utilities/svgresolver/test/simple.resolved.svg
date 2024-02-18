@@ -1,0 +1,7 @@
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" id="svg" width="100mm" height="200mm" viewBox="0 0 100 200" version="1.1">
+  <g id="layer">
+    <rect id="rect_1" width="10.000" height="20.000" x="40.000" y="20.000" rx="0.000" ry="0.000" style="opacity:1;fill:#800080;stroke-width:0.2;"/>
+    <rect id="rect_2" width="10.000" height="20.000" x="60.000" y="20.000" rx="0.000" ry="0.000" style="opacity:1;fill:#808000;stroke-width:0.2;"/>
+    <rect width="10.000" height="20.000" x="80.000" y="20.000" rx="0.000" ry="0.000" style="opacity:1;fill:#f08000;stroke-width:0.2;"/>
+  </g>
+</svg>
