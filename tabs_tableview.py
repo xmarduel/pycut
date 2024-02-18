@@ -301,7 +301,7 @@ class PyCutTabsTableViewManager(QtWidgets.QWidget):
         """
         instruct the model to add an item
         """
-        self.table.addItem({"center": [10, 10], "radius": 5, "enabled": True})
+        self.table.add_item({"center": [10, 10], "radius": 5, "enabled": True})
 
         print("ADD")
         for tab in self.get_model_tabs():
@@ -393,7 +393,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         index = self.currentIndex()
         idx = index.row()
         # instruct the model to del an item
-        self.model().delItem(idx)
+        self.model().del_item(idx)
 
         print("DEL")
         for tab in self.model().tabs:
@@ -404,8 +404,8 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         tabs = [tab.to_dict() for tab in model_tabs]
         self.parent().mainwindow.display_cnc_tabs(tabs)
 
-    def addItem(self, tab_data):
-        self.model().addItem(tab_data)
+    def add_item(self, tab_data):
+        self.model().add_item(tab_data)
         # do not make a "full" setup when adding a new item
         self.setup_persistent_editors()  # to show the editors on a new item
 
@@ -517,7 +517,7 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
 
         return flags
 
-    def addItem(self, tab_data):
+    def add_item(self, tab_data):
         tab = TabItem(tab_data)
 
         idx = len(self.tabs)
@@ -526,14 +526,14 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
         self.tabs.append(tab)
         self.endInsertRows()
 
-    def delItem(self, idx):
+    def del_item(self, idx):
         tab = self.tabs[idx]
 
         self.beginRemoveRows(QtCore.QModelIndex(), idx, idx)
         self.tabs.remove(tab)
         self.endRemoveRows()
 
-    def swapItems(self, idx1, idx2):
+    def swap_items(self, idx1, idx2):
         self.beginResetModel()
         self.tabs[idx1], self.tabs[idx2] = self.tabs[idx2], self.tabs[idx1]
         self.endResetModel()

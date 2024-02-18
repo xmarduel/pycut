@@ -289,9 +289,11 @@ class CncOp:
         self.geometry_svg_paths: List[SvgPath] = []
 
         # the resulting paths from the op type & combinaison setting + enabled svg paths
-        self.geometry: shapely.geometry.MultiPolygon | shapely.geometry.MultiLineString | shapely.geometry.MultiPoint = (
-            None
-        )
+        self.geometry: (
+            shapely.geometry.MultiPolygon
+            | shapely.geometry.MultiLineString
+            | shapely.geometry.MultiPoint
+        ) = None
 
         # the resulting tool paths
         self.cam_paths: List[CamPath] = []
@@ -990,7 +992,7 @@ class GcodeGenerator:
             gcode.append("G21         ; Set units to mm")
         gcode.append("G90         ; Absolute positioning")
         gcode.append(
-            f"G1 {safeZ.toFixed(4)}    F{rapidRate}      ; Move to clearance level"
+            f"G1 {safeZ.to_fixed(4)}    F{rapidRate}      ; Move to clearance level"
         )
 
         if self.gcode_model.spindleControl:

@@ -649,43 +649,43 @@ class SvgViewer(QtWidgets.QGraphicsView):
             for geometry_svg_path in cnc_op.geometry_svg_paths:
                 if geometry_svg_path.eval_closed():
                     # polygons
-                    geometry_svg_path.shape_attrs[
-                        "stroke"
-                    ] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke"]
-                    geometry_svg_path.shape_attrs[
-                        "stroke-width"
-                    ] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-width"]
-                    geometry_svg_path.shape_attrs[
-                        "stroke-opacity"
-                    ] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-opacity"]
+                    geometry_svg_path.shape_attrs["stroke"] = (
+                        self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke"]
+                    )
+                    geometry_svg_path.shape_attrs["stroke-width"] = (
+                        self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-width"]
+                    )
+                    geometry_svg_path.shape_attrs["stroke-opacity"] = (
+                        self.GEOMETRY_PREVIEW_CLOSED_PATHS["stroke-opacity"]
+                    )
 
                     if self.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM["fill"] != "":
-                        geometry_svg_path.shape_attrs[
-                            "fill"
-                        ] = self.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM["fill"]
+                        geometry_svg_path.shape_attrs["fill"] = (
+                            self.GEOMETRY_PREVIEW_CLOSED_PATHS_CUSTOM["fill"]
+                        )
                     else:
-                        geometry_svg_path.shape_attrs[
-                            "fill"
-                        ] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"]
+                        geometry_svg_path.shape_attrs["fill"] = (
+                            self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill"]
+                        )
 
-                    geometry_svg_path.shape_attrs[
-                        "fill-opacity"
-                    ] = self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill-opacity"]
+                    geometry_svg_path.shape_attrs["fill-opacity"] = (
+                        self.GEOMETRY_PREVIEW_CLOSED_PATHS["fill-opacity"]
+                    )
                 else:
                     # lines
-                    geometry_svg_path.shape_attrs[
-                        "stroke"
-                    ] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"]
-                    geometry_svg_path.shape_attrs[
-                        "stroke-width"
-                    ] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]
-                    geometry_svg_path.shape_attrs[
-                        "stroke-opacity"
-                    ] = self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"]
+                    geometry_svg_path.shape_attrs["stroke"] = (
+                        self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"]
+                    )
+                    geometry_svg_path.shape_attrs["stroke-width"] = (
+                        self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]
+                    )
+                    geometry_svg_path.shape_attrs["stroke-opacity"] = (
+                        self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"]
+                    )
                     geometry_svg_path.shape_attrs["fill"] = "none"
-                    geometry_svg_path.shape_attrs[
-                        "fill-opacity"
-                    ] = self.GEOMETRY_PREVIEW_OPENED_PATHS["fill-opacity"]
+                    geometry_svg_path.shape_attrs["fill-opacity"] = (
+                        self.GEOMETRY_PREVIEW_OPENED_PATHS["fill-opacity"]
+                    )
 
             geometry_svg_paths += cnc_op.geometry_svg_paths
 

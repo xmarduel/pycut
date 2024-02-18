@@ -232,7 +232,7 @@ class PMFComboBox(QtWidgets.QComboBox):
         '''
         self.cb_disconnect()
         self.clear()
-        self.addItems(self.items)
+        self.add_items(self.items)
         self.cb_connect()
 
     def set_value(self):
@@ -467,7 +467,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
 
     def add_item(self):
         # instruct the model to add an item
-        self.table.addItem()
+        self.table.add_item()
         
         print("ADD")
         for op in self.table.model().operations:
@@ -477,7 +477,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
         index = self.table.currentIndex()
         idx = index.row()
         # instruct the model to del an item
-        self.table.delItem(idx)
+        self.table.del_item(idx)
         
         print("DEL")
         for op in self.table.model().operations:
@@ -487,7 +487,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
         index = self.table.currentIndex()
         idx = index.row()
         if idx < self.table.model().rowCount(None) - 1:
-            self.table.swapItems(idx, idx + 1)
+            self.table.swap_items(idx, idx + 1)
 
         # to be sure to update the table... and all its delegates
         self.table.setup()
@@ -501,7 +501,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
         index = self.table.currentIndex()
         idx = index.row()
         if idx > 0:
-            self.table.swapItems(idx, idx - 1)
+            self.table.swap_items(idx, idx - 1)
 
         # to be sure to update the table... and all its delegates
         self.table.setup()
@@ -598,21 +598,21 @@ class PMFSimpleTableView(QtWidgets.QTableView):
         self.setColumnWidth(0, 100)  # name
         self.setColumnWidth(4, 100)  # paths
 
-    def addItem(self):
-        self.model().addItem()
+    def add_item(self):
+        self.model().add_item()
         self.setup()  # to show the editors on a new item
 
-    def delItem(self, idx):
-        self.model().delItem(idx)
+    def del_item(self, idx):
+        self.model().del_item(idx)
 
-    def swapItems(self, idx1, idx2):
-        self.model().swapItems(idx1, idx2)
+    def swap_items(self, idx1, idx2):
+        self.model().swap_items(idx1, idx2)
 
     def cb_delete_op(self):
         index = self.currentIndex()
         idx = index.row()
         # instruct the model to del this item
-        self.delItem(idx)
+        self.del_item(idx)
 
     def cb_gen_gcode_op(self):
         index = self.currentIndex()
@@ -747,14 +747,14 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
 
         return flags
 
-    def addItem(self):
+    def add_item(self):
         op = CncOp({})
 
         self.beginInsertRows(QtCore.QModelIndex(), len(self.operations), len(self.operations))
         self.operations.append(op)
         self.endInsertRows()
 
-    def delItem(self, idx):
+    def del_item(self, idx):
         op = self.operations[idx]
 
         self.beginRemoveRows(QtCore.QModelIndex(), idx, idx)
@@ -763,7 +763,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
 
         self.dump()
 
-    def swapItems(self, idx1, idx2):
+    def swap_items(self, idx1, idx2):
         self.beginResetModel()
         self.operations[idx1], self.operations[idx2] = self.operations[idx2], self.operations[idx1]
         self.endResetModel()

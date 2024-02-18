@@ -455,7 +455,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
         instruct the model to add an item
         """
         paths = self.svg_viewer.get_selected_items_ids()
-        self.table.addItem({"paths": paths})
+        self.table.add_item({"paths": paths})
 
         print("ADD")
         for op in self.get_model_operations():
@@ -590,7 +590,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         index = self.currentIndex()
         idx = index.row()
         # instruct the model to del an item
-        self.model().delItem(idx)
+        self.model().del_item(idx)
 
         print("DEL")
         for op in self.model().operations:
@@ -600,7 +600,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         index = self.currentIndex()
         idx = index.row()
         if idx < self.model().rowCount(None) - 1:
-            self.model().swapItems(idx, idx + 1)
+            self.model().swap_items(idx, idx + 1)
 
         # to be sure to update the table... and all its delegates
         self.setup_persistent_editors()
@@ -613,7 +613,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         index = self.currentIndex()
         idx = index.row()
         if idx > 0:
-            self.model().swapItems(idx, idx - 1)
+            self.model().swap_items(idx, idx - 1)
 
         # to be sure to update the table... and all its delegates
         self.setup_persistent_editors()
@@ -622,8 +622,8 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         for op in self.model().operations:
             print(op)
 
-    def addItem(self, op_data):
-        self.model().addItem(op_data)
+    def add_item(self, op_data):
+        self.model().add_item(op_data)
         self.setup_persistent_editors()  # to show the editors on a new item
 
     def enable_disable_cells(self):
@@ -847,7 +847,7 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
 
         return flags
 
-    def addItem(self, op_data):
+    def add_item(self, op_data):
         op = OpItem(op_data)
 
         idx = len(self.operations)
@@ -856,14 +856,14 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
         self.operations.append(op)
         self.endInsertRows()
 
-    def delItem(self, idx: int):
+    def del_item(self, idx: int):
         op = self.operations[idx]
 
         self.beginRemoveRows(QtCore.QModelIndex(), idx, idx)
         self.operations.remove(op)
         self.endRemoveRows()
 
-    def swapItems(self, idx1: int, idx2: int):
+    def swap_items(self, idx1: int, idx2: int):
         self.beginResetModel()
         self.operations[idx1], self.operations[idx2] = (
             self.operations[idx2],

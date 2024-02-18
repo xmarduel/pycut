@@ -6,7 +6,7 @@ class ValWithUnit(float):
     >>> x
     >>> x.to_inch()
     >>> x.to_mm()
-    >>> x.to_inch().toFixed(5)
+    >>> x.to_inch().to_fixed(5)
 
     Unfortunately, cannot say
     >>>  x.set_units("inch")
@@ -37,7 +37,7 @@ class ValWithUnit(float):
         else:
             return ValWithUnit(self, "mm")
 
-    def toFixed(self, level):
+    def to_fixed(self, level):
         """
         Format float value
         """

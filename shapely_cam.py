@@ -590,17 +590,17 @@ class cam:
 
         retractGcode = [
             "; Retract",
-            "G1 Z" + safeZ.toFixed(decimal) + f"{rapidFeedGcode}",
+            "G1 Z" + safeZ.to_fixed(decimal) + f"{rapidFeedGcode}",
         ]
 
         retractForTabGcode = [
             "; Retract for tab",
-            "G1 Z" + tabZ.toFixed(decimal) + f"{rapidFeedGcode}",
+            "G1 Z" + tabZ.to_fixed(decimal) + f"{rapidFeedGcode}",
         ]
 
         retractForPeck = [
             "; Retract for peck",
-            "G1 Z" + peckZ.toFixed(decimal) + f"{rapidFeedGcode}",
+            "G1 Z" + peckZ.to_fixed(decimal) + f"{rapidFeedGcode}",
         ]
 
         def getX(p: Tuple[int, int]):
@@ -616,16 +616,16 @@ class cam:
             if flipXY is False:
                 result = (
                     " X"
-                    + ValWithUnit(x, "-").toFixed(decimal)
+                    + ValWithUnit(x, "-").to_fixed(decimal)
                     + " Y"
-                    + ValWithUnit(y, "-").toFixed(decimal)
+                    + ValWithUnit(y, "-").to_fixed(decimal)
                 )
             else:
                 result = (
                     " X"
-                    + ValWithUnit(-y, "-").toFixed(decimal)
+                    + ValWithUnit(-y, "-").to_fixed(decimal)
                     + " Y"
-                    + ValWithUnit(x, "-").toFixed(decimal)
+                    + ValWithUnit(x, "-").to_fixed(decimal)
                 )
 
             return result
@@ -698,13 +698,13 @@ class cam:
                 if not crosses_tabs:
                     inTabsHeight = False
                     selectedPaths = [origPath]
-                    gcode.append("G1 Z" + ValWithUnit(currentZ, "-").toFixed(decimal))
+                    gcode.append("G1 Z" + ValWithUnit(currentZ, "-").to_fixed(decimal))
                 else:
                     if nextZ >= tabZ:
                         inTabsHeight = False
                         selectedPaths = [origPath]
                         gcode.append(
-                            "G1 Z" + ValWithUnit(currentZ, "-").toFixed(decimal)
+                            "G1 Z" + ValWithUnit(currentZ, "-").to_fixed(decimal)
                         )
                     else:
                         inTabsHeight = True
@@ -753,7 +753,7 @@ class cam:
                                 gcode.append("; plunge")
                                 gcode.append(
                                     "G1 Z"
-                                    + ValWithUnit(nextZ, "-").toFixed(decimal)
+                                    + ValWithUnit(nextZ, "-").to_fixed(decimal)
                                     + plungeFeedGcode
                                 )
 
@@ -775,15 +775,16 @@ class cam:
                                     "G1"
                                     + convertPoint(rampPath[i])
                                     + " Z"
-                                    + ValWithUnit(newZ, "-").toFixed(decimal)
+                                    + ValWithUnit(newZ, "-").to_fixed(decimal)
                                 )
                                 if i == 1:
                                     gcode.append(
                                         gcode_line_start
                                         + " F"
                                         + ValWithUnit(
-                                            min(totalDist / minPlungeTime, cutFeed), "-"
-                                        ).toFixed(decimal)
+                                            min(totalDist / minPlungeTime, cutFeed),
+                                            "-",
+                                        ).to_fixed(decimal)
                                     )
                                 else:
                                     gcode.append(gcode_line_start)
@@ -793,7 +794,7 @@ class cam:
                             gcode.append("; plunge")
                             gcode.append(
                                 "G1 Z"
-                                + ValWithUnit(nextZ, "-").toFixed(decimal)
+                                + ValWithUnit(nextZ, "-").to_fixed(decimal)
                                 + plungeFeedGcode
                             )
 
@@ -806,7 +807,7 @@ class cam:
                         gcode.append("; plunge")
                         gcode.append(
                             "G1 Z"
-                            + ValWithUnit(nextZ, "-").toFixed(decimal)
+                            + ValWithUnit(nextZ, "-").to_fixed(decimal)
                             + plungeFeedGcode
                         )
 
@@ -901,12 +902,12 @@ class TabsSeparator:
         paths: List[shapely.geometry.LineString] = list(shapely_splitted_paths.geoms)
 
         # >>> XAM merge some paths when possible
-        paths = self.mergeCompatiblePaths(paths)
+        paths = self.merge_compatible_paths(paths)
         # <<< XAM
 
         self.separated_paths = paths
 
-    def mergeCompatiblePaths(
+    def merge_compatible_paths(
         self, paths: List[shapely.geometry.LineString]
     ) -> List[shapely.geometry.LineString]:
         """
@@ -915,7 +916,7 @@ class TabsSeparator:
         """
 
         # ------------------------------------------------------------------------------------------------
-        def pathsAreCompatible(
+        def paths_are_compatible(
             path1: shapely.geometry.LineString, path2: shapely.geometry.LineString
         ) -> bool:
             """
@@ -935,20 +936,20 @@ class TabsSeparator:
 
             return endPoint == startPoint
 
-        def mergePathIntoPath(
+        def merge_path_into_path(
             path1: shapely.geometry.LineString, path2: shapely.geometry.LineString
         ) -> Tuple[bool, shapely.geometry.LineString]:
             """
             merge the 2 paths if their end point/start point are compatible (ie the same)
             """
-            if pathsAreCompatible(path1, path2):
+            if paths_are_compatible(path1, path2):
                 # can merge
                 path1 = shapely.ops.linemerge([path1, path2])
                 return True, path1
 
             return False, path1
 
-        def buildPathsCompatibilityTable(
+        def build_paths_compatibility_table(
             paths: List[shapely.geometry.LineString],
         ) -> Dict[List, int]:
             """
@@ -960,7 +961,7 @@ class TabsSeparator:
                 for j, other_path in enumerate(paths):
                     if i == j:
                         continue
-                    rc = pathsAreCompatible(path, other_path)
+                    rc = paths_are_compatible(path, other_path)
                     if rc:
                         if i in compatibility_table:
                             compatibility_table[i].append(j)
@@ -977,7 +978,7 @@ class TabsSeparator:
         # mlines = shapely.geometry.MultiLineString(paths)
         # cnt = MatplotLibUtils.display("offset - as LineString|MultiLineString (from linestring)", mlines, force=True)
 
-        compatibility_table = buildPathsCompatibilityTable(paths)
+        compatibility_table = build_paths_compatibility_table(paths)
 
         while len(compatibility_table) > 0:
             i = list(compatibility_table.keys())[0]
@@ -990,10 +991,10 @@ class TabsSeparator:
                 path = paths.pop(i)
                 path_to_be_merged = paths.pop(j)
 
-            _, merged_path = mergePathIntoPath(path, path_to_be_merged)
+            _, merged_path = merge_path_into_path(path, path_to_be_merged)
 
             paths.append(merged_path)
-            compatibility_table = buildPathsCompatibilityTable(paths)
+            compatibility_table = build_paths_compatibility_table(paths)
 
         return paths
 
