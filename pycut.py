@@ -1108,6 +1108,17 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             self.display_gcode(gcode)
 
+            # go on the gcode simulation view
+            self.ui.tabWidget.setCurrentIndex(3)
+
+            # quick stats
+            miniparser = GcodeMiniParser()
+            miniparser.parse_gcode(gcode)
+            path_time = math.floor(miniparser.path_time)
+            self.ui.GCodeStatistics_RunTime.setText(
+                f"{path_time//60} [min] {path_time%60} [s]"
+            )
+
     def cb_curve_min_segments(self):
         """
         what is it good for ?
