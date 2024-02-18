@@ -112,7 +112,10 @@ class GcodeMiniParser:
             ):
                 self.char_no += 1
             begin = self.char_no
-            while self.char_no < len(self.gcode) and self.gcode[self.char_no] in "+-.0123456789":
+            while (
+                self.char_no < len(self.gcode)
+                and self.gcode[self.char_no] in "+-.0123456789"
+            ):
                 self.char_no += 1
             try:
                 end = self.char_no
@@ -179,7 +182,9 @@ class GcodeMiniParser:
                 self.path_idx_line_no[len(self.path) - 1] = self.line_no
 
             while (
-                self.char_no < len(self.gcode) and self.gcode[self.char_no] != "\r" and self.gcode[self.char_no] != "\n"
+                self.char_no < len(self.gcode)
+                and self.gcode[self.char_no] != "\r"
+                and self.gcode[self.char_no] != "\n"
             ):
                 self.char_no += 1
             while self.char_no < len(self.gcode) and (
@@ -293,7 +298,9 @@ class GcodeMiniParser:
 
                     no = ls.m_lineNumber
                     # self.path_idx_line_no[len(self.path)-1] = ls.m_lineNumber
-                    self.path_idx_line_no[len(self.path) - 1] = get_lineno_for_directiveno(no)
+                    self.path_idx_line_no[len(self.path) - 1] = (
+                        get_lineno_for_directiveno(no)
+                    )
 
                     is_first = False
 
@@ -302,7 +309,9 @@ class GcodeMiniParser:
 
                 no = ls.m_lineNumber
                 # self.path_idx_line_no[len(self.path)-1] = no
-                self.path_idx_line_no[len(self.path) - 1] = get_lineno_for_directiveno(no)
+                self.path_idx_line_no[len(self.path) - 1] = get_lineno_for_directiveno(
+                    no
+                )
 
         # last thing
         self.eval_path_time()

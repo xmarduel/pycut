@@ -16,6 +16,7 @@
 # along with pycut.  If not, see <http:#www.gnu.org/licenses/>.
 
 import sys
+import math
 
 from typing import List
 from typing import Dict
@@ -782,7 +783,9 @@ class cam:
                                         gcode_line_start
                                         + " F"
                                         + ValWithUnit(
-                                            min(totalDist / minPlungeTime, cutFeed),
+                                            math.floor(
+                                                min(totalDist / minPlungeTime, cutFeed)
+                                            ),
                                             "-",
                                         ).to_fixed(decimal)
                                     )

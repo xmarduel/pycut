@@ -992,7 +992,7 @@ class GcodeGenerator:
             gcode.append("G21         ; Set units to mm")
         gcode.append("G90         ; Absolute positioning")
         gcode.append(
-            f"G1 {safeZ.to_fixed(4)}    F{rapidRate}      ; Move to clearance level"
+            f"G1 Z{safeZ.to_fixed(4)}    F{rapidRate}      ; Move to clearance level"
         )
 
         if self.gcode_model.spindleControl:
