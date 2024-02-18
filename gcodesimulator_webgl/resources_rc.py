@@ -50473,10 +50473,10 @@ orceGeneratorRTD\
 |addGoggles|addG\
 roupIcon|addHand\
 gunItem|addHeadg\
-ear|addItem|addI\
-temCargo|addItem\
+ear|add_item|addI\
+temCargo|add_item\
 CargoGlobal|addI\
-temPool|addItemT\
+temPool|add_itemT\
 oBackpack|addIte\
 mToUniform|addIt\
 emToVest|addLive\
@@ -52291,7 +52291,7 @@ tiplier|titleCut\
 |titleFadeOut|ti\
 tleObj|titleRsc|\
 titleText|toArra\
-y|toFixed|toLowe\
+y|to_fixed|toLowe\
 r|toString|toUpp\
 er|triggerActiva\
 ted|triggerActiv\
