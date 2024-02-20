@@ -10,58 +10,59 @@ from PySide6 import QtWidgets
 
 operations = [
     {
-      "name": "op1",
-      "paths": ["p1", "p2"],
-      "type": "Pocket",
-      "cut_depth": 0.125,       
-      "ramp_plunge": True,
-      "combinaison": "Union",
-      "direction": "Conventional",
-      "units": "inch",
-      "margin": 0.0
+        "name": "op1",
+        "paths": ["p1", "p2"],
+        "type": "Pocket",
+        "cut_depth": 0.125,
+        "ramp_plunge": True,
+        "combinaison": "Union",
+        "direction": "Conventional",
+        "units": "inch",
+        "margin": 0.0,
     },
     {
-      "name": "op2",
-      "paths": ["p1", "p2"],
-      "type": "Inside",
-      "cut_depth": 0.125,
-      "ramp_plunge": True,
-      "combinaison": "Union",
-      "direction": "Conventional",
-      "units": "inch",
-      "margin": 0.0,
-      "width": 0.0
+        "name": "op2",
+        "paths": ["p1", "p2"],
+        "type": "Inside",
+        "cut_depth": 0.125,
+        "ramp_plunge": True,
+        "combinaison": "Union",
+        "direction": "Conventional",
+        "units": "inch",
+        "margin": 0.0,
+        "width": 0.0,
     },
     {
-      "name": "op3",
-      "paths": ["p1", "p2"],
-      "type": "Outside",
-      "cut_depth": 0.125,
-      "ramp_plunge": True,
-      "combinaison": "Union",
-      "direction": "Conventional",
-      "units": "inch",
-      "margin": 0.0,
-      "width": 0.0
+        "name": "op3",
+        "paths": ["p1", "p2"],
+        "type": "Outside",
+        "cut_depth": 0.125,
+        "ramp_plunge": True,
+        "combinaison": "Union",
+        "direction": "Conventional",
+        "units": "inch",
+        "margin": 0.0,
+        "width": 0.0,
     },
     {
-      "name": "op4",
-      "paths": ["p4"],
-      "type": "Engrave",
-      "cut_depth": 1.125,
-      "ramp_plunge": False,
-      "combinaison": "Difference",
-      "direction": "Climb",
-      "units": "mm"
-    }
+        "name": "op4",
+        "paths": ["p4"],
+        "type": "Engrave",
+        "cut_depth": 1.125,
+        "ramp_plunge": False,
+        "combinaison": "Difference",
+        "direction": "Climb",
+        "units": "mm",
+    },
 ]
+
 
 class CncOp:
     def __init__(self, data):
         self.name = data.get("name", "op")
         self.cam_op = data.get("type", "Pocket")
         self.cut_depth = data.get("cut_depth", 0.125)
-        self.paths = data.get("paths", [])      
+        self.paths = data.get("paths", [])
         self.ramp_plunge = data.get("ramp_plunge", False)
         self.combinaison = data.get("combinaison", "Union")
         self.direction = data.get("direction", "Conventional")
@@ -72,23 +73,27 @@ class CncOp:
         self.enabled = False
 
     def put_value(self, attr, value):
-        '''
-        '''
+        """ """
         setattr(self, attr, value)
-        
+
     def __str__(self):
-        '''
-        '''
-        return "op: %s %s [%f] %s %s %s %f" % (self.name, self.cam_op, self.cut_depth, self.ramp, self.enabled, self.combinaison, self.cut_depth)
+        """ """
+        return "op: %s %s [%f] %s %s %s %f" % (
+            self.name,
+            self.cam_op,
+            self.cut_depth,
+            self.ramp,
+            self.enabled,
+            self.combinaison,
+            self.cut_depth,
+        )
 
 
 class PMFDoubleSpinBox(QtWidgets.QDoubleSpinBox):
-    '''
-    '''
+    """ """
 
     def __init__(self, parent):
-        '''
-        '''
+        """ """
         QtWidgets.QDoubleSpinBox.__init__(self, parent)
 
         self.o = None
@@ -102,28 +107,23 @@ class PMFDoubleSpinBox(QtWidgets.QDoubleSpinBox):
         self.valueChanged.connect(self.cb_spinbox)
 
     def cb_disconnect(self):
-        '''
-        '''
+        """ """
         self.valueChanged.disconnect(self.cb_spinbox)
 
     def cb_connect(self):
-        '''
-        '''
+        """ """
         self.valueChanged.connect(self.cb_spinbox)
 
     def assign_object(self, o):
-        '''
-        '''
+        """ """
         self.o = o
 
     def assign_object_attribute(self, attribute):
-        '''
-        '''
+        """ """
         self.attribute = attribute
 
     def set_value(self):
-        '''
-        '''
+        """ """
         self.cb_disconnect()
 
         try:
@@ -136,17 +136,16 @@ class PMFDoubleSpinBox(QtWidgets.QDoubleSpinBox):
         self.cb_connect()
 
     def cb_spinbox(self):
-        '''
-        '''
+        """ """
         val = self.value()
         self.o.put_value(self.attribute, val)
 
+
 class PMFCheckBox(QtWidgets.QCheckBox):
-    '''
-    '''
+    """ """
+
     def __init__(self, parent):
-        '''
-        '''
+        """ """
         QtWidgets.QCheckBox.__init__(self, parent)
 
         self.o = None
@@ -155,89 +154,78 @@ class PMFCheckBox(QtWidgets.QCheckBox):
         self.stateChanged.connect(self.cb_checkbox)
 
     def cb_disconnect(self):
-        '''
-        '''
+        """ """
         self.stateChanged.disconnect(self.cb_checkbox)
 
     def cb_connect(self):
-        '''
-        '''
+        """ """
         self.stateChanged.connect(self.cb_checkbox)
 
     def assign_object(self, o):
-        '''
-        '''
+        """ """
         self.o = o
 
     def assign_object_attribute(self, attribute):
-        '''
-        '''
+        """ """
         self.attribute = attribute
 
     def set_value(self):
-        '''
-        '''
+        """ """
         self.cb_disconnect()
 
-        uival = {True: QtCore.Qt.Checked, False: QtCore.Qt.Unchecked}[getattr(self.o, self.attribute)]
+        uival = {True: QtCore.Qt.Checked, False: QtCore.Qt.Unchecked}[
+            getattr(self.o, self.attribute)
+        ]
 
         self.setCheckState(uival)
 
         self.cb_connect()
 
     def cb_checkbox(self, index):
-        '''
-        '''
+        """ """
         val = {QtCore.Qt.Checked: True, QtCore.Qt.Unchecked: False}[self.checkState()]
         self.o.put_value(self.attribute, val)
 
+
 class PMFComboBox(QtWidgets.QComboBox):
-    '''
-    '''
+    """ """
 
     def __init__(self, parent, items):
-        '''
-        '''
+        """ """
         QtWidgets.QComboBox.__init__(self, parent)
 
         self.o = None
         self.attribute = ""
-        
+
         self.items = items
 
         self.currentIndexChanged.connect(self.cb_combobox)
 
     def cb_disconnect(self):
-        '''
-        '''
+        """ """
         self.currentIndexChanged.disconnect(self.cb_combobox)
 
     def cb_connect(self):
-        '''
-        '''
+        """ """
         self.currentIndexChanged.connect(self.cb_combobox)
 
     def assign_object(self, o):
-        '''
-        '''
+        """ """
         self.o = o
 
     def assign_object_attribute(self, attribute):
-        '''
-        '''
+        """ """
         self.attribute = attribute
 
     def fill_control(self):
-        '''
-        '''
+        """ """
         self.cb_disconnect()
         self.clear()
         self.add_items(self.items)
         self.cb_connect()
 
     def set_value(self):
-        '''
-        '''
+        """ """
         self.cb_disconnect()
 
         # values can be strings or integers or of any other type -> use only strings in control
@@ -254,11 +242,11 @@ class PMFComboBox(QtWidgets.QComboBox):
         self.cb_connect()
 
     def cb_combobox(self, index):
-        '''
-        '''
+        """ """
         val = self.itemText(index)
 
         self.o.put_value(self.attribute, val)
+
 
 class PMFCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
     def createEditor(self, parent, option, index: QtCore.QModelIndex):
@@ -277,7 +265,7 @@ class PMFCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
         checkLayout = QtWidgets.QHBoxLayout(checkWidget)
         checkLayout.addWidget(editor)
         checkLayout.setAlignment(QtCore.Qt.AlignCenter)
-        checkLayout.setContentsMargins(0,0,0,0)
+        checkLayout.setContentsMargins(0, 0, 0, 0)
 
         # to flush an "setModelData" in place - it works!
         editor.stateChanged.connect(self.onEditorStateChanged)
@@ -293,14 +281,16 @@ class PMFCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
 
     def setEditorData(self, checkWidget: QtWidgets.QWidget, index: QtCore.QModelIndex):
         checkBoxItem = checkWidget.layout().itemAt(0)
-        checkBox : PMFCheckBox = checkBoxItem.widget()
+        checkBox: PMFCheckBox = checkBoxItem.widget()
         checkBox.set_value()
 
-    def setModelData(self, checkWidget: QtWidgets.QWidget, model, index: QtCore.QModelIndex):
+    def setModelData(
+        self, checkWidget: QtWidgets.QWidget, model, index: QtCore.QModelIndex
+    ):
         print("PMFCheckBoxDelegate::setModelData - editor", checkWidget)
 
         checkBoxItem = checkWidget.layout().itemAt(0)
-        checkBox : PMFCheckBox = checkBoxItem.widget()
+        checkBox: PMFCheckBox = checkBoxItem.widget()
 
         model.handleNewvalue(index, checkBox.isChecked())
         return
@@ -308,13 +298,22 @@ class PMFCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
     def updateEditorGeometry(self, editor, option, index: QtCore.QModelIndex):
         editor.setGeometry(option.rect)
 
+
 class PMFComboBoxDelegate(QtWidgets.QItemDelegate):
     def createEditor(self, parent, option, index: QtCore.QModelIndex):
         col = index.column()
 
         self.items = []
         if col == 2:
-            self.items = ["Pocket", "Inside", "Outside", "Engrave", "Drill", "Peck"]
+            self.items = [
+                "Pocket",
+                "Inside",
+                "Outside",
+                "Engrave",
+                "Drill",
+                "Peck",
+                "Helix",
+            ]
         if col == 7:
             self.items = ["Union", "Intersection", "Difference", "Xor"]
         if col == 8:
@@ -349,8 +348,11 @@ class PMFComboBoxDelegate(QtWidgets.QItemDelegate):
         model.handleNewvalue(index, comboBox.currentText())
         return
 
-    def updateEditorGeometry(self, comboBox: PMFComboBox, option, index: QtCore.QModelIndex):
+    def updateEditorGeometry(
+        self, comboBox: PMFComboBox, option, index: QtCore.QModelIndex
+    ):
         comboBox.setGeometry(option.rect)
+
 
 class PMFDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
     def __init__(self, parent):
@@ -383,22 +385,22 @@ class PMFDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
         model.handleNewvalue(index, spinBox.value())
         return
 
-    def updateEditorGeometry(self, editor: PMFDoubleSpinBox, option, index: QtCore.QModelIndex):
+    def updateEditorGeometry(
+        self, editor: PMFDoubleSpinBox, option, index: QtCore.QModelIndex
+    ):
         editor.setGeometry(option.rect)
 
 
 class PMFTableViewManager(QtWidgets.QWidget):
 
     def __init__(self, parent):
-        '''
-        '''
+        """ """
         QtWidgets.QWidget.__init__(self, parent)
 
         cnc_ops = []
         for op in operations:
             cnc_op = CncOp(op)
             cnc_ops.append(cnc_op)
-
 
         # main section of the window
         vbox = QtWidgets.QVBoxLayout()
@@ -408,8 +410,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
         self.table = PMFSimpleTableView(self)
         self.table.resizeColumnsToContents()
         self.table.setMinimumWidth(800)
-            
-            
+
         self.model = PMFSimpleTableModel(cnc_ops)
         self.table.setModel(self.model)
         self.table.setup()
@@ -446,14 +447,12 @@ class PMFTableViewManager(QtWidgets.QWidget):
         self.setLayout(vbox)
 
     def set_operations(self, operations):
-        '''
-        '''
+        """ """
         cnc_ops = []
         for op in operations:
             cnc_op = CncOp(op)
             cnc_ops.append(cnc_op)
-            
-            
+
         self.model = PMFSimpleTableModel(cnc_ops)
         self.table.setModel(self.model)
         self.table.setup()
@@ -461,14 +460,13 @@ class PMFTableViewManager(QtWidgets.QWidget):
         self.vbox.addWidget(self._table)
 
     def set_model(self, model):
-        '''
-        '''
+        """ """
         self.table.setModel(model)
 
     def add_item(self):
         # instruct the model to add an item
         self.table.add_item()
-        
+
         print("ADD")
         for op in self.table.model().operations:
             print(op)
@@ -478,7 +476,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
         idx = index.row()
         # instruct the model to del an item
         self.table.del_item(idx)
-        
+
         print("DEL")
         for op in self.table.model().operations:
             print(op)
@@ -491,11 +489,10 @@ class PMFTableViewManager(QtWidgets.QWidget):
 
         # to be sure to update the table... and all its delegates
         self.table.setup()
-        
+
         print("DOWN")
         for op in self.table.model().operations:
             print(op)
-        
 
     def up_item(self):
         index = self.table.currentIndex()
@@ -505,17 +502,17 @@ class PMFTableViewManager(QtWidgets.QWidget):
 
         # to be sure to update the table... and all its delegates
         self.table.setup()
-        
+
         print("UP")
         for op in self.table.model().operations:
             print(op)
 
+
 class PMFSimpleTableView(QtWidgets.QTableView):
-    '''
-    '''
+    """ """
+
     def __init__(self, parent=None):
-        '''
-        '''
+        """ """
         QtWidgets.QTableView.__init__(self, parent)
 
         self.parent = parent
@@ -523,8 +520,8 @@ class PMFSimpleTableView(QtWidgets.QTableView):
         self.resizeColumnsToContents()
         # Fixes the width of columns and the height of rows.
         try:
-            #self.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Fixed)
-            #self.verticalHeader().setResizeMode(QtWidgets.QHeaderView.Fixed)
+            # self.horizontalHeader().setResizeMode(QtWidgets.QHeaderView.Fixed)
+            # self.verticalHeader().setResizeMode(QtWidgets.QHeaderView.Fixed)
             pass
         except Exception:
             pass  # PySide
@@ -532,26 +529,25 @@ class PMFSimpleTableView(QtWidgets.QTableView):
         self.setAlternatingRowColors(True)
 
     def setup(self):
-        '''
-        '''
+        """ """
         delegate = PMFComboBoxDelegate(self)
         self.setItemDelegateForColumn(2, delegate)
 
         delegate = PMFCheckBoxDelegate(self)
         self.setItemDelegateForColumn(3, delegate)
-        
+
         delegate = PMFDoubleSpinBoxDelegate(self)
         self.setItemDelegateForColumn(5, delegate)
 
         delegate = PMFCheckBoxDelegate(self)
         self.setItemDelegateForColumn(6, delegate)
-    
+
         delegate = PMFComboBoxDelegate(self)
         self.setItemDelegateForColumn(7, delegate)
-        
+
         delegate = PMFComboBoxDelegate(self)
         self.setItemDelegateForColumn(8, delegate)
-        
+
         delegate = PMFComboBoxDelegate(self)
         self.setItemDelegateForColumn(9, delegate)
 
@@ -572,14 +568,18 @@ class PMFSimpleTableView(QtWidgets.QTableView):
         for row in range(self.model().rowCount(None)):
             btn_gcode_op = QtWidgets.QPushButton()
             btn_gcode_op.setText("")
-            btn_gcode_op.setIcon(QtGui.QIcon('./images/tango/22x22/actions/view-refresh.png'))
+            btn_gcode_op.setIcon(
+                QtGui.QIcon("./images/tango/22x22/actions/view-refresh.png")
+            )
             btn_gcode_op.setToolTip("generate G-Code")
             btn_gcode_op.clicked.connect(self.cb_gen_gcode_op)
             self.setIndexWidget(self.model().index(row, 1), btn_gcode_op)
-        
+
             btn_del_op = QtWidgets.QPushButton()
             btn_del_op.setText("")
-            btn_del_op.setIcon(QtGui.QIcon('./images/tango/22x22/actions/edit-clear.png'))
+            btn_del_op.setIcon(
+                QtGui.QIcon("./images/tango/22x22/actions/edit-clear.png")
+            )
             btn_del_op.setToolTip("Delete Op")
             btn_del_op.clicked.connect(self.cb_delete_op)
             self.setIndexWidget(self.model().index(row, 11), btn_del_op)
@@ -590,10 +590,10 @@ class PMFSimpleTableView(QtWidgets.QTableView):
         swidth = self.style().pixelMetric(QtWidgets.QStyle.PM_ScrollBarExtent)
         fwidth = self.frameWidth() * 2
 
-        #self.setFixedWidth(vwidth + hwidth + swidth + fwidth)
-        #self.setMinimumWidth(vwidth + hwidth + swidth + fwidth)
+        # self.setFixedWidth(vwidth + hwidth + swidth + fwidth)
+        # self.setMinimumWidth(vwidth + hwidth + swidth + fwidth)
 
-        self.resizeColumnsToContents() # now!
+        self.resizeColumnsToContents()  # now!
 
         self.setColumnWidth(0, 100)  # name
         self.setColumnWidth(4, 100)  # paths
@@ -626,28 +626,30 @@ class PMFSimpleTableView(QtWidgets.QTableView):
         # re-generate geometries and preview genometries for all selected
         pass  # TODO
 
+
 class PMFSimpleTableModel(QtCore.QAbstractTableModel):
-    '''
+    """
     model for the table view
-    '''
+    """
+
     def __init__(self, operations):
         super(PMFSimpleTableModel, self).__init__()
-        
+
         self.operations = operations
 
-        self.header =  [
-            "name",                     # [0] str
-            "gen gcode",                # [1] button
+        self.header = [
+            "name",  # [0] str
+            "gen gcode",  # [1] button
             "cam_op",
-            "enabled",                  # [3] checkbox
-            "paths",                    # [4] str
-            "cut_depth",                # [5] float
-            "ramp_plunge",              # [6] checkbox
+            "enabled",  # [3] checkbox
+            "paths",  # [4] str
+            "cut_depth",  # [5] float
+            "ramp_plunge",  # [6] checkbox
             "combinaison",
             "direction",
             "units",
-            "margin",                   # [10] float
-            "del",                      # [11] buttont
+            "margin",  # [10] float
+            "del",  # [11] buttont
         ]
 
         self.cnt = 0
@@ -678,7 +680,9 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
         for op in self.operations:
             print(op)
 
-    def headerData(self, col, orientation: QtCore.Qt.Orientation, role: QtCore.Qt.EditRole):
+    def headerData(
+        self, col, orientation: QtCore.Qt.Orientation, role: QtCore.Qt.EditRole
+    ):
         if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
             return self.header[col]
         return None
@@ -689,16 +693,16 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
     def columnCount(self, parent):
         return len(self.header)
 
-    def setData(self, index: QtCore.QModelIndex, value, role = QtCore.Qt.EditRole):
-        '''
+    def setData(self, index: QtCore.QModelIndex, value, role=QtCore.Qt.EditRole):
+        """
         for the cells without delegate
-        '''
+        """
         op = self.get_operation(index)
         attr = self.get_operation_attr(index)
 
         if role == QtCore.Qt.EditRole:
             setattr(op, attr, value)
-    
+
     def data(self, index: QtCore.QModelIndex, role: QtCore.Qt.EditRole):
         op = self.get_operation(index)
         attr = self.get_operation_attr(index)
@@ -712,9 +716,9 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
             return None
 
         # for checkboxes only
-        if col == 3:   # checkbox
+        if col == 3:  # checkbox
             return None
-        if col == 6:   # checkbox
+        if col == 6:  # checkbox
             return None
 
         if role == QtCore.Qt.DisplayRole:
@@ -750,7 +754,9 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
     def add_item(self):
         op = CncOp({})
 
-        self.beginInsertRows(QtCore.QModelIndex(), len(self.operations), len(self.operations))
+        self.beginInsertRows(
+            QtCore.QModelIndex(), len(self.operations), len(self.operations)
+        )
         self.operations.append(op)
         self.endInsertRows()
 
@@ -765,17 +771,20 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
 
     def swap_items(self, idx1, idx2):
         self.beginResetModel()
-        self.operations[idx1], self.operations[idx2] = self.operations[idx2], self.operations[idx1]
+        self.operations[idx1], self.operations[idx2] = (
+            self.operations[idx2],
+            self.operations[idx1],
+        )
         self.endResetModel()
 
         self.dump()
-        
+
     def get_operation(self, index):
         return self.operations[index.row()]
 
     def get_operation_attr(self, index):
         return self.header[index.column()]
-  
+
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -783,9 +792,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.view = PMFTableViewManager(self)
         self.setCentralWidget(self.view)
-  
-        
-if __name__ == '__main__':
+
+
+if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
     window.show()

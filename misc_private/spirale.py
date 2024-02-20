@@ -137,13 +137,12 @@ class Helix:
             pts.append([x, y, z])
 
         # and the last flat circle
-        if True:
-            for k in range(HELIX_NB_POINTS):
-                x = center[0] + HELIX_RADIUS * math.cos(2 * np.pi * k / HELIX_NB_POINTS)
-                y = center[1] + HELIX_RADIUS * math.sin(2 * np.pi * k / HELIX_NB_POINTS)
-                z = -initial_depth - cut_depth
+        for k in range(HELIX_NB_POINTS):
+            x = center[0] + HELIX_RADIUS * math.cos(2 * np.pi * k / HELIX_NB_POINTS)
+            y = center[1] + HELIX_RADIUS * math.sin(2 * np.pi * k / HELIX_NB_POINTS)
+            z = -initial_depth - cut_depth
 
-                pts.append([x, y, z])
+            pts.append([x, y, z])
 
         self.pts = pts
 

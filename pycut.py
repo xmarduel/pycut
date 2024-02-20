@@ -83,6 +83,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "rapid": 500,
             "plunge": 100,
             "cut": 250,
+            "helix_revolution_depth": 0.1,
         },
         "Material": {
             "units": "mm",
@@ -617,6 +618,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "rapid": self.ui.Tool_Rapid.value(),
                 "plunge": self.ui.Tool_Plunge.value(),
                 "cut": self.ui.Tool_Cut.value(),
+                "helix_revolution_depth": self.ui.Tool_HelixRevolutionDepth.value(),
             },
             "Material": {
                 "units": self.ui.Material_Units.currentText(),
@@ -662,6 +664,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.Tool_Rapid.setValue(settings["Tool"]["rapid"])
         self.ui.Tool_Plunge.setValue(settings["Tool"]["plunge"])
         self.ui.Tool_Cut.setValue(settings["Tool"]["cut"])
+        self.ui.Tool_HelixRevolutionDepth.setValue(
+            settings["Tool"]["helix_revolution_depth"]
+        )
 
         # Material
         self.ui.Material_Units.setCurrentText(settings["Material"]["units"])
@@ -1487,6 +1492,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             settings["Tool"]["plunge"], tool_model.units
         )
         tool_model.cutRate = ValWithUnit(settings["Tool"]["cut"], tool_model.units)
+        tool_model.helixRevolutionDepth = ValWithUnit(
+            settings["Tool"]["helix_revolution_depth"], tool_model.units
+        )
 
         cnc_ops = []
 
@@ -1581,6 +1589,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             settings["Tool"]["plunge"], tool_model.units
         )
         tool_model.cutRate = ValWithUnit(settings["Tool"]["cut"], tool_model.units)
+        tool_model.helixRevolutionDepth = ValWithUnit(settings["Tool"]["helix_revolution_depth"], tool_model.units)
 
         tabsmodel = TabsModel([tab for tab in self.tabs if tab["enabled"] == True])
         tabsmodel.units = settings["Tabs"]["units"]

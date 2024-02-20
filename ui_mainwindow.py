@@ -61,7 +61,7 @@ class Ui_mainwindow(object):
         self.scrollArea_left.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 318, 986))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 304, 995))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSpacing(22)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -155,34 +155,40 @@ class Ui_mainwindow(object):
         self.gridLayout_Tool = QGridLayout()
         self.gridLayout_Tool.setObjectName(u"gridLayout_Tool")
         self.gridLayout_Tool.setContentsMargins(8, -1, -1, -1)
-        self.label_Tool_Plunge_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
-        self.label_Tool_Plunge_UnitsDescr.setObjectName(u"label_Tool_Plunge_UnitsDescr")
-
-        self.gridLayout_Tool.addWidget(self.label_Tool_Plunge_UnitsDescr, 6, 1, 1, 1)
-
         self.label_Tool_Diameter_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
         self.label_Tool_Diameter_UnitsDescr.setObjectName(u"label_Tool_Diameter_UnitsDescr")
 
         self.gridLayout_Tool.addWidget(self.label_Tool_Diameter_UnitsDescr, 1, 1, 1, 1)
 
-        self.label_Tool_Overlap = QLabel(self.scrollAreaWidgetContents)
-        self.label_Tool_Overlap.setObjectName(u"label_Tool_Overlap")
-        self.label_Tool_Overlap.setFont(font1)
+        self.label_Tool_Cut_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_Cut_UnitsDescr.setObjectName(u"label_Tool_Cut_UnitsDescr")
 
-        self.gridLayout_Tool.addWidget(self.label_Tool_Overlap, 4, 0, 1, 1)
+        self.gridLayout_Tool.addWidget(self.label_Tool_Cut_UnitsDescr, 7, 1, 1, 1)
 
-        self.Tool_Rapid = QSpinBox(self.scrollAreaWidgetContents)
-        self.Tool_Rapid.setObjectName(u"Tool_Rapid")
-        self.Tool_Rapid.setMaximum(1000)
-        self.Tool_Rapid.setValue(500)
+        self.Tool_Plunge = QSpinBox(self.scrollAreaWidgetContents)
+        self.Tool_Plunge.setObjectName(u"Tool_Plunge")
+        self.Tool_Plunge.setMaximum(1000)
+        self.Tool_Plunge.setValue(100)
 
-        self.gridLayout_Tool.addWidget(self.Tool_Rapid, 5, 2, 1, 1)
+        self.gridLayout_Tool.addWidget(self.Tool_Plunge, 6, 2, 1, 1)
 
-        self.label_Tool_Units = QLabel(self.scrollAreaWidgetContents)
-        self.label_Tool_Units.setObjectName(u"label_Tool_Units")
-        self.label_Tool_Units.setFont(font1)
+        self.Tool_Cut = QSpinBox(self.scrollAreaWidgetContents)
+        self.Tool_Cut.setObjectName(u"Tool_Cut")
+        self.Tool_Cut.setMaximum(1000)
+        self.Tool_Cut.setValue(200)
 
-        self.gridLayout_Tool.addWidget(self.label_Tool_Units, 0, 0, 1, 1)
+        self.gridLayout_Tool.addWidget(self.Tool_Cut, 7, 2, 1, 1)
+
+        self.label_Tool_Cut = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_Cut.setObjectName(u"label_Tool_Cut")
+        self.label_Tool_Cut.setFont(font1)
+
+        self.gridLayout_Tool.addWidget(self.label_Tool_Cut, 7, 0, 1, 1)
+
+        self.label_Tool_PassDepth_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_PassDepth_UnitsDescr.setObjectName(u"label_Tool_PassDepth_UnitsDescr")
+
+        self.gridLayout_Tool.addWidget(self.label_Tool_PassDepth_UnitsDescr, 3, 1, 1, 1)
 
         self.label_Tool_PassDepth = QLabel(self.scrollAreaWidgetContents)
         self.label_Tool_PassDepth.setObjectName(u"label_Tool_PassDepth")
@@ -190,10 +196,17 @@ class Ui_mainwindow(object):
 
         self.gridLayout_Tool.addWidget(self.label_Tool_PassDepth, 3, 0, 1, 1)
 
-        self.label_Tool_Rapid_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
-        self.label_Tool_Rapid_UnitsDescr.setObjectName(u"label_Tool_Rapid_UnitsDescr")
+        self.label_Tool_Angle = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_Angle.setObjectName(u"label_Tool_Angle")
+        self.label_Tool_Angle.setFont(font1)
 
-        self.gridLayout_Tool.addWidget(self.label_Tool_Rapid_UnitsDescr, 5, 1, 1, 1)
+        self.gridLayout_Tool.addWidget(self.label_Tool_Angle, 2, 0, 1, 1)
+
+        self.label_Tool_Diameter = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_Diameter.setObjectName(u"label_Tool_Diameter")
+        self.label_Tool_Diameter.setFont(font1)
+
+        self.gridLayout_Tool.addWidget(self.label_Tool_Diameter, 1, 0, 1, 1)
 
         self.label_Tool_Plunge = QLabel(self.scrollAreaWidgetContents)
         self.label_Tool_Plunge.setObjectName(u"label_Tool_Plunge")
@@ -206,67 +219,26 @@ class Ui_mainwindow(object):
 
         self.gridLayout_Tool.addWidget(self.label_Tool_Angle_UnitsDescr, 2, 1, 1, 1)
 
-        self.label_Tool_Cut_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
-        self.label_Tool_Cut_UnitsDescr.setObjectName(u"label_Tool_Cut_UnitsDescr")
+        self.label_Tool_Plunge_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_Plunge_UnitsDescr.setObjectName(u"label_Tool_Plunge_UnitsDescr")
 
-        self.gridLayout_Tool.addWidget(self.label_Tool_Cut_UnitsDescr, 7, 1, 1, 1)
+        self.gridLayout_Tool.addWidget(self.label_Tool_Plunge_UnitsDescr, 6, 1, 1, 1)
 
-        self.label_Tool_Angle = QLabel(self.scrollAreaWidgetContents)
-        self.label_Tool_Angle.setObjectName(u"label_Tool_Angle")
-        self.label_Tool_Angle.setFont(font1)
+        self.Tool_PassDepth = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.Tool_PassDepth.setObjectName(u"Tool_PassDepth")
+        self.Tool_PassDepth.setDecimals(3)
+        self.Tool_PassDepth.setMaximum(10.000000000000000)
+        self.Tool_PassDepth.setSingleStep(0.500000000000000)
+        self.Tool_PassDepth.setValue(0.200000000000000)
 
-        self.gridLayout_Tool.addWidget(self.label_Tool_Angle, 2, 0, 1, 1)
+        self.gridLayout_Tool.addWidget(self.Tool_PassDepth, 3, 2, 1, 1)
 
-        self.label_Tool_Rapid = QLabel(self.scrollAreaWidgetContents)
-        self.label_Tool_Rapid.setObjectName(u"label_Tool_Rapid")
-        self.label_Tool_Rapid.setFont(font1)
+        self.Tool_Rapid = QSpinBox(self.scrollAreaWidgetContents)
+        self.Tool_Rapid.setObjectName(u"Tool_Rapid")
+        self.Tool_Rapid.setMaximum(1000)
+        self.Tool_Rapid.setValue(500)
 
-        self.gridLayout_Tool.addWidget(self.label_Tool_Rapid, 5, 0, 1, 1)
-
-        self.Tool_Angle = QSpinBox(self.scrollAreaWidgetContents)
-        self.Tool_Angle.setObjectName(u"Tool_Angle")
-        self.Tool_Angle.setMaximum(180)
-        self.Tool_Angle.setValue(180)
-
-        self.gridLayout_Tool.addWidget(self.Tool_Angle, 2, 2, 1, 1)
-
-        self.label_Tool_Overlap_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
-        self.label_Tool_Overlap_UnitsDescr.setObjectName(u"label_Tool_Overlap_UnitsDescr")
-
-        self.gridLayout_Tool.addWidget(self.label_Tool_Overlap_UnitsDescr, 4, 1, 1, 1)
-
-        self.Tool_Diameter = QDoubleSpinBox(self.scrollAreaWidgetContents)
-        self.Tool_Diameter.setObjectName(u"Tool_Diameter")
-        self.Tool_Diameter.setDecimals(3)
-        self.Tool_Diameter.setMaximum(32.000000000000000)
-        self.Tool_Diameter.setSingleStep(0.100000000000000)
-        self.Tool_Diameter.setValue(1.000000000000000)
-
-        self.gridLayout_Tool.addWidget(self.Tool_Diameter, 1, 2, 1, 1)
-
-        self.label_Tool_Diameter = QLabel(self.scrollAreaWidgetContents)
-        self.label_Tool_Diameter.setObjectName(u"label_Tool_Diameter")
-        self.label_Tool_Diameter.setFont(font1)
-
-        self.gridLayout_Tool.addWidget(self.label_Tool_Diameter, 1, 0, 1, 1)
-
-        self.Tool_Plunge = QSpinBox(self.scrollAreaWidgetContents)
-        self.Tool_Plunge.setObjectName(u"Tool_Plunge")
-        self.Tool_Plunge.setMaximum(1000)
-        self.Tool_Plunge.setValue(100)
-
-        self.gridLayout_Tool.addWidget(self.Tool_Plunge, 6, 2, 1, 1)
-
-        self.label_Tool_PassDepth_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
-        self.label_Tool_PassDepth_UnitsDescr.setObjectName(u"label_Tool_PassDepth_UnitsDescr")
-
-        self.gridLayout_Tool.addWidget(self.label_Tool_PassDepth_UnitsDescr, 3, 1, 1, 1)
-
-        self.label_Tool_Cut = QLabel(self.scrollAreaWidgetContents)
-        self.label_Tool_Cut.setObjectName(u"label_Tool_Cut")
-        self.label_Tool_Cut.setFont(font1)
-
-        self.gridLayout_Tool.addWidget(self.label_Tool_Cut, 7, 0, 1, 1)
+        self.gridLayout_Tool.addWidget(self.Tool_Rapid, 5, 2, 1, 1)
 
         self.Tool_Overlap = QDoubleSpinBox(self.scrollAreaWidgetContents)
         self.Tool_Overlap.setObjectName(u"Tool_Overlap")
@@ -284,21 +256,67 @@ class Ui_mainwindow(object):
 
         self.gridLayout_Tool.addWidget(self.Tool_Units, 0, 1, 1, 1)
 
-        self.Tool_PassDepth = QDoubleSpinBox(self.scrollAreaWidgetContents)
-        self.Tool_PassDepth.setObjectName(u"Tool_PassDepth")
-        self.Tool_PassDepth.setDecimals(3)
-        self.Tool_PassDepth.setMaximum(10.000000000000000)
-        self.Tool_PassDepth.setSingleStep(0.500000000000000)
-        self.Tool_PassDepth.setValue(0.200000000000000)
+        self.label_Tool_Units = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_Units.setObjectName(u"label_Tool_Units")
+        self.label_Tool_Units.setFont(font1)
 
-        self.gridLayout_Tool.addWidget(self.Tool_PassDepth, 3, 2, 1, 1)
+        self.gridLayout_Tool.addWidget(self.label_Tool_Units, 0, 0, 1, 1)
 
-        self.Tool_Cut = QSpinBox(self.scrollAreaWidgetContents)
-        self.Tool_Cut.setObjectName(u"Tool_Cut")
-        self.Tool_Cut.setMaximum(1000)
-        self.Tool_Cut.setValue(200)
+        self.label_Tool_Rapid_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_Rapid_UnitsDescr.setObjectName(u"label_Tool_Rapid_UnitsDescr")
 
-        self.gridLayout_Tool.addWidget(self.Tool_Cut, 7, 2, 1, 1)
+        self.gridLayout_Tool.addWidget(self.label_Tool_Rapid_UnitsDescr, 5, 1, 1, 1)
+
+        self.label_Tool_Overlap_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_Overlap_UnitsDescr.setObjectName(u"label_Tool_Overlap_UnitsDescr")
+
+        self.gridLayout_Tool.addWidget(self.label_Tool_Overlap_UnitsDescr, 4, 1, 1, 1)
+
+        self.label_Tool_Rapid = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_Rapid.setObjectName(u"label_Tool_Rapid")
+        self.label_Tool_Rapid.setFont(font1)
+
+        self.gridLayout_Tool.addWidget(self.label_Tool_Rapid, 5, 0, 1, 1)
+
+        self.Tool_Angle = QSpinBox(self.scrollAreaWidgetContents)
+        self.Tool_Angle.setObjectName(u"Tool_Angle")
+        self.Tool_Angle.setMaximum(180)
+        self.Tool_Angle.setValue(180)
+
+        self.gridLayout_Tool.addWidget(self.Tool_Angle, 2, 2, 1, 1)
+
+        self.label_Tool_Overlap = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_Overlap.setObjectName(u"label_Tool_Overlap")
+        self.label_Tool_Overlap.setFont(font1)
+
+        self.gridLayout_Tool.addWidget(self.label_Tool_Overlap, 4, 0, 1, 1)
+
+        self.Tool_Diameter = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.Tool_Diameter.setObjectName(u"Tool_Diameter")
+        self.Tool_Diameter.setDecimals(3)
+        self.Tool_Diameter.setMaximum(32.000000000000000)
+        self.Tool_Diameter.setSingleStep(0.100000000000000)
+        self.Tool_Diameter.setValue(1.000000000000000)
+
+        self.gridLayout_Tool.addWidget(self.Tool_Diameter, 1, 2, 1, 1)
+
+        self.label_HelixRevolutionDepth = QLabel(self.scrollAreaWidgetContents)
+        self.label_HelixRevolutionDepth.setObjectName(u"label_HelixRevolutionDepth")
+        self.label_HelixRevolutionDepth.setFont(font1)
+
+        self.gridLayout_Tool.addWidget(self.label_HelixRevolutionDepth, 8, 0, 1, 1)
+
+        self.label_HelixRevolutionDepth_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
+        self.label_HelixRevolutionDepth_UnitsDescr.setObjectName(u"label_HelixRevolutionDepth_UnitsDescr")
+
+        self.gridLayout_Tool.addWidget(self.label_HelixRevolutionDepth_UnitsDescr, 8, 1, 1, 1)
+
+        self.Tool_HelixRevolutionDepth = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.Tool_HelixRevolutionDepth.setObjectName(u"Tool_HelixRevolutionDepth")
+        self.Tool_HelixRevolutionDepth.setSingleStep(0.100000000000000)
+        self.Tool_HelixRevolutionDepth.setValue(1.000000000000000)
+
+        self.gridLayout_Tool.addWidget(self.Tool_HelixRevolutionDepth, 8, 2, 1, 1)
 
 
         self.verticalLayoutToolContent.addLayout(self.gridLayout_Tool)
@@ -990,33 +1008,35 @@ class Ui_mainwindow(object):
         self.label_SvgModelHeight.setText(QCoreApplication.translate("mainwindow", u"height", None))
         self.SvgModelHeight.setSuffix(QCoreApplication.translate("mainwindow", u"mm", None))
         self.label_Tool.setText(QCoreApplication.translate("mainwindow", u" Tool (shared for all operations)", None))
-        self.label_Tool_Plunge_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_Tool_Diameter_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
-        self.label_Tool_Overlap.setText(QCoreApplication.translate("mainwindow", u"Overlap", None))
-#if QT_CONFIG(tooltip)
-        self.Tool_Rapid.setToolTip(QCoreApplication.translate("mainwindow", u"The speed the tool moves while not cutting", None))
-#endif // QT_CONFIG(tooltip)
-        self.label_Tool_Units.setText(QCoreApplication.translate("mainwindow", u"Units", None))
-        self.label_Tool_PassDepth.setText(QCoreApplication.translate("mainwindow", u"Pass Depth", None))
-        self.label_Tool_Rapid_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
-        self.label_Tool_Plunge.setText(QCoreApplication.translate("mainwindow", u"Plunge", None))
-        self.label_Tool_Angle_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_Tool_Cut_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
-        self.label_Tool_Angle.setText(QCoreApplication.translate("mainwindow", u"Angle", None))
-        self.label_Tool_Rapid.setText(QCoreApplication.translate("mainwindow", u"Rapid", None))
-        self.label_Tool_Overlap_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
-        self.label_Tool_Diameter.setText(QCoreApplication.translate("mainwindow", u"Diameter", None))
 #if QT_CONFIG(tooltip)
         self.Tool_Plunge.setToolTip(QCoreApplication.translate("mainwindow", u"The speed the tool plunges downwards into the material", None))
 #endif // QT_CONFIG(tooltip)
-        self.label_Tool_PassDepth_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
-        self.label_Tool_Cut.setText(QCoreApplication.translate("mainwindow", u"Cut", None))
-        self.Tool_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
-        self.Tool_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
-
 #if QT_CONFIG(tooltip)
         self.Tool_Cut.setToolTip(QCoreApplication.translate("mainwindow", u"The speed the tool moves horizontally during cutting", None))
 #endif // QT_CONFIG(tooltip)
+        self.label_Tool_Cut.setText(QCoreApplication.translate("mainwindow", u"Cut", None))
+        self.label_Tool_PassDepth_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
+        self.label_Tool_PassDepth.setText(QCoreApplication.translate("mainwindow", u"Pass Depth", None))
+        self.label_Tool_Angle.setText(QCoreApplication.translate("mainwindow", u"Angle", None))
+        self.label_Tool_Diameter.setText(QCoreApplication.translate("mainwindow", u"Diameter", None))
+        self.label_Tool_Plunge.setText(QCoreApplication.translate("mainwindow", u"Plunge", None))
+        self.label_Tool_Angle_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
+        self.label_Tool_Plunge_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
+#if QT_CONFIG(tooltip)
+        self.Tool_Rapid.setToolTip(QCoreApplication.translate("mainwindow", u"The speed the tool moves while not cutting", None))
+#endif // QT_CONFIG(tooltip)
+        self.Tool_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
+        self.Tool_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
+
+        self.label_Tool_Units.setText(QCoreApplication.translate("mainwindow", u"Units", None))
+        self.label_Tool_Rapid_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
+        self.label_Tool_Overlap_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
+        self.label_Tool_Rapid.setText(QCoreApplication.translate("mainwindow", u"Rapid", None))
+        self.label_Tool_Overlap.setText(QCoreApplication.translate("mainwindow", u"Overlap", None))
+        self.label_HelixRevolutionDepth.setText(QCoreApplication.translate("mainwindow", u"Helix Revol. Depth  ", None))
+        self.label_HelixRevolutionDepth_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.labelCurveToLineConversion.setText(QCoreApplication.translate("mainwindow", u" Curve To Line Conversion", None))
         self.label_CurveToLineConversion_MinimumNbSegments.setText(QCoreApplication.translate("mainwindow", u"Minimum Segments", None))
         self.label_CurveToLineConversion_MinimumSegmentsLength.setText(QCoreApplication.translate("mainwindow", u"Minimum Segments Length", None))

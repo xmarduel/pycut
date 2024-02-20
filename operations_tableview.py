@@ -315,7 +315,15 @@ class PyCutComboBoxDelegate(QtWidgets.QStyledItemDelegate):
 
         self.items = []
         if col == 1:
-            self.items = ["Pocket", "Inside", "Outside", "Engrave", "Drill", "Peck"]
+            self.items = [
+                "Pocket",
+                "Inside",
+                "Outside",
+                "Engrave",
+                "Drill",
+                "Peck",
+                "Helix",
+            ]
         if col == 4:
             self.items = ["inch", "mm"]
         if col == 7:
@@ -634,6 +642,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
             "Engrave": False,
             "Drill": False,
             "Peck": False,
+            "Helix": False,
         }
         width = {
             "Pocket": False,
@@ -642,6 +651,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
             "Engrave": False,
             "Drill": False,
             "Peck": False,
+            "Helix": True,
         }
 
         for row in range(self.model().rowCount(None)):
@@ -651,7 +661,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
             self.delegate_col_margin.xeditors[(row, 9)].setEnabled(margin[cam_op])
             self.delegate_col_width.xeditors[(row, 10)].setEnabled(width[cam_op])
 
-    # HOW to do that : "Drill" and "Peck" only for "circle" shapes
+    # HOW to do that : "Drill" and "Peck" and "Helix" only for "circle" shapes
     # HOW to do that : "Pocket" not for "line" and "polyline" shapes
     def enable_disable_drill_and_peck_ops(self):
         """ """
@@ -671,14 +681,16 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
                 # item_engrave = model.item(3)
                 item_drill = model.item(4)
                 item_peck = model.item(5)
+                item_helix = model.item(6)
 
                 if tag == "circle":
                     item_drill.setEnabled(True)
                     item_peck.setEnabled(True)
+                    item_helix.setEnabled(True)
                 else:
                     item_drill.setEnabled(False)
                     item_peck.setEnabled(False)
-
+                    item_helix.setEnabled(False)
                 if tag == "line" or tag == "polyline":
                     item_pocket.setEnabled(False)
                 else:

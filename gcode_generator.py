@@ -19,6 +19,8 @@ from typing import List
 from typing import Dict
 from typing import Any
 
+import math
+
 import shapely
 import shapely.geometry
 import shapely.ops
@@ -33,6 +35,8 @@ from shapely_cam import cam
 from shapely_cam import CamPath
 
 from val_with_unit import ValWithUnit
+
+PI = math.pi
 
 
 class UnitConverter:
@@ -127,6 +131,7 @@ class ToolModel:
         self.rapidRate = ValWithUnit(100, self.units)
         self.plungeRate = ValWithUnit(5, self.units)
         self.cutRate = ValWithUnit(40, self.units)
+        self.helixRevolutionDepth = ValWithUnit(0.165, self.units)
 
     def get_cam_data(self):
         """
@@ -446,7 +451,11 @@ class CncOp:
                 or self.cam_op == "Engrave"
             ):
                 self.combine()
-            if self.cam_op == "Drill" or self.cam_op == "Peck":
+            if (
+                self.cam_op == "Drill"
+                or self.cam_op == "Peck"
+                or self.cam_op == "Helix"
+            ):
                 self.combine_as_drill_or_peck()
 
             if self.cam_op == "Pocket":
@@ -459,6 +468,8 @@ class CncOp:
                 self.calculate_preview_geometry_engrave()
             elif self.cam_op == "Drill" or self.cam_op == "Peck":
                 self.calculate_preview_geometry_drill(tool_model)
+            elif self.cam_op == "Helix":
+                self.calculate_preview_geometry_helix(tool_model)
 
         if self.is_opened_paths_op():
             self.combine_opened_paths()
@@ -548,6 +559,42 @@ class CncOp:
             for poly in self.preview_geometry.geoms:
                 geometry_svg_path = SvgPath.from_shapely_polygon(
                     "pycut_geometry_drill", poly
+                )
+                self.geometry_svg_paths.append(geometry_svg_path)
+
+    def calculate_preview_geometry_helix(self, tool_model: ToolModel):
+        """
+        as a pocket of diameter exactly cutter_dia  FIXME
+        """
+        if self.geometry is not None:
+            shapely_polygons: List[shapely.geometry.Polygon] = []
+            for pt in self.geometry.geoms:
+                center = pt.coords[0]
+                width = self.width.to_mm()
+
+                if width <= 2 * tool_model.diameter:
+                    svgpath = SvgPath.from_circle_def(center, width / 2.0)
+                    shapely_polygons += svgpath.import_as_polygons_list()
+                else:
+                    # ring! polygon with hole
+                    svgpath = SvgPath.from_circle_def(center, width / 2.0)
+                    delta = width - 2 * tool_model.diameter
+                    hole = SvgPath.from_circle_def(center, delta / 2.0)
+
+                    poly_ext = svgpath.import_as_polygons_list()
+                    poly_int = hole.import_as_polygons_list()
+
+                    poly_with_hole = shapely.geometry.Polygon(
+                        poly_ext[0].exterior, holes=[poly_int[0].exterior]
+                    )
+
+                    shapely_polygons += [poly_with_hole]
+
+            self.preview_geometry = shapely.geometry.MultiPolygon(shapely_polygons)
+
+            for poly in self.preview_geometry.geoms:
+                geometry_svg_path = SvgPath.from_shapely_polygon(
+                    "pycut_geometry_helix", poly
                 )
                 self.geometry_svg_paths.append(geometry_svg_path)
 
@@ -710,58 +757,68 @@ class CncOp:
                 self.cam_paths = cam.drill(geometry, toolData["diameterTool"])
             elif cam_op == "Peck":
                 self.cam_paths = cam.peck(geometry, toolData["diameterTool"])
+            elif cam_op == "Helix":
+                self.cam_paths = cam.helix(geometry, toolData["diameterTool"])
 
-        if self.geometry.geom_type == "MultiPolygon":
-            if cam_op != "Engrave":
-                # 'left' for Inside OR pocket, 'right' for Outside
-                geometry = ShapelyUtils.offsetMultiPolygon(
-                    geometry,
-                    offset,
-                    "right" if cam_op == "Outside" else "left",
-                    consider_interiors_offsets=True,
-                )
+        if cam_op == "Pocket" and cam_op.name.startsWith("sp_"):
+            self.cam_paths = cam.spirale_pocket(
+                geometry,
+                toolData["diameterTool"],
+                toolData["overlap"],
+                direction == "Climb",
+            )
+        else:
+            if self.geometry.geom_type == "MultiPolygon":
+                if cam_op != "Engrave":
+                    # 'left' for Inside OR pocket, 'right' for Outside
+                    geometry = ShapelyUtils.offsetMultiPolygon(
+                        geometry,
+                        offset,
+                        "right" if cam_op == "Outside" else "left",
+                        consider_interiors_offsets=True,
+                    )
 
-            if cam_op == "Pocket":
-                self.cam_paths = cam.pocket(
-                    geometry,
-                    toolData["diameterTool"],
-                    toolData["overlap"],
-                    direction == "Climb",
-                )
-            elif cam_op == "Inside" or cam_op == "Outside":
-                width = width.to_mm()
-                if width < toolData["diameterTool"]:
-                    width = toolData["diameterTool"]
-                self.cam_paths = cam.outline(
-                    geometry,
-                    toolData["diameterTool"],
-                    cam_op == "Inside",
-                    width,
-                    toolData["overlap"],
-                    direction == "Climb",
-                )
-            elif cam_op == "Engrave":
-                self.cam_paths = cam.engrave(geometry, direction == "Climb")
+                if cam_op == "Pocket":
+                    self.cam_paths = cam.pocket(
+                        geometry,
+                        toolData["diameterTool"],
+                        toolData["overlap"],
+                        direction == "Climb",
+                    )
+                elif cam_op == "Inside" or cam_op == "Outside":
+                    width = width.to_mm()
+                    if width < toolData["diameterTool"]:
+                        width = toolData["diameterTool"]
+                    self.cam_paths = cam.outline(
+                        geometry,
+                        toolData["diameterTool"],
+                        cam_op == "Inside",
+                        width,
+                        toolData["overlap"],
+                        direction == "Climb",
+                    )
+                elif cam_op == "Engrave":
+                    self.cam_paths = cam.engrave(geometry, direction == "Climb")
 
-        if self.geometry.geom_type == "MultiLineString":
-            if cam_op == "Engrave":
-                self.cam_paths = cam.engrave_opened_paths(
-                    geometry, direction == "Climb"
-                )
-            elif cam_op == "Inside" or cam_op == "Outside":
-                geometry = self.preview_geometry
+            if self.geometry.geom_type == "MultiLineString":
+                if cam_op == "Engrave":
+                    self.cam_paths = cam.engrave_opened_paths(
+                        geometry, direction == "Climb"
+                    )
+                elif cam_op == "Inside" or cam_op == "Outside":
+                    geometry = self.preview_geometry
 
-                width = width.to_mm()
-                if width < toolData["diameterTool"]:
-                    width = toolData["diameterTool"]
-                self.cam_paths = cam.outline_opened_paths(
-                    geometry,
-                    toolData["diameterTool"],
-                    cam_op == "Inside",
-                    width,
-                    toolData["overlap"],
-                    direction == "Climb",
-                )
+                    width = width.to_mm()
+                    if width < toolData["diameterTool"]:
+                        width = toolData["diameterTool"]
+                    self.cam_paths = cam.outline_opened_paths(
+                        geometry,
+                        toolData["diameterTool"],
+                        cam_op == "Inside",
+                        width,
+                        toolData["overlap"],
+                        direction == "Climb",
+                    )
 
         # -------------------------------------------------------------------------------------
 
@@ -975,6 +1032,9 @@ class GcodeGenerator:
         cutRate = int(self.unit_converter.from_mm(self.tool_model.cutRate.to_mm()))
         passdepth = self.unit_converter.from_mm(self.tool_model.passdepth.to_mm())
         toolDiameter = self.unit_converter.from_mm(self.tool_model.diameter.to_mm())
+        helixRevolutionDepth = self.unit_converter.from_mm(
+            self.tool_model.helixRevolutionDepth.to_mm()
+        )
         topZ = self.unit_converter.from_mm(self.material_model.matTopZ.to_mm())
         tabHeight = self.unit_converter.from_mm(self.tabs_model.height.to_mm())
         peckZ = self.unit_converter.from_mm(1.0)
@@ -984,6 +1044,10 @@ class GcodeGenerator:
         # else:
         #    scale = 25.4
         scale = 1
+
+        circle_travel_radius = (cnc_op.width - toolDiameter) / 2.0
+        circle_travel = 2 * PI * circle_travel_radius
+        helixPlungeRate = cutRate * helixRevolutionDepth / circle_travel
 
         gcode = []
         if self.units == "inch":
@@ -1023,15 +1087,25 @@ class GcodeGenerator:
             gcode.append(f"; Paths:        {nb_paths}")
             gcode.append(f"; Direction:    {cnc_op.direction}")
             gcode.append(f"; Cut Depth:    {cut_depth}")
-            gcode.append(f"; Pass Depth:   {passdepth}")
-            gcode.append(f"; Plunge rate:  {plungeRate}")
+
+            if cnc_op.cam_op == "Helix":
+                gcode.append(
+                    f"; Helix Revolution Depth [can be adapted]:   {helixRevolutionDepth}"
+                )
+                gcode.append(
+                    f"; Helix Plunge rate [can be adapted]:  {helixPlungeRate}"
+                )
+            else:
+                gcode.append(f"; Pass Depth:   {passdepth}")
+                gcode.append(f"; Plunge rate:  {plungeRate}")
+
             gcode.append(f"; Cut rate:     {cutRate}")
             gcode.append(";")
-            gcode.append("")
+            gcode.append(";")
 
             tabs = self.tabs_model.tabs
 
-            if cnc_op.cam_op == "Pocket":
+            if cnc_op.cam_op == "Pocket" or cnc_op.cam_op == "Helix":
                 # ignore tabs in pocket op
                 tabs = []
 
@@ -1041,10 +1115,11 @@ class GcodeGenerator:
                         "optype": cnc_op.cam_op,
                         "paths": cnc_op.cam_paths,
                         "ramp": cnc_op.ramp_plunge,
+                        "helixWidth": cnc_op.width,
                         "scale": scale,
                         "offsetX": self.offsetX,
                         "offsetY": self.offsetY,
-                        "decimal": 4,
+                        "decimal": 3,
                         "topZ": topZ,
                         "botZ": botZ,
                         "safeZ": safeZ,
@@ -1053,6 +1128,9 @@ class GcodeGenerator:
                         "retractFeed": rapidRate,
                         "cutFeed": cutRate,
                         "rapidFeed": rapidRate,
+                        "toolDiameter": toolDiameter,
+                        "helixRevolutionDepth": helixRevolutionDepth,
+                        "helixPlungeRate": helixPlungeRate,
                         "tabs": tabs,
                         "tabZ": tabZ,
                         "peckZ": peckZ,

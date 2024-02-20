@@ -18,12 +18,18 @@
 import sys
 import math
 
+from math import sqrt
+
 from typing import List
 from typing import Dict
 from typing import Tuple
 
+import numpy as np
+import matplotlib.pyplot as plt
+
 from val_with_unit import ValWithUnit
 
+import shapely
 import shapely.geometry
 import shapely.ops
 
@@ -31,6 +37,8 @@ from shapely_utils import ShapelyUtils
 from shapely_ext import ShapelyMultiPolygonOffset
 from shapely_ext import ShapelyMultiPolygonOffsetInteriors
 from shapely_matplotlib import MatplotLibUtils
+
+PI = math.pi
 
 
 class CamPath:
@@ -86,6 +94,32 @@ class cam:
         return camPaths
 
     @classmethod
+    def helix(
+        cls,
+        multipoint: shapely.geometry.MultiPoint,
+        cutter_dia: float,
+    ) -> List[CamPath]:
+        """
+        Only for circles, ellipses and rectangles !
+
+        It will be performed from the center of the circle/ellipse/rectangle
+
+        The helix drills down until the cut depth.
+        At each revolution, an amount of "helix_revolution_depth" is cut in the z direction.
+
+        This means, given the cut rate and the helix diameter, the helix plunge rate is calculated
+        """
+        camPaths = []
+
+        for point in multipoint.geoms:
+            pt = point.coords[0]
+            # HACK LineString with 2 identical point? not future proof...
+            camPath = CamPath(shapely.geometry.LineString([pt, pt]), False)
+            camPaths.append(camPath)
+
+        return camPaths
+
+    @classmethod
     def pocket(
         cls,
         multipoly: shapely.geometry.MultiPolygon,
@@ -102,6 +136,26 @@ class cam:
         overlap is in the range [0, 1).
         """
         pc = PocketCalculator(multipoly, cutter_dia, overlap, climb)
+        pc.pocket()
+        return pc.cam_paths
+
+    @classmethod
+    def spirale_pocket(
+        cls,
+        multipoly: shapely.geometry.MultiPolygon,
+        cutter_dia: float,
+        overlap: float,
+        climb: bool,
+    ) -> List[CamPath]:
+        """
+        Compute paths for pocket operation on Shapely multipolygon.
+
+        Returns array of CamPath.
+
+        cutter_dia is in "UserUnit" units.
+        overlap is in the range [0, 1).
+        """
+        pc = SpiralePocketCalculator(multipoly, cutter_dia, overlap, climb)
         pc.pocket()
         return pc.cam_paths
 
@@ -553,6 +607,9 @@ class cam:
           retractFeed:    Feedrate to retract cutter (gcode units)
           cutFeed:        Feedrate for horizontal cuts (gcode units)
           rapidFeed:      Feedrate for rapid moves (gcode units)
+          toolDiameter:
+          helixRevolutionDepth: depth of an helix revolution (theoretical)
+          helixPlungeRate:      helix plunge rate (theoretical)
           tabs:           List of tabs
           tabZ:           Level below which tabs are to be processed
           peckZ:          Level to retract when pecking
@@ -604,13 +661,13 @@ class cam:
             "G1 Z" + peckZ.to_fixed(decimal) + f"{rapidFeedGcode}",
         ]
 
-        def getX(p: Tuple[int, int]):
+        def getX(p: Tuple[float, float]):
             return p[0] * scale + offsetX
 
-        def getY(p: Tuple[int, int]):
+        def getY(p: Tuple[float, float]):
             return -p[1] * scale + offsetY
 
-        def convertPoint(p: Tuple[int, int]):
+        def convertPoint(p: Tuple[float, float]):
             x = p[0] * scale + offsetX
             y = -p[1] * scale + offsetY
 
@@ -630,6 +687,144 @@ class cam:
                 )
 
             return result
+
+        def convertPoint3D(p: Tuple[float, float, float]):
+            x = p[0] * scale + offsetX
+            y = -p[1] * scale + offsetY
+            z = p[2]
+
+            if flipXY is False:
+                result = (
+                    " X"
+                    + ValWithUnit(x, "-").to_fixed(decimal)
+                    + " Y"
+                    + ValWithUnit(y, "-").to_fixed(decimal)
+                    + " Z"
+                    + ValWithUnit(z, "-").to_fixed(decimal)
+                )
+            else:
+                result = (
+                    " X"
+                    + ValWithUnit(-y, "-").to_fixed(decimal)
+                    + " Y"
+                    + ValWithUnit(x, "-").to_fixed(decimal)
+                    + " Z"
+                    + ValWithUnit(z, "-").to_fixed(decimal)
+                )
+
+            return result
+
+        # special case
+        if optype == "Helix":
+            SEG_LEN = 0.1
+
+            tool_diameter = args["toolDiameter"]
+            helix_width = args["helixWidth"]
+            helix_revolution_depth = args["helixRevolutionDepth"]
+            helix_plunge_rate = args["helixPlungeRate"]
+
+            cut_depth = -botZ
+
+            for campath in paths:
+                center = (campath.path.coords.xy[0][0], campath.path.coords.xy[1][0])
+
+                circle_travel_radius = (helix_width - tool_diameter) / 2.0
+                circle_travel = 2 * PI * circle_travel_radius
+                helix_plunge_rate = cutFeed * helix_revolution_depth / circle_travel
+
+                print("HELIX_CIRCLE_TRAVEL_RADIUS = ", circle_travel_radius)
+                print("HELIX_PLUNGE_RATE = ", helix_plunge_rate)
+
+                # well we wish an helix plunge rate as integer.
+                # So the helix_revolution_depth will be somehow "corrected"
+
+                helix_plunge_rate = math.floor(helix_plunge_rate) + 1
+                helix_revolution_depth = circle_travel * helix_plunge_rate / cutFeed
+
+                print("FIXED - HELIX_PLUNGE_RATE = ", helix_plunge_rate)
+                print("FIXED - HELIX_REVOLUTION_DEPTH = ", helix_revolution_depth)
+
+                nb_pts_per_revolution = math.floor(circle_travel / SEG_LEN)
+
+                nb_helixes = math.floor(cut_depth / helix_revolution_depth)
+
+                helix_revolution_depth_last = (
+                    cut_depth - nb_helixes * helix_revolution_depth
+                )
+
+                # calculate all the pts with z component
+                pts = []
+
+                # the helix revolutions
+                for i in range(0, nb_helixes):
+                    for k in range(nb_pts_per_revolution):
+                        x = math.cos(2 * PI * k / nb_pts_per_revolution)
+                        y = math.sin(2 * PI * k / nb_pts_per_revolution)
+
+                        height = helix_revolution_depth  # shorter name
+
+                        z = -i * height - k * height / nb_pts_per_revolution
+
+                        xx = center[0] + circle_travel_radius * x
+                        yy = center[1] + circle_travel_radius * y
+
+                        pts.append([xx, yy, z])
+
+                # and the last one
+
+                if helix_revolution_depth_last > 0.0:
+                    for k in range(nb_pts_per_revolution):
+                        x = math.cos(2 * PI * k / nb_pts_per_revolution)
+                        y = math.sin(2 * PI * k / nb_pts_per_revolution)
+
+                        height = helix_revolution_depth
+                        last_height = helix_revolution_depth_last
+
+                        z = (
+                            -nb_helixes * height
+                            - k * last_height / nb_pts_per_revolution
+                        )
+
+                        xx = center[0] + circle_travel_radius * x
+                        yy = center[1] + circle_travel_radius * y
+
+                        pts.append([xx, yy, z])
+
+                # and the last flat circle
+
+                for k in range(nb_pts_per_revolution + 1):
+                    x = math.cos(2 * PI * k / nb_pts_per_revolution)
+                    y = math.sin(2 * PI * k / nb_pts_per_revolution)
+
+                    z = -cut_depth
+
+                    xx = center[0] + circle_travel_radius * x
+                    yy = center[1] + circle_travel_radius * y
+
+                    pts.append([xx, yy, z])
+
+                # the gcode
+                gcode.append("; Rapid to op center position")
+                gcode.append("G1" + convertPoint(center) + rapidFeedGcode)
+
+                gcode.append("; Slow to op initial position")
+                pt0 = pts[0]
+                gcode.append("G1" + convertPoint(pt0) + cutFeedGcode)
+
+                for k, pt in enumerate(pts):
+                    if k == 0:
+                        gcode.append(
+                            "G1" + convertPoint3D(pt) + f" F{helix_plunge_rate}"
+                        )
+                    else:
+                        gcode.append("G1" + convertPoint3D(pt))
+
+            gcode.extend(retractGcode)
+
+            gcode.append("; Rapid to op center position")
+            gcode.append("G1" + convertPoint(center) + rapidFeedGcode)
+
+            return gcode
 
         # tabs are globals - but maybe this path does not hits any tabs
         crosses_tabs = False
@@ -1034,7 +1229,7 @@ class PocketCalculator:
 
     def pocket(self):
         """
-        main algo
+        main algo - build self.cam_paths
         """
         # use polygons exteriors lines - offset them and and diff with the offseted interiors if any
         multipoly = ShapelyUtils.orientMultiPolygon(self.multipoly)
@@ -1284,3 +1479,234 @@ class PocketCalculator:
         dx = p2[0] - p1[0]
         dy = p2[1] - p1[1]
         return dx * dx + dy * dy
+
+
+class SpiralePocketCalculator:
+
+    def __init__(
+        self,
+        multipoly: shapely.geometry.MultiPolygon,
+        cutter_dia: float,
+        overlap: float,
+        climb: bool,
+    ):
+        """
+        cutter_dia is in user units.
+        overlap is in the range [0, 1].
+        """
+        self.multipoly = multipoly
+
+        self.cutter_dia = cutter_dia
+        self.overlap = overlap
+        self.climb = climb
+
+        self.resolution = 16
+        self.join_style = 1
+        self.mitre_limit = 5.0
+
+        # result of a the calculation
+        self.cam_paths: List[CamPath] = []
+
+        # temp variables
+        self.all_paths: List[shapely.geometry.LineString] = []
+
+    def pocket(self):
+        """
+        main algo - build self.cam_paths
+        """
+        spirale = SpiralePocketCalculator.Spirale(self)
+        pts = spirale.calc()
+
+        self.cam_paths = [CamPath(shapely.geometry.LineString(pts), True)]
+
+    class Spirale:
+        SEGMENT_LEN = 1.0  # mm
+
+        def __init__(self, pocket: "SpiralePocketCalculator"):
+            """ """
+            self.pocket_radius = 15.0  # FIXME - get it from the geometry
+
+            self.plunge_rate = 22  # FIXME - get it from the Tool Model
+            self.cut_rate = 250  # FIXME - get it from the Tool Model
+
+            self.pocket = pocket
+
+            self.cut_arm_size = (
+                self.pocket.cutter_dia / 2.0 * (1.0 - self.pocket.overlap)
+            )
+
+            print("SPIRALE: CUT_SIZE = ", self.cut_arm_size)
+
+            self.nb_arms = math.floor(
+                (self.pocket_radius - self.pocket.cutter_dia / 2.0) / self.cut_arm_size
+            )
+
+            print("NB_ARMS = ", self.nb_arms)
+
+            # on each speudo circle of length 2pi*r there are
+            #  - 2pi*r           segments of lenght 1, or
+            #  - 2pi*r / len_seg segments of length len_seg
+            #
+            # Just sum them:
+            #    NB_POINTS = SUM n=1..NB_CIRCLES [2pi * R_n]
+            #    R_o = 0
+            #    R_n = R_n-1 + CUT_SIZE
+            #        = n*CUT_SIZE
+            #    => NB_POINTS = 2*pi SUM k=n..NB_CIRCLES [n*CUT_SIZE]
+
+            self.nb_points = math.floor(
+                (2 * PI / SpiralePocketCalculator.Spirale.SEGMENT_LEN)
+                * self.cut_arm_size
+                * self.nb_arms
+                * (self.nb_arms + 1)
+                / 2.0
+            )
+
+            print("NB_POINTS = ", self.nb_points)
+
+            self.pocket_radius_minus_cutter = (
+                self.pocket_radius - self.pocket.cutter_dia / 2.0
+            )
+
+            self.pocket_radius_minus_cutter_squared = (
+                self.pocket_radius_minus_cutter * self.pocket_radius_minus_cutter
+            )
+
+            self.x = []
+            self.y = []
+            self.z = []
+
+        def calc(self) -> List[Tuple]:
+            """
+            Prepare arrays x, y
+            """
+            # list of angles : will be sqrt'ed
+            angles = np.linspace(
+                0, (2 * PI * self.nb_arms) * (2 * PI * self.nb_arms), self.nb_points
+            )
+
+            # when the radius of the spirale is increasing,
+            # the delta(angles) must decrease for small increments in angle
+            # at every point
+            t = np.sqrt(angles)
+
+            # list of radiuses : will be sqrt'ed
+            r = np.linspace(0, self.pocket_radius_minus_cutter_squared, self.nb_points)
+            r = np.sqrt(r)  # -> max is POCKET_RADIUS_M_CUTTER
+
+            # because the angles progression is of sqrt, so has to be the
+            # progression of the radiuses!
+
+            x = r * np.cos(t)
+            y = r * np.sin(t)
+
+            # last circle
+            dt = t[-1] - t[-2]
+            print(
+                "dt =",
+                dt,
+                " => nb pts on circle/last spirale [est] = ",
+                math.floor(2 * PI / dt),
+                " => nb pts on circle",
+                math.floor(
+                    2
+                    * PI
+                    * self.pocket_radius_minus_cutter
+                    / SpiralePocketCalculator.Spirale.SEGMENT_LEN
+                ),
+            )
+
+            # discretized circle with N points
+            N = math.floor(2 * PI / dt)
+            # N = math.floor(2 * pi * POCKET_RADIUS_M_CUTTER / SEGMENT_LEN)
+
+            N = N * 2  # fine resolution for the pocket boundary
+
+            r_circle = np.linspace(
+                self.pocket_radius_minus_cutter, self.pocket_radius_minus_cutter, N
+            )
+            t_circle = t[-1] + np.linspace(0, 2 * PI, N)
+
+            dx = r_circle * np.cos(t_circle)
+            dy = r_circle * np.sin(t_circle)
+
+            x = np.concatenate([x, dx])
+            y = np.concatenate([y, dy])
+
+            pts = [[xx, yy] for xx, yy in zip(x, y)]
+
+            return pts
+
+    class Square(Spirale):
+        def __init__(self):
+            super().__init__()
+
+            super().calc()
+
+            self.xx = [
+                SpiralePocketCalculator.Square.to_square_x(u, v)
+                for (u, v) in zip(self.x, self.y)
+            ]
+            self.yy = [
+                SpiralePocketCalculator.Square.to_square_y(u, v)
+                for (u, v) in zip(self.x, self.y)
+            ]
+
+        def plot(self):
+            ax = plt.figure().add_subplot()
+
+            ax.plot(self.xx, self.yy, marker="o")
+            ax.axis("equal")
+            ax.set_ylim([-20, 20])
+            # ax.set_xlim([-10, 10])
+            ax.grid(True)
+
+            plt.show()
+
+        @classmethod
+        def normalize(cls, u, v):
+            return [
+                u / cls.pocket_radius_minus_cutter,
+                v / cls.pocket_radius_minus_cutter,
+            ]
+
+        @classmethod
+        def to_square_x(cls, u, v):
+            """
+            x = ½ √( 2 + u² - v² + 2u√2 ) - ½ √( 2 + u² - v² - 2u√2 )
+            y = ½ √( 2 - u² + v² + 2v√2 ) - ½ √( 2 - u² + v² - 2v√2 )
+            """
+            u, v = PocketSpiralCalculator.Square.normalize(u, v)
+
+            uu = u * u
+            vv = v * v
+
+            a = 2 + uu - vv + 2 * u * sqrt(2)
+            b = 2 + uu - vv - 2 * u * sqrt(2)
+
+            a = a if a > 0.0 else 0.0
+            b = b if b > 0.0 else 0.0
+
+            x = 0.5 * sqrt(a) - 0.5 * sqrt(b)
+
+            return x * cls.pocket_radius_minus_cutter
+
+        @classmethod
+        def to_square_y(cls, u, v):
+            u, v = SpiralePocketCalculator.Square.normalize(u, v)
+
+            uu = u * u
+            vv = v * v
+
+            a = 2 - uu + vv + 2 * v * sqrt(2)
+            b = 2 - uu + vv - 2 * v * sqrt(2)
+
+            a = a if a > 0.0 else 0.0
+            b = b if b > 0.0 else 0.0
+
+            y = 0.5 * sqrt(a) - 0.5 * sqrt(b)
+
+            return y * cls.pocket_radius_minus_cutter
+
+    class Ellipse(Spirale):
+        pass  # TODO
