@@ -686,11 +686,15 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
                 if tag == "circle":
                     item_drill.setEnabled(True)
                     item_peck.setEnabled(True)
-                    item_helix.setEnabled(True)
                 else:
                     item_drill.setEnabled(False)
                     item_peck.setEnabled(False)
+
+                if tag == "circle" or tag == "ellipse" or tag =="rect":
+                    item_helix.setEnabled(True)
+                else:
                     item_helix.setEnabled(False)
+
                 if tag == "line" or tag == "polyline":
                     item_pocket.setEnabled(False)
                 else:

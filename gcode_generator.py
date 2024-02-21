@@ -268,7 +268,7 @@ class CncOp:
 
     def __init__(self, operation: Dict[str, Any]):
         self.units: str = operation["units"]
-        self.name: List[str] = operation["name"]
+        self.name: str = operation["name"]
         self.paths: List[str] = operation["paths"]
         self.combinaison: str = operation["combinaison"]
         self.ramp_plunge = operation["ramp_plunge"]
@@ -351,6 +351,22 @@ class CncOp:
         for svgpath in self.svg_paths:
             # consider only circles
             if svgpath.shape_tag == "circle":
+                shapely_point = svgpath.import_as_point()
+                shapely_points.append(shapely_point)
+
+        self.geometry = shapely.geometry.MultiPoint(shapely_points)
+
+    def combine_as_helix(self):
+        """
+        generate the combinaison of the selected paths
+
+        the generated geometry is a MultiPoint
+        """
+        shapely_points: List[shapely.geometry.Point] = []
+
+        for svgpath in self.svg_paths:
+            # consider only circles and ellipses
+            if svgpath.shape_tag == "circle" or svgpath.shape_tag == "ellipse":
                 shapely_point = svgpath.import_as_point()
                 shapely_points.append(shapely_point)
 
@@ -451,12 +467,11 @@ class CncOp:
                 or self.cam_op == "Engrave"
             ):
                 self.combine()
-            if (
-                self.cam_op == "Drill"
-                or self.cam_op == "Peck"
-                or self.cam_op == "Helix"
-            ):
+
+            if self.cam_op == "Drill" or self.cam_op == "Peck":
                 self.combine_as_drill_or_peck()
+            elif self.cam_op == "Helix":
+                self.combine_as_helix()
 
             if self.cam_op == "Pocket":
                 self.calculate_preview_geometry_pocket()
@@ -727,7 +742,7 @@ class CncOp:
         """ """
         toolData = tool_model.get_cam_data()
 
-        # name = self.name
+        name = self.name
         # ramp_plunge = self.ramp_plunge
         cam_op = self.cam_op
         direction = self.direction
@@ -760,12 +775,13 @@ class CncOp:
             elif cam_op == "Helix":
                 self.cam_paths = cam.helix(geometry, toolData["diameterTool"])
 
-        if cam_op == "Pocket" and cam_op.name.startsWith("sp_"):
+        if cam_op == "Pocket" and True and name.startswith("sp_"):
             self.cam_paths = cam.spirale_pocket(
+                self.svg_paths,
                 geometry,
                 toolData["diameterTool"],
                 toolData["overlap"],
-                direction == "Climb",
+                direction == "Climb"
             )
         else:
             if self.geometry.geom_type == "MultiPolygon":

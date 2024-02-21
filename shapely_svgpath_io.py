@@ -288,10 +288,23 @@ class SvgPath:
 
     def import_as_point(self) -> List[shapely.geometry.Point]:
         """
-        only for circle shapes
+        only for circle, ellipse and rectangle shapes
         """
-        cx = float(self.shape_attrs["cx"])
-        cy = float(self.shape_attrs["cy"])
+        cx = 0.0
+        cy = 0.0
+
+        if self.shape_tag == 'circle' or self.shape_tag =='ellipse':
+            cx = float(self.shape_attrs["cx"])
+            cy = float(self.shape_attrs["cy"])
+        elif self.shape_tag == 'rectangle':
+            w = float(self.shape_attrs.get("width"))
+            h = float(self.shape_attrs.get("height"))
+            
+            x = float(self.shape_attrs.get("x"))
+            y = float(self.shape_attrs.get("y"))
+
+            cx = x + w/2
+            cy = y + h/2
 
         center = (cx, cy)
 

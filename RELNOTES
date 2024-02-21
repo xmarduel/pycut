@@ -1,12 +1,12 @@
 # 0.7.0
 
-- gcode dressup (dogbones)  TODO
+- gcode dressup (dogbones) TODO
 
 # 0.6.5 - IN PROGRESS
 
 helix and spirale operations
 
-# 0.6.1
+# 0.6.3
 
 misc fixes
 
@@ -19,6 +19,7 @@ misc fixes
 # 0.5.1
 
 load gcode file
+
 - produced by pycut: Ok
 - general: viewer: Ok, simulator:NOk
 
@@ -26,7 +27,7 @@ load gcode file
 
 use only svgelements, get rid of svgpathtools
 
-# 0.4.0 
+# 0.4.0
 
 process "opened" paths as well as closed paths
 

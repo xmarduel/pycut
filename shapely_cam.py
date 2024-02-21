@@ -70,8 +70,8 @@ class cam:
 
         for point in multipoint.geoms:
             pt = point.coords[0]
-            # HACK LineString with 2 identical point? not future proof...
-            camPath = CamPath(shapely.geometry.LineString([pt, pt]), True)
+
+            camPath = CamPath(shapely.geometry.Point(pt), True)
             camPaths.append(camPath)
 
         return camPaths
@@ -87,8 +87,8 @@ class cam:
 
         for point in multipoint.geoms:
             pt = point.coords[0]
-            # HACK LineString with 2 identical point? not future proof...
-            camPath = CamPath(shapely.geometry.LineString([pt, pt]), False)
+           
+            camPath = CamPath(shapely.geometry.Point(pt), False)
             camPaths.append(camPath)
 
         return camPaths
@@ -113,8 +113,8 @@ class cam:
 
         for point in multipoint.geoms:
             pt = point.coords[0]
-            # HACK LineString with 2 identical point? not future proof...
-            camPath = CamPath(shapely.geometry.LineString([pt, pt]), False)
+
+            camPath = CamPath(shapely.geometry.Point(pt), False)
             camPaths.append(camPath)
 
         return camPaths
@@ -142,6 +142,7 @@ class cam:
     @classmethod
     def spirale_pocket(
         cls,
+        svgpaths,
         multipoly: shapely.geometry.MultiPolygon,
         cutter_dia: float,
         overlap: float,
@@ -155,7 +156,7 @@ class cam:
         cutter_dia is in "UserUnit" units.
         overlap is in the range [0, 1).
         """
-        pc = SpiralePocketCalculator(multipoly, cutter_dia, overlap, climb)
+        pc = SpiralePocketCalculator(svgpaths, multipoly, cutter_dia, overlap, climb)
         pc.pocket()
         return pc.cam_paths
 
@@ -1485,6 +1486,7 @@ class SpiralePocketCalculator:
 
     def __init__(
         self,
+        svgpaths,
         multipoly: shapely.geometry.MultiPolygon,
         cutter_dia: float,
         overlap: float,
@@ -1494,6 +1496,8 @@ class SpiralePocketCalculator:
         cutter_dia is in user units.
         overlap is in the range [0, 1].
         """
+        self.svgpaths = svgpaths
+
         self.multipoly = multipoly
 
         self.cutter_dia = cutter_dia
@@ -1508,32 +1512,89 @@ class SpiralePocketCalculator:
         self.cam_paths: List[CamPath] = []
 
         # temp variables
-        self.all_paths: List[shapely.geometry.LineString] = []
+        self.pts: List[Tuple] = []
 
     def pocket(self):
         """
         main algo - build self.cam_paths
         """
-        spirale = SpiralePocketCalculator.Spirale(self)
-        pts = spirale.calc()
+        svgpath = self.svgpaths[0]
 
-        self.cam_paths = [CamPath(shapely.geometry.LineString(pts), True)]
+        shape = svgpath.shape_tag
+        
+        if shape == "circle":
+            spirale = SpiralePocketCalculator.Circle(self)
+            self.pts = spirale.calc()
+        if shape == "ellipse":
+            spirale = SpiralePocketCalculator.Ellipse(self)
+            self.pts = spirale.calc()
+        if shape == "rect":
+            spirale = SpiralePocketCalculator.Rectangle(self)
+            self.pts = spirale.calc()
 
-    class Spirale:
+        self.cam_paths = [CamPath(shapely.geometry.LineString(self.pts), True)]
+
+    class Circle:
         SEGMENT_LEN = 1.0  # mm
 
         def __init__(self, pocket: "SpiralePocketCalculator"):
             """ """
-            self.pocket_radius = 15.0  # FIXME - get it from the geometry
+            self.svgpath = svgpath = pocket.svgpaths[0]
+
+            if svgpath.shape_tag == 'circle':
+                r = float(svgpath.shape_attrs.get("r"))
+                self.pocket_radius = r
+
+                cx = float(svgpath.shape_attrs.get("cx"))
+                cy = float(svgpath.shape_attrs.get("cy"))
+                self.center = [cx, cy]
+            elif svgpath.shape_tag == 'ellipse':
+                rx = float(svgpath.shape_attrs.get("rx"))
+                ry = float(svgpath.shape_attrs.get("ry"))
+                self.pocket_radius = min(rx, ry)
+
+                cx = float(svgpath.shape_attrs.get("cx"))
+                cy = float(svgpath.shape_attrs.get("cy"))
+                self.center = [cx, cy]
+            elif svgpath.shape_tag == 'rect':
+                w = float(svgpath.shape_attrs.get("width"))
+                h = float(svgpath.shape_attrs.get("height"))
+                self.pocket_radius = min(w, h) / 2.0
+
+                x = float(svgpath.shape_attrs.get("x"))
+                y = float(svgpath.shape_attrs.get("y"))
+
+                self.center = [x + w/2, y + h/2]
+            else:
+                self.pocket_radius = 20.0  # FIXME - get it from the geometry
+                self.center = [0.0, 0.0]
 
             self.plunge_rate = 22  # FIXME - get it from the Tool Model
             self.cut_rate = 250  # FIXME - get it from the Tool Model
 
             self.pocket = pocket
 
+            overlap = self.pocket.overlap
+
             self.cut_arm_size = (
-                self.pocket.cutter_dia / 2.0 * (1.0 - self.pocket.overlap)
+                self.pocket.cutter_dia / 2.0 * (1.0 - overlap)
             )
+
+            if svgpath.shape_tag == 'ellipse':
+                rx = float(svgpath.shape_attrs.get("rx"))
+                ry = float(svgpath.shape_attrs.get("ry"))
+
+                coeff = max(rx/ry, ry/rx)
+
+                self.cut_arm_size /= coeff
+
+            if svgpath.shape_tag == 'rect':
+                w = float(svgpath.shape_attrs.get("width"))
+                h = float(svgpath.shape_attrs.get("height"))
+
+                coeff = max(w/h, h/w)
+                
+                self.cut_arm_size /= coeff
 
             print("SPIRALE: CUT_SIZE = ", self.cut_arm_size)
 
@@ -1555,7 +1616,7 @@ class SpiralePocketCalculator:
             #    => NB_POINTS = 2*pi SUM k=n..NB_CIRCLES [n*CUT_SIZE]
 
             self.nb_points = math.floor(
-                (2 * PI / SpiralePocketCalculator.Spirale.SEGMENT_LEN)
+                (2 * PI / SpiralePocketCalculator.Circle.SEGMENT_LEN)
                 * self.cut_arm_size
                 * self.nb_arms
                 * (self.nb_arms + 1)
@@ -1597,8 +1658,8 @@ class SpiralePocketCalculator:
             # because the angles progression is of sqrt, so has to be the
             # progression of the radiuses!
 
-            x = r * np.cos(t)
-            y = r * np.sin(t)
+            x = self.center[0] + r * np.cos(t)
+            y = self.center[1] + r * np.sin(t)
 
             # last circle
             dt = t[-1] - t[-2]
@@ -1612,7 +1673,7 @@ class SpiralePocketCalculator:
                     2
                     * PI
                     * self.pocket_radius_minus_cutter
-                    / SpiralePocketCalculator.Spirale.SEGMENT_LEN
+                    / SpiralePocketCalculator.Circle.SEGMENT_LEN
                 ),
             )
 
@@ -1627,8 +1688,8 @@ class SpiralePocketCalculator:
             )
             t_circle = t[-1] + np.linspace(0, 2 * PI, N)
 
-            dx = r_circle * np.cos(t_circle)
-            dy = r_circle * np.sin(t_circle)
+            dx = self.center[0] + r_circle * np.cos(t_circle)
+            dy = self.center[1] + r_circle * np.sin(t_circle)
 
             x = np.concatenate([x, dx])
             y = np.concatenate([y, dy])
@@ -1637,46 +1698,82 @@ class SpiralePocketCalculator:
 
             return pts
 
-    class Square(Spirale):
-        def __init__(self):
-            super().__init__()
+    class Rectangle(Circle):
+        def __init__(self, pocket: "SpiralePocketCalculator"):
+            super().__init__(pocket)
 
-            super().calc()
+            w = float(self.svgpath.shape_attrs.get("width"))
+            h = float(self.svgpath.shape_attrs.get("height"))
 
-            self.xx = [
-                SpiralePocketCalculator.Square.to_square_x(u, v)
-                for (u, v) in zip(self.x, self.y)
-            ]
-            self.yy = [
-                SpiralePocketCalculator.Square.to_square_y(u, v)
-                for (u, v) in zip(self.x, self.y)
-            ]
+            x = float(self.svgpath.shape_attrs.get("x"))
+            y = float(self.svgpath.shape_attrs.get("y"))
+            
+            r = min(w, h) / 2.0
 
-        def plot(self):
-            ax = plt.figure().add_subplot()
+            center = [x + w/2, y + h/2]
 
-            ax.plot(self.xx, self.yy, marker="o")
-            ax.axis("equal")
-            ax.set_ylim([-20, 20])
-            # ax.set_xlim([-10, 10])
-            ax.grid(True)
+            self.tx = center[0]
+            self.ty = center[1]
 
-            plt.show()
+            self.scale_x = w / 2
+            self.scale_y = h / 2
 
-        @classmethod
-        def normalize(cls, u, v):
-            return [
-                u / cls.pocket_radius_minus_cutter,
-                v / cls.pocket_radius_minus_cutter,
-            ]
+            print("CENTER", self.tx, self.ty)
+            print("SCALE", r, self.scale_x, self.scale_y)
 
-        @classmethod
-        def to_square_x(cls, u, v):
+        def calc(self):
+            pts = super().calc()
+        
+            # TODO - better mapping 'cos not good at the border of the square
+            
+            rectangle_pts =  [(
+                self.to_square_x(x, y), 
+                self.to_square_y(x, y)) for (x, y) in pts ]
+
+            # last perfect contour 
+            w = float(self.svgpath.shape_attrs.get("width"))
+            h = float(self.svgpath.shape_attrs.get("height"))
+
+            x = float(self.svgpath.shape_attrs.get("x"))
+            y = float(self.svgpath.shape_attrs.get("y"))
+
             """
+            *----------------*
+            |                |
+            |                | start - go cw (svg y dir)
+            |                |
+            *----------------*
+            """
+            dw = w / 2 - self.pocket.cutter_dia / 2.0
+            dh = h / 2 - self.pocket.cutter_dia / 2.0
+
+            pt0 = [self.center[0] + dw, self.center[1] ]
+            pt1 = [self.center[0] + dw, self.center[1] + dh]
+            pt2 = [self.center[0] - dw, self.center[1] + dh]
+            pt3 = [self.center[0] - dw, self.center[1] - dh]
+            pt4 = [self.center[0] + dw, self.center[1] - dh]
+            pt5 = [self.center[0] + dw, self.center[1] ]
+
+            contours_pts =  [pt0, pt1, pt2, pt3, pt4, pt5 ]
+            
+            rectangle_pts += contours_pts
+
+            return rectangle_pts
+
+        def normalize(self, u, v):
+            return [
+                (u - self.tx)  / self.pocket_radius,
+                (v - self.ty ) / self.pocket_radius,
+            ]
+
+        def to_square_x(self, u, v):
+            """
+            from unit circle to unit square
+
             x = ½ √( 2 + u² - v² + 2u√2 ) - ½ √( 2 + u² - v² - 2u√2 )
             y = ½ √( 2 - u² + v² + 2v√2 ) - ½ √( 2 - u² + v² - 2v√2 )
             """
-            u, v = PocketSpiralCalculator.Square.normalize(u, v)
+            u, v = self.normalize(u, v)
 
             uu = u * u
             vv = v * v
@@ -1686,14 +1783,19 @@ class SpiralePocketCalculator:
 
             a = a if a > 0.0 else 0.0
             b = b if b > 0.0 else 0.0
-
+ 
             x = 0.5 * sqrt(a) - 0.5 * sqrt(b)
 
-            return x * cls.pocket_radius_minus_cutter
+            return self.tx + self.scale_x * x
 
-        @classmethod
-        def to_square_y(cls, u, v):
-            u, v = SpiralePocketCalculator.Square.normalize(u, v)
+        def to_square_y(self, u, v):
+            """
+            from unit circle to unit square
+            
+            x = ½ √( 2 + u² - v² + 2u√2 ) - ½ √( 2 + u² - v² - 2u√2 )
+            y = ½ √( 2 - u² + v² + 2v√2 ) - ½ √( 2 - u² + v² - 2v√2 )
+            """
+            u, v = self.normalize(u, v)
 
             uu = u * u
             vv = v * v
@@ -1706,7 +1808,34 @@ class SpiralePocketCalculator:
 
             y = 0.5 * sqrt(a) - 0.5 * sqrt(b)
 
-            return y * cls.pocket_radius_minus_cutter
+            return self.ty + self.scale_y *  y
 
-    class Ellipse(Spirale):
-        pass  # TODO
+    class Ellipse(Circle):
+        def __init__(self, pocket: "SpiralePocketCalculator"):
+            super().__init__(pocket)
+
+            cx = float(self.svgpath.shape_attrs.get("cx"))
+            cy = float(self.svgpath.shape_attrs.get("cy"))
+
+            rx = float(self.svgpath.shape_attrs.get("rx"))
+            ry = float(self.svgpath.shape_attrs.get("ry"))
+            
+            r = min(rx, ry)
+
+            self.tx = cx
+            self.ty = cy
+
+            self.scale_x = rx / r
+            self.scale_y = ry / r
+
+        def calc(self):
+            pts = super().calc()
+
+            ellipse_pts =  [
+                ( self.tx + (x - self.tx) * self.scale_x, 
+                  self.ty + (y - self.ty) * self.scale_y) for (x,y) in pts
+            ]
+
+            # TODO last "inner ellipse perfect at the distance from the border"
+
+            return ellipse_pts
