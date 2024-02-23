@@ -52,7 +52,7 @@ class ShapelyMultiPolygonOffset:
         for poly in self.multipoly.geoms:
             linearring = shapely.geometry.LineString(poly.exterior)
             # offset of a linearring is !BUGGY!
-            linestring = ShapelyUtils.linearRingToLineString(linearring)
+            linestring = ShapelyUtils.linearring_to_linestring(linearring)
             # unfortunately this generates others PYCUT bugs !!  (pocketing - FIXME - ) so reset
             linestring = linearring
 
@@ -112,7 +112,7 @@ class ShapelyMultiPolygonOffset:
                 ext_offset = shapely.geometry.MultiLineString(lines)
 
             # from the offseted lines, build a multipolygon that we diff with the interiors
-            exterior_multipoly = ShapelyUtils.buildMultiPolyFromOffsets([ext_offset])
+            exterior_multipoly = ShapelyUtils.build_multipoly_from_offsets([ext_offset])
             # print("exterior_multipoly VALID ? ", exterior_multipoly.is_valid)
 
             # MatplotLibUtils.display(
@@ -133,7 +133,7 @@ class ShapelyMultiPolygonOffset:
 
                     interior_polys.append(ipoly)
 
-                interior_multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(
+                interior_multipoly = ShapelyUtils.build_multipoly_from_list_of_polygons(
                     interior_polys
                 )
 
@@ -143,7 +143,7 @@ class ShapelyMultiPolygonOffset:
 
                 # consider interiors offsets
                 if consider_interiors_offsets == True:
-                    interior_multipoly = ShapelyUtils.offsetMultiPolygon(
+                    interior_multipoly = ShapelyUtils.offset_multipolygon(
                         interior_multipoly, amount, "right"
                     )
 
@@ -194,10 +194,10 @@ class ShapelyMultiPolygonOffset:
                     if poly.geom_type == "Polygon":
                         polys.append(poly)
 
-        o_multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(polys)
+        o_multipoly = ShapelyUtils.build_multipoly_from_list_of_polygons(polys)
 
         # ensure orientation
-        o_multipoly = ShapelyUtils.orientMultiPolygon(o_multipoly)
+        o_multipoly = ShapelyUtils.orient_multipolygon(o_multipoly)
 
         return o_multipoly
 
@@ -254,16 +254,16 @@ class ShapelyMultiPolygonOffsetInteriors:
                 int_offsets.append(int_offset)
 
             # from the offseted lines, build a multipolygon that we will diff with the exterior
-            interior_multipoly = ShapelyUtils.buildMultiPolyFromOffsets(int_offsets)
+            interior_multipoly = ShapelyUtils.build_multipoly_from_offsets(int_offsets)
 
             MatplotLibUtils.display(
                 "interior_multipoly", interior_multipoly, force=False
             )
 
             if not interior_multipoly.is_valid:
-                interior_multipoly = ShapelyUtils.fixMultipoly(interior_multipoly)
+                interior_multipoly = ShapelyUtils.fix_multipoly(interior_multipoly)
 
-            exterior_multipoly = ShapelyUtils.offsetMultiPolygon(
+            exterior_multipoly = ShapelyUtils.offset_multipolygon(
                 self.multipoly, amount, "left", consider_interiors_offsets=True
             )
 
@@ -272,13 +272,13 @@ class ShapelyMultiPolygonOffsetInteriors:
             )
 
             # only exterior
-            exterior_multipoly = ShapelyUtils.removeHolesMultipoly(exterior_multipoly)
+            exterior_multipoly = ShapelyUtils.remove_multipoly_holes(exterior_multipoly)
 
             # this simplify may be important so that the offset becomes Ok (example: letter "B")
-            exterior_multipoly = ShapelyUtils.simplifyMultiPoly(
+            exterior_multipoly = ShapelyUtils.simplify_multipoly(
                 exterior_multipoly, 0.001
             )
-            exterior_multipoly = ShapelyUtils.orientMultiPolygon(exterior_multipoly)
+            exterior_multipoly = ShapelyUtils.orient_multipolygon(exterior_multipoly)
 
             MatplotLibUtils.display(
                 "exterior_multipoly", exterior_multipoly, force=False
@@ -329,9 +329,9 @@ class ShapelyMultiPolygonOffsetInteriors:
                     if poly.geom_type == "Polygon":
                         polys.append(poly)
 
-        o_multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(polys)
+        o_multipoly = ShapelyUtils.build_multipoly_from_list_of_polygons(polys)
 
         # ensure orientation
-        o_multipoly = ShapelyUtils.orientMultiPolygon(o_multipoly)
+        o_multipoly = ShapelyUtils.orient_multipolygon(o_multipoly)
 
         return o_multipoly

@@ -1,7 +1,7 @@
 [
+  "Helix.json",
+  "vise2-middle-part.json",
   "vise2-front_and_back_parts.json",
   "misc_private/unimat_cnc_kit/dc_motor_holder.json",
-  "jobs/cnc1419_vise1_2shafts.json",
-  "jobs/cnc_all_letters_tudor.json",
-  "misc_private/unimat_cnc_kit/dc_motor_holder_contour.json"
+  "jobs/cnc1419_vise1_2shafts.json"
 ]

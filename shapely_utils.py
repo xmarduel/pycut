@@ -98,7 +98,7 @@ class ShapelyUtils:
         return True
 
     @classmethod
-    def simplifyMultiLine(
+    def simplify_multiline(
         cls, multiline: shapely.geometry.MultiLineString, tol: float
     ) -> shapely.geometry.MultiLineString | None:
         """
@@ -118,7 +118,7 @@ class ShapelyUtils:
         return res
 
     @classmethod
-    def simplifyMultiPoly(
+    def simplify_multipoly(
         cls, multipoly: shapely.geometry.MultiPolygon, tol: float
     ) -> shapely.geometry.MultiPolygon | None:
         """
@@ -161,7 +161,7 @@ class ShapelyUtils:
             return shapely.geometry.LineString(line)
 
     @classmethod
-    def offsetMultiLine(
+    def offset_multiline(
         cls,
         multiline: shapely.geometry.MultiLineString,
         amount: float,
@@ -198,7 +198,7 @@ class ShapelyUtils:
         return offsetted
 
     @classmethod
-    def orientMultiPolygon(
+    def orient_multipolygon(
         cls, multipoly: shapely.geometry.MultiPolygon
     ) -> shapely.geometry.MultiPolygon:
         """ """
@@ -212,7 +212,7 @@ class ShapelyUtils:
         return xmultipoly
 
     @classmethod
-    def offsetMultiPolygon(
+    def offset_multipolygon(
         cls,
         geometry: shapely.geometry.MultiPolygon,
         amount: float,
@@ -238,7 +238,7 @@ class ShapelyUtils:
         )
 
     @classmethod
-    def offsetMultiPolygonInteriors(
+    def offset_multipolygon_interiors(
         cls,
         geometry: shapely.geometry.MultiPolygon,
         amount: float,
@@ -264,7 +264,7 @@ class ShapelyUtils:
         )
 
     @classmethod
-    def buildMultiPolyFromOffsets(
+    def build_multipoly_from_offsets(
         cls,
         multi_offset: List[
             shapely.geometry.LineString | shapely.geometry.MultiLineString
@@ -309,7 +309,7 @@ class ShapelyUtils:
                 if polygon.is_valid:
                     polygons.append(polygon)
                 else:
-                    print("buildMultiPolyFromOffsets: " + explain_validity(polygon))
+                    print("build_multipoly_from_offsets: " + explain_validity(polygon))
                     res = make_valid(polygon)
                     # hoping the result is valid!
                     if res.geom_type == "Polygon":
@@ -332,14 +332,14 @@ class ShapelyUtils:
                 # tudor 'D' fix - sonce unary_union exception
                 polygons_ok.append(polygon)
             else:
-                print("buildMultiPolyFromOffsets: " + explain_validity(polygon))
+                print("build_multipoly_from_offsets: " + explain_validity(polygon))
 
-        multipoly = ShapelyUtils.buildMultiPolyFromListOfPolygons(polygons_ok)
+        multipoly = ShapelyUtils.build_multipoly_from_list_of_polygons(polygons_ok)
 
         return multipoly
 
     @classmethod
-    def buildMultiPolyFromListOfPolygons(
+    def build_multipoly_from_list_of_polygons(
         cls, polygons: List[shapely.geometry.Polygon]
     ) -> shapely.geometry.MultiPolygon:
         """ """
@@ -359,14 +359,14 @@ class ShapelyUtils:
             multipoly = shapely.geometry.MultiPolygon(polygons)
 
         # ensure orientation
-        multipoly = ShapelyUtils.orientMultiPolygon(multipoly)
+        multipoly = ShapelyUtils.orient_multipolygon(multipoly)
 
         # print("multipoly VALID ?", multipoly.is_valid)
 
         return multipoly
 
     @classmethod
-    def multiPolyToMultiLine(
+    def multipoly_exteriors_to_multiline(
         cls, multipoly: shapely.geometry.MultiPolygon
     ) -> shapely.geometry.MultiLineString:
         """ """
@@ -381,7 +381,7 @@ class ShapelyUtils:
         return multiline
 
     @classmethod
-    def multiPolyIntToMultiLine(
+    def multipoly_interiors_to_multiline(
         cls, multipoly: shapely.geometry.MultiPolygon
     ) -> shapely.geometry.MultiLineString:
         """ """
@@ -397,7 +397,7 @@ class ShapelyUtils:
         return multiline
 
     @classmethod
-    def multiLineToMultiPoly(
+    def multiline_to_multipoly(
         cls, multiline: shapely.geometry.MultiLineString
     ) -> shapely.geometry.MultiPolygon:
         """ """
@@ -413,7 +413,7 @@ class ShapelyUtils:
         return multipoly
 
     @classmethod
-    def removeHolesMultipoly(
+    def remove_multipoly_holes(
         cls, multipoly: shapely.geometry.MultiPolygon
     ) -> shapely.geometry.MultiPolygon:
         epolys = []
@@ -470,7 +470,7 @@ class ShapelyUtils:
         return poly
 
     @classmethod
-    def fixMultipoly(
+    def fix_multipoly(
         cls, multipoly: shapely.geometry.MultiPolygon
     ) -> shapely.geometry.MultiPolygon:
         """ """
@@ -478,7 +478,7 @@ class ShapelyUtils:
 
         for poly in multipoly.geoms:
             if not poly.is_valid:
-                fixed_poly = cls.fixGenericPolygon(poly)
+                fixed_poly = cls.fix_generic_polygon(poly)
                 valid_polys.append(fixed_poly)
             else:
                 valid_polys.append(poly)
@@ -486,7 +486,7 @@ class ShapelyUtils:
         return shapely.geometry.MultiPolygon(valid_polys)
 
     @classmethod
-    def fixSimplePolygon(
+    def fix_simple_polygon(
         cls, polygon: shapely.geometry.Polygon
     ) -> shapely.geometry.Polygon:
         """ """
@@ -528,7 +528,7 @@ class ShapelyUtils:
         return None
 
     @classmethod
-    def fixGenericPolygon(
+    def fix_generic_polygon(
         cls, polygon: shapely.geometry.Polygon
     ) -> shapely.geometry.Polygon:
         """
@@ -542,7 +542,7 @@ class ShapelyUtils:
 
         ext_poly = shapely.geometry.Polygon(exterior)
         if not ext_poly.is_valid:
-            ext_poly = cls.fixSimplePolygon(ext_poly)
+            ext_poly = cls.fix_simple_polygon(ext_poly)
 
         if not interiors:
             ext_linestring = shapely.geometry.LineString(ext_poly.exterior)
@@ -554,7 +554,7 @@ class ShapelyUtils:
                 int_poly = shapely.geometry.Polygon(interior)
 
                 if not int_poly.is_valid:
-                    int_poly = cls.fixSimplePolygon(int_poly)
+                    int_poly = cls.fix_simple_polygon(int_poly)
 
                 fixed_interiors.append(int_poly)
 
@@ -571,7 +571,7 @@ class ShapelyUtils:
         return fixed_poly
 
     @classmethod
-    def linearRingToLineString(
+    def linearring_to_linestring(
         cls, linearring: shapely.geometry.LinearRing
     ) -> shapely.geometry.LineString:
         """

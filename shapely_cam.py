@@ -26,6 +26,7 @@ from typing import Tuple
 
 import numpy as np
 import matplotlib.pyplot as plt
+from shapely_svgpath_io import SvgPath
 
 from val_with_unit import ValWithUnit
 
@@ -87,7 +88,7 @@ class cam:
 
         for point in multipoint.geoms:
             pt = point.coords[0]
-           
+
             camPath = CamPath(shapely.geometry.Point(pt), False)
             camPaths.append(camPath)
 
@@ -179,7 +180,7 @@ class cam:
         overlap is in the  range [0, 1).
         """
         # use lines, not polygons
-        multiline = ShapelyUtils.multiPolyToMultiLine(geometry)
+        multiline = ShapelyUtils.multipoly_exteriors_to_multiline(geometry)
 
         currentWidth = cutter_dia
         allPaths: List[shapely.geometry.LineString] = []
@@ -187,8 +188,8 @@ class cam:
 
         if is_inside:
             # because we always start from the outer ring -> we go "inside"
-            current = ShapelyUtils.offsetMultiLine(multiline, cutter_dia / 2, "left")
-            offset = ShapelyUtils.offsetMultiLine(
+            current = ShapelyUtils.offset_multiline(multiline, cutter_dia / 2, "left")
+            offset = ShapelyUtils.offset_multiline(
                 multiline, width - cutter_dia / 2, "left"
             )
             # bounds = ShapelyUtils.diff(current, offset)
@@ -201,20 +202,20 @@ class cam:
 
             if direction == "inner2outer":
                 # because we always start from the inner ring -> we go "outside"
-                current = ShapelyUtils.offsetMultiLine(
+                current = ShapelyUtils.offset_multiline(
                     multiline, cutter_dia / 2, "right"
                 )
-                offset = ShapelyUtils.offsetMultiLine(
+                offset = ShapelyUtils.offset_multiline(
                     multiline, width - cutter_dia / 2, "right"
                 )
                 # bounds = ShapelyUtils.diff(current, offset)
                 bounds = current
             else:
                 # because we always start from the outer ring -> we go "inside"
-                current = ShapelyUtils.offsetMultiLine(
+                current = ShapelyUtils.offset_multiline(
                     multiline, cutter_dia / 2, "left"
                 )
-                offset = ShapelyUtils.offsetMultiLine(
+                offset = ShapelyUtils.offset_multiline(
                     multiline, width - cutter_dia / 2, "left"
                 )
                 # bounds = ShapelyUtils.diff(current, offset)
@@ -248,9 +249,9 @@ class cam:
                 # >>> XAM fix
                 last_delta = width - currentWidth
                 # <<< XAM fix
-                current = ShapelyUtils.offsetMultiLine(current, last_delta, "left")
+                current = ShapelyUtils.offset_multiline(current, last_delta, "left")
                 if current:
-                    current = ShapelyUtils.simplifyMultiLine(current, 0.01)
+                    current = ShapelyUtils.simplify_multiline(current, 0.01)
 
                 if current:
                     if needReverse:
@@ -275,11 +276,11 @@ class cam:
             if not current:
                 break
 
-            current = ShapelyUtils.offsetMultiLine(
+            current = ShapelyUtils.offset_multiline(
                 current, eachOffset, "left", resolution=16
             )
             if current:
-                current = ShapelyUtils.simplifyMultiLine(current, 0.01)
+                current = ShapelyUtils.simplify_multiline(current, 0.01)
                 print("--- next toolpath")
             else:
                 break
@@ -289,7 +290,7 @@ class cam:
             return []
 
         # merge_paths need MultiPolygon
-        bounds = ShapelyUtils.multiLineToMultiPoly(bounds)
+        bounds = ShapelyUtils.multiline_to_multipoly(bounds)
 
         return cls.merge_paths(bounds, allPaths)
 
@@ -320,8 +321,8 @@ class cam:
 
         if is_inside:
             # because we always start from the outer ring -> we go "inside"
-            current = ShapelyUtils.offsetMultiLine(multiline, 0.0, "left")
-            offset = ShapelyUtils.offsetMultiLine(multiline, width - 0.0, "left")
+            current = ShapelyUtils.offset_multiline(multiline, 0.0, "left")
+            offset = ShapelyUtils.offset_multiline(multiline, width - 0.0, "left")
             # bounds = ShapelyUtils.diff(current, offset)
             bounds = current
             eachOffset = eachWidth
@@ -332,14 +333,14 @@ class cam:
 
             if direction == "inner2outer":
                 # because we always start from the inner ring -> we go "outside"
-                current = ShapelyUtils.offsetMultiLine(multiline, 0.0, "right")
-                offset = ShapelyUtils.offsetMultiLine(multiline, width - 0.0, "right")
+                current = ShapelyUtils.offset_multiline(multiline, 0.0, "right")
+                offset = ShapelyUtils.offset_multiline(multiline, width - 0.0, "right")
                 # bounds = ShapelyUtils.diff(current, offset)
                 bounds = current
             else:
                 # because we always start from the outer ring -> we go "inside"
-                current = ShapelyUtils.offsetMultiLine(multiline, 0.0, "left")
-                offset = ShapelyUtils.offsetMultiLine(multiline, width - 0.0, "left")
+                current = ShapelyUtils.offset_multiline(multiline, 0.0, "left")
+                offset = ShapelyUtils.offset_multiline(multiline, width - 0.0, "left")
                 # bounds = ShapelyUtils.diff(current, offset)
                 bounds = current
 
@@ -371,9 +372,9 @@ class cam:
                 # >>> XAM fix
                 last_delta = width - currentWidth
                 # <<< XAM fix
-                current = ShapelyUtils.offsetMultiLine(current, last_delta, "left")
+                current = ShapelyUtils.offset_multiline(current, last_delta, "left")
                 if current:
-                    current = ShapelyUtils.simplifyMultiLine(current, 0.01)
+                    current = ShapelyUtils.simplify_multiline(current, 0.01)
 
                 if current:
                     if needReverse:
@@ -398,11 +399,11 @@ class cam:
             if not current:
                 break
 
-            current = ShapelyUtils.offsetMultiLine(
+            current = ShapelyUtils.offset_multiline(
                 current, eachOffset, "left", resolution=16
             )
             if current:
-                current = ShapelyUtils.simplifyMultiLine(current, 0.01)
+                current = ShapelyUtils.simplify_multiline(current, 0.01)
                 print("--- next toolpath")
             else:
                 break
@@ -426,8 +427,8 @@ class cam:
         Returns array of CamPath.
         """
         # use lines, not polygons
-        multiline_ext = ShapelyUtils.multiPolyToMultiLine(geometry)
-        multiline_int = ShapelyUtils.multiPolyIntToMultiLine(geometry)
+        multiline_ext = ShapelyUtils.multipoly_exteriors_to_multiline(geometry)
+        multiline_int = ShapelyUtils.multipoly_interiors_to_multiline(geometry)
 
         full_line = shapely.ops.linemerge(
             list(multiline_ext.geoms) + list(multiline_int.geoms)
@@ -487,7 +488,7 @@ class cam:
         else:
             bounds = shapely.geometry.MultiPolygon()
 
-        ext_lines = ShapelyUtils.multiPolyToMultiLine(bounds)
+        ext_lines = ShapelyUtils.multipoly_exteriors_to_multiline(bounds)
         int_polys = []
         for poly in bounds.geoms:
             if poly.interiors:
@@ -1233,12 +1234,12 @@ class PocketCalculator:
         main algo - build self.cam_paths
         """
         # use polygons exteriors lines - offset them and and diff with the offseted interiors if any
-        multipoly = ShapelyUtils.orientMultiPolygon(self.multipoly)
+        multipoly = ShapelyUtils.orient_multipolygon(self.multipoly)
 
         # cnt = MatplotLibUtils.display("multipoly pocket init", multipoly, force=True)
 
         # the exterior
-        current = self.offsetMultiPolygon(
+        current = self.offset_multipolygon(
             multipoly, self.cutter_dia / 2, "left", consider_interiors_offsets=True
         )
 
@@ -1278,9 +1279,9 @@ class PocketCalculator:
             material_cut = shapely.ops.unary_union([cuts])
             remaining_poly = current   : current.covered_by(material_cut)
             """
-            exteriors = ShapelyUtils.multiPolyToMultiLine(current)
+            exteriors = ShapelyUtils.multipoly_exteriors_to_multiline(current)
 
-            self.collectPaths(exteriors)
+            self.collect_paths(exteriors)
 
             # -------------------------------------------- break ?
             if True:
@@ -1295,7 +1296,7 @@ class PocketCalculator:
                     break
             # ------------------------------------------- break ?
 
-            current = self.offsetMultiPolygon(
+            current = self.offset_multipolygon(
                 current,
                 self.cutter_dia * (1 - self.overlap),
                 "left",
@@ -1320,22 +1321,22 @@ class PocketCalculator:
 
             if not current:
                 break
-            current = ShapelyUtils.simplifyMultiPoly(current, 0.001)
+            current = ShapelyUtils.simplify_multipoly(current, 0.001)
             if not current:
                 break
-            current = ShapelyUtils.orientMultiPolygon(current)
+            current = ShapelyUtils.orient_multipolygon(current)
 
         # last: make beautiful interiors, only 1 step
-        interiors = self.offsetMultiPolygonInteriors(
+        interiors = self.offset_multipolygon_interiors(
             multipoly, self.cutter_dia / 2, "left", consider_exteriors_offsets=True
         )
-        interiors_offsets = ShapelyUtils.multiPolyToMultiLine(interiors)
-        self.collectPaths(interiors_offsets)
+        interiors_offsets = ShapelyUtils.multipoly_exteriors_to_multiline(interiors)
+        self.collect_paths(interiors_offsets)
         # - done !
 
         self.merge_paths(bounds, self.all_paths)
 
-    def offsetMultiPolygon(
+    def offset_multipolygon(
         self,
         multipoly: shapely.geometry.MultiPolygon,
         amount: float,
@@ -1355,7 +1356,7 @@ class PocketCalculator:
             self.mitre_limit,
         )
 
-    def offsetMultiPolygonInteriors(
+    def offset_multipolygon_interiors(
         self,
         multipoly: shapely.geometry.MultiPolygon,
         amount: float,
@@ -1375,7 +1376,7 @@ class PocketCalculator:
             self.mitre_limit,
         )
 
-    def collectPaths(self, multiline: shapely.geometry.MultiLineString):
+    def collect_paths(self, multiline: shapely.geometry.MultiLineString):
         """ """
         lines_ok = []
 
@@ -1400,7 +1401,7 @@ class PocketCalculator:
         else:
             bounds = shapely.geometry.MultiPolygon()
 
-        ext_lines = ShapelyUtils.multiPolyToMultiLine(bounds)
+        ext_lines = ShapelyUtils.multipoly_exteriors_to_multiline(bounds)
         int_polys = []
         for poly in bounds.geoms:
             if poly.interiors:
@@ -1521,7 +1522,7 @@ class SpiralePocketCalculator:
         svgpath = self.svgpaths[0]
 
         shape = svgpath.shape_tag
-        
+
         if shape == "circle":
             spirale = SpiralePocketCalculator.Circle(self)
             self.pts = spirale.calc()
@@ -1541,14 +1542,14 @@ class SpiralePocketCalculator:
             """ """
             self.svgpath = svgpath = pocket.svgpaths[0]
 
-            if svgpath.shape_tag == 'circle':
+            if svgpath.shape_tag == "circle":
                 r = float(svgpath.shape_attrs.get("r"))
                 self.pocket_radius = r
 
                 cx = float(svgpath.shape_attrs.get("cx"))
                 cy = float(svgpath.shape_attrs.get("cy"))
                 self.center = [cx, cy]
-            elif svgpath.shape_tag == 'ellipse':
+            elif svgpath.shape_tag == "ellipse":
                 rx = float(svgpath.shape_attrs.get("rx"))
                 ry = float(svgpath.shape_attrs.get("ry"))
                 self.pocket_radius = min(rx, ry)
@@ -1556,7 +1557,7 @@ class SpiralePocketCalculator:
                 cx = float(svgpath.shape_attrs.get("cx"))
                 cy = float(svgpath.shape_attrs.get("cy"))
                 self.center = [cx, cy]
-            elif svgpath.shape_tag == 'rect':
+            elif svgpath.shape_tag == "rect":
                 w = float(svgpath.shape_attrs.get("width"))
                 h = float(svgpath.shape_attrs.get("height"))
                 self.pocket_radius = min(w, h) / 2.0
@@ -1564,7 +1565,7 @@ class SpiralePocketCalculator:
                 x = float(svgpath.shape_attrs.get("x"))
                 y = float(svgpath.shape_attrs.get("y"))
 
-                self.center = [x + w/2, y + h/2]
+                self.center = [x + w / 2, y + h / 2]
             else:
                 self.pocket_radius = 20.0  # FIXME - get it from the geometry
                 self.center = [0.0, 0.0]
@@ -1576,24 +1577,22 @@ class SpiralePocketCalculator:
 
             overlap = self.pocket.overlap
 
-            self.cut_arm_size = (
-                self.pocket.cutter_dia / 2.0 * (1.0 - overlap)
-            )
+            self.cut_arm_size = self.pocket.cutter_dia / 2.0 * (1.0 - overlap)
 
-            if svgpath.shape_tag == 'ellipse':
+            if svgpath.shape_tag == "ellipse":
                 rx = float(svgpath.shape_attrs.get("rx"))
                 ry = float(svgpath.shape_attrs.get("ry"))
 
-                coeff = max(rx/ry, ry/rx)
+                coeff = max(rx / ry, ry / rx)
 
                 self.cut_arm_size /= coeff
 
-            if svgpath.shape_tag == 'rect':
+            if svgpath.shape_tag == "rect":
                 w = float(svgpath.shape_attrs.get("width"))
                 h = float(svgpath.shape_attrs.get("height"))
 
-                coeff = max(w/h, h/w)
-                
+                coeff = max(w / h, h / w)
+
                 self.cut_arm_size /= coeff
 
             print("SPIRALE: CUT_SIZE = ", self.cut_arm_size)
@@ -1707,10 +1706,10 @@ class SpiralePocketCalculator:
 
             x = float(self.svgpath.shape_attrs.get("x"))
             y = float(self.svgpath.shape_attrs.get("y"))
-            
+
             r = min(w, h) / 2.0
 
-            center = [x + w/2, y + h/2]
+            center = [x + w / 2, y + h / 2]
 
             self.tx = center[0]
             self.ty = center[1]
@@ -1721,21 +1720,58 @@ class SpiralePocketCalculator:
             print("CENTER", self.tx, self.ty)
             print("SCALE", r, self.scale_x, self.scale_y)
 
+            self.c1 = 0.0
+            self.c2 = 1.0
+
         def calc(self):
             pts = super().calc()
-        
-            # TODO - better mapping 'cos not good at the border of the square
-            
-            rectangle_pts =  [(
-                self.to_square_x(x, y), 
-                self.to_square_y(x, y)) for (x, y) in pts ]
 
-            # last perfect contour 
+            # TODO - better mapping 'cos not good at the border of the square
+
+            rectangle_pts = [
+                (self.to_square_x(x, y), self.to_square_y(x, y)) for (x, y) in pts
+            ]
+
             w = float(self.svgpath.shape_attrs.get("width"))
             h = float(self.svgpath.shape_attrs.get("height"))
 
             x = float(self.svgpath.shape_attrs.get("x"))
             y = float(self.svgpath.shape_attrs.get("y"))
+
+            diameter = self.pocket.cutter_dia
+
+            centers = [
+                [x + w - diameter, y + h - diameter],
+                [x + diameter, y + h - diameter],
+                [x + diameter, y + diameter],
+                [x + w - diameter, y + diameter],
+            ]
+
+            rectangle_pts += [[x + w - diameter, y + h/2]]
+
+
+            for k, center in enumerate(centers):
+                c = SvgPath.from_circle_def(
+                    center,
+                    self.pocket.cutter_dia,
+                )
+                c.import_svgpath()
+                c_svgpaths = [c]
+                c_multipoly = shapely.geometry.MultiPolygon(c.polys)
+                spirale = SpiralePocketCalculator(
+                    c_svgpaths,
+                    c_multipoly,
+                    self.pocket.cutter_dia,
+                    self.pocket.overlap,
+                    self.pocket.climb,
+                )
+                spirale.pocket()
+
+                rectangle_pts += [center]
+                rectangle_pts += spirale.pts
+                rectangle_pts += [center]
+
+            # last perfect contour
 
             """
             *----------------*
@@ -1747,23 +1783,23 @@ class SpiralePocketCalculator:
             dw = w / 2 - self.pocket.cutter_dia / 2.0
             dh = h / 2 - self.pocket.cutter_dia / 2.0
 
-            pt0 = [self.center[0] + dw, self.center[1] ]
+            pt0 = [self.center[0] + dw, self.center[1]]
             pt1 = [self.center[0] + dw, self.center[1] + dh]
             pt2 = [self.center[0] - dw, self.center[1] + dh]
             pt3 = [self.center[0] - dw, self.center[1] - dh]
             pt4 = [self.center[0] + dw, self.center[1] - dh]
-            pt5 = [self.center[0] + dw, self.center[1] ]
+            pt5 = [self.center[0] + dw, self.center[1]]
 
-            contours_pts =  [pt0, pt1, pt2, pt3, pt4, pt5 ]
-            
+            contours_pts = [pt0, pt1, pt2, pt3, pt4, pt5]
+
             rectangle_pts += contours_pts
 
             return rectangle_pts
 
         def normalize(self, u, v):
             return [
-                (u - self.tx)  / self.pocket_radius,
-                (v - self.ty ) / self.pocket_radius,
+                (u - self.tx) / self.pocket_radius,
+                (v - self.ty) / self.pocket_radius,
             ]
 
         def to_square_x(self, u, v):
@@ -1778,20 +1814,43 @@ class SpiralePocketCalculator:
             uu = u * u
             vv = v * v
 
+            sgn_u = 0.0 if u == 0.0 else (1 if u > 0 else -1)
+            sgn_v = 0.0 if v == 0.0 else (1 if v > 0 else -1)
+
+            # stretch method
+            if u == 0.0 and v == 0.0:
+                x = 0
+
+            if uu >= vv:
+                x = sgn_u * sqrt(uu + vv)
+            else:
+                if v == 0.0:
+                    x = 0.0
+                else:
+                    x = sgn_v * sqrt(uu + vv) * u / v
+
+            x1 = x
+
+            # ellipse method
             a = 2 + uu - vv + 2 * u * sqrt(2)
             b = 2 + uu - vv - 2 * u * sqrt(2)
 
             a = a if a > 0.0 else 0.0
             b = b if b > 0.0 else 0.0
- 
+
             x = 0.5 * sqrt(a) - 0.5 * sqrt(b)
+
+            x2 = x
+
+            # the middle of the two
+            x = (self.c1 * x1 + self.c2 * x2) / (self.c1 + self.c2)
 
             return self.tx + self.scale_x * x
 
         def to_square_y(self, u, v):
             """
             from unit circle to unit square
-            
+
             x = ½ √( 2 + u² - v² + 2u√2 ) - ½ √( 2 + u² - v² - 2u√2 )
             y = ½ √( 2 - u² + v² + 2v√2 ) - ½ √( 2 - u² + v² - 2v√2 )
             """
@@ -1800,6 +1859,24 @@ class SpiralePocketCalculator:
             uu = u * u
             vv = v * v
 
+            sgn_u = 0.0 if u == 0.0 else (1 if u > 0 else -1)
+            sgn_v = 0.0 if v == 0.0 else (1 if v > 0 else -1)
+
+            # stretch method
+            if u == 0.0 and v == 0.0:
+                x = 0.0
+
+            if uu >= vv:
+                if u == 0.0:
+                    y = 0.0
+                else:
+                    y = sgn_u * sqrt(uu + vv) * v / u
+            else:
+                y = sgn_v * sqrt(uu + vv)
+
+            y1 = y
+
+            # ellipse method
             a = 2 - uu + vv + 2 * v * sqrt(2)
             b = 2 - uu + vv - 2 * v * sqrt(2)
 
@@ -1808,7 +1885,12 @@ class SpiralePocketCalculator:
 
             y = 0.5 * sqrt(a) - 0.5 * sqrt(b)
 
-            return self.ty + self.scale_y *  y
+            y2 = y
+
+            # the  middle of the two
+            y = (self.c1 * y1 + self.c2 * y2) / (self.c1 + self.c2)
+
+            return self.ty + self.scale_y * y
 
     class Ellipse(Circle):
         def __init__(self, pocket: "SpiralePocketCalculator"):
@@ -1819,7 +1901,7 @@ class SpiralePocketCalculator:
 
             rx = float(self.svgpath.shape_attrs.get("rx"))
             ry = float(self.svgpath.shape_attrs.get("ry"))
-            
+
             r = min(rx, ry)
 
             self.tx = cx
@@ -1831,9 +1913,12 @@ class SpiralePocketCalculator:
         def calc(self):
             pts = super().calc()
 
-            ellipse_pts =  [
-                ( self.tx + (x - self.tx) * self.scale_x, 
-                  self.ty + (y - self.ty) * self.scale_y) for (x,y) in pts
+            ellipse_pts = [
+                (
+                    self.tx + (x - self.tx) * self.scale_x,
+                    self.ty + (y - self.ty) * self.scale_y,
+                )
+                for (x, y) in pts
             ]
 
             # TODO last "inner ellipse perfect at the distance from the border"

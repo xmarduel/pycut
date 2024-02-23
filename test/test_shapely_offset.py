@@ -596,7 +596,7 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
         # with open("polyext_orient.txt", "w") as f:
         #    f.write(poly_ext.wkt)
 
-        linestring = ShapelyUtils.linearRingToLineString(poly_ext)
+        linestring = ShapelyUtils.linearring_to_linestring(poly_ext)
 
         self.assertEqual(len(linestring.coords), 2653)
 

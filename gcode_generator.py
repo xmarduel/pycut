@@ -510,7 +510,7 @@ class CncOp:
             margin = self.margin.to_mm()
 
             if margin != 0:
-                self.preview_geometry = ShapelyUtils.offsetMultiLine(
+                self.preview_geometry = ShapelyUtils.offset_multiline(
                     self.geometry, margin, "left"
                 )
             else:
@@ -535,7 +535,7 @@ class CncOp:
             margin = self.margin.to_mm()
 
             if margin != 0:
-                self.preview_geometry = ShapelyUtils.offsetMultiLine(
+                self.preview_geometry = ShapelyUtils.offset_multiline(
                     self.geometry, margin, "right"
                 )
             else:
@@ -619,14 +619,14 @@ class CncOp:
             offset = self.margin.to_mm()
 
             # 'left' in 'inside', and 'right' is 'outside'
-            self.geometry = ShapelyUtils.orientMultiPolygon(self.geometry)
-            self.preview_geometry = ShapelyUtils.offsetMultiPolygon(
+            self.geometry = ShapelyUtils.orient_multipolygon(self.geometry)
+            self.preview_geometry = ShapelyUtils.offset_multipolygon(
                 self.geometry, offset, "left", consider_interiors_offsets=True
             )
 
             cnt = MatplotLibUtils.display("preview pocket", self.preview_geometry)
 
-            self.preview_geometry = ShapelyUtils.orientMultiPolygon(
+            self.preview_geometry = ShapelyUtils.orient_multipolygon(
                 self.preview_geometry
             )
 
@@ -655,13 +655,13 @@ class CncOp:
                 width = toolData["diameterTool"]
 
             if margin != 0:
-                geometry = ShapelyUtils.offsetMultiPolygon(
+                geometry = ShapelyUtils.offset_multipolygon(
                     self.geometry, margin, "left"
                 )
             else:
                 geometry = self.geometry
 
-            innergeometry = ShapelyUtils.offsetMultiPolygon(geometry, width, "left")
+            innergeometry = ShapelyUtils.offset_multipolygon(geometry, width, "left")
             self.preview_geometry = geometry.difference(innergeometry)
 
             if self.preview_geometry.geom_type == "Polygon":
@@ -693,7 +693,7 @@ class CncOp:
             margin_plus_width = margin + width
 
             # 'right' in 'inside', and 'left' is 'outside'  hopefully
-            geometry_outer = ShapelyUtils.offsetMultiPolygon(
+            geometry_outer = ShapelyUtils.offset_multipolygon(
                 self.geometry,
                 margin_plus_width,
                 "right",
@@ -701,7 +701,7 @@ class CncOp:
                 join_style=1,
                 mitre_limit=5,
             )
-            geometry_inner = ShapelyUtils.offsetMultiPolygon(
+            geometry_inner = ShapelyUtils.offset_multipolygon(
                 self.geometry,
                 margin,
                 "right",
@@ -781,13 +781,13 @@ class CncOp:
                 geometry,
                 toolData["diameterTool"],
                 toolData["overlap"],
-                direction == "Climb"
+                direction == "Climb",
             )
         else:
             if self.geometry.geom_type == "MultiPolygon":
                 if cam_op != "Engrave":
                     # 'left' for Inside OR pocket, 'right' for Outside
-                    geometry = ShapelyUtils.offsetMultiPolygon(
+                    geometry = ShapelyUtils.offset_multipolygon(
                         geometry,
                         offset,
                         "right" if cam_op == "Outside" else "left",
