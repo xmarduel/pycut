@@ -103,7 +103,7 @@ will shortly point out what has to be taken into consideration when creating "us
 
 <h3 id="P-01-01">SVG Documents</h3>
 
-<p><strong>PyCut</strong>, in order to work acurately, need the SVG document to define its standart
+<p><strong>PyCut</strong>, in order to work acurately, need the SVG document to define its standard
 <strong>width</strong> and <strong>height</strong> with units "<strong>mm</strong>" or
 "<strong>in</strong>". The <strong>viewbox</strong> needs to be defined as well. More on this
 later.</p>
@@ -628,7 +628,7 @@ be used to send the G code to your machine. Have fun...</p>
 
 <h2 id="P-05">Pockets Tips</h2>
 
-<p>The standart pocket algorithm is the so-called "<strong>contour</strong>" algorithm. Starting
+<p>The standard pocket algorithm is the so-called "<strong>contour</strong>" algorithm. Starting
 from the outside, offset curves are generated one after the other until the whole pocket "space" is
 processed. At the end, ordering of the offsets is reversed, thus starting from the middle of the
 pocket.</p>
@@ -662,7 +662,7 @@ pockets)</p>
 
 <p>The cutter diameter plays of course a role. The helix's center will be the <strong>center of the
 (closed) shape</strong>. Considering the case where the center of the helix is [0,0], <strong>on
-which "orbit" will move the cutter</strong>? Well we specify it with the standart
+which "orbit" will move the cutter</strong>? Well we specify it with the standard
 "<strong>width</strong>" operation attribute, which needs to be at least equal or larger than the
 cutter diameter. A good value would be 1.5 * cutter_diameter. With this value, there is an overlap
 of 0.5 (ratio). A value of 1 generates an hole of diameter the cutter diameter. A value of 2 *
@@ -812,7 +812,7 @@ proposed method:</p>
 <p>Here we suppose the cutter radius is 3mm. We wish to mill an inner square hole, so the "convex
 angle" corner problem occurs. We have 2 (or more!) strategies to allow a perfect square to fit in
 the milled hole. Strategy "1" in shown on the left, strategy "2" on the right: the extra tool path
-is displayed as well as the cutter at the end of the extra tool path (and the standart cutter
+is displayed as well as the cutter at the end of the extra tool path (and the standard cutter
 position at the toolpath corner).</p>
 <svg width="200mm" height="80mm" viewBox="0 0 200 80" version="1.1">
   <g id="layer1">

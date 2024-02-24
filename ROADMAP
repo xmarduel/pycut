@@ -16,5 +16,4 @@ Process defs/use and transformations in svg (ie resolve them) without converting
 with shapely 2.1.0  (geos 3.12 offsets fixes)
 
 Clean clean clean
-Refactor refactor refactor
 

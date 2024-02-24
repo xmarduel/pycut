@@ -6,6 +6,8 @@
     "configurations": [
 
 
+
+
         {
             "name": "SVG RESOLVER",
             "type": "python",
@@ -97,7 +99,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": []
+            "args": ["-j", "Helix.json"]
         },
         {
             "name": "PYCUT HOLDER",
@@ -268,6 +270,15 @@
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\test",
             "args": []
+        },
+        {
+            "name": "PYCUT LOAD GCODE",
+            "type": "python",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": ["-g", "misc_private\\gcode.nc"]
         },
     ]
 }

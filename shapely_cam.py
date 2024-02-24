@@ -1747,8 +1747,7 @@ class SpiralePocketCalculator:
                 [x + w - diameter, y + diameter],
             ]
 
-            rectangle_pts += [[x + w - diameter, y + h/2]]
-
+            rectangle_pts += [[x + w - diameter, y + h / 2.0]]
 
             for k, center in enumerate(centers):
                 c = SvgPath.from_circle_def(
@@ -1904,13 +1903,17 @@ class SpiralePocketCalculator:
 
             r = min(rx, ry)
 
+            # cutter trajectory is on the "inner circle"
+            r -= self.pocket.cutter_dia / 2.0
+
             self.tx = cx
             self.ty = cy
 
-            self.scale_x = rx / r
-            self.scale_y = ry / r
+            self.scale_x = (rx - self.pocket.cutter_dia / 2.0) / r
+            self.scale_y = (ry - self.pocket.cutter_dia / 2.0) / r
 
         def calc(self):
+            """just stretch"""
             pts = super().calc()
 
             ellipse_pts = [
@@ -1920,7 +1923,5 @@ class SpiralePocketCalculator:
                 )
                 for (x, y) in pts
             ]
-
-            # TODO last "inner ellipse perfect at the distance from the border"
 
             return ellipse_pts
