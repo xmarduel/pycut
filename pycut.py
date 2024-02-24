@@ -282,6 +282,19 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
                 msgBox.exec()
 
+        self.menubarToggleLeftBottomSidesButton = QtGui.QAction(
+            QtGui.QIcon(":/images/left-bottom-areas.png"),
+            "hide/show",
+            self,
+            shortcut=QtGui.QKeySequence.Back,
+            statusTip="Show/Hide Left/Bottom Sides",
+            triggered=self.toggle_left_bottom_sides,
+        )
+        self.menubarToggleLeftBottomSidesButton.setCheckable(True)
+        self.menubarToggleLeftBottomSidesButton.setToolTip(
+            "Show/Hide Left/Bottom Sides View"
+        )
+
         self.menubarToggleLeftSideButton = QtGui.QAction(
             QtGui.QIcon(":/images/left-area.png"),
             "hide/show",
@@ -321,6 +334,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "Show/Hide Right Side View"
         )  # still not shown
 
+        self.menuBar().addAction(self.menubarToggleLeftBottomSidesButton)
         self.menuBar().addAction(self.menubarToggleLeftSideButton)
         self.menuBar().addAction(self.menubarToggleMiddleAreaButton)
         self.menuBar().addAction(self.menubarToggleRightSideButton)
@@ -405,6 +419,15 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.svg_viewer.set_settings_geometry_preview_custom_color_reset()
             self.menubarGeometryPreviewBlueColorButton.setIcon(QtGui.QIcon(":images/media-record-blue.png"))
     """
+
+    def toggle_left_bottom_sides(self):
+        """ """
+        if self.menubarToggleLeftBottomSidesButton.isChecked():
+            self.ui.scrollArea_left.hide()
+            self.ui.operationsview_manager.hide()
+        else:
+            self.ui.scrollArea_left.show()
+            self.ui.operationsview_manager.show()
 
     def toggle_left_side(self):
         """ """
@@ -1589,7 +1612,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             settings["Tool"]["plunge"], tool_model.units
         )
         tool_model.cutRate = ValWithUnit(settings["Tool"]["cut"], tool_model.units)
-        tool_model.helixRevolutionDepth = ValWithUnit(settings["Tool"]["helix_revolution_depth"], tool_model.units)
+        tool_model.helixRevolutionDepth = ValWithUnit(
+            settings["Tool"]["helix_revolution_depth"], tool_model.units
+        )
 
         tabsmodel = TabsModel([tab for tab in self.tabs if tab["enabled"] == True])
         tabsmodel.units = settings["Tabs"]["units"]
