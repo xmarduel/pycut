@@ -1956,6 +1956,8 @@ class SimulationControls(QtWidgets.QWidget):
             self, 0, self.slider_end
         )
 
+        self.control.spinBox_SpeedFactor.setValue(200)
+
         self.control.horizontalSlider_Position.setValue(self.slider_end)
 
         # signal
