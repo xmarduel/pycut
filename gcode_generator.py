@@ -166,21 +166,21 @@ class MaterialModel:
         self.size_y = y.to_mm()
 
     @property
-    def matBotZ(self):
+    def mat_bot_z(self):
         if self.mat_z_origin == "Bottom":
             return 0
         else:
             return -self.mat_thickness
 
     @property
-    def matTopZ(self):
+    def mat_tot_z(self):
         if self.mat_z_origin == "Top":
             return ValWithUnit(0, self.mat_units)
         else:
             return self.mat_thickness
 
     @property
-    def matZSafeMove(self):
+    def mat_z_safe_move(self):
         if self.mat_z_origin == "Top":
             return self.mat_clearance
         else:
@@ -986,51 +986,51 @@ class GcodeGenerator:
             # as flipped: is maxX when "no flip"
             return self.unit_converter.from_mm(self.job.maxX) + self.offsetX
 
-    def generateGcode(self):
+    def generate_gcode(self):
         if self.gcode_model.gcodeZero == GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL:
-            self.generateGcode_zeroTopLeftOfMaterial()
+            self.generate_gcode_zero_topfeft_of_material()
         elif self.gcode_model.gcodeZero == GcodeModel.ZERO_LOWER_LEFT_OF_MATERIAL:
-            self.generateGcode_zeroLowerLeftOfMaterial()
+            self.generate_gcode_zero_lowerleft_of_material()
         elif self.gcode_model.gcodeZero == GcodeModel.ZERO_LOWER_LEFT_OF_OP:
-            self.generateGcode_zeroLowerLeftOfOp()
+            self.generate_gcode_zero_lowerfeft_of_op()
         elif self.gcode_model.gcodeZero == GcodeModel.ZERO_CENTER_OF_OP:
-            self.generateGcode_zeroCenterOfOp()
+            self.generate_gcode_zero_center_of_op()
 
-    def generateGcode_zeroTopLeftOfMaterial(self):
+    def generate_gcode_zero_topfeft_of_material(self):
         self.offsetX = self.unit_converter.from_mm(0)
         self.offsetY = self.unit_converter.from_mm(0)
-        self.generateGcodeAction()
+        self.generate_gcode_action()
 
-    def generateGcode_zeroLowerLeftOfMaterial(self):
+    def generate_gcode_zero_lowerleft_of_material(self):
         self.offsetX = self.unit_converter.from_mm(0)
         self.offsetY = self.unit_converter.from_mm(self.material_model.size_y)
-        self.generateGcodeAction()
+        self.generate_gcode_action()
 
-    def generateGcode_zeroLowerLeftOfOp(self):
+    def generate_gcode_zero_lowerfeft_of_op(self):
         self.offsetX = -self.unit_converter.from_mm(self.job.minX)
         self.offsetY = -self.unit_converter.from_mm(-self.job.maxY)
-        self.generateGcodeAction()
+        self.generate_gcode_action()
 
-    def generateGcode_zeroCenterOfOp(self):
+    def generate_gcode_zero_center_of_op(self):
         self.offsetX = -self.unit_converter.from_mm((self.job.minX + self.job.maxX) / 2)
         self.offsetY = -self.unit_converter.from_mm(
             -(self.job.minY + self.job.maxY) / 2
         )
-        self.generateGcodeAction()
+        self.generate_gcode_action()
 
-    def setXOffset(self, value: float):
+    def set_x_offset(self, value: float):
         self.offsetX = value
-        self.generateGcodeAction()
+        self.generate_gcode_action()
 
-    def setYOffset(self, value: float):
+    def set_y_offset(self, value: float):
         self.offsetY = value
-        self.generateGcodeAction()
+        self.generate_gcode_action()
 
-    def setFlipXY(self, value: float):
+    def set_flip_xy(self, value: float):
         self.flipXY = value
-        self.generateGcodeAction()
+        self.generate_gcode_action()
 
-    def generateGcodeAction(self):
+    def generate_gcode_action(self):
         cnc_ops: List["CncOp"] = []
         for cnc_op in self.job.operations:
             if cnc_op.enabled:
@@ -1040,7 +1040,7 @@ class GcodeGenerator:
         if len(cnc_ops) == 0:
             return
 
-        safeZ = self.unit_converter.from_mm(self.material_model.matZSafeMove.to_mm())
+        safeZ = self.unit_converter.from_mm(self.material_model.mat_z_safe_move.to_mm())
         rapidRate = int(self.unit_converter.from_mm(self.tool_model.rapidRate.to_mm()))
         plungeRate = int(
             self.unit_converter.from_mm(self.tool_model.plungeRate.to_mm())
@@ -1051,7 +1051,7 @@ class GcodeGenerator:
         helixRevolutionDepth = self.unit_converter.from_mm(
             self.tool_model.helixRevolutionDepth.to_mm()
         )
-        topZ = self.unit_converter.from_mm(self.material_model.matTopZ.to_mm())
+        topZ = self.unit_converter.from_mm(self.material_model.mat_tot_z.to_mm())
         tabHeight = self.unit_converter.from_mm(self.tabs_model.height.to_mm())
         peckZ = self.unit_converter.from_mm(1.0)
 
@@ -1126,7 +1126,7 @@ class GcodeGenerator:
                 tabs = []
 
             gcode.extend(
-                cam.getGcode(
+                cam.get_gcode(
                     {
                         "optype": cnc_op.cam_op,
                         "paths": cnc_op.cam_paths,

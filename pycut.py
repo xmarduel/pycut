@@ -1189,12 +1189,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.label_Tool_Rapid_UnitsDescr.setText("inch/min")
             self.ui.label_Tool_Plunge_UnitsDescr.setText("inch/min")
             self.ui.label_Tool_Cut_UnitsDescr.setText("inch/min")
+            self.ui.label_Tool_HelixRevolutionDepth_UnitsDescr.setText("inch/min")
 
             self.ui.Tool_Diameter.setValue(self.ui.Tool_Diameter.value() / 25.4)
             self.ui.Tool_PassDepth.setValue(self.ui.Tool_PassDepth.value() / 25.4)
             self.ui.Tool_Rapid.setValue(self.ui.Tool_Rapid.value() / 25.4)
             self.ui.Tool_Plunge.setValue(self.ui.Tool_Plunge.value() / 25.4)
             self.ui.Tool_Cut.setValue(self.ui.Tool_Cut.value() / 25.4)
+            self.ui.Tool_HelixRevolutionDepth.setValue(
+                self.ui.Tool_HelixRevolutionDepth.value() / 25.4
+            )
 
         if tool_units == "mm":
             self.ui.label_Tool_Diameter_UnitsDescr.setText("mm")
@@ -1204,12 +1208,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.label_Tool_Rapid_UnitsDescr.setText("mm/min")
             self.ui.label_Tool_Plunge_UnitsDescr.setText("mm/min")
             self.ui.label_Tool_Cut_UnitsDescr.setText("mm/min")
+            self.ui.label_Tool_HelixRevolutionDepth_UnitsDescr.setText("mm/min")
 
             self.ui.Tool_Diameter.setValue(self.ui.Tool_Diameter.value() * 25.4)
             self.ui.Tool_PassDepth.setValue(self.ui.Tool_PassDepth.value() * 25.4)
             self.ui.Tool_Rapid.setValue(self.ui.Tool_Rapid.value() * 25.4)
             self.ui.Tool_Plunge.setValue(self.ui.Tool_Plunge.value() * 25.4)
             self.ui.Tool_Cut.setValue(self.ui.Tool_Cut.value() * 25.4)
+            self.ui.Tool_HelixRevolutionDepth.setValue(
+                self.ui.Tool_HelixRevolutionDepth.value() * 25.4
+            )
 
     def cb_update_material_display(self):
         """
@@ -1667,7 +1675,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             return
 
         generator = GcodeGenerator(job)
-        generator.generateGcode()
+        generator.generate_gcode()
 
         self.after_gcode_generation(generator)
 
@@ -1680,8 +1688,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             return
 
         generator = GcodeGenerator(job)
-        generator.setXOffset(self.ui.GCodeConversion_XOffset.value())
-        # generator.generateGcode()
+        generator.set_x_offset(self.ui.GCodeConversion_XOffset.value())
+        # generator.generate_gcode()
 
         self.after_gcode_generation(generator)
 
@@ -1694,8 +1702,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             return
 
         generator = GcodeGenerator(job)
-        generator.setYOffset(self.ui.GCodeConversion_YOffset.value())
-        # generator.generateGcode()
+        generator.set_y_offset(self.ui.GCodeConversion_YOffset.value())
+        # generator.generate_gcode()
 
         self.after_gcode_generation(generator)
 

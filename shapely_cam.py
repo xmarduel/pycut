@@ -589,10 +589,10 @@ class cam:
         return dx * dx + dy * dy
 
     @classmethod
-    def getGcode(cls, args) -> List[str]:
+    def get_gcode(cls, args) -> List[str]:
         """
-        Convert paths to gcode. getGcode() assumes that the current Z position is at safeZ.
-        getGcode()'s gcode returns Z to this position at the end.
+        Convert paths to gcode. the function assumes that the current Z position is at safeZ.
+        get_gcode()'s gcode returns Z to this position at the end.
         args must have:
           optype:         Type of Op.
           paths:          Array of CamPath
@@ -1438,7 +1438,7 @@ class PocketCalculator:
             closestPointDist = sys.maxsize
             for pathIndex, path in enumerate(paths):
                 for pointIndex, point in enumerate(path):
-                    dist = PocketCalculator.distP(currentPoint, point)
+                    dist = cam.distP(currentPoint, point)
                     if dist < closestPointDist:
                         closestPathIndex = pathIndex
                         closestPointIndex = pointIndex
@@ -1475,12 +1475,6 @@ class PocketCalculator:
             cam_paths.append(CamPath(shapely.geometry.LineString(path), safe_to_close))
 
         self.cam_paths = cam_paths
-
-    @staticmethod
-    def distP(p1: Tuple[int, int], p2: Tuple[int, int]) -> float:
-        dx = p2[0] - p1[0]
-        dy = p2[1] - p1[1]
-        return dx * dx + dy * dy
 
 
 class SpiralePocketCalculator:
@@ -1525,13 +1519,13 @@ class SpiralePocketCalculator:
 
         if shape == "circle":
             spirale = SpiralePocketCalculator.Circle(self)
-            self.pts = spirale.calc()
+            self.pts = spirale.calc_path()
         if shape == "ellipse":
             spirale = SpiralePocketCalculator.Ellipse(self)
-            self.pts = spirale.calc()
+            self.pts = spirale.calc_path()
         if shape == "rect":
             spirale = SpiralePocketCalculator.Rectangle(self)
-            self.pts = spirale.calc()
+            self.pts = spirale.calc_path()
 
         self.cam_paths = [CamPath(shapely.geometry.LineString(self.pts), True)]
 
@@ -1636,7 +1630,7 @@ class SpiralePocketCalculator:
             self.y = []
             self.z = []
 
-        def calc(self) -> List[Tuple]:
+        def calc_path(self) -> List[Tuple]:
             """
             Prepare arrays x, y
             """
@@ -1723,8 +1717,8 @@ class SpiralePocketCalculator:
             self.c1 = 0.0
             self.c2 = 1.0
 
-        def calc(self):
-            pts = super().calc()
+        def calc_path(self):
+            pts = super().calc_path()
 
             # TODO - better mapping 'cos not good at the border of the square
 
@@ -1912,9 +1906,9 @@ class SpiralePocketCalculator:
             self.scale_x = (rx - self.pocket.cutter_dia / 2.0) / r
             self.scale_y = (ry - self.pocket.cutter_dia / 2.0) / r
 
-        def calc(self):
+        def calc_path(self):
             """just stretch"""
-            pts = super().calc()
+            pts = super().calc_path()
 
             ellipse_pts = [
                 (

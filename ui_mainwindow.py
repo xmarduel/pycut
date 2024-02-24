@@ -61,7 +61,7 @@ class Ui_mainwindow(object):
         self.scrollArea_left.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 304, 995))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 318, 986))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSpacing(22)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -300,16 +300,16 @@ class Ui_mainwindow(object):
 
         self.gridLayout_Tool.addWidget(self.Tool_Diameter, 1, 2, 1, 1)
 
-        self.label_HelixRevolutionDepth = QLabel(self.scrollAreaWidgetContents)
-        self.label_HelixRevolutionDepth.setObjectName(u"label_HelixRevolutionDepth")
-        self.label_HelixRevolutionDepth.setFont(font1)
+        self.label_Tool_HelixRevolutionDepth = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_HelixRevolutionDepth.setObjectName(u"label_Tool_HelixRevolutionDepth")
+        self.label_Tool_HelixRevolutionDepth.setFont(font1)
 
-        self.gridLayout_Tool.addWidget(self.label_HelixRevolutionDepth, 8, 0, 1, 1)
+        self.gridLayout_Tool.addWidget(self.label_Tool_HelixRevolutionDepth, 8, 0, 1, 1)
 
-        self.label_HelixRevolutionDepth_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
-        self.label_HelixRevolutionDepth_UnitsDescr.setObjectName(u"label_HelixRevolutionDepth_UnitsDescr")
+        self.label_Tool_HelixRevolutionDepth_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_HelixRevolutionDepth_UnitsDescr.setObjectName(u"label_Tool_HelixRevolutionDepth_UnitsDescr")
 
-        self.gridLayout_Tool.addWidget(self.label_HelixRevolutionDepth_UnitsDescr, 8, 1, 1, 1)
+        self.gridLayout_Tool.addWidget(self.label_Tool_HelixRevolutionDepth_UnitsDescr, 8, 1, 1, 1)
 
         self.Tool_HelixRevolutionDepth = QDoubleSpinBox(self.scrollAreaWidgetContents)
         self.Tool_HelixRevolutionDepth.setObjectName(u"Tool_HelixRevolutionDepth")
@@ -454,7 +454,7 @@ class Ui_mainwindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tabsview_manager.sizePolicy().hasHeightForWidth())
         self.tabsview_manager.setSizePolicy(sizePolicy)
-        self.tabsview_manager.setMinimumSize(QSize(0, 200))
+        self.tabsview_manager.setMinimumSize(QSize(0, 180))
 
         self.verticalLayoutTabsContent.addWidget(self.tabsview_manager)
 
@@ -1035,8 +1035,8 @@ class Ui_mainwindow(object):
         self.label_Tool_Overlap_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_Tool_Rapid.setText(QCoreApplication.translate("mainwindow", u"Rapid", None))
         self.label_Tool_Overlap.setText(QCoreApplication.translate("mainwindow", u"Overlap", None))
-        self.label_HelixRevolutionDepth.setText(QCoreApplication.translate("mainwindow", u"Helix Revol. Depth  ", None))
-        self.label_HelixRevolutionDepth_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
+        self.label_Tool_HelixRevolutionDepth.setText(QCoreApplication.translate("mainwindow", u"Helix Revol. Depth  ", None))
+        self.label_Tool_HelixRevolutionDepth_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.labelCurveToLineConversion.setText(QCoreApplication.translate("mainwindow", u" Curve To Line Conversion", None))
         self.label_CurveToLineConversion_MinimumNbSegments.setText(QCoreApplication.translate("mainwindow", u"Minimum Segments", None))
         self.label_CurveToLineConversion_MinimumSegmentsLength.setText(QCoreApplication.translate("mainwindow", u"Minimum Segments Length", None))
