@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg version="1.1" width="220mm" height="220mm" viewBox="0 0 220 220" id="spirale" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+	<g id="root">
+	    <!--
+		<path  id="path"  stroke="black" stroke-width="0.1" fill="green" 
+	       d="M 0 10 H 55.7574 
+		           c 1.171 -1.171 3.068 -1.171 4.2426 0 
+				   c 1.171 1.171 1.171 3.068 0 4.2426 
+			  V 50 
+			  H 0 v -40 z"/>
+		-->
+		<path  id="path"  stroke="black" stroke-width="0.1" fill="green" 
+		  d="M 10 10  H 55.7574 
+		          c 1.171 -1.171 3.068 -1.171 4.2426 0 
+				  c 1.171 1.171 1.171 3.068 0 4.2426 
+		    V 45.7574 
+		          c  1.171 1.171 1.171  3.068 0  4.2426 
+				  c -1.171 1.171 -3.068 1.171 -4.2426 0 
+		    H 4.2426 
+			      c -1.171  1.171 -3.068  1.171 -4.2426 0 
+				  c -1.171 -1.171 -1.171 -3.068  0 -4.2426 
+		    V 14.2426 
+                  c -1.171 -1.171 -1.171 -3.068 0 -4.2426 
+                  c  1.171 -1.171  3.068 -1.171 4.2426 0
+			Z"/>
+		
+		<circle id="cutter1" cx="57" cy="13" r="3" fill="blue"/>
+		<circle id="cutter2" cx="57" cy="47" r="3" fill="blue"/>
+		<circle id="cutter3" cx="03" cy="47" r="3" fill="blue"/>
+		<circle id="cutter4" cx="03" cy="13" r="3" fill="blue"/>
+		<circle id="bone1"   cx="57.8786" cy="12.1214" r="3" fill="orange" fill-opacity="0.6"/>
+		<circle id="bone2"   cx="57.8786" cy="47.8786" r="3" fill="orange" fill-opacity="0.6"/>
+		<circle id="bone3"   cx="02.1214" cy="47.8786" r="3" fill="orange" fill-opacity="0.6"/>
+		<circle id="bone4"   cx="02.1214" cy="12.1214" r="3" fill="orange" fill-opacity="0.6"/>
+	</g>
+</svg>

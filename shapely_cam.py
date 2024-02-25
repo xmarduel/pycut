@@ -725,6 +725,9 @@ class cam:
             helix_revolution_depth = args["helixRevolutionDepth"]
             helix_plunge_rate = args["helixPlungeRate"]
 
+            if helix_width < tool_diameter:
+                helix_width = tool_diameter * 1.5  # default!
+
             cut_depth = -botZ
 
             for campath in paths:

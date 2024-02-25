@@ -4,5 +4,7 @@
 	   <circle    id="circle"  cx="30"  cy="60" r="20" stroke="black" stroke-width="1" fill="red" />
 	   <ellipse   id="ellipse" cx="140" cy="60" rx="30" ry="20" stroke="black" stroke-width="1" fill="blue" />
 	   <rect      id="rect"    x="60" y="40" width="30" height="40" stroke="black" stroke-width="1" fill="green" />
+	   <polygon   id="polygon" points="40,100 70,110 50,135 50,170 15,115 " stroke="black" stroke-width="1" fill="green" />
+       <path      id="path"    d="M 100,100 L 130,110 L 110,135 L 110,170 L 85,115 Z" stroke="black" stroke-width="1" fill="blue" />
 	</g>
 </svg>

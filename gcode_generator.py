@@ -366,7 +366,13 @@ class CncOp:
 
         for svgpath in self.svg_paths:
             # consider only circles and ellipses
-            if svgpath.shape_tag == "circle" or svgpath.shape_tag == "ellipse":
+            if (
+                svgpath.shape_tag == "circle"
+                or svgpath.shape_tag == "ellipse"
+                or svgpath.shape_tag == "rect"
+                or svgpath.shape_tag == "polygon"
+                or (svgpath.shape_tag == "path" and svgpath.closed)
+            ):
                 shapely_point = svgpath.import_as_point()
                 shapely_points.append(shapely_point)
 
@@ -586,6 +592,10 @@ class CncOp:
             for pt in self.geometry.geoms:
                 center = pt.coords[0]
                 width = self.width.to_mm()
+
+                if width == 0.0:
+                    # default value
+                    width = 1.5 * tool_model.diameter
 
                 if width <= 2 * tool_model.diameter:
                     svgpath = SvgPath.from_circle_def(center, width / 2.0)
@@ -1060,6 +1070,9 @@ class GcodeGenerator:
         # else:
         #    scale = 25.4
         scale = 1
+
+        if cnc_op.width <= toolDiameter:
+            cnc_op.width = toolDiameter * 1.5  # default!
 
         circle_travel_radius = (cnc_op.width - toolDiameter) / 2.0
         circle_travel = 2 * PI * circle_travel_radius

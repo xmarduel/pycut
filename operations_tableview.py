@@ -690,7 +690,13 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
                     item_drill.setEnabled(False)
                     item_peck.setEnabled(False)
 
-                if tag == "circle" or tag == "ellipse" or tag =="rect":
+                if (
+                    tag == "circle"
+                    or tag == "ellipse"
+                    or tag == "rect"
+                    or tag == "polygon"
+                    or (tag == "path" and True)  # FIXME   "is closed"
+                ):
                     item_helix.setEnabled(True)
                 else:
                     item_helix.setEnabled(False)

@@ -683,8 +683,8 @@ round). </p>
     <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        -->
     <circle cx="66.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </g>
   <g id="layer1" transform="translate(120 0)">
@@ -696,8 +696,8 @@ round). </p>
     <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      -->
     <circle cx="65.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </g>
 </svg>
@@ -724,37 +724,28 @@ round). </p>
 <p>Note that the amount of material not removed by the cutter depends on the angle of the corner and the radius of the
 cutter.</p>
 
-<p>To remedy to this, you can</p>
-<ul>
-  <li>fix the resulting GCode -more or less- per hand so that the corners are milled as you wish</li>
-  <li>generate the GCode with "DogBones Dressup"</li>
-  <li>I do not know yet another method</li>
-</ul>
-
 <div class="info">
 <p><strong>Note:</strong> For concave angles, the generated toolpaths around such corners are smooth and do not need
 any fixups.</p>
 </div>
 
-<p>The first option means you have to modify "per hand" the produced GCode. Some computation help will be certainly
-needed anyway. It may be an acceptable solution if the workpiece has only a few convex angles. But how allowing to
-modify the Gcode "per hand" in a repeatable manner? here is my proposed method:</p>
-<ol>
-  <li>Generate the Gcode first.</li>
-  <li>Identify the locations(s) of the Gcode where the problem occurs (convex angles).</li>
-  <li>Write "fixup" GCode "blocks" that will be inserted into the generated GCode at the right places</li>
-</ol>
+<p>Fixing the GCode "per hand" is absolutely no solution, so an automatic handling has to be perfomed.</p>
 
 <div class="warning">
-<p><strong>Warning:</strong> If there are 1000 corners to fix, it will be unpracticable..</p>
+<p><strong>Warning:</strong> Having had a look at (the doc of) some other tools (<strong>BlenderCam</strong>,
+<strong>Fusion360</strong>), I have noticed these tools, in order to perform dogbones correction "update" the geometry,
+or rather said "actualize" the countour lines to be milled so that these countour lines get the bones. After that, the
+"inside" or "outside" operations are performed "as usua". I will try to take a different approach: only the generated
+GCode will be "fixed" when encountering "angles". </p>
 </div>
 
 <h3>A first try</h3>
 
-<p>Here we suppose the cutter radius is 3mm. We wish to mill an inner square hole, so the "convex angle" corner problem
-occurs. We have 2 (or more!) strategies to allow a perfect square to fit in the milled hole. Strategy "1" in shown on
-the left, strategy "2" on the right: the extra tool path is displayed as well as the cutter at the end of the extra
-tool path (and the standard cutter position at the toolpath corner).</p>
+<p>Let's get a taste how dogbone handling look loke. Here we suppose the cutter radius is <strong>3mm</strong>. We wish
+to mill an inner square hole, so the "convex angle" corner problem occurs. We have 2 (or more!) strategies to allow a
+square to fit in the milled hole. Strategy "1" in shown on the left, strategy "2" on the right: the extra tool path is
+displayed with the cutter at the end of the extra tool path (as well as the standard cutter position at the toolpath
+corner).</p>
 <svg width="200mm" height="80mm" viewBox="0 0 200 80" version="1.1">
   <g id="layer1">
     <polyline points="10,70 10,10 100,10 100,70" stroke-width="0.5" fill="none" stroke="black"/>
@@ -764,12 +755,12 @@ tool path (and the standard cutter position at the toolpath corner).</p>
               stroke-opacity="0.8"/>
     <circle cx="20" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
     <!-- 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             D = sqrt(10*10 + 10*10) = 14.14
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             d = 14.14 -10 = 4.14
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             dx = dy =  d / sqrt(2) = 2.93
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     D = sqrt(10*10 + 10*10) = 14.14
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     d = 14.14 -10 = 4.14
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     dx = dy =  d / sqrt(2) = 2.93
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     -->
     <polyline id="dog-bone-path1" points="20,20 17.07,17.07" fill="none" stroke="blue" stroke-linejoin="round"
               stroke-width="0.3" stroke-opacity="0.2"/>
     <circle id="dog-bone-path1-material" cx="17.07" cy="17.07" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2"
@@ -783,7 +774,8 @@ tool path (and the standard cutter position at the toolpath corner).</p>
   </g>
 </svg>
 
-<p>We see that the strategy "1" removes far less extra material than the strategy "2". </p>
+<p>We see that the strategy "1" removes far less extra material than the strategy "2", so we will concentrate later
+only on these strategy.. </p>
 
 <p>At every G01 instruction, there is certainly a direction change, which can be tiny (consider milling an inner
 circle, not as G02 or G03 but with a list of GO1 instructions) or big, here in our case a 90 degrees direction
@@ -814,54 +806,12 @@ G1 X15.00 Y20.00 (change of direction to the right)</code></pre>
 
 <p>In the following, I will prefer switching to incremental distance mode (G91) and back (G90) for the fixups.</p>
 
-<p>Of course, in case of automatic fixups, we need to inform the Gcode generator that it has to take into account this
+<p>Of course, with automatic dogbones, we need to inform the Gcode generator that it has to take into account this
 fixup, thus inserting the "block" each time a gcode line with such a pattern (<code>G1 X15.00 Y20.00</code>) is
 found.</p>
 
-<p>If the GCode generator cannot do this on its own, it is up to the user to give the right fixups, for each "problem
-zone" (convex corner) one block. This fixup will have to be saved in the project, and to be applied only for the
-desired operations. In the job file, there is a "gcode-fixups" section at the operation definition:</p>
-<pre><code class="language-json">{
-   "name": "op_contour",
-   "type": "outside",
-   "cut_depth": 3.175,
-   "paths": [
-     "contour"
-   ],
-   "ramp_plunge": false,
-   "combinaison": "Union",
-   "direction": "Conventional",
-   "units": "mm",
-   "margin": 0.0,
-   "width": 0.0,
-   "gcode-fixups":[
-       {"G1 X10.00 Y20.00" : [ 
-           "; fix up begin ------------------------",
-           "G91              ( incremental distance mode)",
-           "G1 X-1.00 Y1.00  ( goes 1mm top left ) ", 
-           "G1 X1.00 Y-10.00 ( and back )",
-           "G90              ( absolute distance mode)", 
-           "; fix up end --------------------------"]
-       },
-       {"G1 X15.00 Y20.00" : [ 
-           "; fix up begin ------------------------",
-           "G91             ( incremental distance mode)",
-           "G1 X0.00 Y3.00  ( goes 3mm top )",
-           "G1 X0.00 Y-3.00 ( and back )",
-           "G90             ( absolute distance mode)", 
-           "; fix up end --------------------------"]
-       }
-    }
-}</code></pre>
-
-<div class="warning">
-<p><strong>Warning:</strong> Note that the GCode generation is function, among others, of the cutter radius (obvious)
-but also of the "GCodeConversion" settings. Notably, when changing the generation offsets (x or y), then the whole
-GCode is modified, thus making the reference patterns for the fixups obsolete.</p>
-</div>
-
-<p>In this first try, we "naively" gave at the left corner for the "strategy 1" a fix-up of 1 mm with fix-up direction
-NE. We can certainly do better.</p>
+<p>In this first try, we "naively" gave at the left corner for the "strategy 1" a fix-up of 1 mm in the NE direction.
+We can certainly do better.</p>
 
 <p><strong>Example-1</strong>: exact fixup, same geometry with a cutter of radius 3.0 mm</p>
 We wish to calculate the cutter extra travel exactly in order to minimize the extra stock removal while achieving the
@@ -914,8 +864,9 @@ G90
 <p>Easy!</p>
 
 <div class="info">
-<p><strong>Info:</strong> For this particular case (angle size and orientation), the gap is 1.24 mm and the fixups
-<code>dx = 0.8786</code>, <code>dy = 0.8786 mm</code> for a cutter radius of 3.0 mm. </p>
+<p><strong>Info:</strong> For this particular case (angle size and orientation), the gap is 1.2426 mm and the fixups
+<code>dx = 0.8786</code>, <code>dy = 0.8786 mm</code> for a cutter radius of 3.0 mm. For other cutter radiuses, the
+ratio (1.2426 / 3.0 = 0.41) for an angle of 90 deg. shall remain the same.</p>
 </div>
 
 <h4>General case / automatic fixups</h4>
@@ -1079,7 +1030,7 @@ slopes are \( -1\) and \(1;\) so the correct bisection is the second one, and it
 G1 X0.0  Y4.0
 G1 X4.0  Y4.0</code></pre>
 
-<p>So obviously there is a sharp (right) corner at \([4, 4] \). The corner angle is \( \beta = 90\)\deg;.</p>
+<p>So obviously there is a sharp (right) corner at \([4, 4] \). The corner angle is \( \beta = 90\)°.</p>
 
 <p>The slopes of the incoming and outcoming segments are \(m_1 = -\inf \) and \( m_2 = 0 \) and the slopes of the
 bisections are \( -1\) and \(1\). The correct bisection is the first one, and its correct orientation is +135° (not
@@ -1101,17 +1052,9 @@ bisections are \( -1\) and \(1\). The correct bisection is the first one, and it
 threshold</strong>" which is per default 120°. A completely separate utility "gcode_dressup.py" will be called upon
 GCode generation completion to transform the GCode for the operations requiring it.</p>
 
-<p>In the operations table, we add a column "fixups" as a checkbox, which, for every operation, can be set on or off
-and will have a background color. Setting the checkbox off will disable the fixups generation for this particular
-operation. When set "on", fixups modifiers will be applied to the generated GCode. After completion, the background
-color will indicates if fixups have been performed:</p>
-<ul>
-  <li>no background: no fixups applied at all for this operation</li>
-  <li>orange: fixups have been added</li>
-</ul>
-
-<p>Finally, in the GCode Viewer/GCode simulator GCode browsers, lines corresponding to added fixups (comprised between
-the comment lines </p>
+<p>In the operations table, we add a column "fixups" as a checkbox, which, for every operation, can be set on or off.
+Moreover, in the GCode Viewer/GCode simulator GCode browsers, lines corresponding to added fixups (comprised
+between the comment lines </p>
 <pre><code class="language-gcode">; start fixup</code></pre>
 
 <p>and </p>
@@ -1119,9 +1062,7 @@ the comment lines </p>
 
 <p>will have a blue background in order to clearly identify them.</p>
 
-<p><strong>It is worth noting that in a first implemetation step, the fixups will be calculated only for "Inside" or
-"Outside" operations, and not for the "Pocket" operations (TODO). This in because, for pocket operations, the toolpaths
-which are not adjacents to the stock borders may have sharp corners which do not need dogbones at all.</strong></p>
+<p><strong></strong></p>
 
 <h3 id="APPENDICE-01">Appendix-1: SVG Editors</h3>
 
