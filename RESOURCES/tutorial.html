@@ -319,7 +319,7 @@ case of multiple operations enabled, as the project name, with ending suffix "nc
 <h2 id="P-04">GUI Components</h2>
 
 <h3 id="P-04-01">Svg Settings</h3>
-<img src="pycut_svgsettings.png" width="310px" /> 
+<img src="doc/pycut_svgsettings.png" width="310px" /> 
 
 <h4>user units scale</h4>
 
@@ -328,7 +328,7 @@ would set the document's size to <strong>100x40 mm</strong>, supposedly the size
 automatically sets the <strong>user units scale </strong><strong>to 1</strong>. Note that the user units are not "px"
 or whatever. This means, <strong>1 "user unit" is equal to 1 mm (and the viewbox is "0 0 100 40" while width="100mm"
 and height="40mm")</strong></p>
-<img src="Inkscape_settings_mm.png" width="563px" /> 
+<img src="doc/Inkscape_settings_mm.png" width="563px" /> 
 
 <p>Of course when editing the svg (in Inkscape or in a text editor), <strong>the user is only concerned with the user
 units</strong> : he draws a rectangle of size 20x30 at the location 10x10. The users may simply even not be aware of
@@ -340,7 +340,7 @@ the document becomes then <strong>3,93701x1,57480 inches</strong> (yes, 100 / 25
 <strong>Inkscape</strong> automatically change the <strong>user units scale to 25.4</strong>. Because of this, the
 <strong>view box remains at "0 0 100 40"</strong>. That way, a rectangle filling the full document size is still
 100x40. </p>
-<img src="Inkscape_settings_in.png" width="563px" /> 
+<img src="doc/Inkscape_settings_in.png" width="563px" /> 
 
 <p>Filling a box half the size of the document is 50x20, right, but what are real physical dimensions of that box ? The
 user would have to steadily calculate from fancy user units (ex: 50x20) in inches</p>
@@ -396,7 +396,7 @@ the <strong>user unit scale factor is always 1</strong> .</p>
 <p></p>
 
 <h3 id="P-04-02">Tool</h3>
-<img src="pycut_tool.png" width="310px" /> 
+<img src="doc/pycut_tool.png" width="310px" /> 
 
 <h3 id="P-04-03">Tabs</h3>
 
@@ -405,7 +405,7 @@ in the svg viewer, of radius 5 and position (10,10). The user can drag 'n drop i
 size/postion in the tab table. Yes tabs, for simplicity, are circle. To be effective, the tabs have to be enabled and
 of course placed somewhere on the generated toolpaths. The height of the tabs is shared by all tabs. <strong>They are
 ignored for Pocket operations</strong>.</p>
-<img src="./pycut_tabs.png" width="310px" /> 
+<img src="doc/./pycut_tabs.png" width="310px" /> 
 
 <p></p>
 
@@ -414,7 +414,7 @@ ignored for Pocket operations</strong>.</p>
 <h3 id="P-04-04">Material</h3>
 
 <p>The Operations "Cut Depth" should not be larger than the material thickness. </p>
-<img src="./pycut_material.png" width="310px" /> 
+<img src="doc/./pycut_material.png" width="310px" /> 
 
 <p></p>
 
@@ -432,7 +432,7 @@ exceed the physical possibilities of the machine when travelling in the z-axis, 
 <h3 id="P-04-05">Curve to Line Conversion</h3>
 
 <p>If your design contain curves (svg "arcs" or "bezier" curves), they have to be discretized in small segments.</p>
-<img src="./pycut_curve_to_line_conversion.png" width="300px" /> 
+<img src="doc/./pycut_curve_to_line_conversion.png" width="300px" /> 
 
 <p>The 2 following parameters allow to specified how fine the curve discretization will be:</p>
 <ul>
@@ -456,7 +456,7 @@ top-left postion.</p>
   <li>Bottom-Left location of the Gcode area</li>
   <li>Center of the Gcode area</li>
 </ul>
-<img src="./pycut_gcode_conversion.png" width="310px" /> 
+<img src="doc/./pycut_gcode_conversion.png" width="310px" /> 
 
 <p>Note that these 4 buttons act as radio buttons.</p>
 
@@ -521,7 +521,7 @@ to carve something like 16x10 cm without rotating all items in the source svg. <
   <li>Spindle Start/Stop (<strong>M3</strong>/<strong>M5</strong> codes)</li>
   <li><strong>M2</strong> code</li>
 </ul>
-<img src="./pycut_gcode_generation.png" width="310px" />
+<img src="doc/./pycut_gcode_generation.png" width="310px" />
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- -----------------------------------------------------------------------------------------------------------> 
 
@@ -530,7 +530,7 @@ to carve something like 16x10 cm without rotating all items in the source svg. <
 <h3>Create Operations</h3>
 
 <p>This is where the user defined its cam operations, thus this is where the action takes place.</p>
-<img src="./pycut_ops.png" width="1170px" /> 
+<img src="doc/./pycut_ops.png" width="1170px" /> 
 
 <p>First one or more item(s) have to be selected in the svgviewer, click on "Create Operation" and a default operation
 is created. When more than one item has been selected, the user can perform logical operations on this set of item </p>
