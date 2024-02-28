@@ -269,7 +269,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Angle</string>
+               <string>Cutter Angle</string>
               </property>
              </widget>
             </item>
@@ -281,7 +281,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Diameter</string>
+               <string>Cutter Diameter</string>
               </property>
              </widget>
             </item>
@@ -447,26 +447,26 @@
              </widget>
             </item>
             <item row="8" column="0">
-             <widget class="QLabel" name="label_Tool_HelixRevolutionDepth">
+             <widget class="QLabel" name="label_Tool_HelixPitch">
               <property name="font">
                <font>
                 <bold>true</bold>
                </font>
               </property>
               <property name="text">
-               <string>Helix Revol. Depth  </string>
+               <string>Helix Pitch </string>
               </property>
              </widget>
             </item>
             <item row="8" column="1">
-             <widget class="QLabel" name="label_Tool_HelixRevolutionDepth_UnitsDescr">
+             <widget class="QLabel" name="label_Tool_HelixPitch_UnitsDescr">
               <property name="text">
                <string>__units__</string>
               </property>
              </widget>
             </item>
             <item row="8" column="2">
-             <widget class="QDoubleSpinBox" name="Tool_HelixRevolutionDepth">
+             <widget class="QDoubleSpinBox" name="Tool_HelixPitch">
               <property name="singleStep">
                <double>0.100000000000000</double>
               </property>

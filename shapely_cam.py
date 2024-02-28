@@ -106,7 +106,7 @@ class cam:
         It will be performed from the center of the circle/ellipse/rectangle
 
         The helix drills down until the cut depth.
-        At each revolution, an amount of "helix_revolution_depth" is cut in the z direction.
+        At each revolution, an cut depth of "helix_pitch" is cut in the z direction.
 
         This means, given the cut rate and the helix diameter, the helix plunge rate is calculated
         """
@@ -610,8 +610,8 @@ class cam:
           cutFeed:        Feedrate for horizontal cuts (gcode units)
           rapidFeed:      Feedrate for rapid moves (gcode units)
           toolDiameter:
-          helixRevolutionDepth: depth of an helix revolution (theoretical)
-          helixPlungeRate:      helix plunge rate (theoretical)
+          helixPitch:     Depth of an helix revolution (theoretical)
+          helixPlungeRate:Helix plunge rate (theoretical)
           tabs:           List of tabs
           tabZ:           Level below which tabs are to be processed
           peckZ:          Level to retract when pecking
@@ -722,7 +722,7 @@ class cam:
 
             tool_diameter = args["toolDiameter"]
             helix_width = args["helixWidth"]
-            helix_revolution_depth = args["helixRevolutionDepth"]
+            helix_pitch = args["helixPitch"]
             helix_plunge_rate = args["helixPlungeRate"]
 
             if helix_width < tool_diameter:
@@ -735,27 +735,25 @@ class cam:
 
                 circle_travel_radius = (helix_width - tool_diameter) / 2.0
                 circle_travel = 2 * PI * circle_travel_radius
-                helix_plunge_rate = cutFeed * helix_revolution_depth / circle_travel
+                helix_plunge_rate = cutFeed * helix_pitch / circle_travel
 
                 print("HELIX_CIRCLE_TRAVEL_RADIUS = ", circle_travel_radius)
                 print("HELIX_PLUNGE_RATE = ", helix_plunge_rate)
 
                 # well we wish an helix plunge rate as integer.
-                # So the helix_revolution_depth will be somehow "corrected"
+                # So the helix_pitch will be somehow "corrected"
 
                 helix_plunge_rate = math.floor(helix_plunge_rate) + 1
-                helix_revolution_depth = circle_travel * helix_plunge_rate / cutFeed
+                helix_pitch = circle_travel * helix_plunge_rate / cutFeed
 
                 print("FIXED - HELIX_PLUNGE_RATE = ", helix_plunge_rate)
-                print("FIXED - HELIX_REVOLUTION_DEPTH = ", helix_revolution_depth)
+                print("FIXED - helix_pitch = ", helix_pitch)
 
                 nb_pts_per_revolution = math.floor(circle_travel / SEG_LEN)
 
-                nb_helixes = math.floor(cut_depth / helix_revolution_depth)
+                nb_helixes = math.floor(cut_depth / helix_pitch)
 
-                helix_revolution_depth_last = (
-                    cut_depth - nb_helixes * helix_revolution_depth
-                )
+                helix_pitch_last = cut_depth - nb_helixes * helix_pitch
 
                 # calculate all the pts with z component
                 pts = []
@@ -766,7 +764,7 @@ class cam:
                         x = math.cos(2 * PI * k / nb_pts_per_revolution)
                         y = math.sin(2 * PI * k / nb_pts_per_revolution)
 
-                        height = helix_revolution_depth  # shorter name
+                        height = helix_pitch  # shorter name
 
                         z = -i * height - k * height / nb_pts_per_revolution
 
@@ -777,13 +775,13 @@ class cam:
 
                 # and the last one
 
-                if helix_revolution_depth_last > 0.0:
+                if helix_pitch_last > 0.0:
                     for k in range(nb_pts_per_revolution):
                         x = math.cos(2 * PI * k / nb_pts_per_revolution)
                         y = math.sin(2 * PI * k / nb_pts_per_revolution)
 
-                        height = helix_revolution_depth
-                        last_height = helix_revolution_depth_last
+                        height = helix_pitch
+                        last_height = helix_pitch_last
 
                         z = (
                             -nb_helixes * height

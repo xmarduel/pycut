@@ -131,7 +131,7 @@ class ToolModel:
         self.rapidRate = ValWithUnit(100, self.units)
         self.plungeRate = ValWithUnit(5, self.units)
         self.cutRate = ValWithUnit(40, self.units)
-        self.helixRevolutionDepth = ValWithUnit(0.165, self.units)
+        self.helixPitch = ValWithUnit(0.165, self.units)
 
     def get_cam_data(self):
         """
@@ -1058,9 +1058,7 @@ class GcodeGenerator:
         cutRate = int(self.unit_converter.from_mm(self.tool_model.cutRate.to_mm()))
         passdepth = self.unit_converter.from_mm(self.tool_model.passdepth.to_mm())
         toolDiameter = self.unit_converter.from_mm(self.tool_model.diameter.to_mm())
-        helixRevolutionDepth = self.unit_converter.from_mm(
-            self.tool_model.helixRevolutionDepth.to_mm()
-        )
+        helixPitch = self.unit_converter.from_mm(self.tool_model.helixPitch.to_mm())
         topZ = self.unit_converter.from_mm(self.material_model.mat_tot_z.to_mm())
         tabHeight = self.unit_converter.from_mm(self.tabs_model.height.to_mm())
         peckZ = self.unit_converter.from_mm(1.0)
@@ -1076,7 +1074,7 @@ class GcodeGenerator:
 
         circle_travel_radius = (cnc_op.width - toolDiameter) / 2.0
         circle_travel = 2 * PI * circle_travel_radius
-        helixPlungeRate = cutRate * helixRevolutionDepth / circle_travel
+        helixPlungeRate = cutRate * helixPitch / circle_travel
 
         gcode = []
         if self.units == "inch":
@@ -1118,9 +1116,7 @@ class GcodeGenerator:
             gcode.append(f"; Cut Depth:    {cut_depth}")
 
             if cnc_op.cam_op == "Helix":
-                gcode.append(
-                    f"; Helix Revolution Depth [can be adapted]:   {helixRevolutionDepth}"
-                )
+                gcode.append(f"; Helix Pitch [can be adapted]:       {helixPitch}")
                 gcode.append(
                     f"; Helix Plunge rate [can be adapted]:  {helixPlungeRate}"
                 )
@@ -1158,7 +1154,7 @@ class GcodeGenerator:
                         "cutFeed": cutRate,
                         "rapidFeed": rapidRate,
                         "toolDiameter": toolDiameter,
-                        "helixRevolutionDepth": helixRevolutionDepth,
+                        "helixPitch": helixPitch,
                         "helixPlungeRate": helixPlungeRate,
                         "tabs": tabs,
                         "tabZ": tabZ,

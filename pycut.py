@@ -83,7 +83,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "rapid": 500,
             "plunge": 100,
             "cut": 250,
-            "helix_revolution_depth": 0.1,
+            "helix_pitch": 0.1,
         },
         "Material": {
             "units": "mm",
@@ -641,7 +641,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "rapid": self.ui.Tool_Rapid.value(),
                 "plunge": self.ui.Tool_Plunge.value(),
                 "cut": self.ui.Tool_Cut.value(),
-                "helix_revolution_depth": self.ui.Tool_HelixRevolutionDepth.value(),
+                "helix_pitch": self.ui.Tool_HelixPitch.value(),
             },
             "Material": {
                 "units": self.ui.Material_Units.currentText(),
@@ -687,9 +687,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.Tool_Rapid.setValue(settings["Tool"]["rapid"])
         self.ui.Tool_Plunge.setValue(settings["Tool"]["plunge"])
         self.ui.Tool_Cut.setValue(settings["Tool"]["cut"])
-        self.ui.Tool_HelixRevolutionDepth.setValue(
-            settings["Tool"]["helix_revolution_depth"]
-        )
+        self.ui.Tool_HelixPitch.setValue(settings["Tool"]["helix_pitch"])
 
         # Material
         self.ui.Material_Units.setCurrentText(settings["Material"]["units"])
@@ -1189,16 +1187,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.label_Tool_Rapid_UnitsDescr.setText("inch/min")
             self.ui.label_Tool_Plunge_UnitsDescr.setText("inch/min")
             self.ui.label_Tool_Cut_UnitsDescr.setText("inch/min")
-            self.ui.label_Tool_HelixRevolutionDepth_UnitsDescr.setText("inch/min")
+            self.ui.label_Tool_HelixPitch_UnitsDescr.setText("inch/min")
 
             self.ui.Tool_Diameter.setValue(self.ui.Tool_Diameter.value() / 25.4)
             self.ui.Tool_PassDepth.setValue(self.ui.Tool_PassDepth.value() / 25.4)
             self.ui.Tool_Rapid.setValue(self.ui.Tool_Rapid.value() / 25.4)
             self.ui.Tool_Plunge.setValue(self.ui.Tool_Plunge.value() / 25.4)
             self.ui.Tool_Cut.setValue(self.ui.Tool_Cut.value() / 25.4)
-            self.ui.Tool_HelixRevolutionDepth.setValue(
-                self.ui.Tool_HelixRevolutionDepth.value() / 25.4
-            )
+            self.ui.Tool_HelixPitch.setValue(self.ui.Tool_HelixPitch.value() / 25.4)
 
         if tool_units == "mm":
             self.ui.label_Tool_Diameter_UnitsDescr.setText("mm")
@@ -1208,16 +1204,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.label_Tool_Rapid_UnitsDescr.setText("mm/min")
             self.ui.label_Tool_Plunge_UnitsDescr.setText("mm/min")
             self.ui.label_Tool_Cut_UnitsDescr.setText("mm/min")
-            self.ui.label_Tool_HelixRevolutionDepth_UnitsDescr.setText("mm/min")
+            self.ui.label_Tool_HelixPitch_UnitsDescr.setText("mm/min")
 
             self.ui.Tool_Diameter.setValue(self.ui.Tool_Diameter.value() * 25.4)
             self.ui.Tool_PassDepth.setValue(self.ui.Tool_PassDepth.value() * 25.4)
             self.ui.Tool_Rapid.setValue(self.ui.Tool_Rapid.value() * 25.4)
             self.ui.Tool_Plunge.setValue(self.ui.Tool_Plunge.value() * 25.4)
             self.ui.Tool_Cut.setValue(self.ui.Tool_Cut.value() * 25.4)
-            self.ui.Tool_HelixRevolutionDepth.setValue(
-                self.ui.Tool_HelixRevolutionDepth.value() * 25.4
-            )
+            self.ui.Tool_HelixPitch.setValue(self.ui.Tool_HelixPitch.value() * 25.4)
 
     def cb_update_material_display(self):
         """
@@ -1523,8 +1517,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             settings["Tool"]["plunge"], tool_model.units
         )
         tool_model.cutRate = ValWithUnit(settings["Tool"]["cut"], tool_model.units)
-        tool_model.helixRevolutionDepth = ValWithUnit(
-            settings["Tool"]["helix_revolution_depth"], tool_model.units
+        tool_model.helixPitch = ValWithUnit(
+            settings["Tool"]["helix_pitch"], tool_model.units
         )
 
         cnc_ops = []
@@ -1620,8 +1614,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             settings["Tool"]["plunge"], tool_model.units
         )
         tool_model.cutRate = ValWithUnit(settings["Tool"]["cut"], tool_model.units)
-        tool_model.helixRevolutionDepth = ValWithUnit(
-            settings["Tool"]["helix_revolution_depth"], tool_model.units
+        tool_model.helixPitch = ValWithUnit(
+            settings["Tool"]["helix_pitch"], tool_model.units
         )
 
         tabsmodel = TabsModel([tab for tab in self.tabs if tab["enabled"] == True])

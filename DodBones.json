@@ -34,7 +34,7 @@
       "rapid": 500,
       "plunge": 100,
       "cut": 250,
-      "helix_revolution_depth": 0.1
+      "helix_pitch": 0.1
     },
     "Material": {
       "units": "mm",

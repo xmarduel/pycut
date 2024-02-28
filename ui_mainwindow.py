@@ -300,23 +300,23 @@ class Ui_mainwindow(object):
 
         self.gridLayout_Tool.addWidget(self.Tool_Diameter, 1, 2, 1, 1)
 
-        self.label_Tool_HelixRevolutionDepth = QLabel(self.scrollAreaWidgetContents)
-        self.label_Tool_HelixRevolutionDepth.setObjectName(u"label_Tool_HelixRevolutionDepth")
-        self.label_Tool_HelixRevolutionDepth.setFont(font1)
+        self.label_Tool_HelixPitch = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_HelixPitch.setObjectName(u"label_Tool_HelixPitch")
+        self.label_Tool_HelixPitch.setFont(font1)
 
-        self.gridLayout_Tool.addWidget(self.label_Tool_HelixRevolutionDepth, 8, 0, 1, 1)
+        self.gridLayout_Tool.addWidget(self.label_Tool_HelixPitch, 8, 0, 1, 1)
 
-        self.label_Tool_HelixRevolutionDepth_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
-        self.label_Tool_HelixRevolutionDepth_UnitsDescr.setObjectName(u"label_Tool_HelixRevolutionDepth_UnitsDescr")
+        self.label_Tool_HelixPitch_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
+        self.label_Tool_HelixPitch_UnitsDescr.setObjectName(u"label_Tool_HelixPitch_UnitsDescr")
 
-        self.gridLayout_Tool.addWidget(self.label_Tool_HelixRevolutionDepth_UnitsDescr, 8, 1, 1, 1)
+        self.gridLayout_Tool.addWidget(self.label_Tool_HelixPitch_UnitsDescr, 8, 1, 1, 1)
 
-        self.Tool_HelixRevolutionDepth = QDoubleSpinBox(self.scrollAreaWidgetContents)
-        self.Tool_HelixRevolutionDepth.setObjectName(u"Tool_HelixRevolutionDepth")
-        self.Tool_HelixRevolutionDepth.setSingleStep(0.100000000000000)
-        self.Tool_HelixRevolutionDepth.setValue(1.000000000000000)
+        self.Tool_HelixPitch = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.Tool_HelixPitch.setObjectName(u"Tool_HelixPitch")
+        self.Tool_HelixPitch.setSingleStep(0.100000000000000)
+        self.Tool_HelixPitch.setValue(1.000000000000000)
 
-        self.gridLayout_Tool.addWidget(self.Tool_HelixRevolutionDepth, 8, 2, 1, 1)
+        self.gridLayout_Tool.addWidget(self.Tool_HelixPitch, 8, 2, 1, 1)
 
 
         self.verticalLayoutToolContent.addLayout(self.gridLayout_Tool)
@@ -1019,8 +1019,8 @@ class Ui_mainwindow(object):
         self.label_Tool_Cut.setText(QCoreApplication.translate("mainwindow", u"Cut", None))
         self.label_Tool_PassDepth_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_Tool_PassDepth.setText(QCoreApplication.translate("mainwindow", u"Pass Depth", None))
-        self.label_Tool_Angle.setText(QCoreApplication.translate("mainwindow", u"Angle", None))
-        self.label_Tool_Diameter.setText(QCoreApplication.translate("mainwindow", u"Diameter", None))
+        self.label_Tool_Angle.setText(QCoreApplication.translate("mainwindow", u"Cutter Angle", None))
+        self.label_Tool_Diameter.setText(QCoreApplication.translate("mainwindow", u"Cutter Diameter", None))
         self.label_Tool_Plunge.setText(QCoreApplication.translate("mainwindow", u"Plunge", None))
         self.label_Tool_Angle_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_Tool_Plunge_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
@@ -1035,8 +1035,8 @@ class Ui_mainwindow(object):
         self.label_Tool_Overlap_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_Tool_Rapid.setText(QCoreApplication.translate("mainwindow", u"Rapid", None))
         self.label_Tool_Overlap.setText(QCoreApplication.translate("mainwindow", u"Overlap", None))
-        self.label_Tool_HelixRevolutionDepth.setText(QCoreApplication.translate("mainwindow", u"Helix Revol. Depth  ", None))
-        self.label_Tool_HelixRevolutionDepth_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
+        self.label_Tool_HelixPitch.setText(QCoreApplication.translate("mainwindow", u"Helix Pitch ", None))
+        self.label_Tool_HelixPitch_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.labelCurveToLineConversion.setText(QCoreApplication.translate("mainwindow", u" Curve To Line Conversion", None))
         self.label_CurveToLineConversion_MinimumNbSegments.setText(QCoreApplication.translate("mainwindow", u"Minimum Segments", None))
         self.label_CurveToLineConversion_MinimumSegmentsLength.setText(QCoreApplication.translate("mainwindow", u"Minimum Segments Length", None))
