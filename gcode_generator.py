@@ -591,20 +591,25 @@ class CncOp:
             shapely_polygons: List[shapely.geometry.Polygon] = []
             for pt in self.geometry.geoms:
                 center = pt.coords[0]
-                width = self.width.to_mm()
+                radius = self.width.to_mm()
 
-                if width == 0.0:
+                if radius == 0.0:
                     # default value
-                    width = 1.5 * tool_model.diameter
+                    radius = tool_model.diameter / 4.0
 
-                if width <= 2 * tool_model.diameter:
-                    svgpath = SvgPath.from_circle_def(center, width / 2.0)
+                if radius <= tool_model.diameter / 2.0:
+                    svgpath = SvgPath.from_circle_def(
+                        center, radius + tool_model.diameter / 2.0
+                    )
                     shapely_polygons += svgpath.import_as_polygons_list()
                 else:
                     # ring! polygon with hole
-                    svgpath = SvgPath.from_circle_def(center, width / 2.0)
-                    delta = width - 2 * tool_model.diameter
-                    hole = SvgPath.from_circle_def(center, delta / 2.0)
+                    svgpath = SvgPath.from_circle_def(
+                        center, radius + tool_model.diameter / 2.0
+                    )
+                    hole = SvgPath.from_circle_def(
+                        center, radius - tool_model.diameter / 2.0
+                    )
 
                     poly_ext = svgpath.import_as_polygons_list()
                     poly_int = hole.import_as_polygons_list()
@@ -848,11 +853,25 @@ class CncOp:
 
         # -------------------------------------------------------------------------------------
 
-        for cam_path in self.cam_paths:
-            svg_path = SvgPath.from_shapely_linestring(
-                "pycut_toolpath", cam_path.path, cam_path.safe_to_close
-            )
-            self.cam_paths_svg_paths.append(svg_path)
+        if cam_op == "Helix":
+            for cam_path in self.cam_paths:
+                center = (cam_path.path.coords.xy[0][0], cam_path.path.coords.xy[1][0])
+
+                svgpath = SvgPath.from_circle_def(center, width)
+                polys = svgpath.import_as_polygons_list()
+
+                helix_path = CamPath(polys[0].exterior, False)
+
+                svg_path = SvgPath.from_shapely_linestring(
+                    "pycut_toolpath", helix_path.path, helix_path.safe_to_close
+                )
+                self.cam_paths_svg_paths.append(svg_path)
+        else:
+            for cam_path in self.cam_paths:
+                svg_path = SvgPath.from_shapely_linestring(
+                    "pycut_toolpath", cam_path.path, cam_path.safe_to_close
+                )
+                self.cam_paths_svg_paths.append(svg_path)
 
 
 class JobModel:
@@ -1069,10 +1088,12 @@ class GcodeGenerator:
         #    scale = 25.4
         scale = 1
 
-        if cnc_op.width <= toolDiameter:
-            cnc_op.width = toolDiameter * 1.5  # default!
+        helix_radius = cnc_op.width
 
-        circle_travel_radius = (cnc_op.width - toolDiameter) / 2.0
+        if helix_radius == 0.0:
+            helix_radius = toolDiameter / 4.0  # default!
+
+        circle_travel_radius = helix_radius
         circle_travel = 2 * PI * circle_travel_radius
         helixPlungeRate = cutRate * helixPitch / circle_travel
 
@@ -1140,7 +1161,7 @@ class GcodeGenerator:
                         "optype": cnc_op.cam_op,
                         "paths": cnc_op.cam_paths,
                         "ramp": cnc_op.ramp_plunge,
-                        "helixWidth": cnc_op.width,
+                        "helixRadius": cnc_op.width,
                         "scale": scale,
                         "offsetX": self.offsetX,
                         "offsetY": self.offsetY,

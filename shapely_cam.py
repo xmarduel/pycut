@@ -721,19 +721,19 @@ class cam:
             SEG_LEN = 0.1
 
             tool_diameter = args["toolDiameter"]
-            helix_width = args["helixWidth"]
+            helix_radius = args["helixRadius"]
             helix_pitch = args["helixPitch"]
             helix_plunge_rate = args["helixPlungeRate"]
 
-            if helix_width < tool_diameter:
-                helix_width = tool_diameter * 1.5  # default!
+            if helix_radius == 0.0:
+                helix_radius = tool_diameter / 4.0  # default!
 
             cut_depth = -botZ
 
             for campath in paths:
                 center = (campath.path.coords.xy[0][0], campath.path.coords.xy[1][0])
 
-                circle_travel_radius = (helix_width - tool_diameter) / 2.0
+                circle_travel_radius = helix_radius
                 circle_travel = 2 * PI * circle_travel_radius
                 helix_plunge_rate = cutFeed * helix_pitch / circle_travel
 
