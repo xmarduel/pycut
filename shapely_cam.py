@@ -41,6 +41,8 @@ from shapely_matplotlib import MatplotLibUtils
 
 PI = math.pi
 
+from hsm_nibble import geometry
+
 
 class CamPath:
     """
@@ -158,6 +160,26 @@ class cam:
         overlap is in the range [0, 1).
         """
         pc = SpiralePocketCalculator(svgpaths, multipoly, cutter_dia, overlap, climb)
+        pc.pocket()
+        return pc.cam_paths
+
+    @classmethod
+    def nibble_pocket(
+        cls,
+        multipoly: shapely.geometry.MultiPolygon,
+        cutter_dia: float,
+        overlap: float,
+        climb: bool,
+    ) -> List[CamPath]:
+        """
+        Compute paths for pocket operation on Shapely multipolygon.
+
+        Returns array of CamPath.
+
+        cutter_dia is in "UserUnit" units.
+        overlap is in the range [0, 1).
+        """
+        pc = NibblePocketCalculator(multipoly, cutter_dia, overlap, climb)
         pc.pocket()
         return pc.cam_paths
 
@@ -1920,3 +1942,215 @@ class SpiralePocketCalculator:
             ]
 
             return ellipse_pts
+
+
+class NibblePocketCalculator:
+    """ """
+
+    def __init__(
+        self,
+        multipoly: shapely.geometry.MultiPolygon,
+        cutter_dia: float,
+        overlap: float,
+        climb: bool,
+    ):
+        """
+        cutter_dia is in user units.
+        overlap is in the range [0, 1].
+        """
+        self.multipoly = multipoly
+
+        self.cutter_dia = cutter_dia
+        self.overlap = overlap
+        self.climb = climb
+
+        self.resolution = 16
+        self.join_style = 1
+        self.mitre_limit = 5.0
+
+        # result of a the calculation
+        self.cam_paths: List[CamPath] = []
+
+        # temp variables
+        self.all_paths: List[shapely.geometry.LineString] = []
+
+    def pocket(self):
+        """
+        main algo - build self.cam_paths
+        """
+        # use polygons exteriors lines - offset them and and diff with the offseted interiors if any
+        multipoly = ShapelyUtils.orient_multipolygon(self.multipoly)
+
+        # the exterior
+        current = self.offset_multipolygon(
+            multipoly, self.cutter_dia / 2, "left", consider_interiors_offsets=True
+        )
+
+        poly = current.geoms[0]
+        xx, yy = poly.exterior.xy
+
+        poly = shapely.geometry.Polygon(
+            [(20, 20), (100, 20), (100, 150), (20, 150), (20, 20)]
+        )
+
+        step_size = (1.0 - self.overlap) * self.cutter_dia / 2.0
+
+        print("step_size = ", step_size)
+
+        winding_dir = (
+            geometry.ArcDir.CW
+        )  # if self.climb == True else geometry.ArcDir.CCW
+
+        toolpath = geometry.Pocket(
+            poly,
+            step_size,
+            winding_dir,
+            generate=True,
+            # starting_point=Point(-39.9, 11.8),
+            # starting_radius=2.5,
+            debug=True,
+        )
+
+        timeslice = 1000  # ms
+        for index, progress in enumerate(toolpath.get_arcs(timeslice)):
+            print(index, round(progress * 1000) / 1000)
+        # toolpath.path contains the currently generated path data at this point.
+
+        return self.toolpath_to_campaths(toolpath)
+
+    def toolpath_to_campaths(self, toolpath: geometry.Pocket):
+        """ """
+        last_element = None
+
+        xx = []
+        yy = []
+
+        for k, element in enumerate(toolpath.path):
+
+            if last_element is not None:
+                # assert last_element.end.equals_exact(element.start, 6)
+                # assert shapely.geometry.Point(
+                #    last_element.path.coords[-1]
+                # ).equals_exact(shapely.geometry.Point(element.path.coords[0]), 6)
+                pass
+            last_element = element
+
+            if type(element).__name__ == "Arc":
+                print("k = ", k, type(element).__name__)
+
+                x, y = element.path.xy
+
+                for xi in x:
+                    if math.fabs(xi + 20.113) < 0.001:
+                        a = 1
+                    if math.fabs(xi - 20.113) < 0.001:
+                        a = 1
+
+                # if element.debug:
+                #    plt.plot(x, y, c=element.debug, linewidth=3)
+                # else:
+                #    plt.plot(x, y, c=cut_colour, linewidth=1)
+
+                xx.extend(x)
+                yy.extend(y)
+
+                # campath = CamPath(element.path, False)
+                # self.cam_paths.append(campath)
+
+            elif type(element).__name__ == "Line":
+                print("k = ", k, type(element).__name__, element.move_style)
+
+                x, y = element.path.xy
+
+                for xi in x:
+                    if math.fabs(xi + 20.113) < 0.001:
+                        a = 1
+                    if math.fabs(xi - 20.113) < 0.001:
+                        a = 1
+
+                if element.move_style == geometry.MoveStyle.RAPID_INSIDE:
+                    # plt.plot(x, y, linestyle="--", c=rapid_inside_colour, linewidth=1)
+
+                    if True:
+                        self.add_campath(xx, yy, False)
+
+                        xx = []
+                        yy = []
+
+                        #    self.add_campath(x, y, True)
+
+                    # else:
+                    #    xx.extend(x)
+                    #    yy.extend(y)
+
+                    pass
+
+                elif element.move_style == geometry.MoveStyle.RAPID_OUTSIDE:
+                    # plt.plot(x, y, c=rapid_outside_colour, linewidth=1)
+
+                    if True:
+                        self.add_campath(xx, yy, True)
+
+                        xx = []
+                        yy = []
+
+                        self.add_campath(x, y, False)
+
+                    else:
+                        xx.extend(x)
+                        yy.extend(y)
+
+                else:
+                    assert element.move_style == geometry.MoveStyle.CUT
+
+                    # actually the beginning of a new "path"
+                    # so the old path is finished, but it should only be
+                    # a single 'retract'....
+
+                    if False:
+                        # plt.plot(x, y, c=rapid_outside_colour, linewidth=1)
+
+                        self.add_campath(xx, yy, True)
+
+                        xx = []
+                        yy = []
+
+                        self.add_campath(x, y, True)
+
+                    else:
+                        xx.extend(x)
+                        yy.extend(y)
+
+                    # plt.plot(x, y, linestyle="--", c=cut_colour, linewidth=1)
+
+                # campath = CamPath(element.path, True)
+                # self.cam_paths.append(campath)
+
+        self.add_campath(xx, yy, True)
+
+    def add_campath(self, xx, yy, safe_to_close):
+        coords = [(x, y) for x, y in zip(xx, yy)]
+        linestring = shapely.geometry.LineString(coords)
+
+        campath = CamPath(linestring, safe_to_close)
+        self.cam_paths.append(campath)
+
+    def offset_multipolygon(
+        self,
+        multipoly: shapely.geometry.MultiPolygon,
+        amount: float,
+        side: str,
+        consider_interiors_offsets=False,
+    ) -> shapely.geometry.MultiPolygon:
+        """
+        Generate offseted polygons.
+        """
+        offseter = ShapelyMultiPolygonOffset(multipoly)
+        return offseter.offset(
+            amount,
+            side,
+            consider_interiors_offsets,
+            self.resolution,
+            self.join_style,
+            self.mitre_limit,
+        )
