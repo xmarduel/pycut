@@ -576,10 +576,9 @@ offset curves are generated one after the other until the whole pocket "space" i
 the offsets is reversed, thus starting from the middle of the pocket.</p>
 
 <p>There are others algorithms, for example the "<strong>spirale</strong>" algorithm. Here we start fom the center of
-the pocket and go towards the outside in spirales, hence the name. It works best for <strong>circles</strong> and
-<strong>ellipses</strong>. For <strong>rectangles</strong>, <strong>polygons</strong> and <strong>closed
-paths</strong>, PyCut will use the external (free) library "<strong style="color:#8000ff">HSM_nibblers</strong>" which
-produces very nice toolpaths<strong>.</strong></p>
+the pocket and go towards the outside in spirales, hence the name. It is easy to calculate the toolpaths for 
+<strong>circles</strong> and <strong>ellipses</strong>. For the other shapes, <strong>PyCut</strong> utilizes the external (free) library
+<strong style="color:#8000ff">HSM_nibblers</strong> which produces very nice toolpaths<strong>.</strong></p>
 
 <p><strong>PyCut</strong> will try to implement this <strong>pocket</strong> algorithm in two steps: first an
 "<strong>Helix</strong>" operation, then a "<strong>Pocket</strong>" operation. <strong
@@ -587,13 +586,16 @@ style="color:#8000ff">Trick</strong>: to "activate" the spirale algorithm, just 
 "<strong>sp_</strong>" prefix! To "activate" the HSM_nibbler algorithm, just name the pocket operation with a
 "<strong>nb_</strong>" prefix! </p>
 
+<p>The helix will be cut in the "center" of the shape (the shapely polygon "centroid)", and we pass this location
+to the HSM nibbler, thus ensuring a good start of the pocket "nibbler" operation.</p>
+
 <p>The spirales will be for <strong>circles, ellipses</strong> shapes only -something admittingly rather restrictive-
 because these cases are more or less trivial. There is then no "isles" that neccessarely occur in the corners of the
 pocket for non-trivial geometries. But the HSM_nibblers toopaths are there for the others shapes.</p>
 
 <div class="info">
-<p><strong>Note:</strong> Having succesfully created an helix (hole) into the center of a <strong>circle</strong>,
-<strong>ellipse</strong>, <strong>rectangle</strong>, <strong>polygon</strong> or <strong>closed path</strong>, then
+<p><strong>Note:</strong> Having succesfully created an helix (hole) into the center of a basic shape (<strong>circle</strong>,
+<strong>ellipse</strong>, <strong>rectangle</strong>, <strong>polygon</strong> or <strong>closed path</strong>), then
 the "standard" pocket algorithm can be used with a <strong>very large overlap</strong> (value close to 1) and <strong>a
 larger pass depth</strong> (rather than a standard overlap and a tiny pass depth that is used for standard pockets)</p>
 </div>
