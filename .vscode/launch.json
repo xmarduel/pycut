@@ -8,6 +8,7 @@
 
 
 
+
         {
             "name": "SVG RESOLVER",
             "type": "python",
@@ -99,7 +100,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["-j", "Helix.json"]
+            "args": ["-j", "xx.json"]
         },
         {
             "name": "PYCUT HOLDER",

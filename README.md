@@ -38,18 +38,20 @@ start the program from the installation folder
   - engrave YES
   - vPocket NO (will never be implemented - I do not need this -)
   - drill or peck YES (for circle of radius smaller than the cutter radius)
+  - helix YES
 - svg items selection and op creation with combinaison Union/Diff/Inter/Xor (geometry calculated)
 - preview geom displayed in svg viewer
 - tabs
 - toolpaths displayed in svg viewer
-- gcode produced
-- gcode viewer (as in Candle)
+- gcode path viewer (as in Candle)
 - gcode simulator (as in jsCut, but with candle parser)
+- gcode produced (GRBL)
 
 ## Main Improvments over JsCut
 
 - tabs "on the fly" (no need to define them in the svg file)
 - flip X/Y in GCode (good for my machine - the "1419" one -)
 - can handle polygons as well as lines ("closed paths" and "opened paths")
+- toolpaths with HSM_nibblers optional
 
 See the Wiki page for more.

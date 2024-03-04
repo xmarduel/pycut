@@ -1,10 +1,6 @@
-# 2.0.0
-
-opencamlib toolpaths ?
-
 # 1.4.0
 
-gcode dressup ("dogbones")
+dogbones
 
 # 1.2.0
 

@@ -790,9 +790,16 @@ class CncOp:
             elif cam_op == "Helix":
                 self.cam_paths = cam.helix(geometry, toolData["diameterTool"])
 
-        if cam_op == "Pocket" and True and name.startswith("sp_"):
+        if cam_op == "Pocket" and name.startswith("sp_"):
             self.cam_paths = cam.spirale_pocket(
                 self.svg_paths,
+                geometry,
+                toolData["diameterTool"],
+                toolData["overlap"],
+                direction == "Climb",
+            )
+        elif cam_op == "Pocket" and name.startswith("nb_"):
+            self.cam_paths = cam.nibble_pocket(
                 geometry,
                 toolData["diameterTool"],
                 toolData["overlap"],
@@ -868,10 +875,12 @@ class CncOp:
                 self.cam_paths_svg_paths.append(svg_path)
         else:
             for cam_path in self.cam_paths:
-                svg_path = SvgPath.from_shapely_linestring(
-                    "pycut_toolpath", cam_path.path, cam_path.safe_to_close
-                )
-                self.cam_paths_svg_paths.append(svg_path)
+                linestring = cam_path.path
+                if len(linestring.coords.xy[0]) > 0:
+                    svg_path = SvgPath.from_shapely_linestring(
+                        "pycut_toolpath", linestring, cam_path.safe_to_close
+                    )
+                    self.cam_paths_svg_paths.append(svg_path)
 
 
 class JobModel:
