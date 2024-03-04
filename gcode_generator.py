@@ -356,28 +356,6 @@ class CncOp:
 
         self.geometry = shapely.geometry.MultiPoint(shapely_points)
 
-    def combine_as_helix(self):
-        """
-        generate the combinaison of the selected paths
-
-        the generated geometry is a MultiPoint
-        """
-        shapely_points: List[shapely.geometry.Point] = []
-
-        for svgpath in self.svg_paths:
-            # consider only circles and ellipses
-            if (
-                svgpath.shape_tag == "circle"
-                or svgpath.shape_tag == "ellipse"
-                or svgpath.shape_tag == "rect"
-                or svgpath.shape_tag == "polygon"
-                or (svgpath.shape_tag == "path" and svgpath.closed)
-            ):
-                shapely_point = svgpath.import_as_point()
-                shapely_points.append(shapely_point)
-
-        self.geometry = shapely.geometry.MultiPoint(shapely_points)
-
     def combine(self) -> None:
         """
         generate the combinaison of the selected paths
@@ -477,7 +455,7 @@ class CncOp:
             if self.cam_op == "Drill" or self.cam_op == "Peck":
                 self.combine_as_drill_or_peck()
             elif self.cam_op == "Helix":
-                self.combine_as_helix()
+                self.combine()
 
             if self.cam_op == "Pocket":
                 self.calculate_preview_geometry_pocket()
@@ -584,13 +562,17 @@ class CncOp:
                 self.geometry_svg_paths.append(geometry_svg_path)
 
     def calculate_preview_geometry_helix(self, tool_model: ToolModel):
-        """
-        as a pocket of diameter exactly cutter_dia  FIXME
-        """
+        """ """
         if self.geometry is not None:
             shapely_polygons: List[shapely.geometry.Polygon] = []
-            for pt in self.geometry.geoms:
-                center = pt.coords[0]
+            for poly in self.geometry.geoms:
+                center_pt = poly.centroid
+
+                cx = center_pt.xy[0][0]
+                cy = center_pt.xy[1][0]
+
+                center = (cx, cy)
+
                 radius = self.width.to_mm()
 
                 if radius == 0.0:
@@ -787,10 +769,11 @@ class CncOp:
                 self.cam_paths = cam.drill(geometry, toolData["diameterTool"])
             elif cam_op == "Peck":
                 self.cam_paths = cam.peck(geometry, toolData["diameterTool"])
-            elif cam_op == "Helix":
-                self.cam_paths = cam.helix(geometry, toolData["diameterTool"])
 
-        if cam_op == "Pocket" and name.startswith("sp_"):
+        if cam_op == "Helix":
+            self.cam_paths = cam.helix(geometry, toolData["diameterTool"])
+
+        elif cam_op == "Pocket" and name.startswith("sp_"):
             self.cam_paths = cam.spirale_pocket(
                 self.svg_paths,
                 geometry,
@@ -799,7 +782,7 @@ class CncOp:
                 direction == "Climb",
             )
         elif cam_op == "Pocket" and name.startswith("nb_"):
-            self.cam_paths = cam.nibble_pocket(
+            self.cam_paths = cam.nibbler_pocket(
                 geometry,
                 toolData["diameterTool"],
                 toolData["overlap"],

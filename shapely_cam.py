@@ -99,23 +99,21 @@ class cam:
     @classmethod
     def helix(
         cls,
-        multipoint: shapely.geometry.MultiPoint,
+        multipolygon: shapely.geometry.MultiPolygon,
         cutter_dia: float,
     ) -> List[CamPath]:
         """
-        Only for circles, ellipses and rectangles !
-
-        It will be performed from the center of the circle/ellipse/rectangle
+        It will be performed from the center of the shape.
 
         The helix drills down until the cut depth.
-        At each revolution, an cut depth of "helix_pitch" is cut in the z direction.
+        At each revolution, a cut depth of depth "helix_pitch" is cut in the z direction.
 
         This means, given the cut rate and the helix diameter, the helix plunge rate is calculated
         """
         camPaths = []
 
-        for point in multipoint.geoms:
-            pt = point.coords[0]
+        for poly in multipolygon.geoms:
+            pt = poly.centroid
 
             camPath = CamPath(shapely.geometry.Point(pt), False)
             camPaths.append(camPath)
@@ -164,7 +162,7 @@ class cam:
         return pc.cam_paths
 
     @classmethod
-    def nibble_pocket(
+    def nibbler_pocket(
         cls,
         multipoly: shapely.geometry.MultiPolygon,
         cutter_dia: float,
@@ -1998,7 +1996,7 @@ class NibblePocketCalculator:
                 step_size,
                 winding_dir,
                 generate=True,
-                # starting_point=Point(-39.9, 11.8),
+                starting_point=poly.centroid,
                 # starting_radius=2.5,
                 debug=True,
             )
