@@ -864,7 +864,13 @@ class CncOp:
             for cam_path in self.cam_paths:
                 center = (cam_path.path.coords.xy[0][0], cam_path.path.coords.xy[1][0])
 
-                svgpath = SvgPath.from_circle_def(center, width)
+                if width == 0.0:
+                    # default value
+                    radius = tool_model.diameter / 4.0
+                else:
+                    radius = width
+
+                svgpath = SvgPath.from_circle_def(center, radius)
                 polys = svgpath.import_as_polygons_list()
 
                 helix_path = CamPath(polys[0].exterior, False)

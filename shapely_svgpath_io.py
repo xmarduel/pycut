@@ -296,7 +296,7 @@ class SvgPath:
         if self.shape_tag == "circle" or self.shape_tag == "ellipse":
             cx = float(self.shape_attrs["cx"])
             cy = float(self.shape_attrs["cy"])
-        elif self.shape_tag == "rectangle":
+        elif self.shape_tag == "rect":
             w = float(self.shape_attrs.get("width"))
             h = float(self.shape_attrs.get("height"))
 
