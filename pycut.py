@@ -487,8 +487,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         dlg.setWindowTitle("PyCut Tutorial")
         dlg.setModal(True)
 
-        fileName = ":/tutorial_qt.html"
-        # fileName = ":/tutorial.html"
+        fileName = ":/tutorial.html"
         file = QtCore.QFile(fileName)
         if file.open(QtCore.QIODevice.ReadOnly):
             data = str(file.readAll(), "utf-8")  # explicit encoding
@@ -497,7 +496,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         file.close()
 
-        htmlView.setHtml(data)
+        htmlView.setHtml(data, baseUrl=QtCore.QUrl("qrc:/"))
 
         dlg.show()
 
