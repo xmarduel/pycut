@@ -43,14 +43,15 @@
       <li><a href="#P-04-07">GCode Generation</a></li>
     </ul>
   </li>
-  <li><a href="#P-05">GCode DressUp</a> </li>
-  <li><a href="#APPENCIDE-01">Appendix-1: SVG Editors</a></li>
-  <li><a href="#APPENCIDE-02">Appendix-2: GCODE Viewers</a></li>
+  <li><a href="#P-05">Pockets Tips</a> </li>
+  <li><a href="#P-06">GCode DressUp</a> </li>
+  <li><a href="#APPENDICE-01">Appendix-1: SVG Editors</a></li>
+  <li><a href="#APPENDICE-02">Appendix-2: GCODE Viewers</a></li>
 </ul>
 <script type="text/javascript">
 var tree = document.querySelectorAll('ul.tree a:not(:last-child)');
-for (var i = 0; i < tree.length; i++){
-    tree[i].addEventListener('click', function(e) {
+for (var i = 0; i < tree.length; i++) {
+    tree[i].addEventListener('click', function (e) {
         var parent = e.target.parentElement;
         var classList = parent.classList;
         if (classList.contains("open")) {
@@ -87,15 +88,24 @@ web-based programm, that takes as input <strong>SVG</strong> files and generates
 <p><strong>PyCut</strong> aims to offer all the (minimalistics) features found in jsCut, with some improvements.
 Hopefully you will find <strong>PyCut</strong> usefull when learning CNC and producing your first GCode files.</p>
 
-<p>Starting point of <strong>PyCut</strong> are <strong>SVG</strong> files, your designs. In the following, we will use
-<strong>Inkscape</strong> to produce/explain <strong>SVG</strong> files and will shortly point out what has to be taken
-into consideration when creating "usable" <strong>SVG</strong> files for <strong>PyCut</strong>.</p>
+<p>Starting point of <strong>PyCut</strong> are <strong>SVG</strong> files, your designs. In the following, we will
+  point out what has to be taken into consideration when creating "usable" <strong>SVG</strong> files for
+  <strong>PyCut</strong>.</p>
 
-<h3 id="P-01-01">SVG Documents</h3>
+<h2 id="P-01-01">SVG Documents</h2>
 
 <p><strong>PyCut</strong>, in order to work acurately, need the SVG document to define its standard
 <strong>width</strong> and <strong>height</strong> with units "<strong>mm</strong>" or "<strong>in</strong>". The
-<strong>viewbox</strong> needs to be defined as well. More on this later.</p>
+<strong>viewbox</strong> needs to be defined as well. The view shall be of the form </p>
+
+<p></p>
+<pre><code>viewbox="0 0 &lt;width&gt; &lt;height&gt;"</code></pre>
+
+<div class="info">
+<p><strong>Note:</strong> The <strong>height</strong> will be used later when creating GCode with the
+<strong>PyCut</strong> option "Zero Lower Left of Material" as reference.</p>
+</div>
+
 
 <h3 id="P-01-011">SVG Shapes and Paths</h3>
 
@@ -120,6 +130,13 @@ user to define cnc operations on the "shapes" defined inside the svg file. Of co
 
 <p>can define in a single path definition many closed or opened (sub)paths.</p>
 
+<p>Finally, the user will maybe also want to process the strings written in the svg file:</p>
+<ul>
+  <li><span style="color:#0000ff">&lt;text&gt;</span></li>
+</ul>
+
+<p>For these strings to be imported, however, they have to be first converted to path.</p>
+
 <p><strong>PyCut</strong> processes "paths" in order to calculate geometries and cnc tool paths, but thankfully it can
 read out of the box all kind of shapes, so there is <strong>no need</strong> to convert your svg files into "paths
 only" svgs.</p>
@@ -130,14 +147,32 @@ only" svgs.</p>
 <p><strong>Warning:</strong> PyCut will only display shapes in its viewer which have an id.</p>
 </div>
 
-<p>Finally, the user will maybe also want to process the strings written in the svg file:</p>
-<ul>
-  <li><span style="color:#0000ff">&lt;text&gt;</span></li>
-</ul>
+<p>In order to reference the shapes, the shapes must have their own <strong>"id"</strong>, hopefully unique inside the
+  svg document. The user, having edited the svg file "per hand" or not, should not forget to check and give the shapes he
+  wishes to process an unique id.</p>
+  
+  <h4>Defs and use tags</h4>
+  
+  <p><strong>PyCut</strong> cannot import directly the very handy SVG <strong>&lt;def&gt;</strong> and
+  <strong>&lt;use&gt;</strong> feature. The utility <strong>svgresolver.py</strong> delivered with PyCut will have to be
+  used. It takes as input the SVG file defined with <code>&lt;defs&gt;</code> and outputs a new SVG where all
+  <code>&lt;defs&gt;/&lt;use&gt;</code> have been resolved.</p>
+  
+  <h4>Opened and closed paths/shapes</h4>
+  
+  <p>A path can be closed or not. This is not a matter if the first point is equal the the last point. A closed path or
+  subpath contains the annotation <strong>"Z"</strong> or <strong>"z"</strong> at its end. Even if the first point of the
+  path is equal to its last point, the path is only considered as closed with the ending "Z/z".</p>
+  
+  <div class="warning">
+  <p><strong>Warning:</strong> PyCut strongly relies on the <strong>Z/z</strong> annotation to decide if the path is
+  closed or not. When not closed, "Pocket" operations will not be allowed for this path.</p>
+  </div>
+  
+  <p><strong>PyCut</strong> imports closed paths as shapely "Polygon" (infact "MultiPolygon"), while opened paths are
+  imported as "LineString" (infact "MultiLineString").</p>
 
-<p>For these strings to be imported, however, they have to be first converted to path.</p>
-
-<p><strong>PyCut</strong> will import these shapes either as (shapely) "<span style="color:#0000ff">Polygon</span>"
+<p><strong>PyCut</strong> will import the other shapes either as (shapely) "<span style="color:#0000ff">Polygon</span>"
 (i.e. <strong>closed items</strong>) or as (shapely) "<span style="color:#0000ff">LineString</span>" (i.e.
 <strong>opened items</strong>). Of course, svg <span style="color:#0000ff">&lt;rect&gt;</span>, <span
 style="color:#0000ff">&lt;circle&gt;</span>, <span style="color:#0000ff">&lt;ellipse&gt;</span> and <span
@@ -153,6 +188,8 @@ example, the letters "i" or "j" are defined with a single svg path, defining two
 to consider these paths as a single shapely MultiPolygon entity. The letter "a" is a polygon with one hole, the letter
 "g" is a polygon with two holes (for some fonts). In the freetype vocabulary, "a" is formed by 2 "contours", "g" by
 three "contours".</p>
+
+<h4>Text shapes</h4>
 
 <p><strong>PyCut</strong> cannot process yet <span style="color:#0000ff">&lt;text&gt;</span> items directly.
 Fortunately, <span style="color:#0000ff">&lt;text&gt;</span> items can to be converted into <span
@@ -170,20 +207,6 @@ style="color:#8000ff">IN PROGRESS</span></strong>.</p>
 <p>All in all, if <strong>PyCut</strong> were to display text strings at the wrong positions, the user can always
 export the svg from <strong>Inkscape</strong> (and write <strong>PyCut</strong> a ticket).</p>
 
-<h4>Closed and opened paths</h4>
-
-<p>A path can be closed or not. This is not a matter if the first point is equal the the last point. A closed path or
-subpath contains the annotation <strong>"Z"</strong> or <strong>"z"</strong> at its end. Even if the first point of the
-path is equal to its last point, the path is only considered as closed with the ending "Z/z".</p>
-
-<div class="warning">
-<p><strong>Warning:</strong> PyCut strongly relies on the <strong>Z</strong> annotation to decide if the path is closed
-or not. When not closed, "Pocket" operations will not be allowed for this path.</p>
-</div>
-
-<p><strong>PyCut</strong> imports closed paths as shapely "Polygon" (infact "MultiPolygon"), while opened paths are
-imported as "LineString" (infact "MultiLineString").</p>
-
 <h4>Transformations</h4>
 
 <p><strong>PyCut</strong> cannot handle "out of the box" svg datas where shapes are defined with "transform" operations
@@ -199,45 +222,6 @@ example, transforming a <code>&lt;rect&gt;</code> element with a rotate transfor
 <strong><span style="color:#8000ff">IN PROGRESS</span></strong>: this utility should be integrated into
 <strong>PyCut</strong> so that the user can spare this step. Actually, this utility is found in the source code under
 the folder "<strong>utilities/svgresolver</strong>". </p>
-
-<h2 id="P-02">Svg Documents</h2>
-
-<p>Svg files can be written with basic text editors (vi, emacs etc..) or with graphical applications, like
-<strong>Inkscape</strong>. In both cases, the svg files should contains (and <strong>Inkscape</strong> does it
-automatically) a <strong>viewBox</strong> as well as a <strong>width</strong> and an <strong>height</strong>. These 2
-important attributes should be given with a unit, i.e "<strong>mm</strong>" or "<strong>in</strong>" as we are editing
-data in order to later generate gcode (with "mm" or "in" units).</p>
-
-<div class="info">
-<p><strong>Note:</strong> The <strong>height</strong> will be used later when creating GCode with the
-<strong>PyCut</strong> option "Zero Lower Left of Material" as reference.</p>
-</div>
-
-<h4>Shapes "id"</h4>
-
-<p>In order to reference the shapes, the shapes must have their own <strong>"id"</strong>, hopefully unique inside the
-svg document.</p>
-
-<p>If the user has edited the svg file "per hand", then he should not forget to give the shapes he wishes to process an
-unique id. If the user has created the svg with <strong>Inkscape</strong>, then "id"s are automatically given, but
-maybe the user will want to edit them and give them meaningfull name.</p>
-
-<h4>Writing Svg Files with Inkscape</h4>
-
-<p>With <strong>Inkscape</strong>, the first step is to specify the "Document size". Please choose as units
-"<strong>mm</strong>" or "<strong>in</strong>". <span style="color:#8000ff"><strong>You should also do this when
-creating a svg file with a text editor</strong></span>.</p>
-
-<h4>Writing Svg Files with a Text Editor</h4>
-
-<p>Sometimes it is easier to edit a svg file without a graphical app like <strong>Inkscape</strong>, but simply with a
-text editor. </p>
-
-<p>This way, it is easy for example to define shapes in the <strong>&lt;def&gt;</strong> paragraph and reuse theses
-shapes in the main body of the svg file with the help of the <strong>&lt;use&gt;</strong> tag and some transformations.
-Unfortunately <strong>PyCut</strong> cannot imported such construct. The utility <strong>svgresolver.py</strong>
-delivered with PyCut will have to be used. It takes as input the SVG file defined with <code>&lt;defs&gt;</code> and
-outputs a new SVG where all <code>&lt;defs&gt;/&lt;use&gt;</code> have been resolved.</p>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
@@ -588,7 +572,8 @@ cutter diameter</strong>, in order to have toolpath, "<strong><span style="color
 <p><strong style="color:#8000ff">NEW</strong>: for
 <strong>circles</strong>/<strong>ellipses</strong>/<strong>rectangles</strong>/<strong>polygons and more generatly
 closed paths</strong>, the "<strong style="color:#8000ff">helix</strong>" operation is available. This cut "smoothly"
-in the center of the shape a hole or an helix, depending on the width of the helix and the cutter diameter.</p>
+in the center of the shape an hole or a donut, depending on the radius of the helix and the cutter diameter. The hlix
+has always the tickness of the cutter diameter.</p>
 
 <p>In order to generate G code, enable one or many operations and click on "Generate G code". <strong>PyCut</strong>
 will try to do its best... The resulting G code is displayed in the G code viewer and G code simulator.</p>
@@ -606,46 +591,48 @@ G code to your machine. Have fun...</p>
 offset curves are generated one after the other until the whole pocket "space" is processed. At the end, ordering of
 the offsets is reversed, thus starting from the middle of the pocket.</p>
 
-<p>There are others algorithms, for example the "<strong>spirale</strong>" algorithm. Here we start from the center of
-the pocket and go towards the outside in spirales, hence the name. It works best for <strong>circles</strong> and
-<strong>ellipses</strong>. For <strong>rectangles</strong>, it is possible to map the spirales from a
-<strong>circle</strong> into a <strong>rectangle.</strong></p>
-
-<p><strong>PyCut</strong> will try to implement this <strong>pocket</strong> algorithm in two steps: first an
-"<strong>Helix</strong>" operation, then a "<strong>Pocket</strong>" operation. <strong
-style="color:#8000ff">Trick</strong>: to "activate" the spirale algorithm, just name the pocket operation with a
-"<strong>sp_</strong>" prefix! </p>
-
-<p>The spirales will be for <strong>circles, ellipses</strong> and <strong>rectangles</strong><strong></strong> shapes
-only -something admittingly rather restrictive- because these cases are more or less trivial. There is then no "isles"
-that neccessarely occur in the corners of the pocket for non-trivial geometries. Will the spirale arms successfully
-fill a rectangle? Hopefull yes, and the user can check it with the gcode simulator!</p>
-
-<div class="info">
-<p><strong>Note:</strong> Having succesfully created an helix (hole) into the center of a <strong>circle</strong>,
-<strong>ellipse</strong>, <strong>rectangle</strong>, <strong>polygon</strong> or <strong>closed path</strong>, then
-the "standard" pocket algorithm can be used with a <strong>very large overlap</strong> (value close to 1) and <strong>a
-larger pass depth</strong> (rather than a standard overlap and a tiny pass depth that is used for standard pockets)</p>
-</div>
+<p>There are others algorithms, for example the "<strong>spirale</strong>" algorithm. Here we start fom the center of
+  the pocket and go towards the outside in spirales, hence the name. It is easy to calculate the toolpaths for 
+  <strong>circles</strong> and <strong>ellipses</strong>. For the other shapes, <strong>PyCut</strong> utilizes the external (free) library
+  <strong style="color:#8000ff">HSM_nibblers</strong> which produces very nice toolpaths<strong>.</strong></p>
+  
+  <p><strong>PyCut</strong> will try to implement this <strong>pocket</strong> algorithm in two steps: first an
+    "<strong>Helix</strong>" operation, then a "<strong>Pocket</strong>" operation. <strong
+    style="color:#8000ff">Trick</strong>: to "activate" the spirale algorithm, just name the pocket operation with a
+    "<strong>sp_</strong>" prefix! To "activate" the HSM_nibbler algorithm, just name the pocket operation with a
+    "<strong>nb_</strong>" prefix! </p>
+    
+    <p>The helix will be cut in the "center" of the shape (the shapely polygon "centroid)", and we pass this location
+    to the HSM nibbler, thus ensuring a good start of the pocket "nibbler" operation.</p>
+    
+    <p>The spirales will be for <strong>circles, ellipses</strong> shapes only -something admittingly rather restrictive-
+    because these cases are more or less trivial. There is then no "isles" that neccessarely occur in the corners of the
+    pocket for non-trivial geometries. But the HSM_nibblers toopaths are there for the others shapes.</p>
+    
+    <div class="info">
+    <p><strong>Note:</strong> Having succesfully created an helix (hole) into the center of a basic shape (<strong>circle</strong>,
+    <strong>ellipse</strong>, <strong>rectangle</strong>, <strong>polygon</strong> or <strong>closed path</strong>), then
+    the "standard" pocket algorithm can be used with a <strong>very large overlap</strong> (value close to 1) and <strong>a
+    larger pass depth</strong> (rather than a standard overlap and a tiny pass depth that is used for standard pockets)</p>
+    </div>
 
 <h4>Helix</h4>
 
-<p>The cutter diameter plays of course a role. The helix's center will be the <strong>center of the (closed)
-shape</strong>. Considering the case where the center of the helix is [0,0], <strong>on which "orbit" will move the
-cutter</strong>? Well we specify it with the standard "<strong>width</strong>" operation attribute, which needs to be
-at least equal or larger than the cutter diameter. A good value would be 1.5 * cutter_diameter. With this value, there
-is an overlap of 0.5 (ratio). A value of 1 generates an hole of diameter the cutter diameter. A value of 2 *
-cutter_diameter generates an hole of diameter 2 times the cutter diameter. Above this value, there wil be material
-remaining in the middle part of the helix, and the helix is thus simular to an "Inside" or "Outside"operation for an
-imaginary circle shape, however with a "smoother" cut. </p>
-
-<p>The helix revolution depth is the most important parameter. Its values (example 0.1 mm for aluminium) implies that
-the "helix plunge rate" is calculated from the helix width and the standard cut (feed) rate. Specifiying the helix
-revolution depth though is easier.</p>
-
-<p>Theoretically, the Helix operation could perform threads cutting by generating first an hole, then an helix "inside
-the hole" where the helix width would be smaller the the hole diameter.</p>
-
+<p>The cutter diameter will be the "thickness" of the helix. The helix's center will be the <strong>center of the
+  (closed) shape</strong>. Considering the case where the center of the helix is [0,0], <strong>on which "orbit" will
+  move the cutter</strong>? Well we specify it with the standard "<strong>width</strong>" operation attribute, which
+  infact means the <strong>helix radius</strong>. A good value would be the <strong>half of the cutter radius</strong>.
+  With this value, there is an overlap of 0.75 (ratio). A value greather than the cutter radius generates a donut (well
+  the center may fall), and the helix is thus simular to an "Inside" or "Outside"operation for an imaginary circle shape,
+  however with a "smoother" cut. </p>
+  
+  <p>The helix pitch (revolution depth) is the most important parameter. Its value (example 0.1 mm for aluminium) implies
+  that the "helix plunge rate" is calculated from the helix radius and the standard cut (feed) rate. Specifiying the
+  helix pitch though is easier.</p>
+  
+  <p>Theoretically, the Helix operation could perform threads cutting by generating first an hole, then an helix "inside
+  the hole" where the helix radius would be smaller the the hole radius.</p>
+  
 <h4>Spirale</h4>
 
 <p>With a Spirale operation, the cutter will plunge automatically with a <strong>depth</strong> equal to the specified
@@ -738,76 +725,105 @@ round). </p>
 <p>Note that the amount of material not removed by the cutter depends on the angle of the corner and the radius of the
 cutter.</p>
 
-<p>To remedy to this, you can</p>
-<ul>
-  <li>fix the resulting GCode -more or less- per hand so that the corners are milled as you wish</li>
-  <li>generate the GCode with "DogBones Dressup"</li>
-  <li>I do not know yet another method</li>
-</ul>
-
 <div class="info">
 <p><strong>Note:</strong> For concave angles, the generated toolpaths around such corners are smooth and do not need
 any fixups.</p>
 </div>
 
-<p>The first option means you have to modify "per hand" the produced GCode. Some computation help will be certainly
-needed anyway. It may be an acceptable solution if the workpiece has only a few convex angles. But how allowing to
-modify the Gcode "per hand" in a repeatable manner? here is my proposed method:</p>
-<ol>
-  <li>Generate the Gcode first.</li>
-  <li>Identify the locations(s) of the Gcode where the problem occurs (convex angles).</li>
-  <li>Write "fixup" GCode "blocks" that will be inserted into the generated GCode at the right places</li>
-</ol>
+<p>Fixing the GCode "per hand" is absolutely no solution, so an automatic handling has to be perfomed.</p>
 
 <div class="warning">
-<p><strong>Warning:</strong> If there are 1000 corners to fix, it will be unpracticable..</p>
+<p><strong>Warning:</strong> Having had a look at (the doc of) some other tools (<strong>BlenderCam</strong>,
+<strong>Fusion360</strong>), I have noticed that these tools, in order to perform dogbones correction, "update" the
+geometry, or rather said "actualize" the contour lines so that these contour lines get their bones. After that, the
+"inside" or "outside" operations are performed "as usual". I will try to take a different approach : only the generated
+GCode will be "fixed" when encountering "angles". </p>
 </div>
 
 <h3>A first try</h3>
 
-<p>Here we suppose the cutter radius is 3mm. We wish to mill an inner square hole, so the "convex angle" corner problem
-occurs. We have 2 (or more!) strategies to allow a perfect square to fit in the milled hole. Strategy "1" in shown on
-the left, strategy "2" on the right: the extra tool path is displayed as well as the cutter at the end of the extra
-tool path (and the standard cutter position at the toolpath corner).</p>
-<svg width="200mm" height="80mm" viewBox="0 0 200 80" version="1.1">
-  <g id="layer1">
-    <polyline points="10,70 10,10 100,10 100,70" stroke-width="0.5" fill="none" stroke="black"/>
-    <polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="20px"
-              stroke-opacity="0.2"/>
-    <polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
-              stroke-opacity="0.8"/>
-    <circle cx="20" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
-    <!-- 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                       D = sqrt(10*10 + 10*10) = 14.14
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                       d = 14.14 -10 = 4.14
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                       dx = dy =  d / sqrt(2) = 2.93
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                       -->
-    <polyline id="dog-bone-path1" points="20,20 17.07,17.07" fill="none" stroke="blue" stroke-linejoin="round"
-              stroke-width="0.3" stroke-opacity="0.2"/>
-    <circle id="dog-bone-path1-material" cx="17.07" cy="17.07" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2"
-            stroke-opacity="0.1"/>
-    <!--  other bone type -->
-    <polyline id="dog-bone-path2" points="90,20 90,10" fill="none" stroke="blue" stroke-linejoin="round"
-              stroke-width="0.3" stroke-opacity="0.2"/>
-    <circle id="cutter2" cx="90" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
-    <circle id="dog-bone-path2-material" cx="90" cy="10" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2"
-            stroke-opacity="0.1"/>
-  </g>
-</svg>
+<p>Let's get a taste how dogbone handling look like. Here we suppose the cutter radius is <strong>3mm</strong>. We wish
+  to mill an inner square hole, so the "convex angle" corner problem occurs. We have 2 (or more!) strategies to allow a
+  square to fit in the milled hole. Strategy "1" in shown on the left, strategy "2" on the right: the extra tool path is
+  displayed with the cutter at the end of the extra tool path (as well as the standard cutter position at the toolpath
+  corner).</p>
+  <svg width="200mm" height="100mm" viewBox="0 0 200 100" version="1.1">
+    <style>
+      .small {font: italic 3px sans-serif;}</style>
+    <g id="layer">
+      <line x1="10" x2="10" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
+      <line x1="20" x2="20" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
+      <line x1="30" x2="30" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
+      <line x1="40" x2="40" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
+      <line x1="50" x2="50" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
+      <line x1="60" x2="60" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
+      <line x1="70" x2="70" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
+      <line x1="80" x2="80" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
+      <line x1="90" x2="90" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
+      <line x1="100" x2="100" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
+      <text x="8" y="100" class="small">7</text>
+      <text x="18" y="100" class="small">10</text>
+      <text x="28" y="100" class="small">13</text>
+      <text x="38" y="100" class="small">16</text>
+      <text x="48" y="100" class="small">19</text>
+      <text x="58" y="100" class="small">22</text>
+      <text x="68" y="100" class="small">25</text>
+      <text x="78" y="100" class="small">28</text>
+      <text x="88" y="100" class="small">31</text>
+      <text x="98" y="100" class="small">34</text>
+      <line x1="105" x2="110" y1="10" y2="10" stroke-width="0.5" fill="none" stroke="black"/>
+      <line x1="105" x2="110" y1="20" y2="20" stroke-width="0.5" fill="none" stroke="black"/>
+      <line x1="105" x2="110" y1="30" y2="30" stroke-width="0.5" fill="none" stroke="black"/>
+      <line x1="105" x2="110" y1="40" y2="40" stroke-width="0.5" fill="none" stroke="black"/>
+      <line x1="105" x2="110" y1="50" y2="50" stroke-width="0.5" fill="none" stroke="black"/>
+      <line x1="105" x2="110" y1="60" y2="60" stroke-width="0.5" fill="none" stroke="black"/>
+      <line x1="105" x2="110" y1="70" y2="70" stroke-width="0.5" fill="none" stroke="black"/>
+      <line x1="105" x2="110" y1="80" y2="80" stroke-width="0.5" fill="none" stroke="black"/>
+      <text x="112" y="11" class="small">23</text>
+      <text x="112" y="21" class="small">20</text>
+      <text x="112" y="31" class="small">17</text>
+      <text x="112" y="41" class="small">14</text>
+      <text x="112" y="51" class="small">11</text>
+      <text x="112" y="61" class="small">8</text>
+      <text x="112" y="71" class="small">5</text>
+      <text x="112" y="81" class="small">2</text>
+      <rect x="10" y="10" width="90" height="70" stroke-width="0.4" fill="none" stroke="black"/>
+      <rect x="20" y="20" width="70" height="50" stroke-width="0.2" fill="none" stroke="red"/>
+      <rect x="20" y="20" width="70" height="50" stroke-width="20px" fill="none" stroke="blue" stroke-linejoin="round"
+            stroke-opacity="0.2"/>
+      <circle cx="20" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+      <circle cx="90" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+      <text x="11" y="13" class="small">C</text>
+      <text x="97" y="13" class="small">D</text>
+      <text x="21" y="23" class="small">A</text>
+      <!--
+                D = sqrt(10*10 + 10*10) = 14.14
+                  d = 14.14 -10 = 4.14dx = dy = d / sqrt(2) = 2.93
+                -->
+      <polyline id="dog-bone-path1" points="20,20 17.07,17.07" fill="none" stroke="blue" stroke-width="0.3"
+                stroke-opacity="0.5"/>
+      <circle id="dog-bone-path1-material" cx="17.07" cy="17.07" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2"
+              stroke-opacity="0.1"/>
+      <!--  other bone type -->
+      <polyline id="dog-bone-path2" points="90,20 90,10" fill="none" stroke="blue" stroke-width="0.3"
+                stroke-opacity="0.5"/>
+      <circle id="dog-bone-path2-material" cx="90" cy="10" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2"
+              stroke-opacity="0.1"/>
+    </g>
+  </svg>
 
-<p>We see that the strategy "1" removes far less extra material than the strategy "2". </p>
+<p>We see that the strategy "1" removes far less extra material than the strategy "2", so we will concentrate later
+  only on the strategy "1". </p>
 
 <p>At every G01 instruction, there is certainly a direction change, which can be tiny (consider milling an inner
 circle, not as G02 or G03 but with a list of GO1 instructions) or big, here in our case a 90 degrees direction
 change.</p>
-<pre><code class="language-gcode">G1 X10.00 Y15.00
-  G1 X10.00 Y20.00  (go up)
-  G1 X15.00 Y20.00  (change of direction to the right)</code></pre>
+<pre><code class="language-gcode">G1 X10.00 Y5.00
+G1 X10.00 Y20.00  (go up to A)
+G1 X31.00 Y20.00  (change of direction to the right)</code></pre>
 
 <p>We shall insert a GCode block before changing the direction</p>
-<pre><code class="language-gcode">G1 X10.00 Y15.00
+<pre><code class="language-gcode">G1 X10.00 Y5.00
   G1 X10.00 Y20.00 (go up)
   ; fix up begin ------------------------
   G1 X09.00 Y21.00 (goes 1mm top left)
@@ -816,7 +832,7 @@ change.</p>
   G1 X15.00 Y20.00 (change of direction to the right)</code></pre>
 
 <p>or, using incremental distance mode for the fix-up:</p>
-<pre><code class="language-gcode">G1 X10.00 Y15.00
+<pre><code class="language-gcode">G1 X10.00 Y5.00
   G1 X10.00 Y20.00 (go up)
   ; fix up begin ------------------------
   G91           (incremental distance mode) 
@@ -828,55 +844,9 @@ change.</p>
 
 <p>In the following, I will prefer switching to incremental distance mode (G91) and back (G90) for the fixups.</p>
 
-<p>Of course, in case of automatic fixups, we need to inform the Gcode generator that it has to take into account this
-fixup, thus inserting the "block" each time a gcode line with such a pattern (<code>G1 X15.00 Y20.00</code>) is
-found.</p>
-
-<p>If the GCode generator cannot do this on its own, it is up to the user to give the right fixups, for each "problem
-zone" (convex corner) one block. This fixup will have to be saved in the project, and to be applied only for the
-desired operations. In the job file, there is a "gcode-fixups" section at the operation definition:</p>
-<pre><code class="language-json">{
-     "name": "op_contour",
-     "type": "outside",
-     "cut_depth": 3.175,
-     "paths": [
-       "contour"
-     ],
-     "ramp_plunge": false,
-     "combinaison": "Union",
-     "direction": "Conventional",
-     "units": "mm",
-     "margin": 0.0,
-     "width": 0.0,
-     "gcode-fixups":[
-         {"G1 X10.00 Y20.00" : [ 
-             "; fix up begin ------------------------",
-             "G91              ( incremental distance mode)",
-             "G1 X-1.00 Y1.00  ( goes 1mm top left ) ", 
-             "G1 X1.00 Y-10.00 ( and back )",
-             "G90              ( absolute distance mode)", 
-             "; fix up end --------------------------"]
-         },
-         {"G1 X15.00 Y20.00" : [ 
-             "; fix up begin ------------------------",
-             "G91             ( incremental distance mode)",
-             "G1 X0.00 Y3.00  ( goes 3mm top )",
-             "G1 X0.00 Y-3.00 ( and back )",
-             "G90             ( absolute distance mode)", 
-             "; fix up end --------------------------"]
-         }
-      }
-  }</code></pre>
-
-<div class="warning">
-<p><strong>Warning:</strong> Note that the GCode generation is function, among others, of the cutter radius (obvious)
-but also of the "GCodeConversion" settings. Notably, when changing the generation offsets (x or y), then the whole
-GCode is modified, thus making the reference patterns for the fixups obsolete.</p>
-</div>
-
-<p>In this first try, we "naively" gave at the left corner for the "strategy 1" a fix-up of 1 mm with fix-up direction
-NE. We can certainly do better.</p>
-
+<p>In this first try, we "naively" gave at the left corner an extra travel of 1 mm in the NE direction. We can
+  certainly do better.</p>
+  
 <p><strong>Example-1</strong>: exact fixup, same geometry with a cutter of radius 3.0 mm</p>
 We wish to calculate the cutter extra travel exactly in order to minimize the extra stock removal while achieving the
 corner beeing milled completely as shown on the picture. 
@@ -886,16 +856,18 @@ position for it (see GCode). Thus there is a gap of </p>
 
 <p><code>gap = sqrt(3.0*3.0 + 3.0*3.0) - 3.0 = 1.2426</code></p>
 
-<p>between the corner and the border of the cutter.</p>
+<p>between the corner C and the border of the cutter at point A.</p>
 
-<p>So we know which extra travel <code>dx</code> and <code>dy</code> to give to the cutter (hint: it is not the "gap").
-It is: </p>
+<p>So we know which extra travel <code>dx</code> and <code>dy</code> the cutter must travel in order to its border
+  reaches C: </p>
 <pre><code>dx = gap * cos(3 *pi / 4) = -0.8786
   dy = gap * sin(3 *pi / 4) = +0.8786</code></pre>
 
-<p>The angle <code>3*pi/4</code> here is the direction of the outer corner (concave) angle bisection line, let's call
-it the "orientation" of the corner. So lets try to generalize for any corner "orientation". We denote this orientation
-"bi". .</p>
+  <p>The angle <code>3*pi/4</code> here is the direction of the outer corner (concave) angle bisection line, let's call
+    it the "orientation" of the corner. It is of course identical to the direction of AC, but in practice C is not known,
+    only the position of the cutter. not that the cutter "trajectory" makes exactly the same angle as the real geometry
+    when encountering a convex angle. So lets try to generalize for any corner "orientation". We denote this orientation
+    "bisect".</p>
 <pre><code>dx = gap * cos(bisect) = -0.8786
   dy = gap * sin(bisect) = +0.8786</code></pre>
 
@@ -907,17 +879,17 @@ it the "orientation" of the corner. So lets try to generalize for any corner "or
   G90
   ; fix up end --------------------------</code></pre>
 
-<p><strong>Example-2</strong>: exact fixup, same geometry but at the corner on the right</p>
+  <p><strong>Example-2</strong>: exact fixup, same geometry but at the corner D on the right</p>
 
-<p>The corner coordinate is [18.0, 23.0] and the cutter reaches the coordinate [15.0, 20.0] from the left. Remember,
-the cutter radius is 3mm. The gap between the corner and the cutter border remains the same, as the angle is still a
-right angle.</p>
-
-<p>But the orientation of the corner is this time pi / 4. </p>
-<pre><code>dx = offset * cos(bisect) = 0.8786
+  <p>The corner coordinate is [34.0, 23.0] and the cutter reaches the coordinate [31.0, 23.0] from the left. Remember,
+  the cutter radius is 3mm. The gap between the corner and the cutter border remains the same, as the angle is still a
+  right angle.</p>
+  
+  <p>But the orientation of the corner is this time <code>pi/4</code>. </p>
+  <pre><code>dx = offset * cos(bisect) = 0.8786
   dy = offset * sin(bisect) = 0.8786</code></pre>
-
-<p>So the fixup for this corber is </p>
+  
+  <p>So the fixup for this corner is </p>
 <pre><code class="language-gcode">; fix up begin ------------------------
   G91
   G1 X0.8786  Y0.8786   ( goes 0.8786 mm top right )
@@ -928,16 +900,18 @@ right angle.</p>
 <p>Easy!</p>
 
 <div class="info">
-<p><strong>Info:</strong> For this particular case (angle size and orientation), the gap is 1.24 mm and the fixups
-<code>dx = 0.8786</code>, <code>dy = 0.8786 mm</code> for a cutter radius of 3.0 mm. </p>
-</div>
+  <p><strong>Info:</strong> For this particular case (angle 90 deg.), the gap is <code>1.2426 mm</code> and the fixups
+  (angles orientations <code>pi/4</code> or <code>3pi/4</code>) <code>dx = 0.8786</code>, <code>dy = 0.8786 mm</code> for
+  a cutter radius of 3.0 mm. For different cutter radiuses, the ratio gap - cutter radius (1.2426 / 3.0 = 0.41) shall
+  remain the same.</p>
+  </div>
 
 <h4>General case / automatic fixups</h4>
 
 <p>Knowing only the GCode, the theoretical corner on the stock could be calculated in order to evaluate the gap between
 the cutter border and the stock corner. Infact the stock corner does not have to be calculated at all, as the gap is
 infact only function of the cutter diameter and the angle of the corner of the toolpath. The orientation of the corner
-indeed does not play a role. </p>
+indeed does not play a role (for the gap size). </p>
 
 <p><svg width="140mm" height="200mm" viewBox="0 0 140 200" version="1.1" id="svg5">
   <g id="angle_60" transform="translate(20 10)">
@@ -961,7 +935,7 @@ indeed does not play a role. </p>
 </svg>
  </p>
 
-<p>The gap is </p>
+ <p>The gap (distance between corner and cutter border) is </p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
   <mi>gap</mi>
   <mo>=</mo>
@@ -998,40 +972,38 @@ indeed does not play a role. </p>
   </msub>
 </math>
 <p>where \(a\) is the <strong>half the size of the corner's angle</strong>. So for a cutter radius of 1:</p>
+<ul>
+  <li>\(a = 60^{\circ} \implies gap = 0.15 \)</li>
+  <li>\(a = 45^{\circ} \implies gap = 0.41 \)</li>
+  <li>\(a = 30^{\circ} \implies gap = 1.00 \)</li>
+</ul>
 
-<p>Example: \(a = 60^{\circ} \implies gap = 0.15 \)</p>
-
-<p>Example: \(a = 45^{\circ} \implies gap = 0.41 \)</p>
-
-<p>Example: \(a = 30^{\circ} \implies gap = 1.0 \)</p>
-
-<p>Considering the GCode pattern </p>
-
-<p></p>
+<p>Considering the GCode pattern (constitued of 3 G1 lines) </p>
 <pre><code class="language-gcode">G1 X&lt;x1&gt;  Y&lt;y1&gt;
   G1 X&lt;xm&gt;  Y&lt;ym&gt;
   G1 X&lt;x2&gt;  Y&lt;y2&gt;</code></pre>
 
-<p>we wish to generate a fixup for this GCode pattern, this means at the points \([X_c:Y_c]\). As it turns out, we do
-not need to know if we are milling for an "Inside" or "Outside" operation, we do not need to check either if the angle
-is concave or convex! Consider the following example: a spade. We would like to mill "Inside" or "Outside"</p>
-
-<p>For an "<strong>Inside</strong>" operation, around the sharp corner "A" , the size of the angle "inside" is larger
-than 180° (concave). The Gcode path of the "Inside" operation will be smooth around A, a fixup is thus not needed; the
-GCode near A will be a succession of small G1 increments without sharp transitions. At corner "B", the size of the
-angle "inside" is smaller than 180° (convex). A fixup will be needed as the GCode path will also present a sharp
-corner of the same magnitide as the stock corner itself. </p>
-
-<p>For an "<strong>Outside</strong>" operation, at corner A, the size of the angle "outside" is smaller than 180°
-(convex) and thus the GCode at "A" will need to have a fix-up, while the GCode at corner "B" (where the size of the
-angle "outside" is larger than 180°) will be smooth, consisting again of a succession of small G1 increments without
-sharp angles.</p>
-
-<p>At the locations where the GCode path is not smooth the fixups have to be performed. We set as
-<strong>threshold</strong> an angle of <strong>120 degrees</strong>, slightly larger than a right angle. Above this
-threshold (from 120° to 180°), no fixup is needed at all as the gap if about only one tenth of the cutter radius or
-less. Between 0° and 120°, we have to calculate the right direction of the bissection, the "orientation" of the
-corner. The "orientation" must be "outside the corner" in order to mill "inside" the corner.</p>
+  <p>we wish to generate a fixup for this GCode pattern, this means at the points \([x_m:y_m]\). As it turns out, we do
+    not need to know if we are milling for an "Inside" or "Outside" operation, we do not need to check either if the angle
+    is concave or convex! Consider the following example: a spade. We would like to mill "Inside" or "Outside"</p>
+    
+    <p>For an "<strong>Inside</strong>" operation, around the sharp corner "A", the angle in is concave and the size of the
+    angle "inside" is larger than 180°. The Gcode path of the "Inside" operation will be smooth around A, a fixup is thus
+    not needed; the GCode near A will be a succession of small G1 increments without sharp transitions. At corner "B", the
+    angle is convex and the size of the angle "inside" is smaller than 180° . A fixup will be needed as the GCode path
+    will also present a sharp corner of the same magnitide as the stock corner itself. </p>
+    
+    <p>For an "<strong>Outside</strong>" operation, at corner A, the angle is convex and the size of the angle "outside" is
+    smaller than 180° and thus the GCode at "A" will need to have a fix-up, while the GCode at corner "B" (where the size
+    of the angle "outside" is larger than 180°) will be smooth, consisting again of a succession of small G1 increments
+    without sharp angles.</p>
+    
+    <p>At the locations where the GCode path is not smooth the fixups have to be performed. We set as
+    <strong>threshold</strong> an angle of <strong>120 degrees</strong>, slightly larger than a right angle. Above this
+    threshold (from 120° to 180°), no fixup is needed at all as the gap if about only one tenth of the cutter radius or
+    less, or it is simply an "exterior travel". Between 0° and 120°, we have to calculate the right direction of the
+    angle bissection, the "orientation" of the corner. The "orientation" must be "outside the corner" in order to mill
+    "inside" the corner.</p>
 
 <p><svg width="1000" height="500" viewBox="0 0 1000 500" version="1.1" id="svg_spade">
   <path
@@ -1044,32 +1016,35 @@ corner. The "orientation" must be "outside the corner" in order to mill "inside"
 
 <p></p>
 
-<p>So the slope of the GCode incoming segment is \( m_1 = (y_m - y_1) \ (x_m - x_1) \) and the slope of the GCode
-outcoming segment is \( m_2 = (y_2 - y_m) \ (x_2 - x_m) \) </p>
-
-<p>incoming gcode line: \( y = m_1 x + k_1 \) or, in another form \( a_1 x + b_1 y + c_1 = 0\) </p>
-
-<p>outcoming gcode line: \( y = m_2 x + k_2 \) or, in another form \( a_2 x + b_2 y + c_2 = 0\) </p>
-
-<p>The angle at the toolpath is calculated with</p>
-
-<p>\(cos(\beta) = \displaystyle \frac{ u \cdot v}{ \| u \| \cdot \|v\| } \) </p>
-
-<p>and the internal and external bisections line equations of the corner are given by the two equations</p>
-
-<p>\( \displaystyle \frac{ a_1x + b_1y + c_1}{ \sqrt{a_1^2 + b_1^2} } = +/- \frac{ a_2x + b_2y + c_2}{ \sqrt{a_2^2 +
-b_2^2} } \implies A_i x + B_i y + C_i = 0 \)</p>
-
-<p>so the angles of these two bisections lines is given with \( tan(\alpha_i) = - A_i / B_i\) with \( \alpha_i \) in
-\([-\pi/2:\pi/2]\)</p>
-
-<p>The correct bisection is the one such that its slope is contained in the slopes of the two corner's segments, and
-the orientation must look "outside" the corner </p>
-
-<p></p>
-
-<p>Let's try our formulas for a sharp angle. Let's say the cutter radius is 1mm. The GCode encountered is</p>
-<pre><code class="language-gcode">G1 X-2  Y2
+<p>Let's do some maths! the slope of the GCode incoming segment is \( m_1 = (y_m - y_1) \ (x_m - x_1) \) and the slope
+  of the GCode outcoming segment is \( m_2 = (y_2 - y_m) \ (x_2 - x_m) \) </p>
+  
+  <p>incoming segment equation: \( y = m_1 x + k_1 \) or, in another form \( a_1 x + b_1 y + c_1 = 0\) </p>
+  
+  <p>outcoming segment equation: \( y = m_2 x + k_2 \) or, in another form \( a_2 x + b_2 y + c_2 = 0\) </p>
+  
+  <p>The angle at the toolpath mid point is calculated with</p>
+  
+  <p>\(cos(\beta) = \displaystyle \frac{ u \cdot v}{ \| u \| \cdot \|v\| } \) </p>
+  
+  <p>and the internal and external bisections line equations of the corner are given by the two equations</p>
+  
+  <p>\( \displaystyle \frac{ a_1x + b_1y + c_1}{ \sqrt{a_1^2 + b_1^2} } = +/- \frac{ a_2x + b_2y + c_2}{ \sqrt{a_2^2 +
+  b_2^2} } \implies A_i x + B_i y + C_i = 0 \)</p>
+  
+  <p>so the angles of these two bisections lines is given with \( tan(\alpha_i) = - A_i / B_i\) with \( \alpha_i \) in
+  \([-\pi/2:\pi/2]\)</p>
+  
+  <p>The correct bisection is the one such that its slope is contained in the slopes of the two corner's segments, and
+  the orientation must look "outside" the corner.</p>
+  
+  <p></p>
+  
+  <p>Let's try our formulas for a sharp angle. Let's say the cutter radius is 1mm. The GCode encountered is</p>
+  <svg width="50" height="60" viewBox="-10 -40 60 20" version="1.1">
+    <polyline points="-10,-10  40,-40  10,10" stroke-width="0.2" fill="none" stroke="black"/>
+  </svg>
+  <pre><code class="language-gcode">G1 X-2  Y2
   G1 X4   Y4
   G1 X2   Y-2</code></pre>
 
@@ -1089,15 +1064,18 @@ slopes are \( -1\) and \(1;\) so the correct bisection is the second one, and it
 <p>\( dy = 0.874 \)</p>
 
 <h4>Example 2</h4>
+<svg width="50" height="50" viewBox="0 -40 50 10" version="1.1">
+  <polyline points="0,0  0,-40  40,-40" stroke-width="0.2" fill="none" stroke="black"/>
+</svg>
 <pre><code class="language-gcode">G1 X0.0  Y0.0
-  G1 X0.0  Y4.0
-  G1 X4.0  Y4.0</code></pre>
+G1 X0.0  Y4.0
+G1 X4.0  Y4.0</code></pre>
 
-<p>So obviously there is a sharp (right) corner at \([4, 4] \). The corner angle is \( \beta = 90\)\deg;.</p>
+<p>So obviously there is a sharp (right) corner at \([0, 4] \). The corner angle is \( \beta = 90\)°.</p>
 
 <p>The slopes of the incoming and outcoming segments are \(m_1 = -\inf \) and \( m_2 = 0 \) and the slopes of the
-bisections are \( -1\) and \(1\). The correct bisection is the first one, and its correct orientation is +135° (not
--45°) pointing "outside" the corner.</p>
+bisections are \( -1\) and \(1\). The correct bisection is the first one (slope -1), and its correct orientation is
++135° (not -45°) pointing "outside" the corner.</p>
 
 <h5>Gap</h5>
 
@@ -1111,21 +1089,13 @@ bisections are \( -1\) and \(1\). The correct bisection is the first one, and it
 
 <p><strong>PyCut GCode Dressup GUI</strong></p>
 
-<p>How to integrate this handling into <strong>PyCut</strong> ? There is a setting option "<strong>GCode Dressup
-threshold</strong>" which is per default 120°. A completely separate utility "gcode_dressup.py" will be called upon
-GCode generation completion to transform the GCode for the operations requiring it.</p>
-
-<p>In the operations table, we add a column "fixups" as a checkbox, which, for every operation, can be set on or off
-and will have a background color. Setting the checkbox off will disable the fixups generation for this particular
-operation. When set "on", fixups modifiers will be applied to the generated GCode. After completion, the background
-color will indicates if fixups have been performed:</p>
-<ul>
-  <li>no background: no fixups applied at all for this operation</li>
-  <li>orange: fixups have been added</li>
-</ul>
-
-<p>Finally, in the GCode Viewer/GCode simulator GCode browsers, lines corresponding to added fixups (comprised between
-the comment lines </p>
+<p>How to integrate this handling into <strong>PyCut</strong> ? There is a setting option "<strong>GCode DogBones
+  threshold</strong>" which is per default 120°. A completely separate utility "gcode_dressup.py" will be called upon
+  GCode generation completion to transform the GCode for the operations requiring it.</p>
+  
+  <p>In the operations table, we add a column "fixups" as a checkbox, which, for every operation, can be set on or off.
+  Moreover, in the GCode Viewer/GCode simulator GCode browsers, lines corresponding to added fixups (comprised between
+  the comment lines </p>
 <pre><code class="language-gcode">; start fixup</code></pre>
 
 <p>and </p>
@@ -1133,9 +1103,6 @@ the comment lines </p>
 
 <p>will have a blue background in order to clearly identify them.</p>
 
-<p><strong>It is worth noting that in a first implemetation step, the fixups will be calculated only for "Inside" or
-"Outside" operations, and not for the "Pocket" operations (TODO). This in because, for pocket operations, the toolpaths
-which are not adjacents to the stock borders may have sharp corners which do not need dogbones at all.</strong></p>
 
 <h3 id="APPENDICE-01">Appendix-1: SVG Editors</h3>
 
@@ -1155,45 +1122,46 @@ part to the difficulty of use of the app.</p>
 
 <h4>Inkscape</h4>
 
-<p>To me much too complicated. I "hate" the fact that the circles are given from their "bounding box", not from the
-center with radius (ok it is possible, but I have always to figure out how). <strong>Editing paths is far to
-complicated</strong> (to me) and thus too difficult. The saved SVG data is full of <strong>inkscape/sodipodi
-namespaces</strong> stuff, which I dislike a lot in a SVG file. I would rather prefer a raw SVG with only the minimal
-and certainly not all these extra namespace stuff. Removing per hand these extra stuff destroy the Inkscape project
-settings. </p>
-
-<p><strong>Yeappy</strong>! To obtain a SVG data free of sodipodi/inkscape namespace stuff, you have to "export" your
-SVG data (your "project" file) as SVG!</p>
-
-<p>Editing points coordinates "per hand" is nearly impossible as the coordinates are only accessible from the "d"
-string, which is not really human readable. Here is an example of a polyline with 8 points:</p>
-<pre><code>M 5.9999998,35.999999 10,33 l 5,2.999999 -1,-4 h 7 V 41 H 12 L 8.9999999,38.999998</code></pre>
-
-<p>BTW, note how absolute and relative keywords are given in the path. Question: what are the coordinates of the fifth
-point?</p>
-
-<p>Concatening segments to form a single path doesn't even work as expected. The simple task consisting of
-concatenating a polyline and a bezier curve -in this order- (which are joined) seems not to work! There is the
-"<strong>combine</strong>" command, but the result is a single path (ok... ) containing 2 subpaths (with "M"), which is
-not Ok, the first one beeing the bezier curve and the second one beeing the polyline, this means in reversed order.
-Sure, with "M"s everywhere, the segments ordering is not that important, is it! <strong>A very desapointing
-implementation from Inkscape I would say</strong>. Conclusion: <strong>unusable if you want to generate complex
-paths.</strong></p>
+<p><strong>Editing paths is far too complicated</strong> (to me) and completely impracticable for paths looking like
+  CAD work. </p>
+  
+  <p>To go further in details, editing points coordinates "per hand" is nearly impossible as the coordinates are only
+  accessible from the "d" string, which is not really human readable. Here is an example of a polyline with 8 points:</p>
+  <pre><code>M 5.9999998,35.999999 10,33 l 5,2.999999 -1,-4 h 7 V 41 H 12 L 8.9999999,38.999998</code></pre>
+  
+  <p>BTW, note how absolute and relative keywords are given in the path. Question: what are the coordinates of the fifth
+  point?</p>
+  
+  <p>What about the other shapes? I "hate" the fact that the circles are given from their "bounding box", not from the
+  center with radius (ok it is possible, but always have to figure out how). To obtain a "clean" SVG file (free from
+  sodipodi namespace stuff), do not forget to export your project as "SVG". </p>
+  
+  <p>But back to paths. Concatening segments to form a single path doesn't even work as expected. The simple task
+  consisting of concatenating a polyline and a bezier curve -in this order- (which are joined) seems not to work! There
+  is the "<strong>combine</strong>" command, but the result is a single path (ok... ) containing 2 subpaths (with "M"),
+  which is not Ok, the first one beeing the bezier curve and the second one beeing the polyline, this means in reversed
+  order. Sure, with "M"s everywhere, the segments ordering is not that important, is it! </p>
+  
+  <p><strong>A very desapointing implementation from Inkscape I would say</strong>. Conclusion: <strong>unusable if you
+  want to generate complex paths.</strong></p>
 
 <p>PS: There is the "Draw Bezier and straight line tool" with mode "Create regular Bezier path" but after many many
 hours of trial (despite YouTube tutorials) I did not succeed to use it properly. Is it just me ? With it you cannot
 anyway mix your path with an arc curve.</p>
 
+<p>PPS: Infact I believe that Inkscape is not suitable for path editing. Like most of SVG applications, it is meant for
+  painting.</p>  
+
 <h4>LibreCAD <span style="color:#008000">****NEARLY GOOD****</span></h4>
 
 <p>It is (was) a fork of QCAD (2011). It looks a lot like QCAD, but the (my) first feeling is that the user interface
-seems better. <strong>The SVG export is exactly what one would expect (well , nearly)</strong>. There is minimal extra
-LibreCAD namespace stuff in the output. Do not know yet how to assign ids to the entities (bad). You only have to take
-care that in the SVG format y = 0 is the top of the drawing, so coordinates in the SVG file are inverted from
-coordinates in the app (which is normal). The y = 0 correspond to the highest coordinate of your items in the canvas
-(Note: in <strong>QCAD</strong> the coordinates are the same and there is a global svg transform="scale(1,-1)". The
-viewBox is calculated accordingly. It would be nice to have this option in <strong>LibreCAD</strong>).</p>
-
+  seems better. <strong>The SVG export is exactly what one would expect (well, nearly)</strong>. There is minimal extra
+  LibreCAD namespace stuff in the output. Do not know yet how to assign ids to the entities (not good). You only have to
+  take care that in the SVG format y = 0 is the top of the drawing, so coordinates in the SVG file are inverted from
+  coordinates in the app (which is normal). The y = 0 correspond to the highest coordinate of your items in the canvas
+  (Note: in <strong>QCAD</strong> the coordinates are the same and there is a global svg transform="scale(1,-1)". The
+  viewBox is calculated accordingly. It would be nice to have this option in <strong>LibreCAD</strong>).</p>
+  
 <p><strong>Splines</strong> <strong>through</strong> <strong>3 points correspond to bezier quadratic curves</strong>,
 while <strong>splines through 4 or more points are not cubic bezier curves but only sequence of quadratic
 curves</strong> (it seems possible! is it ? they really look to be smooth of order 3!).</p>
@@ -1233,7 +1201,7 @@ sure), but one can avoid these in a design. The SVG closed path "Z" is also miss
 <div class="info">
 <p><strong>Note</strong>: in 2023, a <strong>Blender</strong> add-on called <strong>CAD Sketcher</strong> is in
 development, which utilize the SolveSpace library for sketching. Maybe the user interface will be there even better
-(and gives the SVG export).</p>
+(and offers the SVG export functionality).</p>
 </div>
 
 <h4>Fusion 360</h4>
@@ -1252,8 +1220,8 @@ outputs them as polylines (with many points). <strong>Conclusion: unusable</stro
 
 <h3><strong>Online editors:</strong></h3>
 
-<p>There are plenty of them, but they all seem to be meant for painting, not for CAD (a little like Inkscape). Finally
-found this one:</p>
+<p>There are plenty of them, but they all seem to be meant for painting (like Inkscape), not for CAD. Finally found
+  this one:</p>
 
 <h4>SvgPathEditor <span style="color:#ff00ff"><span style="color:#ff00ff"></span></span><span
 style="color:#ff00ff">****EXCELLENT****</span></h4>
@@ -1315,11 +1283,11 @@ exporting it right and clean. The apps which theorytically could use the SVG pat
 write a patch!-) export them then correctly. But who else would want to import svg paths? Response: the applications
 that do not want to use an other (maybe more complicated) format, because yes, SVG can be indeed simple.</p>
 
-<p>The SVG format has the merit to exist, sure, can be viewed in a browser, and in some points is very practical
-(that's why <strong>PyCut</strong> use it), even when not "optimal". But concerning the svg path definition, what is
-the point for example of allowing paths with sub-paths? The SVG format completely ignores the concept of
-"multiline"/"multipolygon" etc. Polygons have no "interiors" so they must be defined as such in a path composed of 2 or
-more subpaths for this purpose.</p>
+<p>The SVG format has the merit to exist, sure, can be viewed in a browser, can be edited with a text editor, and in
+  some points is very practical (that's why <strong>PyCut</strong> use it), even when not "optimal". But concerning the
+  svg path definition, what is the point for example of allowing paths with sub-paths? The SVG format completely ignores
+  the concept of multiline/multipolygon etc. Polygons have no "interiors" so they must be defined as such in a path
+  composed of 2 or more subpaths for this purpose.</p>
 
 <p><strong>All in all very desapointing, excepted <span style="color:#008000">SolveSpace</span> and <span
 style="color:#008000">SvgPathEditor</span>!</strong></p>
@@ -1327,19 +1295,19 @@ style="color:#008000">SvgPathEditor</span>!</strong></p>
 <h4><strong><span style="color:#0000ff">Per hand</span></strong></h4>
 
 <p>Finally my prefered method! Per hand you can also write items in the <code>&lt;defs&gt;</code> section, and use
-these items repeatidly with transformations with the <code>&lt;use&gt;</code> tag. My utility
-<strong>svgresolver.py</strong> then transforms this svg file into another one, usable for <strong>PyCut. Not the
-perfect toolchain I admit, but well my svgs are not that complicated</strong>. You have to understand how to write an
-arc/bezier curve per hand, it is not that difficult. And yours svgs are then "<strong>clean</strong>" and easily
-modificable. </p>
-
+  these items repeatidly with transformations with the <code>&lt;use&gt;</code> tag. My utility
+  <strong>svgresolver.py</strong> then transforms this svg file into another one, usable for <strong>PyCut. Not the
+  perfect toolchain I admit, but well my svgs are not that complicated</strong>. You have to understand how to write an
+  arc/bezier curve per hand, it is not that difficult and can always use the <strong>SvgPathEditor</strong> tool. And
+  yours svgs are then "<strong>clean</strong>" and easily modificable. </p>
+  
 <p></p>
 
 <h3 id="APPENDICE-02">Appendix-2: GCODE Viewers</h3>
 
 <p>Of course, CANDLE offers a GCODE viewer. There nevertheless a few ones (to my knowledge) worth a mention:</p>
 <ul>
-  <li>NCnetics <span style="color:#ff00ff">****EXCELLENT****</span></li>
+  <li>NCnetics <span style="color:#ff00ff"><strong>****EXCELLENT****</strong></span></li>
   <li>PlanetCNC (which is a GCode sender -with dedicated hardware- as well)</li>
   <li>what else ?</li>
 </ul>
