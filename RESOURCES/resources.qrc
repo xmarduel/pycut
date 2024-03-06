@@ -61,8 +61,8 @@
         <file>doc/css/folder-new.png</file>
         <file>doc/css/document-open.png</file>
         <file>doc/css/bookmark-new.png</file>
-        <file>doc/tutorial_qt.html</file>
-        <file>doc/tutorial.html</file>
-        <file>doc/about.html</file>
+        <file>tutorial_qt.html</file>
+        <file>tutorial.html</file>
+        <file>about.html</file>
     </qresource>
 </RCC>

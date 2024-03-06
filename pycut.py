@@ -487,7 +487,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         dlg.setWindowTitle("PyCut Tutorial")
         dlg.setModal(True)
 
-        fileName = ":/doc/tutorial_qt.html"
+        fileName = ":/tutorial_qt.html"
+        # fileName = ":/tutorial.html"
         file = QtCore.QFile(fileName)
         if file.open(QtCore.QIODevice.ReadOnly):
             data = str(file.readAll(), "utf-8")  # explicit encoding
@@ -518,7 +519,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         dlg.setModal(True)
 
         try:
-            view.setSource(QtCore.QUrl.fromLocalFile(":/doc/about.html"))
+            view.setSource(QtCore.QUrl.fromLocalFile(":/about.html"))
         except Exception as msg:
             view.setHtml(self.notfound % {"message": str(msg)})
 
