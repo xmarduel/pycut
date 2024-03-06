@@ -299,7 +299,7 @@ case of multiple operations enabled, as the project name, with ending suffix "nc
 <h3 id="P-04-01">Svg Settings</h3>
 
 <div>
-<img src="qrc:/doc/pycut_svgsettings.png" width="310"> </div>
+<img src="qrc:/doc/pycut_svgsettings.png" width="310" /> </div>
 
 <h4>user units scale</h4>
 
@@ -310,7 +310,7 @@ or whatever. This means, <strong>1 "user unit" is equal to 1 mm (and the viewbox
 and height="40mm")</strong></p>
 
 <div>
-<img src="qrc:/doc/Inkscape_settings_mm.png" width="563"> </div>
+<img src="qrc:/doc/Inkscape_settings_mm.png" width="563" /> </div>
 
 <p>Of course when editing the svg (in Inkscape or in a text editor), <strong>the user is only concerned with the user
 units</strong> : he draws a rectangle of size 20x30 at the location 10x10. The users may simply even not be aware of
@@ -324,7 +324,7 @@ the document becomes then <strong>3,93701x1,57480 inches</strong> (yes, 100 / 25
 100x40.</p>
 
 <div>
-<img src="qrc:/doc/Inkscape_settings_in.png" width="563"> </div>
+<img src="qrc:/doc/Inkscape_settings_in.png" width="563" /> </div>
 
 <p>Filling a box half the size of the document is 50x20, right, but what are real physical dimensions of that box ? The
 user would have to steadily calculate from fancy user units (ex: 50x20) in inches</p>
@@ -382,7 +382,7 @@ the <strong>user unit scale factor is always 1</strong> .</p>
 <h3 id="P-04-02">Tool</h3>
 
 <div>
-<img src="qrc:/doc/pycut_tool.png" width="310"> </div>
+<img src="qrc:/doc/pycut_tool.png" width="310" /> </div>
 
 <h3 id="P-04-03">Tabs</h3>
 
@@ -393,7 +393,7 @@ of course placed somewhere on the generated toolpaths. The height of the tabs is
 ignored for Pocket operations</strong>.</p>
 
 <div>
-<img src="qrc:/doc/pycut_tabs.png" width="310"> </div>
+<img src="qrc:/doc/pycut_tabs.png" width="310" /> </div>
 
 <p></p>
 
@@ -404,14 +404,14 @@ ignored for Pocket operations</strong>.</p>
 <p>The Operations "Cut Depth" should not be larger than the material thickness. </p>
 
 <div>
-<img src="qrc:/doc/pycut_material.png" width="310"> </div>
+<img src="qrc:/doc/pycut_material.png" width="310" /> </div>
 
 <p></p>
 
 <div class="warning">
-<p><strong>Warning</strong>: Actually no check is performed on the values given here. The depth cut of the operations
-should not exceed this thickness, or only exceeding it with a minimal value, only to be sure to cut through.</p>
-</div>
+  <p><strong>Warning</strong>: Actually no check is performed on the values given here. The depth cut of the operations
+    should not exceed this thickness, or only exceeding it with a minimal value, only to be sure to cut through.. </p>
+    </div>
 
 <div class="warning">
 <p><strong>Warning</strong>: The clearance is written in the produced g-code. Thus the user should be sure it does not
@@ -424,7 +424,7 @@ exceed the physical possibilities of the machine when travelling in the z-axis, 
 <p>If your design contain curves (svg "arcs" or "bezier" curves), they have to be discretized in small segments.</p>
 
 <div>
-<img src="qrc:/doc/pycut_curve_to_line_conversion.png" width="300"></div>
+<img src="qrc:/doc/pycut_curve_to_line_conversion.png" width="300" /></div>
 
 <p>The 2 following parameters allow to specified how fine the curve discretization will be:</p>
 <ul>
@@ -450,7 +450,7 @@ top-left postion.</p>
 </ul>
 
 <div>
-<img src="qrc:/doc/pycut_gcode_conversion.png" width="310"> </div>
+<img src="qrc:/doc/pycut_gcode_conversion.png" width="310" /> </div>
 
 <p>Note that these 4 buttons act as radio buttons.</p>
 
@@ -517,7 +517,8 @@ to carve something like 16x10 cm without rotating all items in the source svg. <
 </ul>
 
 <div>
-<img src="qrc:/doc/pycut_gcode_generation.png" width="310"> </div>
+<img src="qrc:/doc/pycut_gcode_generation.png" width="310" /></div>
+
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
@@ -528,7 +529,7 @@ to carve something like 16x10 cm without rotating all items in the source svg. <
 <p>This is where the user defined its cam operations, thus this is where the action takes place.</p>
 
 <div>
-<img src="qrc:/doc/pycut_ops.png" width="1170"> </div>
+<img src="qrc:/doc/pycut_ops.png" width="1170" /> </div>
 
 <p>First one or more item(s) have to be selected in the svgviewer, click on "Create Operation" and a default operation
 is created. When more than one item has been selected, the user can perform logical operations on this set of item </p>
