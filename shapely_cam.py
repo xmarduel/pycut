@@ -1551,7 +1551,7 @@ class SpiralePocketCalculator:
         self.cam_paths = [CamPath(shapely.geometry.LineString(self.pts), True)]
 
     class Circle:
-        SEGMENT_LEN = 1.0  # mm
+        SEGMENT_LEN = 0.25  # mm
 
         def __init__(self, pocket: "SpiralePocketCalculator"):
             """ """
