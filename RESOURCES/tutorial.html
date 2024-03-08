@@ -97,9 +97,17 @@ Hopefully you will find <strong>PyCut</strong> usefull when learning CNC and pro
 point out what has to be taken into consideration when creating "usable" <strong>SVG</strong> files for
 <strong>PyCut</strong>.</p>
 
+<h3>Why PyCut</h3>
+
+<p>With <strong>PyCut</strong>, you do not need to do 3D modelling. SVG files (2D) are <strong>PyCut</strong> input format, 
+and for simple milling tasks it is perfectly OK.
+Granted, SVG shapes modelling is not so straightforward as one could think, as free software lacks good
+SVG modelling applications. Infact, writing a SVG file with a text editor is sometimes the best way! 
+For complex shapes (so-called SVG paths), other tools may be used, see Appendix.</p>
+
 <h2 id="P-01-01">SVG Documents</h2>
 
-<p><strong>PyCut</strong>, in order to work acurately, need the SVG document to define its standard
+<p><strong>PyCut</strong>, in order to work accurately, need the SVG document to define its standard
 <strong>width</strong> and <strong>height</strong> with units "<strong>mm</strong>" or "<strong>in</strong>". The
 <strong>viewbox</strong> needs to be defined as well. The view shall be of the form </p>
 
@@ -110,7 +118,6 @@ point out what has to be taken into consideration when creating "usable" <strong
 <p><strong>Note:</strong> The <strong>height</strong> will be used later when creating GCode with the
 <strong>PyCut</strong> option "Zero Lower Left of Material" as reference.</p>
 </div>
-
 
 <h3 id="P-01-011">SVG Shapes and Paths</h3>
 
@@ -158,9 +165,9 @@ wishes to process an unique id.</p>
 
 <h4>Defs and use tags</h4>
 
-<p><strong>PyCut</strong> cannot import directly the very handy SVG <strong>&lt;def&gt;</strong> and
-<strong>&lt;use&gt;</strong> feature. The utility <strong>svgresolver.py</strong> delivered with PyCut will have to be
-used. It takes as input the SVG file defined with <code>&lt;defs&gt;</code> and outputs a new SVG where all
+<p><strong>PyCut</strong> cannot import directly the very handy SVG <strong>&lt;defs&gt;</strong> and
+<strong>&lt;use&gt;</strong> feature. The utility <strong>svgresolver.py</strong> delivered with <strong>PyCut</strong>
+will have to be used. It takes as input the SVG file defined with <code>&lt;defs&gt;</code> and outputs a new SVG where all
 <code>&lt;defs&gt;/&lt;use&gt;</code> have been resolved.</p>
 
 <h4>Opened and closed paths/shapes</h4>
@@ -197,8 +204,8 @@ three "contours".</p>
 <h4>Text shapes</h4>
 
 <p><strong>PyCut</strong> cannot process yet <span style="color:#0000ff">&lt;text&gt;</span> items directly.
-Fortunately, <span style="color:#0000ff">&lt;text&gt;</span> items can to be converted into <span
-style="color:#0000ff">&lt;path&gt;</span> items within <strong>Inkscape</strong>, sonce they will be ignored by
+Fortunately, <span style="color:#0000ff">&lt;text&gt;</span> items must be converted into <span
+style="color:#0000ff">&lt;path&gt;</span> items, sonce they will be ignored by
 <strong>PyCut</strong>. <strong>PyCut</strong> also comes with the utiilty <strong>svgtext2svgpath.py</strong> which
 will also convert your <code><span style="color:#0000ff">&lt;text&gt;</span></code> items. How to use it? just call the
 <strong>svgtext2svgpath.py</strong> program which outputs in a new svg the <span
@@ -209,7 +216,8 @@ not be splitted into several <span style="color:#0000ff">&lt;tspan&gt;</span> it
 style="color:#0000ff">&lt;tspan&gt;</span> tag at all is also possible (and simpler). <strong><span
 style="color:#8000ff">IN PROGRESS</span></strong>.</p>
 
-<p>All in all, if <strong>PyCut</strong> were to display text strings at the wrong positions, the user can always
+<p>All in all, if <strong>PyCut</strong> were to display text strings at the wrong positions (after having
+transformed them into paths), the user can always
 export the svg from <strong>Inkscape</strong> (and write <strong>PyCut</strong> a ticket).</p>
 
 <h4>Transformations</h4>
@@ -304,7 +312,7 @@ case of multiple operations enabled, as the project name, with ending suffix "nc
 <h3 id="P-04-01">Svg Settings</h3>
 
 <div>
-<img src="doc/pycut_svgsettings.png" width="310px" /> </div>
+<img src="doc/pycut_svgsettings.png" width="310px" /> </div> 
 
 <h4>user units scale</h4>
 
@@ -315,7 +323,7 @@ or whatever. This means, <strong>1 "user unit" is equal to 1 mm (and the viewbox
 and height="40mm")</strong></p>
 
 <div>
-<img src="doc/Inkscape_settings_mm.png" width="563" /> </div>
+<img src="doc/Inkscape_settings_mm.png" width="563" /> </div> 
 
 <p>Of course when editing the svg (in Inkscape or in a text editor), <strong>the user is only concerned with the user
 units</strong> : he draws a rectangle of size 20x30 at the location 10x10. The users may simply even not be aware of
@@ -329,7 +337,7 @@ the document becomes then <strong>3,93701x1,57480 inches</strong> (yes, 100 / 25
 100x40.</p>
 
 <div>
-<img src="doc/Inkscape_settings_in.png" width="563" /> </div>
+<img src="doc/Inkscape_settings_in.png" width="563" /> </div> 
 
 <p>Filling a box half the size of the document is 50x20, right, but what are real physical dimensions of that box ? The
 user would have to steadily calculate from fancy user units (ex: 50x20) in inches</p>
@@ -387,7 +395,7 @@ the <strong>user unit scale factor is always 1</strong> .</p>
 <h3 id="P-04-02">Tool</h3>
 
 <div>
-<img src="doc/pycut_tool.png" width="310" /> </div>
+<img src="doc/pycut_tool.png" width="310" /> </div> 
 
 <h3 id="P-04-03">Tabs</h3>
 
@@ -398,7 +406,7 @@ of course placed somewhere on the generated toolpaths. The height of the tabs is
 ignored for Pocket operations</strong>.</p>
 
 <div>
-<img src="doc/pycut_tabs.png" width="310" /> </div>
+<img src="doc/pycut_tabs.png" width="310" /> </div> 
 
 <p></p>
 
@@ -409,7 +417,7 @@ ignored for Pocket operations</strong>.</p>
 <p>The Operations "Cut Depth" should not be larger than the material thickness. </p>
 
 <div>
-<img src="doc/pycut_material.png" width="310" /> </div>
+<img src="doc/pycut_material.png" width="310" /> </div> 
 
 <p></p>
 
@@ -534,7 +542,7 @@ to carve something like 16x10 cm without rotating all items in the source svg. <
 <p>This is where the user defined its cam operations, thus this is where the action takes place.</p>
 
 <div>
-<img src="doc/pycut_ops.png" width="1170" /> </div>
+<img src="doc/pycut_ops.png" width="1170" /> </div> 
 
 <p>First one or more item(s) have to be selected in the svgviewer, click on "Create Operation" and a default operation
 is created. When more than one item has been selected, the user can perform logical operations on this set of item </p>
@@ -740,9 +748,9 @@ any fixups.</p>
 
 <div class="warning">
 <p><strong>Warning:</strong> Having had a look at (the doc of) some other tools (<strong>BlenderCam</strong>,
-<strong>Fusion360</strong>), I have noticed that these tools, in order to perform dogbones correction, "update" the
-geometry, or rather said "actualize" the contour lines so that these contour lines get their bones. After that, the
-"inside" or "outside" operations are performed "as usual". I will try to take a different approach : only the generated
+<strong>Fusion360</strong>), I have noticed that these tools, in order to perform dogbones correction, "actualize" the
+geometry, or rather said the geometry contour so that this contour get bones. After that, the
+"inside" or "pocket" operations are performed "as usual". I will try to take a different approach : only the generated
 GCode will be "fixed" when encountering "angles". </p>
 </div>
 
@@ -750,7 +758,7 @@ GCode will be "fixed" when encountering "angles". </p>
 
 <p>Let's get a taste how dogbone handling look like. Here we suppose the cutter radius is <strong>3mm</strong>. We wish
 to mill an inner square hole, so the "convex angle" corner problem occurs. We have 2 (or more!) strategies to allow a
-square to fit in the milled hole. Strategy "1" in shown on the left, strategy "2" on the right: the extra tool path is
+square to fit in the milled hole. Strategy "1" is shown on the left, strategy "2" on the right: the extra tool path is
 displayed with the cutter at the end of the extra tool path (as well as the standard cutter position at the toolpath
 corner).</p>
 <svg width="200mm" height="100mm" viewBox="0 0 200 100" version="1.1">
@@ -818,7 +826,7 @@ corner).</p>
   </g>
 </svg>
 
-<p>We see that the strategy "1" removes far less extra material than the strategy "2", so we will concentrate later
+<p>We see that the strategy "1" removes far less extra material than the strategy "2", so we will concentrate
 only on the strategy "1". </p>
 
 <p>At every G01 instruction, there is certainly a direction change, which can be tiny (consider milling an inner
@@ -1047,8 +1055,8 @@ the orientation must look "outside" the corner.</p>
 <p></p>
 
 <p>Let's try our formulas for a sharp angle. Let's say the cutter radius is 1mm. The GCode encountered is</p>
-<svg width="50" height="60" viewBox="-10 -40 60 20" version="1.1">
-  <polyline points="-10,-10  40,-40  10,10" stroke-width="0.2" fill="none" stroke="black"/>
+<svg width="70" height="80" viewBox="-10 -40 60 20" version="1.1">
+  <polyline points="-10,-10  40,-40  10,10" stroke-width="0.75" fill="none" stroke="black"/>
 </svg>
 <pre><code class="language-gcode">G1 X-2  Y2
 G1 X4   Y4
