@@ -27,6 +27,7 @@ start the program from the installation folder
 - freetype-py (latest) - used in svgtext2svgpath.py utility
 - matplotlib (latest) - to debug/view shapely offsets ops
 - numba (latest) - for python simulator optimization
+- pyvoronoi (latest) - for HSM nibbler toolpaths
 
 ## Features
 
@@ -52,6 +53,6 @@ start the program from the installation folder
 - tabs "on the fly" (no need to define them in the svg file)
 - flip X/Y in GCode (good for my machine - the "1419" one -)
 - can handle polygons as well as lines ("closed paths" and "opened paths")
-- toolpaths with HSM_nibblers optional
+- ![new](RESOURCES/images/new_img.png) toolpaths with HSM_nibblers optional
 
 See the Wiki page for more.
