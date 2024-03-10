@@ -49,6 +49,7 @@
     "GCodeConversion": {
       "units": "mm",
       "flip_xy": false,
+      "use_offset": false,
       "x_offset": 0.0,
       "y_offset": 0.0,
       "xy_reference": "ZERO_TOP_LEFT_OF_MATERIAL"
