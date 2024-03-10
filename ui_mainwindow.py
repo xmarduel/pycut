@@ -826,6 +826,12 @@ class Ui_mainwindow(object):
 
         self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_ZeroCenterOfOp, 4, 0, 1, 3)
 
+        self.GCodeConversion_UseOffset = QCheckBox(self.scrollAreaWidgetContents_2)
+        self.GCodeConversion_UseOffset.setObjectName(u"GCodeConversion_UseOffset")
+        self.GCodeConversion_UseOffset.setFont(font1)
+
+        self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_UseOffset, 5, 2, 1, 1)
+
 
         self.verticalLayoutGCodeConversion.addLayout(self.gridLayout_GCodeConversion)
 
@@ -1087,6 +1093,7 @@ class Ui_mainwindow(object):
         self.GCodeConversion_ZeroLowerLeftOfMaterial.setText(QCoreApplication.translate("mainwindow", u"Zero lower left (Material)", None))
         self.GCodeConversion_ZeroLowerLeftOfOp.setText(QCoreApplication.translate("mainwindow", u"Zero lower left (Op)         ", None))
         self.GCodeConversion_ZeroCenterOfOp.setText(QCoreApplication.translate("mainwindow", u"Zero center (Op)               ", None))
+        self.GCodeConversion_UseOffset.setText(QCoreApplication.translate("mainwindow", u"Use Offset", None))
         self.labelGCodeGeneration.setText(QCoreApplication.translate("mainwindow", u" GCode Generation", None))
         self.label_GCodeGeneration_ReturnToZeroAtEnd.setText(QCoreApplication.translate("mainwindow", u"Return to 0,0 at end", None))
         self.GCodeGeneration_ReturnToZeroAtEnd.setText("")

@@ -98,6 +98,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         "GCodeConversion": {
             "units": "mm",
             "flip_xy": False,
+            "use_offset": False,
             "x_offset": 0.0,
             "y_offset": 0.0,
             "xy_reference": "ZERO_TOP_LEFT_OF_MATERIAL",
@@ -656,6 +657,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             "GCodeConversion": {
                 "units": self.ui.GCodeConversion_Units.currentText(),
                 "flip_xy": self.ui.GCodeConversion_FlipXY.isChecked(),
+                "use_offset": self.ui.GCodeConversion_UseOffset.isChecked(),
                 "x_offset": self.ui.GCodeConversion_XOffset.value(),
                 "y_offset": self.ui.GCodeConversion_YOffset.value(),
                 "xy_reference": GcodeModel.XYRef[
@@ -709,6 +711,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         )
         self.ui.GCodeConversion_FlipXY.setChecked(
             settings["GCodeConversion"]["flip_xy"]
+        )
+        self.ui.GCodeConversion_UseOffset.setChecked(
+            settings["GCodeConversion"]["use_offset"]
         )
         self.ui.GCodeConversion_XOffset.setValue(
             settings["GCodeConversion"]["x_offset"]
@@ -1625,6 +1630,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         gcode_model = GcodeModel()
         gcode_model.units = settings["GCodeConversion"]["units"]
         gcode_model.flipXY = settings["GCodeConversion"]["flip_xy"]
+        gcode_model.useOffset = settings["GCodeConversion"]["use_offset"]
         gcode_model.XOffset = settings["GCodeConversion"]["x_offset"]
         gcode_model.YOffset = settings["GCodeConversion"]["y_offset"]
         gcode_model.returnTo00 = settings["GCodeGeneration"]["return_to_zero_at_end"]

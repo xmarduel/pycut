@@ -98,6 +98,7 @@ class GcodeModel:
         self.gcodeZero = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
 
         self.flipXY = False
+        self.useOffset = False
 
         # ----------------------------
         self.returnTo00 = False
@@ -962,6 +963,7 @@ class GcodeGenerator:
         self.offsetY = self.gcode_model.YOffset
 
         self.flipXY = self.gcode_model.flipXY
+        self.useOffset = self.gcode_model.useOffset
 
         self.gcode = ""
 
@@ -1024,25 +1026,31 @@ class GcodeGenerator:
             self.generate_gcode_zero_center_of_op()
 
     def generate_gcode_zero_topfeft_of_material(self):
-        self.offsetX = self.unit_converter.from_mm(0)
-        self.offsetY = self.unit_converter.from_mm(0)
+        if not self.useOffset:
+            self.offsetX = self.unit_converter.from_mm(0)
+            self.offsetY = self.unit_converter.from_mm(0)
         self.generate_gcode_action()
 
     def generate_gcode_zero_lowerleft_of_material(self):
-        self.offsetX = self.unit_converter.from_mm(0)
-        self.offsetY = self.unit_converter.from_mm(self.material_model.size_y)
+        if not self.useOffset:
+            self.offsetX = self.unit_converter.from_mm(0)
+            self.offsetY = self.unit_converter.from_mm(self.material_model.size_y)
         self.generate_gcode_action()
 
     def generate_gcode_zero_lowerfeft_of_op(self):
-        self.offsetX = -self.unit_converter.from_mm(self.job.minX)
-        self.offsetY = -self.unit_converter.from_mm(-self.job.maxY)
+        if not self.useOffset:
+            self.offsetX = -self.unit_converter.from_mm(self.job.minX)
+            self.offsetY = -self.unit_converter.from_mm(-self.job.maxY)
         self.generate_gcode_action()
 
     def generate_gcode_zero_center_of_op(self):
-        self.offsetX = -self.unit_converter.from_mm((self.job.minX + self.job.maxX) / 2)
-        self.offsetY = -self.unit_converter.from_mm(
-            -(self.job.minY + self.job.maxY) / 2
-        )
+        if not self.useOffset:
+            self.offsetX = -self.unit_converter.from_mm(
+                (self.job.minX + self.job.maxX) / 2
+            )
+            self.offsetY = -self.unit_converter.from_mm(
+                -(self.job.minY + self.job.maxY) / 2
+            )
         self.generate_gcode_action()
 
     def set_x_offset(self, value: float):
@@ -1053,9 +1061,12 @@ class GcodeGenerator:
         self.offsetY = value
         self.generate_gcode_action()
 
-    def set_flip_xy(self, value: float):
+    def set_flip_xy(self, value: bool):
         self.flipXY = value
         self.generate_gcode_action()
+
+    def set_use_offset(self, value: bool):
+        self.set_use_offset = value
 
     def generate_gcode_action(self):
         cnc_ops: List["CncOp"] = []

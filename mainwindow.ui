@@ -1429,6 +1429,18 @@
               </attribute>
              </widget>
             </item>
+            <item row="5" column="2">
+             <widget class="QCheckBox" name="GCodeConversion_UseOffset">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Use Offset</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
          </layout>
