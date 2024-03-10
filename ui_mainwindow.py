@@ -227,7 +227,7 @@ class Ui_mainwindow(object):
         self.Tool_PassDepth = QDoubleSpinBox(self.scrollAreaWidgetContents)
         self.Tool_PassDepth.setObjectName(u"Tool_PassDepth")
         self.Tool_PassDepth.setDecimals(3)
-        self.Tool_PassDepth.setMaximum(10.000000000000000)
+        self.Tool_PassDepth.setMaximum(30.000000000000000)
         self.Tool_PassDepth.setSingleStep(0.500000000000000)
         self.Tool_PassDepth.setValue(0.200000000000000)
 
