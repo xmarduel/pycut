@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+    
 
 
 
@@ -100,7 +101,7 @@
             "program": "pycut.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
-            "args": ["-j", "xx.json"]
+            "args": ["-j", "vise2-front_and_back_parts.json"]
         },
         {
             "name": "PYCUT HOLDER",

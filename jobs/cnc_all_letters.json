@@ -747,7 +747,8 @@
       "overlap": 0.5,
       "rapid": 1000,
       "plunge": 127,
-      "cut": 1000
+      "cut": 1000,
+      "helix_pitch": 0.2
     },
     "Material": {
       "units": "inch",
@@ -762,6 +763,7 @@
     "GCodeConversion": {
       "units": "mm",
       "flip_xy": false,
+      "use_offset": false,
       "x_offset": 0.0,
       "y_offset": 100.0,
       "xy_reference": "ZERO_LOWER_LEFT_OF_OP"

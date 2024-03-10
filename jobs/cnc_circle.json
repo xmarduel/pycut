@@ -47,7 +47,8 @@
       "overlap": 0.6,
       "rapid": 1000,
       "plunge": 127,
-      "cut": 1000
+      "cut": 1000,
+      "helix_pitch": 0.2
     },
     "Material": {
       "units": "mm",
@@ -62,6 +63,7 @@
     "GCodeConversion": {
       "units": "mm",
       "flip_xy": false,
+      "use_offset": false,
       "x_offset": -100.0,
       "y_offset": 50.0,
       "xy_reference": "ZERO_CENTER_OF_OP"
