@@ -26,9 +26,9 @@
 	<defs id="defs">
 	    <circle id="screw_3.0mm"               style="fill:#00f0ff;fill-opacity:1" cx="0" cy="0" r="1.5" />
 		<circle id="screw_5.0mm"               style="fill:#0000ff;fill-opacity:1" cx="0" cy="0" r="2.5" />
-		<circle id="shaft_8.0mm"               style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="4.0" />
-		<circle id="shaft_bearing_15.0mm"      style="fill:#808000;fill-opacity:1" cx="0" cy="0" r="7.5" />
-		<circle id="backlash_item_hole_10.3mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.15" />
+		<circle id="shaft_8.0mm"               style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="4.075" /><!--luft-->
+		<circle id="shaft_bearing_15.0mm"      style="fill:#808000;fill-opacity:1" cx="0" cy="0" r="7.55" /><!--luft-->
+		<circle id="backlash_item_hole_10.3mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.25" /><!--luft-->
 		<!-- for a screw of diameter 3mm ... -->
 		<circle id="backlash_item_screw_3.0mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="1.5" />
 		<!-- ... the hole is 2.5mm ==> need a bit of 2mm diameter -->
