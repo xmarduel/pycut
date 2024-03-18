@@ -1872,7 +1872,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         p2_from_common_prefix = pathlib.PurePath(p2_from_common_prefix).as_posix()
 
         p2_nb_slashes = p2_from_common_prefix.count("/")
-        relative_p1 = "/".join(p2_nb_slashes * [".."]) + "/" + p1_from_common_prefix
+
+        if p2_nb_slashes > 0:
+            relative_p1 = "/".join(p2_nb_slashes * [".."]) + "/" + p1_from_common_prefix
+        else:
+            relative_p1 = p1_from_common_prefix
 
         return relative_p1
 
