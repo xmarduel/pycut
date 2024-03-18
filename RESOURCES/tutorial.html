@@ -265,7 +265,7 @@ PyCut saves its generated gcode files with a comment line of the form</p>
 
 <h3 id="P-03-01">Loading a SVG file</h3>
 
-<p>Import your svg into <strong>PyCut</strong>. The menubar contains such a commnd. The SVG content should be displayed
+<p>Import your svg into <strong>PyCut</strong>. It is achieved through the menubar command <strong>SVG | Load SVG</strong>. The SVG content should be displayed
 in the central area. </p>
 
 <div class="info">
@@ -275,9 +275,9 @@ in the central area. </p>
 
 <h3 id="P-03-02">Creating a PyCut Job</h3>
 
-<p>Then create a new "job" : this is a kind of project file that stores for a given svg file all the CAM operations
-that the users has created, together with all others settings relevant when generating GCode. It can be created, saved
-and loaded again and modified - quite practical.</p>
+<p>Then create a new "job" : this is a kind of project file that stores uponside the svg file all the CAM operations
+that the user has created or will create, together with all others settings relevant when generating GCode. 
+It can be created, saved and loaded again and modified - quite practical.</p>
 
 <h3 id="P-03-03">Creating CAM operations</h3>
 
@@ -467,10 +467,15 @@ top-left postion.</p>
 
 <p>Note that these 4 buttons act as radio buttons.</p>
 
-<p>These four references options set the XOffset and YOffset of the GCode calculation. After a GCode generation, it is
+<p>These four basic options set the XOffset and YOffset of the GCode calculation. After a GCode generation, it is
 still possible to modify the XOffset and YOffset to fit at best how to user wants to have the origin be located with
 the help of the 2 spin boxes. Infact, modifying "per hand" the X or Y offset recalculate the GCode, so this is a costly
 operation.</p>
+
+<p>The checkbox "Use Offset" is used, as example, as the following: the user can select first only 1 CAM operation, for 
+example <strong>Center of the Gcode area</strong>. An X and Y offset is thus calculated. Then the user checks "on" the 
+checkbox, so that these offsets are frozen and become the references for the further CAM operations and their produced gcode.
+</p>
 
 <div class="warning">
 <p><strong>Info</strong>: The option "Center of the Gcode area" is particularely usefull when the user wants to run 2

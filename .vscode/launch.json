@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
     
 
 
@@ -96,6 +97,15 @@
         },
         {
             "name": "PYCUT EMPTY",
+            "type": "python",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut",
+            "args": []
+        },
+        {
+            "name": "PYCUT VISE FRONT/BACK",
             "type": "python",
             "request": "launch",
             "program": "pycut.py",
