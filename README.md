@@ -1,10 +1,16 @@
-# pycut
+# PyCut
 
 clone of jscut in python
 
-![pycut1](https://user-images.githubusercontent.com/28778239/226173273-8989a03e-e9d6-4753-9ade-17af9e15d4c3.png)
+![pycut](RESOURCES/pycut_img.png)
 
 Disclamer: This software is used at the user's own risk. No responsibility is accepted by its creator.
+
+## Why PyCut
+
+With <strong>PyCut</strong>, you do not need to do 3D modelling. SVG files (2D) are <strong>PyCut</strong> input format, and for simple milling tasks it is perfectly OK. Granted, SVG shapes modelling is not so straightforward as one could think, as free software lacks good SVG modelling applications. Infact, writing a SVG file with a text editor is sometimes the best way! For complex shapes (so-called SVG paths), other tools may be used (see Tutorial).
+
+Before starting, please have a look at the tutorial to be sure your SVG input files follow the PyCut requirements (mostly: how to define the view box).
 
 ## Usage
 
@@ -14,7 +20,7 @@ start the program from the installation folder
 > python pycut.py -h
 > python pycut.py
 > python pycut.py -j <path_to_job>
-> python pycut.py -g <path_to_gcode>
+> python pycut.py -g <path_to_gcode>   # view an external gcode data
 ```
 
 ## Dependencies
@@ -28,6 +34,11 @@ start the program from the installation folder
 - matplotlib (latest) - to debug/view shapely offsets ops
 - numba (latest) - for python simulator optimization
 - pyvoronoi (latest) - for HSM nibbler toolpaths
+
+Note: If installation of pyvoronoi fails with pip, you can
+
+1. install cython
+2. download pyvoronoi.zip, unpack it and perform its setup.py from the source dir
 
 ## Features
 
