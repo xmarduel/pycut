@@ -2,6 +2,7 @@
 
 from typing import List
 from typing import Dict
+from typing import Any
 
 import math
 import copy
@@ -257,7 +258,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
     def set_mainwindow(self, mainwindow):
         self.mainwindow = mainwindow
 
-    def get_svg_size_x(self) -> ValWithUnit:
+    def get_svg_size_x(self) -> ValWithUnit | None:
         """
         get the width of the svg given in units "mm", "cm" or "in" (see Inkscape)
         """
@@ -277,7 +278,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         return None
 
-    def get_svg_size_y(self) -> ValWithUnit:
+    def get_svg_size_y(self) -> ValWithUnit | None:
         """
         get the height of the svg given in units "mm", "cm" or "in" (see Inkscape)
         """
@@ -402,7 +403,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         images_types = ["image"]
 
-        images: List[etree.ElementTree] = []
+        images: List[etree.Element] = []
 
         for element in elements:
             tag = element.tag
@@ -419,6 +420,10 @@ class SvgViewer(QtWidgets.QGraphicsView):
         for image in images:
             image_id = image.attrib.get("id", None)
 
+            if image_id is None:
+                print("    -> ignoring")
+                continue
+
             item = SvgItem(image_id, self, curr_renderer)
             # does not work
             self.scene().addItem(item)
@@ -428,7 +433,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
             else:
                 self.extra_items.append(item)
 
-        shapes: List[etree.ElementTree] = []
+        shapes: List[etree.Element] = []
 
         for element in elements:
             if not element.tag.startswith("{http://www.w3.org/2000/svg}"):
@@ -471,7 +476,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # zoom with the initial zoom factor
         # self.scale(self.current_zoom, self.current_zoom)
 
-    def set_tabs(self, tabs: List[Dict[str, any]]):
+    def set_tabs(self, tabs: List[Dict[str, Any]]):
         """ """
         if not self.in_dnd:
             # remove tabs
@@ -707,7 +712,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         return cam_paths_svg_paths
 
-    def display_tabs(self, tabs: List[Dict[str, any]]):
+    def display_tabs(self, tabs: List[Dict[str, Any]]):
         """ """
         # the tabs as paths
         svg_paths = self.make_tabs_svg_paths(tabs)

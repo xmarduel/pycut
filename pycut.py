@@ -1,6 +1,6 @@
 # This Python file uses the following encoding: utf-8
 
-VERSION = "0_6_0"
+VERSION = "0_6_5"
 
 import sys
 import os
@@ -17,6 +17,7 @@ import xml.etree.ElementTree as etree
 from typing import List
 from typing import Dict
 from typing import Tuple
+from typing import Any
 
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -134,7 +135,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.build_recent_jobs_submenu()
 
         self.operations = []
-        self.tabs: List[Dict[str, any]] = []
+        self.tabs: List[Dict[str, Any]] = []
 
         # a job to keep the generated gcode in memory (and save it)
         self.job = None
@@ -660,7 +661,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "use_offset": self.ui.GCodeConversion_UseOffset.isChecked(),
                 "x_offset": self.ui.GCodeConversion_XOffset.value(),
                 "y_offset": self.ui.GCodeConversion_YOffset.value(),
-                "xy_reference": GcodeModel.XYRef[
+                "xy_reference": GcodeModel.GCODE_ZERO_REF[
                     self.ui.buttonGroup_GCodeConversion.checkedId()
                 ],
             },
@@ -1192,7 +1193,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.label_Tool_Rapid_UnitsDescr.setText("inch/min")
             self.ui.label_Tool_Plunge_UnitsDescr.setText("inch/min")
             self.ui.label_Tool_Cut_UnitsDescr.setText("inch/min")
-            self.ui.label_Tool_HelixPitch_UnitsDescr.setText("inch/min")
+            self.ui.label_Tool_HelixPitch_UnitsDescr.setText("inch")
 
             self.ui.Tool_Diameter.setValue(self.ui.Tool_Diameter.value() / 25.4)
             self.ui.Tool_PassDepth.setValue(self.ui.Tool_PassDepth.value() / 25.4)
@@ -1209,7 +1210,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.label_Tool_Rapid_UnitsDescr.setText("mm/min")
             self.ui.label_Tool_Plunge_UnitsDescr.setText("mm/min")
             self.ui.label_Tool_Cut_UnitsDescr.setText("mm/min")
-            self.ui.label_Tool_HelixPitch_UnitsDescr.setText("mm/min")
+            self.ui.label_Tool_HelixPitch_UnitsDescr.setText("mm")
 
             self.ui.Tool_Diameter.setValue(self.ui.Tool_Diameter.value() * 25.4)
             self.ui.Tool_PassDepth.setValue(self.ui.Tool_PassDepth.value() * 25.4)
@@ -1428,7 +1429,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         svg = fp.read()
         fp.close()
 
-        def extract_svg_dimensions(svg: str) -> Tuple[int, int]:
+        def extract_svg_dimensions(svg: str) -> Tuple[str, str]:
             """
             Dimension of the svg are of importance when making gcode from the lower left
             side of the material
@@ -1483,12 +1484,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # and the tabs if any
         self.svg_viewer.set_tabs(self.tabs)
 
-    def assign_tabs(self, tabs: List[Tab]):
+    def assign_tabs(self, tabs: List[Dict[str, Any]]):
         """ """
         self.tabs = tabs
         self.ui.tabsview_manager.set_tabs(self.tabs)
 
-    def display_cnc_tabs(self, tabs: List[Tab]):
+    def display_cnc_tabs(self, tabs: List[Dict[str, Any]]):
         """ """
         self.tabs = tabs
         self.svg_viewer.set_tabs(self.tabs)
@@ -1517,12 +1518,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             settings["Tool"]["passdepth"], tool_model.units
         )
         tool_model.overlap = settings["Tool"]["overlap"]
-        tool_model.rapidRate = ValWithUnit(settings["Tool"]["rapid"], tool_model.units)
-        tool_model.plungeRate = ValWithUnit(
+        tool_model.rapid_rate = ValWithUnit(settings["Tool"]["rapid"], tool_model.units)
+        tool_model.plunge_rate = ValWithUnit(
             settings["Tool"]["plunge"], tool_model.units
         )
-        tool_model.cutRate = ValWithUnit(settings["Tool"]["cut"], tool_model.units)
-        tool_model.helixPitch = ValWithUnit(
+        tool_model.cut_rate = ValWithUnit(settings["Tool"]["cut"], tool_model.units)
+        tool_model.helix_pitch = ValWithUnit(
             settings["Tool"]["helix_pitch"], tool_model.units
         )
 
@@ -1590,7 +1591,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         settings = self.get_current_settings()
 
         svg_model = SvgModel()
-        svg_model.pxPerInch = 96
+        svg_model.px_per_inch = 96
         material_model = MaterialModel()
         material_model.mat_units = settings["Material"]["units"]
         material_model.mat_thickness = ValWithUnit(
@@ -1614,12 +1615,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             settings["Tool"]["passdepth"], tool_model.units
         )
         tool_model.overlap = settings["Tool"]["overlap"]
-        tool_model.rapidRate = ValWithUnit(settings["Tool"]["rapid"], tool_model.units)
-        tool_model.plungeRate = ValWithUnit(
+        tool_model.rapid_rate = ValWithUnit(settings["Tool"]["rapid"], tool_model.units)
+        tool_model.plunge_rate = ValWithUnit(
             settings["Tool"]["plunge"], tool_model.units
         )
-        tool_model.cutRate = ValWithUnit(settings["Tool"]["cut"], tool_model.units)
-        tool_model.helixPitch = ValWithUnit(
+        tool_model.cut_rate = ValWithUnit(settings["Tool"]["cut"], tool_model.units)
+        tool_model.helix_pitch = ValWithUnit(
             settings["Tool"]["helix_pitch"], tool_model.units
         )
 
@@ -1629,24 +1630,26 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         gcode_model = GcodeModel()
         gcode_model.units = settings["GCodeConversion"]["units"]
-        gcode_model.flipXY = settings["GCodeConversion"]["flip_xy"]
-        gcode_model.useOffset = settings["GCodeConversion"]["use_offset"]
-        gcode_model.XOffset = settings["GCodeConversion"]["x_offset"]
-        gcode_model.YOffset = settings["GCodeConversion"]["y_offset"]
-        gcode_model.returnTo00 = settings["GCodeGeneration"]["return_to_zero_at_end"]
-        gcode_model.spindleControl = settings["GCodeGeneration"]["spindle_control"]
-        gcode_model.spindleSpeed = settings["GCodeGeneration"]["spindle_speed"]
+        gcode_model.flip_xy = settings["GCodeConversion"]["flip_xy"]
+        gcode_model.use_offset = settings["GCodeConversion"]["use_offset"]
+        gcode_model.x_offset = settings["GCodeConversion"]["x_offset"]
+        gcode_model.y_offset = settings["GCodeConversion"]["y_offset"]
+        gcode_model.return_to_zero_at_end = settings["GCodeGeneration"][
+            "return_to_zero_at_end"
+        ]
+        gcode_model.spindle_control = settings["GCodeGeneration"]["spindle_control"]
+        gcode_model.spindle_speed = settings["GCodeGeneration"]["spindle_speed"]
         gcode_model.programEnd = settings["GCodeGeneration"]["program_end"]
 
-        gcode_model.gcodeZero = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
+        gcode_model.gcode_zero_ref = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
         if self.ui.GCodeConversion_ZeroTopLeftOfMaterial.isChecked():
-            gcode_model.gcodeZero = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
+            gcode_model.gcode_zero_ref = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
         if self.ui.GCodeConversion_ZeroLowerLeftOfMaterial.isChecked():
-            gcode_model.gcodeZero = GcodeModel.ZERO_LOWER_LEFT_OF_MATERIAL
+            gcode_model.gcode_zero_ref = GcodeModel.ZERO_LOWER_LEFT_OF_MATERIAL
         if self.ui.GCodeConversion_ZeroLowerLeftOfOp.isChecked():
-            gcode_model.gcodeZero = GcodeModel.ZERO_LOWER_LEFT_OF_OP
+            gcode_model.gcode_zero_ref = GcodeModel.ZERO_LOWER_LEFT_OF_OP
         if self.ui.GCodeConversion_ZeroCenterOfOp.isChecked():
-            gcode_model.gcodeZero = GcodeModel.ZERO_CENTER_OF_OP
+            gcode_model.gcode_zero_ref = GcodeModel.ZERO_CENTER_OF_OP
 
         cnc_ops = self.get_jobmodel_operations()
 
@@ -1751,8 +1754,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.cb_generate_gcode_y_offset
         )
 
-        self.ui.GCodeConversion_XOffset.setValue(generator.offsetX)
-        self.ui.GCodeConversion_YOffset.setValue(generator.offsetY)
+        self.ui.GCodeConversion_XOffset.setValue(generator.x_offset)
+        self.ui.GCodeConversion_YOffset.setValue(generator.y_offset)
 
         self.ui.GCodeConversion_XOffset.valueChanged.connect(
             self.cb_generate_gcode_x_offset
@@ -1761,10 +1764,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.cb_generate_gcode_y_offset
         )
 
-        self.ui.GCodeConversion_MinX.setValue(generator.minX)
-        self.ui.GCodeConversion_MinY.setValue(generator.minY)
-        self.ui.GCodeConversion_MaxX.setValue(generator.maxX)
-        self.ui.GCodeConversion_MaxY.setValue(generator.maxY)
+        self.ui.GCodeConversion_MinX.setValue(generator.min_x)
+        self.ui.GCodeConversion_MinY.setValue(generator.min_y)
+        self.ui.GCodeConversion_MaxX.setValue(generator.max_x)
+        self.ui.GCodeConversion_MaxY.setValue(generator.max_y)
 
         self.svg_viewer.display_job(generator.job)
 

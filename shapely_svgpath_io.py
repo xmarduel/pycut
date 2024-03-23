@@ -528,7 +528,7 @@ class SvgPath:
         return path
 
     @classmethod
-    def from_circle_def(cls, center: List[float], radius: float) -> "SvgPath":
+    def from_circle_def(cls, center: Tuple[float, float], radius: float) -> "SvgPath":
         """
         PyCut Tab import in svg viewer
         """

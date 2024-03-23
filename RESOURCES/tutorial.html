@@ -107,6 +107,8 @@ For complex shapes (so-called SVG paths), other tools may be used, see Appendix.
 
 <h2 id="P-01-01">SVG Documents</h2>
 
+<h3 id="P-01-010">SVG ViewBox definition</h3>
+
 <p><strong>PyCut</strong>, in order to work accurately, need the SVG document to define its standard
 <strong>width</strong> and <strong>height</strong> with units "<strong>mm</strong>" or "<strong>in</strong>". The
 <strong>viewbox</strong> needs to be defined as well. The view shall be of the form </p>
@@ -255,13 +257,13 @@ job is opened.</p>
 
 <p>A GCode file can also be loaded with the argument <code>--gcode</code>. Hopefully PyCut can parse it (roughly: what
 <strong>Candle</strong> can parse - <strong>PyCut</strong> uses a similar parser). The toolpaths can then be viewed in
-the GCode viewer and GCode simulator. For the GCode simulator, the tool diameter is needed for an accurate simulation.
+the GCode viewer (toolpaths simulation) and GCode simulator. For the GCode simulator (material removing simulation), the tool diameter is needed for an accurate simulation.
 PyCut saves its generated gcode files with a comment line of the form</p>
 <pre><code class="language-gcode">; Diameter   &lt;value&gt;</code></pre>
 
 <p>that is parsed to retrieve the right tool diameter. </p>
 
-<p>For the very first time, start <strong>PyCut</strong> without job.</p>
+<p>So for the very first time, start <strong>PyCut</strong> without job.</p>
 
 <h3 id="P-03-01">Loading a SVG file</h3>
 
@@ -456,10 +458,10 @@ top-left postion.</p>
 
 <p>It is possible to change the reference location of the generated GCode</p>
 <ul>
-  <li>Top-Left location of the material</li>
-  <li>Bottom-Left location of the material</li>
-  <li>Bottom-Left location of the Gcode area</li>
-  <li>Center of the Gcode area</li>
+  <li>Zero top-left of the material</li>
+  <li>Zero lower-Left (bottom) of the material</li>
+  <li>Tero lower-Left (bottom) of the Gcode area</li>
+  <li>Zero Center of the Gcode area</li>
 </ul>
 
 <div>
@@ -640,17 +642,15 @@ larger pass depth</strong> (rather than a standard overlap and a tiny pass depth
 <p>The cutter diameter will be the "thickness" of the helix. The helix's center will be the <strong>center of the
 (closed) shape</strong>. Considering the case where the center of the helix is [0,0], <strong>on which "orbit" will
 move the cutter</strong>? Well we specify it with the standard "<strong>width</strong>" operation attribute, which
-infact means the <strong>helix radius</strong>. A good value would be the <strong>half of the cutter radius</strong>.
+infact means the <strong>radius</strong> of the circle on which the cutter center travels. A good value would be the 
+<strong>half of the cutter radius</strong>.
 With this value, there is an overlap of 0.75 (ratio). A value greather than the cutter radius generates a donut (well
 the center may fall), and the helix is thus simular to an "Inside" or "Outside"operation for an imaginary circle shape,
 however with a "smoother" cut. </p>
 
-<p>The helix pitch (revolution depth) is the most important parameter. Its value (example 0.1 mm for aluminium) implies
-that the "helix plunge rate" is calculated from the helix radius and the standard cut (feed) rate. Specifiying the
-helix pitch though is easier.</p>
-
-<p>Theoretically, the Helix operation could perform threads cutting by generating first an hole, then an helix "inside
-the hole" where the helix radius would be smaller the the hole radius.</p>
+<p>The helix pitch (revolution depth) is the most important parameter. Theoretically, the Helix operation could perform 
+threads cutting by generating first an hole, then an helix "inside the hole" where the outer border of the helix 
+would be smaller than the hole radius, and utilizing a dedicated cutter.</p>
 
 <h4>Spirale</h4>
 

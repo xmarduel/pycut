@@ -23,6 +23,7 @@ from math import sqrt
 from typing import List
 from typing import Dict
 from typing import Tuple
+from typing import Any
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -549,9 +550,9 @@ class cam:
         numLeft = len(paths) - 1
 
         while numLeft > 0:
-            closestPathIndex = None
-            closestPointIndex = None
-            closestPointDist = sys.maxsize
+            closestPathIndex = -1
+            closestPointIndex = -1
+            closestPointDist = float(sys.maxsize)
             for pathIndex, path in enumerate(paths):
                 for pointIndex, point in enumerate(path):
                     dist = cam.distP(currentPoint, point)
@@ -618,8 +619,8 @@ class cam:
           paths:          Array of CamPath
           ramp:           Ramp these paths?
           scale:          Factor to convert Clipper units to gcode units
-          offsetX:        Offset X (gcode units)
-          offsetY:        Offset Y (gcode units)
+          x_offset:       Offset X (gcode units)
+          y_offset:       Offset Y (gcode units)
           decimal:        Number of decimal places to keep in gcode
           topZ:           Top of area to cut (gcode units)
           botZ:           Bottom of area to cut (gcode units)
@@ -629,20 +630,20 @@ class cam:
           retractFeed:    Feedrate to retract cutter (gcode units)
           cutFeed:        Feedrate for horizontal cuts (gcode units)
           rapidFeed:      Feedrate for rapid moves (gcode units)
-          toolDiameter:
-          helixPitch:     Depth of an helix revolution (theoretical)
-          helixPlungeRate:Helix plunge rate (theoretical)
+          tool_diameter:
+          helix_pitch:    Depth of an helix revolution
+          helix_plunge_rate: Helix plunge rate
           tabs:           List of tabs
           tabZ:           Level below which tabs are to be processed
           peckZ:          Level to retract when pecking
-          flipXY          toggle X with Y
+          flip_xy         toggle X with Y
         """
         optype = args["optype"]
         paths: List[CamPath] = args["paths"]
         ramp = args["ramp"]
         scale = args["scale"]
-        offsetX = args["offsetX"]
-        offsetY = args["offsetY"]
+        x_offset = args["x_offset"]
+        y_offset = args["y_offset"]
         decimal = args["decimal"]
         topZ = args["topZ"]
         botZ = args["botZ"]
@@ -664,7 +665,7 @@ class cam:
 
         peckZ = args["peckZ"]
 
-        flipXY = args["flipXY"]
+        flip_xy = args["flip_xy"]
 
         gcode = []
 
@@ -684,16 +685,16 @@ class cam:
         ]
 
         def getX(p: Tuple[float, float]):
-            return p[0] * scale + offsetX
+            return p[0] * scale + x_offset
 
         def getY(p: Tuple[float, float]):
-            return -p[1] * scale + offsetY
+            return -p[1] * scale + y_offset
 
-        def convertPoint(p: Tuple[float, float]):
-            x = p[0] * scale + offsetX
-            y = -p[1] * scale + offsetY
+        def convertPoint(p: Tuple[float, float] | Tuple[float, float, float]):
+            x = p[0] * scale + x_offset
+            y = -p[1] * scale + y_offset
 
-            if flipXY is False:
+            if flip_xy is False:
                 result = (
                     " X"
                     + ValWithUnit(x, "-").to_fixed(decimal)
@@ -711,11 +712,11 @@ class cam:
             return result
 
         def convertPoint3D(p: Tuple[float, float, float]):
-            x = p[0] * scale + offsetX
-            y = -p[1] * scale + offsetY
+            x = p[0] * scale + x_offset
+            y = -p[1] * scale + y_offset
             z = p[2]
 
-            if flipXY is False:
+            if flip_xy is False:
                 result = (
                     " X"
                     + ValWithUnit(x, "-").to_fixed(decimal)
@@ -740,10 +741,10 @@ class cam:
         if optype == "Helix":
             SEG_LEN = 0.1
 
-            tool_diameter = args["toolDiameter"]
-            helix_radius = args["helixRadius"]
-            helix_pitch = args["helixPitch"]
-            helix_plunge_rate = args["helixPlungeRate"]
+            tool_diameter = args["tool_diameter"]
+            helix_radius = args["helix_radius"]
+            helix_pitch = args["helix_pitch"]
+            helix_plunge_rate = args["helix_plunge_rate"]
 
             if helix_radius == 0.0:
                 helix_radius = tool_diameter / 4.0  # default!
@@ -755,19 +756,8 @@ class cam:
 
                 circle_travel_radius = helix_radius
                 circle_travel = 2 * PI * circle_travel_radius
-                helix_plunge_rate = cutFeed * helix_pitch / circle_travel
-
-                print("HELIX_CIRCLE_TRAVEL_RADIUS = ", circle_travel_radius)
-                print("HELIX_PLUNGE_RATE = ", helix_plunge_rate)
-
-                # well we wish an helix plunge rate as integer.
-                # So the helix_pitch will be somehow "corrected"
-
-                helix_plunge_rate = math.floor(helix_plunge_rate) + 1
-                helix_pitch = circle_travel * helix_plunge_rate / cutFeed
-
-                print("FIXED - HELIX_PLUNGE_RATE = ", helix_plunge_rate)
-                print("FIXED - helix_pitch = ", helix_pitch)
+                # helix_plunge_rate = math.floor(cutFeed * helix_pitch / circle_travel) # BS
+                helix_plunge_rate = plungeFeed
 
                 nb_pts_per_revolution = math.floor(circle_travel / SEG_LEN)
 
@@ -776,7 +766,7 @@ class cam:
                 helix_pitch_last = cut_depth - nb_helixes * helix_pitch
 
                 # calculate all the pts with z component
-                pts = []
+                pts: List[Tuple[float, float, float]] = []
 
                 # the helix revolutions
                 for i in range(0, nb_helixes):
@@ -791,7 +781,7 @@ class cam:
                         xx = center[0] + circle_travel_radius * x
                         yy = center[1] + circle_travel_radius * y
 
-                        pts.append([xx, yy, z])
+                        pts.append((xx, yy, z))
 
                 # and the last one
 
@@ -811,7 +801,7 @@ class cam:
                         xx = center[0] + circle_travel_radius * x
                         yy = center[1] + circle_travel_radius * y
 
-                        pts.append([xx, yy, z])
+                        pts.append((xx, yy, z))
 
                 # and the last flat circle
 
@@ -824,7 +814,7 @@ class cam:
                     xx = center[0] + circle_travel_radius * x
                     yy = center[1] + circle_travel_radius * y
 
-                    pts.append([xx, yy, z])
+                    pts.append((xx, yy, z))
 
                 # the gcode
                 gcode.append("; Rapid to op center position")
@@ -938,7 +928,7 @@ class cam:
                     if ramp and minPlungeTime > 0:
                         minPlungeTime = (currentZ - nextZ) / plungeFeed
                         idealDist = cutFeed * minPlungeTime
-                        totalDist = 0
+                        totalDist = 0.0
                         for end in range(1, len(list(selectedPath.coords))):
                             if totalDist > idealDist:
                                 break
@@ -979,7 +969,7 @@ class cam:
                             gcode.append("; ramp")
                             executedRamp = True
 
-                            distTravelled = 0
+                            distTravelled = 0.0
                             for i in range(1, len(rampPath)):
                                 distTravelled += cam.dist(
                                     getX(rampPath[i - 1]),
@@ -1061,7 +1051,7 @@ class cam:
 class TabsSeparator:
     """ """
 
-    def __init__(self, tabs: List[Dict[str, any]]):
+    def __init__(self, tabs: List[Dict[str, Any]]):
         self.tabs = tabs
 
         self.separated_paths: List[shapely.geometry.LineString] = []
@@ -1085,7 +1075,7 @@ class TabsSeparator:
         # print("origPath", origPath)
         # print("origPath", shapely_openpath)
 
-        shapely_tabs_ = []
+        shapely_tabs_: List[shapely.geometry.Polygon] = []
         # 1. from the tabs, build shapely tab polygons
         for tab_def in self.tabs:
             tab = Tab(tab_def)
@@ -1093,11 +1083,11 @@ class TabsSeparator:
             shapely_tabs_ += shapely_tabs
 
         # hey, multipolygons are good...
-        shapely_tabs = shapely.ops.unary_union(shapely_tabs_)
-        if shapely_tabs.geom_type == "Polygon":
+        shapely_tabs_union = shapely.ops.unary_union(shapely_tabs_)
+        if shapely_tabs_union.geom_type == "Polygon":
             shapely_tabs = shapely.geometry.MultiPolygon([shapely_tabs])
-        if shapely_tabs.geom_type == "GeometryCollection":
-            for geom in shapely_tabs.geoms:
+        if shapely_tabs_union.geom_type == "GeometryCollection":
+            for geom in shapely_tabs_union.geoms:
                 if geom.geom_type == "MultiPolygon":
                     shapely_tabs = geom
                 if geom.geom_type == "Polygon":
@@ -1172,11 +1162,11 @@ class TabsSeparator:
 
         def build_paths_compatibility_table(
             paths: List[shapely.geometry.LineString],
-        ) -> Dict[List, int]:
+        ) -> Dict[int, List]:
             """
             for all paths in the list of paths, check first which ones can be merged
             """
-            compatibility_table = {}
+            compatibility_table: Dict[int, List] = {}
 
             for i, path in enumerate(paths):
                 for j, other_path in enumerate(paths):
@@ -1454,9 +1444,9 @@ class PocketCalculator:
         numLeft = len(paths) - 1
 
         while numLeft > 0:
-            closestPathIndex = None
-            closestPointIndex = None
-            closestPointDist = sys.maxsize
+            closestPathIndex = -1
+            closestPointIndex = -1
+            closestPointDist = float(sys.maxsize)
             for pathIndex, path in enumerate(paths):
                 for pointIndex, point in enumerate(path):
                     dist = cam.distP(currentPoint, point)
@@ -1496,6 +1486,8 @@ class PocketCalculator:
             cam_paths.append(CamPath(shapely.geometry.LineString(path), safe_to_close))
 
         self.cam_paths = cam_paths
+
+        return cam_paths
 
 
 class SpiralePocketCalculator:
@@ -1647,11 +1639,11 @@ class SpiralePocketCalculator:
                 self.pocket_radius_minus_cutter * self.pocket_radius_minus_cutter
             )
 
-            self.x = []
-            self.y = []
-            self.z = []
+            self.x: List[float] = []
+            self.y: List[float] = []
+            self.z: List[float] = []
 
-        def calc_path(self) -> List[Tuple]:
+        def calc_path(self) -> List[Tuple[float, float]]:
             """
             Prepare arrays x, y
             """
@@ -1708,7 +1700,7 @@ class SpiralePocketCalculator:
             x = np.concatenate([x, dx])
             y = np.concatenate([y, dy])
 
-            pts = [[xx, yy] for xx, yy in zip(x, y)]
+            pts = [(xx, yy) for xx, yy in zip(x, y)]
 
             return pts
 

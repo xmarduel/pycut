@@ -82,7 +82,7 @@ class GcodeModel:
     ZERO_LOWER_LEFT_OF_OP = 3
     ZERO_CENTER_OF_OP = 4
 
-    XYRef = {
+    GCODE_ZERO_REF = {
         ZERO_TOP_LEFT_OF_MATERIAL: "ZERO_TOP_LEFT_OF_MATERIAL",
         ZERO_LOWER_LEFT_OF_MATERIAL: "ZERO_LOWER_LEFT_OF_MATERIAL",
         ZERO_LOWER_LEFT_OF_OP: "ZERO_LOWER_LEFT_OF_OP",
@@ -92,19 +92,19 @@ class GcodeModel:
     def __init__(self):
         # --------------------------- not sure yet for these
         self.units = "mm"
-        self.XOffset = 0.0
-        self.YOffset = 0.0
+        self.x_offset = 0.0
+        self.y_offset = 0.0
 
-        self.gcodeZero = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
+        self.gcode_zero_ref = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
 
-        self.flipXY = False
-        self.useOffset = False
+        self.flip_xy = False
+        self.use_offset = False
 
         # ----------------------------
-        self.returnTo00 = False
+        self.return_to_zero_at_end = False
 
-        self.spindleControl = True
-        self.spindleSpeed = 1000
+        self.spindle_control = True
+        self.spindle_speed = 1000
 
         self.programEnd = False
 
@@ -117,7 +117,7 @@ class SvgModel:
     size_y = 100.0
 
     def __init__(self):
-        self.pxPerInch = 96
+        self.px_per_inch = 96
 
 
 class ToolModel:
@@ -129,17 +129,17 @@ class ToolModel:
         self.angle = 180
         self.passdepth = ValWithUnit(0.125, self.units)
         self.overlap = 0.5
-        self.rapidRate = ValWithUnit(100, self.units)
-        self.plungeRate = ValWithUnit(5, self.units)
-        self.cutRate = ValWithUnit(40, self.units)
-        self.helixPitch = ValWithUnit(0.165, self.units)
+        self.rapid_rate = ValWithUnit(100, self.units)
+        self.plunge_rate = ValWithUnit(5, self.units)
+        self.cut_rate = ValWithUnit(40, self.units)
+        self.helix_pitch = ValWithUnit(0.165, self.units)
 
     def get_cam_data(self):
         """
         convert to the gcode units FIXME actual per default mm
         """
         result = {
-            "diameterTool": self.diameter.to_mm(),
+            "diameter_tool": self.diameter.to_mm(),
             "passdepth": self.passdepth.to_mm(),
             "overlap": self.overlap,
         }
@@ -239,8 +239,8 @@ class Tab:
 class TabsModel:
     """ """
 
-    def __init__(self, tabs: List[Dict[str, any]]):
-        self.tabs: List[Dict[str, any]] = tabs
+    def __init__(self, tabs: List[Dict[str, Any]]):
+        self.tabs: List[Dict[str, Any]] = tabs
 
         self.units = "mm"  # default
         self.height = ValWithUnit(2.0, self.units)  # default
@@ -251,14 +251,14 @@ class TabsModel:
         self.units = units
         self.height = ValWithUnit(height, units)
 
-        Tab.set_height(self.height)
+        Tab.set_height(self.height, self.units)
 
     def has_tabs(self):
         return len(self.tabs) > 0
 
     def pos_in_tab(self, x: float, y: float, z: float, op_cut_depth: float):
         for tab in self.tabs:
-            if tab.pos_inside_tab(x, y, z, op_cut_depth):
+            if Tab(tab).pos_inside_tab(x, y, z, op_cut_depth):
                 return True
 
         return False
@@ -282,12 +282,12 @@ class CncOp:
         if "margin" in operation:
             self.margin = ValWithUnit(operation["margin"], self.units)
         else:
-            self.margin = None
+            self.margin = ValWithUnit(0.0, self.units)
 
         if "width" in operation:
             self.width = ValWithUnit(operation["width"], self.units)
         else:
-            self.width = None
+            self.width = ValWithUnit(0.0, self.units)
 
         # the input
         self.svg_paths: List[SvgPath] = []  # to fill at "setup"
@@ -417,8 +417,8 @@ class CncOp:
 
         the generated geometry is a MultiPolygon
         """
-        self.shapely_polygons: List[shapely.geometry.Polygon] = []
-        self.shapely_lines: List[shapely.geometry.LineString] = []
+        self.shapely_polygons = []
+        self.shapely_lines = []
 
         for svg_path in self.svg_paths:
             shapely_lines = svg_path.import_as_lines_list()
@@ -649,8 +649,8 @@ class CncOp:
 
             width = self.width.to_mm()
 
-            if width < toolData["diameterTool"]:
-                width = toolData["diameterTool"]
+            if width < toolData["diameter_tool"]:
+                width = toolData["diameter_tool"]
 
             if margin != 0:
                 geometry = ShapelyUtils.offset_multipolygon(
@@ -684,8 +684,8 @@ class CncOp:
         if self.geometry is not None:
             width = self.width.to_mm()
 
-            if width < toolData["diameterTool"]:
-                width = toolData["diameterTool"]
+            if width < toolData["diameter_tool"]:
+                width = toolData["diameter_tool"]
 
             margin = self.margin.to_mm()
             margin_plus_width = margin + width
@@ -758,8 +758,8 @@ class CncOp:
         #    if direction == "outer2inner":
         #        # start from the outer ring and cam in the inside dir
         #        width = self.width.to_mm()
-        #        if width < toolData["diameterTool"]:
-        #            width = toolData["diameterTool"]
+        #        if width < toolData["diameter_tool"]:
+        #            width = toolData["diameter_tool"]
         #        offset += width
         #    else:
         #        # start from the inner ring and cam in the outside dir
@@ -767,25 +767,25 @@ class CncOp:
 
         if self.geometry.geom_type == "MultiPoint":
             if cam_op == "Drill":
-                self.cam_paths = cam.drill(geometry, toolData["diameterTool"])
+                self.cam_paths = cam.drill(geometry, toolData["diameter_tool"])
             elif cam_op == "Peck":
-                self.cam_paths = cam.peck(geometry, toolData["diameterTool"])
+                self.cam_paths = cam.peck(geometry, toolData["diameter_tool"])
 
         if cam_op == "Helix":
-            self.cam_paths = cam.helix(geometry, toolData["diameterTool"])
+            self.cam_paths = cam.helix(geometry, toolData["diameter_tool"])
 
         elif cam_op == "Pocket" and name.startswith("sp_"):
             self.cam_paths = cam.spirale_pocket(
                 self.svg_paths,
                 geometry,
-                toolData["diameterTool"],
+                toolData["diameter_tool"],
                 toolData["overlap"],
                 direction == "Climb",
             )
         elif cam_op == "Pocket" and name.startswith("nb_"):
             self.cam_paths = cam.nibbler_pocket(
                 geometry,
-                toolData["diameterTool"],
+                toolData["diameter_tool"],
                 toolData["overlap"],
                 direction == "Climb",
             )
@@ -803,17 +803,17 @@ class CncOp:
                 if cam_op == "Pocket":
                     self.cam_paths = cam.pocket(
                         geometry,
-                        toolData["diameterTool"],
+                        toolData["diameter_tool"],
                         toolData["overlap"],
                         direction == "Climb",
                     )
                 elif cam_op == "Inside" or cam_op == "Outside":
                     width = width.to_mm()
-                    if width < toolData["diameterTool"]:
-                        width = toolData["diameterTool"]
+                    if width < toolData["diameter_tool"]:
+                        width = toolData["diameter_tool"]
                     self.cam_paths = cam.outline(
                         geometry,
-                        toolData["diameterTool"],
+                        toolData["diameter_tool"],
                         cam_op == "Inside",
                         width,
                         toolData["overlap"],
@@ -831,11 +831,11 @@ class CncOp:
                     geometry = self.preview_geometry
 
                     width = width.to_mm()
-                    if width < toolData["diameterTool"]:
-                        width = toolData["diameterTool"]
+                    if width < toolData["diameter_tool"]:
+                        width = toolData["diameter_tool"]
                     self.cam_paths = cam.outline_opened_paths(
                         geometry,
-                        toolData["diameterTool"],
+                        toolData["diameter_tool"],
                         cam_op == "Inside",
                         width,
                         toolData["overlap"],
@@ -896,10 +896,10 @@ class JobModel:
         self.tabs_model = tabs_model
         self.gcode_model = gcode_model
 
-        self.minX = 0
-        self.minY = 0
-        self.maxX = 0
-        self.maxY = 0
+        self.min_x = 0
+        self.min_y = 0
+        self.max_x = 0
+        self.max_y = 0
 
         self.calculate_operation_cam_paths()
         self.find_min_max()
@@ -916,10 +916,10 @@ class JobModel:
                 )
 
     def find_min_max(self):
-        minX = 0
-        maxX = 0
-        minY = 0
-        maxY = 0
+        min_x = 0
+        max_x = 0
+        min_y = 0
+        max_y = 0
         foundFirst = False
 
         for op in self.operations:
@@ -928,21 +928,21 @@ class JobModel:
                     toolPath = cam_path.path
                     for point in toolPath.coords:
                         if not foundFirst:
-                            minX = point[0]
-                            maxX = point[0]
-                            minY = point[1]
-                            maxY = point[1]
+                            min_x = point[0]
+                            max_x = point[0]
+                            min_y = point[1]
+                            max_y = point[1]
                             foundFirst = True
                         else:
-                            minX = min(minX, point[0])
-                            minY = min(minY, point[1])
-                            maxX = max(maxX, point[0])
-                            maxY = max(maxY, point[1])
+                            min_x = min(min_x, point[0])
+                            min_y = min(min_y, point[1])
+                            max_x = max(max_x, point[0])
+                            max_y = max(max_y, point[1])
 
-        self.minX = minX
-        self.maxX = maxX
-        self.minY = minY
-        self.maxY = maxY
+        self.min_x = min_x
+        self.max_x = max_x
+        self.min_y = min_y
+        self.max_y = max_y
 
 
 class GcodeGenerator:
@@ -959,114 +959,114 @@ class GcodeGenerator:
         self.units = self.gcode_model.units
         self.unit_converter = UnitConverter(self.units)
 
-        self.offsetX = self.gcode_model.XOffset
-        self.offsetY = self.gcode_model.YOffset
+        self.x_offset = self.gcode_model.x_offset
+        self.y_offset = self.gcode_model.y_offset
 
-        self.flipXY = self.gcode_model.flipXY
-        self.useOffset = self.gcode_model.useOffset
+        self.flip_xy = self.gcode_model.flip_xy
+        self.use_offset = self.gcode_model.use_offset
 
         self.gcode = ""
 
     @property
-    def minX(self):
+    def min_x(self):
         """
         only display value after gcode generation
         """
-        if self.flipXY == False:
+        if self.flip_xy == False:
             # normal case
-            return self.unit_converter.from_mm(self.job.minX) + self.offsetX
+            return self.unit_converter.from_mm(self.job.min_x) + self.x_offset
         else:
-            # as flipped: is -maxY when "no flip"
-            return self.unit_converter.from_mm(self.job.minY) - self.offsetY
+            # as flipped: is -max_y when "no flip"
+            return self.unit_converter.from_mm(self.job.min_y) - self.y_offset
 
     @property
-    def maxX(self):
+    def max_x(self):
         """
         only display value after gcode generation
         """
-        if self.flipXY == False:
+        if self.flip_xy == False:
             # normal case
-            return self.unit_converter.from_mm(self.job.maxX) + self.offsetX
+            return self.unit_converter.from_mm(self.job.max_x) + self.x_offset
         else:
-            # as flipped: is -minY when "no flip"
-            return self.unit_converter.from_mm(self.job.maxY) - self.offsetY
+            # as flipped: is -min_y when "no flip"
+            return self.unit_converter.from_mm(self.job.max_y) - self.y_offset
 
     @property
-    def minY(self):
+    def min_y(self):
         """
         only display value after gcode generation
         """
-        if self.flipXY == False:
+        if self.flip_xy == False:
             # normal case
-            return -self.unit_converter.from_mm(self.job.maxY) + self.offsetY
+            return -self.unit_converter.from_mm(self.job.max_y) + self.y_offset
         else:
-            # as flipped: is minX when "no flip"
-            return self.unit_converter.from_mm(self.job.minX) + self.offsetX
+            # as flipped: is min_x when "no flip"
+            return self.unit_converter.from_mm(self.job.min_x) + self.x_offset
 
     @property
-    def maxY(self):
+    def max_y(self):
         """
         only display value after gcode generation
         """
-        if self.flipXY == False:
+        if self.flip_xy == False:
             # normal case
-            return -self.unit_converter.from_mm(self.job.minY) + self.offsetY
+            return -self.unit_converter.from_mm(self.job.min_y) + self.y_offset
         else:
-            # as flipped: is maxX when "no flip"
-            return self.unit_converter.from_mm(self.job.maxX) + self.offsetX
+            # as flipped: is max_x when "no flip"
+            return self.unit_converter.from_mm(self.job.max_x) + self.x_offset
 
     def generate_gcode(self):
-        if self.gcode_model.gcodeZero == GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL:
+        if self.gcode_model.gcode_zero_ref == GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL:
             self.generate_gcode_zero_topfeft_of_material()
-        elif self.gcode_model.gcodeZero == GcodeModel.ZERO_LOWER_LEFT_OF_MATERIAL:
+        elif self.gcode_model.gcode_zero_ref == GcodeModel.ZERO_LOWER_LEFT_OF_MATERIAL:
             self.generate_gcode_zero_lowerleft_of_material()
-        elif self.gcode_model.gcodeZero == GcodeModel.ZERO_LOWER_LEFT_OF_OP:
+        elif self.gcode_model.gcode_zero_ref == GcodeModel.ZERO_LOWER_LEFT_OF_OP:
             self.generate_gcode_zero_lowerfeft_of_op()
-        elif self.gcode_model.gcodeZero == GcodeModel.ZERO_CENTER_OF_OP:
+        elif self.gcode_model.gcode_zero_ref == GcodeModel.ZERO_CENTER_OF_OP:
             self.generate_gcode_zero_center_of_op()
 
     def generate_gcode_zero_topfeft_of_material(self):
-        if not self.useOffset:
-            self.offsetX = self.unit_converter.from_mm(0)
-            self.offsetY = self.unit_converter.from_mm(0)
+        if not self.use_offset:
+            self.x_offset = self.unit_converter.from_mm(0)
+            self.y_offset = self.unit_converter.from_mm(0)
         self.generate_gcode_action()
 
     def generate_gcode_zero_lowerleft_of_material(self):
-        if not self.useOffset:
-            self.offsetX = self.unit_converter.from_mm(0)
-            self.offsetY = self.unit_converter.from_mm(self.material_model.size_y)
+        if not self.use_offset:
+            self.x_offset = self.unit_converter.from_mm(0)
+            self.y_offset = self.unit_converter.from_mm(self.material_model.size_y)
         self.generate_gcode_action()
 
     def generate_gcode_zero_lowerfeft_of_op(self):
-        if not self.useOffset:
-            self.offsetX = -self.unit_converter.from_mm(self.job.minX)
-            self.offsetY = -self.unit_converter.from_mm(-self.job.maxY)
+        if not self.use_offset:
+            self.x_offset = -self.unit_converter.from_mm(self.job.min_x)
+            self.y_offset = -self.unit_converter.from_mm(-self.job.max_y)
         self.generate_gcode_action()
 
     def generate_gcode_zero_center_of_op(self):
-        if not self.useOffset:
-            self.offsetX = -self.unit_converter.from_mm(
-                (self.job.minX + self.job.maxX) / 2
+        if not self.use_offset:
+            self.x_offset = -self.unit_converter.from_mm(
+                (self.job.min_x + self.job.max_x) / 2
             )
-            self.offsetY = -self.unit_converter.from_mm(
-                -(self.job.minY + self.job.maxY) / 2
+            self.y_offset = -self.unit_converter.from_mm(
+                -(self.job.min_y + self.job.max_y) / 2
             )
         self.generate_gcode_action()
 
     def set_x_offset(self, value: float):
-        self.offsetX = value
+        self.x_offset = value
         self.generate_gcode_action()
 
     def set_y_offset(self, value: float):
-        self.offsetY = value
+        self.y_offset = value
         self.generate_gcode_action()
 
     def set_flip_xy(self, value: bool):
-        self.flipXY = value
+        self.flip_xy = value
         self.generate_gcode_action()
 
     def set_use_offset(self, value: bool):
-        self.set_use_offset = value
+        self.use_offset = value
 
     def generate_gcode_action(self):
         cnc_ops: List["CncOp"] = []
@@ -1079,14 +1079,16 @@ class GcodeGenerator:
             return
 
         safeZ = self.unit_converter.from_mm(self.material_model.mat_z_safe_move.to_mm())
-        rapidRate = int(self.unit_converter.from_mm(self.tool_model.rapidRate.to_mm()))
-        plungeRate = int(
-            self.unit_converter.from_mm(self.tool_model.plungeRate.to_mm())
+        rapid_rate = int(
+            self.unit_converter.from_mm(self.tool_model.rapid_rate.to_mm())
         )
-        cutRate = int(self.unit_converter.from_mm(self.tool_model.cutRate.to_mm()))
+        plunge_rate = int(
+            self.unit_converter.from_mm(self.tool_model.plunge_rate.to_mm())
+        )
+        cut_rate = int(self.unit_converter.from_mm(self.tool_model.cut_rate.to_mm()))
         passdepth = self.unit_converter.from_mm(self.tool_model.passdepth.to_mm())
-        toolDiameter = self.unit_converter.from_mm(self.tool_model.diameter.to_mm())
-        helixPitch = self.unit_converter.from_mm(self.tool_model.helixPitch.to_mm())
+        tool_diameter = self.unit_converter.from_mm(self.tool_model.diameter.to_mm())
+        helix_pitch = self.unit_converter.from_mm(self.tool_model.helix_pitch.to_mm())
         topZ = self.unit_converter.from_mm(self.material_model.mat_tot_z.to_mm())
         tabHeight = self.unit_converter.from_mm(self.tabs_model.height.to_mm())
         peckZ = self.unit_converter.from_mm(1.0)
@@ -1100,11 +1102,12 @@ class GcodeGenerator:
         helix_radius = cnc_op.width
 
         if helix_radius == 0.0:
-            helix_radius = toolDiameter / 4.0  # default!
+            helix_radius = tool_diameter / 4.0  # default!
 
         circle_travel_radius = helix_radius
         circle_travel = 2 * PI * circle_travel_radius
-        helixPlungeRate = cutRate * helixPitch / circle_travel
+        # helix_plunge_rate = math.floor(cut_rate * helix_pitch / circle_travel)  BS
+        helix_plunge_rate = plunge_rate
 
         gcode = []
         if self.units == "inch":
@@ -1113,18 +1116,18 @@ class GcodeGenerator:
             gcode.append("G21         ; Set units to mm")
         gcode.append("G90         ; Absolute positioning")
         gcode.append(
-            f"G1 Z{safeZ.to_fixed(4)}    F{rapidRate}      ; Move to clearance level"
+            f"G1 Z{safeZ.to_fixed(4)}    F{rapid_rate}      ; Move to clearance level"
         )
 
-        if self.gcode_model.spindleControl:
+        if self.gcode_model.spindle_control:
             gcode.append("")
             gcode.append("; Start the spindle")
-            gcode.append(f"M3 S{self.gcode_model.spindleSpeed}")
+            gcode.append(f"M3 S{self.gcode_model.spindle_speed}")
 
         gcode.append("")
         gcode.append(";")
         gcode.append("; Tool Info")
-        gcode.append(f"; Diameter:    {toolDiameter}")
+        gcode.append(f"; Diameter:    {tool_diameter}")
         gcode.append("")
 
         for idx, cnc_op in enumerate(cnc_ops):
@@ -1146,15 +1149,13 @@ class GcodeGenerator:
             gcode.append(f"; Cut Depth:    {cut_depth}")
 
             if cnc_op.cam_op == "Helix":
-                gcode.append(f"; Helix Pitch [can be adapted]:       {helixPitch}")
-                gcode.append(
-                    f"; Helix Plunge rate [can be adapted]:  {helixPlungeRate}"
-                )
+                gcode.append(f"; Helix Pitch:       {helix_pitch}")
+                gcode.append(f"; Helix Plunge rate:  {helix_plunge_rate}")
             else:
                 gcode.append(f"; Pass Depth:   {passdepth}")
-                gcode.append(f"; Plunge rate:  {plungeRate}")
+                gcode.append(f"; Plunge rate:  {plunge_rate}")
 
-            gcode.append(f"; Cut rate:     {cutRate}")
+            gcode.append(f"; Cut rate:     {cut_rate}")
             gcode.append(";")
             gcode.append(";")
 
@@ -1170,39 +1171,39 @@ class GcodeGenerator:
                         "optype": cnc_op.cam_op,
                         "paths": cnc_op.cam_paths,
                         "ramp": cnc_op.ramp_plunge,
-                        "helixRadius": cnc_op.width,
+                        "helix_radius": cnc_op.width,
                         "scale": scale,
-                        "offsetX": self.offsetX,
-                        "offsetY": self.offsetY,
+                        "x_offset": self.x_offset,
+                        "y_offset": self.y_offset,
                         "decimal": 3,
                         "topZ": topZ,
                         "botZ": botZ,
                         "safeZ": safeZ,
                         "passdepth": passdepth,
-                        "plungeFeed": plungeRate,
-                        "retractFeed": rapidRate,
-                        "cutFeed": cutRate,
-                        "rapidFeed": rapidRate,
-                        "toolDiameter": toolDiameter,
-                        "helixPitch": helixPitch,
-                        "helixPlungeRate": helixPlungeRate,
+                        "plungeFeed": plunge_rate,
+                        "retractFeed": rapid_rate,
+                        "cutFeed": cut_rate,
+                        "rapidFeed": rapid_rate,
+                        "tool_diameter": tool_diameter,
+                        "helix_pitch": helix_pitch,
+                        "helix_plunge_rate": helix_plunge_rate,
                         "tabs": tabs,
                         "tabZ": tabZ,
                         "peckZ": peckZ,
-                        "flipXY": self.flipXY,
+                        "flip_xy": self.flip_xy,
                     }
                 )
             )
 
-        if self.gcode_model.spindleControl:
+        if self.gcode_model.spindle_control:
             gcode.append("")
             gcode.append("; Stop the spindle")
             gcode.append("M5")
 
-        if self.gcode_model.returnTo00:
+        if self.gcode_model.return_to_zero_at_end:
             gcode.append("")
             gcode.append("; Return to 0,0")
-            gcode.append(f"G0 X0 Y0 F{rapidRate}")
+            gcode.append(f"G0 X0 Y0 F{rapid_rate}")
 
         if self.gcode_model.programEnd:
             gcode.append("")

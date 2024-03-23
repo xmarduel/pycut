@@ -285,12 +285,12 @@ class SvgResolver:
         for child in item:
             if not isinstance(child.tag, str):  # a comment ?
                 continue
-                
+
             print("tag", child.tag)
-            
+
             if "id" not in child.attrib:
                 continue
-          
+
             ns_tag = child.tag.split(self.NS)
             if len(ns_tag) == 1:
                 tag = ns_tag[0]

@@ -174,7 +174,7 @@ class Ui_mainwindow(object):
 
         self.Tool_Cut = QSpinBox(self.scrollAreaWidgetContents)
         self.Tool_Cut.setObjectName(u"Tool_Cut")
-        self.Tool_Cut.setMaximum(1000)
+        self.Tool_Cut.setMaximum(10000)
         self.Tool_Cut.setValue(200)
 
         self.gridLayout_Tool.addWidget(self.Tool_Cut, 7, 2, 1, 1)

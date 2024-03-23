@@ -32,6 +32,7 @@ import argparse
 
 from typing import List
 from typing import Dict
+from typing import Any
 
 from lxml import etree
 import numpy as np
@@ -51,7 +52,9 @@ class PathWithAttribs:
     Wrapper on Path class to contains the attribs as well
     """
 
-    def __init__(self, path: Path, elt: etree.Element, id: str, attribs: any):
+    def __init__(
+        self, path: Path, elt: etree.Element, id: str, attribs: Dict[str, Any]
+    ):
         self.path = path
         self.elt = elt
         self.attribs = attribs
@@ -629,15 +632,15 @@ class FontFiles:
 
         def build_font_style(style: str, weight: str, stretch: str) -> str:
             # resulting font style
-            font_style = []
+            font_styles = []
             if stretch not in ["", "normal"]:
-                font_style.append(stretch)
+                font_styles.append(stretch)
             if weight not in ["", "normal"]:
-                font_style.append(weight)
+                font_styles.append(weight)
             if style not in ["", "normal"]:
-                font_style.append(style)
+                font_styles.append(style)
 
-            font_style = " ".join(font_style)
+            font_style = " ".join(font_styles)
 
             return font_style
 
@@ -658,6 +661,9 @@ class FontFiles:
         """ """
         if cls.lookup is None:
             cls.setupFonts()
+
+        if cls.lookup is None:
+            return None
 
         family = family.lower()
         weight = weight.lower()
@@ -762,31 +768,31 @@ class Char2SvgPath:
 
             # TTF/OTF is big-endian (>)
 
-            def readuint32(self, offset: int = None) -> int:
+            def readuint32(self, offset: int | None = None) -> int:
                 """Read 32-bit unsigned integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">I", self.read(4))[0]
 
-            def readuint16(self, offset: int = None) -> int:
+            def readuint16(self, offset: int | None = None) -> int:
                 """Read 16-bit unsigned integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">H", self.read(2))[0]
 
-            def readuint8(self, offset: int = None) -> int:
+            def readuint8(self, offset: int | None = None) -> int:
                 """Read 8-bit unsigned integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">B", self.read(1))[0]
 
-            def readint8(self, offset: int = None) -> int:
+            def readint8(self, offset: int | None = None) -> int:
                 """Read 8-bit signed integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">b", self.read(1))[0]
 
-            def readdate(self, offset: int = None) -> datetime:
+            def readdate(self, offset: int | None = None) -> datetime:
                 """Read datetime"""
                 if offset:
                     self.seek(offset)
@@ -795,13 +801,13 @@ class Char2SvgPath:
                 mdate = fontepoch + timedelta(seconds=mtime)
                 return mdate
 
-            def readint16(self, offset: int = None) -> int:
+            def readint16(self, offset: int | None = None) -> int:
                 """Read 16-bit signed integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">h", self.read(2))[0]
 
-            def readshort(self, offset: int = None) -> float:
+            def readshort(self, offset: int | None = None) -> float:
                 """Read "short" fixed point number (S1.14)"""
                 x = self.readint16()
                 return float(x) * 2**-14
@@ -929,7 +935,7 @@ class Char2SvgPath:
         So, for each contour, we want to pick out only the tags and points for that contour.
         """
         start, end = 0, 0
-        path_segments = []
+        path_segments: List[Line | QuadraticBezier] = []
 
         for i in range(len(outline.contours)):
             end = outline.contours[i]
