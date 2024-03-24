@@ -70,15 +70,15 @@ class cam:
         """
         Compute paths for drill operation on Shapely multipoint
         """
-        camPaths = []
+        cam_paths = []
 
         for point in multipoint.geoms:
             pt = point.coords[0]
 
-            camPath = CamPath(shapely.geometry.Point(pt), True)
-            camPaths.append(camPath)
+            cam_path = CamPath(shapely.geometry.Point(pt), True)
+            cam_paths.append(cam_path)
 
-        return camPaths
+        return cam_paths
 
     @classmethod
     def peck(
@@ -87,15 +87,15 @@ class cam:
         """
         Compute paths for peck operation on Shapely multipoint
         """
-        camPaths = []
+        cam_paths = []
 
         for point in multipoint.geoms:
             pt = point.coords[0]
 
-            camPath = CamPath(shapely.geometry.Point(pt), False)
-            camPaths.append(camPath)
+            cam_path = CamPath(shapely.geometry.Point(pt), False)
+            cam_paths.append(cam_path)
 
-        return camPaths
+        return cam_paths
 
     @classmethod
     def helix(
@@ -111,15 +111,15 @@ class cam:
 
         This means, given the cut rate and the helix diameter, the helix plunge rate is calculated
         """
-        camPaths = []
+        cam_paths = []
 
         for poly in multipolygon.geoms:
             pt = poly.centroid
 
-            camPath = CamPath(shapely.geometry.Point(pt), False)
-            camPaths.append(camPath)
+            cam_path = CamPath(shapely.geometry.Point(pt), False)
+            cam_paths.append(cam_path)
 
-        return camPaths
+        return cam_paths
 
     @classmethod
     def pocket(
@@ -742,22 +742,20 @@ class cam:
             SEG_LEN = 0.1
 
             tool_diameter = args["tool_diameter"]
-            helix_radius = args["helix_radius"]
+            helix_outer_radius = args["helix_outer_radius"]
             helix_pitch = args["helix_pitch"]
             helix_plunge_rate = args["helix_plunge_rate"]
 
-            if helix_radius == 0.0:
-                helix_radius = tool_diameter / 4.0  # default!
+            if helix_outer_radius < tool_diameter / 2.0:
+                helix_outer_radius = tool_diameter / 2.0 + 0.1  # drill
 
             cut_depth = -botZ
 
             for campath in paths:
                 center = (campath.path.coords.xy[0][0], campath.path.coords.xy[1][0])
 
-                circle_travel_radius = helix_radius
+                circle_travel_radius = helix_outer_radius - tool_diameter / 2.0
                 circle_travel = 2 * PI * circle_travel_radius
-                # helix_plunge_rate = math.floor(cutFeed * helix_pitch / circle_travel) # BS
-                helix_plunge_rate = plungeFeed
 
                 nb_pts_per_revolution = math.floor(circle_travel / SEG_LEN)
 

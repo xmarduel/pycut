@@ -1639,7 +1639,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         ]
         gcode_model.spindle_control = settings["GCodeGeneration"]["spindle_control"]
         gcode_model.spindle_speed = settings["GCodeGeneration"]["spindle_speed"]
-        gcode_model.programEnd = settings["GCodeGeneration"]["program_end"]
+        gcode_model.program_end = settings["GCodeGeneration"]["program_end"]
 
         gcode_model.gcode_zero_ref = GcodeModel.ZERO_TOP_LEFT_OF_MATERIAL
         if self.ui.GCodeConversion_ZeroTopLeftOfMaterial.isChecked():

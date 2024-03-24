@@ -639,17 +639,17 @@ larger pass depth</strong> (rather than a standard overlap and a tiny pass depth
 
 <h4>Helix</h4>
 
-<p>The cutter diameter will be the "thickness" of the helix. The helix's center will be the <strong>center of the
-(closed) shape</strong>. Considering the case where the center of the helix is [0,0], <strong>on which "orbit" will
-move the cutter</strong>? Well we specify it with the standard "<strong>width</strong>" operation attribute, which
-infact means the <strong>radius</strong> of the circle on which the cutter center travels. A good value would be the 
-<strong>half of the cutter radius</strong>.
-With this value, there is an overlap of 0.75 (ratio). A value greather than the cutter radius generates a donut (well
-the center may fall), and the helix is thus simular to an "Inside" or "Outside"operation for an imaginary circle shape,
-however with a "smoother" cut. </p>
+<p>The helix's center will be the <strong>center of the (closed) shape</strong>. For a circle, this is obviously 
+the center of the circle shape. Considering the case where the center of the helix is [0,0], <strong>on which 
+"orbit" will move the cutter</strong>? Well in case of an Helix operation, the "<strong>width</strong>" operation 
+corresponds to the helix outer radius. This means that the <strong>radius</strong> of the orbit, the circle on 
+which the cutter center travels, is <string>width - cutter_radius</string>. So the width has to be larger than
+the cutter radius, sonce the helix will be infact a drill operation. A value larger than the cutter diameter 
+generates a ring (with an inner hole), and the helix is then simular to an "Inside" or "Outside"operation 
+for an imaginary circle shape, however with a "smoother" cut. </p>
 
 <p>The helix pitch (revolution depth) is the most important parameter. Theoretically, the Helix operation could perform 
-threads cutting by generating first an hole, then an helix "inside the hole" where the outer border of the helix 
+threads cutting by generating first an hole, then an helix "inside the hole" where the outer radius of the helix 
 would be smaller than the hole radius, and utilizing a dedicated cutter.</p>
 
 <h4>Spirale</h4>

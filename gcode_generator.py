@@ -106,7 +106,7 @@ class GcodeModel:
         self.spindle_control = True
         self.spindle_speed = 1000
 
-        self.programEnd = False
+        self.program_end = False
 
 
 class SvgModel:
@@ -576,23 +576,17 @@ class CncOp:
 
                 radius = self.width.to_mm()
 
-                if radius == 0.0:
-                    # default value
-                    radius = tool_model.diameter / 4.0
-
                 if radius <= tool_model.diameter / 2.0:
-                    svgpath = SvgPath.from_circle_def(
-                        center, radius + tool_model.diameter / 2.0
-                    )
+                    # default value
+                    radius = tool_model.diameter / 2.0 + 0.1
+
+                if radius <= tool_model.diameter:
+                    svgpath = SvgPath.from_circle_def(center, radius)
                     shapely_polygons += svgpath.import_as_polygons_list()
                 else:
                     # ring! polygon with hole
-                    svgpath = SvgPath.from_circle_def(
-                        center, radius + tool_model.diameter / 2.0
-                    )
-                    hole = SvgPath.from_circle_def(
-                        center, radius - tool_model.diameter / 2.0
-                    )
+                    svgpath = SvgPath.from_circle_def(center, radius)
+                    hole = SvgPath.from_circle_def(center, radius - tool_model.diameter)
 
                     poly_ext = svgpath.import_as_polygons_list()
                     poly_int = hole.import_as_polygons_list()
@@ -848,11 +842,11 @@ class CncOp:
             for cam_path in self.cam_paths:
                 center = (cam_path.path.coords.xy[0][0], cam_path.path.coords.xy[1][0])
 
-                if width == 0.0:
+                if width <= tool_model.diameter / 2.0:
                     # default value
-                    radius = tool_model.diameter / 4.0
+                    radius = tool_model.diameter / 2.0 + 0.1
                 else:
-                    radius = width
+                    radius = width - tool_model.diameter / 2.0
 
                 svgpath = SvgPath.from_circle_def(center, radius)
                 polys = svgpath.import_as_polygons_list()
@@ -1099,13 +1093,11 @@ class GcodeGenerator:
         #    scale = 25.4
         scale = 1
 
-        helix_radius = cnc_op.width
+        helix_outer_radius = cnc_op.width
 
-        if helix_radius == 0.0:
-            helix_radius = tool_diameter / 4.0  # default!
+        if helix_outer_radius < tool_diameter / 2.0:
+            helix_outer_radius = tool_diameter / 2.0 + 0.1  # default! (drill)
 
-        circle_travel_radius = helix_radius
-        circle_travel = 2 * PI * circle_travel_radius
         # helix_plunge_rate = math.floor(cut_rate * helix_pitch / circle_travel)  BS
         helix_plunge_rate = plunge_rate
 
@@ -1171,7 +1163,6 @@ class GcodeGenerator:
                         "optype": cnc_op.cam_op,
                         "paths": cnc_op.cam_paths,
                         "ramp": cnc_op.ramp_plunge,
-                        "helix_radius": cnc_op.width,
                         "scale": scale,
                         "x_offset": self.x_offset,
                         "y_offset": self.y_offset,
@@ -1185,6 +1176,7 @@ class GcodeGenerator:
                         "cutFeed": cut_rate,
                         "rapidFeed": rapid_rate,
                         "tool_diameter": tool_diameter,
+                        "helix_outer_radius": cnc_op.width,
                         "helix_pitch": helix_pitch,
                         "helix_plunge_rate": helix_plunge_rate,
                         "tabs": tabs,
@@ -1205,7 +1197,7 @@ class GcodeGenerator:
             gcode.append("; Return to 0,0")
             gcode.append(f"G0 X0 Y0 F{rapid_rate}")
 
-        if self.gcode_model.programEnd:
+        if self.gcode_model.program_end:
             gcode.append("")
             gcode.append("; Program End")
             gcode.append("M2")
