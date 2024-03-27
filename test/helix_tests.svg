@@ -2,10 +2,10 @@
 <svg version="1.1" width="200mm" height="50mm" viewBox="0 0 200 50" id="spirale" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
 	<g id="root">
 	    <circle    id="circle1"  cx="10"  cy="25" r="4.00" stroke="black" stroke-width="1" fill="red" />
-	    <circle    id="circle2"  cx="30"  cy="25" r="5.00" stroke="black" stroke-width="1" fill="red" />
-		<circle    id="circle3"  cx="50"  cy="25" r="5.00" stroke="black" stroke-width="1" fill="red" />
-	    <circle    id="circle4"  cx="70"  cy="25" r="7.50" stroke="black" stroke-width="1" fill="red" />
-		<circle    id="circle5"  cx="100"  cy="25" r="7.50" stroke="black" stroke-width="1" fill="red" />
-	    <circle    id="circle6"  cx="130"  cy="25" r="10.0"  stroke="black" stroke-width="1" fill="red" />
+	    <circle    id="circle2"  cx="30"  cy="25" r="4.05" stroke="black" stroke-width="1" fill="red" />
+		<circle    id="circle3"  cx="50"  cy="25" r="4.10" stroke="black" stroke-width="1" fill="red" />
+	    <circle    id="circle4"  cx="70"  cy="25" r="4.15" stroke="black" stroke-width="1" fill="red" />
+		<circle    id="circle5"  cx="100"  cy="25" r="5.15" stroke="black" stroke-width="1" fill="red" />
+	    <circle    id="circle6"  cx="130"  cy="25" r="5.20"  stroke="black" stroke-width="1" fill="red" />
 	</g>
 </svg>

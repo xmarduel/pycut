@@ -203,9 +203,10 @@ class cam:
         # use lines, not polygons
         multiline = ShapelyUtils.multipoly_exteriors_to_multiline(geometry)
 
-        currentWidth = cutter_dia
-        allPaths: List[shapely.geometry.LineString] = []
-        eachWidth = cutter_dia * (1 - overlap)
+        current_width = cutter_dia
+        each_width = cutter_dia * (1 - overlap)
+
+        all_paths: List[shapely.geometry.LineString] = []
 
         if is_inside:
             # because we always start from the outer ring -> we go "inside"
@@ -215,8 +216,8 @@ class cam:
             )
             # bounds = ShapelyUtils.diff(current, offset)
             bounds = current
-            eachOffset = eachWidth
-            needReverse = climb
+            each_offset = each_width
+            need_reverse = climb
         else:
             direction = "inner2outer"
             # direction = "outer2inner"
@@ -242,14 +243,14 @@ class cam:
                 # bounds = ShapelyUtils.diff(current, offset)
                 bounds = current
 
-            eachOffset = eachWidth
-            needReverse = not climb
+            each_offset = each_width
+            need_reverse = not climb
 
             # TEST
-            # allPaths = [p for p in current.geoms]
+            # all_paths = [p for p in current.geoms]
 
-        while True and currentWidth <= width:
-            if needReverse:
+        while current_width <= width:
+            if need_reverse:
                 reversed = []
                 for path in current.geoms:
                     coords = list(
@@ -257,25 +258,21 @@ class cam:
                     )  # is a tuple!  JSCUT current reversed in place
                     coords.reverse()
                     reversed.append(shapely.geometry.LineString(coords))
-                allPaths = (
-                    reversed + allPaths
-                )  # JSCUT: allPaths = current.concat(allPaths)
+                all_paths = reversed + all_paths
             else:
-                allPaths = [
-                    p for p in current.geoms
-                ] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+                all_paths = [p for p in current.geoms] + all_paths
 
-            nextWidth = currentWidth + eachWidth
-            if nextWidth > width and (width - currentWidth) > 0:
+            next_width = current_width + each_width
+            if next_width > width and (width - current_width) > 0:
                 # >>> XAM fix
-                last_delta = width - currentWidth
+                last_delta = width - current_width
                 # <<< XAM fix
                 current = ShapelyUtils.offset_multiline(current, last_delta, "left")
                 if current:
                     current = ShapelyUtils.simplify_multiline(current, 0.01)
 
                 if current:
-                    if needReverse:
+                    if need_reverse:
                         reversed = []
                         for path in current.geoms:
                             coords = list(
@@ -283,22 +280,18 @@ class cam:
                             )  # is a tuple!  JSCUT current reversed in place
                             coords.reverse()
                             reversed.append(shapely.geometry.LineString(coords))
-                        allPaths = (
-                            reversed + allPaths
-                        )  # JSCUT: allPaths = current.concat(allPaths)
+                        all_paths = reversed + all_paths
                     else:
-                        allPaths = [
-                            p for p in current.geoms
-                        ] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+                        all_paths = [p for p in current.geoms] + all_paths
                     break
 
-            currentWidth = nextWidth
+            current_width = next_width
 
             if not current:
                 break
 
             current = ShapelyUtils.offset_multiline(
-                current, eachOffset, "left", resolution=16
+                current, each_offset, "left", resolution=16
             )
             if current:
                 current = ShapelyUtils.simplify_multiline(current, 0.01)
@@ -306,14 +299,14 @@ class cam:
             else:
                 break
 
-        if len(allPaths) == 0:
+        if len(all_paths) == 0:
             # no possible paths! TODO . inform user
             return []
 
         # merge_paths need MultiPolygon
         bounds = ShapelyUtils.multiline_to_multipoly(bounds)
 
-        return cls.merge_paths(bounds, allPaths)
+        return cls.merge_paths(bounds, all_paths)
 
     @classmethod
     def outline_opened_paths(
@@ -336,9 +329,10 @@ class cam:
         # use lines, not polygons
         multiline = geometry
 
-        currentWidth = cutter_dia
-        allPaths: List[shapely.geometry.LineString] = []
-        eachWidth = cutter_dia * (1 - overlap)
+        current_width = cutter_dia
+        each_width = cutter_dia * (1 - overlap)
+
+        all_paths: List[shapely.geometry.LineString] = []
 
         if is_inside:
             # because we always start from the outer ring -> we go "inside"
@@ -346,8 +340,8 @@ class cam:
             offset = ShapelyUtils.offset_multiline(multiline, width - 0.0, "left")
             # bounds = ShapelyUtils.diff(current, offset)
             bounds = current
-            eachOffset = eachWidth
-            needReverse = climb
+            each_offset = each_width
+            need_reverse = climb
         else:
             direction = "inner2outer"
             # direction = "outer2inner"
@@ -365,14 +359,14 @@ class cam:
                 # bounds = ShapelyUtils.diff(current, offset)
                 bounds = current
 
-            eachOffset = eachWidth
-            needReverse = not climb
+            each_offset = each_width
+            need_reverse = not climb
 
             # TEST
-            # allPaths = [p for p in current.geoms]
+            # all_paths = [p for p in current.geoms]
 
-        while True and currentWidth <= width:
-            if needReverse:
+        while True and current_width <= width:
+            if need_reverse:
                 reversed = []
                 for path in current.geoms:
                     coords = list(
@@ -380,25 +374,21 @@ class cam:
                     )  # is a tuple!  JSCUT current reversed in place
                     coords.reverse()
                     reversed.append(shapely.geometry.LineString(coords))
-                allPaths = (
-                    reversed + allPaths
-                )  # JSCUT: allPaths = current.concat(allPaths)
+                all_paths = reversed + all_paths
             else:
-                allPaths = [
-                    p for p in current.geoms
-                ] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+                all_paths = [p for p in current.geoms] + all_paths
 
-            nextWidth = currentWidth + eachWidth
-            if nextWidth > width and (width - currentWidth) > 0:
+            next_width = current_width + each_width
+            if next_width > width and (width - current_width) > 0:
                 # >>> XAM fix
-                last_delta = width - currentWidth
+                last_delta = width - current_width
                 # <<< XAM fix
                 current = ShapelyUtils.offset_multiline(current, last_delta, "left")
                 if current:
                     current = ShapelyUtils.simplify_multiline(current, 0.01)
 
                 if current:
-                    if needReverse:
+                    if need_reverse:
                         reversed = []
                         for path in current.geoms:
                             coords = list(
@@ -406,22 +396,18 @@ class cam:
                             )  # is a tuple!  JSCUT current reversed in place
                             coords.reverse()
                             reversed.append(shapely.geometry.LineString(coords))
-                        allPaths = (
-                            reversed + allPaths
-                        )  # JSCUT: allPaths = current.concat(allPaths)
+                        all_paths = reversed + all_paths
                     else:
-                        allPaths = [
-                            p for p in current.geoms
-                        ] + allPaths  # JSCUT: allPaths = current.concat(allPaths)
+                        all_paths = [p for p in current.geoms] + all_paths
                     break
 
-            currentWidth = nextWidth
+            current_width = next_width
 
             if not current:
                 break
 
             current = ShapelyUtils.offset_multiline(
-                current, eachOffset, "left", resolution=16
+                current, each_offset, "left", resolution=16
             )
             if current:
                 current = ShapelyUtils.simplify_multiline(current, 0.01)
@@ -429,14 +415,14 @@ class cam:
             else:
                 break
 
-        if len(allPaths) == 0:
+        if len(all_paths) == 0:
             # no possible paths! TODO . inform user
             return []
 
         # merge_paths need MultiPolygon
         bounds = shapely.geometry.MultiPolygon()
 
-        return cls.merge_paths(bounds, allPaths, closed_path=False)
+        return cls.merge_paths(bounds, all_paths, closed_path=False)
 
     @classmethod
     def engrave(
@@ -456,20 +442,20 @@ class cam:
         )
 
         if full_line.geom_type == "LineString":
-            camPaths = [CamPath(full_line, False)]
-            return camPaths
+            cam_paths = [CamPath(full_line, False)]
+            return cam_paths
 
-        allPaths = []
+        all_paths = []
         for line in full_line.geoms:
             coords = list(line.coords)  # JSCUT: path = paths.slice(0)
             if not climb:
                 coords.reverse()
 
             coords.append(coords[0])
-            allPaths.append(shapely.geometry.LineString(coords))
+            all_paths.append(shapely.geometry.LineString(coords))
 
-        camPaths = [CamPath(path, False) for path in allPaths]
-        return camPaths
+        cam_paths = [CamPath(path, False) for path in all_paths]
+        return cam_paths
 
     @classmethod
     def engrave_opened_paths(
@@ -480,17 +466,17 @@ class cam:
 
         Returns array of CamPath.
         """
-        allPaths = []
+        all_paths = []
         for line in geometry.geoms:
             coords = list(line.coords)  # JSCUT: path = paths.slice(0)
             if not climb:
                 coords.reverse()
 
             # coords.append(coords[0])  # what's this ??
-            allPaths.append(shapely.geometry.LineString(coords))
+            all_paths.append(shapely.geometry.LineString(coords))
 
-        camPaths = [CamPath(path, False) for path in allPaths]
-        return camPaths
+        cam_paths = [CamPath(path, False) for path in all_paths]
+        return cam_paths
 
     @classmethod
     def merge_paths(
@@ -524,78 +510,74 @@ class cam:
         # std list
         thepaths = [list(path.coords) for path in paths]
 
-        #####
-        # thepaths = thepaths[19:22]
-        #####
-
         paths = thepaths
 
-        currentPath = paths[0]
+        current_path = paths[0]
 
-        pathEndPoint = currentPath[-1]
-        pathStartPoint = currentPath[0]
+        path_end_point = current_path[-1]
+        path_start_point = current_path[0]
 
         # close if start/end points not equal - in case of closed_path geometry -
         if closed_path == True:
             if (
-                pathEndPoint[0] != pathStartPoint[0]
-                or pathEndPoint[1] != pathStartPoint[1]
+                path_end_point[0] != path_start_point[0]
+                or path_end_point[1] != path_start_point[1]
             ):
-                currentPath = currentPath + [pathStartPoint]
+                current_path = current_path + [path_start_point]
 
-        currentPoint = currentPath[-1]
+        current_point = current_path[-1]
         paths[0] = []  # empty
 
-        mergedPaths: List[shapely.geometry.LineString] = []
-        numLeft = len(paths) - 1
+        merged_paths: List[shapely.geometry.LineString] = []
+        num_left = len(paths) - 1
 
-        while numLeft > 0:
-            closestPathIndex = -1
-            closestPointIndex = -1
-            closestPointDist = float(sys.maxsize)
+        while num_left > 0:
+            closest_path_index = -1
+            closest_point_index = -1
+            closest_point_dist = float(sys.maxsize)
             for pathIndex, path in enumerate(paths):
                 for pointIndex, point in enumerate(path):
-                    dist = cam.distP(currentPoint, point)
-                    if dist < closestPointDist:
-                        closestPathIndex = pathIndex
-                        closestPointIndex = pointIndex
-                        closestPointDist = dist
+                    dist = cam.distP(current_point, point)
+                    if dist < closest_point_dist:
+                        closest_path_index = pathIndex
+                        closest_point_index = pointIndex
+                        closest_point_dist = dist
 
-            path = paths[closestPathIndex]
-            paths[closestPathIndex] = []  # empty
-            numLeft -= 1
-            needNew = ShapelyUtils.crosses(
-                ext_lines, currentPoint, path[closestPointIndex]
+            path = paths[closest_path_index]
+            paths[closest_path_index] = []  # empty
+            num_left -= 1
+            need_new = ShapelyUtils.crosses(
+                ext_lines, current_point, path[closest_point_index]
             )
-            if (not needNew) and int_multipoly:
-                needNew = ShapelyUtils.crosses(
-                    int_multipoly, currentPoint, path[closestPointIndex]
+            if (not need_new) and int_multipoly:
+                need_new = ShapelyUtils.crosses(
+                    int_multipoly, current_point, path[closest_point_index]
                 )
 
-            # JSCUT path = path.slice(closestPointIndex, len(path)).concat(path.slice(0, closestPointIndex))
-            path = path[closestPointIndex:] + path[:closestPointIndex]
+            # JSCUT path = path.slice(closest_point_index, len(path)).concat(path.slice(0, closest_point_index))
+            path = path[closest_point_index:] + path[:closest_point_index]
             path.append(path[0])
 
-            if needNew:
-                mergedPaths.append(currentPath)
-                currentPath = path
-                currentPoint = currentPath[-1]
+            if need_new:
+                merged_paths.append(current_path)
+                current_path = path
+                current_point = current_path[-1]
             else:
-                currentPath = currentPath + path
-                currentPoint = currentPath[-1]
+                current_path = current_path + path
+                current_point = current_path[-1]
 
-        mergedPaths.append(currentPath)
+        merged_paths.append(current_path)
 
-        camPaths: List[CamPath] = []
-        for path in mergedPaths:
+        cam_paths: List[CamPath] = []
+        for path in merged_paths:
             safe_to_close = not ShapelyUtils.crosses(bounds, path[0], path[-1])
 
             if closed_path == False:
                 safe_to_close = False
 
-            camPaths.append(CamPath(shapely.geometry.LineString(path), safe_to_close))
+            cam_paths.append(CamPath(shapely.geometry.LineString(path), safe_to_close))
 
-        return camPaths
+        return cam_paths
 
     @staticmethod
     def dist(x1: float, y1: float, x2: float, y2: float) -> float:
@@ -615,28 +597,28 @@ class cam:
         Convert paths to gcode. the function assumes that the current Z position is at safeZ.
         get_gcode()'s gcode returns Z to this position at the end.
         args must have:
-          optype:         Type of Op.
-          paths:          Array of CamPath
-          ramp:           Ramp these paths?
-          scale:          Factor to convert Clipper units to gcode units
-          x_offset:       Offset X (gcode units)
-          y_offset:       Offset Y (gcode units)
-          decimal:        Number of decimal places to keep in gcode
-          topZ:           Top of area to cut (gcode units)
-          botZ:           Bottom of area to cut (gcode units)
-          safeZ:          Z position to safely move over uncut areas (gcode units)
-          passdepth:      Cut depth for each pass (gcode units)
-          plungeFeed:     Feedrate to plunge cutter (gcode units)
-          retractFeed:    Feedrate to retract cutter (gcode units)
-          cutFeed:        Feedrate for horizontal cuts (gcode units)
-          rapidFeed:      Feedrate for rapid moves (gcode units)
+          optype:            Type of Op.
+          paths:             Array of CamPath
+          ramp:              Ramp these paths?
+          scale:             Factor to convert Clipper units to gcode units
+          x_offset:          Offset X (gcode units)
+          y_offset:          Offset Y (gcode units)
+          decimal:           Number of decimal places to keep in gcode
+          topZ:              Top of area to cut (gcode units)
+          botZ:              Bottom of area to cut (gcode units)
+          safeZ:             Z position to safely move over uncut areas (gcode units)
+          passdepth:         Cut depth for each pass (gcode units)
+          plunge_feed:       Feedrate to plunge cutter (gcode units)
+          retract_feed:      Feedrate to retract cutter (gcode units)
+          cut_feed:          Feedrate for horizontal cuts (gcode units)
+          rapid_feed:        Feedrate for rapid moves (gcode units)
           tool_diameter:
-          helix_pitch:    Depth of an helix revolution
+          helix_pitch:       Depth of an helix revolution
           helix_plunge_rate: Helix plunge rate
-          tabs:           List of tabs
-          tabZ:           Level below which tabs are to be processed
-          peckZ:          Level to retract when pecking
-          flip_xy         toggle X with Y
+          tabs:              List of tabs
+          tabZ:              Level below which tabs are to be processed
+          peckZ:             Level to retract when pecking
+          flip_xy            Toggle X with Y
         """
         optype = args["optype"]
         paths: List[CamPath] = args["paths"]
@@ -650,15 +632,15 @@ class cam:
         safeZ = args["safeZ"]
         passdepth = args["passdepth"]
 
-        plungeFeedGcode = " F%d" % args["plungeFeed"]
-        retractFeedGcode = " F%d" % args["retractFeed"]
-        cutFeedGcode = " F%d" % args["cutFeed"]
-        rapidFeedGcode = " F%d" % args["rapidFeed"]
+        plungeFeedGcode = " F%d" % args["plunge_feed"]
+        retractFeedGcode = " F%d" % args["retract_feed"]
+        cutFeedGcode = " F%d" % args["cut_feed"]
+        rapidFeedGcode = " F%d" % args["rapid_feed"]
 
-        plungeFeed = args["plungeFeed"]
-        retractFeed = args["retractFeed"]
-        cutFeed = args["cutFeed"]
-        rapidFeed = args["rapidFeed"]
+        plunge_feed = args["plunge_feed"]
+        retract_feed = args["retract_feed"]
+        cut_feed = args["cut_feed"]
+        rapid_feed = args["rapid_feed"]
 
         tabs = args["tabs"]
         tabZ = args["tabZ"]
@@ -922,10 +904,10 @@ class cam:
                         continue
 
                     executedRamp = False
-                    minPlungeTime = (currentZ - nextZ) / plungeFeed
+                    minPlungeTime = (currentZ - nextZ) / plunge_feed
                     if ramp and minPlungeTime > 0:
-                        minPlungeTime = (currentZ - nextZ) / plungeFeed
-                        idealDist = cutFeed * minPlungeTime
+                        minPlungeTime = (currentZ - nextZ) / plunge_feed
+                        idealDist = cut_feed * minPlungeTime
                         totalDist = 0.0
                         for end in range(1, len(list(selectedPath.coords))):
                             if totalDist > idealDist:
@@ -990,7 +972,7 @@ class cam:
                                         + " F"
                                         + ValWithUnit(
                                             math.floor(
-                                                min(totalDist / minPlungeTime, cutFeed)
+                                                min(totalDist / minPlungeTime, cut_feed)
                                             ),
                                             "-",
                                         ).to_fixed(decimal)
@@ -1426,60 +1408,63 @@ class PocketCalculator:
         thepaths = [list(path.coords) for path in paths]
         paths = thepaths
 
-        currentPath = paths[0]
+        current_path = paths[0]
 
-        pathEndPoint = currentPath[-1]
-        pathStartPoint = currentPath[0]
+        path_end_point = current_path[-1]
+        path_start_point = current_path[0]
 
         # close if start/end point not equal - why ? I could have simple lines!
-        if pathEndPoint[0] != pathStartPoint[0] or pathEndPoint[1] != pathStartPoint[1]:
-            currentPath = currentPath + [pathStartPoint]
+        if (
+            path_end_point[0] != path_start_point[0]
+            or path_end_point[1] != path_start_point[1]
+        ):
+            current_path = current_path + [path_start_point]
 
-        currentPoint = currentPath[-1]
+        current_point = current_path[-1]
         paths[0] = []  # empty
 
-        mergedPaths: List[shapely.geometry.LineString] = []
-        numLeft = len(paths) - 1
+        merged_paths: List[shapely.geometry.LineString] = []
+        num_left = len(paths) - 1
 
-        while numLeft > 0:
-            closestPathIndex = -1
-            closestPointIndex = -1
-            closestPointDist = float(sys.maxsize)
+        while num_left > 0:
+            closest_path_index = -1
+            closest_point_index = -1
+            closest_point_dist = float(sys.maxsize)
             for pathIndex, path in enumerate(paths):
                 for pointIndex, point in enumerate(path):
-                    dist = cam.distP(currentPoint, point)
-                    if dist < closestPointDist:
-                        closestPathIndex = pathIndex
-                        closestPointIndex = pointIndex
-                        closestPointDist = dist
+                    dist = cam.distP(current_point, point)
+                    if dist < closest_point_dist:
+                        closest_path_index = pathIndex
+                        closest_point_index = pointIndex
+                        closest_point_dist = dist
 
-            path = paths[closestPathIndex]
-            paths[closestPathIndex] = []  # empty
-            numLeft -= 1
-            needNew = ShapelyUtils.crosses(
-                ext_lines, currentPoint, path[closestPointIndex]
+            path = paths[closest_path_index]
+            paths[closest_path_index] = []  # empty
+            num_left -= 1
+            need_new = ShapelyUtils.crosses(
+                ext_lines, current_point, path[closest_point_index]
             )
-            if (not needNew) and int_multipoly:
-                needNew = ShapelyUtils.crosses(
-                    int_multipoly, currentPoint, path[closestPointIndex]
+            if (not need_new) and int_multipoly:
+                need_new = ShapelyUtils.crosses(
+                    int_multipoly, current_point, path[closest_point_index]
                 )
 
-            # JSCUT path = path.slice(closestPointIndex, len(path)).concat(path.slice(0, closestPointIndex))
-            path = path[closestPointIndex:] + path[:closestPointIndex]
+            # JSCUT path = path.slice(closest_point_index, len(path)).concat(path.slice(0, closest_point_index))
+            path = path[closest_point_index:] + path[:closest_point_index]
             path.append(path[0])
 
-            if needNew:
-                mergedPaths.append(currentPath)
-                currentPath = path
-                currentPoint = currentPath[-1]
+            if need_new:
+                merged_paths.append(current_path)
+                current_path = path
+                current_point = current_path[-1]
             else:
-                currentPath = currentPath + path
-                currentPoint = currentPath[-1]
+                current_path = current_path + path
+                current_point = current_path[-1]
 
-        mergedPaths.append(currentPath)
+        merged_paths.append(current_path)
 
         cam_paths: List[CamPath] = []
-        for path in mergedPaths:
+        for path in merged_paths:
             safe_to_close = not ShapelyUtils.crosses(bounds, path[0], path[-1])
             cam_paths.append(CamPath(shapely.geometry.LineString(path), safe_to_close))
 
