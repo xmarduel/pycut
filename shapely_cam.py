@@ -535,12 +535,12 @@ class cam:
             closest_path_index = -1
             closest_point_index = -1
             closest_point_dist = float(sys.maxsize)
-            for pathIndex, path in enumerate(paths):
-                for pointIndex, point in enumerate(path):
+            for path_index, path in enumerate(paths):
+                for point_index, point in enumerate(path):
                     dist = cam.distP(current_point, point)
                     if dist < closest_point_dist:
-                        closest_path_index = pathIndex
-                        closest_point_index = pointIndex
+                        closest_path_index = path_index
+                        closest_point_index = point_index
                         closest_point_dist = dist
 
             path = paths[closest_path_index]
@@ -600,7 +600,6 @@ class cam:
           optype:            Type of Op.
           paths:             Array of CamPath
           ramp:              Ramp these paths?
-          scale:             Factor to convert Clipper units to gcode units
           x_offset:          Offset X (gcode units)
           y_offset:          Offset Y (gcode units)
           decimal:           Number of decimal places to keep in gcode
@@ -623,7 +622,6 @@ class cam:
         optype = args["optype"]
         paths: List[CamPath] = args["paths"]
         ramp = args["ramp"]
-        scale = args["scale"]
         x_offset = args["x_offset"]
         y_offset = args["y_offset"]
         decimal = args["decimal"]
@@ -632,10 +630,10 @@ class cam:
         safeZ = args["safeZ"]
         passdepth = args["passdepth"]
 
-        plungeFeedGcode = " F%d" % args["plunge_feed"]
-        retractFeedGcode = " F%d" % args["retract_feed"]
-        cutFeedGcode = " F%d" % args["cut_feed"]
-        rapidFeedGcode = " F%d" % args["rapid_feed"]
+        plunge_feed_gcode = " F%d" % args["plunge_feed"]
+        retract_feed_gcode = " F%d" % args["retract_feed"]
+        cut_feed_gcode = " F%d" % args["cut_feed"]
+        rapid_feed_gcode = " F%d" % args["rapid_feed"]
 
         plunge_feed = args["plunge_feed"]
         retract_feed = args["retract_feed"]
@@ -651,30 +649,30 @@ class cam:
 
         gcode = []
 
-        retractGcode = [
+        retract_gcode = [
             "; Retract",
-            "G1 Z" + safeZ.to_fixed(decimal) + f"{rapidFeedGcode}",
+            "G1 Z" + safeZ.to_fixed(decimal) + f"{rapid_feed_gcode}",
         ]
 
-        retractForTabGcode = [
+        retract_for_tab_gcode = [
             "; Retract for tab",
-            "G1 Z" + tabZ.to_fixed(decimal) + f"{rapidFeedGcode}",
+            "G1 Z" + tabZ.to_fixed(decimal) + f"{rapid_feed_gcode}",
         ]
 
-        retractForPeck = [
+        retract_for_peck = [
             "; Retract for peck",
-            "G1 Z" + peckZ.to_fixed(decimal) + f"{rapidFeedGcode}",
+            "G1 Z" + peckZ.to_fixed(decimal) + f"{rapid_feed_gcode}",
         ]
 
-        def getX(p: Tuple[float, float]):
-            return p[0] * scale + x_offset
+        def get_x(p: Tuple[float, float]):
+            return p[0] + x_offset
 
-        def getY(p: Tuple[float, float]):
-            return -p[1] * scale + y_offset
+        def get_y(p: Tuple[float, float]):
+            return -p[1] + y_offset
 
-        def convertPoint(p: Tuple[float, float] | Tuple[float, float, float]):
-            x = p[0] * scale + x_offset
-            y = -p[1] * scale + y_offset
+        def convert_point(p: Tuple[float, float] | Tuple[float, float, float]):
+            x = p[0] + x_offset
+            y = -p[1] + y_offset
 
             if flip_xy is False:
                 result = (
@@ -693,9 +691,9 @@ class cam:
 
             return result
 
-        def convertPoint3D(p: Tuple[float, float, float]):
-            x = p[0] * scale + x_offset
-            y = -p[1] * scale + y_offset
+        def convert_point_3D(p: Tuple[float, float, float]):
+            x = p[0] + x_offset
+            y = -p[1] + y_offset
             z = p[2]
 
             if flip_xy is False:
@@ -798,24 +796,24 @@ class cam:
 
                 # the gcode
                 gcode.append("; Rapid to op center position")
-                gcode.append("G1" + convertPoint(center) + rapidFeedGcode)
+                gcode.append("G1" + convert_point(center) + rapid_feed_gcode)
 
                 gcode.append("; Slow to op initial position")
                 pt0 = pts[0]
-                gcode.append("G1" + convertPoint(pt0) + cutFeedGcode)
+                gcode.append("G1" + convert_point(pt0) + cut_feed_gcode)
 
                 for k, pt in enumerate(pts):
                     if k == 0:
                         gcode.append(
-                            "G1" + convertPoint3D(pt) + f" F{helix_plunge_rate}"
+                            "G1" + convert_point_3D(pt) + f" F{helix_plunge_rate}"
                         )
                     else:
-                        gcode.append("G1" + convertPoint3D(pt))
+                        gcode.append("G1" + convert_point_3D(pt))
 
-            gcode.extend(retractGcode)
+            gcode.extend(retract_gcode)
 
             gcode.append("; Rapid to op center position")
-            gcode.append("G1" + convertPoint(center) + rapidFeedGcode)
+            gcode.append("G1" + convert_point(center) + rapid_feed_gcode)
 
             return gcode
 
@@ -823,52 +821,52 @@ class cam:
         crosses_tabs = False
         # --> crosses_tabs will be fixed later
 
-        for pathIndex, path in enumerate(paths):
-            origPath = path.path
-            if len(origPath.coords) == 0:
+        for path_index, path in enumerate(paths):
+            orig_path = path.path
+            if len(orig_path.coords) == 0:
                 continue
 
             # split the path to cut into many partials paths to avoid tabs areas
             tab_separator = TabsSeparator(tabs)
-            tab_separator.separate(origPath)
+            tab_separator.separate(orig_path)
 
             separated_paths = tab_separator.separated_paths
             crosses_tabs = tab_separator.crosses_tabs
 
             gcode.append("")
-            gcode.append(f"; Path {pathIndex+1}")
+            gcode.append(f"; Path {path_index+1}")
 
             currentZ = safeZ
             finishedZ = topZ
 
             # need to cut at tabZ if tabs there
-            exactTabZLevelDone = False
+            exact_tabz_level_done = False
 
             while finishedZ > botZ:
                 nextZ = max(finishedZ - passdepth, botZ)
 
                 if crosses_tabs:
                     if nextZ == tabZ:
-                        exactTabZLevelDone = True
+                        exact_tabz_level_done = True
                     elif nextZ < tabZ:
                         # a last cut at the exact tab height withput tabs
-                        if exactTabZLevelDone == False:
+                        if exact_tabz_level_done == False:
                             nextZ = tabZ
-                            exactTabZLevelDone = True
+                            exact_tabz_level_done = True
 
                 if currentZ <= tabZ and ((not path.safe_to_close) or crosses_tabs):
                     if optype == "Peck":
-                        gcode.extend(retractForPeck)
+                        gcode.extend(retract_for_peck)
                         currentZ = peckZ
                     else:
-                        gcode.extend(retractGcode)
+                        gcode.extend(retract_gcode)
                         currentZ = safeZ
                 elif currentZ < safeZ and (not path.safe_to_close):
                     if optype == "Peck":
-                        gcode.extend(retractForPeck)
+                        gcode.extend(retract_for_peck)
                         currentZ = peckZ
                     else:
-                        gcode.extend(retractGcode)
+                        gcode.extend(retract_gcode)
                         currentZ = safeZ
 
                 # check this - what does it mean ???
@@ -879,90 +877,90 @@ class cam:
 
                 gcode.append("; Rapid to initial position")
                 gcode.append(
-                    "G1" + convertPoint(list(origPath.coords)[0]) + rapidFeedGcode
+                    "G1" + convert_point(list(orig_path.coords)[0]) + rapid_feed_gcode
                 )
 
-                inTabsHeight = False
+                in_tabs_height = False
 
                 if not crosses_tabs:
-                    inTabsHeight = False
-                    selectedPaths = [origPath]
+                    in_tabs_height = False
+                    selected_paths = [orig_path]
                     gcode.append("G1 Z" + ValWithUnit(currentZ, "-").to_fixed(decimal))
                 else:
                     if nextZ >= tabZ:
-                        inTabsHeight = False
-                        selectedPaths = [origPath]
+                        in_tabs_height = False
+                        selected_paths = [orig_path]
                         gcode.append(
                             "G1 Z" + ValWithUnit(currentZ, "-").to_fixed(decimal)
                         )
                     else:
-                        inTabsHeight = True
-                        selectedPaths = separated_paths
+                        in_tabs_height = True
+                        selected_paths = separated_paths
 
-                for selectedPath in selectedPaths:
-                    if selectedPath.is_empty:
+                for selected_path in selected_paths:
+                    if selected_path.is_empty:
                         continue
 
-                    executedRamp = False
-                    minPlungeTime = (currentZ - nextZ) / plunge_feed
-                    if ramp and minPlungeTime > 0:
-                        minPlungeTime = (currentZ - nextZ) / plunge_feed
-                        idealDist = cut_feed * minPlungeTime
-                        totalDist = 0.0
-                        for end in range(1, len(list(selectedPath.coords))):
-                            if totalDist > idealDist:
+                    executed_ramp = False
+                    min_plunge_time = (currentZ - nextZ) / plunge_feed
+                    if ramp and min_plunge_time > 0:
+                        min_plunge_time = (currentZ - nextZ) / plunge_feed
+                        ideal_dist = cut_feed * min_plunge_time
+                        total_dist = 0.0
+                        for end in range(1, len(list(selected_path.coords))):
+                            if total_dist > ideal_dist:
                                 break
 
-                            pt1 = list(selectedPath.coords)[end - 1]
-                            pt2 = list(selectedPath.coords)[end]
-                            totalDist += 2 * cam.dist(
-                                getX(pt1), getY(pt1), getX(pt2), getY(pt2)
+                            pt1 = list(selected_path.coords)[end - 1]
+                            pt2 = list(selected_path.coords)[end]
+                            total_dist += 2 * cam.dist(
+                                get_x(pt1), get_y(pt1), get_x(pt2), get_y(pt2)
                             )
 
-                        if totalDist > 0:
-                            # rampPath = selectedPath.slice(0, end)
-                            rampPath = [
-                                list(selectedPath.coords)[k] for k in range(0, end)
+                        if total_dist > 0:
+                            # ramp_path = selected_path.slice(0, end)
+                            ramp_path = [
+                                list(selected_path.coords)[k] for k in range(0, end)
                             ]
 
-                            # rampPathEnd = selectedPath.slice(0, end - 1).reverse()
-                            rampPathEnd = [
-                                list(selectedPath.coords)[k] for k in range(0, end - 1)
+                            # ramp_path_end = selected_path.slice(0, end - 1).reverse()
+                            ramp_path_end = [
+                                list(selected_path.coords)[k] for k in range(0, end - 1)
                             ]
-                            rampPathEnd.reverse()
+                            ramp_path_end.reverse()
 
-                            rampPath = rampPath + rampPathEnd
+                            ramp_path = ramp_path + ramp_path_end
 
-                            if inTabsHeight:
+                            if in_tabs_height:
                                 # move to initial point of partial path
                                 gcode.append(
                                     "; Tab: move to first point of partial path at safe height"
                                 )
-                                gcode.append("G1" + convertPoint(rampPath[1]))
+                                gcode.append("G1" + convert_point(ramp_path[1]))
                                 gcode.append("; plunge")
                                 gcode.append(
                                     "G1 Z"
                                     + ValWithUnit(nextZ, "-").to_fixed(decimal)
-                                    + plungeFeedGcode
+                                    + plunge_feed_gcode
                                 )
 
                             gcode.append("; ramp")
-                            executedRamp = True
+                            executed_ramp = True
 
-                            distTravelled = 0.0
-                            for i in range(1, len(rampPath)):
-                                distTravelled += cam.dist(
-                                    getX(rampPath[i - 1]),
-                                    getY(rampPath[i - 1]),
-                                    getX(rampPath[i]),
-                                    getY(rampPath[i]),
+                            dist_travelled = 0.0
+                            for i in range(1, len(ramp_path)):
+                                dist_travelled += cam.dist(
+                                    get_x(ramp_path[i - 1]),
+                                    get_y(ramp_path[i - 1]),
+                                    get_x(ramp_path[i]),
+                                    get_y(ramp_path[i]),
                                 )
-                                newZ = currentZ + distTravelled / totalDist * (
+                                newZ = currentZ + dist_travelled / total_dist * (
                                     nextZ - currentZ
                                 )
                                 gcode_line_start = (
                                     "G1"
-                                    + convertPoint(rampPath[i])
+                                    + convert_point(ramp_path[i])
                                     + " Z"
                                     + ValWithUnit(newZ, "-").to_fixed(decimal)
                                 )
@@ -972,7 +970,10 @@ class cam:
                                         + " F"
                                         + ValWithUnit(
                                             math.floor(
-                                                min(totalDist / minPlungeTime, cut_feed)
+                                                min(
+                                                    total_dist / min_plunge_time,
+                                                    cut_feed,
+                                                )
                                             ),
                                             "-",
                                         ).to_fixed(decimal)
@@ -980,26 +981,28 @@ class cam:
                                 else:
                                     gcode.append(gcode_line_start)
 
-                    if not inTabsHeight:
-                        if not executedRamp:
+                    if not in_tabs_height:
+                        if not executed_ramp:
                             gcode.append("; plunge")
                             gcode.append(
                                 "G1 Z"
                                 + ValWithUnit(nextZ, "-").to_fixed(decimal)
-                                + plungeFeedGcode
+                                + plunge_feed_gcode
                             )
 
-                    if inTabsHeight:
+                    if in_tabs_height:
                         # move to initial point of partial path
                         gcode.append(
                             "; Tab: move to first point of partial path at safe height"
                         )
-                        gcode.append("G1" + convertPoint(list(selectedPath.coords)[0]))
+                        gcode.append(
+                            "G1" + convert_point(list(selected_path.coords)[0])
+                        )
                         gcode.append("; plunge")
                         gcode.append(
                             "G1 Z"
                             + ValWithUnit(nextZ, "-").to_fixed(decimal)
-                            + plungeFeedGcode
+                            + plunge_feed_gcode
                         )
 
                     currentZ = nextZ
@@ -1007,23 +1010,23 @@ class cam:
                     gcode.append("; cut")
 
                     # on a given height, generate series of G1
-                    for i, pt in enumerate(selectedPath.coords):
+                    for i, pt in enumerate(selected_path.coords):
                         if i == 0:
                             continue
 
-                        gcode_line_start = "G1" + convertPoint(pt)
+                        gcode_line_start = "G1" + convert_point(pt)
                         if i == 1:
-                            gcode.append(gcode_line_start + " " + cutFeedGcode)
+                            gcode.append(gcode_line_start + " " + cut_feed_gcode)
                         else:
                             gcode.append(gcode_line_start)
 
-                    if inTabsHeight:
+                    if in_tabs_height:
                         # retract to safeZ before processing next separated_paths item
-                        gcode.extend(retractGcode)
+                        gcode.extend(retract_gcode)
 
                 finishedZ = nextZ
 
-            gcode.extend(retractGcode)
+            gcode.extend(retract_gcode)
 
         return gcode
 
@@ -1052,8 +1055,8 @@ class TabsSeparator:
 
         shapely_openpath = shapely.geometry.LineString(pts)
 
-        # print("origPath", origPath)
-        # print("origPath", shapely_openpath)
+        # print("orig_path", orig_path)
+        # print("orig_path", shapely_openpath)
 
         shapely_tabs_: List[shapely.geometry.Polygon] = []
         # 1. from the tabs, build shapely tab polygons
@@ -1092,9 +1095,7 @@ class TabsSeparator:
 
         paths: List[shapely.geometry.LineString] = list(shapely_splitted_paths.geoms)
 
-        # >>> XAM merge some paths when possible
         paths = self.merge_compatible_paths(paths)
-        # <<< XAM
 
         self.separated_paths = paths
 
@@ -1122,10 +1123,10 @@ class TabsSeparator:
             if boundary1_len == 0 or boundary2_len == 0:
                 return False
 
-            endPoint = path1.boundary.geoms[1]
-            startPoint = path2.boundary.geoms[0]
+            end_point = path1.boundary.geoms[1]
+            start_point = path2.boundary.geoms[0]
 
-            return endPoint == startPoint
+            return end_point == start_point
 
         def merge_path_into_path(
             path1: shapely.geometry.LineString, path2: shapely.geometry.LineString
@@ -1430,12 +1431,12 @@ class PocketCalculator:
             closest_path_index = -1
             closest_point_index = -1
             closest_point_dist = float(sys.maxsize)
-            for pathIndex, path in enumerate(paths):
-                for pointIndex, point in enumerate(path):
+            for path_index, path in enumerate(paths):
+                for point_index, point in enumerate(path):
                     dist = cam.distP(current_point, point)
                     if dist < closest_point_dist:
-                        closest_path_index = pathIndex
-                        closest_point_index = pointIndex
+                        closest_path_index = path_index
+                        closest_point_index = point_index
                         closest_point_dist = dist
 
             path = paths[closest_path_index]

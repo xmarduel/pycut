@@ -99,11 +99,10 @@ point out what has to be taken into consideration when creating "usable" <strong
 
 <h3>Why PyCut</h3>
 
-<p>With <strong>PyCut</strong>, you do not need to do 3D modelling. SVG files (2D) are <strong>PyCut</strong> input format, 
-and for simple milling tasks it is perfectly OK.
-Granted, SVG shapes modelling is not so straightforward as one could think, as free software lacks good
-SVG modelling applications. Infact, writing a SVG file with a text editor is sometimes the best way! 
-For complex shapes (so-called SVG paths), other tools may be used, see Appendix.</p>
+<p>With <strong>PyCut</strong>, you do not need to do 3D modelling. SVG files (2D) are <strong>PyCut</strong> input
+format, and for simple milling tasks it is perfectly OK. Granted, SVG shapes modelling is not so straightforward as one
+could think, as free software lacks good SVG modelling applications. Infact, writing a SVG file with a text editor is
+sometimes the best way! For complex shapes (so-called SVG paths), other tools may be used, see Appendix.</p>
 
 <h2 id="P-01-01">SVG Documents</h2>
 
@@ -111,10 +110,21 @@ For complex shapes (so-called SVG paths), other tools may be used, see Appendix.
 
 <p><strong>PyCut</strong>, in order to work accurately, need the SVG document to define its standard
 <strong>width</strong> and <strong>height</strong> with units "<strong>mm</strong>" or "<strong>in</strong>". The
-<strong>viewbox</strong> needs to be defined as well. The view shall be of the form </p>
+<strong>viewbox</strong> needs to be defined as well. The viewbox shall be of the form </p>
 
 <p></p>
-<pre><code>viewBox="0 0 &lt;width&gt; &lt;height&gt;"</code></pre>
+<pre><code class="language-html">viewBox="0 0 &lt;width&gt; &lt;height&gt;"</code></pre>
+
+<p>So as example:</p>
+
+<pre><code class="language-html">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;svg version="1.1" width="200mm" height="100mm" viewBox="0 0 200 100" id="test" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"&gt;
+  &lt;g id="root"&gt;
+    &lt;circle id="circle" cx="30" cy="60" r="20" stroke="black" stroke-width="1" fill="red" /&gt;
+    &lt;rect id="rect" x="60" y="40" width="30" height="40" stroke="black" stroke-width="1" fill="green" /&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;
+</code></pre>
 
 <div class="info">
 <p><strong>Note:</strong> The <strong>height</strong> will be used later when creating GCode with the
@@ -169,8 +179,8 @@ wishes to process an unique id.</p>
 
 <p><strong>PyCut</strong> cannot import directly the very handy SVG <strong>&lt;defs&gt;</strong> and
 <strong>&lt;use&gt;</strong> feature. The utility <strong>svgresolver.py</strong> delivered with <strong>PyCut</strong>
-will have to be used. It takes as input the SVG file defined with <code>&lt;defs&gt;</code> and outputs a new SVG where all
-<code>&lt;defs&gt;/&lt;use&gt;</code> have been resolved.</p>
+will have to be used. It takes as input the SVG file defined with <code>&lt;defs&gt;</code> and outputs a new SVG where
+all <code>&lt;defs&gt;/&lt;use&gt;</code> have been resolved.</p>
 
 <h4>Opened and closed paths/shapes</h4>
 
@@ -207,9 +217,9 @@ three "contours".</p>
 
 <p><strong>PyCut</strong> cannot process yet <span style="color:#0000ff">&lt;text&gt;</span> items directly.
 Fortunately, <span style="color:#0000ff">&lt;text&gt;</span> items must be converted into <span
-style="color:#0000ff">&lt;path&gt;</span> items, sonce they will be ignored by
-<strong>PyCut</strong>. <strong>PyCut</strong> also comes with the utiilty <strong>svgtext2svgpath.py</strong> which
-will also convert your <code><span style="color:#0000ff">&lt;text&gt;</span></code> items. How to use it? just call the
+style="color:#0000ff">&lt;path&gt;</span> items, sonce they will be ignored by <strong>PyCut</strong>.
+<strong>PyCut</strong> also comes with the utiilty <strong>svgtext2svgpath.py</strong> which will also convert your
+<code><span style="color:#0000ff">&lt;text&gt;</span></code> items. How to use it? just call the
 <strong>svgtext2svgpath.py</strong> program which outputs in a new svg the <span
 style="color:#0000ff">&lt;text&gt;</span> items as <span style="color:#0000ff">&lt;path&gt;</span> items. Copy/paste
 the result of a <span style="color:#0000ff">&lt;text&gt;</span> conversion into your own svg. A successfull conversion
@@ -218,9 +228,9 @@ not be splitted into several <span style="color:#0000ff">&lt;tspan&gt;</span> it
 style="color:#0000ff">&lt;tspan&gt;</span> tag at all is also possible (and simpler). <strong><span
 style="color:#8000ff">IN PROGRESS</span></strong>.</p>
 
-<p>All in all, if <strong>PyCut</strong> were to display text strings at the wrong positions (after having
-transformed them into paths), the user can always
-export the svg from <strong>Inkscape</strong> (and write <strong>PyCut</strong> a ticket).</p>
+<p>All in all, if <strong>PyCut</strong> were to display text strings at the wrong positions (after having transformed
+them into paths), the user can always export the svg from <strong>Inkscape</strong> (and write <strong>PyCut</strong> a
+ticket).</p>
 
 <h4>Transformations</h4>
 
@@ -257,8 +267,9 @@ job is opened.</p>
 
 <p>A GCode file can also be loaded with the argument <code>--gcode</code>. Hopefully PyCut can parse it (roughly: what
 <strong>Candle</strong> can parse - <strong>PyCut</strong> uses a similar parser). The toolpaths can then be viewed in
-the GCode viewer (toolpaths simulation) and GCode simulator. For the GCode simulator (material removing simulation), the tool diameter is needed for an accurate simulation.
-PyCut saves its generated gcode files with a comment line of the form</p>
+the GCode viewer (toolpaths simulation) and GCode simulator. For the GCode simulator (material removing simulation),
+the tool diameter is needed for an accurate simulation. PyCut saves its generated gcode files with a comment line of
+the form</p>
 <pre><code class="language-gcode">; Diameter   &lt;value&gt;</code></pre>
 
 <p>that is parsed to retrieve the right tool diameter. </p>
@@ -267,8 +278,8 @@ PyCut saves its generated gcode files with a comment line of the form</p>
 
 <h3 id="P-03-01">Loading a SVG file</h3>
 
-<p>Import your svg into <strong>PyCut</strong>. It is achieved through the menubar command <strong>SVG | Load SVG</strong>. The SVG content should be displayed
-in the central area. </p>
+<p>Import your svg into <strong>PyCut</strong>. It is achieved through the menubar command <strong>SVG | Load
+SVG</strong>. The SVG content should be displayed in the central area. </p>
 
 <div class="info">
 <p><strong>Note:</strong> text is not displayed inside the <strong>PyCut</strong> svg viewer. It has to be converted as
@@ -278,8 +289,8 @@ in the central area. </p>
 <h3 id="P-03-02">Creating a PyCut Job</h3>
 
 <p>Then create a new "job" : this is a kind of project file that stores uponside the svg file all the CAM operations
-that the user has created or will create, together with all others settings relevant when generating GCode. 
-It can be created, saved and loaded again and modified - quite practical.</p>
+that the user has created or will create, together with all others settings relevant when generating GCode. It can be
+created, saved and loaded again and modified - quite practical.</p>
 
 <h3 id="P-03-03">Creating CAM operations</h3>
 
@@ -314,7 +325,7 @@ case of multiple operations enabled, as the project name, with ending suffix "nc
 <h3 id="P-04-01">Svg Settings</h3>
 
 <div>
-<img src="doc/pycut_svgsettings.png" width="310px" /> </div> 
+<img src="doc/pycut_svgsettings.png" width="310px" /> </div>
 
 <h4>user units scale</h4>
 
@@ -325,7 +336,7 @@ or whatever. This means, <strong>1 "user unit" is equal to 1 mm (and the viewbox
 and height="40mm")</strong></p>
 
 <div>
-<img src="doc/Inkscape_settings_mm.png" width="563" /> </div> 
+<img src="doc/Inkscape_settings_mm.png" width="563" /> </div>
 
 <p>Of course when editing the svg (in Inkscape or in a text editor), <strong>the user is only concerned with the user
 units</strong> : he draws a rectangle of size 20x30 at the location 10x10. The users may simply even not be aware of
@@ -339,7 +350,7 @@ the document becomes then <strong>3,93701x1,57480 inches</strong> (yes, 100 / 25
 100x40.</p>
 
 <div>
-<img src="doc/Inkscape_settings_in.png" width="563" /> </div> 
+<img src="doc/Inkscape_settings_in.png" width="563" /> </div>
 
 <p>Filling a box half the size of the document is 50x20, right, but what are real physical dimensions of that box ? The
 user would have to steadily calculate from fancy user units (ex: 50x20) in inches</p>
@@ -397,7 +408,7 @@ the <strong>user unit scale factor is always 1</strong> .</p>
 <h3 id="P-04-02">Tool</h3>
 
 <div>
-<img src="doc/pycut_tool.png" width="310" /> </div> 
+<img src="doc/pycut_tool.png" width="310" /> </div>
 
 <h3 id="P-04-03">Tabs</h3>
 
@@ -408,7 +419,7 @@ of course placed somewhere on the generated toolpaths. The height of the tabs is
 ignored for Pocket operations</strong>.</p>
 
 <div>
-<img src="doc/pycut_tabs.png" width="310" /> </div> 
+<img src="doc/pycut_tabs.png" width="310" /> </div>
 
 <p></p>
 
@@ -419,7 +430,7 @@ ignored for Pocket operations</strong>.</p>
 <p>The Operations "Cut Depth" should not be larger than the material thickness. </p>
 
 <div>
-<img src="doc/pycut_material.png" width="310" /> </div> 
+<img src="doc/pycut_material.png" width="310" /> </div>
 
 <p></p>
 
@@ -439,7 +450,7 @@ exceed the physical possibilities of the machine when travelling in the z-axis, 
 <p>If your design contain curves (svg "arcs" or "bezier" curves), they have to be discretized in small segments.</p>
 
 <div>
-<img src="doc/pycut_curve_to_line_conversion.png" width="300" /></div> 
+<img src="doc/pycut_curve_to_line_conversion.png" width="300" /></div>
 
 <p>The 2 following parameters allow to specified how fine the curve discretization will be:</p>
 <ul>
@@ -465,19 +476,19 @@ top-left postion.</p>
 </ul>
 
 <div>
-<img src="doc/pycut_gcode_conversion.png" width="310" /> </div> 
+<img src="doc/pycut_gcode_conversion.png" width="310" /> </div>
 
 <p>Note that these 4 buttons act as radio buttons.</p>
 
-<p>These four basic options set the XOffset and YOffset of the GCode calculation. After a GCode generation, it is
-still possible to modify the XOffset and YOffset to fit at best how to user wants to have the origin be located with
-the help of the 2 spin boxes. Infact, modifying "per hand" the X or Y offset recalculate the GCode, so this is a costly
+<p>These four basic options set the XOffset and YOffset of the GCode calculation. After a GCode generation, it is still
+possible to modify the XOffset and YOffset to fit at best how to user wants to have the origin be located with the help
+of the 2 spin boxes. Infact, modifying "per hand" the X or Y offset recalculate the GCode, so this is a costly
 operation.</p>
 
-<p>The checkbox "Use Offset" is used, as example, as the following: the user can select first only 1 CAM operation, for 
-example <strong>Center of the Gcode area</strong>. An X and Y offset is thus calculated. Then the user checks "on" the 
-checkbox, so that these offsets are frozen and become the references for the further CAM operations and their produced gcode.
-</p>
+<p>The checkbox "Use Offset" is used, as example, as the following: the user can select first only 1 CAM operation, for
+example <strong>Center of the Gcode area</strong>. An X and Y offset is thus calculated. Then the user checks "on" the
+checkbox, so that these offsets are frozen and become the references for the further CAM operations and their produced
+gcode. </p>
 
 <div class="warning">
 <p><strong>Info</strong>: The option "Center of the Gcode area" is particularely usefull when the user wants to run 2
@@ -538,9 +549,8 @@ to carve something like 16x10 cm without rotating all items in the source svg. <
 
 <div>
 <img src="doc/pycut_gcode_generation.png" width="310" /></div>
-
 <!-- ----------------------------------------------------------------------------------------------------------->
-<!-- -----------------------------------------------------------------------------------------------------------> 
+<!-- ----------------------------------------------------------------------------------------------------------->
 
 <p></p>
 
@@ -549,7 +559,7 @@ to carve something like 16x10 cm without rotating all items in the source svg. <
 <p>This is where the user defined its cam operations, thus this is where the action takes place.</p>
 
 <div>
-<img src="doc/pycut_ops.png" width="1170" /> </div> 
+<img src="doc/pycut_ops.png" width="1170" /> </div>
 
 <p>First one or more item(s) have to be selected in the svgviewer, click on "Create Operation" and a default operation
 is created. When more than one item has been selected, the user can perform logical operations on this set of item </p>
@@ -613,9 +623,10 @@ offset curves are generated one after the other until the whole pocket "space" i
 the offsets is reversed, thus starting from the middle of the pocket.</p>
 
 <p>There are others algorithms, for example the "<strong>spirale</strong>" algorithm. Here we start fom the center of
-the pocket and go towards the outside in spirales, hence the name. It is easy to calculate the toolpaths for 
-<strong>circles</strong> and <strong>ellipses</strong>. For the other shapes, <strong>PyCut</strong> utilizes the external (free) library
-<strong style="color:#8000ff">HSM_nibblers</strong> which produces very nice toolpaths<strong>.</strong></p>
+the pocket and go towards the outside in spirales, hence the name. It is easy to calculate the toolpaths for
+<strong>circles</strong> and <strong>ellipses</strong>. For the other shapes, <strong>PyCut</strong> utilizes the
+external (free) library <strong style="color:#8000ff">HSM_nibblers</strong> which produces very nice
+toolpaths<strong>.</strong></p>
 
 <p><strong>PyCut</strong> will try to implement this <strong>pocket</strong> algorithm in two steps: first an
 "<strong>Helix</strong>" operation, then a "<strong>Pocket</strong>" operation. <strong
@@ -623,34 +634,35 @@ style="color:#8000ff">Trick</strong>: to "activate" the spirale algorithm, just 
 "<strong>sp_</strong>" prefix! To "activate" the HSM_nibbler algorithm, just name the pocket operation with a
 "<strong>nb_</strong>" prefix! </p>
 
-<p>The helix will be cut in the "center" of the shape (the shapely polygon "centroid)", and we pass this location
-to the HSM nibbler, thus ensuring a good start of the pocket "nibbler" operation.</p>
+<p>The helix will be cut in the "center" of the shape (the shapely polygon "centroid)", and we pass this location to
+the HSM nibbler, thus ensuring a good start of the pocket "nibbler" operation.</p>
 
 <p>The spirales will be for <strong>circles, ellipses</strong> shapes only -something admittingly rather restrictive-
 because these cases are more or less trivial. There is then no "isles" that neccessarely occur in the corners of the
 pocket for non-trivial geometries. But the HSM_nibblers toopaths are there for the others shapes.</p>
 
 <div class="info">
-<p><strong>Note:</strong> Having succesfully created an helix (hole) into the center of a basic shape (<strong>circle</strong>,
-<strong>ellipse</strong>, <strong>rectangle</strong>, <strong>polygon</strong> or <strong>closed path</strong>), then
-the "standard" pocket algorithm can be used with a <strong>very large overlap</strong> (value close to 1) and <strong>a
-larger pass depth</strong> (rather than a standard overlap and a tiny pass depth that is used for standard pockets)</p>
+<p><strong>Note:</strong> Having succesfully created an helix (hole) into the center of a basic shape
+(<strong>circle</strong>, <strong>ellipse</strong>, <strong>rectangle</strong>, <strong>polygon</strong> or
+<strong>closed path</strong>), then the "standard" pocket algorithm can be used with a <strong>very large
+overlap</strong> (value close to 1) and <strong>a larger pass depth</strong> (rather than a standard overlap and a tiny
+pass depth that is used for standard pockets)</p>
 </div>
 
 <h4>Helix</h4>
 
-<p>The helix's center will be the <strong>center of the (closed) shape</strong>. For a circle, this is obviously 
-the center of the circle shape. Considering the case where the center of the helix is [0,0], <strong>on which 
-"orbit" will move the cutter</strong>? Well in case of an Helix operation, the "<strong>width</strong>" operation 
-corresponds to the helix outer radius. This means that the <strong>radius</strong> of the orbit, the circle on 
-which the cutter center travels, is <string>width - cutter_radius</string>. So the width has to be larger than
-the cutter radius, sonce the helix will be infact a drill operation. A value larger than the cutter diameter 
-generates a ring (with an inner hole), and the helix is then simular to an "Inside" or "Outside"operation 
-for an imaginary circle shape, however with a "smoother" cut. </p>
+<p>The helix's center will be the <strong>center of the (closed) shape</strong>. For a circle, this is obviously the
+center of the circle shape. Considering the case where the center of the helix is [0,0], <strong>on which "orbit" will
+move the cutter</strong>? Well in case of an Helix operation, the "<strong>width</strong>" operation corresponds to the
+helix outer radius. This means that the <strong>radius</strong> of the orbit, the circle on which the cutter center
+travels, is <string>width - cutter_radius</string>. So the width has to be larger than the cutter radius, sonce the
+helix will be infact a drill operation. A value larger than the cutter diameter generates a ring (with an inner hole),
+and the helix is then simular to an "Inside" or "Outside"operation for an imaginary circle shape, however with a
+"smoother" cut. </p>
 
-<p>The helix pitch (revolution depth) is the most important parameter. Theoretically, the Helix operation could perform 
-threads cutting by generating first an hole, then an helix "inside the hole" where the outer radius of the helix 
-would be smaller than the hole radius, and utilizing a dedicated cutter.</p>
+<p>The helix pitch (revolution depth) is the most important parameter. Theoretically, the Helix operation could perform
+threads cutting by generating first an hole, then an helix "inside the hole" where the outer radius of the helix would
+be smaller than the hole radius, and utilizing a dedicated cutter.</p>
 
 <h4>Spirale</h4>
 
@@ -703,8 +715,8 @@ round). </p>
     <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                -->
     <circle cx="66.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </g>
   <g id="layer1" transform="translate(120 0)">
@@ -716,8 +728,8 @@ round). </p>
     <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              -->
     <circle cx="65.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </g>
 </svg>
@@ -754,9 +766,9 @@ any fixups.</p>
 <div class="warning">
 <p><strong>Warning:</strong> Having had a look at (the doc of) some other tools (<strong>BlenderCam</strong>,
 <strong>Fusion360</strong>), I have noticed that these tools, in order to perform dogbones correction, "actualize" the
-geometry, or rather said the geometry contour so that this contour get bones. After that, the
-"inside" or "pocket" operations are performed "as usual". I will try to take a different approach : only the generated
-GCode will be "fixed" when encountering "angles". </p>
+geometry, or rather said the geometry contour so that this contour get bones. After that, the "inside" or "pocket"
+operations are performed "as usual". I will try to take a different approach : only the generated GCode will be "fixed"
+when encountering "angles". </p>
 </div>
 
 <h3>A first try</h3>
@@ -816,9 +828,9 @@ corner).</p>
     <text x="97" y="13" class="small">D</text>
     <text x="21" y="23" class="small">A</text>
     <!--
-            	D = sqrt(10*10 + 10*10) = 14.14
-                d = 14.14 -10 = 4.14dx = dy = d / sqrt(2) = 2.93
-            	-->
+                	D = sqrt(10*10 + 10*10) = 14.14
+                    d = 14.14 -10 = 4.14dx = dy = d / sqrt(2) = 2.93
+                	-->
     <polyline id="dog-bone-path1" points="20,20 17.07,17.07" fill="none" stroke="blue" stroke-width="0.3"
               stroke-opacity="0.5"/>
     <circle id="dog-bone-path1-material" cx="17.07" cy="17.07" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2"
@@ -831,8 +843,8 @@ corner).</p>
   </g>
 </svg>
 
-<p>We see that the strategy "1" removes far less extra material than the strategy "2", so we will concentrate
-only on the strategy "1". </p>
+<p>We see that the strategy "1" removes far less extra material than the strategy "2", so we will concentrate only on
+the strategy "1". </p>
 
 <p>At every G01 instruction, there is certainly a direction change, which can be tiny (consider milling an inner
 circle, not as G02 or G03 but with a list of GO1 instructions) or big, here in our case a 90 degrees direction
@@ -1121,7 +1133,6 @@ the comment lines </p>
 <pre><code class="language-gcode">; end fixup</code></pre>
 
 <p>will have a blue background in order to clearly identify them.</p>
-
 
 <h3 id="APPENDICE-01">Appendix-1: SVG Editors</h3>
 

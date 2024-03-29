@@ -272,9 +272,9 @@ class CncOp:
         self.name: str = operation["name"]
         self.paths: List[str] = operation["paths"]
         self.combinaison: str = operation["combinaison"]
-        self.ramp_plunge = operation["ramp_plunge"]
-        self.cam_op = operation["type"]
-        self.direction = operation["direction"]
+        self.ramp_plunge: bool = operation["ramp_plunge"]
+        self.cam_op: str = operation["type"]  # "Pocket" ...
+        self.direction: str = operation["direction"]
         self.cut_depth = ValWithUnit(operation["cut_depth"], self.units)
 
         self.enabled = operation.get("enabled", False)
@@ -636,15 +636,15 @@ class CncOp:
 
     def calculate_preview_geometry_inside(self, tool_model: ToolModel):
         """ """
-        toolData = tool_model.get_cam_data()
+        tool_data = tool_model.get_cam_data()
 
         if self.geometry is not None:
             margin = self.margin.to_mm()
 
             width = self.width.to_mm()
 
-            if width < toolData["diameter_tool"]:
-                width = toolData["diameter_tool"]
+            if width < tool_data["diameter_tool"]:
+                width = tool_data["diameter_tool"]
 
             if margin != 0:
                 geometry = ShapelyUtils.offset_multipolygon(
@@ -673,13 +673,13 @@ class CncOp:
     def calculate_preview_geometry_outside(self, tool_model: ToolModel):
         """ """
         # shapely: first the outer, then the inner hole
-        toolData = tool_model.get_cam_data()
+        tool_data = tool_model.get_cam_data()
 
         if self.geometry is not None:
             width = self.width.to_mm()
 
-            if width < toolData["diameter_tool"]:
-                width = toolData["diameter_tool"]
+            if width < tool_data["diameter_tool"]:
+                width = tool_data["diameter_tool"]
 
             margin = self.margin.to_mm()
             margin_plus_width = margin + width
@@ -732,7 +732,7 @@ class CncOp:
         self, svg_model: SvgModel, tool_model: ToolModel, material_model: MaterialModel
     ):
         """ """
-        toolData = tool_model.get_cam_data()
+        tool_data = tool_model.get_cam_data()
 
         name = self.name
         # ramp_plunge = self.ramp_plunge
@@ -752,8 +752,8 @@ class CncOp:
         #    if direction == "outer2inner":
         #        # start from the outer ring and cam in the inside dir
         #        width = self.width.to_mm()
-        #        if width < toolData["diameter_tool"]:
-        #            width = toolData["diameter_tool"]
+        #        if width < tool_data["diameter_tool"]:
+        #            width = tool_data["diameter_tool"]
         #        offset += width
         #    else:
         #        # start from the inner ring and cam in the outside dir
@@ -761,26 +761,26 @@ class CncOp:
 
         if self.geometry.geom_type == "MultiPoint":
             if cam_op == "Drill":
-                self.cam_paths = cam.drill(geometry, toolData["diameter_tool"])
+                self.cam_paths = cam.drill(geometry, tool_data["diameter_tool"])
             elif cam_op == "Peck":
-                self.cam_paths = cam.peck(geometry, toolData["diameter_tool"])
+                self.cam_paths = cam.peck(geometry, tool_data["diameter_tool"])
 
         if cam_op == "Helix":
-            self.cam_paths = cam.helix(geometry, toolData["diameter_tool"])
+            self.cam_paths = cam.helix(geometry, tool_data["diameter_tool"])
 
         elif cam_op == "Pocket" and name.startswith("sp_"):
             self.cam_paths = cam.spirale_pocket(
                 self.svg_paths,
                 geometry,
-                toolData["diameter_tool"],
-                toolData["overlap"],
+                tool_data["diameter_tool"],
+                tool_data["overlap"],
                 direction == "Climb",
             )
         elif cam_op == "Pocket" and name.startswith("nb_"):
             self.cam_paths = cam.nibbler_pocket(
                 geometry,
-                toolData["diameter_tool"],
-                toolData["overlap"],
+                tool_data["diameter_tool"],
+                tool_data["overlap"],
                 direction == "Climb",
             )
         else:
@@ -797,20 +797,20 @@ class CncOp:
                 if cam_op == "Pocket":
                     self.cam_paths = cam.pocket(
                         geometry,
-                        toolData["diameter_tool"],
-                        toolData["overlap"],
+                        tool_data["diameter_tool"],
+                        tool_data["overlap"],
                         direction == "Climb",
                     )
                 elif cam_op == "Inside" or cam_op == "Outside":
                     width = width.to_mm()
-                    if width < toolData["diameter_tool"]:
-                        width = toolData["diameter_tool"]
+                    if width < tool_data["diameter_tool"]:
+                        width = tool_data["diameter_tool"]
                     self.cam_paths = cam.outline(
                         geometry,
-                        toolData["diameter_tool"],
+                        tool_data["diameter_tool"],
                         cam_op == "Inside",
                         width,
-                        toolData["overlap"],
+                        tool_data["overlap"],
                         direction == "Climb",
                     )
                 elif cam_op == "Engrave":
@@ -825,14 +825,14 @@ class CncOp:
                     geometry = self.preview_geometry
 
                     width = width.to_mm()
-                    if width < toolData["diameter_tool"]:
-                        width = toolData["diameter_tool"]
+                    if width < tool_data["diameter_tool"]:
+                        width = tool_data["diameter_tool"]
                     self.cam_paths = cam.outline_opened_paths(
                         geometry,
-                        toolData["diameter_tool"],
+                        tool_data["diameter_tool"],
                         cam_op == "Inside",
                         width,
-                        toolData["overlap"],
+                        tool_data["overlap"],
                         direction == "Climb",
                     )
 
@@ -1084,21 +1084,14 @@ class GcodeGenerator:
         tool_diameter = self.unit_converter.from_mm(self.tool_model.diameter.to_mm())
         helix_pitch = self.unit_converter.from_mm(self.tool_model.helix_pitch.to_mm())
         topZ = self.unit_converter.from_mm(self.material_model.mat_tot_z.to_mm())
-        tabHeight = self.unit_converter.from_mm(self.tabs_model.height.to_mm())
+        tab_height = self.unit_converter.from_mm(self.tabs_model.height.to_mm())
         peckZ = self.unit_converter.from_mm(1.0)
-
-        # if self.units == "inch":
-        #    scale = 1.0
-        # else:
-        #    scale = 25.4
-        scale = 1
 
         helix_outer_radius = cnc_op.width
 
         if helix_outer_radius < tool_diameter / 2.0:
             helix_outer_radius = tool_diameter / 2.0 + 0.1  # default! (drill)
 
-        # helix_plunge_rate = math.floor(cut_rate * helix_pitch / circle_travel)  BS
         helix_plunge_rate = plunge_rate
 
         gcode = []
@@ -1126,7 +1119,7 @@ class GcodeGenerator:
             cut_depth = self.unit_converter.from_mm(cnc_op.cut_depth.to_mm())
             botZ = ValWithUnit(topZ - cut_depth, self.units)
             tabZ = self.unit_converter.from_mm(
-                topZ.to_mm() - cut_depth.to_mm() + tabHeight.to_mm()
+                topZ.to_mm() - cut_depth.to_mm() + tab_height.to_mm()
             )
 
             nb_paths = len(cnc_op.cam_paths)  # in use!
@@ -1163,7 +1156,6 @@ class GcodeGenerator:
                         "optype": cnc_op.cam_op,
                         "paths": cnc_op.cam_paths,
                         "ramp": cnc_op.ramp_plunge,
-                        "scale": scale,
                         "x_offset": self.x_offset,
                         "y_offset": self.y_offset,
                         "decimal": 3 if self.units == "mm" else 4,
