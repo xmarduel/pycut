@@ -1067,9 +1067,11 @@ class TabsSeparator:
 
         # hey, multipolygons are good...
         shapely_tabs_union = shapely.ops.unary_union(shapely_tabs_)
-        if shapely_tabs_union.geom_type == "Polygon":
-            shapely_tabs = shapely.geometry.MultiPolygon([shapely_tabs])
-        if shapely_tabs_union.geom_type == "GeometryCollection":
+        if shapely_tabs_union.geom_type == "MultiPolygon":
+            shapely_tabs = shapely_tabs_union
+        elif shapely_tabs_union.geom_type == "Polygon":
+            shapely_tabs = shapely.geometry.MultiPolygon([shapely_tabs_union])
+        elif shapely_tabs_union.geom_type == "GeometryCollection":
             for geom in shapely_tabs_union.geoms:
                 if geom.geom_type == "MultiPolygon":
                     shapely_tabs = geom

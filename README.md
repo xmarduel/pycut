@@ -25,20 +25,16 @@ start the program from the installation folder
 
 ## Dependencies
 
-- Python 3.10
-- PySide6 6.6.2
-- shapely 1.8.4 with PyOpenGL (latest)
-- svgelements (latest)
+- Python 3.11
+- PySide6 6.6.3
+- shapely 1.8.5 
+- PyOpenGL (latest)
+- svgelement (latest)
 - lxml (latest)
 - freetype-py (latest) - used in svgtext2svgpath.py utility
 - matplotlib (latest) - to debug/view shapely offsets ops
 - numba (latest) - for python simulator optimization
 - pyvoronoi (latest) - for HSM nibbler toolpaths
-
-Note: If installation of pyvoronoi fails with pip, you can
-
-1. install cython
-2. download pyvoronoi.zip, unpack it and perform its setup.py from the source dir
 
 ## Features
 

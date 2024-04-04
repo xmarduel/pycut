@@ -36,18 +36,18 @@
 	</defs>
 	
 	<!-- middle part to be "g-coded" -->
-    <rect  id="part_2" style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.1" width="25" height="200" x="0" y="0" />
+    <rect  id="part_2" style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.1" width="25.1" height="200" x="0" y="0" />
 		
-	<use   href="#shaft_bearing_15.0mm"  id="part_middle_shaft_1_bearing_hole"   transform="translate(11.5,15)" />
-	<use   href="#shaft_bearing_15.0mm"  id="part_middle_shaft_2_bearing_hole"   transform="translate(11.5,185)" />
-	<use   href="#shaft_8.0mm"      id="part_middle_shaft_1_hole"   transform="translate(11.5,15)" />
-	<use   href="#shaft_8.0mm"      id="part_middle_shaft_2_hole"   transform="translate(11.5,185)" />
+	<use   href="#shaft_bearing_15.0mm"  id="part_middle_shaft_1_bearing_hole"   transform="translate(13.5,15)" />
+	<use   href="#shaft_bearing_15.0mm"  id="part_middle_shaft_2_bearing_hole"   transform="translate(13.5,185)" />
+	<use   href="#shaft_8.0mm"      id="part_middle_shaft_1_hole"   transform="translate(13.5,15)" />
+	<use   href="#shaft_8.0mm"      id="part_middle_shaft_2_hole"   transform="translate(13.5,185)" />
 		  
-	<g id="backlash_hole_part_middle" transform="translate(11.5,100)">
+	<g id="backlash_hole_part_middle" transform="translate(13.5,100)">
 	  <!-- 15mm diameter => pocket 20mm deep -->
 	  <circle  id="leadscrew-middle" r="7.5" style="fill:green"/>
 	</g>
 	  
-	<line id="part2_cut"        style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="1" y1="0"  x2="1"  y2="200"/>
-    <line id="part2_schlitz"    style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="22" y1="0"  x2="22"  y2="200"/>
+	<line id="part2_cut"        style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="24" y1="0"  x2="24"  y2="200"/>
+    <line id="part2_schlitz"    style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="3"  y1="0"  x2="3"  y2="200"/>
 </svg>
