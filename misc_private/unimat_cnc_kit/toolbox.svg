@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg version="1.1" width="200mm" height="150mm" viewBox="0 0 200 150" id="toolbox-kit" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+    
+  <defs id="defs">
+    <rect id="case10.5"         style="fill:#ff00ff;stroke-width:0.25;stroke-opacity:1" width="10.5" height="80"  />
+	<rect id="case12.5"         style="fill:#44ffff;stroke-width:0.25;stroke-opacity:1" width="12.5" height="80"  />
+	<rect id="case16.5"         style="fill:#ff00ff;stroke-width:0.25;stroke-opacity:1" width="16.5" height="80"  />
+	<rect id="case15.0_long"    style="fill:#66ff44;stroke-width:0.25;stroke-opacity:1" width="15.0" height="90"  />
+	
+	
+  </defs>
+    
+  <g id="root" transform="translate(10,10)">
+      <rect id="inlay"     style="fill:none;stroke:black;stroke-width:0.25;stroke-opacity:1" width="166" height="117"  />
+      
+	  <use href="#case12.5" id="case1"  x="10"  y="10"/>
+	  <use href="#case12.5" id="case2"  x="28"  y="10"/>
+	  <use href="#case12.5" id="case3"  x="46"  y="10"/>
+	  <use href="#case10.5" id="case4"  x="64"  y="10"/>
+	  <use href="#case10.5" id="case5"  x="82"  y="10"/>
+	  <use href="#case16.5" id="case6"  x="100"  y="10"/>	 
+	  <use href="#case12.5" id="case7"  x="123"  y="10"/>
+	  <use href="#case15.0_long" id="case8"  x="141"  y="10"/>
+	  
+	  <rect id="werkzeuge"   style="fill:blue;stroke:black;stroke-width:0.25;stroke-opacity:1" width="125" height="15"  x="10" y="97" />
+	  <rect id="werkzeuge0"  style="fill:blue;stroke:black;stroke-width:0.25;stroke-opacity:1" width="21" height="6.2"   x="135" y="105.9" />
+  </g>
+</svg>

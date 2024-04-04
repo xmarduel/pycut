@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" width="200mm" height="150mm" viewBox="0 0 200 150" id="toolbox-kit">
+  <g id="root">
+    <rect id="inlay" width="166.000" height="117.000" x="10.000" y="10.000" rx="0.000" ry="0.000" style="fill:none;stroke:black;stroke-width:0.25;stroke-opacity:1"/>
+    <rect id="case1" width="12.500" height="80.000" x="20.000" y="20.000" rx="0.000" ry="0.000" style="fill:#44ffff;stroke-width:0.25;stroke-opacity:1"/>
+    <rect id="case2" width="12.500" height="80.000" x="38.000" y="20.000" rx="0.000" ry="0.000" style="fill:#44ffff;stroke-width:0.25;stroke-opacity:1"/>
+    <rect id="case3" width="12.500" height="80.000" x="56.000" y="20.000" rx="0.000" ry="0.000" style="fill:#44ffff;stroke-width:0.25;stroke-opacity:1"/>
+    <rect id="case4" width="10.500" height="80.000" x="74.000" y="20.000" rx="0.000" ry="0.000" style="fill:#ff00ff;stroke-width:0.25;stroke-opacity:1"/>
+    <rect id="case5" width="10.500" height="80.000" x="92.000" y="20.000" rx="0.000" ry="0.000" style="fill:#ff00ff;stroke-width:0.25;stroke-opacity:1"/>
+    <rect id="case6" width="16.500" height="80.000" x="110.000" y="20.000" rx="0.000" ry="0.000" style="fill:#ff00ff;stroke-width:0.25;stroke-opacity:1"/>
+    <rect id="case7" width="12.500" height="80.000" x="133.000" y="20.000" rx="0.000" ry="0.000" style="fill:#44ffff;stroke-width:0.25;stroke-opacity:1"/>
+    <rect id="case8" width="15.000" height="90.000" x="151.000" y="20.000" rx="0.000" ry="0.000" style="fill:#66ff44;stroke-width:0.25;stroke-opacity:1"/>
+    <rect id="werkzeuge" width="125.000" height="15.000" x="20.000" y="107.000" rx="0.000" ry="0.000" style="fill:blue;stroke:black;stroke-width:0.25;stroke-opacity:1"/>
+    <rect id="werkzeuge0" width="21.000" height="6.200" x="145.000" y="115.900" rx="0.000" ry="0.000" style="fill:blue;stroke:black;stroke-width:0.25;stroke-opacity:1"/>
+  </g>
+</svg>
