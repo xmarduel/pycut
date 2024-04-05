@@ -24,9 +24,10 @@
 	The view for this part is from above, while the view for the two parts with shaft is from the side.	
 	-->
 	<defs id="defs">
-	    <circle id="screw_3.0mm"               style="fill:#00f0ff;fill-opacity:1" cx="0" cy="0" r="1.5" />
+	    <circle id="drill_3.0mm"               style="fill:#992044;fill-opacity:1" cx="0" cy="0" r="1.5" />
+		<circle id="drill_6.0mm"               style="fill:#992044;fill-opacity:1" cx="0" cy="0" r="3.0" />
 		<circle id="screw_5.0mm"               style="fill:#0000ff;fill-opacity:1" cx="0" cy="0" r="2.5" />
-		<circle id="shaft_8.0mm"               style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="4.0" />
+		<circle id="shaft_8.0mm"               style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="4.05" />
 		<circle id="shaft_bearing_15.0mm"      style="fill:#808000;fill-opacity:1" cx="0" cy="0" r="7.5" />
 		<circle id="backlash_item_hole_10.3mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.15" />
 		<!-- for a screw of diameter 3mm ... -->
@@ -49,5 +50,21 @@
 	</g>
 	  
 	<line id="part2_cut"        style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="24" y1="0"  x2="24"  y2="200"/>
-    <line id="part2_schlitz"    style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="3"  y1="0"  x2="3"  y2="200"/>
+  <line id="part2_schlitz"    style="fill:none;stroke-width:0.1;stroke-dasharray:1;stroke:black"  x1="3"  y1="0"  x2="3"   y2="200"/>
+
+  <use   href="#drill_6.0mm"   id="part_middle_shaft_1_drill_1"   transform="translate(10.5,15)" />
+	<use   href="#drill_6.0mm"   id="part_middle_shaft_1_drill_2"   transform="translate(16.5,15)" />
+	<use   href="#drill_3.0mm"   id="part_middle_shaft_1_drill_3"   transform="translate(13.5,19)" />
+	<use   href="#drill_3.0mm"   id="part_middle_shaft_1_drill_4"   transform="translate(13.5,11)" />
+	
+  <use   href="#drill_6.0mm"   id="part_middle_shaft_2_drill_1"   transform="translate(10.5,185)" />
+	<use   href="#drill_6.0mm"   id="part_middle_shaft_2_drill_2"   transform="translate(16.5,185)" />	
+	<use   href="#drill_3.0mm"   id="part_middle_shaft_2_drill_3"   transform="translate(13.5,189)" />
+	<use   href="#drill_3.0mm"   id="part_middle_shaft_2_drill_4"   transform="translate(13.5,181)" />
+	
+	<use   href="#drill_6.0mm"   id="part_middle_leadscrew_drill_1"   transform="translate(10.5,100)" />
+	<use   href="#drill_6.0mm"   id="part_middle_leadscrew_drill_2"   transform="translate(16.5,100)" />	
+	<use   href="#drill_3.0mm"   id="part_middle_leadscrew_drill_3"   transform="translate(13.5,104)" />
+	<use   href="#drill_3.0mm"   id="part_middle_leadscrew_drill_4"   transform="translate(13.5, 96)" />
+	
 </svg>

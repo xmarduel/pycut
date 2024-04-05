@@ -24,15 +24,15 @@
 	The view for this part is from above, while the view for the two parts with shaft is from the side.	
 	-->
 	<defs id="defs">
-	    <circle id="screw_3.0mm"               style="fill:#00f0ff;fill-opacity:1" cx="0" cy="0" r="1.5" />
+	    <circle id="drill_6.0mm"               style="fill:#992044;fill-opacity:1" cx="0" cy="0" r="3.0" />
 		<circle id="screw_5.0mm"               style="fill:#0000ff;fill-opacity:1" cx="0" cy="0" r="2.5" />
-		<circle id="shaft_8.0mm"               style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="4.05" /><!--luft-->
-		<circle id="shaft_bearing_15.0mm"      style="fill:#808000;fill-opacity:1" cx="0" cy="0" r="7.55" /><!--luft-->
-		<circle id="backlash_item_hole_10.3mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.20" /><!--luft-->
+		<circle id="shaft_8.0mm"               style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="4.10" /> <!--luft-->
+		<circle id="shaft_bearing_15.0mm"      style="fill:#808000;fill-opacity:1" cx="0" cy="0" r="7.60" /> <!--luft-->
+		<circle id="backlash_item_hole_10.3mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.20" /> <!--luft-->
 		<!-- for a screw of diameter 3mm ... -->
 		<circle id="backlash_item_screw_3.0mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="1.5" />
 		<!-- ... the hole is 2.5mm ==> need a bit of 2mm diameter -->
-		<circle id="backlash_item_screw_3.0mm_gewinde" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="1.25" />
+		<circle id="backlash_item_screw_3.0mm_gewinde" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="1.2" />
 	</defs>
 	
 	<!-- parts front and back to be "g-coded" -->	  
@@ -42,6 +42,10 @@
 	  <!-- 8mm diameter => cut 15mm deep -->
 	  <use   href="#shaft_8.0mm"      id="part_1_shaft_1_hole"   transform="translate(13.5,15)" />
 	  <use   href="#shaft_8.0mm"      id="part_1_shaft_2_hole"   transform="translate(13.5,185)" />
+	  
+	   <use   href="#drill_6.0mm"   id="part_part1_shaft_1_drill_1"   transform="translate(13.5,  15)" />
+	   <use   href="#drill_6.0mm"   id="part_part1_shaft_1_drill_1"   transform="translate(13.5, 185)" />
+	   
 		  
 	  <g id="lead_screw_hole" transform="translate(13.5,100)">
 	    <!-- 10.3 diameter => cut through -->  
@@ -51,6 +55,8 @@
 	    <use href="#backlash_item_screw_3.0mm" transform="rotate(-90) translate(8,0)" id="backlash_item_screw_3.0mm_W" />   
 		  
 	    <circle id="leadscrew" style="fill:blue;stroke-width:0.1;stroke:blue"   cx="0" cy="0" r="4.0"/>
+		
+		<use   href="#drill_6.0mm"   id="part_part1_shaft_1_drill_1"   transform="translate(0,  0)" />
 	  </g>
 	</g>
     <g transform="translate(0,0)">
@@ -59,5 +65,8 @@
       <!-- 8mm diameter => cut 15mm deep -->
 	  <use   href="#shaft_8.0mm"      id="part_3_shaft_1_hole"   transform="translate(13.5,15)" />
 	  <use   href="#shaft_8.0mm"      id="part_3_shaft_2_hole"   transform="translate(13.5,185)" />
+	  
+	  <use   href="#drill_6.0mm"   id="part_part3_shaft_1_drill_1"   transform="translate(13.5, 15)" />
+	  <use   href="#drill_6.0mm"   id="part_part3_shaft_2_drill_1"   transform="translate(13.5,185)" />
 	</g>
 </svg>
