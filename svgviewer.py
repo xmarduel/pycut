@@ -681,9 +681,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
                     geometry_svg_path.shape_attrs["stroke"] = (
                         self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke"]
                     )
-                    geometry_svg_path.shape_attrs["stroke-width"] = (
-                        self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]
-                    )
+
+                    if geometry_svg_path.p_id.startswith("pycut_geometry_opened_path"):
+                        # do not overwrite
+                        pass
+                    else:
+                        geometry_svg_path.shape_attrs["stroke-width"] = (
+                            self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]
+                        )
                     geometry_svg_path.shape_attrs["stroke-opacity"] = (
                         self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"]
                     )

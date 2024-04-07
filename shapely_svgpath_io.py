@@ -528,6 +528,32 @@ class SvgPath:
         return path
 
     @classmethod
+    def from_shapely_linestring_for_preview_opened_path(
+        cls, prefix: str, linestring: shapely.geometry.LineString, cutter_diamter: float
+    ) -> "SvgPath":
+        """ """
+        # SHAPELY: default width = 2.0 * scale_factor => scale_factor = cutter_diam / 2.0
+
+        path_str = linestring.svg(scale_factor=cutter_diamter / 2.0)
+        # gives an id
+        path_str = path_str.replace("/>", ' id="%s" />' % prefix)
+
+        svg_str = (
+            """<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+            version="1.1">
+            <g>
+            %s
+            </g> 
+        </svg>"""
+            % path_str
+        )
+
+        paths = cls.svg_paths_from_svg_string(svg_str)
+        path = paths[0]
+
+        return path
+
+    @classmethod
     def from_circle_def(cls, center: Tuple[float, float], radius: float) -> "SvgPath":
         """
         PyCut Tab import in svg viewer

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" width="40mm" height="40mm" viewBox="0 0 40 40" id="plate">
+  <!--
+	The vise has 3 parts, all joined by 2 shafts (8mm diameter), where in the middle part
+	the shafts are enclosed with bearings (15mm diameter).
+	
+	The middle part is "floating" while the two others parts are fixed by screws to the base.
+	
+	The holes for these 2 shafts must be perfectly aligned on the 3 parts, 
+	as well as the 2 holes in parts 1 and 2 for the leadscrew.
+	
+	The holes for the shafts are not centered, as the middle part must be cut-off (as the last part) 
+	to clamp the workpiece of a height of 3 mm (and a width of 6mm).
+	The "secondary clamp" has a width of 3 mm and an height of 20mm. 
+	
+	Note that for the leadscrew the hole must be a little translated in direction of the top of the bar, because 
+	the hand handle (where the human hand acts in order to screw/unscrew) has a diameter of 2cm so it has to be 
+	"elevated" sonce the handle will be very unpracticable.
+	
+	The leadscrew passes through a backlash item so we name this hole the backlash hole.
+	the leadscrew hole is 10.3 mm diameter for the part1 and 15mm for the middle part.
+	
+	We also display the plan for a fixed part (there are 2 of them) which are screwed to the machine.
+	The view for this part is from above, while the view for the two parts with shaft is from the side.	
+	-->
+  <!-- part to be "g-coded" -->
+  <g id="root"><!--
+	  <circle id="plate"  style="fill:none;stroke:black;stroke-width:0.25"  cx="20" cy="20" r="20" />
+	  --><!-- for g code: 2 open paths to process one after another --><path id="arc1" d="M 0,20.0000108 a 20,20 0 0,0 40.0000216,0" style="fill:none;stroke:black;stroke-width:0.25"/><path id="arc2" d="M 40.0000216,20.0000108 a 20,20 0 0,0 -40.0000216,0" style="fill:none;stroke:black;stroke-width:0.25"/><g><circle id="main" cx="20.000" cy="20.000" r="3.500" style="fill:#0000ff;fill-opacity:1"/><circle id="screwN" cx="20.000" cy="34.000" r="2.500" style="fill:#0000ff;fill-opacity:1"/><circle id="screwS" cx="20.000" cy="6.000" r="2.500" style="fill:#0000ff;fill-opacity:1"/><circle id="screwW" cx="6.000" cy="20.000" r="2.500" style="fill:#0000ff;fill-opacity:1"/><circle id="screwE" cx="34.000" cy="20.000" r="2.500" style="fill:#0000ff;fill-opacity:1"/></g>
+	 
+	
+    </g>
+</svg>

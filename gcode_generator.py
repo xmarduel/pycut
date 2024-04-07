@@ -475,17 +475,17 @@ class CncOp:
             self.combine_opened_paths()
 
             if self.cam_op == "Engrave":
-                self.calculate_opened_paths_preview_geometry_engrave()
+                self.calculate_opened_paths_preview_geometry_engrave(tool_model)
             elif self.cam_op == "Inside":
                 self.calculate_opened_paths_preview_geometry_inside(tool_model)
             elif self.cam_op == "Outside":
                 self.calculate_opened_paths_preview_geometry_outside(tool_model)
 
-    def calculate_opened_paths_preview_geometry_engrave(self):
+    def calculate_opened_paths_preview_geometry_engrave(self, tool_model: ToolModel):
         """ """
         for line in self.geometry.geoms:
-            svg_path = SvgPath.from_shapely_linestring(
-                "pycut_geometry_engrave", line, False
+            svg_path = SvgPath.from_shapely_linestring_for_preview_opened_path(
+                "pycut_geometry_opened_path_engrave", line, tool_model.diameter
             )
             self.geometry_svg_paths.append(svg_path)
 
@@ -509,8 +509,8 @@ class CncOp:
         self.geometry_svg_paths = []
 
         for line in self.preview_geometry.geoms:
-            geometry_svg_path = SvgPath.from_shapely_linestring(
-                "pycut_geometry_inside", line, False
+            geometry_svg_path = SvgPath.from_shapely_linestring_for_preview_opened_path(
+                "pycut_geometry_opened_path_inside", line, tool_model.diameter
             )
             self.geometry_svg_paths.append(geometry_svg_path)
 
@@ -536,8 +536,8 @@ class CncOp:
 
         # should have 2 paths, one inner, one outer -> show the "ring"
         for line in self.preview_geometry.geoms:
-            geometry_svg_path = SvgPath.from_shapely_linestring(
-                "pycut_geometry_outside", line, False
+            geometry_svg_path = SvgPath.from_shapely_linestring_for_preview_opened_path(
+                "pycut_geometry_opened_path_outside", line, tool_model.diameter
             )
             self.geometry_svg_paths.append(geometry_svg_path)
 
