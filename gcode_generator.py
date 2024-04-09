@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with pycut.  If not, see <http:#www.gnu.org/licenses/>.
 
+import sys
+
 from typing import List
 from typing import Dict
 from typing import Any
@@ -82,7 +84,7 @@ class GcodeModel:
     ZERO_LOWER_LEFT_OF_OP = 3
     ZERO_CENTER_OF_OP = 4
 
-    GCODE_ZERO_REF = {
+    GCODE_ZERO_REF_STRINGS = {
         ZERO_TOP_LEFT_OF_MATERIAL: "ZERO_TOP_LEFT_OF_MATERIAL",
         ZERO_LOWER_LEFT_OF_MATERIAL: "ZERO_LOWER_LEFT_OF_MATERIAL",
         ZERO_LOWER_LEFT_OF_OP: "ZERO_LOWER_LEFT_OF_OP",
@@ -158,7 +160,7 @@ class MaterialModel:
 
         # from the svg size, the dimension of the material in mm
         self.size_x = ValWithUnit(SvgModel.size_x, "mm")  # default
-        self.size_y = ValWithUnit(SvgModel.size_x, "mm")  # default
+        self.size_y = ValWithUnit(SvgModel.size_y, "mm")  # default
 
     def set_material_size_x(self, x: ValWithUnit):
         self.size_x = x.to_mm()
@@ -735,10 +737,9 @@ class CncOp:
         tool_data = tool_model.get_cam_data()
 
         name = self.name
-        # ramp_plunge = self.ramp_plunge
         cam_op = self.cam_op
+
         direction = self.direction
-        # cut_depth = self.cut_depth
         margin = self.margin
         width = self.width
 
@@ -910,28 +911,20 @@ class JobModel:
                 )
 
     def find_min_max(self):
-        min_x = 0
-        max_x = 0
-        min_y = 0
-        max_y = 0
-        foundFirst = False
+        min_x = sys.maxsize
+        max_x = -sys.maxsize
+        min_y = sys.maxsize
+        max_y = -sys.maxsize
 
         for op in self.operations:
             if op.enabled and op.cam_paths != None:
                 for cam_path in op.cam_paths:
-                    toolPath = cam_path.path
-                    for point in toolPath.coords:
-                        if not foundFirst:
-                            min_x = point[0]
-                            max_x = point[0]
-                            min_y = point[1]
-                            max_y = point[1]
-                            foundFirst = True
-                        else:
-                            min_x = min(min_x, point[0])
-                            min_y = min(min_y, point[1])
-                            max_x = max(max_x, point[0])
-                            max_y = max(max_y, point[1])
+                    toolpath = cam_path.path
+                    for point in toolpath.coords:
+                        min_x = min(min_x, point[0])
+                        min_y = min(min_y, point[1])
+                        max_x = max(max_x, point[0])
+                        max_y = max(max_y, point[1])
 
         self.min_x = min_x
         self.max_x = max_x

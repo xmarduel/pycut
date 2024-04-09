@@ -112,6 +112,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         },
     }
 
+    IMG_TANGO_VIEW_REFRESH = ":/images/tango/22x22/actions/view-refresh.png"
+    IMG_TANGO_APP_SYSTEM = ":/images/tango/32x32/categories/applications-system.png"
+    IMG_TANGP_SAVE_AS = ":/images/tango/22x22/actions/document-save-as.png"
+
     def __init__(self, options):
         """ """
         super(PyCutMainWindow, self).__init__()
@@ -128,9 +132,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.tabWidget.setTabVisible(3, False)
 
         self.setWindowTitle("PyCut")
-        self.setWindowIcon(
-            QtGui.QIcon(":/images/tango/32x32/categories/applications-system.png")
-        )
+        self.setWindowIcon(QtGui.QIcon(self.IMG_TANGO_APP_SYSTEM))
 
         self.build_recent_jobs_submenu()
 
@@ -156,9 +158,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.operationsview_manager.set_svg_viewer(self.svg_viewer)
 
         # callbacks
-        self.ui.SaveGcode.setIcon(
-            QtGui.QIcon(":/images/tango/22x22/actions/document-save-as.png")
-        )
+        self.ui.SaveGcode.setIcon(QtGui.QIcon(self.IMG_TANGP_SAVE_AS))
         self.ui.SaveGcode.clicked.connect(self.cb_save_gcode)
 
         self.ui.actionOpenSvg.triggered.connect(self.cb_open_svg)
@@ -228,16 +228,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.GCodeConversion_ZeroCenterOfOp.clicked.connect(self.cb_generate_gcode)
 
         self.ui.GCodeConversion_ZeroTopLeftOfMaterial.setIcon(
-            QtGui.QIcon(":/images/tango/22x22/actions/view-refresh.png")
+            QtGui.QIcon(self.IMG_TANGO_VIEW_REFRESH)
         )
         self.ui.GCodeConversion_ZeroLowerLeftOfMaterial.setIcon(
-            QtGui.QIcon(":/images/tango/22x22/actions/view-refresh.png")
+            QtGui.QIcon(self.IMG_TANGO_VIEW_REFRESH)
         )
         self.ui.GCodeConversion_ZeroLowerLeftOfOp.setIcon(
-            QtGui.QIcon(":/images/tango/22x22/actions/view-refresh.png")
+            QtGui.QIcon(self.IMG_TANGO_VIEW_REFRESH)
         )
         self.ui.GCodeConversion_ZeroCenterOfOp.setIcon(
-            QtGui.QIcon(":/images/tango/22x22/actions/view-refresh.png")
+            QtGui.QIcon(self.IMG_TANGO_VIEW_REFRESH)
         )
 
         self.ui.buttonGroup_GCodeConversion.setId(
@@ -267,22 +267,22 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 self.open_job(options.job)
             else:
                 # alert
-                msgBox = QtWidgets.QMessageBox()
-                msgBox.setWindowTitle("PyCut")
-                msgBox.setText("Job File %s not found" % options.job)
-                msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
-                msgBox.exec()
+                msgbox = QtWidgets.QMessageBox()
+                msgbox.setWindowTitle("PyCut")
+                msgbox.setText("Job File %s not found" % options.job)
+                msgbox.setDefaultButton(QtWidgets.QMessageBox.Save)
+                msgbox.exec()
 
         elif options.gcode is not None:
             if os.path.exists(options.gcode):
                 self.open_gcode(options.gcode)
             else:
                 # alert
-                msgBox = QtWidgets.QMessageBox()
-                msgBox.setWindowTitle("PyCut")
-                msgBox.setText("GCode File %s not found" % options.gcode)
-                msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
-                msgBox.exec()
+                msgbox = QtWidgets.QMessageBox()
+                msgbox.setWindowTitle("PyCut")
+                msgbox.setText("GCode File %s not found" % options.gcode)
+                msgbox.setDefaultButton(QtWidgets.QMessageBox.Save)
+                msgbox.exec()
 
         self.menubarToggleLeftBottomSidesButton = QtGui.QAction(
             QtGui.QIcon(":/images/left-bottom-areas.png"),
@@ -341,26 +341,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.menuBar().addAction(self.menubarToggleMiddleAreaButton)
         self.menuBar().addAction(self.menubarToggleRightSideButton)
 
-        # some buttons (3) to quickly set/unset the geometry preview color to a predefined "custom" color
-        # self.menubarGeometryPreviewRedColorButton = QtGui.QAction(QtGui.QPixmap(":images/media-record-red.png"), "",
-        #        self, shortcut=QtGui.QKeySequence.Back,
-        #        statusTip="Geometry Preview in Red", triggered=self.set_unset_geometry_preview_custom_color_red)
-        # self.menubarGeometryPreviewRedColorButton.setCheckable(True)
-
-        # self.menubarGeometryPreviewGreenColorButton = QtGui.QAction(QtGui.QIcon(":images/media-record-green.png"), "",
-        #        self, shortcut=QtGui.QKeySequence.Back,
-        #        statusTip="Geometry Preview in Green", triggered=self.set_unset_geometry_preview_custom_color_green)
-        # self.menubarGeometryPreviewGreenColorButton.setCheckable(True)
-
-        # self.menubarGeometryPreviewBlueColorButton = QtGui.QAction(QtGui.QIcon(":images/media-record-blue.png"), "",
-        #        self, shortcut=QtGui.QKeySequence.Back,
-        #        statusTip="Geometry Preview in Blue", triggered=self.set_unset_geometry_preview_custom_color_blue)
-        # self.menubarGeometryPreviewBlueColorButton.setCheckable(True)
-
-        # self.menuBar().addAction(self.menubarGeometryPreviewRedColorButton)
-        # self.menuBar().addAction(self.menubarGeometryPreviewGreenColorButton)
-        # self.menuBar().addAction(self.menubarGeometryPreviewBlueColorButton)
-
         # these callbacks only after have loading a job
         self.ui.GCodeConversion_XOffset.valueChanged.connect(
             self.cb_generate_gcode_x_offset
@@ -371,56 +351,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
 
         self.setWindowState(QtCore.Qt.WindowMaximized)
-
-    """
-    def set_unset_geometry_preview_custom_color_red(self):
-        '''
-        '''
-        if self.menubarGeometryPreviewRedColorButton.isChecked():
-            # reset other buttons
-            self.menubarGeometryPreviewGreenColorButton.setChecked(False)
-            self.menubarGeometryPreviewGreenColorButton.setIcon(QtGui.QIcon(":images/media-record-green.png"))
-            self.menubarGeometryPreviewBlueColorButton.setChecked(False)
-            self.menubarGeometryPreviewBlueColorButton.setIcon(QtGui.QIcon(":images/media-record-blue.png"))
-
-            self.svg_viewer.set_settings_geometry_preview_custom_color("#ff0000")
-            self.menubarGeometryPreviewRedColorButton.setIcon(QtGui.QIcon(":images/media-record-red-dark.png"))
-        else:
-            self.svg_viewer.set_settings_geometry_preview_custom_color_reset()
-            self.menubarGeometryPreviewRedColorButton.setIcon(QtGui.QIcon(":images/media-record-red.png"))
-
-    def set_unset_geometry_preview_custom_color_green(self):
-        '''
-        '''
-        if self.menubarGeometryPreviewGreenColorButton.isChecked():
-            # reset other buttons
-            self.menubarGeometryPreviewRedColorButton.setChecked(False)
-            self.menubarGeometryPreviewRedColorButton.setIcon(QtGui.QIcon(":images/media-record-red.png"))
-            self.menubarGeometryPreviewBlueColorButton.setChecked(False)
-            self.menubarGeometryPreviewBlueColorButton.setIcon(QtGui.QIcon(":images/media-record-blue.png"))
-
-            self.svg_viewer.set_settings_geometry_preview_custom_color("#00ff00")
-            self.menubarGeometryPreviewGreenColorButton.setIcon(QtGui.QIcon(":images/media-record-green-dark.png"))
-        else:
-            self.svg_viewer.set_settings_geometry_preview_custom_color_reset()
-            self.menubarGeometryPreviewGreenColorButton.setIcon(QtGui.QIcon(":images/media-record-green.png"))
-
-    def set_unset_geometry_preview_custom_color_blue(self):
-        '''
-        '''
-        if self.menubarGeometryPreviewBlueColorButton.isChecked():
-            # reset other buttons
-            self.menubarGeometryPreviewRedColorButton.setChecked(False)
-            self.menubarGeometryPreviewRedColorButton.setIcon(QtGui.QIcon(":images/media-record-red.png"))
-            self.menubarGeometryPreviewGreenColorButton.setChecked(False)
-            self.menubarGeometryPreviewGreenColorButton.setIcon(QtGui.QIcon(":images/media-record-green.png"))
-
-            self.svg_viewer.set_settings_geometry_preview_custom_color("#0000ff")
-            self.menubarGeometryPreviewBlueColorButton.setIcon(QtGui.QIcon(":images/media-record-blue-dark.png"))
-        else:
-            self.svg_viewer.set_settings_geometry_preview_custom_color_reset()
-            self.menubarGeometryPreviewBlueColorButton.setIcon(QtGui.QIcon(":images/media-record-blue.png"))
-    """
 
     def toggle_left_bottom_sides(self):
         """ """
@@ -451,29 +381,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.scrollArea_right.hide()
         else:
             self.ui.scrollArea_right.show()
-
-    """
-    def cb_show_tutorial_qt(self):
-        dlg = QtWidgets.QDialog(self)
-
-        view = QtWidgets.QTextBrowser(dlg)
-        view.setReadOnly(True)
-        view.setMinimumSize(800,500)
-
-        mainLayout = QtWidgets.QVBoxLayout()
-        mainLayout.addWidget(view)
-
-        dlg.setLayout(mainLayout)
-        dlg.setWindowTitle("PyCut Tutorial")
-        dlg.setModal(True)
-
-        try:
-            view.setSource(QtCore.QUrl.fromLocalFile(":/doc/tutorial.html"))
-        except Exception as msg:
-            view.setHtml(self.notfound % {'message':str(msg)})
-
-        dlg.show()
-    """
 
     def cb_show_tutorial_qt(self):
         """ """
@@ -661,7 +568,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "use_offset": self.ui.GCodeConversion_UseOffset.isChecked(),
                 "x_offset": self.ui.GCodeConversion_XOffset.value(),
                 "y_offset": self.ui.GCodeConversion_YOffset.value(),
-                "xy_reference": GcodeModel.GCODE_ZERO_REF[
+                "xy_reference": GcodeModel.GCODE_ZERO_REF_STRINGS[
                     self.ui.buttonGroup_GCodeConversion.checkedId()
                 ],
             },
@@ -1002,11 +909,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                     svg_file = os.path.join(abs_jobdir, self.svg_file)
 
             if not os.path.exists(svg_file):
-                msgBox = QtWidgets.QMessageBox()
-                msgBox.setWindowTitle("PyCut")
-                msgBox.setText("Svg File %s not found" % svg_file)
-                msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
-                msgBox.exec()
+                msgbox = QtWidgets.QMessageBox()
+                msgbox.setWindowTitle("PyCut")
+                msgbox.setText("Svg File %s not found" % svg_file)
+                msgbox.setDefaultButton(QtWidgets.QMessageBox.Save)
+                msgbox.exec()
                 return
 
             self.operations = job["operations"]
@@ -1079,7 +986,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             self.jobfilename = jobfilename
 
-    def cb_open_gcode(self, gcodefilename):
+    def cb_open_gcode(self):
         """ """
         # read gcode
         xfilter = "GCODE Files (*.nc *.ncc, *.ngc, *.gcode)"
@@ -1130,13 +1037,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                         break
 
             if not found:
-                msgBox = QtWidgets.QMessageBox()
-                msgBox.setWindowTitle("PyCut")
-                msgBox.setText(
+                msgbox = QtWidgets.QMessageBox()
+                msgbox.setWindowTitle("PyCut")
+                msgbox.setText(
                     "No tool diameter found in file, using current tool diameter for GCode Simulator"
                 )
-                msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
-                msgBox.exec()
+                msgbox.setDefaultButton(QtWidgets.QMessageBox.Save)
+                msgbox.exec()
 
             self.display_gcode(gcode)
 
@@ -1716,11 +1623,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         if not has_operations:
             # alert
-            msgBox = QtWidgets.QMessageBox()
-            msgBox.setWindowTitle("PyCut")
-            msgBox.setText("The Job has no operations!")
-            msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
-            msgBox.exec()
+            msgbox = QtWidgets.QMessageBox()
+            msgbox.setWindowTitle("PyCut")
+            msgbox.setText("The Job has no operations!")
+            msgbox.setDefaultButton(QtWidgets.QMessageBox.Save)
+            msgbox.exec()
 
         return has_operations
 
@@ -1733,14 +1640,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         if not has_toolpaths:
             # alert
-            msgBox = QtWidgets.QMessageBox()
-            msgBox.setWindowTitle("PyCut")
-            msgBox.setText("The Job has no toolpaths!")
-            msgBox.setInformativeText(
+            msgbox = QtWidgets.QMessageBox()
+            msgbox.setWindowTitle("PyCut")
+            msgbox.setText("The Job has no toolpaths!")
+            msgbox.setInformativeText(
                 "Maybe is the geometry too narrow for the cutter?"
             )
-            msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
-            msgBox.exec()
+            msgbox.setDefaultButton(QtWidgets.QMessageBox.Save)
+            msgbox.exec()
 
         return has_toolpaths
 
