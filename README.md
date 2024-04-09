@@ -34,7 +34,7 @@ start the program from the installation folder
 - freetype-py (latest) - used in svgtext2svgpath.py utility
 - matplotlib (latest) - to debug/view shapely offsets ops
 - numba (latest) - for python simulator optimization
-- pyvoronoi (latest) - for HSM nibbler toolpaths
+- pyvoronoi (latest) - for HSM nibble toolpaths
 
 ## Features
 
