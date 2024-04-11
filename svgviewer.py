@@ -689,6 +689,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
                         geometry_svg_path.shape_attrs["stroke-width"] = (
                             self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"]
                         )
+
                     geometry_svg_path.shape_attrs["stroke-opacity"] = (
                         self.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-opacity"]
                     )

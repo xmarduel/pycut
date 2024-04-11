@@ -114,7 +114,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
     IMG_TANGO_VIEW_REFRESH = ":/images/tango/22x22/actions/view-refresh.png"
     IMG_TANGO_APP_SYSTEM = ":/images/tango/32x32/categories/applications-system.png"
-    IMG_TANGP_SAVE_AS = ":/images/tango/22x22/actions/document-save-as.png"
+    IMG_TANGO_SAVE_AS = ":/images/tango/22x22/actions/document-save-as.png"
 
     def __init__(self, options):
         """ """
@@ -158,7 +158,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.operationsview_manager.set_svg_viewer(self.svg_viewer)
 
         # callbacks
-        self.ui.SaveGcode.setIcon(QtGui.QIcon(self.IMG_TANGP_SAVE_AS))
+        self.ui.SaveGcode.setIcon(QtGui.QIcon(self.IMG_TANGO_SAVE_AS))
         self.ui.SaveGcode.clicked.connect(self.cb_save_gcode)
 
         self.ui.actionOpenSvg.triggered.connect(self.cb_open_svg)
@@ -386,13 +386,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         """ """
         dlg = QtWidgets.QDialog(self)
 
-        htmlView = QtWebEngineWidgets.QWebEngineView(dlg)
-        htmlView.setMinimumSize(1100, 600)
+        htmlview = QtWebEngineWidgets.QWebEngineView(dlg)
+        htmlview.setMinimumSize(1100, 600)
 
-        mainLayout = QtWidgets.QVBoxLayout()
-        mainLayout.addWidget(htmlView)
+        main_layout = QtWidgets.QVBoxLayout()
+        main_layout.addWidget(htmlview)
 
-        dlg.setLayout(mainLayout)
+        dlg.setLayout(main_layout)
         dlg.setWindowTitle("PyCut Tutorial")
         dlg.setModal(True)
 
@@ -405,7 +405,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         file.close()
 
-        htmlView.setHtml(data, baseUrl=QtCore.QUrl("qrc:/"))
+        htmlview.setHtml(data, baseUrl=QtCore.QUrl("qrc:/"))
 
         dlg.show()
 
@@ -419,10 +419,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         view.setReadOnly(True)
         view.setMinimumSize(800, 500)
 
-        mainLayout = QtWidgets.QVBoxLayout()
-        mainLayout.addWidget(view)
+        main_layout = QtWidgets.QVBoxLayout()
+        main_layout.addWidget(view)
 
-        dlg.setLayout(mainLayout)
+        dlg.setLayout(main_layout)
         dlg.setWindowTitle("PyCut Relnotes")
         dlg.setModal(True)
 
