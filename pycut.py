@@ -116,6 +116,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     IMG_TANGO_APP_SYSTEM = ":/images/tango/32x32/categories/applications-system.png"
     IMG_TANGO_SAVE_AS = ":/images/tango/22x22/actions/document-save-as.png"
 
+    RECENT_JOBS = "./recent_jobs.json"
+
     def __init__(self, options):
         """ """
         super(PyCutMainWindow, self).__init__()
@@ -396,8 +398,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         dlg.setWindowTitle("PyCut Tutorial")
         dlg.setModal(True)
 
-        fileName = ":/tutorial.html"
-        file = QtCore.QFile(fileName)
+        filename = ":/tutorial.html"
+        file = QtCore.QFile(filename)
         if file.open(QtCore.QIODevice.ReadOnly):
             data = str(file.readAll(), "utf-8")  # explicit encoding
         else:
@@ -1697,12 +1699,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         """
         self.recent_jobs = []
 
-        if not os.path.exists("./recent_jobs.json"):
-            fp = open("./recent_jobs.json", "w")
+        if not os.path.exists(self.RECENT_JOBS):
+            fp = open(self.RECENT_JOBS, "w")
             json.dump([], fp, indent=2)
             fp.close()
 
-        with open("./recent_jobs.json", "r") as f:
+        with open(self.RECENT_JOBS, "r") as f:
             self.recent_jobs = json.load(f)
 
         return self.recent_jobs
@@ -1711,7 +1713,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         """
         Write the list of recent jobs to the settings file
         """
-        with open("./recent_jobs.json", "w") as json_file:
+        with open(self.RECENT_JOBS, "w") as json_file:
             json.dump(self.recent_jobs, json_file, indent=2)
 
     def prepend_recent_jobs(self, jobfile):
