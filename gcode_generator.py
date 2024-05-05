@@ -777,8 +777,8 @@ class CncOp:
                 tool_data["overlap"],
                 direction == "Climb",
             )
-        elif cam_op == "Pocket" and name.startswith("nb_"):
-            self.cam_paths = cam.nibbler_pocket(
+        elif cam_op == "Pocket" and name.startswith("hsm_"):
+            self.cam_paths = cam.hsm_nibbler_pocket(
                 geometry,
                 tool_data["diameter_tool"],
                 tool_data["overlap"],

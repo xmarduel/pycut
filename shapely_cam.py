@@ -163,7 +163,7 @@ class cam:
         return pc.cam_paths
 
     @classmethod
-    def nibbler_pocket(
+    def hsm_nibbler_pocket(
         cls,
         multipoly: shapely.geometry.MultiPolygon,
         cutter_dia: float,
@@ -2028,10 +2028,13 @@ class NibblePocketCalculator:
                 if element.move_style == geometry.MoveStyle.RAPID_INSIDE:
                     # plt.plot(x, y, linestyle="--", c=rapid_inside_colour, linewidth=1)
 
-                    self.add_campath(xx, yy, True)
+                    # self.add_campath(xx, yy, True)
 
-                    xx = []
-                    yy = []
+                    # xx = []
+                    # yy = []
+
+                    xx.extend(x)
+                    yy.extend(y)
 
                 elif element.move_style == geometry.MoveStyle.RAPID_OUTSIDE:
                     # plt.plot(x, y, c=rapid_outside_colour, linewidth=1)
