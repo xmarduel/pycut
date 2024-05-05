@@ -29,7 +29,7 @@ start the program from the installation folder
 - PySide6 6.6.3
 - shapely 1.8.5 
 - PyOpenGL (latest)
-- svgelement (latest)
+- svgelements (latest)
 - lxml (latest)
 - freetype-py (latest) - used in svgtext2svgpath.py utility
 - matplotlib (latest) - to debug/view shapely offsets ops
