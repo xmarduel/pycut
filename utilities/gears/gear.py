@@ -127,11 +127,11 @@ class GearMainWindow(QtWidgets.QMainWindow):
     
     def cb_reset_ratio_gear_gap_teeth(self):
         """ """
-        self.ui.ratio_gear_gap_teeth.setValue(7.0 / 5.0)
+        self.ui.ratio_gear_gap_teeth.setValue(1.65)
 
     def cb_reset_ratio_teeth_head_base(self):
         """ """
-        self.ui.ratio_teeth_head_base.setValue(3.0 / 7.0)
+        self.ui.ratio_teeth_head_base.setValue(0.4)
 
     def cb_generate_svg(self) -> str:
         """ """

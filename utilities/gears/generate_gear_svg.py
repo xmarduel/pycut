@@ -117,10 +117,8 @@ class GearMaker:
     # you can adjust it to change the look of the teeth... big value -> straight lines , small value -> round
 
     # ratio gear gap/teeth
-    RATIO_GEAR_GAP_TEETH = 8.0 / 4.0  # for  'BASIC' and 'ADVANCED'
-    RATIO_GEAR_GAP_TEETH = 7.0 / 5.0  # for  'ARC'
-
-    RATIO_TEETH_HEAD_BASE = 3.0 / 7.0
+    RATIO_GEAR_GAP_TEETH = 1.65
+    RATIO_TEETH_HEAD_BASE = 0.4
 
     BEARING_RADIUS = 10  # mm
     BEARING_NUT_LENGTH = 4  # mm
@@ -129,7 +127,7 @@ class GearMaker:
     REINFORCMENT_RADIUS = 15  # mm
 
     # SVG VIEW
-    STROKE_WIDTH = 0.05
+    STROKE_WIDTH = 0.025
     STROKE_COLOR = "#000000"
     GEAR_COLOR = "#cccccc"
     BEARING_COLOR = "#ffcccc"
@@ -485,11 +483,40 @@ class GearMaker:
 
         self.gear_segments.append(arc)
 
+        """
+        ATTENTION!
+        
+        we give 
+        
+        L_h / L_b = self.RATIO_TEETH_HEAD_BASE = R_L  (ratio of lengths)
+        -> the head length is smaller than the base length
+
+        What must be the ratio ALPHA_h / ALPHA_b (ratio of angles) so that
+        the ratio of length is satisfied ? Indeed, we are not on the same circle!
+
+        Denoting the diff of height of the base circle and head circle 
+        DELTA_H = HEAD_HEIGHT + FOOT_HEIGHT
+                                          
+        => 
+                                                                                                                                              R_h - R_b
+        ALPHA_h / ALPHA_b = R_A = R_L / ( 1 + DELTA_H / R )
+
+        """
+        DELTA_H = self.HEAD_HEIGHT + self.FOOT_HEIGHT
+
+        RATIO_ANGLE = self.RATIO_TEETH_HEAD_BASE / (
+            1.0 + (DELTA_H) / self.PITCH_CIRCLE_RADIUS
+        )
+
+        alpha_teeth_head = alpha_teeth * RATIO_ANGLE
+        alpha_base_to_head = (alpha_teeth - alpha_teeth_head) / 2.0
+
+        alpha_teeth_cc = alpha_teeth - 2 * alpha_base_to_head
+
         # now the teeth itself -  arc to the head
         arc_start = gap_pt
-        arc_end = self.rotate(
-            arc_start, alpha_teeth * (1 - self.RATIO_TEETH_HEAD_BASE) / 2.0
-        )
+        arc_end = self.rotate(arc_start, alpha_base_to_head)
+
         arc_end = self.translate(
             arc_end, self.HEAD_CIRCLE_RADIUS / self.FOOT_CIRCLE_RADIUS
         )
@@ -507,7 +534,7 @@ class GearMaker:
         self.gear_segments.append(arc)
 
         # teeth HEAD - you could make an arc
-        teeth_HEAD = self.rotate(arc_end, alpha_teeth * self.RATIO_TEETH_HEAD_BASE)
+        teeth_HEAD = self.rotate(arc_end, alpha_teeth_cc)
 
         teeth = """ L %(teeth_x)s %(teeth_y)s 
         """ % {
@@ -519,9 +546,7 @@ class GearMaker:
 
         # arc to the base
         arc_start = teeth_HEAD
-        arc_end = self.rotate(
-            arc_start, alpha_teeth * (1 - self.RATIO_TEETH_HEAD_BASE) / 2.0
-        )
+        arc_end = self.rotate(arc_start, alpha_base_to_head)
         arc_end = self.translate(
             arc_end, self.FOOT_CIRCLE_RADIUS / self.HEAD_CIRCLE_RADIUS
         )
@@ -706,7 +731,7 @@ if __name__ == "__main__":
         dest="ratio_teeth_head_base",
         type=float,
         default=3.0 / 7.0,
-        help="teeth ratio base / head",
+        help="teeth ratio head / base",
     )
 
     options = parser.parse_args()
