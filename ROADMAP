@@ -1,15 +1,9 @@
-# 1.4.0
+# 2.0.0
 
 dogbones
 
-# 1.2.0
-
-Process basic <text> elements without converting them before to <path> elements
-Process defs/use and transformations in svg (ie resolve them) without converting them before
-
 # 1.0.0
 
-with shapely 2.1.0  (geos 3.12 lib with offsets fixes)
+with shapely 2.1.0 (geos 3.12 lib with offsets fixes)
 
 Clean clean clean
-

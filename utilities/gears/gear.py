@@ -58,21 +58,21 @@ class GearMainWindow(QtWidgets.QMainWindow):
 
         self.ui.foot_height.valueChanged.connect(self.cb_generate_svg)
         self.ui.head_height.valueChanged.connect(self.cb_generate_svg)
+        self.ui.ratio_teeth_gap_base.valueChanged.connect(self.cb_generate_svg)
         self.ui.curvature.valueChanged.connect(self.cb_generate_svg)
-        self.ui.ratio_gear_gap_teeth.valueChanged.connect(self.cb_generate_svg)
         self.ui.ratio_teeth_head_base.valueChanged.connect(self.cb_generate_svg)
         self.ui.reinforcment_radius.valueChanged.connect(self.cb_generate_svg)
 
         self.ui.button_foot_height_reset.clicked.connect(self.cb_reset_foot_height)
         self.ui.button_head_height_reset.clicked.connect(self.cb_reset_head_height)
+        self.ui.button_ratio_teeth_gap_base_reset.clicked.connect(self.cb_reset_ratio_teeth_gap_base)
         self.ui.button_curvature_reset.clicked.connect(self.cb_reset_curvature)
-        self.ui.button_ratio_gear_gap_teeth_reset.clicked.connect(self.cb_reset_ratio_gear_gap_teeth)
         self.ui.button_ratio_teeth_head_base_reset.clicked.connect(self.cb_reset_ratio_teeth_head_base)
 
         self.cb_reset_foot_height()
         self.cb_reset_head_height()
         self.cb_reset_curvature()
-        self.cb_reset_ratio_gear_gap_teeth()
+        self.cb_reset_ratio_teeth_gap_base()
         self.cb_reset_ratio_teeth_head_base()
     
     def setup_svg_viewer(self):
@@ -125,9 +125,9 @@ class GearMainWindow(QtWidgets.QMainWindow):
         """ """
         self.ui.curvature.setValue(9.0 / 4.0 * (self.ui.foot_height.value() + self.ui.head_height.value()))
     
-    def cb_reset_ratio_gear_gap_teeth(self):
+    def cb_reset_ratio_teeth_gap_base(self):
         """ """
-        self.ui.ratio_gear_gap_teeth.setValue(1.65)
+        self.ui.ratio_teeth_gap_base.setValue(0.6)
 
     def cb_reset_ratio_teeth_head_base(self):
         """ """
@@ -142,7 +142,7 @@ class GearMainWindow(QtWidgets.QMainWindow):
                 "FOOT_HEIGHT": self.ui.foot_height.value(),
                 "HEAD_HEIGHT": self.ui.head_height.value(),
                 "TEETH_CURVATURE": self.ui.curvature.value(),
-                "RATIO_GEAR_GAP_TEETH": self.ui.ratio_gear_gap_teeth.value(),
+                "RATIO_TEETH_GAP_BASE": self.ui.ratio_teeth_gap_base.value(),
                 "RATIO_TEETH_HEAD_BASE": self.ui.ratio_teeth_head_base.value(),
                 "REINFORCMENT_RADIUS": self.ui.reinforcment_radius.value()
             }

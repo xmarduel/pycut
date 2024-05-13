@@ -314,33 +314,6 @@ class Ui_mainwindow(object):
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_32)
 
-        self.horizontalLayout_33 = QHBoxLayout()
-        self.horizontalLayout_33.setObjectName(u"horizontalLayout_33")
-        self.horizontalLayout_33.setContentsMargins(4, -1, -1, -1)
-        self.label_ratio_gear_gap_teeth = QLabel(self.scrollAreaWidgetContents)
-        self.label_ratio_gear_gap_teeth.setObjectName(u"label_ratio_gear_gap_teeth")
-        self.label_ratio_gear_gap_teeth.setMinimumSize(QSize(160, 0))
-        self.label_ratio_gear_gap_teeth.setFont(font1)
-
-        self.horizontalLayout_33.addWidget(self.label_ratio_gear_gap_teeth)
-
-        self.ratio_gear_gap_teeth = QDoubleSpinBox(self.scrollAreaWidgetContents)
-        self.ratio_gear_gap_teeth.setObjectName(u"ratio_gear_gap_teeth")
-        self.ratio_gear_gap_teeth.setMaximum(5.000000000000000)
-        self.ratio_gear_gap_teeth.setSingleStep(0.050000000000000)
-        self.ratio_gear_gap_teeth.setValue(1.400000000000000)
-
-        self.horizontalLayout_33.addWidget(self.ratio_gear_gap_teeth)
-
-        self.button_ratio_gear_gap_teeth_reset = QPushButton(self.scrollAreaWidgetContents)
-        self.button_ratio_gear_gap_teeth_reset.setObjectName(u"button_ratio_gear_gap_teeth_reset")
-        self.button_ratio_gear_gap_teeth_reset.setMaximumSize(QSize(24, 16777215))
-
-        self.horizontalLayout_33.addWidget(self.button_ratio_gear_gap_teeth_reset)
-
-
-        self.verticalLayout_2.addLayout(self.horizontalLayout_33)
-
         self.label_GearTeethsShape = QLabel(self.scrollAreaWidgetContents)
         self.label_GearTeethsShape.setObjectName(u"label_GearTeethsShape")
         self.label_GearTeethsShape.setEnabled(True)
@@ -348,6 +321,33 @@ class Ui_mainwindow(object):
         self.label_GearTeethsShape.setStyleSheet(u"background-color: rgb(198, 198, 198);")
 
         self.verticalLayout_2.addWidget(self.label_GearTeethsShape)
+
+        self.horizontalLayout_43 = QHBoxLayout()
+        self.horizontalLayout_43.setObjectName(u"horizontalLayout_43")
+        self.horizontalLayout_43.setContentsMargins(4, -1, -1, -1)
+        self.label_ratio_teeth_gap_base = QLabel(self.scrollAreaWidgetContents)
+        self.label_ratio_teeth_gap_base.setObjectName(u"label_ratio_teeth_gap_base")
+        self.label_ratio_teeth_gap_base.setMinimumSize(QSize(160, 0))
+        self.label_ratio_teeth_gap_base.setFont(font1)
+
+        self.horizontalLayout_43.addWidget(self.label_ratio_teeth_gap_base)
+
+        self.ratio_teeth_gap_base = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.ratio_teeth_gap_base.setObjectName(u"ratio_teeth_gap_base")
+        self.ratio_teeth_gap_base.setMaximum(5.000000000000000)
+        self.ratio_teeth_gap_base.setSingleStep(0.050000000000000)
+        self.ratio_teeth_gap_base.setValue(0.600000000000000)
+
+        self.horizontalLayout_43.addWidget(self.ratio_teeth_gap_base)
+
+        self.button_ratio_teeth_gap_base_reset = QPushButton(self.scrollAreaWidgetContents)
+        self.button_ratio_teeth_gap_base_reset.setObjectName(u"button_ratio_teeth_gap_base_reset")
+        self.button_ratio_teeth_gap_base_reset.setMaximumSize(QSize(24, 16777215))
+
+        self.horizontalLayout_43.addWidget(self.button_ratio_teeth_gap_base_reset)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout_43)
 
         self.horizontalLayout_41 = QHBoxLayout()
         self.horizontalLayout_41.setObjectName(u"horizontalLayout_41")
@@ -392,7 +392,7 @@ class Ui_mainwindow(object):
         self.ratio_teeth_head_base.setObjectName(u"ratio_teeth_head_base")
         self.ratio_teeth_head_base.setMaximum(1.000000000000000)
         self.ratio_teeth_head_base.setSingleStep(0.010000000000000)
-        self.ratio_teeth_head_base.setValue(0.420000000000000)
+        self.ratio_teeth_head_base.setValue(0.400000000000000)
 
         self.horizontalLayout_42.addWidget(self.ratio_teeth_head_base)
 
@@ -489,9 +489,9 @@ class Ui_mainwindow(object):
         self.button_foot_height_reset.setText(QCoreApplication.translate("mainwindow", u"...", None))
         self.label_head_height.setText(QCoreApplication.translate("mainwindow", u"head height", None))
         self.button_head_height_reset.setText(QCoreApplication.translate("mainwindow", u"...", None))
-        self.label_ratio_gear_gap_teeth.setText(QCoreApplication.translate("mainwindow", u"ratio gear gap/teethbase", None))
-        self.button_ratio_gear_gap_teeth_reset.setText(QCoreApplication.translate("mainwindow", u"....", None))
         self.label_GearTeethsShape.setText(QCoreApplication.translate("mainwindow", u"Teeths Shape", None))
+        self.label_ratio_teeth_gap_base.setText(QCoreApplication.translate("mainwindow", u"ratio teeth gap/base", None))
+        self.button_ratio_teeth_gap_base_reset.setText(QCoreApplication.translate("mainwindow", u"....", None))
         self.label_curvature.setText(QCoreApplication.translate("mainwindow", u"curvature", None))
         self.button_curvature_reset.setText(QCoreApplication.translate("mainwindow", u"...", None))
         self.label_ratio_teeth_head_base.setText(QCoreApplication.translate("mainwindow", u"ratio teeth head/base", None))

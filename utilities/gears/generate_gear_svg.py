@@ -15,7 +15,7 @@ import math
 from typing import Dict
 from typing import Any
 
-SVG_ANIMATE_TPL = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+SVG_2_GEARS_ANIMATED_TPL = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
@@ -27,7 +27,7 @@ SVG_ANIMATE_TPL = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
    id="gear_hobbymat">
    <defs>
      %(GEAR)s
-     %(REINFORCEMENT)s
+     %(REINFORCMENT)s
      %(BEARING)s
    </defs>
 
@@ -37,10 +37,6 @@ SVG_ANIMATE_TPL = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
    ratio-teeth-gap          : %(GEAR_RATIO_GAP_TEETH)f
    teeth-curvature          : %(GEAR_TEETH_CURVATURE)f
    ratio-teeth-head-base    : %(GEAR_TEETH_RATION_HEAD_BASE)f
-
-   25 -> 8.45
-   40 -> ok
-   80
    -->
 
    <g>
@@ -61,12 +57,73 @@ SVG_ANIMATE_TPL = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
        <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="%(SECOND_GEAR_ROTATION_ANIM_START)f 0 0" to="%(SECOND_GEAR_ROTATION_ANIM_END)f 0 0" dur="%(ANIMATE_PERIOD)fs" additive="sum" repeatCount="indefinite" />
      </use>
 
-     <!-- refernece line -->
-    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 0 200 L 300 200" ></path>
-    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 200 0 L 200 300" ></path>
-    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M %(SECOND_GEAR_X_POS)f 0 L %(SECOND_GEAR_X_POS)f 300" ></path>
+     <!-- reference lines -->
+     
+     <!-- gear1 horizontal axis -->
+     <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 0 200 L 300 200" ></path>
+     <!-- gear1 vertical axis -->
+     <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 200 0 L 200 300" ></path>
+    
+     <!-- middle vertical -->
+     <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M %(SECOND_GEAR_X_LEFT)f 0 L %(SECOND_GEAR_X_LEFT)f 300" ></path>
 
+     <!-- gear2 vertical axis -->     
+     <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M %(SECOND_GEAR_X_POS)f 0 L %(SECOND_GEAR_X_POS)f 300" ></path>
+
+   </g>
+   
+</svg>
+"""
+
+SVG_2_GEARS_STATIC_TPL = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="400mm"
+   height="400mm"
+   viewBox="0 0 400 400"
+   version="1.1"
+   id="gear_hobbymat">
+   <defs>
+     %(GEAR)s
+     %(REINFORCMENT)s
+     %(BEARING)s
+   </defs>
+
+   <!--
+   module                   : %(GEAR_MODULE)f
+   nb-teeth                 : %(GEAR_NB_TEETH)d
+   ratio-teeth-gap          : %(GEAR_RATIO_GAP_TEETH)f
+   teeth-curvature          : %(GEAR_TEETH_CURVATURE)f
+   ratio-teeth-head-base    : %(GEAR_TEETH_RATION_HEAD_BASE)f
+   -->
+
+   <g>
+     <!-- first gear -->
+     <use href="#gear"    id="gear_1"    transform="translate(200,200) rotate(0)"></use>
+     <use href="#bearing" id="bearing_1" transform="translate(200,200) rotate(0)"></use>
+
+     <!-- second gear -->
+     <use href="#gear"    id="gear_2"    transform="translate(%(SECOND_GEAR_X_POS)f,200) rotate(%(SECOND_GEAR_ROTATION_ANIM_START)f)"></use>
+     <use href="#bearing" id="bearing_2" transform="translate(%(SECOND_GEAR_X_POS)f,200) rotate(%(SECOND_GEAR_ROTATION_ANIM_START)f)"> </use>
+
+     <!-- reference lines -->
+    <!-- gear1 horizontal axis -->
+    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 0 200 L 300 200" ></path>
+    <!-- gear2 vertical axis -->
+    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 200 0 L 200 300" ></path>
+    
+    <!-- middle verical -->
     <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M %(SECOND_GEAR_X_LEFT)f 0 L %(SECOND_GEAR_X_LEFT)f 300" ></path>
+
+    <!-- gear2 horizontal axis -->
+    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M -300 0 L 300 0" 
+      transform="translate(%(SECOND_GEAR_X_POS)f,200) rotate(%(SECOND_GEAR_ROTATION_ANIM_START)f)"></path>
+    <!-- gear2 vertical axis -->
+    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 0.000000 -300 L 0.000000 300" 
+      transform="translate(%(SECOND_GEAR_X_POS)f,200) rotate(%(SECOND_GEAR_ROTATION_ANIM_START)f)"></path>
+    
 
    </g>
    
@@ -107,18 +164,13 @@ class GearMaker:
         MODULE * math.pi
     )  # länge des bogen zwischen 2 Zähne auf den PITCH_CIRCLE : (2pi * R) / z
 
-    # test teeth profiles
-    TEETH_PROFIL = "BASIC"
-    TEETH_PROFIL = "ADVANCED"
-    TEETH_PROFIL = "ARC"
-
     # TEETH CURVATURE
     TEETH_CURVATURE = 9.0 / 4.0 * (FOOT_HEIGHT + HEAD_HEIGHT)  # about 5
     # you can adjust it to change the look of the teeth... big value -> straight lines , small value -> round
 
     # ratio gear gap/teeth
-    RATIO_GEAR_GAP_TEETH = 1.65
-    RATIO_TEETH_HEAD_BASE = 0.4
+    RATIO_TEETH_GAP_BASE = 0.6  # teeth base about 2 times longer than the gap
+    RATIO_TEETH_HEAD_BASE = 0.4  # teeth base about 2 times longer than the head
 
     BEARING_RADIUS = 10  # mm
     BEARING_NUT_LENGTH = 4  # mm
@@ -145,7 +197,7 @@ class GearMaker:
         print("FOOT_CIRCLE_RADIUS    : %4.2f" % GearMaker.FOOT_CIRCLE_RADIUS)
         print("HEAD_CIRCLE_RADIUS    : %4.2f" % GearMaker.HEAD_CIRCLE_RADIUS)
         print(
-            "PITCH                 : %4.2f [length of the arc of the pitch cirlce between 3 teeths]"
+            "PITCH                 : %4.2f [length of the arc of the pitch circle between 2 teeths]"
             % GearMaker.PITCH
         )
         print(
@@ -256,10 +308,11 @@ class GearMaker:
     def get_reinforcement(self) -> str:
         """ """
         path = """
-        <circle id="reinforcement" style="fill:none;stroke:%s;stroke-width:%f"
+        <circle id="reinforcement" style="fill:%s;stroke:%s;stroke-width:%f"
             cx="0" cy="0" r="%s"
         />
         """ % (
+            self.GEAR_COLOR,
             self.STROKE_COLOR,
             self.STROKE_WIDTH,
             self.REINFORCMENT_RADIUS,
@@ -286,183 +339,22 @@ class GearMaker:
             self._make_teeth()
 
     def _make_teeth(self):
-        """ """
-        if self.TEETH_PROFIL == "BASIC":
-            self._make_teeth_basic()
-        elif self.TEETH_PROFIL == "ADVANCED":
-            self._make_teeth_advanced()
-        elif self.TEETH_PROFIL == "ARC":
-            self._make_teeth_arc()
-        else:
-            print("teeth style unknown!")
-
-    def _make_teeth_basic(self):
-        """
-        basic teeth
-        """
-        start_pt = self._start_pt
-
-        alpha = self.PITCH / self.PITCH_CIRCLE_RADIUS
-
-        alpha_gap = (alpha) / (1 + self.RATIO_GEAR_GAP_TEETH)
-        alpha_teeth = (alpha) / (1 + 1.0 / self.RATIO_GEAR_GAP_TEETH)
-
-        gap_pt = self.rotate(start_pt, alpha_gap)
-
-        rotation = 0
-        arc_path = 0  # small arc
-        clockwise = 1
-
-        # 1- first an arc along the base for the teeth "gap"
-        arc = """A %(radius)s %(radius)s %(rotation)s %(arc_path)s %(clockwise)s %(gap_x)s %(gap_y)s L 
-        """ % {
-            "radius": self.FOOT_CIRCLE_RADIUS,
-            "rotation": rotation,
-            "arc_path": arc_path,
-            "clockwise": clockwise,
-            "gap_x": gap_pt[0],
-            "gap_y": gap_pt[1],
-        }
-
-        self.gear_segments.append(arc)
-
-        # now the teeth itself
-        height_h_coeff = self.HEAD_CIRCLE_RADIUS / self.FOOT_CIRCLE_RADIUS
-
-        # start the teeth : straight to the head
-        teeth_HEAD = self.rotate(gap_pt, alpha_teeth / 4.0)
-        teeth_HEAD = self.translate(teeth_HEAD, height_h_coeff)
-
-        teeth = """%(teeth_x)s %(teeth_y)s """ % {
-            "teeth_x": teeth_HEAD[0],
-            "teeth_y": teeth_HEAD[1],
-        }
-
-        self.gear_segments.append(teeth)
-
-        # teeth HEAD finish
-        teeth_HEAD = self.rotate(teeth_HEAD, alpha_teeth / 2.0)
-
-        teeth = """%(teeth_x)s %(teeth_y)s """ % {
-            "teeth_x": teeth_HEAD[0],
-            "teeth_y": teeth_HEAD[1],
-        }
-
-        self.gear_segments.append(teeth)
-
-        # back to the base : next start
-        start_pt = self.rotate(gap_pt, alpha_teeth)
-
-        teeth = """%(start_pt_x)s %(start_pt_y)s
-        """ % {
-            "start_pt_x": start_pt[0],
-            "start_pt_y": start_pt[1],
-        }
-
-        self.gear_segments.append(teeth)
-
-        self._start_pt = start_pt
-
-    def _make_teeth_advanced(self):
-        """
-        consider the pitch as it should be the case
-        """
-        start_pt = self._start_pt
-
-        alpha = self.PITCH / self.PITCH_CIRCLE_RADIUS
-
-        alpha_gap = (alpha) / (1 + self.RATIO_GEAR_GAP_TEETH)
-        alpha_teeth = (alpha) / (1 + 1.0 / self.RATIO_GEAR_GAP_TEETH)
-
-        gap_pt = self.rotate(start_pt, alpha_gap)
-
-        rotation = 0
-        arc_path = 0  # small arc
-        clockwise = 1
-
-        # 1- first an arc along the base for the teeth "gap"
-        arc = """ A %(radius)s %(radius)s %(rotation)s %(arc_path)s %(clockwise)s %(gap_x)s %(gap_y)s
-        """ % {
-            "radius": self.FOOT_CIRCLE_RADIUS,
-            "rotation": rotation,
-            "arc_path": arc_path,
-            "clockwise": clockwise,
-            "gap_x": gap_pt[0],
-            "gap_y": gap_pt[1],
-        }
-
-        self.gear_segments.append(arc)
-
-        # noe the teeth itself
-        height_p_coeff = self.PITCH_CIRCLE_RADIUS / self.FOOT_CIRCLE_RADIUS
-        height_h_coeff = self.HEAD_CIRCLE_RADIUS / self.PITCH_CIRCLE_RADIUS
-
-        # start the teeth : Pitch
-        teeth_PITCH = self.rotate(gap_pt, alpha_teeth / 8.0)
-        teeth_PITCH = self.translate(teeth_PITCH, height_p_coeff)
-
-        teeth = """ L %(teeth_x)s %(teeth_y)s """ % {
-            "teeth_x": teeth_PITCH[0],
-            "teeth_y": teeth_PITCH[1],
-        }
-
-        self.gear_segments.append(teeth)
-
-        # teeth HEAD
-        teeth_HEAD = self.rotate(teeth_PITCH, alpha_teeth / 4.0)
-        teeth_HEAD = self.translate(teeth_HEAD, height_h_coeff)
-
-        teeth = """%(teeth_x)s %(teeth_y)s """ % {
-            "teeth_x": teeth_HEAD[0],
-            "teeth_y": teeth_HEAD[1],
-        }
-
-        self.gear_segments.append(teeth)
-
-        # teeth HEAD finish
-        teeth_HEAD = self.rotate(teeth_HEAD, alpha_teeth / 4.0)
-
-        teeth = """%(teeth_x)s %(teeth_y)s """ % {
-            "teeth_x": teeth_HEAD[0],
-            "teeth_y": teeth_HEAD[1],
-        }
-
-        self.gear_segments.append(teeth)
-
-        # teeth PITCH finish
-        teeth_PITCH = self.translate(teeth_HEAD, 1.0 / height_h_coeff)
-        teeth_PITCH = self.rotate(teeth_PITCH, alpha_teeth / 4.0)
-
-        teeth = """%(teeth_x)s %(teeth_y)s """ % {
-            "teeth_x": teeth_PITCH[0],
-            "teeth_y": teeth_PITCH[1],
-        }
-
-        self.gear_segments.append(teeth)
-
-        # back to the base : next start
-        start_pt = self.rotate(gap_pt, alpha_teeth)
-
-        teeth = """%(start_pt_x)s %(start_pt_y)s
-        """ % {
-            "start_pt_x": start_pt[0],
-            "start_pt_y": start_pt[1],
-        }
-
-        self.gear_segments.append(teeth)
-
-        self._start_pt = start_pt
-
-    def _make_teeth_arc(self):
         """
         exact teeth
+
+        alpha = alpha_gap + alpha_base  [base + gap]
+
+        alpha_gap = r * alpha_base
+
+        => alpha_base = alpha * ( 1 / (1+r) )
+        => alpha_gap  = alpha * ( r / (1+r) )
         """
         start_pt = self._start_pt
 
         alpha = self.PITCH / self.PITCH_CIRCLE_RADIUS
 
-        alpha_gap = (alpha) / (1 + self.RATIO_GEAR_GAP_TEETH)
-        alpha_teeth = (alpha) / (1 + 1.0 / self.RATIO_GEAR_GAP_TEETH)
+        alpha_gap = alpha * self.RATIO_TEETH_GAP_BASE / (1 + self.RATIO_TEETH_GAP_BASE)
+        alpha_teeth = alpha * 1.0 / (1 + self.RATIO_TEETH_GAP_BASE)
 
         gap_pt = self.rotate(start_pt, alpha_gap)
 
@@ -608,8 +500,8 @@ class GearMaker:
     def get_second_gear_rotation(self):
         """ """
         alpha = self.PITCH / self.PITCH_CIRCLE_RADIUS
-        alpha_gap = (alpha) / (1 + self.RATIO_GEAR_GAP_TEETH)
-        alpha_teeth = (alpha) / (1 + 1.0 / self.RATIO_GEAR_GAP_TEETH)
+        alpha_gap = alpha * self.RATIO_TEETH_GAP_BASE / (1 + self.RATIO_TEETH_GAP_BASE)
+        alpha_teeth = alpha * 1.0 / (1 + self.RATIO_TEETH_GAP_BASE)
 
         return (alpha_teeth - alpha_gap) / 2.0 * (180 / math.pi)
 
@@ -650,20 +542,13 @@ class GearMaker:
             cls.MODULE * math.pi
         )  # länge des bogen zwischen 2 Zähne auf den PITCH_CIRCLE : (2pi * R) / z
 
-        # test teeth profiles
-        cls.TEETH_PROFIL = "BASIC"
-        cls.TEETH_PROFIL = "ADVANCED"
-        cls.TEETH_PROFIL = "ARC"
-
         # TEETH CURVATURE
         cls.TEETH_CURVATURE = params["TEETH_CURVATURE"]
         # you can adjust it to change the look of the teeth... big value -> straight lines , small value -> round
 
         # ratio gear gap/teeth
-        cls.RATIO_GEAR_GAP_TEETH = 8.0 / 4.0  # for  'BASIC' and 'ADVANCED'
-        cls.RATIO_GEAR_GAP_TEETH = params["RATIO_GEAR_GAP_TEETH"]
-
-        cls.RATIO_TEETH_HEAD_BASE = params["RATIO_TEETH_HEAD_BASE"]
+        cls.RATIO_TEETH_GAP_BASE = params["RATIO_TEETH_GAP_BASE"]  # ratio = L_gap / L_b
+        cls.RATIO_TEETH_HEAD_BASE = params["RATIO_TEETH_HEAD_BASE"]  # ratio = L_h / L_b
 
         cls.REINFORCMENT_RADIUS = params["REINFORCMENT_RADIUS"]
 
@@ -673,7 +558,7 @@ def main():
 
     maker = GearMaker()
 
-    svg = SVG_ANIMATE_TPL % {
+    svg = SVG_2_GEARS_ANIMATED_TPL % {
         "GEAR": maker.get_gear(),
         "BEARING": maker.get_bearing(),
         "REINFORCMENT": maker.get_reinforcement(),
@@ -681,7 +566,7 @@ def main():
         "SECOND_GEAR_X_LEFT": maker.get_second_gear_x_left(),
         "GEAR_MODULE": maker.MODULE,
         "GEAR_NB_TEETH": maker.NB_TEETHS,
-        "GEAR_RATIO_GAP_TEETH": maker.RATIO_GEAR_GAP_TEETH,
+        "GEAR_RATIO_GAP_TEETH": maker.RATIO_TEETH_GAP_BASE,
         "GEAR_TEETH_CURVATURE": maker.TEETH_CURVATURE,
         "GEAR_TEETH_RATION_HEAD_BASE": maker.RATIO_TEETH_HEAD_BASE,
         "SECOND_GEAR_ROTATION_ANIM_START": maker.get_second_gear_rotation(),
@@ -689,7 +574,26 @@ def main():
         "ANIMATE_PERIOD": 30,
     }
 
-    fp = open("hobbymat_gear_%d.svg" % GearMaker.NB_TEETHS, "w")
+    fp = open("hobbymat_2gears_%d_animated.svg" % GearMaker.NB_TEETHS, "w")
+    fp.write(svg)
+    fp.close()
+
+    svg = SVG_2_GEARS_STATIC_TPL % {
+        "GEAR": maker.get_gear(),
+        "BEARING": maker.get_bearing(),
+        "REINFORCMENT": maker.get_reinforcement(),
+        "SECOND_GEAR_X_POS": maker.get_second_gear_x_pos(),
+        "SECOND_GEAR_X_LEFT": maker.get_second_gear_x_left(),
+        "GEAR_MODULE": maker.MODULE,
+        "GEAR_NB_TEETH": maker.NB_TEETHS,
+        "GEAR_RATIO_GAP_TEETH": maker.RATIO_TEETH_GAP_BASE,
+        "GEAR_TEETH_CURVATURE": maker.TEETH_CURVATURE,
+        "GEAR_TEETH_RATION_HEAD_BASE": maker.RATIO_TEETH_HEAD_BASE,
+        "SECOND_GEAR_ROTATION_ANIM_START": maker.get_second_gear_rotation(),
+        "SECOND_GEAR_ROTATION_ANIM_END": maker.get_second_gear_rotation() - 380.0,
+    }
+
+    fp = open("hobbymat_2gears_%d_static.svg" % GearMaker.NB_TEETHS, "w")
     fp.write(svg)
     fp.close()
 
@@ -714,7 +618,7 @@ if __name__ == "__main__":
         "--ratio-teeth-gap",
         dest="ratio",
         type=float,
-        default=7.0 / 5.0,
+        default=0.60,
         help="ratio teeth-gap",
     )
     parser.add_argument(
@@ -730,7 +634,7 @@ if __name__ == "__main__":
         "--ratio-teeth-head-base",
         dest="ratio_teeth_head_base",
         type=float,
-        default=3.0 / 7.0,
+        default=0.4,
         help="teeth ratio head / base",
     )
 
@@ -738,7 +642,7 @@ if __name__ == "__main__":
 
     GearMaker.MODULE = options.module
     GearMaker.NB_TEETHS = options.nb_teeth
-    GearMaker.RATIO_GEAR_GAP_TEETH = options.ratio
+    GearMaker.RATIO_TEETH_GAP_BASE = options.ratio
     GearMaker.TEETH_CURVATURE = options.teeth_curvature
     GearMaker.RATIO_TEETH_HEAD_BASE = options.ratio_teeth_head_base
 
