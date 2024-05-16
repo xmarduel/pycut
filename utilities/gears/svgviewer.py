@@ -12,6 +12,7 @@ from PySide6 import QtWidgets
 
 from PySide6 import QtSvg
 from PySide6 import QtSvgWidgets
+from PySide6 import QtWebEngineWidgets
 
 import xml.etree.ElementTree as etree
 
@@ -76,10 +77,10 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
             self.selected_effect = None
 
 
-class SvgViewer(QtSvgWidgets.QSvgWidget):
+class SvgViewerWidget(QtSvgWidgets.QSvgWidget):
     def __init__(self, parent):
         """ """
-        super(SvgViewer, self).__init__(parent)
+        super(SvgViewerWidget, self).__init__(parent)
 
         self.mainwindow = None
 
@@ -100,7 +101,7 @@ class SvgViewer(QtSvgWidgets.QSvgWidget):
         self.load(QtCore.QByteArray(svg_string))
 
 
-class XSvgViewer(QtWidgets.QGraphicsView):
+class SvgViewer(QtWidgets.QGraphicsView):
     """
     The SvgViewer can 'only' load full svg files.
     It cannot increment the view with single "Paths"
@@ -119,7 +120,7 @@ class XSvgViewer(QtWidgets.QGraphicsView):
 
     def __init__(self, parent):
         """ """
-        super(XSvgViewer, self).__init__(parent)
+        super(SvgViewer, self).__init__(parent)
         self.mainwindow = None
         self.renderer = QtSvg.QSvgRenderer()
 
@@ -242,3 +243,21 @@ class XSvgViewer(QtWidgets.QGraphicsView):
         self.scale(factor, factor)
         self.storeZoomFactor()
         self.zoomChanged.emit()
+
+
+class SvgWebEngineViewer(QtWebEngineWidgets.QWebEngineView):
+    """ """
+
+    def __init__(self, parent):
+        """ """
+        super(SvgWebEngineViewer, self).__init__(parent)
+        self.setMinimumSize(800, 800)
+
+        self.mainwindow = None
+
+    def set_mainwindow(self, mainwindow):
+        self.mainwindow = mainwindow
+
+    def set_svg(self, svg: str):
+        """ """
+        self.setHtml(svg, baseUrl=QtCore.QUrl("qrc:/"))

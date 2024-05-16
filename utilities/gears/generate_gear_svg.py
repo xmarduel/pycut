@@ -21,8 +21,8 @@ SVG_2_GEARS_ANIMATED_TPL = """<?xml version="1.0" encoding="UTF-8" standalone="n
    xmlns="http://www.w3.org/2000/svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="400mm"
-   height="400mm"
-   viewBox="0 0 400 400"
+   height="200mm"
+   viewBox="0 0 400 200"
    version="1.1"
    id="gear_hobbymat">
    <defs>
@@ -41,28 +41,28 @@ SVG_2_GEARS_ANIMATED_TPL = """<?xml version="1.0" encoding="UTF-8" standalone="n
 
    <g>
      <!-- first gear -->
-     <use href="#gear"    id="gear_1"    transform="translate(200,200) rotate(0)" >
+     <use href="#gear"    id="gear_1"    transform="translate(100,100) rotate(0)" >
       <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 0 0" to="380 0 0" dur="%(ANIMATE_PERIOD)fs" additive="sum" repeatCount="indefinite" />
      </use>
-     <use href="#bearing" id="bearing_1" transform="translate(200,200)">
+     <use href="#bearing" id="bearing_1" transform="translate(100,100)">
       <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 0 0" to="380 0 0" dur="%(ANIMATE_PERIOD)fs" additive="sum" repeatCount="indefinite" />
      </use>
 
      <!-- second gear -->
-     <use href="#gear"    id="gear_2"    transform="translate(%(SECOND_GEAR_X_POS)f,200) rotate(0)">
+     <use href="#gear"    id="gear_2"    transform="translate(%(SECOND_GEAR_X_POS)f,100) rotate(0)">
       <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="%(SECOND_GEAR_ROTATION_ANIM_START)f 0 0" to="%(SECOND_GEAR_ROTATION_ANIM_END)f 0 0" dur="%(ANIMATE_PERIOD)fs" additive="sum" repeatCount="indefinite" />
     </use>
      
-     <use href="#bearing" id="bearing_2" transform="translate(%(SECOND_GEAR_X_POS)f,200) rotate(0)">
+     <use href="#bearing" id="bearing_2" transform="translate(%(SECOND_GEAR_X_POS)f,100) rotate(0)">
        <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="%(SECOND_GEAR_ROTATION_ANIM_START)f 0 0" to="%(SECOND_GEAR_ROTATION_ANIM_END)f 0 0" dur="%(ANIMATE_PERIOD)fs" additive="sum" repeatCount="indefinite" />
      </use>
 
      <!-- reference lines -->
      
      <!-- gear1 horizontal axis -->
-     <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 0 200 L 300 200" ></path>
+     <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 0 100 L 300 100" ></path>
      <!-- gear1 vertical axis -->
-     <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 200 0 L 200 300" ></path>
+     <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 100 0 L 100 200" ></path>
     
      <!-- middle vertical -->
      <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M %(SECOND_GEAR_X_LEFT)f 0 L %(SECOND_GEAR_X_LEFT)f 300" ></path>
@@ -81,8 +81,8 @@ SVG_2_GEARS_STATIC_TPL = """<?xml version="1.0" encoding="UTF-8" standalone="no"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="400mm"
-   height="400mm"
-   viewBox="0 0 400 400"
+   height="200mm"
+   viewBox="0 0 400 200"
    version="1.1"
    id="gear_hobbymat">
    <defs>
@@ -101,32 +101,49 @@ SVG_2_GEARS_STATIC_TPL = """<?xml version="1.0" encoding="UTF-8" standalone="no"
 
    <g>
      <!-- first gear -->
-     <use href="#gear"    id="gear_1"    transform="translate(200,200) rotate(0)"></use>
-     <use href="#bearing" id="bearing_1" transform="translate(200,200) rotate(0)"></use>
+     <use href="#gear"    id="gear_1"    transform="translate(100,100) rotate(0)"></use>
+     <use href="#bearing" id="bearing_1" transform="translate(100,100) rotate(0)"></use>
 
      <!-- second gear -->
-     <use href="#gear"    id="gear_2"    transform="translate(%(SECOND_GEAR_X_POS)f,200) rotate(%(SECOND_GEAR_ROTATION_ANIM_START)f)"></use>
-     <use href="#bearing" id="bearing_2" transform="translate(%(SECOND_GEAR_X_POS)f,200) rotate(%(SECOND_GEAR_ROTATION_ANIM_START)f)"> </use>
+     <use href="#gear"    id="gear_2"    transform="translate(%(SECOND_GEAR_X_POS)f,100) rotate(%(SECOND_GEAR_ROTATION_ANIM_START)f)"></use>
+     <use href="#bearing" id="bearing_2" transform="translate(%(SECOND_GEAR_X_POS)f,100) rotate(%(SECOND_GEAR_ROTATION_ANIM_START)f)"> </use>
 
      <!-- reference lines -->
     <!-- gear1 horizontal axis -->
-    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 0 200 L 300 200" ></path>
+    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 0 100 L 200 100" ></path>
     <!-- gear2 vertical axis -->
-    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 200 0 L 200 300" ></path>
+    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 100 0 L 100 200" ></path>
     
     <!-- middle verical -->
-    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M %(SECOND_GEAR_X_LEFT)f 0 L %(SECOND_GEAR_X_LEFT)f 300" ></path>
+    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M %(SECOND_GEAR_X_LEFT)f 0 L %(SECOND_GEAR_X_LEFT)f 200" ></path>
 
     <!-- gear2 horizontal axis -->
     <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M -300 0 L 300 0" 
-      transform="translate(%(SECOND_GEAR_X_POS)f,200) rotate(%(SECOND_GEAR_ROTATION_ANIM_START)f)"></path>
+      transform="translate(%(SECOND_GEAR_X_POS)f,100) rotate(%(SECOND_GEAR_ROTATION_ANIM_START)f)"></path>
     <!-- gear2 vertical axis -->
     <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 0.000000 -300 L 0.000000 300" 
-      transform="translate(%(SECOND_GEAR_X_POS)f,200) rotate(%(SECOND_GEAR_ROTATION_ANIM_START)f)"></path>
+      transform="translate(%(SECOND_GEAR_X_POS)f,100) rotate(%(SECOND_GEAR_ROTATION_ANIM_START)f)"></path>
     
 
    </g>
    
+</svg>
+"""
+
+SVG_GEAR_TPL = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="400mm"
+   height="400mm"
+   viewBox="-200 -200 400 400"
+   version="1.1"
+   id="gear_hobbymat">
+   <g>
+     %(GEAR)s
+     %(REINFORCEMENT)s
+     %(BEARING)s
+   </g>
 </svg>
 """
 
@@ -507,11 +524,11 @@ class GearMaker:
 
     def get_second_gear_x_pos(self):
         """ """
-        return self.PITCH_CIRCLE_DIAMETER + 200
+        return self.PITCH_CIRCLE_DIAMETER + 100
 
     def get_second_gear_x_left(self):
         """ """
-        return self.PITCH_CIRCLE_DIAMETER / 2.0 + 200
+        return self.PITCH_CIRCLE_DIAMETER / 2.0 + 100
 
     @classmethod
     def set_params(cls, params: Dict[str, Any]):
@@ -552,48 +569,70 @@ class GearMaker:
 
         cls.REINFORCMENT_RADIUS = params["REINFORCMENT_RADIUS"]
 
+    def make_svg_gear(self):
+        """ """
+        return SVG_GEAR_TPL % {
+            "GEAR": self.get_gear(),
+            "REINFORCEMENT": self.get_reinforcement(),
+            "BEARING": self.get_bearing(),
+        }
+
+    def make_svg_gears_animated(self):
+        """ """
+        return SVG_2_GEARS_ANIMATED_TPL % {
+            "GEAR": self.get_gear(),
+            "BEARING": self.get_bearing(),
+            "REINFORCMENT": self.get_reinforcement(),
+            "SECOND_GEAR_X_POS": self.get_second_gear_x_pos(),
+            "SECOND_GEAR_X_LEFT": self.get_second_gear_x_left(),
+            "GEAR_MODULE": self.MODULE,
+            "GEAR_NB_TEETH": self.NB_TEETHS,
+            "GEAR_RATIO_GAP_TEETH": self.RATIO_TEETH_GAP_BASE,
+            "GEAR_TEETH_CURVATURE": self.TEETH_CURVATURE,
+            "GEAR_TEETH_RATION_HEAD_BASE": self.RATIO_TEETH_HEAD_BASE,
+            "SECOND_GEAR_ROTATION_ANIM_START": self.get_second_gear_rotation(),
+            "SECOND_GEAR_ROTATION_ANIM_END": self.get_second_gear_rotation() - 380.0,
+            "ANIMATE_PERIOD": 30,
+        }
+
+    def make_svg_gears_static(self):
+        """ """
+        return SVG_2_GEARS_STATIC_TPL % {
+            "GEAR": self.get_gear(),
+            "BEARING": self.get_bearing(),
+            "REINFORCMENT": self.get_reinforcement(),
+            "SECOND_GEAR_X_POS": self.get_second_gear_x_pos(),
+            "SECOND_GEAR_X_LEFT": self.get_second_gear_x_left(),
+            "GEAR_MODULE": self.MODULE,
+            "GEAR_NB_TEETH": self.NB_TEETHS,
+            "GEAR_RATIO_GAP_TEETH": self.RATIO_TEETH_GAP_BASE,
+            "GEAR_TEETH_CURVATURE": self.TEETH_CURVATURE,
+            "GEAR_TEETH_RATION_HEAD_BASE": self.RATIO_TEETH_HEAD_BASE,
+            "SECOND_GEAR_ROTATION_ANIM_START": self.get_second_gear_rotation(),
+            "SECOND_GEAR_ROTATION_ANIM_END": self.get_second_gear_rotation() - 380.0,
+        }
+
 
 def main():
     """ """
 
     maker = GearMaker()
 
-    svg = SVG_2_GEARS_ANIMATED_TPL % {
-        "GEAR": maker.get_gear(),
-        "BEARING": maker.get_bearing(),
-        "REINFORCMENT": maker.get_reinforcement(),
-        "SECOND_GEAR_X_POS": maker.get_second_gear_x_pos(),
-        "SECOND_GEAR_X_LEFT": maker.get_second_gear_x_left(),
-        "GEAR_MODULE": maker.MODULE,
-        "GEAR_NB_TEETH": maker.NB_TEETHS,
-        "GEAR_RATIO_GAP_TEETH": maker.RATIO_TEETH_GAP_BASE,
-        "GEAR_TEETH_CURVATURE": maker.TEETH_CURVATURE,
-        "GEAR_TEETH_RATION_HEAD_BASE": maker.RATIO_TEETH_HEAD_BASE,
-        "SECOND_GEAR_ROTATION_ANIM_START": maker.get_second_gear_rotation(),
-        "SECOND_GEAR_ROTATION_ANIM_END": maker.get_second_gear_rotation() - 380.0,
-        "ANIMATE_PERIOD": 30,
-    }
+    svg = maker.make_svg_gears_animated()
 
-    fp = open("hobbymat_2gears_%d_animated.svg" % GearMaker.NB_TEETHS, "w")
+    fp = open("hobbymat_2_gears_%d_animated.svg" % GearMaker.NB_TEETHS, "w")
     fp.write(svg)
     fp.close()
 
-    svg = SVG_2_GEARS_STATIC_TPL % {
-        "GEAR": maker.get_gear(),
-        "BEARING": maker.get_bearing(),
-        "REINFORCMENT": maker.get_reinforcement(),
-        "SECOND_GEAR_X_POS": maker.get_second_gear_x_pos(),
-        "SECOND_GEAR_X_LEFT": maker.get_second_gear_x_left(),
-        "GEAR_MODULE": maker.MODULE,
-        "GEAR_NB_TEETH": maker.NB_TEETHS,
-        "GEAR_RATIO_GAP_TEETH": maker.RATIO_TEETH_GAP_BASE,
-        "GEAR_TEETH_CURVATURE": maker.TEETH_CURVATURE,
-        "GEAR_TEETH_RATION_HEAD_BASE": maker.RATIO_TEETH_HEAD_BASE,
-        "SECOND_GEAR_ROTATION_ANIM_START": maker.get_second_gear_rotation(),
-        "SECOND_GEAR_ROTATION_ANIM_END": maker.get_second_gear_rotation() - 380.0,
-    }
+    svg = maker.make_svg_gears_static()
 
-    fp = open("hobbymat_2gears_%d_static.svg" % GearMaker.NB_TEETHS, "w")
+    fp = open("hobbymat_2_gears_%d_static.svg" % GearMaker.NB_TEETHS, "w")
+    fp.write(svg)
+    fp.close()
+
+    svg = maker.make_svg_gear()
+
+    fp = open("hobbymat_gear_%d.svg" % GearMaker.NB_TEETHS, "w")
     fp.write(svg)
     fp.close()
 

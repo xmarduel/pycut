@@ -1,0 +1,66 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+  <link href="prism.css" rel="stylesheet">
+  <style>
+    pre[class*="language-"] {
+          font-size: 12px;
+          font-style: normal;
+          font-family: monospace;
+          background-color: #ffffff;
+    }
+    
+    span.code {
+      font-size: 10pt;
+      color: black;
+    }
+    span.code_comment {
+      font-size: 10pt;
+      color: green;
+    }
+  </style>
+  <title></title>
+</head>
+
+<body>
+<script type="text/javascript" src="prism.js">
+</script>
+<script type="text/javascript" src="prism_keep_tag.js">
+</script>
+
+<h3>Gears</h3>
+
+<p></p>
+
+<h3>Introduction</h3>
+
+<p>Welcome to <strong>Gears</strong>, a small program to generate some gears in the SVG format.
+Primary goal of this program was to generate gears for the Hobbymat MD65 Lathe, hence the custom
+bearing geometry in the center of the gear.</p>
+
+<p>Hopefully, users will be able to generate all kind of gears.</p>
+
+<h3>Usage</h3>
+
+<p>From the command line</p>
+<pre><code class="language-shell">&gt; python gears.py -h
+&gt; python gears.py</code></pre>
+
+<h3>Further processing</h3>
+
+<p>It can be possible to generate <code>stl</code> files within <strong>blender</strong> in order
+to use 3D printing. When importing the SVG in <strong>blender</strong>, the user has to convert the
+curves to mesh, and then solidify these meshes. <span style="color:#ff00ff">Unfortunately, these
+meshes can be buggy</span>. The user will recognize when something goes wrong.</p>
+
+<p>In this case, the user has to "clean" the mesh from unwanted nodes, especially the spurious one
+on the teeths of the gear. After having applied some <strong>solidify/boolean modifiers</strong>,
+and <strong>applied</strong> (blender "apply" modifiers) them, then the unwanted items fot the
+<code>stl</code> export must be deleted.</p>
+
+<p>Finally, the exported <code>stl</code> file can be imported in a 3D printing slicer.</p>
+<!--
+<p><em>Note for "tatarize": load the svg in chrome and from the DOM tree take a view at both circles Properties (Properties Tab): ids are indeed "circle-left" or "circle-right" ! (but this is still OK as you made)</em></p>
+-->
+</body>
+</html>

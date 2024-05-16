@@ -3,6 +3,8 @@ a GUI app to view/generate gears for hobbymat MD65 as SVG.
 
 Tip: use blender to import the svg, solidify/bool items to produce
      an stl file for 3D printing.
+Blender: when importing svg, curve to mesh, clean by hand the blender mesh
+         at the teeths.
 """
 VERSION = "1_0_0"
 
@@ -18,22 +20,6 @@ import svgviewer
 import generate_gear_svg
 
 
-SVG_GEAR_TPL = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   width="400mm"
-   height="400mm"
-   viewBox="-200 -200 400 400"
-   version="1.1"
-   id="gear_hobbymat">
-   <g>
-     %(GEAR)s
-     %(REINFORCEMENT)s
-     %(BEARING)s
-   </g>
-</svg>
-"""
 
 class GearMainWindow(QtWidgets.QMainWindow):
     """ """
@@ -50,11 +36,16 @@ class GearMainWindow(QtWidgets.QMainWindow):
         self.svg_viewer = self.setup_svg_viewer()
         self.svg_viewer.set_mainwindow(self)
 
+        self.svg_viewer_2_gears_animated = self.setup_svg_viewer_2_gears_animated()
+        self.svg_viewer_2_gears_animated.set_mainwindow(self)
+
+        self.svg_viewer_2_gears_static = self.setup_svg_viewer_2_gears_static()
+        self.svg_viewer_2_gears_static.set_mainwindow(self)
+
         self.ui.generate_svg.clicked.connect(self.cb_generate_svg)
-        self.ui.load_svg.clicked.connect(self.cb_load_svg_file)
         self.ui.save_svg.clicked.connect(self.cb_save_svg_file)
 
-        self.ui.nb_teeths.valueChanged.connect(self.cb_generate_svg)
+        self.ui.nb_teeths.valueChanged.connect(self.cb_nb_teeths)
 
         self.ui.foot_height.valueChanged.connect(self.cb_generate_svg)
         self.ui.head_height.valueChanged.connect(self.cb_generate_svg)
@@ -75,12 +66,12 @@ class GearMainWindow(QtWidgets.QMainWindow):
         self.cb_reset_ratio_teeth_gap_base()
         self.cb_reset_ratio_teeth_head_base()
     
-    def setup_svg_viewer(self):
+    def setup_svg_viewer(self) -> svgviewer.SvgViewer:
         """ """
-        svg_widget = self.ui.svg_viewer
+        svg_widget = self.ui.svgwidget_1_gear
         layout = svg_widget.layout()
 
-        svg_viewer = svgviewer.XSvgViewer(svg_widget)
+        svg_viewer = svgviewer.SvgViewer(svg_widget)
         svg_viewer.set_mainwindow(self)
 
         layout.addWidget(svg_viewer)
@@ -88,30 +79,43 @@ class GearMainWindow(QtWidgets.QMainWindow):
 
         return svg_viewer
     
-    def display_svg_file(self, svg_file:str):
+    def setup_svg_viewer_2_gears_animated(self) -> svgviewer.SvgWebEngineViewer:
         """ """
-        if svg_file is None:
-            return
+        svg_widget = self.ui.svgwidget_2_gears_animated
+        layout = svg_widget.layout()
 
-        fp = open(svg_file, "r")
-        svg = fp.read()
-        fp.close()
+        svg_viewer_animated = svgviewer.SvgWebEngineViewer(svg_widget)
+        svg_viewer_animated.set_mainwindow(self)
 
-        self.svg_viewer.set_svg(svg)
+        layout.addWidget(svg_viewer_animated)
+        layout.setStretch(0, 1)
 
-    def display_svg_string(self, svg_string:str):
+        return svg_viewer_animated
+
+    def setup_svg_viewer_2_gears_static(self) -> svgviewer.SvgWebEngineViewer:
+        """ """
+        svg_widget = self.ui.svgwidget_2_gears_static
+        layout = svg_widget.layout()
+
+        svg_viewer_static = svgviewer.SvgWebEngineViewer(svg_widget)
+        svg_viewer_static.set_mainwindow(self)
+
+        layout.addWidget(svg_viewer_static)
+        layout.setStretch(0, 1)
+
+        return svg_viewer_static
+
+    def display_svg(self, svg_string:str):
         """ """
         self.svg_viewer.set_svg(svg_string)
 
-    def cb_load_svg_file(self):
+    def display_svg_animated(self, svg_string:str):
         """ """
-        # select svg file
-        xfilter = "SVG Files (*.svg)"
-        svgfile, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, caption="load file", dir=".", filter=xfilter
-        )
+        self.svg_viewer_2_gears_animated.set_svg(svg_string)
 
-        self.display_svg_file(svgfile)
+    def display_svg_static(self, svg_string:str):
+        """ """
+        self.svg_viewer_2_gears_static.set_svg(svg_string)
 
     def cb_reset_foot_height(self):
         """ """
@@ -133,7 +137,18 @@ class GearMainWindow(QtWidgets.QMainWindow):
         """ """
         self.ui.ratio_teeth_head_base.setValue(0.4)
 
-    def cb_generate_svg(self) -> str:
+    def cb_nb_teeths(self):
+        """ """
+        nb_teeths = self.ui.nb_teeths.value()
+        modul = self.ui.modul.value()
+
+        gear_diameter = modul * nb_teeths
+
+        self.ui.gear_diameter.setValue(gear_diameter)
+
+        self.cb_generate_svg()
+    
+    def cb_generate_svg(self):
         """ """
         maker = generate_gear_svg.GearMaker()
         generate_gear_svg.GearMaker.set_params(
@@ -148,15 +163,14 @@ class GearMainWindow(QtWidgets.QMainWindow):
             }
         )
 
-        svg = SVG_GEAR_TPL %  { 
-            "GEAR": maker.get_gear(),
-            "REINFORCEMENT": maker.get_reinforcement(),
-            "BEARING": maker.get_bearing() 
-        }
+        svg = maker.make_svg_gear()
+        self.display_svg(svg)
 
-        self.display_svg_string(svg)
+        svg = maker.make_svg_gears_static()
+        self.display_svg_static(svg)
 
-        return svg
+        svg = maker.make_svg_gears_animated()
+        self.display_svg_animated(svg)
 
     def cb_save_svg_file(self):
         """ """

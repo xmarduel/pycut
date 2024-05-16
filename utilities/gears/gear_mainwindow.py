@@ -18,7 +18,8 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QDoubleSpinBox, QHBoxLayout, QLabel,
     QMainWindow, QPushButton, QScrollArea, QSizePolicy,
-    QSpacerItem, QSpinBox, QVBoxLayout, QWidget)
+    QSpacerItem, QSpinBox, QTabWidget, QVBoxLayout,
+    QWidget)
 
 class Ui_mainwindow(object):
     def setupUi(self, mainwindow):
@@ -207,22 +208,22 @@ class Ui_mainwindow(object):
         self.horizontalLayout_23 = QHBoxLayout()
         self.horizontalLayout_23.setObjectName(u"horizontalLayout_23")
         self.horizontalLayout_23.setContentsMargins(4, -1, -1, -1)
-        self.label_diameter = QLabel(self.scrollAreaWidgetContents)
-        self.label_diameter.setObjectName(u"label_diameter")
-        self.label_diameter.setMinimumSize(QSize(160, 0))
-        self.label_diameter.setFont(font1)
+        self.label_gear_diameter = QLabel(self.scrollAreaWidgetContents)
+        self.label_gear_diameter.setObjectName(u"label_gear_diameter")
+        self.label_gear_diameter.setMinimumSize(QSize(160, 0))
+        self.label_gear_diameter.setFont(font1)
 
-        self.horizontalLayout_23.addWidget(self.label_diameter)
+        self.horizontalLayout_23.addWidget(self.label_gear_diameter)
 
-        self.doubleSpinBox = QDoubleSpinBox(self.scrollAreaWidgetContents)
-        self.doubleSpinBox.setObjectName(u"doubleSpinBox")
-        self.doubleSpinBox.setEnabled(False)
-        self.doubleSpinBox.setDecimals(1)
-        self.doubleSpinBox.setMaximum(200.000000000000000)
-        self.doubleSpinBox.setSingleStep(0.100000000000000)
-        self.doubleSpinBox.setValue(40.000000000000000)
+        self.gear_diameter = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.gear_diameter.setObjectName(u"gear_diameter")
+        self.gear_diameter.setEnabled(False)
+        self.gear_diameter.setDecimals(1)
+        self.gear_diameter.setMaximum(200.000000000000000)
+        self.gear_diameter.setSingleStep(0.100000000000000)
+        self.gear_diameter.setValue(40.000000000000000)
 
-        self.horizontalLayout_23.addWidget(self.doubleSpinBox)
+        self.horizontalLayout_23.addWidget(self.gear_diameter)
 
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_23)
@@ -427,24 +428,40 @@ class Ui_mainwindow(object):
 
         self.verticalLayout.addWidget(self.generate_svg)
 
-        self.svg_viewer = QWidget(self.centralArea)
-        self.svg_viewer.setObjectName(u"svg_viewer")
-        self.verticalLayout_4 = QVBoxLayout(self.svg_viewer)
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_svgviewer = QVBoxLayout()
-        self.verticalLayout_svgviewer.setSpacing(6)
-        self.verticalLayout_svgviewer.setObjectName(u"verticalLayout_svgviewer")
+        self.tabWidget = QTabWidget(self.centralArea)
+        self.tabWidget.setObjectName(u"tabWidget")
+        self.svgwidget_1_gear = QWidget()
+        self.svgwidget_1_gear.setObjectName(u"svgwidget_1_gear")
+        self.verticalLayout_3 = QVBoxLayout(self.svgwidget_1_gear)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.svgwidget_1_gear_layout = QVBoxLayout()
+        self.svgwidget_1_gear_layout.setObjectName(u"svgwidget_1_gear_layout")
 
-        self.verticalLayout_4.addLayout(self.verticalLayout_svgviewer)
+        self.verticalLayout_3.addLayout(self.svgwidget_1_gear_layout)
 
+        self.tabWidget.addTab(self.svgwidget_1_gear, "")
+        self.svgwidget_2_gears_static = QWidget()
+        self.svgwidget_2_gears_static.setObjectName(u"svgwidget_2_gears_static")
+        self.verticalLayout_5 = QVBoxLayout(self.svgwidget_2_gears_static)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.svgwidget_2_gears_static_layout = QVBoxLayout()
+        self.svgwidget_2_gears_static_layout.setObjectName(u"svgwidget_2_gears_static_layout")
 
-        self.verticalLayout.addWidget(self.svg_viewer)
+        self.verticalLayout_5.addLayout(self.svgwidget_2_gears_static_layout)
 
-        self.load_svg = QPushButton(self.centralArea)
-        self.load_svg.setObjectName(u"load_svg")
+        self.tabWidget.addTab(self.svgwidget_2_gears_static, "")
+        self.svgwidget_2_gears_animated = QWidget()
+        self.svgwidget_2_gears_animated.setObjectName(u"svgwidget_2_gears_animated")
+        self.verticalLayout_6 = QVBoxLayout(self.svgwidget_2_gears_animated)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.svgwidget_2_gears_animated_layout = QVBoxLayout()
+        self.svgwidget_2_gears_animated_layout.setObjectName(u"svgwidget_2_gears_animated_layout")
 
-        self.verticalLayout.addWidget(self.load_svg)
+        self.verticalLayout_6.addLayout(self.svgwidget_2_gears_animated_layout)
+
+        self.tabWidget.addTab(self.svgwidget_2_gears_animated, "")
+
+        self.verticalLayout.addWidget(self.tabWidget)
 
         self.save_svg = QPushButton(self.centralArea)
         self.save_svg.setObjectName(u"save_svg")
@@ -458,6 +475,9 @@ class Ui_mainwindow(object):
         mainwindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(mainwindow)
+
+        self.tabWidget.setCurrentIndex(0)
+
 
         QMetaObject.connectSlotsByName(mainwindow)
     # setupUi
@@ -482,7 +502,7 @@ class Ui_mainwindow(object):
         self.label_GearBasics.setText(QCoreApplication.translate("mainwindow", u"Basics", None))
         self.label_modul.setText(QCoreApplication.translate("mainwindow", u"module", None))
         self.label_nb_teeths.setText(QCoreApplication.translate("mainwindow", u"nb teeths", None))
-        self.label_diameter.setText(QCoreApplication.translate("mainwindow", u"gear diameter", None))
+        self.label_gear_diameter.setText(QCoreApplication.translate("mainwindow", u"gear diameter", None))
         self.label_reinforcment_radius.setText(QCoreApplication.translate("mainwindow", u"reinforcment radius", None))
         self.label_GearSize.setText(QCoreApplication.translate("mainwindow", u"Sizes", None))
         self.label_foot_height.setText(QCoreApplication.translate("mainwindow", u"foot height", None))
@@ -497,7 +517,9 @@ class Ui_mainwindow(object):
         self.label_ratio_teeth_head_base.setText(QCoreApplication.translate("mainwindow", u"ratio teeth head/base", None))
         self.button_ratio_teeth_head_base_reset.setText(QCoreApplication.translate("mainwindow", u"...", None))
         self.generate_svg.setText(QCoreApplication.translate("mainwindow", u"Generate SVG", None))
-        self.load_svg.setText(QCoreApplication.translate("mainwindow", u"Load SVG", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.svgwidget_1_gear), QCoreApplication.translate("mainwindow", u"Gear", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.svgwidget_2_gears_static), QCoreApplication.translate("mainwindow", u"2 Gears", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.svgwidget_2_gears_animated), QCoreApplication.translate("mainwindow", u"Animation", None))
         self.save_svg.setText(QCoreApplication.translate("mainwindow", u"Save SVG", None))
     # retranslateUi
 

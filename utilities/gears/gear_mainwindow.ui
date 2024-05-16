@@ -304,7 +304,7 @@
            <number>4</number>
           </property>
           <item>
-           <widget class="QLabel" name="label_diameter">
+           <widget class="QLabel" name="label_gear_diameter">
             <property name="minimumSize">
              <size>
               <width>160</width>
@@ -323,7 +323,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QDoubleSpinBox" name="doubleSpinBox">
+           <widget class="QDoubleSpinBox" name="gear_diameter">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -746,35 +746,40 @@
         </widget>
        </item>
        <item>
-        <widget class="QWidget" name="svg_viewer" native="true">
-         <layout class="QVBoxLayout" name="verticalLayout_4">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_svgviewer">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="load_svg">
-         <property name="text">
-          <string>Load SVG</string>
+        <widget class="QTabWidget" name="tabWidget">
+         <property name="currentIndex">
+          <number>0</number>
          </property>
+         <widget class="QWidget" name="svgwidget_1_gear">
+          <attribute name="title">
+           <string>Gear</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <layout class="QVBoxLayout" name="svgwidget_1_gear_layout"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="svgwidget_2_gears_static">
+          <attribute name="title">
+           <string>2 Gears</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <layout class="QVBoxLayout" name="svgwidget_2_gears_static_layout"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="svgwidget_2_gears_animated">
+          <attribute name="title">
+           <string>Animation</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <layout class="QVBoxLayout" name="svgwidget_2_gears_animated_layout"/>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
        <item>
