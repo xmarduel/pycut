@@ -14,6 +14,7 @@ import argparse
 from PySide6 import QtCore
 from PySide6 import QtGui
 from PySide6 import QtWidgets
+from PySide6 import QtWebEngineWidgets
 
 import gear_mainwindow
 import svgviewer
@@ -30,6 +31,8 @@ class GearMainWindow(QtWidgets.QMainWindow):
 
         self.ui = gear_mainwindow.Ui_mainwindow()
         self.ui.setupUi(self)
+
+        self.signaler = MouseButtonSignaler()
 
         self.setWindowTitle("Gears")
 
@@ -54,6 +57,15 @@ class GearMainWindow(QtWidgets.QMainWindow):
         self.ui.ratio_teeth_head_base.valueChanged.connect(self.cb_generate_svg)
         self.ui.reinforcment_radius.valueChanged.connect(self.cb_generate_svg)
 
+        self.signaler.installOn(self.ui.label_foot_height)
+        self.signaler.installOn(self.ui.label_head_height)
+        self.signaler.installOn(self.ui.label_ratio_teeth_gap_base)
+        self.signaler.installOn(self.ui.label_curvature)
+        self.signaler.installOn(self.ui.label_ratio_teeth_head_base)
+        self.signaler.installOn(self.ui.label_reinforcment_radius)
+
+        self.signaler.mouseButtonEvent.connect(self.mouseButtonEventHandler)
+
         self.ui.button_foot_height_reset.clicked.connect(self.cb_reset_foot_height)
         self.ui.button_head_height_reset.clicked.connect(self.cb_reset_head_height)
         self.ui.button_ratio_teeth_gap_base_reset.clicked.connect(self.cb_reset_ratio_teeth_gap_base)
@@ -65,7 +77,20 @@ class GearMainWindow(QtWidgets.QMainWindow):
         self.cb_reset_curvature()
         self.cb_reset_ratio_teeth_gap_base()
         self.cb_reset_ratio_teeth_head_base()
+
+        self.ui.actionTutorial.triggered.connect(self.cb_show_tutorial_qt)
+        self.ui.actionAbout_Qt.triggered.connect(self.cb_show_about_qt)
+        self.ui.actionAbout_Gears.triggered.connect(self.cb_show_about_gears)
     
+    def mouseButtonEventHandler(self, obj: QtWidgets.QWidget, ev: QtGui.QMouseEvent):
+        """ """
+        name = obj.objectName()
+        html_file = f"./doc/help_{name}.html"
+
+        with open(html_file) as f:
+            html = f.read()
+            self.ui.tooltip_info.setHtml(html)
+        
     def setup_svg_viewer(self) -> svgviewer.SvgViewer:
         """ """
         svg_widget = self.ui.svgwidget_1_gear
@@ -179,6 +204,80 @@ class GearMainWindow(QtWidgets.QMainWindow):
         fp = open("gear_%i.svg" % self.ui.nb_teeths.value(), "w")
         fp.write(svg)
         fp.close()
+
+    def cb_show_tutorial_qt(self):
+        """ """
+        dlg = QtWidgets.QDialog(self)
+
+        htmlview = QtWebEngineWidgets.QWebEngineView(dlg)
+        htmlview.setMinimumSize(1100, 600)
+
+        main_layout = QtWidgets.QVBoxLayout()
+        main_layout.addWidget(htmlview)
+
+        dlg.setLayout(main_layout)
+        dlg.setWindowTitle("PyCut Tutorial")
+        dlg.setModal(True)
+
+        filename = "./doc/gears.html"
+        file = QtCore.QFile(filename)
+        if file.open(QtCore.QIODevice.ReadOnly):
+            data = str(file.readAll(), "utf-8")  # explicit encoding
+        else:
+            data = "ERROR"
+
+        file.close()
+
+        htmlview.setHtml(data, baseUrl=QtCore.QUrl("qrc:/"))
+
+        dlg.show()
+
+    def cb_show_about_qt(self):
+        QtWidgets.QApplication.instance().aboutQt()
+
+    def cb_show_about_gears(self):
+        dlg = QtWidgets.QDialog(self)
+
+        view = QtWidgets.QTextBrowser(dlg)
+        view.setReadOnly(True)
+        view.setMinimumSize(800, 500)
+
+        main_layout = QtWidgets.QVBoxLayout()
+        main_layout.addWidget(view)
+
+        dlg.setLayout(main_layout)
+        dlg.setWindowTitle("Gears Relnotes")
+        dlg.setModal(True)
+
+        try:
+            view.setSource(QtCore.QUrl.fromLocalFile("./doc/about.html"))
+        except Exception as msg:
+            view.setHtml(self.notfound % {"message": str(msg)})
+
+        dlg.show()
+
+
+class MouseButtonSignaler(QtCore.QObject):
+    """ 
+    click on QLabel
+    """
+    mouseButtonEvent = QtCore.Signal(QtWidgets.QWidget, QtGui.QMouseEvent)
+
+    def __init__(self, parent = None):
+        QtCore.QObject.__init__(self, parent)
+  
+    def installOn(self, widget: QtWidgets.QWidget):
+        """ """
+        widget.installEventFilter(self)
+
+    def eventFilter(self, obj: QtCore.QObject, ev: QtCore.QEvent):
+        """ """
+        ev_ok = ev.type() == QtCore.QEvent.MouseButtonRelease
+
+        if ev_ok and obj.isWidgetType():
+            self.mouseButtonEvent.emit(obj, ev)
+
+        return False
 
 
 def main():

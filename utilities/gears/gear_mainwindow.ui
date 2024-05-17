@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1146</width>
+    <width>1183</width>
     <height>734</height>
    </rect>
   </property>
@@ -32,10 +32,10 @@
          <x>0</x>
          <y>0</y>
          <width>318</width>
-         <height>714</height>
+         <height>693</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1">
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1">
         <property name="spacing">
          <number>4</number>
         </property>
@@ -195,7 +195,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_L2"/>
+         <layout class="QHBoxLayout" name="horizontalLayout_sep01"/>
         </item>
         <item>
          <widget class="QLabel" name="label_GearBasics">
@@ -380,7 +380,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout"/>
+         <layout class="QHBoxLayout" name="horizontalLayout_sep02"/>
         </item>
         <item>
          <widget class="QLabel" name="label_GearSize">
@@ -507,6 +507,9 @@
          </layout>
         </item>
         <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_sep03"/>
+        </item>
+        <item>
          <widget class="QLabel" name="label_GearTeethsShape">
           <property name="enabled">
            <bool>true</bool>
@@ -572,7 +575,7 @@
              </size>
             </property>
             <property name="text">
-             <string>....</string>
+             <string>...</string>
             </property>
            </widget>
           </item>
@@ -704,6 +707,9 @@
           </property>
          </spacer>
         </item>
+        <item>
+         <widget class="QTextBrowser" name="tooltip_info"/>
+        </item>
        </layout>
       </widget>
      </widget>
@@ -794,54 +800,38 @@
     </item>
    </layout>
   </widget>
-  <action name="actionOpenSvg">
-   <property name="text">
-    <string>Load SVG</string>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1183</width>
+     <height>21</height>
+    </rect>
    </property>
-  </action>
-  <action name="actionNewJob">
-   <property name="text">
-    <string>New Job</string>
-   </property>
-  </action>
-  <action name="actionOpenJob">
-   <property name="text">
-    <string>Open Job...</string>
-   </property>
-  </action>
-  <action name="actionSaveJobAs">
-   <property name="text">
-    <string>Save Job As...</string>
-   </property>
-  </action>
-  <action name="actionSaveJob">
-   <property name="text">
-    <string>Save Job</string>
-   </property>
-  </action>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionTutorial"/>
+    <addaction name="actionAbout_Qt"/>
+    <addaction name="actionAbout_Gears"/>
+   </widget>
+   <addaction name="menuHelp"/>
+  </widget>
   <action name="actionTutorial">
    <property name="text">
     <string>Tutorial</string>
    </property>
   </action>
-  <action name="actionAboutQt">
+  <action name="actionAbout_Qt">
    <property name="text">
-    <string>About &amp;Qt</string>
+    <string>About Qt</string>
    </property>
   </action>
-  <action name="actionAboutPyCut">
+  <action name="actionAbout_Gears">
    <property name="text">
-    <string>About PyCut</string>
-   </property>
-  </action>
-  <action name="actionSettings">
-   <property name="text">
-    <string>Viewers Settings...</string>
-   </property>
-  </action>
-  <action name="actionOpenGCode">
-   <property name="text">
-    <string>Load GCode</string>
+    <string>About Gears</string>
    </property>
   </action>
  </widget>

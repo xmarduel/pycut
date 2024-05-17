@@ -17,35 +17,21 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QDoubleSpinBox, QHBoxLayout, QLabel,
-    QMainWindow, QPushButton, QScrollArea, QSizePolicy,
-    QSpacerItem, QSpinBox, QTabWidget, QVBoxLayout,
-    QWidget)
+    QMainWindow, QMenu, QMenuBar, QPushButton,
+    QScrollArea, QSizePolicy, QSpacerItem, QSpinBox,
+    QTabWidget, QTextBrowser, QVBoxLayout, QWidget)
 
 class Ui_mainwindow(object):
     def setupUi(self, mainwindow):
         if not mainwindow.objectName():
             mainwindow.setObjectName(u"mainwindow")
-        mainwindow.resize(1146, 734)
-        self.actionOpenSvg = QAction(mainwindow)
-        self.actionOpenSvg.setObjectName(u"actionOpenSvg")
-        self.actionNewJob = QAction(mainwindow)
-        self.actionNewJob.setObjectName(u"actionNewJob")
-        self.actionOpenJob = QAction(mainwindow)
-        self.actionOpenJob.setObjectName(u"actionOpenJob")
-        self.actionSaveJobAs = QAction(mainwindow)
-        self.actionSaveJobAs.setObjectName(u"actionSaveJobAs")
-        self.actionSaveJob = QAction(mainwindow)
-        self.actionSaveJob.setObjectName(u"actionSaveJob")
+        mainwindow.resize(1183, 734)
         self.actionTutorial = QAction(mainwindow)
         self.actionTutorial.setObjectName(u"actionTutorial")
-        self.actionAboutQt = QAction(mainwindow)
-        self.actionAboutQt.setObjectName(u"actionAboutQt")
-        self.actionAboutPyCut = QAction(mainwindow)
-        self.actionAboutPyCut.setObjectName(u"actionAboutPyCut")
-        self.actionSettings = QAction(mainwindow)
-        self.actionSettings.setObjectName(u"actionSettings")
-        self.actionOpenGCode = QAction(mainwindow)
-        self.actionOpenGCode.setObjectName(u"actionOpenGCode")
+        self.actionAbout_Qt = QAction(mainwindow)
+        self.actionAbout_Qt.setObjectName(u"actionAbout_Qt")
+        self.actionAbout_Gears = QAction(mainwindow)
+        self.actionAbout_Gears.setObjectName(u"actionAbout_Gears")
         self.centralwidget = QWidget(mainwindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout_2 = QHBoxLayout(self.centralwidget)
@@ -56,7 +42,7 @@ class Ui_mainwindow(object):
         self.scrollArea_GearProperties.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 318, 714))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 318, 693))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSpacing(4)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -149,10 +135,10 @@ class Ui_mainwindow(object):
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_14)
 
-        self.horizontalLayout_L2 = QHBoxLayout()
-        self.horizontalLayout_L2.setObjectName(u"horizontalLayout_L2")
+        self.horizontalLayout_sep01 = QHBoxLayout()
+        self.horizontalLayout_sep01.setObjectName(u"horizontalLayout_sep01")
 
-        self.verticalLayout_2.addLayout(self.horizontalLayout_L2)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_sep01)
 
         self.label_GearBasics = QLabel(self.scrollAreaWidgetContents)
         self.label_GearBasics.setObjectName(u"label_GearBasics")
@@ -248,10 +234,10 @@ class Ui_mainwindow(object):
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_24)
 
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout_sep02 = QHBoxLayout()
+        self.horizontalLayout_sep02.setObjectName(u"horizontalLayout_sep02")
 
-        self.verticalLayout_2.addLayout(self.horizontalLayout)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_sep02)
 
         self.label_GearSize = QLabel(self.scrollAreaWidgetContents)
         self.label_GearSize.setObjectName(u"label_GearSize")
@@ -314,6 +300,11 @@ class Ui_mainwindow(object):
 
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_32)
+
+        self.horizontalLayout_sep03 = QHBoxLayout()
+        self.horizontalLayout_sep03.setObjectName(u"horizontalLayout_sep03")
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout_sep03)
 
         self.label_GearTeethsShape = QLabel(self.scrollAreaWidgetContents)
         self.label_GearTeethsShape.setObjectName(u"label_GearTeethsShape")
@@ -410,7 +401,12 @@ class Ui_mainwindow(object):
 
         self.verticalLayout_2.addItem(self.verticalSpacer)
 
-        self.verticalLayout_2.setStretch(19, 1)
+        self.tooltip_info = QTextBrowser(self.scrollAreaWidgetContents)
+        self.tooltip_info.setObjectName(u"tooltip_info")
+
+        self.verticalLayout_2.addWidget(self.tooltip_info)
+
+        self.verticalLayout_2.setStretch(21, 1)
         self.scrollArea_GearProperties.setWidget(self.scrollAreaWidgetContents)
 
         self.horizontalLayout_2.addWidget(self.scrollArea_GearProperties)
@@ -473,6 +469,17 @@ class Ui_mainwindow(object):
 
         self.horizontalLayout_2.setStretch(1, 1)
         mainwindow.setCentralWidget(self.centralwidget)
+        self.menuBar = QMenuBar(mainwindow)
+        self.menuBar.setObjectName(u"menuBar")
+        self.menuBar.setGeometry(QRect(0, 0, 1183, 21))
+        self.menuHelp = QMenu(self.menuBar)
+        self.menuHelp.setObjectName(u"menuHelp")
+        mainwindow.setMenuBar(self.menuBar)
+
+        self.menuBar.addAction(self.menuHelp.menuAction())
+        self.menuHelp.addAction(self.actionTutorial)
+        self.menuHelp.addAction(self.actionAbout_Qt)
+        self.menuHelp.addAction(self.actionAbout_Gears)
 
         self.retranslateUi(mainwindow)
 
@@ -484,16 +491,9 @@ class Ui_mainwindow(object):
 
     def retranslateUi(self, mainwindow):
         mainwindow.setWindowTitle(QCoreApplication.translate("mainwindow", u"main", None))
-        self.actionOpenSvg.setText(QCoreApplication.translate("mainwindow", u"Load SVG", None))
-        self.actionNewJob.setText(QCoreApplication.translate("mainwindow", u"New Job", None))
-        self.actionOpenJob.setText(QCoreApplication.translate("mainwindow", u"Open Job...", None))
-        self.actionSaveJobAs.setText(QCoreApplication.translate("mainwindow", u"Save Job As...", None))
-        self.actionSaveJob.setText(QCoreApplication.translate("mainwindow", u"Save Job", None))
         self.actionTutorial.setText(QCoreApplication.translate("mainwindow", u"Tutorial", None))
-        self.actionAboutQt.setText(QCoreApplication.translate("mainwindow", u"About &Qt", None))
-        self.actionAboutPyCut.setText(QCoreApplication.translate("mainwindow", u"About PyCut", None))
-        self.actionSettings.setText(QCoreApplication.translate("mainwindow", u"Viewers Settings...", None))
-        self.actionOpenGCode.setText(QCoreApplication.translate("mainwindow", u"Load GCode", None))
+        self.actionAbout_Qt.setText(QCoreApplication.translate("mainwindow", u"About Qt", None))
+        self.actionAbout_Gears.setText(QCoreApplication.translate("mainwindow", u"About Gears", None))
         self.label_GearSvg.setText(QCoreApplication.translate("mainwindow", u"Svg", None))
         self.label_svg_width.setText(QCoreApplication.translate("mainwindow", u"width", None))
         self.label_svg_height.setText(QCoreApplication.translate("mainwindow", u"height", None))
@@ -511,7 +511,7 @@ class Ui_mainwindow(object):
         self.button_head_height_reset.setText(QCoreApplication.translate("mainwindow", u"...", None))
         self.label_GearTeethsShape.setText(QCoreApplication.translate("mainwindow", u"Teeths Shape", None))
         self.label_ratio_teeth_gap_base.setText(QCoreApplication.translate("mainwindow", u"ratio teeth gap/base", None))
-        self.button_ratio_teeth_gap_base_reset.setText(QCoreApplication.translate("mainwindow", u"....", None))
+        self.button_ratio_teeth_gap_base_reset.setText(QCoreApplication.translate("mainwindow", u"...", None))
         self.label_curvature.setText(QCoreApplication.translate("mainwindow", u"curvature", None))
         self.button_curvature_reset.setText(QCoreApplication.translate("mainwindow", u"...", None))
         self.label_ratio_teeth_head_base.setText(QCoreApplication.translate("mainwindow", u"ratio teeth head/base", None))
@@ -521,5 +521,6 @@ class Ui_mainwindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.svgwidget_2_gears_static), QCoreApplication.translate("mainwindow", u"2 Gears", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.svgwidget_2_gears_animated), QCoreApplication.translate("mainwindow", u"Animation", None))
         self.save_svg.setText(QCoreApplication.translate("mainwindow", u"Save SVG", None))
+        self.menuHelp.setTitle(QCoreApplication.translate("mainwindow", u"Help", None))
     # retranslateUi
 
