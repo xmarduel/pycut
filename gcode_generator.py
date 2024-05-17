@@ -706,10 +706,6 @@ class CncOp:
 
             self.preview_geometry = geometry_outer.difference(geometry_inner)
 
-            ## DEBUG
-            # self.preview_geometry = geometry_outer
-            ## DEBUG
-
             if self.preview_geometry.geom_type == "Polygon":
                 self.preview_geometry = shapely.geometry.MultiPolygon(
                     [self.preview_geometry]

@@ -918,18 +918,16 @@ class cam:
                             )
 
                         if total_dist > 0:
-                            # ramp_path = selected_path.slice(0, end)
-                            ramp_path = [
+                            ramp_path_forw = [
                                 list(selected_path.coords)[k] for k in range(0, end)
                             ]
 
-                            # ramp_path_end = selected_path.slice(0, end - 1).reverse()
-                            ramp_path_end = [
+                            ramp_path_backw = [
                                 list(selected_path.coords)[k] for k in range(0, end - 1)
                             ]
-                            ramp_path_end.reverse()
+                            ramp_path_backw.reverse()
 
-                            ramp_path = ramp_path + ramp_path_end
+                            ramp_path = ramp_path_forw + ramp_path_backw
 
                             if in_tabs_height:
                                 # move to initial point of partial path
@@ -1055,9 +1053,6 @@ class TabsSeparator:
 
         shapely_openpath = shapely.geometry.LineString(pts)
 
-        # print("orig_path", orig_path)
-        # print("orig_path", shapely_openpath)
-
         shapely_tabs_: List[shapely.geometry.Polygon] = []
         # 1. from the tabs, build shapely tab polygons
         for tab_def in self.tabs:
@@ -1119,9 +1114,6 @@ class TabsSeparator:
             boundary1_len = len(list(path1.boundary.geoms))
             boundary2_len = len(list(path2.boundary.geoms))
 
-            # print("boundary1_len =", boundary1_len)
-            # print("boundary2_len =", boundary2_len)
-
             if boundary1_len == 0 or boundary2_len == 0:
                 return False
 
@@ -1168,9 +1160,6 @@ class TabsSeparator:
 
         if len(paths) <= 1:
             return paths
-
-        # mlines = shapely.geometry.MultiLineString(paths)
-        # cnt = MatplotLibUtils.display("offset - as LineString|MultiLineString (from linestring)", mlines, force=True)
 
         compatibility_table = build_paths_compatibility_table(paths)
 
@@ -1719,8 +1708,6 @@ class SpiralePocketCalculator:
         def calc_path(self):
             pts = super().calc_path()
 
-            # TODO - better mapping 'cos not good at the border of the square
-
             rectangle_pts = [
                 (self.to_square_x(x, y), self.to_square_y(x, y)) for (x, y) in pts
             ]
@@ -1991,8 +1978,6 @@ class NibblePocketCalculator:
             campath = CamPath(poly.exterior, True)
             self.cam_paths.append(campath)
 
-        return
-
     def toolpath_to_campaths(self, toolpath: geometry.Pocket):
         """ """
         xx = []
@@ -2000,22 +1985,10 @@ class NibblePocketCalculator:
 
         for k, element in enumerate(toolpath.path):
 
-            # if last_element is not None:
-            #    assert last_element.end.equals_exact(element.start, 6)
-            #    assert shapely.geometry.Point(
-            #       last_element.path.coords[-1]
-            #    ).equals_exact(shapely.geometry.Point(element.path.coords[0]), 6)
-            # last_element = element
-
             if type(element).__name__ == "Arc":
                 print("k = ", k, type(element).__name__)
 
                 x, y = element.path.xy
-
-                # if element.debug:
-                #    plt.plot(x, y, c=element.debug, linewidth=3)
-                # else:
-                #    plt.plot(x, y, c=cut_colour, linewidth=1)
 
                 xx.extend(x)
                 yy.extend(y)
@@ -2027,11 +2000,6 @@ class NibblePocketCalculator:
 
                 if element.move_style == geometry.MoveStyle.RAPID_INSIDE:
                     # plt.plot(x, y, linestyle="--", c=rapid_inside_colour, linewidth=1)
-
-                    # self.add_campath(xx, yy, True)
-
-                    # xx = []
-                    # yy = []
 
                     xx.extend(x)
                     yy.extend(y)
