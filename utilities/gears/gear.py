@@ -240,7 +240,7 @@ class GearMainWindow(QtWidgets.QMainWindow):
 
         view = QtWidgets.QTextBrowser(dlg)
         view.setReadOnly(True)
-        view.setMinimumSize(800, 500)
+        view.setMinimumSize(500, 500)
 
         main_layout = QtWidgets.QVBoxLayout()
         main_layout.addWidget(view)

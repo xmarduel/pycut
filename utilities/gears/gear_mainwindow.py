@@ -25,7 +25,7 @@ class Ui_mainwindow(object):
     def setupUi(self, mainwindow):
         if not mainwindow.objectName():
             mainwindow.setObjectName(u"mainwindow")
-        mainwindow.resize(1183, 734)
+        mainwindow.resize(896, 611)
         self.actionTutorial = QAction(mainwindow)
         self.actionTutorial.setObjectName(u"actionTutorial")
         self.actionAbout_Qt = QAction(mainwindow)
@@ -42,7 +42,7 @@ class Ui_mainwindow(object):
         self.scrollArea_GearProperties.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 318, 693))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 304, 633))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSpacing(4)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -471,7 +471,7 @@ class Ui_mainwindow(object):
         mainwindow.setCentralWidget(self.centralwidget)
         self.menuBar = QMenuBar(mainwindow)
         self.menuBar.setObjectName(u"menuBar")
-        self.menuBar.setGeometry(QRect(0, 0, 1183, 21))
+        self.menuBar.setGeometry(QRect(0, 0, 896, 21))
         self.menuHelp = QMenu(self.menuBar)
         self.menuHelp.setObjectName(u"menuHelp")
         mainwindow.setMenuBar(self.menuBar)

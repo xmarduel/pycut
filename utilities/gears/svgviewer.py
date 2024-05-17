@@ -251,7 +251,7 @@ class SvgWebEngineViewer(QtWebEngineWidgets.QWebEngineView):
     def __init__(self, parent):
         """ """
         super(SvgWebEngineViewer, self).__init__(parent)
-        self.setMinimumSize(800, 800)
+        self.setMaximumSize(1000, 1000)
 
         self.mainwindow = None
 
