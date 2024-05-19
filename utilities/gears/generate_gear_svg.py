@@ -235,12 +235,7 @@ class GearMaker:
             % (self.HEAD_CIRCLE_RADIUS / self.PITCH_CIRCLE_RADIUS)
         )
 
-        self.gear_segments = []
-        self.bearing_segments = []
-
-        self._start_pt = [0, 0]
-        self._curr_pt = [0, 0]
-        self._end_pt = [0, 0]
+        self.initialize()
 
     @classmethod
     def setup(cls):
@@ -265,6 +260,15 @@ class GearMaker:
         cls.PITCH = (
             cls.MODULE * math.pi
         )  # länge des bogen zwischen 2 Zähne auf den PITCH_CIRCLE : (2pi * R) / z
+
+    def initialize(self):
+        """ """
+        self.gear_segments = []
+        self.bearing_segments = []
+
+        self._start_pt = [0, 0]
+        self._curr_pt = [0, 0]
+        self._end_pt = [0, 0]
 
     def rotate(self, pt, angle):
         """ """
@@ -571,6 +575,8 @@ class GearMaker:
 
     def make_svg_gear(self):
         """ """
+        self.initialize()
+
         return SVG_GEAR_TPL % {
             "GEAR": self.get_gear(),
             "REINFORCEMENT": self.get_reinforcement(),
@@ -579,6 +585,8 @@ class GearMaker:
 
     def make_svg_gears_animated(self):
         """ """
+        self.initialize()
+
         return SVG_2_GEARS_ANIMATED_TPL % {
             "GEAR": self.get_gear(),
             "BEARING": self.get_bearing(),
@@ -597,6 +605,8 @@ class GearMaker:
 
     def make_svg_gears_static(self):
         """ """
+        self.initialize()
+
         return SVG_2_GEARS_STATIC_TPL % {
             "GEAR": self.get_gear(),
             "BEARING": self.get_bearing(),
