@@ -60,15 +60,15 @@ SVG_2_GEARS_ANIMATED_TPL = """<?xml version="1.0" encoding="UTF-8" standalone="n
      <!-- reference lines -->
      
      <!-- gear1 horizontal axis -->
-     <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 0 100 L 300 100" ></path>
+     <path style="stroke:#ff0000;stroke-width:0.050000" d="M 0 100 L 300 100" ></path>
      <!-- gear1 vertical axis -->
-     <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 100 0 L 100 200" ></path>
+     <path style="stroke:#ff0000;stroke-width:0.050000" d="M 100 0 L 100 200" ></path>
     
      <!-- middle vertical -->
      <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M %(SECOND_GEAR_X_LEFT)f 0 L %(SECOND_GEAR_X_LEFT)f 300" ></path>
 
      <!-- gear2 vertical axis -->     
-     <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M %(SECOND_GEAR_X_POS)f 0 L %(SECOND_GEAR_X_POS)f 300" ></path>
+     <path style="stroke:#0000ff;stroke-width:0.050000" d="M %(SECOND_GEAR_X_POS)f 0 L %(SECOND_GEAR_X_POS)f 300" ></path>
 
    </g>
    
@@ -112,7 +112,7 @@ SVG_2_GEARS_STATIC_TPL = """<?xml version="1.0" encoding="UTF-8" standalone="no"
     <!-- gear1 horizontal axis -->
     <path style="stroke:#ff0000;stroke-width:0.050000" d="M 0 100 L 200 100" ></path>
     <!-- gear2 vertical axis -->
-    <path style=stroke:#ff0000;stroke-width:0.050000" d="M 100 0 L 100 200" ></path>
+    <path style="stroke:#ff0000;stroke-width:0.050000" d="M 100 0 L 100 200" ></path>
     
     <!-- middle verical -->
     <path style="stroke:#000000;stroke-width:0.050000" d="M %(SECOND_GEAR_X_LEFT)f 0 L %(SECOND_GEAR_X_LEFT)f 200" ></path>
@@ -535,6 +535,7 @@ class GearMaker:
             OK - theta = (alpha_teeth - alpha_gap ) / 2  (magic!)
         else :
             OK - theta = alpha_teeth  (magic!)
+            OK - theta = -alpha_gap   (magic!)
         """
         alpha = self.PITCH / self.PITCH_CIRCLE_RADIUS
         alpha_gap = alpha * self.RATIO_TEETH_GAP_BASE / (1 + self.RATIO_TEETH_GAP_BASE)
@@ -543,7 +544,8 @@ class GearMaker:
         if self.NB_TEETHS % 2 == 0:
             return (alpha_teeth - alpha_gap) / 2.0 * (180 / math.pi)
         else:
-            return (alpha_teeth) / 1.0 * (180 / math.pi)
+            return -(alpha_gap) / 1.0 * (180 / math.pi)
+            # return (alpha_teeth) / 1.0 * (180 / math.pi)
 
     def get_second_gear_x_pos(self):
         """ """
