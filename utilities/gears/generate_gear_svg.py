@@ -110,18 +110,18 @@ SVG_2_GEARS_STATIC_TPL = """<?xml version="1.0" encoding="UTF-8" standalone="no"
 
      <!-- reference lines -->
     <!-- gear1 horizontal axis -->
-    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 0 100 L 200 100" ></path>
+    <path style="stroke:#ff0000;stroke-width:0.050000" d="M 0 100 L 200 100" ></path>
     <!-- gear2 vertical axis -->
-    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 100 0 L 100 200" ></path>
+    <path style=stroke:#ff0000;stroke-width:0.050000" d="M 100 0 L 100 200" ></path>
     
     <!-- middle verical -->
-    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M %(SECOND_GEAR_X_LEFT)f 0 L %(SECOND_GEAR_X_LEFT)f 200" ></path>
+    <path style="stroke:#000000;stroke-width:0.050000" d="M %(SECOND_GEAR_X_LEFT)f 0 L %(SECOND_GEAR_X_LEFT)f 200" ></path>
 
     <!-- gear2 horizontal axis -->
-    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M -300 0 L 300 0" 
+    <path style="stroke:#0000ff;stroke-width:0.050000" d="M -300 0 L 300 0" 
       transform="translate(%(SECOND_GEAR_X_POS)f,100) rotate(%(SECOND_GEAR_ROTATION_ANIM_START)f)"></path>
     <!-- gear2 vertical axis -->
-    <path style="fill:#ffcccc;stroke:#000000;stroke-width:0.050000" d="M 0.000000 -300 L 0.000000 300" 
+    <path style="stroke:#0000ff;stroke-width:0.050000" d="M 0.000000 -300 L 0.000000 300" 
       transform="translate(%(SECOND_GEAR_X_POS)f,100) rotate(%(SECOND_GEAR_ROTATION_ANIM_START)f)"></path>
     
 
@@ -359,6 +359,14 @@ class GearMaker:
         for _ in range(self.NB_TEETHS):
             self._make_teeth()
 
+        alpha = self.PITCH / self.PITCH_CIRCLE_RADIUS
+
+        alpha_gap = alpha * self.RATIO_TEETH_GAP_BASE / (1 + self.RATIO_TEETH_GAP_BASE)
+        alpha_teeth = alpha * 1.0 / (1 + self.RATIO_TEETH_GAP_BASE)
+
+        print("ALPHA TEETH = ", alpha_teeth, alpha_teeth * 180 / math.pi)
+        print("ALPHA GAP = ", alpha_gap, alpha_gap * 180 / math.pi)
+
     def _make_teeth(self):
         """
         exact teeth
@@ -519,12 +527,23 @@ class GearMaker:
         self.bearing_segments.append(nut)
 
     def get_second_gear_rotation(self):
-        """ """
+        """
+        When displaying 2 gears, the second gear must be rotated in such way
+        that the 2 gears do inside each other perfectly
+
+        nb teeth / 2 :
+            OK - theta = (alpha_teeth - alpha_gap ) / 2  (magic!)
+        else :
+            OK - theta = alpha_teeth  (magic!)
+        """
         alpha = self.PITCH / self.PITCH_CIRCLE_RADIUS
         alpha_gap = alpha * self.RATIO_TEETH_GAP_BASE / (1 + self.RATIO_TEETH_GAP_BASE)
         alpha_teeth = alpha * 1.0 / (1 + self.RATIO_TEETH_GAP_BASE)
 
-        return (alpha_teeth - alpha_gap) / 2.0 * (180 / math.pi)
+        if self.NB_TEETHS % 2 == 0:
+            return (alpha_teeth - alpha_gap) / 2.0 * (180 / math.pi)
+        else:
+            return (alpha_teeth) / 1.0 * (180 / math.pi)
 
     def get_second_gear_x_pos(self):
         """ """
@@ -619,7 +638,6 @@ class GearMaker:
             "GEAR_TEETH_CURVATURE": self.TEETH_CURVATURE,
             "GEAR_TEETH_RATION_HEAD_BASE": self.RATIO_TEETH_HEAD_BASE,
             "SECOND_GEAR_ROTATION_ANIM_START": self.get_second_gear_rotation(),
-            "SECOND_GEAR_ROTATION_ANIM_END": self.get_second_gear_rotation() - 380.0,
         }
 
 

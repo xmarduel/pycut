@@ -11,6 +11,8 @@ VERSION = "1_0_0"
 import sys
 import argparse
 
+from typing import Tuple
+
 from PySide6 import QtCore
 from PySide6 import QtGui
 from PySide6 import QtWidgets
@@ -173,7 +175,33 @@ class GearMainWindow(QtWidgets.QMainWindow):
 
         self.cb_generate_svg()
     
-    def cb_generate_svg(self):
+    def cb_generate_svg(self) -> Tuple[str, str, str]:
+        """ """
+        maker = generate_gear_svg.GearMaker()
+        generate_gear_svg.GearMaker.set_params(
+            {
+                "NB_TEETHS": self.ui.nb_teeths.value(),
+                "FOOT_HEIGHT": self.ui.foot_height.value(),
+                "HEAD_HEIGHT": self.ui.head_height.value(),
+                "TEETH_CURVATURE": self.ui.curvature.value(),
+                "RATIO_TEETH_GAP_BASE": self.ui.ratio_teeth_gap_base.value(),
+                "RATIO_TEETH_HEAD_BASE": self.ui.ratio_teeth_head_base.value(),
+                "REINFORCMENT_RADIUS": self.ui.reinforcment_radius.value()
+            }
+        )
+
+        svg1 = maker.make_svg_gear()
+        self.display_svg(svg1)
+
+        svg2 = maker.make_svg_gears_static()
+        self.display_svg_static(svg2)
+
+        svg3 = maker.make_svg_gears_animated()
+        self.display_svg_animated(svg3)
+
+        return (svg1, svg2, svg3)
+
+    def cb_save_svg_file(self):
         """ """
         maker = generate_gear_svg.GearMaker()
         generate_gear_svg.GearMaker.set_params(
@@ -191,17 +219,21 @@ class GearMainWindow(QtWidgets.QMainWindow):
         svg = maker.make_svg_gear()
         self.display_svg(svg)
 
+        fp = open("gear_%i.svg" % self.ui.nb_teeths.value(), "w")
+        fp.write(svg)
+        fp.close()
+
         svg = maker.make_svg_gears_static()
         self.display_svg_static(svg)
+
+        fp = open("gears_%i_static.svg" % self.ui.nb_teeths.value(), "w")
+        fp.write(svg)
+        fp.close()
 
         svg = maker.make_svg_gears_animated()
         self.display_svg_animated(svg)
 
-    def cb_save_svg_file(self):
-        """ """
-        svg = self.cb_generate_svg()
-
-        fp = open("gear_%i.svg" % self.ui.nb_teeths.value(), "w")
+        fp = open("gears_%i_animated.svg" % self.ui.nb_teeths.value(), "w")
         fp.write(svg)
         fp.close()
 
