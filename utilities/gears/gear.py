@@ -248,7 +248,7 @@ class GearMainWindow(QtWidgets.QMainWindow):
         main_layout.addWidget(htmlview)
 
         dlg.setLayout(main_layout)
-        dlg.setWindowTitle("PyCut Tutorial")
+        dlg.setWindowTitle("Gears Tutorial")
         dlg.setModal(True)
 
         filename = "./doc/gears.html"
@@ -318,7 +318,7 @@ def main():
     )
 
     # version info
-    parser.add_argument("--version", action="version", version="f{VERSION}")
+    parser.add_argument("--version", action="version", version=f"{VERSION}")
 
     options = parser.parse_args()
 

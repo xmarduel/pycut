@@ -36,9 +36,63 @@
 
 <p>Welcome to <strong>Gears</strong>, a small program to generate some gears in the SVG format.
 Primary goal of this program is to generate gears for the Hobbymat MD65 Lathe, hence the custom
-bearing hole geometry in the center of the gear.</p>
+bearing hole geometry in the center of the gear as well as the "reinforcement" ring.</p>
 
 <p>Hopefully, users will be able to generate all kind of gears.</p>
+
+<h3>Gears primer</h3>
+
+<p>A lot can be found in internet about gears. We just recall here the basics.</p>
+
+<p>When the gear <strong>module is 1</strong>, the gear's diameter is equal to its number of
+teeths. But the gear diameter "up to the teeths" is infact somehow larger, because the teeths have
+a given height. This height is given with the <strong>head_height</strong> parameter. And the
+teeths have also a <strong>foot_height</strong>, and thus the circle on which the teeths sit has a
+diameter smaller than the "official" gear
+diameter.<strong><strong><strong></strong></strong></strong></p>
+
+<p>The following default values seem acceptable:</p>
+<ul>
+  <li><strong>head_height = 1.25</strong></li>
+  <li><strong>foot_height = 1.0</strong></li>
+</ul>
+
+<p>The head height should not be larger than the foot height.</p>
+
+<p>Finally I did not find explanations about the following points which seem to me of importance
+(obviouslay, I missed something!):</p>
+<ul>
+  <li>how wide has to be a teeth foot (or "base") in comparison to the teeth gap (gap between two
+    teeths)? Hence the <strong>ratio_teeth_gap/base </strong>parameter
+  setting<strong>.</strong></li>
+  <li>how wide has to be a teeth head in comparison to its base? Hence the
+    <strong>ratio_teeth_head/base </strong>parameter setting<strong>.</strong></li>
+</ul>
+
+<p>The following default values seem acceptable:</p>
+<ul>
+  <li><strong>ratio_teeth_gap/base = 0.60</strong></li>
+  <li><strong>ratio_teeth_head/base = 0.40</strong></li>
+</ul>
+
+<p>The perfect curvature of the teeths was calculated by <strong>Euler</strong>. Here I do not
+care, but assign a curvature as an "arc curvature". The <strong>curvature</strong> of the teeths
+gets as default value <strong>5</strong>. This correspond to the <strong>svg arc curvature</strong>
+in the arc definition from the teeth foot to its head. </p>
+
+<p></p>
+
+<p>The user can play with these settings, and observe how two gears with the same properties fit
+(more or less good) together.</p>
+
+<p>When saving to svg, 3 files are produced:</p>
+<ul>
+  <li>single gear svg</li>
+  <li>2 "static" gears that fit in another</li>
+  <li>2 "animated" gears that fit in another: enjoy!</li>
+</ul>
+
+<p></p>
 
 <h3>Usage</h3>
 
@@ -47,28 +101,54 @@ bearing hole geometry in the center of the gear.</p>
 &gt; python gears.py</code></pre>
 
 <h4>Svg</h4>
-TODO
+These settings are for the svg output for the single gear svg file. Accually not used. 
+<ul>
+  <li><strong>width</strong>: the width in the svg definition</li>
+  <li><strong>height</strong>: the height in the svg definition</li>
+  <li><strong>viewbox: x</strong>: the origin x value in the svg viewBox definition</li>
+  <li><strong>viewbox: y</strong>: the origin y value in the svg viewBox definition</li>
+</ul>
+
 <h4>Basics</h4>
-TODO
-<h4>Sizes</h4>
-TODO
+<ul>
+  <li><strong>module</strong>: the main gear parameter. Honestly I have just considered a value of
+    1 in all my experiments.</li>
+  <li><strong>nb teeths</strong>: yeah...</li>
+  <li><strong>gear parameter</strong>: infact a consequence of the given module and number of
+    teeths, so it is not editable.</li>
+  <li><strong>reinforcement radius</strong>: used it (or not) to produce gears similar to the
+    hobbymat lathe ones, when generating stl files within blender.</li>
+</ul>
+
+<h4>Teeths Sizes</h4>
+<ul>
+  <li><strong>foot height</strong>:</li>
+  <li><strong>head height</strong>: </li>
+</ul>
+
 <h4>Teeths Shape</h4>
-TODO
+<ul>
+  <li><strong>ratio teeth gap/base</strong>:</li>
+  <li><strong>curvature</strong>: </li>
+  <li><strong>ratio teeth head/base</strong>: </li>
+</ul>
+
+<p></p>
 
 <h3>Further processing</h3>
 
-<p>It can be possible to generate <code>stl</code> files within <strong>blender</strong> in order
-to use 3D printing. When importing the SVG in <strong>blender</strong>, the user has to convert the
-curves to mesh, and then solidify these meshes. <span style="color:#ff00ff">Unfortunately, these
-meshes can be buggy</span>. The user will recognize when something goes wrong when "solidifying" 
-the gear's mesh.</p>
+<p>It is possible to generate <code>stl</code> files within <strong>blender</strong> in order to
+use 3D printing. When importing the SVG in <strong>blender</strong>, the user has to convert the
+(svg) curves to mesh, and then solidify these meshes. <span style="color:#ff00ff">Unfortunately,
+these meshes can be buggy</span>. The user will recognize the bug when "solidifying" the gear's
+mesh.</p>
 
-<p>In this case, the user has to "clean" the mesh from unwanted vertices, especially the spurious ones
-on the teeths of the gear. After having applied some <strong>solidify/boolean modifiers</strong>,
-and <strong>applied</strong> (blender "apply" modifiers) them, then the unwanted items for a proper
-<code>stl</code> export (bearing and reinforcment items) must be deleted.</p>
+<p>In this case, the user has to "clean" the mesh from unwanted nodes/vertices, especially the
+spurious ones on the teeths of the gear. After having created some <strong>solidify/boolean
+modifiers</strong>, and <strong>applied</strong> (blender "apply" modifiers) <strong>them</strong>,
+then the unwanted items for a proper <code>stl</code> export must be deleted -in our case the
+<code>bearing</code> and <code>reinforcement</code> items.</p>
 
 <p>Finally, the generated <code>stl</code> file can be imported in a 3D printing slicer.</p>
-
 </body>
 </html>
