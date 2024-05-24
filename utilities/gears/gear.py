@@ -222,21 +222,21 @@ class GearMainWindow(QtWidgets.QMainWindow):
         svg = maker.make_svg_gear()
         self.display_svg(svg)
 
-        fp = open("gear_%i.svg" % self.ui.nb_teeths.value(), "w")
+        fp = open("hobbymat_gear_%i.svg" % self.ui.nb_teeths.value(), "w")
         fp.write(svg)
         fp.close()
 
         svg = maker.make_svg_gears_static()
         self.display_svg_static(svg)
 
-        fp = open("gears_%i_static.svg" % self.ui.nb_teeths.value(), "w")
+        fp = open("hobbymat_2_gears_%i_static.svg" % self.ui.nb_teeths.value(), "w")
         fp.write(svg)
         fp.close()
 
         svg = maker.make_svg_gears_animated()
         self.display_svg_animated(svg)
 
-        fp = open("gears_%i_animated.svg" % self.ui.nb_teeths.value(), "w")
+        fp = open("hobbymat_2_gears_%i_animated.svg" % self.ui.nb_teeths.value(), "w")
         fp.write(svg)
         fp.close()
 
