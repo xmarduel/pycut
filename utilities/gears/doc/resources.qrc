@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>gear_terms.png</file>
+        <file>js/prism.js</file>
+        <file>css/prism.css</file>
+        <file>gears.html</file>
+        <file>about.html</file>
+    </qresource>
+</RCC>

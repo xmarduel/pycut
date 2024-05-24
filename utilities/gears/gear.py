@@ -1,10 +1,5 @@
 """
 a GUI app to view/generate gears for hobbymat MD65 as SVG.
-
-Tip: use blender to import the svg, solidify/bool items to produce
-     an stl file for 3D printing.
-Blender: when importing svg, curve to mesh, clean by hand the blender mesh
-         at the teeths.
 """
 VERSION = "1_0_0"
 
@@ -22,6 +17,7 @@ import gear_mainwindow
 import svgviewer
 import generate_gear_svg
 
+import resources_rc
 
 
 class GearMainWindow(QtWidgets.QMainWindow):
@@ -254,7 +250,7 @@ class GearMainWindow(QtWidgets.QMainWindow):
         dlg.setWindowTitle("Gears Tutorial")
         dlg.setModal(True)
 
-        filename = "./doc/gears.html"
+        filename = ":/gears.html"
         file = QtCore.QFile(filename)
         if file.open(QtCore.QIODevice.ReadOnly):
             data = str(file.readAll(), "utf-8")  # explicit encoding
@@ -285,7 +281,7 @@ class GearMainWindow(QtWidgets.QMainWindow):
         dlg.setModal(True)
 
         try:
-            view.setSource(QtCore.QUrl.fromLocalFile("./doc/about.html"))
+            view.setSource(QtCore.QUrl.fromLocalFile(":/about.html"))
         except Exception as msg:
             view.setHtml(self.notfound % {"message": str(msg)})
 
