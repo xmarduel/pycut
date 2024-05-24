@@ -6,6 +6,18 @@
 from PySide6 import QtCore
 
 qt_resource_data = b"\
+\x00\x00\x00\x1a\
+<\
+h3>Teeth foot he\
+ight</h3>\
+\x00\x00\x00\x1c\
+<\
+h3>Reinforcment \
+Radius</h3>\
+\x00\x00\x00\x1d\
+<\
+h3>Ratio Teeth G\
+ap/Base</h3>\
 \x00\x00\x00\x1f\
 <\
 h3>Gears version\
@@ -23544,7 +23556,19 @@ M6\xd9d\x93M6\xd9d\xd3V'\x8bP6\xd9\
 d\x93M6\xd9d\x93M[\x99\x92\xc9\xff\x0f\x8f\xfd\
 \x9e\x89j|\x8dV\x00\x00\x00\x00IEND\xaeB\
 `\x82\
-\x00\x00\x19;\
+\x00\x00\x00\x12\
+<\
+h3>Curvature</h3\
+>\
+\x00\x00\x00\x1e\
+<\
+h3>Ratio Teeth H\
+ead/Base</h3>\
+\x00\x00\x00\x1a\
+<\
+h3>Teeth head he\
+ight</h3>\
+\x00\x00\x19E\
 <\
 html>\x0a<head>\x0a  <\
 meta http-equiv=\
@@ -23552,404 +23576,405 @@ meta http-equiv=\
 ontent=\x22text/htm\
 l; charset=iso-8\
 859-1\x22>\x0a  <link \
-href=\x22prism.css\x22\
- rel=\x22stylesheet\
-\x22>\x0a  <style>\x0a   \
- pre[class*=\x22lan\
-guage-\x22] {\x0a     \
-     font-size: \
-12px;\x0a          \
-font-style: norm\
-al;\x0a          fo\
-nt-family: monos\
-pace;\x0a          \
-background-color\
-: #ffffff;\x0a    }\
-\x0a    \x0a    span.c\
-ode {\x0a      font\
--size: 10pt;\x0a   \
-   color: black;\
-\x0a    }\x0a    span.\
-code_comment {\x0a \
-     font-size: \
-10pt;\x0a      colo\
-r: green;\x0a    }\x0a\
-  </style>\x0a  <ti\
-tle></title>\x0a</h\
-ead>\x0a\x0a<body>\x0a<sc\
+href=\x22css/prism.\
+css\x22 rel=\x22styles\
+heet\x22>\x0a  <style>\
+\x0a    pre[class*=\
+\x22language-\x22] {\x0a \
+         font-si\
+ze: 12px;\x0a      \
+    font-style: \
+normal;\x0a        \
+  font-family: m\
+onospace;\x0a      \
+    background-c\
+olor: #ffffff;\x0a \
+   }\x0a    \x0a    sp\
+an.code {\x0a      \
+font-size: 10pt;\
+\x0a      color: bl\
+ack;\x0a    }\x0a    s\
+pan.code_comment\
+ {\x0a      font-si\
+ze: 10pt;\x0a      \
+color: green;\x0a  \
+  }\x0a  </style>\x0a \
+ <title></title>\
+\x0a</head>\x0a\x0a<body>\
+\x0a<script type=\x22t\
+ext/javascript\x22 \
+src=\x22js/prism.js\
+\x22>\x0a</script>\x0a<sc\
 ript type=\x22text/\
 javascript\x22 src=\
-\x22prism.js\x22>\x0a</sc\
-ript>\x0a<script ty\
-pe=\x22text/javascr\
-ipt\x22 src=\x22prism_\
-keep_tag.js\x22>\x0a</\
-script>\x0a\x0a<h3>Gea\
-rs</h3>\x0a\x0a<p></p>\
-\x0a\x0a<h3>Introducti\
-on</h3>\x0a\x0a<p>Welc\
-ome to <strong>G\
-ears</strong>, a\
- small program t\
-o generate some \
-gears in the SVG\
- format.\x0aPrimary\
- goal of this pr\
-ogram is to gene\
-rate gears for t\
-he Hobbymat MD65\
- Lathe, hence th\
-e custom\x0abearing\
- hole geometry i\
-n the center of \
-the gear as well\
- as the \x22reinfor\
-cement\x22 ring.</p\
->\x0a\x0a<p>Hopefully,\
- users will be a\
-ble to generate \
-all kind of gear\
-s.</p>\x0a\x0a<h3>Gear\
-s primer</h3>\x0a\x0a<\
-p>A lot can be f\
-ound in internet\
- about gears. We\
- just recall her\
-e the basics. He\
-re is an image\x0aw\
-here standad gea\
-rs terms are hig\
-hlighted.</p>\x0a\x0a<\
-p><img alt=\x22gear\
-\x22 src=\x22gear_term\
-s.png\x22 width=\x2268\
-7\x22></p>\x0a\x0a<p>The \
-<strong>module</\
-strong> of a gea\
-r is the ratio o\
-f the \x22reference\
- diameter\x22 of th\
-e gear divided \x0a\
-by the number of\
- teeth. Or diffe\
-rently said, the\
- diameter of the\
- gear is the pro\
-duct  of the num\
-ber of \x0ateeths t\
-imes the module.\
-</p>\x0a\x0a<p>When th\
-e gear <strong>m\
-odule is 1</stro\
-ng>, the gear's \
-diameter is equa\
-l to its number \
-of\x0ateeths. This \
-diameter corresp\
-onds to the <str\
-ong>pitch circle\
-</strong>. But t\
-he gear diameter\
- \x22up to the\x0ateet\
-hs\x22 is infact so\
-mehow larger, be\
-cause the teeths\
- have a given he\
-ight. The total \
-\x0aheight of a tee\
-th is the sum of\
- the \x22<strong>Ad\
-dedum</strong>\x22 \
-(denoted here <s\
-trong>head_heigh\
-t</strong>) \x0aand\
- the \x22<strong>De\
-dendum</strong>\x22\
- (denoted here <\
-strong>foot_heig\
-ht</strong>). Th\
-e circle on whic\
-h the\x0ateeths sit\
- has a diameter \
-smaller than the\
- <strong>pitch c\
-ircle</strong> a\
-nd is called the\
- <strong>root ci\
-rcle.</strong>\x0a.\
-</p>\x0a\x0a<p>The fol\
-lowing default v\
-alues seem accep\
-table:</p>\x0a<ul>\x0a\
-  <li><strong>fo\
-ot_height = 1.25\
- mm (x module)</\
-strong></li>\x0a  <\
-li><strong>head_\
-height = 1.00 mm\
- (x module)</str\
-ong></li>\x0a</ul>\x0a\
-\x0a<p>The head hei\
-ght should not b\
-e larger than th\
-e foot height.</\
-p>\x0a\x0a<p>Finally I\
- did not find ex\
-planations about\
- the following p\
-oints which seem\
- of importance t\
-o me\x0a(obviously,\
- I missed someth\
-ing!):</p>\x0a<ul>\x0a\
-  <li>how wide h\
-as to be a teeth\
- foot in compari\
-son to the teeth\
- gap (gap betwee\
-n two teeths)?\x0a \
-   Hence the <st\
-rong>ratio_teeth\
-_gap/foot</stron\
-g> parameter set\
-ting<strong>.</s\
-trong></li>\x0a  <l\
-i>how wide has t\
-o be a teeth hea\
-d in comparison \
-to its foot? Hen\
-ce the\x0a    <stro\
-ng>ratio_teeth_h\
-ead/foot </stron\
-g>parameter sett\
-ing<strong>.</st\
-rong></li>\x0a</ul>\
-\x0a\x0a<p>The followi\
-ng default value\
-s seem acceptabl\
-e:</p>\x0a<ul>\x0a  <l\
-i><strong>ratio_\
-teeth_gap/foot =\
- 0.60</strong></\
-li>\x0a  <li><stron\
-g>ratio_teeth_he\
-ad/foot = 0.40</\
-strong></li>\x0a</u\
-l>\x0a\x0a<p>The perfe\
-ct curvature of \
-the teeths was c\
-alculated by <st\
-rong>Euler</stro\
-ng>. Here I do n\
-ot\x0acare, but ass\
-ign a curvature \
-as an \x22arc curva\
-ture\x22. The <stro\
-ng>curvature</st\
-rong> of the tee\
-ths\x0agets as defa\
-ult value <stron\
-g>5</strong>. Th\
-is correspond to\
- the <strong>svg\
- arc curvature</\
-strong>\x0ain the a\
-rc definition fr\
-om the teeth foo\
-t to its head an\
-d seems acceptab\
-le. </p>\x0a\x0a<p></p\
->\x0a\x0a<p>The user c\
-an play with the\
-se settings, and\
- observe how two\
- gears with the \
-same properties \
-fit\x0a(more or les\
-s good) together\
-.</p>\x0a\x0a<p>When s\
-aving to svg, 3 \
-files are produc\
-ed:</p>\x0a<ul>\x0a  <\
-li>single gear s\
-vg</li>\x0a  <li>2 \
-\x22static\x22 gears t\
-hat fit in anoth\
-er</li>\x0a  <li>2 \
-\x22animated\x22 gears\
- that fit in ano\
-ther: enjoy!</li\
->\x0a</ul>\x0a\x0a<p></p>\
-\x0a\x0a<h3>Usage</h3>\
-\x0a\x0a<p>From the co\
-mmand line</p>\x0a<\
-pre><code class=\
-\x22language-shell\x22\
->&gt; python gea\
-rs.py -h\x0a&gt; py\
-thon gears.py</c\
-ode></pre>\x0a\x0a<h4>\
-Svg</h4>\x0aThese s\
-ettings are for \
-the svg output f\
-or the single ge\
-ar svg file. Acc\
-ually not used. \
+\x22js/prism_keep_t\
+ag.js\x22>\x0a</script\
+>\x0a\x0a<h3>Gears</h3\
+>\x0a\x0a<p></p>\x0a\x0a<h3>\
+Introduction</h3\
+>\x0a\x0a<p>Welcome to\
+ <strong>Gears</\
+strong>, a small\
+ program to gene\
+rate some gears \
+in the SVG forma\
+t.\x0aPrimary goal \
+of this program \
+is to generate g\
+ears for the Hob\
+bymat MD65 Lathe\
+, hence the cust\
+om\x0abearing hole \
+geometry in the \
+center of the ge\
+ar as well as th\
+e \x22reinforcement\
+\x22 ring.</p>\x0a\x0a<p>\
+Hopefully, users\
+ will be able to\
+ generate all ki\
+nd of gears.</p>\
+\x0a\x0a<h3>Gears prim\
+er</h3>\x0a\x0a<p>A lo\
+t can be found i\
+n internet about\
+ gears. We just \
+recall here the \
+basics. Here is \
+an image\x0awhere s\
+tandad gears ter\
+ms are highlight\
+ed.</p>\x0a\x0a<p><img\
+ alt=\x22gear\x22 src=\
+\x22gear_terms.png\x22\
+ width=\x22687\x22></p\
+>\x0a\x0a<p>The <stron\
+g>module</strong\
+> of a gear is t\
+he ratio of the \
+\x22reference diame\
+ter\x22 of the gear\
+ divided \x0aby the\
+ number of teeth\
+. Or differently\
+ said, the diame\
+ter of the gear \
+is the product  \
+of the number of\
+ \x0ateeths times t\
+he module.</p>\x0a\x0a\
+<p>When the gear\
+ <strong>module \
+is 1</strong>, t\
+he gear's diamet\
+er is equal to i\
+ts number of\x0atee\
+ths. This diamet\
+er corresponds t\
+o the <strong>pi\
+tch circle</stro\
+ng>. But the gea\
+r diameter \x22up t\
+o the\x0ateeths\x22 is\
+ infact somehow \
+larger, because \
+the teeths have \
+a given height. \
+The total \x0aheigh\
+t of a teeth is \
+the sum of the \x22\
+<strong>Addedum<\
+/strong>\x22 (denot\
+ed here <strong>\
+head_height</str\
+ong>) \x0aand the \x22\
+<strong>Dedendum\
+</strong>\x22 (deno\
+ted here <strong\
+>foot_height</st\
+rong>). The circ\
+le on which the\x0a\
+teeths sit has a\
+ diameter smalle\
+r than the <stro\
+ng>pitch circle<\
+/strong> and is \
+called the <stro\
+ng>root circle.<\
+/strong>\x0a.</p>\x0a\x0a\
+<p>The following\
+ default values \
+seem acceptable:\
+</p>\x0a<ul>\x0a  <li>\
+<strong>foot_hei\
+ght = 1.25 mm (x\
+ module)</strong\
+></li>\x0a  <li><st\
+rong>head_height\
+ = 1.00 mm (x mo\
+dule)</strong></\
+li>\x0a</ul>\x0a\x0a<p>Th\
+e head height sh\
+ould not be larg\
+er than the foot\
+ height.</p>\x0a\x0a<p\
+>Finally I did n\
+ot find explanat\
+ions about the f\
+ollowing points \
+which seem of im\
+portance to me\x0a(\
+obviously, I mis\
+sed something!):\
+</p>\x0a<ul>\x0a  <li>\
+how wide has to \
+be a teeth foot \
+in comparison to\
+ the teeth gap (\
+gap between two \
+teeths)?\x0a    Hen\
+ce the <strong>r\
+atio_teeth_gap/f\
+oot</strong> par\
+ameter setting<s\
+trong>.</strong>\
+</li>\x0a  <li>how \
+wide has to be a\
+ teeth head in c\
+omparison to its\
+ foot? Hence the\
+\x0a    <strong>rat\
+io_teeth_head/fo\
+ot </strong>para\
+meter setting<st\
+rong>.</strong><\
+/li>\x0a</ul>\x0a\x0a<p>T\
+he following def\
+ault values seem\
+ acceptable:</p>\
 \x0a<ul>\x0a  <li><str\
-ong>width</stron\
-g>: the width in\
- the svg definit\
-ion</li>\x0a  <li><\
-strong>height</s\
-trong>: the heig\
-ht in the svg de\
-finition</li>\x0a  \
-<li><strong>view\
-box: x</strong>:\
- the origin x va\
-lue in the svg v\
-iewBox definitio\
-n</li>\x0a  <li><st\
-rong>viewbox: y<\
-/strong>: the or\
-igin y value in \
-the svg viewBox \
-definition</li>\x0a\
-  <li><strong>an\
-imation speed</s\
-trong>: for the \
-2 gears animatio\
-n, time of a ful\
-l revolution</li\
->\x0a</ul>\x0a\x0a<h4>Bas\
-ics</h4>\x0a<ul>\x0a  \
-<li><strong>modu\
-le</strong>: the\
- main gear param\
-eter. Honestly I\
- have just consi\
-dered a value of\
-\x0a    1 in all my\
- experiments.</l\
+ong>ratio_teeth_\
+gap/foot = 0.60<\
+/strong></li>\x0a  \
+<li><strong>rati\
+o_teeth_head/foo\
+t = 0.40</strong\
+></li>\x0a</ul>\x0a\x0a<p\
+>The perfect cur\
+vature of the te\
+eths was calcula\
+ted by <strong>E\
+uler</strong>. H\
+ere I do not\x0acar\
+e, but assign a \
+curvature as an \
+\x22arc curvature\x22.\
+ The <strong>cur\
+vature</strong> \
+of the teeths\x0age\
+ts as default va\
+lue <strong>5</s\
+trong>. This cor\
+respond to the <\
+strong>svg arc c\
+urvature</strong\
+>\x0ain the arc def\
+inition from the\
+ teeth foot to i\
+ts head and seem\
+s acceptable. </\
+p>\x0a\x0a<p></p>\x0a\x0a<p>\
+The user can pla\
+y with these set\
+tings, and obser\
+ve how two gears\
+ with the same p\
+roperties fit\x0a(m\
+ore or less good\
+) together.</p>\x0a\
+\x0a<p>When saving \
+to svg, 3 files \
+are produced:</p\
+>\x0a<ul>\x0a  <li>sin\
+gle gear svg</li\
+>\x0a  <li>2 \x22stati\
+c\x22 gears that fi\
+t in another</li\
+>\x0a  <li>2 \x22anima\
+ted\x22 gears that \
+fit in another: \
+enjoy!</li>\x0a</ul\
+>\x0a\x0a<p></p>\x0a\x0a<h3>\
+Usage</h3>\x0a\x0a<p>F\
+rom the command \
+line</p>\x0a<pre><c\
+ode class=\x22langu\
+age-shell\x22>&gt; \
+python gears.py \
+-h\x0a&gt; python g\
+ears.py</code></\
+pre>\x0a\x0a<h4>Svg</h\
+4>\x0aThese setting\
+s are for the sv\
+g output for the\
+ single gear svg\
+ file. Accually \
+not used. \x0a<ul>\x0a\
+  <li><strong>wi\
+dth</strong>: th\
+e width in the s\
+vg definition</l\
 i>\x0a  <li><strong\
->nb teeths</stro\
-ng>: yeah...</li\
+>height</strong>\
+: the height in \
+the svg definiti\
+on</li>\x0a  <li><s\
+trong>viewbox: x\
+</strong>: the o\
+rigin x value in\
+ the svg viewBox\
+ definition</li>\
+\x0a  <li><strong>v\
+iewbox: y</stron\
+g>: the origin y\
+ value in the sv\
+g viewBox defini\
+tion</li>\x0a  <li>\
+<strong>animatio\
+n speed</strong>\
+: for the 2 gear\
+s animation, tim\
+e of a full revo\
+lution</li>\x0a</ul\
+>\x0a\x0a<h4>Basics</h\
+4>\x0a<ul>\x0a  <li><s\
+trong>module</st\
+rong>: the main \
+gear parameter. \
+Honestly I have \
+just considered \
+a value of\x0a    1\
+ in all my exper\
+iments.</li>\x0a  <\
+li><strong>nb te\
+eths</strong>: y\
+eah...</li>\x0a  <l\
+i><strong>gear p\
+arameter</strong\
+>: infact a cons\
+equence of the g\
+iven module and \
+number of\x0a    te\
+eths, so it is n\
+ot editable.</li\
 >\x0a  <li><strong>\
-gear parameter</\
-strong>: infact \
-a consequence of\
- the given modul\
-e and number of\x0a\
-    teeths, so i\
-t is not editabl\
-e.</li>\x0a  <li><s\
-trong>reinforcem\
-ent radius</stro\
-ng>: used it (or\
- not) to produce\
- gears similar t\
-o the\x0a    hobbym\
-at lathe ones, w\
-hen generating s\
-tl files within \
-blender.</li>\x0a</\
-ul>\x0a\x0a<h4>Teeths \
-Sizes</h4>\x0a<ul>\x0a\
-  <li><strong>fo\
-ot height</stron\
-g>:</li>\x0a  <li><\
-strong>head heig\
-ht</strong>: </l\
-i>\x0a</ul>\x0a\x0a<h4>Te\
-eths Shape</h4>\x0a\
-<ul>\x0a  <li><stro\
-ng>ratio teeth g\
-ap/foot</strong>\
-:</li>\x0a  <li><st\
-rong>curvature</\
-strong>: </li>\x0a \
+reinforcement ra\
+dius</strong>: u\
+sed it (or not) \
+to produce gears\
+ similar to the\x0a\
+    hobbymat lat\
+he ones, when ge\
+nerating stl fil\
+es within blende\
+r.</li>\x0a</ul>\x0a\x0a<\
+h4>Teeths Sizes<\
+/h4>\x0a<ul>\x0a  <li>\
+<strong>foot hei\
+ght</strong>:</l\
+i>\x0a  <li><strong\
+>head height</st\
+rong>: </li>\x0a</u\
+l>\x0a\x0a<h4>Teeths S\
+hape</h4>\x0a<ul>\x0a \
  <li><strong>rat\
-io teeth head/fo\
-ot</strong>: </l\
-i>\x0a</ul>\x0a\x0a<p></p\
->\x0a\x0a<h3>Further p\
-rocessing</h3>\x0a\x0a\
-<h4>3D Printing<\
-/h4>\x0a\x0a<p>It is p\
-ossible to gener\
-ate <code>stl</c\
-ode> files withi\
-n <strong>blende\
-r</strong> in or\
-der to\x0ause 3D pr\
-inting. When imp\
-orting the SVG i\
-n <strong>blende\
-r</strong>, the \
-user has to conv\
-ert the\x0a(svg) cu\
-rves to mesh, an\
-d then solidify \
-these meshes. <s\
-pan style=\x22color\
-:#ff00ff\x22>Unfort\
-unately,\x0athese m\
-eshes can be bug\
-gy</span>. The u\
-ser will recogni\
-ze the bug when \
-\x22solidifying\x22 th\
-e gear's\x0amesh.</\
-p>\x0a\x0a<p>In this c\
-ase, the user ha\
-s to \x22clean\x22 the\
- mesh from unwan\
-ted nodes/vertic\
-es, especially t\
-he\x0aspurious ones\
- on the teeths o\
-f the gear. Afte\
-r having created\
- some <strong>so\
-lidify/boolean\x0am\
-odifiers</strong\
->, and <strong>a\
-pplied</strong> \
-(blender \x22apply\x22\
- modifiers) <str\
-ong>them</strong\
->,\x0athen the unwa\
-nted items for a\
- proper <code>st\
-l</code> export \
-must be deleted \
--in our case the\
-\x0a<code>bearing</\
-code> and <code>\
-reinforcement</c\
-ode> items.</p>\x0a\
-\x0a<p>Finally, the\
- generated <code\
->stl</code> file\
- can be imported\
- in a 3D printin\
-g slicer.</p>\x0a\x0a<\
-h4>PyCut</h4>\x0a\x0a<\
-p>Of course the \
-svg can be loade\
-d into <strong>P\
-yCut</strong>. F\
-or perfect cutti\
-ng DogBones shou\
-ld\x0abe implemente\
-d, but they also\
- can be done \x22pe\
-r hand\x22 inside t\
-he svg itself (m\
-odify the <code>\
-bearing</code> p\
-ath).</p>\x0a</body\
->\x0a</html>\x0a\
+io teeth gap/foo\
+t</strong>:</li>\
+\x0a  <li><strong>c\
+urvature</strong\
+>: </li>\x0a  <li><\
+strong>ratio tee\
+th head/foot</st\
+rong>: </li>\x0a</u\
+l>\x0a\x0a<p></p>\x0a\x0a<h3\
+>Further process\
+ing</h3>\x0a\x0a<h4>3D\
+ Printing</h4>\x0a\x0a\
+<p>It is possibl\
+e to generate <c\
+ode>stl</code> f\
+iles within <str\
+ong>blender</str\
+ong> in order to\
+\x0ause 3D printing\
+. When importing\
+ the SVG in <str\
+ong>blender</str\
+ong>, the user h\
+as to convert th\
+e\x0a(svg) curves t\
+o mesh, and then\
+ solidify these \
+meshes. <span st\
+yle=\x22color:#ff00\
+ff\x22>Unfortunatel\
+y,\x0athese meshes \
+can be buggy</sp\
+an>. The user wi\
+ll recognize the\
+ bug when \x22solid\
+ifying\x22 the gear\
+'s\x0amesh.</p>\x0a\x0a<p\
+>In this case, t\
+he user has to \x22\
+clean\x22 the mesh \
+from unwanted no\
+des/vertices, es\
+pecially the\x0aspu\
+rious ones on th\
+e teeths of the \
+gear. After havi\
+ng created some \
+<strong>solidify\
+/boolean\x0amodifie\
+rs</strong>, and\
+ <strong>applied\
+</strong> (blend\
+er \x22apply\x22 modif\
+iers) <strong>th\
+em</strong>,\x0athe\
+n the unwanted i\
+tems for a prope\
+r <code>stl</cod\
+e> export must b\
+e deleted -in ou\
+r case the\x0a<code\
+>bearing</code> \
+and <code>reinfo\
+rcement</code> i\
+tems.</p>\x0a\x0a<p>Fi\
+nally, the gener\
+ated <code>stl</\
+code> file can b\
+e imported in a \
+3D printing slic\
+er.</p>\x0a\x0a<h4>PyC\
+ut</h4>\x0a\x0a<p>Of c\
+ourse the svg ca\
+n be loaded into\
+ <strong>PyCut</\
+strong>. For per\
+fect cutting Dog\
+Bones should\x0abe \
+implemented, but\
+ they also can b\
+e done \x22per hand\
+\x22 inside the svg\
+ itself (modify \
+the <code>bearin\
+g</code> path).<\
+/p>\x0a</body>\x0a</ht\
+ml>\x0a\
 \x00\x00\x10w\
 /\
 * PrismJS 1.22.0\
@@ -54165,6 +54190,23 @@ rism);\x0d\x0a\
 "
 
 qt_resource_name = b"\
+\x00\x1b\
+\x00i\x0d\x5c\
+\x00h\
+\x00e\x00l\x00p\x00_\x00l\x00a\x00b\x00e\x00l\x00_\x00f\x00o\x00o\x00t\x00_\x00h\
+\x00e\x00i\x00g\x00h\x00t\x00.\x00h\x00t\x00m\x00l\
+\x00#\
+\x06\xdc$\x5c\
+\x00h\
+\x00e\x00l\x00p\x00_\x00l\x00a\x00b\x00e\x00l\x00_\x00r\x00e\x00i\x00n\x00f\x00o\
+\x00r\x00c\x00m\x00e\x00n\x00t\x00_\x00r\x00a\x00d\x00i\x00u\x00s\x00.\x00h\x00t\
+\x00m\x00l\
+\x00$\
+\x09\xd0?<\
+\x00h\
+\x00e\x00l\x00p\x00_\x00l\x00a\x00b\x00e\x00l\x00_\x00r\x00a\x00t\x00i\x00o\x00_\
+\x00t\x00e\x00e\x00t\x00h\x00_\x00g\x00a\x00p\x00_\x00f\x00o\x00o\x00t\x00.\x00h\
+\x00t\x00m\x00l\
 \x00\x02\
 \x00\x00\x07\x13\
 \x00j\
@@ -54177,6 +54219,22 @@ qt_resource_name = b"\
 \x0eV\x99\xa7\
 \x00g\
 \x00e\x00a\x00r\x00_\x00t\x00e\x00r\x00m\x00s\x00.\x00p\x00n\x00g\
+\x00\x19\
+\x09\x86M\xdc\
+\x00h\
+\x00e\x00l\x00p\x00_\x00l\x00a\x00b\x00e\x00l\x00_\x00c\x00u\x00r\x00v\x00a\x00t\
+\x00u\x00r\x00e\x00.\x00h\x00t\x00m\x00l\
+\x00%\
+\x0a\x0f\xd4\xdc\
+\x00h\
+\x00e\x00l\x00p\x00_\x00l\x00a\x00b\x00e\x00l\x00_\x00r\x00a\x00t\x00i\x00o\x00_\
+\x00t\x00e\x00e\x00t\x00h\x00_\x00h\x00e\x00a\x00d\x00_\x00f\x00o\x00o\x00t\x00.\
+\x00h\x00t\x00m\x00l\
+\x00\x1b\
+\x00i\xf9\x1c\
+\x00h\
+\x00e\x00l\x00p\x00_\x00l\x00a\x00b\x00e\x00l\x00_\x00h\x00e\x00a\x00d\x00_\x00h\
+\x00e\x00i\x00g\x00h\x00t\x00.\x00h\x00t\x00m\x00l\
 \x00\x03\
 \x00\x00j\xa3\
 \x00c\
@@ -54196,21 +54254,33 @@ qt_resource_name = b"\
 "
 
 qt_resource_struct = b"\
-\x00\x00\x00\x00\x00\x02\x00\x00\x00\x05\x00\x00\x00\x01\
+\x00\x00\x00\x00\x00\x02\x00\x00\x00\x0b\x00\x00\x00\x01\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x00\x00\x00\x02\x00\x00\x00\x01\x00\x00\x00\x07\
+\x00\x00\x00\xd6\x00\x02\x00\x00\x00\x01\x00\x00\x00\x0d\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x00F\x00\x02\x00\x00\x00\x01\x00\x00\x00\x06\
+\x00\x00\x01\xe0\x00\x02\x00\x00\x00\x01\x00\x00\x00\x0c\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x00R\x00\x00\x00\x00\x00\x01\x00\x05\xbe\xda\
-\x00\x00\x01\x8f\xa9\xd0\xc7w\
-\x00\x00\x00\x0a\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
+\x00\x00\x01\x8f\x85\xc6=;\
+\x00\x00\x01\xa4\x00\x00\x00\x00\x00\x01\x00\x05\xbfq\
+\x00\x00\x01\x8f\x85\xc6\xbcQ\
+\x00\x00\x00<\x00\x00\x00\x00\x00\x01\x00\x00\x00\x1e\
+\x00\x00\x01\x8f\x85\xcb\xa1@\
+\x00\x00\x01\xec\x00\x00\x00\x00\x00\x01\x00\x05\xbf\x8f\
+\x00\x00\x01\x8f\xaa\xa4\xe5\xf4\
+\x00\x00\x01\x1c\x00\x00\x00\x00\x00\x01\x00\x05\xbf9\
+\x00\x00\x01\x8f\x85\xc8\x0b\x11\
+\x00\x00\x00\x88\x00\x00\x00\x00\x00\x01\x00\x00\x00>\
+\x00\x00\x01\x8f\xaa\xb0/\xac\
+\x00\x00\x01T\x00\x00\x00\x00\x00\x01\x00\x05\xbfO\
+\x00\x00\x01\x8f\x85\xc8\x86~\
+\x00\x00\x00\xe0\x00\x00\x00\x00\x00\x01\x00\x00\x00_\
 \x00\x00\x01\x8f\x85\x97\x03\xa8\
-\x00\x00\x00$\x00\x00\x00\x00\x00\x01\x00\x00\x00#\
+\x00\x00\x00\xfa\x00\x00\x00\x00\x00\x01\x00\x00\x00\x82\
 \x00\x00\x01\x8f\xa9\x8a\xaf\xec\
-\x00\x00\x00l\x00\x00\x00\x00\x00\x01\x00\x05\xd8\x19\
+\x00\x00\x02\x06\x00\x00\x00\x00\x00\x01\x00\x05\xd8\xd8\
 \x00\x00\x01\x8e\x19@\xf5\x7f\
-\x00\x00\x00\x84\x00\x00\x00\x00\x00\x01\x00\x05\xe8\x94\
+\x00\x00\x02\x1e\x00\x00\x00\x00\x00\x01\x00\x05\xe9S\
 \x00\x00\x01\x8e\x19@\xff\xd9\
 "
 

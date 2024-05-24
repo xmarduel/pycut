@@ -5,5 +5,11 @@
         <file>css/prism.css</file>
         <file>gears.html</file>
         <file>about.html</file>
+        <file>help_label_curvature.html</file>
+        <file>help_label_foot_height.html</file>
+        <file>help_label_head_height.html</file>
+        <file>help_label_ratio_teeth_gap_foot.html</file>
+        <file>help_label_ratio_teeth_head_foot.html</file>
+        <file>help_label_reinforcment_radius.html</file>
     </qresource>
 </RCC>

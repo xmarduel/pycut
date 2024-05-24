@@ -13,7 +13,7 @@ from PySide6 import QtGui
 from PySide6 import QtWidgets
 from PySide6 import QtWebEngineWidgets
 
-import gear_mainwindow
+import gears_mainwindow as gears_mainwindow
 import svgviewer
 import generate_gear_svg
 
@@ -27,7 +27,7 @@ class GearMainWindow(QtWidgets.QMainWindow):
         """ """
         super(GearMainWindow, self).__init__()
 
-        self.ui = gear_mainwindow.Ui_mainwindow()
+        self.ui = gears_mainwindow.Ui_mainwindow()
         self.ui.setupUi(self)
 
         self.signaler = MouseButtonSignaler()
