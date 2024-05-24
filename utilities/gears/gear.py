@@ -52,33 +52,34 @@ class GearMainWindow(QtWidgets.QMainWindow):
 
         self.ui.nb_teeths.valueChanged.connect(self.cb_nb_teeths)
 
+        self.ui.svg_animation_speed.valueChanged.connect(self.cb_generate_svg)
         self.ui.foot_height.valueChanged.connect(self.cb_generate_svg)
         self.ui.head_height.valueChanged.connect(self.cb_generate_svg)
-        self.ui.ratio_teeth_gap_base.valueChanged.connect(self.cb_generate_svg)
+        self.ui.ratio_teeth_gap_foot.valueChanged.connect(self.cb_generate_svg)
         self.ui.curvature.valueChanged.connect(self.cb_generate_svg)
-        self.ui.ratio_teeth_head_base.valueChanged.connect(self.cb_generate_svg)
+        self.ui.ratio_teeth_head_foot.valueChanged.connect(self.cb_generate_svg)
         self.ui.reinforcment_radius.valueChanged.connect(self.cb_generate_svg)
 
         self.signaler.installOn(self.ui.label_foot_height)
         self.signaler.installOn(self.ui.label_head_height)
-        self.signaler.installOn(self.ui.label_ratio_teeth_gap_base)
+        self.signaler.installOn(self.ui.label_ratio_teeth_gap_foot)
         self.signaler.installOn(self.ui.label_curvature)
-        self.signaler.installOn(self.ui.label_ratio_teeth_head_base)
+        self.signaler.installOn(self.ui.label_ratio_teeth_head_foot)
         self.signaler.installOn(self.ui.label_reinforcment_radius)
 
         self.signaler.mouseButtonEvent.connect(self.mouseButtonEventHandler)
 
         self.ui.button_foot_height_reset.clicked.connect(self.cb_reset_foot_height)
         self.ui.button_head_height_reset.clicked.connect(self.cb_reset_head_height)
-        self.ui.button_ratio_teeth_gap_base_reset.clicked.connect(self.cb_reset_ratio_teeth_gap_base)
+        self.ui.button_ratio_teeth_gap_foot_reset.clicked.connect(self.cb_reset_ratio_teeth_gap_foot)
         self.ui.button_curvature_reset.clicked.connect(self.cb_reset_curvature)
-        self.ui.button_ratio_teeth_head_base_reset.clicked.connect(self.cb_reset_ratio_teeth_head_base)
+        self.ui.button_ratio_teeth_head_foot_reset.clicked.connect(self.cb_reset_ratio_teeth_head_foot)
 
         self.cb_reset_foot_height()
         self.cb_reset_head_height()
         self.cb_reset_curvature()
-        self.cb_reset_ratio_teeth_gap_base()
-        self.cb_reset_ratio_teeth_head_base()
+        self.cb_reset_ratio_teeth_gap_foot()
+        self.cb_reset_ratio_teeth_head_foot()
 
         self.ui.actionTutorial.triggered.connect(self.cb_show_tutorial_qt)
         self.ui.actionAbout_Qt.triggered.connect(self.cb_show_about_qt)
@@ -156,13 +157,13 @@ class GearMainWindow(QtWidgets.QMainWindow):
         """ """
         self.ui.curvature.setValue(9.0 / 4.0 * (self.ui.foot_height.value() + self.ui.head_height.value()))
     
-    def cb_reset_ratio_teeth_gap_base(self):
+    def cb_reset_ratio_teeth_gap_foot(self):
         """ """
-        self.ui.ratio_teeth_gap_base.setValue(0.6)
+        self.ui.ratio_teeth_gap_foot.setValue(0.6)
 
-    def cb_reset_ratio_teeth_head_base(self):
+    def cb_reset_ratio_teeth_head_foot(self):
         """ """
-        self.ui.ratio_teeth_head_base.setValue(0.4)
+        self.ui.ratio_teeth_head_foot.setValue(0.4)
 
     def cb_nb_teeths(self):
         """ """
@@ -184,9 +185,10 @@ class GearMainWindow(QtWidgets.QMainWindow):
                 "FOOT_HEIGHT": self.ui.foot_height.value(),
                 "HEAD_HEIGHT": self.ui.head_height.value(),
                 "TEETH_CURVATURE": self.ui.curvature.value(),
-                "RATIO_TEETH_GAP_BASE": self.ui.ratio_teeth_gap_base.value(),
-                "RATIO_TEETH_HEAD_BASE": self.ui.ratio_teeth_head_base.value(),
-                "REINFORCMENT_RADIUS": self.ui.reinforcment_radius.value()
+                "RATIO_TEETH_GAP_FOOT": self.ui.ratio_teeth_gap_foot.value(),
+                "RATIO_TEETH_HEAD_FOOT": self.ui.ratio_teeth_head_foot.value(),
+                "REINFORCMENT_RADIUS": self.ui.reinforcment_radius.value(),
+                "ANIMATION_REVOLUTION_TIME": self.ui.svg_animation_speed.value()
             }
         )
 
@@ -210,9 +212,10 @@ class GearMainWindow(QtWidgets.QMainWindow):
                 "FOOT_HEIGHT": self.ui.foot_height.value(),
                 "HEAD_HEIGHT": self.ui.head_height.value(),
                 "TEETH_CURVATURE": self.ui.curvature.value(),
-                "RATIO_TEETH_GAP_BASE": self.ui.ratio_teeth_gap_base.value(),
-                "RATIO_TEETH_HEAD_BASE": self.ui.ratio_teeth_head_base.value(),
-                "REINFORCMENT_RADIUS": self.ui.reinforcment_radius.value()
+                "RATIO_TEETH_GAP_FOOT": self.ui.ratio_teeth_gap_foot.value(),
+                "RATIO_TEETH_HEAD_FOOT": self.ui.ratio_teeth_head_foot.value(),
+                "REINFORCMENT_RADIUS": self.ui.reinforcment_radius.value(),
+                "ANIMATION_REVOLUTION_TIME": self.ui.svg_animation_speed.value()
             }
         )
 

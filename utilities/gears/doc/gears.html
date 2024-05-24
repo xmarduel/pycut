@@ -42,43 +42,50 @@ bearing hole geometry in the center of the gear as well as the "reinforcement" r
 
 <h3>Gears primer</h3>
 
-<p>A lot can be found in internet about gears. We just recall here the basics.</p>
+<p>A lot can be found in internet about gears. We just recall here the basics. Here is an image
+where standad gears terms are highlighted.</p>
+
+<p><img alt="gear" src="gear_terms.png" width="687"></p>
+
+<p>The <strong>module</strong> of a gear is the ratio of the "reference diameter" of the gear divided 
+by the number of teeth. Or differently said, the diameter of the gear is the product  of the number of 
+teeths times the module.</p>
 
 <p>When the gear <strong>module is 1</strong>, the gear's diameter is equal to its number of
-teeths. But the gear diameter "up to the teeths" is infact somehow larger, because the teeths have
-a given height. This height is given with the <strong>head_height</strong> parameter. And the
-teeths have also a <strong>foot_height</strong>, and thus the circle on which the teeths sit has a
-diameter smaller than the "official" gear
-diameter.<strong><strong><strong></strong></strong></strong></p>
+teeths. This diameter corresponds to the <strong>pitch circle</strong>. But the gear diameter "up to the
+teeths" is infact somehow larger, because the teeths have a given height. The total 
+height of a teeth is the sum of the "<strong>Addedum</strong>" (denoted here <strong>head_height</strong>) 
+and the "<strong>Dedendum</strong>" (denoted here <strong>foot_height</strong>). The circle on which the
+teeths sit has a diameter smaller than the <strong>pitch circle</strong> and is called the <strong>root circle.</strong>
+.</p>
 
 <p>The following default values seem acceptable:</p>
 <ul>
-  <li><strong>head_height = 1.25</strong></li>
-  <li><strong>foot_height = 1.0</strong></li>
+  <li><strong>foot_height = 1.25 mm (x module)</strong></li>
+  <li><strong>head_height = 1.00 mm (x module)</strong></li>
 </ul>
 
 <p>The head height should not be larger than the foot height.</p>
 
-<p>Finally I did not find explanations about the following points which seem to me of importance
-(obviouslay, I missed something!):</p>
+<p>Finally I did not find explanations about the following points which seem of importance to me
+(obviously, I missed something!):</p>
 <ul>
-  <li>how wide has to be a teeth foot (or "base") in comparison to the teeth gap (gap between two
-    teeths)? Hence the <strong>ratio_teeth_gap/base </strong>parameter
-  setting<strong>.</strong></li>
-  <li>how wide has to be a teeth head in comparison to its base? Hence the
-    <strong>ratio_teeth_head/base </strong>parameter setting<strong>.</strong></li>
+  <li>how wide has to be a teeth foot in comparison to the teeth gap (gap between two teeths)?
+    Hence the <strong>ratio_teeth_gap/foot</strong> parameter setting<strong>.</strong></li>
+  <li>how wide has to be a teeth head in comparison to its foot? Hence the
+    <strong>ratio_teeth_head/foot </strong>parameter setting<strong>.</strong></li>
 </ul>
 
 <p>The following default values seem acceptable:</p>
 <ul>
-  <li><strong>ratio_teeth_gap/base = 0.60</strong></li>
-  <li><strong>ratio_teeth_head/base = 0.40</strong></li>
+  <li><strong>ratio_teeth_gap/foot = 0.60</strong></li>
+  <li><strong>ratio_teeth_head/foot = 0.40</strong></li>
 </ul>
 
 <p>The perfect curvature of the teeths was calculated by <strong>Euler</strong>. Here I do not
 care, but assign a curvature as an "arc curvature". The <strong>curvature</strong> of the teeths
 gets as default value <strong>5</strong>. This correspond to the <strong>svg arc curvature</strong>
-in the arc definition from the teeth foot to its head. </p>
+in the arc definition from the teeth foot to its head and seems acceptable. </p>
 
 <p></p>
 
@@ -107,6 +114,7 @@ These settings are for the svg output for the single gear svg file. Accually not
   <li><strong>height</strong>: the height in the svg definition</li>
   <li><strong>viewbox: x</strong>: the origin x value in the svg viewBox definition</li>
   <li><strong>viewbox: y</strong>: the origin y value in the svg viewBox definition</li>
+  <li><strong>animation speed</strong>: for the 2 gears animation, time of a full revolution</li>
 </ul>
 
 <h4>Basics</h4>
@@ -128,14 +136,16 @@ These settings are for the svg output for the single gear svg file. Accually not
 
 <h4>Teeths Shape</h4>
 <ul>
-  <li><strong>ratio teeth gap/base</strong>:</li>
+  <li><strong>ratio teeth gap/foot</strong>:</li>
   <li><strong>curvature</strong>: </li>
-  <li><strong>ratio teeth head/base</strong>: </li>
+  <li><strong>ratio teeth head/foot</strong>: </li>
 </ul>
 
 <p></p>
 
 <h3>Further processing</h3>
+
+<h4>3D Printing</h4>
 
 <p>It is possible to generate <code>stl</code> files within <strong>blender</strong> in order to
 use 3D printing. When importing the SVG in <strong>blender</strong>, the user has to convert the
@@ -150,5 +160,10 @@ then the unwanted items for a proper <code>stl</code> export must be deleted -in
 <code>bearing</code> and <code>reinforcement</code> items.</p>
 
 <p>Finally, the generated <code>stl</code> file can be imported in a 3D printing slicer.</p>
+
+<h4>PyCut</h4>
+
+<p>Of course the svg can be loaded into <strong>PyCut</strong>. For perfect cutting DogBones should
+be implemented, but they also can be done "per hand" inside the svg itself (modify the <code>bearing</code> path).</p>
 </body>
 </html>

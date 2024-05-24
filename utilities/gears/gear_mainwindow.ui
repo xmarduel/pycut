@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>896</width>
-    <height>611</height>
+    <width>1007</width>
+    <height>744</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,11 +31,11 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>304</width>
-         <height>633</height>
+         <width>318</width>
+         <height>694</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1">
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1">
         <property name="spacing">
          <number>4</number>
         </property>
@@ -189,6 +189,45 @@
            <widget class="QSpinBox" name="viewbox_y">
             <property name="enabled">
              <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_15">
+          <property name="leftMargin">
+           <number>4</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_svg_animation_speed">
+            <property name="minimumSize">
+             <size>
+              <width>160</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>animation speed</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="svg_animation_speed">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="value">
+             <number>30</number>
             </property>
            </widget>
           </item>
@@ -383,7 +422,7 @@
          <layout class="QHBoxLayout" name="horizontalLayout_sep02"/>
         </item>
         <item>
-         <widget class="QLabel" name="label_GearSize">
+         <widget class="QLabel" name="label_GearTeethsSizes">
           <property name="font">
            <font>
             <pointsize>14</pointsize>
@@ -395,7 +434,7 @@
            <string notr="true">background-color: rgb(196, 196, 196);</string>
           </property>
           <property name="text">
-           <string>Sizes</string>
+           <string>Teeths Sizes</string>
           </property>
          </widget>
         </item>
@@ -535,7 +574,7 @@
            <number>4</number>
           </property>
           <item>
-           <widget class="QLabel" name="label_ratio_teeth_gap_base">
+           <widget class="QLabel" name="label_ratio_teeth_gap_foot">
             <property name="minimumSize">
              <size>
               <width>160</width>
@@ -549,12 +588,12 @@
              </font>
             </property>
             <property name="text">
-             <string>ratio teeth gap/base</string>
+             <string>ratio teeth gap/foot</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QDoubleSpinBox" name="ratio_teeth_gap_base">
+           <widget class="QDoubleSpinBox" name="ratio_teeth_gap_foot">
             <property name="maximum">
              <double>5.000000000000000</double>
             </property>
@@ -567,7 +606,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="button_ratio_teeth_gap_base_reset">
+           <widget class="QPushButton" name="button_ratio_teeth_gap_foot_reset">
             <property name="maximumSize">
              <size>
               <width>24</width>
@@ -645,7 +684,7 @@
            <number>4</number>
           </property>
           <item>
-           <widget class="QLabel" name="label_ratio_teeth_head_base">
+           <widget class="QLabel" name="label_ratio_teeth_head_foot">
             <property name="minimumSize">
              <size>
               <width>160</width>
@@ -659,12 +698,12 @@
              </font>
             </property>
             <property name="text">
-             <string>ratio teeth head/base</string>
+             <string>ratio teeth head/foot</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QDoubleSpinBox" name="ratio_teeth_head_base">
+           <widget class="QDoubleSpinBox" name="ratio_teeth_head_foot">
             <property name="maximum">
              <double>1.000000000000000</double>
             </property>
@@ -677,7 +716,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="button_ratio_teeth_head_base_reset">
+           <widget class="QPushButton" name="button_ratio_teeth_head_foot_reset">
             <property name="maximumSize">
              <size>
               <width>24</width>
@@ -805,8 +844,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>896</width>
-     <height>21</height>
+     <width>1007</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp">

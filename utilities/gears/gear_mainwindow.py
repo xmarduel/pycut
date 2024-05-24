@@ -25,7 +25,7 @@ class Ui_mainwindow(object):
     def setupUi(self, mainwindow):
         if not mainwindow.objectName():
             mainwindow.setObjectName(u"mainwindow")
-        mainwindow.resize(896, 611)
+        mainwindow.resize(1007, 744)
         self.actionTutorial = QAction(mainwindow)
         self.actionTutorial.setObjectName(u"actionTutorial")
         self.actionAbout_Qt = QAction(mainwindow)
@@ -42,7 +42,7 @@ class Ui_mainwindow(object):
         self.scrollArea_GearProperties.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 304, 633))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 318, 694))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSpacing(4)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -134,6 +134,27 @@ class Ui_mainwindow(object):
 
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_14)
+
+        self.horizontalLayout_15 = QHBoxLayout()
+        self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
+        self.horizontalLayout_15.setContentsMargins(4, -1, -1, -1)
+        self.label_svg_animation_speed = QLabel(self.scrollAreaWidgetContents)
+        self.label_svg_animation_speed.setObjectName(u"label_svg_animation_speed")
+        self.label_svg_animation_speed.setMinimumSize(QSize(160, 0))
+        self.label_svg_animation_speed.setFont(font1)
+
+        self.horizontalLayout_15.addWidget(self.label_svg_animation_speed)
+
+        self.svg_animation_speed = QSpinBox(self.scrollAreaWidgetContents)
+        self.svg_animation_speed.setObjectName(u"svg_animation_speed")
+        self.svg_animation_speed.setMinimum(1)
+        self.svg_animation_speed.setMaximum(100)
+        self.svg_animation_speed.setValue(30)
+
+        self.horizontalLayout_15.addWidget(self.svg_animation_speed)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout_15)
 
         self.horizontalLayout_sep01 = QHBoxLayout()
         self.horizontalLayout_sep01.setObjectName(u"horizontalLayout_sep01")
@@ -239,12 +260,12 @@ class Ui_mainwindow(object):
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_sep02)
 
-        self.label_GearSize = QLabel(self.scrollAreaWidgetContents)
-        self.label_GearSize.setObjectName(u"label_GearSize")
-        self.label_GearSize.setFont(font)
-        self.label_GearSize.setStyleSheet(u"background-color: rgb(196, 196, 196);")
+        self.label_GearTeethsSizes = QLabel(self.scrollAreaWidgetContents)
+        self.label_GearTeethsSizes.setObjectName(u"label_GearTeethsSizes")
+        self.label_GearTeethsSizes.setFont(font)
+        self.label_GearTeethsSizes.setStyleSheet(u"background-color: rgb(196, 196, 196);")
 
-        self.verticalLayout_2.addWidget(self.label_GearSize)
+        self.verticalLayout_2.addWidget(self.label_GearTeethsSizes)
 
         self.horizontalLayout_31 = QHBoxLayout()
         self.horizontalLayout_31.setObjectName(u"horizontalLayout_31")
@@ -317,26 +338,26 @@ class Ui_mainwindow(object):
         self.horizontalLayout_43 = QHBoxLayout()
         self.horizontalLayout_43.setObjectName(u"horizontalLayout_43")
         self.horizontalLayout_43.setContentsMargins(4, -1, -1, -1)
-        self.label_ratio_teeth_gap_base = QLabel(self.scrollAreaWidgetContents)
-        self.label_ratio_teeth_gap_base.setObjectName(u"label_ratio_teeth_gap_base")
-        self.label_ratio_teeth_gap_base.setMinimumSize(QSize(160, 0))
-        self.label_ratio_teeth_gap_base.setFont(font1)
+        self.label_ratio_teeth_gap_foot = QLabel(self.scrollAreaWidgetContents)
+        self.label_ratio_teeth_gap_foot.setObjectName(u"label_ratio_teeth_gap_foot")
+        self.label_ratio_teeth_gap_foot.setMinimumSize(QSize(160, 0))
+        self.label_ratio_teeth_gap_foot.setFont(font1)
 
-        self.horizontalLayout_43.addWidget(self.label_ratio_teeth_gap_base)
+        self.horizontalLayout_43.addWidget(self.label_ratio_teeth_gap_foot)
 
-        self.ratio_teeth_gap_base = QDoubleSpinBox(self.scrollAreaWidgetContents)
-        self.ratio_teeth_gap_base.setObjectName(u"ratio_teeth_gap_base")
-        self.ratio_teeth_gap_base.setMaximum(5.000000000000000)
-        self.ratio_teeth_gap_base.setSingleStep(0.050000000000000)
-        self.ratio_teeth_gap_base.setValue(0.600000000000000)
+        self.ratio_teeth_gap_foot = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.ratio_teeth_gap_foot.setObjectName(u"ratio_teeth_gap_foot")
+        self.ratio_teeth_gap_foot.setMaximum(5.000000000000000)
+        self.ratio_teeth_gap_foot.setSingleStep(0.050000000000000)
+        self.ratio_teeth_gap_foot.setValue(0.600000000000000)
 
-        self.horizontalLayout_43.addWidget(self.ratio_teeth_gap_base)
+        self.horizontalLayout_43.addWidget(self.ratio_teeth_gap_foot)
 
-        self.button_ratio_teeth_gap_base_reset = QPushButton(self.scrollAreaWidgetContents)
-        self.button_ratio_teeth_gap_base_reset.setObjectName(u"button_ratio_teeth_gap_base_reset")
-        self.button_ratio_teeth_gap_base_reset.setMaximumSize(QSize(24, 16777215))
+        self.button_ratio_teeth_gap_foot_reset = QPushButton(self.scrollAreaWidgetContents)
+        self.button_ratio_teeth_gap_foot_reset.setObjectName(u"button_ratio_teeth_gap_foot_reset")
+        self.button_ratio_teeth_gap_foot_reset.setMaximumSize(QSize(24, 16777215))
 
-        self.horizontalLayout_43.addWidget(self.button_ratio_teeth_gap_base_reset)
+        self.horizontalLayout_43.addWidget(self.button_ratio_teeth_gap_foot_reset)
 
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_43)
@@ -373,26 +394,26 @@ class Ui_mainwindow(object):
         self.horizontalLayout_42 = QHBoxLayout()
         self.horizontalLayout_42.setObjectName(u"horizontalLayout_42")
         self.horizontalLayout_42.setContentsMargins(4, -1, -1, -1)
-        self.label_ratio_teeth_head_base = QLabel(self.scrollAreaWidgetContents)
-        self.label_ratio_teeth_head_base.setObjectName(u"label_ratio_teeth_head_base")
-        self.label_ratio_teeth_head_base.setMinimumSize(QSize(160, 0))
-        self.label_ratio_teeth_head_base.setFont(font1)
+        self.label_ratio_teeth_head_foot = QLabel(self.scrollAreaWidgetContents)
+        self.label_ratio_teeth_head_foot.setObjectName(u"label_ratio_teeth_head_foot")
+        self.label_ratio_teeth_head_foot.setMinimumSize(QSize(160, 0))
+        self.label_ratio_teeth_head_foot.setFont(font1)
 
-        self.horizontalLayout_42.addWidget(self.label_ratio_teeth_head_base)
+        self.horizontalLayout_42.addWidget(self.label_ratio_teeth_head_foot)
 
-        self.ratio_teeth_head_base = QDoubleSpinBox(self.scrollAreaWidgetContents)
-        self.ratio_teeth_head_base.setObjectName(u"ratio_teeth_head_base")
-        self.ratio_teeth_head_base.setMaximum(1.000000000000000)
-        self.ratio_teeth_head_base.setSingleStep(0.010000000000000)
-        self.ratio_teeth_head_base.setValue(0.400000000000000)
+        self.ratio_teeth_head_foot = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.ratio_teeth_head_foot.setObjectName(u"ratio_teeth_head_foot")
+        self.ratio_teeth_head_foot.setMaximum(1.000000000000000)
+        self.ratio_teeth_head_foot.setSingleStep(0.010000000000000)
+        self.ratio_teeth_head_foot.setValue(0.400000000000000)
 
-        self.horizontalLayout_42.addWidget(self.ratio_teeth_head_base)
+        self.horizontalLayout_42.addWidget(self.ratio_teeth_head_foot)
 
-        self.button_ratio_teeth_head_base_reset = QPushButton(self.scrollAreaWidgetContents)
-        self.button_ratio_teeth_head_base_reset.setObjectName(u"button_ratio_teeth_head_base_reset")
-        self.button_ratio_teeth_head_base_reset.setMaximumSize(QSize(24, 16777215))
+        self.button_ratio_teeth_head_foot_reset = QPushButton(self.scrollAreaWidgetContents)
+        self.button_ratio_teeth_head_foot_reset.setObjectName(u"button_ratio_teeth_head_foot_reset")
+        self.button_ratio_teeth_head_foot_reset.setMaximumSize(QSize(24, 16777215))
 
-        self.horizontalLayout_42.addWidget(self.button_ratio_teeth_head_base_reset)
+        self.horizontalLayout_42.addWidget(self.button_ratio_teeth_head_foot_reset)
 
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_42)
@@ -406,7 +427,7 @@ class Ui_mainwindow(object):
 
         self.verticalLayout_2.addWidget(self.tooltip_info)
 
-        self.verticalLayout_2.setStretch(21, 1)
+        self.verticalLayout_2.setStretch(22, 1)
         self.scrollArea_GearProperties.setWidget(self.scrollAreaWidgetContents)
 
         self.horizontalLayout_2.addWidget(self.scrollArea_GearProperties)
@@ -471,7 +492,7 @@ class Ui_mainwindow(object):
         mainwindow.setCentralWidget(self.centralwidget)
         self.menuBar = QMenuBar(mainwindow)
         self.menuBar.setObjectName(u"menuBar")
-        self.menuBar.setGeometry(QRect(0, 0, 896, 21))
+        self.menuBar.setGeometry(QRect(0, 0, 1007, 26))
         self.menuHelp = QMenu(self.menuBar)
         self.menuHelp.setObjectName(u"menuHelp")
         mainwindow.setMenuBar(self.menuBar)
@@ -499,23 +520,24 @@ class Ui_mainwindow(object):
         self.label_svg_height.setText(QCoreApplication.translate("mainwindow", u"height", None))
         self.label_viewbox_x.setText(QCoreApplication.translate("mainwindow", u"viewbox : x", None))
         self.label_viewbox_y.setText(QCoreApplication.translate("mainwindow", u"viewbox : y", None))
+        self.label_svg_animation_speed.setText(QCoreApplication.translate("mainwindow", u"animation speed", None))
         self.label_GearBasics.setText(QCoreApplication.translate("mainwindow", u"Basics", None))
         self.label_modul.setText(QCoreApplication.translate("mainwindow", u"module", None))
         self.label_nb_teeths.setText(QCoreApplication.translate("mainwindow", u"nb teeths", None))
         self.label_gear_diameter.setText(QCoreApplication.translate("mainwindow", u"gear diameter", None))
         self.label_reinforcment_radius.setText(QCoreApplication.translate("mainwindow", u"reinforcment radius", None))
-        self.label_GearSize.setText(QCoreApplication.translate("mainwindow", u"Sizes", None))
+        self.label_GearTeethsSizes.setText(QCoreApplication.translate("mainwindow", u"Teeths Sizes", None))
         self.label_foot_height.setText(QCoreApplication.translate("mainwindow", u"foot height", None))
         self.button_foot_height_reset.setText(QCoreApplication.translate("mainwindow", u"...", None))
         self.label_head_height.setText(QCoreApplication.translate("mainwindow", u"head height", None))
         self.button_head_height_reset.setText(QCoreApplication.translate("mainwindow", u"...", None))
         self.label_GearTeethsShape.setText(QCoreApplication.translate("mainwindow", u"Teeths Shape", None))
-        self.label_ratio_teeth_gap_base.setText(QCoreApplication.translate("mainwindow", u"ratio teeth gap/base", None))
-        self.button_ratio_teeth_gap_base_reset.setText(QCoreApplication.translate("mainwindow", u"...", None))
+        self.label_ratio_teeth_gap_foot.setText(QCoreApplication.translate("mainwindow", u"ratio teeth gap/foot", None))
+        self.button_ratio_teeth_gap_foot_reset.setText(QCoreApplication.translate("mainwindow", u"...", None))
         self.label_curvature.setText(QCoreApplication.translate("mainwindow", u"curvature", None))
         self.button_curvature_reset.setText(QCoreApplication.translate("mainwindow", u"...", None))
-        self.label_ratio_teeth_head_base.setText(QCoreApplication.translate("mainwindow", u"ratio teeth head/base", None))
-        self.button_ratio_teeth_head_base_reset.setText(QCoreApplication.translate("mainwindow", u"...", None))
+        self.label_ratio_teeth_head_foot.setText(QCoreApplication.translate("mainwindow", u"ratio teeth head/foot", None))
+        self.button_ratio_teeth_head_foot_reset.setText(QCoreApplication.translate("mainwindow", u"...", None))
         self.generate_svg.setText(QCoreApplication.translate("mainwindow", u"Generate SVG", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.svgwidget_1_gear), QCoreApplication.translate("mainwindow", u"Gear", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.svgwidget_2_gears_static), QCoreApplication.translate("mainwindow", u"2 Gears", None))
