@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg version="1.1" width="100mm" height="100mm" viewBox="0 0 100 100" id="unitmat-dc-motor" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+
+  <defs id="defs">
+    <circle id="holder_screw_4.1mm"   style="fill:#00ffff;fill-opacity:1.0"  cx="0" cy="0" r="2.05" />
+    <circle id="motor_screw_5.0mm"    style="fill:#ff00ff;fill-opacity:1.0"  cx="0" cy="0" r="2.25" />
+  </defs>
+    
+  <g id="root" transform="translate(50 50)">	
+	  <!-- dc motor -->
+    <circle id="mounting_plate" style="fill:none;stroke:#00ff00;stroke-width:0.2" cx="0" cy="0" r="34"/>
+    <circle id="hole" cx="0" cy="0" r="14" style="fill:#0000ff;fill-opacity:1.0"/>
+    
+    <!-- these 3 to screw the mounting plate on the motor -->
+    <!-- distance between 2 screws : 36.0 mm => on circle r = d / sqrt(3) = 20.785 -->
+    <use href="#motor_screw_5.0mm" transform="rotate (0)   translate(20.785 0)" id="motor_screw_5.0mm_E" />
+    <use href="#motor_screw_5.0mm" transform="rotate (120) translate(20.785 0)" id="motor_screw_5.0mm_W" />
+    <use href="#motor_screw_5.0mm" transform="rotate (240) translate(20.785 0)" id="motor_screw_5.0mm_N" />
+ 
+    <!-- these 2 to screw the mounting plate on unimat lathe holder arm -->
+    <use href="#holder_screw_4.1mm" transform="rotate(0)   translate(0  -20.5)" id="holder_screw_4.1mm_NW" />
+    <use href="#holder_screw_4.1mm" transform="rotate(180) translate(0  -20.5)" id="holder_screw_4.1mm_SE" />
+  </g>
+</svg>
