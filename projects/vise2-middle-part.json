@@ -1,0 +1,167 @@
+{
+  "svg_file": "misc_private/cnc1419/vise2-1419_v2-8mm_GCODE_PartM.resolved.svg",
+  "operations": [
+    {
+      "name": "shaft_2_partial",
+      "type": "Helix",
+      "cut_depth": 24.0,
+      "paths": [
+        "part_middle_shaft_2_bearing_hole"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 5.5
+    },
+    {
+      "name": "shaft_2",
+      "type": "Helix",
+      "cut_depth": 24.0,
+      "paths": [
+        "part_middle_shaft_2_bearing_hole"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 7.5
+    },
+    {
+      "name": "shaft-1_partial",
+      "type": "Helix",
+      "cut_depth": 24.0,
+      "paths": [
+        "part_middle_shaft_1_bearing_hole"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 5.5
+    },
+    {
+      "name": "shaft_1",
+      "type": "Helix",
+      "cut_depth": 24.0,
+      "paths": [
+        "part_middle_shaft_1_bearing_hole"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 7.5
+    },
+    {
+      "name": "op_partial",
+      "type": "Helix",
+      "cut_depth": 17.0,
+      "paths": [
+        "leadscrew-middle"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 5.5
+    },
+    {
+      "name": "op",
+      "type": "Helix",
+      "cut_depth": 17.0,
+      "paths": [
+        "leadscrew-middle"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 7.5
+    }
+  ],
+  "settings": {
+    "svg": {
+      "px_per_inch": 96
+    },
+    "Tabs": {
+      "units": "mm",
+      "height": 1.0,
+      "tabs": []
+    },
+    "Tool": {
+      "units": "mm",
+      "diameter": 6.0,
+      "angle": 180,
+      "passdepth": 0.2,
+      "overlap": 0.8,
+      "rapid": 400,
+      "plunge": 100,
+      "cut": 200,
+      "helix_pitch": 1.2
+    },
+    "Material": {
+      "units": "mm",
+      "thickness": 25.0,
+      "z_origin": "Top",
+      "clearance": 2.5
+    },
+    "CurveToLineConversion": {
+      "minimum_segments": 5,
+      "minimum_segments_length": 0.01
+    },
+    "GCodeConversion": {
+      "units": "mm",
+      "flip_xy": false,
+      "use_offset": true,
+      "x_offset": -13.5,
+      "y_offset": 185.0,
+      "xy_reference": "ZERO_CENTER_OF_OP"
+    },
+    "GCodeGeneration": {
+      "return_to_zero_at_end": true,
+      "spindle_control": true,
+      "spindle_speed": 1000,
+      "program_end": true
+    }
+  },
+  "viewers_settings": {
+    "svg_viewer": {
+      "TABS_SETTINGS": {
+        "stroke": "#aa4488",
+        "stroke-width": "0",
+        "fill": "#aa4488",
+        "fill-opacity": "1.0",
+        "fill-opacity-disabled": "0.3"
+      },
+      "GEOMETRY_PREVIEW_CLOSED_PATHS": {
+        "stroke": "#ff0000",
+        "stroke-width": "0",
+        "stroke-opacity": "1.0",
+        "fill": "#ff0000",
+        "fill-opacity": "1.0"
+      },
+      "GEOMETRY_PREVIEW_OPENED_PATHS": {
+        "stroke": "#ff0000",
+        "stroke-width": "1.0",
+        "stroke-opacity": "1.0",
+        "fill": "none",
+        "fill-opacity": "1.0"
+      },
+      "TOOLPATHS": {
+        "stroke": "#00ff00",
+        "stroke-width": "0.2"
+      }
+    },
+    "gcode_viewer": {},
+    "gcode_simulator": {
+      "fb": 2
+    }
+  }
+}
