@@ -1670,11 +1670,11 @@
       <string>Open Recent Jobs</string>
      </property>
     </widget>
-    <addaction name="actionNewJob"/>
+    <addaction name="actionNewProject"/>
     <addaction name="menuOpen_Recent_Jobs"/>
-    <addaction name="actionOpenJob"/>
-    <addaction name="actionSaveJobAs"/>
-    <addaction name="actionSaveJob"/>
+    <addaction name="actionOpenProject"/>
+    <addaction name="actionSaveProjectAs"/>
+    <addaction name="actionSaveProject"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -1707,24 +1707,36 @@
     <string>Load SVG</string>
    </property>
   </action>
-  <action name="actionNewJob">
+  <action name="actionNewProject">
    <property name="text">
-    <string>New Job</string>
+    <string>New Project</string>
+   </property>
+   <property name="toolTip">
+    <string>New Project</string>
    </property>
   </action>
-  <action name="actionOpenJob">
+  <action name="actionOpenProject">
    <property name="text">
-    <string>Open Job...</string>
+    <string>Open Project...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Project</string>
    </property>
   </action>
-  <action name="actionSaveJobAs">
+  <action name="actionSaveProjectAs">
    <property name="text">
-    <string>Save Job As...</string>
+    <string>Save Project As...</string>
+   </property>
+   <property name="toolTip">
+    <string>Save Project As</string>
    </property>
   </action>
-  <action name="actionSaveJob">
+  <action name="actionSaveProject">
    <property name="text">
-    <string>Save Job</string>
+    <string>Save Project</string>
+   </property>
+   <property name="toolTip">
+    <string>Save Project</string>
    </property>
   </action>
   <action name="actionTutorial">

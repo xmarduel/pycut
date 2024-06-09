@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.1
+## Created by: Qt User Interface Compiler version 6.6.3
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -33,14 +33,14 @@ class Ui_mainwindow(object):
         mainwindow.resize(1226, 1049)
         self.actionOpenSvg = QAction(mainwindow)
         self.actionOpenSvg.setObjectName(u"actionOpenSvg")
-        self.actionNewJob = QAction(mainwindow)
-        self.actionNewJob.setObjectName(u"actionNewJob")
-        self.actionOpenJob = QAction(mainwindow)
-        self.actionOpenJob.setObjectName(u"actionOpenJob")
-        self.actionSaveJobAs = QAction(mainwindow)
-        self.actionSaveJobAs.setObjectName(u"actionSaveJobAs")
-        self.actionSaveJob = QAction(mainwindow)
-        self.actionSaveJob.setObjectName(u"actionSaveJob")
+        self.actionNewProject = QAction(mainwindow)
+        self.actionNewProject.setObjectName(u"actionNewProject")
+        self.actionOpenProject = QAction(mainwindow)
+        self.actionOpenProject.setObjectName(u"actionOpenProject")
+        self.actionSaveProjectAs = QAction(mainwindow)
+        self.actionSaveProjectAs.setObjectName(u"actionSaveProjectAs")
+        self.actionSaveProject = QAction(mainwindow)
+        self.actionSaveProject.setObjectName(u"actionSaveProject")
         self.actionTutorial = QAction(mainwindow)
         self.actionTutorial.setObjectName(u"actionTutorial")
         self.actionAboutQt = QAction(mainwindow)
@@ -449,7 +449,7 @@ class Ui_mainwindow(object):
 
         self.tabsview_manager = PyCutTabsTableViewManager(self.scrollAreaWidgetContents)
         self.tabsview_manager.setObjectName(u"tabsview_manager")
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tabsview_manager.sizePolicy().hasHeightForWidth())
@@ -462,7 +462,7 @@ class Ui_mainwindow(object):
 
         self.verticalLayout_2.addLayout(self.verticalLayoutTabsContent)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_2.addItem(self.verticalSpacer)
 
@@ -546,7 +546,7 @@ class Ui_mainwindow(object):
 
         self.horizontalLayout_6 = QHBoxLayout()
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
-        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_6.addItem(self.horizontalSpacer_3)
 
@@ -557,7 +557,7 @@ class Ui_mainwindow(object):
 
         self.horizontalLayout_6.addWidget(self.widget_display_material)
 
-        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_6.addItem(self.horizontalSpacer_4)
 
@@ -938,7 +938,7 @@ class Ui_mainwindow(object):
 
         self.verticalLayout_5.addLayout(self.verticalLayoutGCodeStatistics)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_5.addItem(self.verticalSpacer_2)
 
@@ -976,11 +976,11 @@ class Ui_mainwindow(object):
         self.menubar.addAction(self.menuHelp.menuAction())
         self.menuSvg.addAction(self.actionOpenSvg)
         self.menuSvg.addSeparator()
-        self.menuFile.addAction(self.actionNewJob)
+        self.menuFile.addAction(self.actionNewProject)
         self.menuFile.addAction(self.menuOpen_Recent_Jobs.menuAction())
-        self.menuFile.addAction(self.actionOpenJob)
-        self.menuFile.addAction(self.actionSaveJobAs)
-        self.menuFile.addAction(self.actionSaveJob)
+        self.menuFile.addAction(self.actionOpenProject)
+        self.menuFile.addAction(self.actionSaveProjectAs)
+        self.menuFile.addAction(self.actionSaveProject)
         self.menuHelp.addAction(self.actionTutorial)
         self.menuHelp.addAction(self.actionAboutQt)
         self.menuHelp.addAction(self.actionAboutPyCut)
@@ -998,10 +998,22 @@ class Ui_mainwindow(object):
     def retranslateUi(self, mainwindow):
         mainwindow.setWindowTitle(QCoreApplication.translate("mainwindow", u"main", None))
         self.actionOpenSvg.setText(QCoreApplication.translate("mainwindow", u"Load SVG", None))
-        self.actionNewJob.setText(QCoreApplication.translate("mainwindow", u"New Job", None))
-        self.actionOpenJob.setText(QCoreApplication.translate("mainwindow", u"Open Job...", None))
-        self.actionSaveJobAs.setText(QCoreApplication.translate("mainwindow", u"Save Job As...", None))
-        self.actionSaveJob.setText(QCoreApplication.translate("mainwindow", u"Save Job", None))
+        self.actionNewProject.setText(QCoreApplication.translate("mainwindow", u"New Project", None))
+#if QT_CONFIG(tooltip)
+        self.actionNewProject.setToolTip(QCoreApplication.translate("mainwindow", u"New Project", None))
+#endif // QT_CONFIG(tooltip)
+        self.actionOpenProject.setText(QCoreApplication.translate("mainwindow", u"Open Project...", None))
+#if QT_CONFIG(tooltip)
+        self.actionOpenProject.setToolTip(QCoreApplication.translate("mainwindow", u"Open Project", None))
+#endif // QT_CONFIG(tooltip)
+        self.actionSaveProjectAs.setText(QCoreApplication.translate("mainwindow", u"Save Project As...", None))
+#if QT_CONFIG(tooltip)
+        self.actionSaveProjectAs.setToolTip(QCoreApplication.translate("mainwindow", u"Save Project As", None))
+#endif // QT_CONFIG(tooltip)
+        self.actionSaveProject.setText(QCoreApplication.translate("mainwindow", u"Save Project", None))
+#if QT_CONFIG(tooltip)
+        self.actionSaveProject.setToolTip(QCoreApplication.translate("mainwindow", u"Save Project", None))
+#endif // QT_CONFIG(tooltip)
         self.actionTutorial.setText(QCoreApplication.translate("mainwindow", u"Tutorial", None))
         self.actionAboutQt.setText(QCoreApplication.translate("mainwindow", u"About &Qt", None))
         self.actionAboutPyCut.setText(QCoreApplication.translate("mainwindow", u"About PyCut", None))

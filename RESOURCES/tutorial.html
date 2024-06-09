@@ -116,15 +116,13 @@ sometimes the best way! For complex shapes (so-called SVG paths), other tools ma
 <pre><code class="language-html">viewBox="0 0 &lt;width&gt; &lt;height&gt;"</code></pre>
 
 <p>So as example:</p>
-
 <pre><code class="language-html">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
 &lt;svg version="1.1" width="200mm" height="100mm" viewBox="0 0 200 100" id="test" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"&gt;
   &lt;g id="root"&gt;
     &lt;circle id="circle" cx="30" cy="60" r="20" stroke="black" stroke-width="1" fill="red" /&gt;
     &lt;rect id="rect" x="60" y="40" width="30" height="40" stroke="black" stroke-width="1" fill="green" /&gt;
   &lt;/g&gt;
-&lt;/svg&gt;
-</code></pre>
+&lt;/svg&gt;</code></pre>
 
 <div class="info">
 <p><strong>Note:</strong> The <strong>height</strong> will be used later when creating GCode with the
@@ -258,12 +256,12 @@ the folder "<strong>utilities/svgresolver</strong>". </p>
 
 <p><code>&gt; python pycut.py -h</code></p>
 
-<p><code>&gt; python pycut.py --job=&lt;jobfile&gt;</code></p>
+<p><code>&gt; python pycut.py --proj=&lt;projectfile&gt;</code></p>
 
 <p><code>&gt; python pycut.py --gcode=&lt;gcodefile&gt;</code></p>
 
-<p>Without argument, pycut opens without loading any SVG file. With the <code>--job</code> argument, a previously saved
-job is opened.</p>
+<p>Without argument, pycut opens without loading any SVG file. With the <code>--proj</code> argument, a previously
+saved project is opened.</p>
 
 <p>A GCode file can also be loaded with the argument <code>--gcode</code>. Hopefully PyCut can parse it (roughly: what
 <strong>Candle</strong> can parse - <strong>PyCut</strong> uses a similar parser). The toolpaths can then be viewed in
@@ -274,7 +272,7 @@ the form</p>
 
 <p>that is parsed to retrieve the right tool diameter. </p>
 
-<p>So for the very first time, start <strong>PyCut</strong> without job.</p>
+<p>So for the very first time, start <strong>PyCut</strong> without project.</p>
 
 <h3 id="P-03-01">Loading a SVG file</h3>
 
@@ -286,17 +284,17 @@ SVG</strong>. The SVG content should be displayed in the central area. </p>
 &lt;path&gt; in order to be further processed.</p>
 </div>
 
-<h3 id="P-03-02">Creating a PyCut Job</h3>
+<h3 id="P-03-02">Creating a PyCut Project</h3>
 
-<p>Then create a new "job" : this is a kind of project file that stores uponside the svg file all the CAM operations
-that the user has created or will create, together with all others settings relevant when generating GCode. It can be
-created, saved and loaded again and modified - quite practical.</p>
+<p>Then create a new "project" : this is a file that stores uponside the svg file all the CAM operations that the user
+has created or will create, together with all others settings relevant when generating GCode. It can be created, saved
+and loaded again and modified - quite practical.</p>
 
 <h3 id="P-03-03">Creating CAM operations</h3>
 
-<p>Once an empty job is created and a svg file loaded, it is time to create some CAM operations: select 1 or more items
-in SVG window (they should turn beige) and click the button "Create Operation": a new operation in the operation table
-should appear.</p>
+<p>Once an empty project is created and a svg file loaded, it is time to create some CAM operations: select 1 or more
+items in SVG window (they should turn beige) and click the button "Create Operation": a new operation in the operation
+table should appear.</p>
 
 <p>Define the properties of the operation: the main one is the CAM operation type: "<strong>Pocket</strong>",
 "<strong>Engrave</strong>", "<strong>Inside</strong>" or "<strong>Outside</strong>". There are also the
@@ -715,8 +713,8 @@ round). </p>
     <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
     <circle cx="66.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </g>
   <g id="layer1" transform="translate(120 0)">
@@ -728,8 +726,8 @@ round). </p>
     <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
               stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  -->
     <circle cx="65.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
   </g>
 </svg>
@@ -828,9 +826,9 @@ corner).</p>
     <text x="97" y="13" class="small">D</text>
     <text x="21" y="23" class="small">A</text>
     <!--
-                	D = sqrt(10*10 + 10*10) = 14.14
-                    d = 14.14 -10 = 4.14dx = dy = d / sqrt(2) = 2.93
-                	-->
+                    	D = sqrt(10*10 + 10*10) = 14.14
+                        d = 14.14 -10 = 4.14dx = dy = d / sqrt(2) = 2.93
+                    	-->
     <polyline id="dog-bone-path1" points="20,20 17.07,17.07" fill="none" stroke="blue" stroke-width="0.3"
               stroke-opacity="0.5"/>
     <circle id="dog-bone-path1-material" cx="17.07" cy="17.07" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2"

@@ -19,7 +19,7 @@ start the program from the installation folder
 ```
 > python pycut.py -h
 > python pycut.py
-> python pycut.py -j <path_to_job>
+> python pycut.py -p <path_to_project>
 > python pycut.py -g <path_to_gcode>   # view an external gcode data
 ```
 
@@ -38,7 +38,7 @@ start the program from the installation folder
 
 ## Features
 
-- read "config" files : so-called job file with all settings and ops
+- read "project" files : a file with all settings and ops for a given svg file
 - select 1 or more ops in the list and "generate" Gcode -> toolpaths OK for
   - pocket YES
   - outside YES

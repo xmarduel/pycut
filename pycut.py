@@ -116,13 +116,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     IMG_TANGO_APP_SYSTEM = ":/images/tango/32x32/categories/applications-system.png"
     IMG_TANGO_SAVE_AS = ":/images/tango/22x22/actions/document-save-as.png"
 
-    RECENT_JOBS = "./recent_jobs.json"
+    RECENT_PROJECTS = "./recent_projects.json"
 
     def __init__(self, options):
         """ """
         super(PyCutMainWindow, self).__init__()
 
-        self.recent_jobs = self.read_recent_jobs()
+        self.recent_projects = self.read_recent_projects()
 
         self.ui = Ui_mainwindow()
         self.ui.setupUi(self)
@@ -136,7 +136,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.setWindowTitle("PyCut")
         self.setWindowIcon(QtGui.QIcon(self.IMG_TANGO_APP_SYSTEM))
 
-        self.build_recent_jobs_submenu()
+        self.build_recent_projects_submenu()
 
         self.operations = []
         self.tabs: List[Dict[str, Any]] = []
@@ -144,8 +144,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # a job to keep the generated gcode in memory (and save it)
         self.job = None
 
-        # open/read/write job settings
-        self.jobfilename = None
+        # open/read/write project settings
+        self.projfilename = None
 
         self.simulator_webgl_viewer = None
         self.simulator_python_viewer = None
@@ -164,10 +164,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.SaveGcode.clicked.connect(self.cb_save_gcode)
 
         self.ui.actionOpenSvg.triggered.connect(self.cb_open_svg)
-        self.ui.actionNewJob.triggered.connect(self.cb_new_job)
-        self.ui.actionOpenJob.triggered.connect(self.cb_open_job)
-        self.ui.actionSaveJobAs.triggered.connect(self.cb_save_job_as)
-        self.ui.actionSaveJob.triggered.connect(self.cb_save_job)
+        self.ui.actionNewProject.triggered.connect(self.cb_new_project)
+        self.ui.actionOpenProject.triggered.connect(self.cb_open_project)
+        self.ui.actionSaveProjectAs.triggered.connect(self.cb_save_project_as)
+        self.ui.actionSaveProject.triggered.connect(self.cb_save_project)
 
         self.ui.actionSettings.triggered.connect(self.cb_open_viewers_settings_dialog)
 
@@ -264,14 +264,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.init_gui()
 
-        if options.job is not None:
-            if os.path.exists(options.job):
-                self.open_job(options.job)
+        if options.project is not None:
+            if os.path.exists(options.project):
+                self.open_project(options.project)
             else:
                 # alert
                 msgbox = QtWidgets.QMessageBox()
                 msgbox.setWindowTitle("PyCut")
-                msgbox.setText("Job File %s not found" % options.job)
+                msgbox.setText("Project File %s not found" % options.project)
                 msgbox.setDefaultButton(QtWidgets.QMessageBox.Save)
                 msgbox.exec()
 
@@ -343,7 +343,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.menuBar().addAction(self.menubarToggleMiddleAreaButton)
         self.menuBar().addAction(self.menubarToggleRightSideButton)
 
-        # these callbacks only after have loading a job
+        # these callbacks only after have loading a project
         self.ui.GCodeConversion_XOffset.valueChanged.connect(
             self.cb_generate_gcode_x_offset
         )
@@ -438,21 +438,21 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def cb_save_gcode(self):
         """ """
         if self.job:
-            jobname = os.path.basename(self.jobfilename)
-            jobname = os.path.splitext(jobname)[0]
+            projname = os.path.basename(self.projfilename)
+            projname = os.path.splitext(projname)[0]
 
-            opname = self.job.operations[0].name
+            opname = self.project.operations[0].name
 
-            filename = "%s_%s.nc" % (jobname, opname)
+            filename = "%s_%s.nc" % (projname, opname)
 
             gcode = self.job.gcode
 
             if os.path.exists(filename):
                 k = 1
-                filename = "%s_%s_%d.nc" % (jobname, opname, k)
+                filename = "%s_%s_%d.nc" % (projname, opname, k)
                 while os.path.exists(filename):
                     k += 1
-                    filename = "%s_%s_%d.nc" % (jobname, opname, k)
+                    filename = "%s_%s_%d.nc" % (projname, opname, k)
 
             fp = open(filename, "w")
             fp.write(gcode)
@@ -794,7 +794,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
     def cb_open_svg(self):
         """
-        not a job, a svg only -> no operations
+        a svg only (not a project) -> no operations
         """
         xfilter = "SVG Files (*.svg)"
         svg_file, _ = QtWidgets.QFileDialog.getOpenFileName(
@@ -806,7 +806,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             self.svg_file = svg_file
 
-            # clean current job (table)
+            # clean current project (table)
             self.operations = []
             self.ui.operationsview_manager.set_operations(self.operations)
 
@@ -816,23 +816,23 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             self.display_svg(self.svg_file)
 
-    def cb_new_job(self):
+    def cb_new_project(self):
         """ """
         self.svg_file = None
         self.display_svg(self.svg_file)
 
-        # clean current job (operations table)
+        # clean current project (operations table)
         self.operations = []
         self.ui.operationsview_manager.set_operations(self.operations)
 
-        # clean current job (tabs table)
+        # clean current project (tabs table)
         self.tabs = []
         self.ui.tabsview_manager.set_tabs(self.tabs)
 
-    def cb_open_recent_job_file(self):
+    def cb_open_recent_project_file(self):
         """ """
         sender = self.sender()
-        jobfilename = sender.text()
+        projfilename = sender.text()
 
         self.ui.GCodeConversion_XOffset.valueChanged.disconnect(
             self.cb_generate_gcode_x_offset
@@ -842,7 +842,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         )
         self.ui.GCodeConversion_FlipXY.clicked.disconnect(self.cb_generate_gcode)
 
-        self.open_job(jobfilename)
+        self.open_project(projfilename)
 
         self.ui.GCodeConversion_XOffset.valueChanged.connect(
             self.cb_generate_gcode_x_offset
@@ -852,15 +852,15 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         )
         self.ui.GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
 
-    def cb_open_job(self):
+    def cb_open_project(self):
         """ """
         # read json
         xfilter = "JSON Files (*.json)"
-        jobfilename, _ = QtWidgets.QFileDialog.getOpenFileName(
+        projfilename, _ = QtWidgets.QFileDialog.getOpenFileName(
             self, caption="open file", dir=".", filter=xfilter
         )
 
-        jobfilename = self.minify_path(jobfilename)
+        projfilename = self.minify_path(projfilename)
 
         try:
             self.ui.GCodeConversion_XOffset.valueChanged.disconnect(
@@ -874,7 +874,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             print(e)
             pass
 
-        self.open_job(jobfilename)
+        self.open_project(projfilename)
 
         self.ui.GCodeConversion_XOffset.valueChanged.connect(
             self.cb_generate_gcode_x_offset
@@ -884,31 +884,31 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         )
         self.ui.GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
 
-    def open_job(self, jobfilename: str):
+    def open_project(self, projfilename: str):
         cwd = os.getcwd()
 
-        common_prefix = [os.path.commonprefix([cwd, jobfilename])]
-        jobfilename = os.path.relpath(jobfilename, common_prefix[0])
+        common_prefix = [os.path.commonprefix([cwd, projfilename])]
+        projfilename = os.path.relpath(projfilename, common_prefix[0])
 
-        with open(jobfilename) as f:
-            self.jobfilename = jobfilename
+        with open(projfilename) as f:
+            self.projfilename = projfilename
 
-            self.prepend_recent_jobs(jobfilename)
+            self.prepend_recent_projects(projfilename)
 
-            job = json.load(f)
+            project = json.load(f)
 
-            self.svg_file = job["svg_file"]  # relativ to job or absolute
+            self.svg_file = project["svg_file"]  # relativ to project or absolute
 
             if os.path.isabs(self.svg_file):
                 svg_file = self.svg_file
             else:
-                if os.path.isabs(jobfilename):
-                    jobdir = os.path.dirname(jobfilename)
-                    svg_file = os.path.join(jobdir, self.svg_file)
+                if os.path.isabs(projfilename):
+                    projdir = os.path.dirname(projfilename)
+                    svg_file = os.path.join(projdir, self.svg_file)
                 else:
-                    abs_jobfilename = os.path.abspath(jobfilename)
-                    abs_jobdir = os.path.dirname(abs_jobfilename)
-                    svg_file = os.path.join(abs_jobdir, self.svg_file)
+                    abs_projfilename = os.path.abspath(projfilename)
+                    abs_projdir = os.path.dirname(abs_projfilename)
+                    svg_file = os.path.join(abs_projdir, self.svg_file)
 
             if not os.path.exists(svg_file):
                 msgbox = QtWidgets.QMessageBox()
@@ -918,16 +918,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 msgbox.exec()
                 return
 
-            self.operations = job["operations"]
-            self.tabs = job["settings"]["Tabs"].get("tabs", [])
+            self.operations = project["operations"]
+            self.tabs = project["settings"]["Tabs"].get("tabs", [])
 
             # display
             self.display_svg(svg_file)
 
             # and fill the whole gui
-            self.apply_settings(job["settings"])
-            if "viewers_settings" in job:
-                self.apply_viewers_settings(job["viewers_settings"])
+            self.apply_settings(project["settings"])
+            if "viewers_settings" in project:
+                self.apply_viewers_settings(project["viewers_settings"])
 
             # fill operations table
             self.ui.operationsview_manager.set_operations(self.operations)
@@ -935,27 +935,27 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             # fill tabs table
             self.ui.tabsview_manager.set_tabs(self.tabs)
 
-    def cb_save_job(self):
+    def cb_save_project(self):
         """ """
         operations = self.ui.operationsview_manager.get_operations()
 
-        job = {
+        project = {
             "svg_file": self.svg_file,
             "operations": operations,
             "settings": self.get_current_settings(),
             "viewers_settings": self.get_current_viewers_settings(),
         }
 
-        with open(self.jobfilename, "w") as json_file:
-            json.dump(job, json_file, indent=2)
+        with open(self.projfilename, "w") as json_file:
+            json.dump(project, json_file, indent=2)
 
-    def cb_save_job_as(self):
+    def cb_save_project_as(self):
         """ """
         xfilter = "JSON Files (*.json)"
 
         operations = self.ui.operationsview_manager.get_operations()
 
-        job = {
+        project = {
             "svg_file": self.svg_file,
             "operations": operations,
             "settings": self.get_current_settings(),
@@ -963,30 +963,30 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         }
 
         # open file dialog for a file name
-        jobfilename, _ = QtWidgets.QFileDialog.getSaveFileName(
+        projfilename, _ = QtWidgets.QFileDialog.getSaveFileName(
             self, caption="Save As", dir=".", filter=xfilter
         )
 
-        if jobfilename:
-            jobfilename = self.minify_path(jobfilename)
+        if projfilename:
+            projfilename = self.minify_path(projfilename)
 
             """
-            get the svg file path relativ to the job file
+            get the svg file path relativ to the project file
             if both paths start from the cwd
             """
-            if not os.path.isabs(jobfilename) and not os.path.isabs(self.svg_file):
+            if not os.path.isabs(projfilename) and not os.path.isabs(self.svg_file):
                 svg_file_fix = self.get_relpath_relativ_to_the_other(
-                    self.svg_file, jobfilename
+                    self.svg_file, projfilename
                 )
             else:
                 svg_file_fix = self.svg_file
 
-            job["svg_file"] = svg_file_fix
+            project["svg_file"] = svg_file_fix
 
-            with open(jobfilename, "w") as json_file:
-                json.dump(job, json_file, indent=2)
+            with open(projfilename, "w") as json_file:
+                json.dump(project, json_file, indent=2)
 
-            self.jobfilename = jobfilename
+            self.projfilename = projfilename
 
     def cb_open_gcode(self):
         """ """
@@ -1436,7 +1436,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             settings["Tool"]["helix_pitch"], tool_model.units
         )
 
-        cnc_ops = []
+        cnc_ops : List[CncOp] = []
 
         for op_model in operations:
             if not op_model.enabled:
@@ -1693,59 +1693,59 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.display_gcode(gcode)
 
-    def read_recent_jobs(self):
+    def read_recent_projects(self):
         """
-        Returns the list of recent jobs fron the setting file
+        Returns the list of recent projects fron the setting file
         """
-        self.recent_jobs = []
+        self.recent_projects = []
 
-        if not os.path.exists(self.RECENT_JOBS):
-            fp = open(self.RECENT_JOBS, "w")
+        if not os.path.exists(self.RECENT_PROJECTS):
+            fp = open(self.RECENT_PROJECTS, "w")
             json.dump([], fp, indent=2)
             fp.close()
 
-        with open(self.RECENT_JOBS, "r") as f:
-            self.recent_jobs = json.load(f)
+        with open(self.RECENT_PROJECTS, "r") as f:
+            self.recent_projects = json.load(f)
 
-        return self.recent_jobs
+        return self.recent_projects
 
-    def write_recent_jobs(self):
+    def write_recent_projects(self):
         """
-        Write the list of recent jobs to the settings file
+        Write the list of recent projects to the settings file
         """
-        with open(self.RECENT_JOBS, "w") as json_file:
-            json.dump(self.recent_jobs, json_file, indent=2)
+        with open(self.RECENT_PROJECTS, "w") as json_file:
+            json.dump(self.recent_projects, json_file, indent=2)
 
-    def prepend_recent_jobs(self, jobfile):
+    def prepend_recent_projects(self, projfile):
         """ """
         # consider unix style if not absolute
-        if not os.path.isabs(jobfile):
-            jobfile_unix = jobfile.replace(ntpath.sep, posixpath.sep)
+        if not os.path.isabs(projfile):
+            projfile_unix = projfile.replace(ntpath.sep, posixpath.sep)
         else:
-            jobfile_unix = jobfile
+            projfile_unix = projfile
 
-        if jobfile_unix.startswith("./"):
-            jobfile_unix = jobfile_unix[2:]
+        if projfile_unix.startswith("./"):
+            projfile_unix = projfile_unix[2:]
 
         # remove duplicated
-        if jobfile_unix in self.recent_jobs:
-            self.recent_jobs.remove(jobfile_unix)
+        if projfile_unix in self.recent_projects:
+            self.recent_projects.remove(projfile_unix)
 
-        self.recent_jobs.insert(0, jobfile_unix)
+        self.recent_projects.insert(0, projfile_unix)
 
-        self.recent_jobs = self.recent_jobs[:5]
+        self.recent_projects = self.recent_projects[:5]
 
     def closeEvent(self, event):
         # do stuff
-        self.write_recent_jobs()
+        self.write_recent_projects()
         event.accept()  # let the window close
 
-    def build_recent_jobs_submenu(self):
+    def build_recent_projects_submenu(self):
         """ """
-        for jobfilename in self.recent_jobs:
+        for projfilename in self.recent_projects:
             icon = QtGui.QIcon.fromTheme("edit-paste")
-            item = QtGui.QAction(icon, jobfilename, self.ui.menuOpen_Recent_Jobs)
-            item.triggered.connect(self.cb_open_recent_job_file)
+            item = QtGui.QAction(icon, projfilename, self.ui.menuOpen_Recent_Jobs)
+            item.triggered.connect(self.cb_open_recent_project_file)
             self.ui.menuOpen_Recent_Jobs.addAction(item)
 
     def minify_path(self, apath):
@@ -1765,13 +1765,13 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         ex:
           p1 = 'misc_private/cnc1310/test_svgs/backlash.svg'
-          p2 = 'jobs/jj.json'
+          p2 = 'projects/jj.json'
 
           => pp1 = '../misc_private/cnc1310/test_svgs/backlash.svg'
 
         ex:
           p1 = 'misc_private/cnc1310/test_svgs/backlash.svg'
-          p2 = 'misc_private/jobs/jj.json'
+          p2 = 'misc_private/projects/jj.json'
 
           => pp1 = '../cnc1310/test_svgs/backlash.svg'
         """
@@ -1800,7 +1800,12 @@ def main():
 
     # argument
     parser.add_argument(
-        "-j", "--job", dest="job", nargs="?", default=None, help="load job file | empty"
+        "-p",
+        "--proj",
+        dest="project",
+        nargs="?",
+        default=None,
+        help="load project file | empty",
     )
     parser.add_argument(
         "-g",
