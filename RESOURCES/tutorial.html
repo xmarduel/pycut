@@ -23,12 +23,19 @@
 <div class="sidenav">
 <h3 class="title_sidenav">Contents</h3>
 <ul class="tree">
-  <li><a href="#P-01">Introduction</a> 
-    <ul>
-      <li><a href="#P-01-01">SVG Shapes and Paths</a></li>
-    </ul>
-  </li>
-  <li><a href="#P-02">SVG Documents</a> </li>
+  <li><a href="#P-01">Introduction</a> </li>
+  <li><a href="#P-02">SVG Documents</a> 
+   <ul>
+      <li><a href="#P-02-01">SVG ViewBox</a></li>
+	  <li><a href="#P-02-02">SVG Shapes and Paths</a>
+	    <ul>
+          <li><a href="#P-02-02-01">Opened and closed paths</a></li>
+	      <li><a href="#P-02-02-02">Text shapes</a></li>
+		  <li><a href="#P-02-02-03">Special tags: defs and use</a></li>
+		  <li><a href="#P-02-02-04">Transformations</a></li>
+        </ul>
+	  </li>
+    </ul></li>
   <li><a href="#P-03">Basic example</a> 
     <ul>
       <li><a href="#P-03-01">Loading a SVG file</a></li>
@@ -48,7 +55,10 @@
       <li><a href="#P-04-07">GCode Generation</a></li>
     </ul>
   </li>
-  <li><a href="#P-05">Pockets Tips</a> </li>
+  <li><a href="#P-05">CAM Operations</a>
+    <ul>
+      <li><a href="#P-05-01">Pockets</a></li>
+    </ul>	</li>
   <li><a href="#P-06">GCode DressUp</a> </li>
   <li><a href="#APPENDICE-01">Appendix-1: SVG Editors</a></li>
   <li><a href="#APPENDICE-02">Appendix-2: GCODE Viewers</a></li>
@@ -97,16 +107,14 @@ Hopefully you will find <strong>PyCut</strong> usefull when learning CNC and pro
 point out what has to be taken into consideration when creating "usable" <strong>SVG</strong> files for
 <strong>PyCut</strong>.</p>
 
-<h3>Why PyCut</h3>
-
-<p>With <strong>PyCut</strong>, you do not need to do 3D modelling. SVG files (2D) are <strong>PyCut</strong> input
+<p>Indeed, with <strong>PyCut</strong>, you do not need to do 3D modelling. SVG files (2D) are <strong>PyCut</strong> input
 format, and for simple milling tasks it is perfectly OK. Granted, SVG shapes modelling is not so straightforward as one
 could think, as free software lacks good SVG modelling applications. Infact, writing a SVG file with a text editor is
 sometimes the best way! For complex shapes (so-called SVG paths), other tools may be used, see Appendix.</p>
 
-<h2 id="P-01-01">SVG Documents</h2>
+<h2 id="P-02">SVG Documents</h2>
 
-<h3 id="P-01-010">SVG ViewBox definition</h3>
+<h3 id="P-02-01">SVG ViewBox</h3>
 
 <p><strong>PyCut</strong>, in order to work accurately, need the SVG document to define its standard
 <strong>width</strong> and <strong>height</strong> with units "<strong>mm</strong>" or "<strong>in</strong>". The
@@ -115,7 +123,13 @@ sometimes the best way! For complex shapes (so-called SVG paths), other tools ma
 <p></p>
 <pre><code class="language-html">viewBox="0 0 &lt;width&gt; &lt;height&gt;"</code></pre>
 
-<p>So as example:</p>
+<p>and the viewbox width and height must correspond to the SVG attributes <strong>width</strong> and <strong>height</strong>.</p>
+ 
+<div class="info">
+<p><strong>Note:</strong> The specified units will be the ones for the generated GCode(s)</p>
+</div>
+
+<p>As an example:</p>
 <pre><code class="language-html">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
 &lt;svg version="1.1" width="200mm" height="100mm" viewBox="0 0 200 100" id="test" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"&gt;
   &lt;g id="root"&gt;
@@ -124,12 +138,8 @@ sometimes the best way! For complex shapes (so-called SVG paths), other tools ma
   &lt;/g&gt;
 &lt;/svg&gt;</code></pre>
 
-<div class="info">
-<p><strong>Note:</strong> The <strong>height</strong> will be used later when creating GCode with the
-<strong>PyCut</strong> option "Zero Lower Left of Material" as reference.</p>
-</div>
 
-<h3 id="P-01-011">SVG Shapes and Paths</h3>
+<h3 id="P-02-02">SVG Shapes and Paths</h3>
 
 <p>The SVG standard is very large, and <strong>PyCut</strong> cannot simply read a svg file, display it, and allow the
 user to define cnc operations on the "shapes" defined inside the svg file. Of course, the goal of
@@ -152,50 +162,55 @@ user to define cnc operations on the "shapes" defined inside the svg file. Of co
 
 <p>can define in a single path definition many closed or opened (sub)paths.</p>
 
-<p>Finally, the user will maybe also want to process the strings written in the svg file:</p>
-<ul>
-  <li><span style="color:#0000ff">&lt;text&gt;</span></li>
-</ul>
+<div class="info">
+<p><strong>Note:</strong> PyCut will only display shapes in its viewer which have an id.</p>
+</div>
 
-<p>For these strings to be imported, however, they have to be first converted to path.</p>
+<div class="warning">
+<p><strong>Warning:</strong> Some shapes can completely cover smaller shapes, depending on the order they are
+defined in the SVG, and thus making the smaller shapes invisible in the viewer. 
+In this case, large shapes should be defined before the smaller ones.</p>
+</div>
 
 <p><strong>PyCut</strong> processes "paths" in order to calculate geometries and cnc tool paths, but thankfully it can
 read out of the box all kind of shapes, so there is <strong>no need</strong> to convert your svg files into "paths
 only" svgs.</p>
 
+
+<p>Finally, the user will maybe also want to process the strings written in the svg file:</p>
+<ul>
+  <li><span style="color:#0000ff">&lt;text&gt;</span></li>
+</ul>
+
+
 <p>In the following, we will employ the term "shapes" for svg shapes as well as for svg paths.</p>
 
+
 <div class="warning">
-<p><strong>Warning:</strong> PyCut will only display shapes in its viewer which have an id.</p>
+<p><strong>Warning:</strong> 
+Strings are not (yet) imported directly. They have first to be converted to paths.
 </div>
 
 <p>In order to reference the shapes, the shapes must have their own <strong>"id"</strong>, hopefully unique inside the
 svg document. The user, having edited the svg file "per hand" or not, should not forget to check and give the shapes he
 wishes to process an unique id.</p>
 
-<h4>Defs and use tags</h4>
+<h4 id="P-02-02-01">Opened and closed paths</h4>
 
-<p><strong>PyCut</strong> cannot import directly the very handy SVG <strong>&lt;defs&gt;</strong> and
-<strong>&lt;use&gt;</strong> feature. The utility <strong>svgresolver.py</strong> delivered with <strong>PyCut</strong>
-will have to be used. It takes as input the SVG file defined with <code>&lt;defs&gt;</code> and outputs a new SVG where
-all <code>&lt;defs&gt;/&lt;use&gt;</code> have been resolved.</p>
-
-<h4>Opened and closed paths/shapes</h4>
-
-<p>A path can be closed or not. This is not a matter if the first point is equal the the last point. A closed path or
+<p>A path can be closed or not. This is not a matter if the path's first point is equal to its last point. A closed path or
 subpath contains the annotation <strong>"Z"</strong> or <strong>"z"</strong> at its end. Even if the first point of the
-path is equal to its last point, the path is only considered as closed with the ending "Z/z".</p>
+path is equal to its last point, the path is only considered as closed with the ending <strong>"Z"</strong> or <strong>"z"</strong>.</p>
 
 <div class="warning">
-<p><strong>Warning:</strong> PyCut strongly relies on the <strong>Z/z</strong> annotation to decide if the path is
-closed or not. When not closed, "Pocket" operations will not be allowed for this path.</p>
+<p><strong>Warning:</strong> PyCut strongly relies on the <strong>[Zz]</strong> annotation to decide if the path is
+closed or not. When not closed, "Pocket" operations will not be allowed for this opened path.</p>
 </div>
 
-<p><strong>PyCut</strong> imports closed paths as shapely "Polygon" (infact "MultiPolygon"), while opened paths are
-imported as "LineString" (infact "MultiLineString").</p>
+<p><strong>PyCut</strong> imports closed paths as shapely "MultiPolygon", while opened paths are
+imported as "MultiLineString", but here the sake of simplicity, we will only refer them as "Polygon" or "LineString".</p>
 
-<p><strong>PyCut</strong> will import the other shapes either as (shapely) "<span style="color:#0000ff">Polygon</span>"
-(i.e. <strong>closed items</strong>) or as (shapely) "<span style="color:#0000ff">LineString</span>" (i.e.
+<p><strong>PyCut</strong> will import the other shapes either as "<span style="color:#0000ff">Polygon</span>"
+(i.e. <strong>closed items</strong>) or as "<span style="color:#0000ff">LineString</span>" (i.e.
 <strong>opened items</strong>). Of course, svg <span style="color:#0000ff">&lt;rect&gt;</span>, <span
 style="color:#0000ff">&lt;circle&gt;</span>, <span style="color:#0000ff">&lt;ellipse&gt;</span> and <span
 style="color:#0000ff">&lt;polygon&gt;</span> are closed items, while <span style="color:#0000ff">&lt;line&gt;</span>
@@ -211,10 +226,10 @@ to consider these paths as a single shapely MultiPolygon entity. The letter "a" 
 "g" is a polygon with two holes (for some fonts). In the freetype vocabulary, "a" is formed by 2 "contours", "g" by
 three "contours".</p>
 
-<h4>Text shapes</h4>
+<h4 id="P-02-02-02">Text shapes</h4>
 
 <p><strong>PyCut</strong> cannot process yet <span style="color:#0000ff">&lt;text&gt;</span> items directly.
-Fortunately, <span style="color:#0000ff">&lt;text&gt;</span> items must be converted into <span
+Fortunately, <span style="color:#0000ff">&lt;text&gt;</span> items can be converted into <span
 style="color:#0000ff">&lt;path&gt;</span> items, sonce they will be ignored by <strong>PyCut</strong>.
 <strong>PyCut</strong> also comes with the utiilty <strong>svgtext2svgpath.py</strong> which will also convert your
 <code><span style="color:#0000ff">&lt;text&gt;</span></code> items. How to use it? just call the
@@ -226,25 +241,47 @@ not be splitted into several <span style="color:#0000ff">&lt;tspan&gt;</span> it
 style="color:#0000ff">&lt;tspan&gt;</span> tag at all is also possible (and simpler). <strong><span
 style="color:#8000ff">IN PROGRESS</span></strong>.</p>
 
+<p>This utility is found in the source code inside the folder "<strong>utilities/svgtext2svgpath.</strong>"
+
 <p>All in all, if <strong>PyCut</strong> were to display text strings at the wrong positions (after having transformed
 them into paths), the user can always export the svg from <strong>Inkscape</strong> (and write <strong>PyCut</strong> a
 ticket).</p>
 
-<h4>Transformations</h4>
+<h4 id="P-02-02-03">Special tags: defs and use</h4>
+
+<p><strong>PyCut</strong> cannot import directly the very handy SVG <strong>&lt;defs&gt;</strong> and
+<strong>&lt;use&gt;</strong> feature. The utility <strong>svgresolver.py</strong> delivered with <strong>PyCut</strong>
+will have to be used. The utility <strong>svgresolver.py</strong> takes as input the SVG file containing <code>&lt;defs&gt;</code>  and  <code>&lt;use&gt;</code> tags
+and outputs a new SVG where all <code>&lt;defs&gt;/&lt;use&gt;</code> have been resolved, i.e. turned into real objects.</p>
+
+<p>This utility is found in the source code inside the folder "<strong>utilities/svgresolver.</strong>"
+
+<p>One drawback is that the user has then to manage 2 SVG files: the first one with <strong>&lt;defs&gt;</strong> and
+<strong>&lt;use&gt;</strong>, and a second one, the "resolved" one which is the input file for <strong>PyCut</strong>.
+
+
+<h4 id="P-02-02-04">Transformations</h4>
+
+<div class="info">
+<p><strong>Info:</strong>Transformations can be defined on every shapes or groups, but are often use in combinaison of 
+<strong>&lt;defs&gt;</strong> and <strong>&lt;use&gt;</strong> tags.</p>
+</div>
+
 
 <p><strong>PyCut</strong> cannot handle "out of the box" svg datas where shapes are defined with "transform" operations
 (translate, rotate etc.).</p>
 
-<p>Nevertheless, it is possible to "resolve" the shapes transformations, as <strong>PyCut</strong> also comes with the
-utility <strong>svgresolver.py</strong>. The <strong>svgresolver.py</strong> program reads any svg file and outputs a
-new svg file with all transformations resolved, while keeping the<strong>"id"</strong>s right. It work best in
+<p>Nevertheless, it is also possible to "resolve" the shapes transformations with the previously mentined utility
+<strong>svgresolver.py</strong>. this utility also processes all transformations found in the svg file, 
+while keeping the<strong>"id"</strong>s right. It work best in
 combinaison of the <code>&lt;use&gt;</code> tag in the <code>&lt;defs&gt;</code> section, as a single item defined in
 the <code>&lt;defs&gt;</code> section can then be re-used at many locations. Obviously, not everything is possible: for
 example, transforming a <code>&lt;rect&gt;</code> element with a rotate transformation does not result in a
-<code>&lt;rect&gt;</code> (but a <code>&lt;polygon&gt;</code>) and <strong>svgresolver.py</strong> cannot handle this.
-<strong><span style="color:#8000ff">IN PROGRESS</span></strong>: this utility should be integrated into
-<strong>PyCut</strong> so that the user can spare this step. Actually, this utility is found in the source code under
-the folder "<strong>utilities/svgresolver</strong>". </p>
+<code>&lt;rect&gt;</code> (but a <code>&lt;polygon&gt;</code>) and <strong>svgresolver.py</strong> cannot handle this.</p>
+
+<p><strong><span style="color:#8000ff">IN PROGRESS</span></strong>: this utility should be integrated into
+<strong>PyCut</strong> so that the user can spare this step.</p>
+
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
@@ -270,11 +307,13 @@ the tool diameter is needed for an accurate simulation. PyCut saves its generate
 the form</p>
 <pre><code class="language-gcode">; Diameter   &lt;value&gt;</code></pre>
 
-<p>that is parsed to retrieve the right tool diameter. </p>
-
-<p>So for the very first time, start <strong>PyCut</strong> without project.</p>
+<p>that is parsed to retrieve the right tool diameter. Inserting such a line in the external GCode allows 
+<strong>PyCut</strong> to properly simulate the GCode.</p>
 
 <h3 id="P-03-01">Loading a SVG file</h3>
+
+
+<p>So for the very first time, start <strong>PyCut</strong> without specifying any project.</p>
 
 <p>Import your svg into <strong>PyCut</strong>. It is achieved through the menubar command <strong>SVG | Load
 SVG</strong>. The SVG content should be displayed in the central area. </p>
@@ -296,12 +335,30 @@ and loaded again and modified - quite practical.</p>
 items in SVG window (they should turn beige) and click the button "Create Operation": a new operation in the operation
 table should appear.</p>
 
-<p>Define the properties of the operation: the main one is the CAM operation type: "<strong>Pocket</strong>",
-"<strong>Engrave</strong>", "<strong>Inside</strong>" or "<strong>Outside</strong>". There are also the
-"<strong>Drill</strong>" and "<strong>Peck</strong>" operations, for the <span
-style="color:#0000ff">&lt;circle&gt;</span> shapes whose diameter is smaller or equal to the tool diameter, and the
-"<strong>Helix</strong>" operation for <span style="color:#0000ff">&lt;circle&gt;</span> of any size. The others
-options will be discussed later. Default values at this point should be Ok.</p>
+<p>Define the properties of the operation: the main one is the CAM operation type: </p>
+<ul>
+  <li><strong>Pocket</strong></li>
+  <li><strong>Engrave</strong></li>
+  <li><strong>Inside</strong></li>
+  <li><strong>Outside</strong></li>
+</ul>
+
+<p>There are also the</p>
+ <ul>
+<li><strong>Drill</strong></li>
+<li><strong>Peck</strong></li>
+</ul>
+
+<p>operations, for the <span style="color:#0000ff">&lt;circle&gt;</span> shapes whose diameter is smaller or equal 
+to the tool diameter, and the 
+
+<ul>
+<li><strong>Helix</strong></lI>
+</ul>
+<p> operation for <span style="color:#0000ff">&lt;circle&gt;</span> 
+of any size. </p>
+
+<p>The others options will be discussed later. Default values at this point should be Ok.</p>
 
 <h3 id="P-03-04">Create the GCode</h3>
 
@@ -467,10 +524,10 @@ top-left postion.</p>
 
 <p>It is possible to change the reference location of the generated GCode</p>
 <ul>
-  <li>Zero top-left of the material</li>
-  <li>Zero lower-Left (bottom) of the material</li>
-  <li>Tero lower-Left (bottom) of the Gcode area</li>
-  <li>Zero Center of the Gcode area</li>
+  <li>Zero top left of the material</li>
+  <li>Zero lower left (bottom) of the material</li>
+  <li>Zero lower left (bottom) of the Gcode area (Op)</li>
+  <li>Zero Center of the Gcode area (Op)</li>
 </ul>
 
 <div>
@@ -483,22 +540,24 @@ possible to modify the XOffset and YOffset to fit at best how to user wants to h
 of the 2 spin boxes. Infact, modifying "per hand" the X or Y offset recalculate the GCode, so this is a costly
 operation.</p>
 
-<p>The checkbox "Use Offset" is used, as example, as the following: the user can select first only 1 CAM operation, for
-example <strong>Center of the Gcode area</strong>. An X and Y offset is thus calculated. Then the user checks "on" the
+<p>The checkbox "Use Offset" is used, as example, as the following: the user can select first only one CAM operation, 
+with for example the option <strong>Zero Center (Op)</strong>. An X and Y offset are thus calculated. Then the user checks 
+"on" the <b>"Use Offset"</b>
 checkbox, so that these offsets are frozen and become the references for the further CAM operations and their produced
 gcode. </p>
 
 <div class="warning">
-<p><strong>Info</strong>: The option "Center of the Gcode area" is particularely usefull when the user wants to run 2
-differents G-Code files produced on the same workpiece with 2 different tool diameters. By ensuring that the center of
-the operations are the same, at the end of the first operation (first GCode file), the users can change the tool in the
+<p><strong>Info</strong>: The option <strong>"Zero Center (Op)"</strong> is particularely usefull when the user wants to run 2
+differents G-Code files produced on the same workpiece with 2 different tool diameters (as <strong>PyCut</strong> 
+can only produce GCode with only 1 tool setting). By ensuring that the center of
+the operations are the same, at the end of the first operation (first GCode file), the user can change the tool in the
 machine and load/start the second G-Code file. This occurs when some holes have to be drilled in the first operation
 and a contour or pocket operation has to be performed in the second operation with a much larger tool. </p>
 </div>
 
 <div class="warning">
-<p><strong>Info</strong>: The two entries are "debounced" when entering the values from the keyboard, as each change of
-value calls the GCode generator, which is a costly operation. WIth "Enter", the GCode generator is then called.
+<p><strong>Info</strong>: The two SpinBox entries are "debounced" when entering the values from the keyboard, as each change of
+value calls the GCode generator, which is a costly operation. With "Enter", the GCode generator is then called.
 Utilizing the spin boxes arrows is not debounced.</p>
 </div>
 
@@ -509,14 +568,14 @@ have to position your bit exactly at the "top-left" of your material in order to
 from this initial position. </p>
 
 <p>But imagine you want the reference to be the center of the first circle. After having generated the GCode for the
-first circle, click on "Zero Center (Op)" and observe and meorize what are the resulting X an Y offsets (it will be
+first circle, click on "Zero Center (Op)" and observe and memorize what are the resulting X an Y offsets (it will be
 (-10, 15)). Now select the 2 operations and generate the GCode. The offsets will certainly chande, but then type in the
-offsets the memerized X and Y offsets. The GCode will be reevaluated with the offsets (-10,15) and thus the GCode 0,0
+offsets the memorized X and Y offsets. The GCode will be reevaluated with the offsets (-10,15) and thus the GCode 0,0
 position will be the center of the first circle.</p>
 
 <p>But why would you want to have as reference of the GCode the center of the first circle ? Well when milling the two
 holes in your workpiece maybe you may want to position the bit at a given position on the workpiece and from this
-location mill the second holes, the first hole beeing milled exactly when you have positioned your bit. Bacause what
+location mill the second holes, the first hole beeing milled exactly when you have positioned your bit. Because what
 was important was the relative position of the two holes, while the absolute position of the first hole was to be
 determinated by yourself on the workpiece.</p>
 
@@ -601,7 +660,7 @@ cutter diameter</strong>, in order to have toolpath, "<strong><span style="color
 <p><strong style="color:#8000ff">NEW</strong>: for
 <strong>circles</strong>/<strong>ellipses</strong>/<strong>rectangles</strong>/<strong>polygons and more generatly
 closed paths</strong>, the "<strong style="color:#8000ff">helix</strong>" operation is available. This cut "smoothly"
-in the center of the shape an hole or a donut, depending on the radius of the helix and the cutter diameter. The hlix
+in the center of the shape an hole or a donut, depending on the radius of the helix and the cutter diameter. The helix
 has always the tickness of the cutter diameter.</p>
 
 <p>In order to generate G code, enable one or many operations and click on "Generate G code". <strong>PyCut</strong>
@@ -614,9 +673,11 @@ G code to your machine. Have fun...</p>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
-<h2 id="P-05">Pockets Tips</h2>
+<h2 id="P-05">CAM Operations</h2>
 
-<p>The standard pocket algorithm is the so-called "<strong>contour</strong>" algorithm. Starting from the outside,
+<h3 id="P-05-01">Pockets</h2>
+
+<p>The standard pocket algorithm is the so-called "<strong>contour</strong>" algorithm. Starting from the outside border,
 offset curves are generated one after the other until the whole pocket "space" is processed. At the end, ordering of
 the offsets is reversed, thus starting from the middle of the pocket.</p>
 
@@ -627,10 +688,20 @@ external (free) library <strong style="color:#8000ff">HSM_nibblers</strong> whic
 toolpaths<strong>.</strong></p>
 
 <p><strong>PyCut</strong> will try to implement this <strong>pocket</strong> algorithm in two steps: first an
-"<strong>Helix</strong>" operation, then a "<strong>Pocket</strong>" operation. <strong
+"<strong>Helix</strong>" operation, then a "<strong>Pocket</strong>" operation.<p>
+
+<p> <strong
 style="color:#8000ff">Trick</strong>: to "activate" the spirale algorithm, just name the pocket operation with a
 "<strong>sp_</strong>" prefix! To "activate" the HSM_nibbler algorithm, just name the pocket operation with a
 "<strong>hsm_</strong>" prefix! </p>
+
+<div class="info">
+<p><strong>Note:</strong> To enable the Spirale pocket toolpaths, prefix the pocket operation with "sp_"</p>
+</div>
+
+<div class="info">
+<p><strong>Note:</strong> To enable the HSM pocket toolpaths, prefix the pocket operation with "hsm_"</p>
+</div>
 
 <p>The helix will be cut in the "center" of the shape (the shapely polygon "centroid)", and we pass this location to
 the HSM nibbler, thus ensuring a good start of the pocket "hsm_nibbler" operation.</p>
@@ -662,26 +733,26 @@ and the helix is then simular to an "Inside" or "Outside"operation for an imagin
 threads cutting by generating first an hole, then an helix "inside the hole" where the outer radius of the helix would
 be smaller than the hole radius, and utilizing a dedicated cutter.</p>
 
-<h4>Spirale</h4>
+<h4>Pocket/Spirale</h4>
 
-<p>With a Spirale operation, the cutter will plunge automatically with a <strong>depth</strong> equal to the specified
+<p>With a Pocket/Spirale operation, the cutter will plunge automatically with a <strong>depth</strong> equal to the specified
 standard <strong>pass depth</strong>. Hopefully a hole has previously been cut at this place... At best, an Helix
 operation precedes a Spirale operation. The spirale will mainly cut into the material "sideways". It seems it is a
 better way to mill pockets, as the bit is then used mainly from the side, preserving its drilling bottom side if the
 <strong>pass depth</strong> is equal to the <strong>full cut depth</strong>.</p>
 
-<p>For a Spirale operation to work best, as the pass depth is large, a very big overlap is required (example: 0.975).
+<p>For a Pocket/Spirale operation to work best, as the pass depth is large, a very big overlap is required (example: 0.975).
 This way, the spirale only "attacks" the material on a rather limited side surface, thus preserving the bit and
 allowing greather depth passes. If you wish for example that at each spirale arm 1mm is milled, then the overlap has to
 be chosen accordingly. Denoting A the size of the material beeing cut at each spirale arm : A = cutter_radius *
 (1-overlap) =&gt; overlap = 1 - A / cutter_radius.</p>
 
-<p>So a combined "Helix+ Spirale" operation is somehow similar to the normal "pocket" operation when a very large pass
+<p>So a combined "Helix+Pocket/Spirale" operation is somehow similar to the normal "pocket" operation when a very large pass
 depth and an overlap near to 1.0 are chosen. Nevertheless, with the "contour" algorithm , the cutter would plunge into
 the material without helix (even if a ramp is still possible) for a large pass depth at the given plunge rate, which
 would be quite dangerous even if the plunge rate would be small. </p>
 
-<p>Note that for an Helix or Spirale operation, cam paths are calculated "per hand" without the help of the shapely
+<p>Note that for an Helix or Pocket/Spirale operation, cam paths are calculated "per hand" without the help of the shapely
 library and its "offset curve" functionality. But the <strong>Spirale</strong> can only be used when considering
 <strong>circle/ellipse</strong> or <strong>rectangle</strong> shapes.</p>
 
@@ -768,6 +839,12 @@ geometry, or rather said the geometry contour so that this contour get bones. Af
 operations are performed "as usual". I will try to take a different approach : only the generated GCode will be "fixed"
 when encountering "angles". </p>
 </div>
+
+<div class="warning">
+<p><strong>Warning:</strong> A drawback of this approach is that the user has 0 influence on the dogbones generation.
+On the other, he does not have to specify them at all </p>
+</div>
+
 
 <h3>A first try</h3>
 
@@ -1070,8 +1147,8 @@ the orientation must look "outside" the corner.</p>
 <p></p>
 
 <p>Let's try our formulas for a sharp angle. Let's say the cutter radius is 1mm. The GCode encountered is</p>
-<svg width="70" height="80" viewBox="-10 -40 60 20" version="1.1">
-  <polyline points="-10,-10  40,-40  10,10" stroke-width="0.75" fill="none" stroke="black"/>
+<svg width="70" height="55" viewBox="0 0 70 55" version="1.1">
+  <polyline points="10,30  60,0  30,50" stroke-width="0.75" fill="none" stroke="black"/>
 </svg>
 <pre><code class="language-gcode">G1 X-2  Y2
 G1 X4   Y4
@@ -1093,8 +1170,8 @@ slopes are \( -1\) and \(1;\) so the correct bisection is the second one, and it
 <p>\( dy = 0.874 \)</p>
 
 <h4>Example 2</h4>
-<svg width="50" height="50" viewBox="0 -40 50 10" version="1.1">
-  <polyline points="0,0  0,-40  40,-40" stroke-width="0.2" fill="none" stroke="black"/>
+<svg width="50" height="45" viewBox="0 0 50 45" version="1.1">
+  <polyline points="10,40  10,2  50,2" stroke-width="0.75" fill="none" stroke="black"/>
 </svg>
 <pre><code class="language-gcode">G1 X0.0  Y0.0
 G1 X0.0  Y4.0
@@ -1344,7 +1421,7 @@ yours svgs are then "<strong>clean</strong>" and easily modificable. </p>
 
 <p>Real GCODE simulators (I mean simulation with material removal) are on the other way seldom.</p>
 <ul>
-  <li>Camotics: unfortunately very resources intensive</li>
+  <li>Camotics: unfortunately very resources intensive and not so accurate in the details</li>
   <li>CNCSimulator PRO (not free)</li>
   <li>FreeCAD ? how to import gcode into it ?</li>
   <li>Blender ? see BlenderCAM add-on - not sure if there is a simulation</li>
