@@ -95,7 +95,10 @@ concerning the style in use elements remain a somehow mystery for me.</em></p>
 <p>A file named <code>test_basic.resolved.svg</code> is created</p>
 
 <pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
-&lt;svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" width="100mm" height="200mm" viewBox="0 0 100 200" version="1.1" id="svg"&gt;
+&lt;svg version="1.1" id="svg" width="100mm" height="200mm" viewBox="0 0 100 200"
+  xmlns="http://www.w3.org/2000/svg" 
+  xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xmlns:svg="http://www.w3.org/2000/svg" &gt;
   &lt;g id="layer1"&gt;
     &lt;g id="layer_circle"&gt;
       &lt;circle id="circle_left" cx="10.000" cy="10.000" r="2.250" style="opacity:0.5;fill:#880088;stroke:#00ffff;stroke-opacity:0.25;stroke-width:0.2"/&gt;
@@ -108,7 +111,7 @@ concerning the style in use elements remain a somehow mystery for me.</em></p>
   &lt;/g&gt;
 &lt;/svg&gt;</pre></code>
 
-<p>and <strong>PyCut</strong> can use this "resolved" svg data as input. Note how the <code>id</code>s are preserved. 
+<p>and <strong>PyCut</strong> can use this "resolved" svg data as valid input. Note how the <code>id</code>s are preserved. 
 Also note how the opacity values in the styles are merged in the resolved items's styles.</p>
 
 <h3>ToDo</h3>

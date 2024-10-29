@@ -38,10 +38,11 @@
     </ul></li>
   <li><a href="#P-03">Basic example</a> 
     <ul>
-      <li><a href="#P-03-01">Loading a SVG file</a></li>
+      <li><a href="#P-03-00">PyCut as GCode simulator</a></li>
+	  <li><a href="#P-03-01">Loading a SVG file</a></li>
       <li><a href="#P-03-02">Creating a PyCut Job</a></li>
       <li><a href="#P-03-03">Creating CAM operations</a></li>
-      <li><a href="#P-03-04">Create the GCode</a></li>
+      <li><a href="#P-03-04">Generate the GCode</a></li>
     </ul>
   </li>
   <li><a href="#P-04">GUI Components</a> 
@@ -100,6 +101,9 @@
 <p>Welcome to <strong>PyCut</strong>, a clone of <strong>jsCut</strong>, the excellent (at least for beginners) CAM,
 web-based programm, that takes as input <strong>SVG</strong> files and generates G-Code. So why this rewrite ?</p>
 
+<p>As <strong>jsut</strong> is a Web application written is javascript, <strong>PyCut</strong> is written is python and is
+a desktop application. So few python modules have to be installed first, as well as python itself of course.</p>
+
 <p><strong>PyCut</strong> aims to offer all the (minimalistics) features found in jsCut, with some improvements.
 Hopefully you will find <strong>PyCut</strong> usefull when learning CNC and producing your first GCode files.</p>
 
@@ -108,22 +112,26 @@ point out what has to be taken into consideration when creating "usable" <strong
 <strong>PyCut</strong>.</p>
 
 <p>Indeed, with <strong>PyCut</strong>, you do not need to do 3D modelling. SVG files (2D) are <strong>PyCut</strong> input
-format, and for simple milling tasks it is perfectly OK. Granted, SVG shapes modelling is not so straightforward as one
-could think, as free software lacks good SVG modelling applications. Infact, writing a SVG file with a text editor is
-sometimes the best way! For complex shapes (so-called SVG paths), other tools may be used, see Appendix.</p>
+format, and for simple milling tasks it is perfectly OK. Granted, SVG shapes (paths) definition is not so straightforward as one
+could think, and free software lacks good SVG paths modelling applications. Infact, writing a SVG file with a text editor is
+sometimes the best way. For non trivial svg paths, other tools may be used, see Appendix.</p>
 
 <h2 id="P-02">SVG Documents</h2>
 
 <h3 id="P-02-01">SVG ViewBox</h3>
 
 <p><strong>PyCut</strong>, in order to work accurately, need the SVG document to define its standard
-<strong>width</strong> and <strong>height</strong> with units "<strong>mm</strong>" or "<strong>in</strong>". The
-<strong>viewbox</strong> needs to be defined as well. The viewbox shall be of the form </p>
+<strong>width</strong> and <strong>height</strong> attributes with the units "<strong>mm</strong>" or "<strong>in</strong>".
 
-<p></p>
+<pre><code class="language-html">&lt;svg version="1.1" width="&lt;width&gt;mm" height="&lt;height&gt;mm" ... 
+...
+&lt;/svg&gt;</code></pre>
+
+<p>and the <strong>viewbox</strong> definition shall be of the form </p>
+
 <pre><code class="language-html">viewBox="0 0 &lt;width&gt; &lt;height&gt;"</code></pre>
 
-<p>and the viewbox width and height must correspond to the SVG attributes <strong>width</strong> and <strong>height</strong>.</p>
+<p>with its width and height corresponding to the SVG attributes <strong>width</strong> and <strong>height</strong>.</p>
  
 <div class="info">
 <p><strong>Note:</strong> The specified units will be the ones for the generated GCode(s)</p>
@@ -131,7 +139,9 @@ sometimes the best way! For complex shapes (so-called SVG paths), other tools ma
 
 <p>As an example:</p>
 <pre><code class="language-html">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
-&lt;svg version="1.1" width="200mm" height="100mm" viewBox="0 0 200 100" id="test" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg"&gt;
+&lt;svg version="1.1" width="200mm" height="100mm" viewBox="0 0 200 100" id="test" 
+   xmlns="http://www.w3.org/2000/svg" 
+   xmlns:svg="http://www.w3.org/2000/svg"&gt;
   &lt;g id="root"&gt;
     &lt;circle id="circle" cx="30" cy="60" r="20" stroke="black" stroke-width="1" fill="red" /&gt;
     &lt;rect id="rect" x="60" y="40" width="30" height="40" stroke="black" stroke-width="1" fill="green" /&gt;
@@ -155,21 +165,18 @@ user to define cnc operations on the "shapes" defined inside the svg file. Of co
   <li><span style="color:#0000ff">&lt;polyline&gt;</span></li>
 </ul>
 
-<p>The almighty</p>
+<p>The powerfull</p>
 <ul>
   <li><span style="color:#0000ff">&lt;path&gt;</span></li>
 </ul>
 
 <p>can define in a single path definition many closed or opened (sub)paths.</p>
 
-<div class="info">
-<p><strong>Note:</strong> PyCut will only display shapes in its viewer which have an id.</p>
-</div>
-
 <div class="warning">
-<p><strong>Warning:</strong> Some shapes can completely cover smaller shapes, depending on the order they are
+<p><strong>Warning:</strong> Some shapes can completely overlap smaller shapes, depending on the order they are
 defined in the SVG, and thus making the smaller shapes invisible in the viewer. 
-In this case, large shapes should be defined before the smaller ones.</p>
+In this case, larger shapes should be defined before the smaller ones, so that the smaller ones are
+on top of the larger ones.</p>
 </div>
 
 <p><strong>PyCut</strong> processes "paths" in order to calculate geometries and cnc tool paths, but thankfully it can
@@ -183,17 +190,21 @@ only" svgs.</p>
 </ul>
 
 
-<p>In the following, we will employ the term "shapes" for svg shapes as well as for svg paths.</p>
-
-
 <div class="warning">
 <p><strong>Warning:</strong> 
 Strings are not (yet) imported directly. They have first to be converted to paths.
 </div>
 
+<p>In the following, we will employ the term "shapes" for svg shapes as well as for svg paths.</p>
+
+
 <p>In order to reference the shapes, the shapes must have their own <strong>"id"</strong>, hopefully unique inside the
 svg document. The user, having edited the svg file "per hand" or not, should not forget to check and give the shapes he
 wishes to process an unique id.</p>
+
+<div class="info">
+<p><strong>Note:</strong> PyCut will only display shapes in its viewer which have an id.</p>
+</div>
 
 <h4 id="P-02-02-01">Opened and closed paths</h4>
 
@@ -300,9 +311,13 @@ example, transforming a <code>&lt;rect&gt;</code> element with a rotate transfor
 <p>Without argument, pycut opens without loading any SVG file. With the <code>--proj</code> argument, a previously
 saved project is opened.</p>
 
-<p>A GCode file can also be loaded with the argument <code>--gcode</code>. Hopefully PyCut can parse it (roughly: what
+<h3 id="P-03-00">PyCut as GCode simulator</h3>
+
+<p><strong>PyCut</strong> can also be used as a GCode viewer or simulator. GCode files can be loaded with the argument</p> 
+<p><code>&gt; python pycut.py --gcode=&lt;gcodefile&gt;</code></p>
+<p>Hopefully PyCut can parse it (roughly: what
 <strong>Candle</strong> can parse - <strong>PyCut</strong> uses a similar parser). The toolpaths can then be viewed in
-the GCode viewer (toolpaths simulation) and GCode simulator. For the GCode simulator (material removing simulation),
+the GCode viewer (toolpaths simulation) and GCode simulator (material removing simulation). For the GCode simulator,
 the tool diameter is needed for an accurate simulation. PyCut saves its generated gcode files with a comment line of
 the form</p>
 <pre><code class="language-gcode">; Diameter   &lt;value&gt;</code></pre>
@@ -317,11 +332,6 @@ the form</p>
 
 <p>Import your svg into <strong>PyCut</strong>. It is achieved through the menubar command <strong>SVG | Load
 SVG</strong>. The SVG content should be displayed in the central area. </p>
-
-<div class="info">
-<p><strong>Note:</strong> text is not displayed inside the <strong>PyCut</strong> svg viewer. It has to be converted as
-&lt;path&gt; in order to be further processed.</p>
-</div>
 
 <h3 id="P-03-02">Creating a PyCut Project</h3>
 
@@ -360,7 +370,7 @@ of any size. </p>
 
 <p>The others options will be discussed later. Default values at this point should be Ok.</p>
 
-<h3 id="P-03-04">Create the GCode</h3>
+<h3 id="P-03-04">Generate the GCode</h3>
 
 <p>Select (enable) one or more CAM operations in the operations table: the "geometry" of the operation(s) should turn
 black in the SVG viewer: this is (are) the region(s) of the material that wil be affected when cutting the material.</p>
@@ -490,15 +500,18 @@ ignored for Pocket operations</strong>.</p>
 <p></p>
 
 <div class="warning">
-<p><strong>Warning</strong>: Actually no check is performed on the values given here. The depth cut of the operations
-should not exceed this thickness, or only exceeding it with a minimal value, only to be sure to cut through.. </p>
-</div>
-
-<div class="warning">
 <p><strong>Warning</strong>: The clearance is written in the produced g-code. Thus the user should be sure it does not
 exceed the physical possibilities of the machine when travelling in the z-axis, especially for small machines like the
 1419 or 1310.</p>
 </div>
+
+<div class="warning">
+<p><strong>Warning</strong>: The thickness as none impact on the produced GCode. It is only there
+to remaind that every CAM operation should not exceed this value (no check performed). The depth cut of any operation
+should not exceed the material real thickness, or only exceeding it with a minimal value, only to be sure to cut through,
+and knowing there is a spoilboard that has an acceptable thickness.</p>
+</div>
+
 
 <h3 id="P-04-05">Curve to Line Conversion</h3>
 
@@ -526,8 +539,8 @@ top-left postion.</p>
 <ul>
   <li>Zero top left of the material</li>
   <li>Zero lower left (bottom) of the material</li>
-  <li>Zero lower left (bottom) of the Gcode area (Op)</li>
-  <li>Zero Center of the Gcode area (Op)</li>
+  <li>Zero lower left (Op) i.e bottom left of the area defined by the Gcode</li>
+  <li>Zero Center (Op) i.e center of the area defined by the Gcode</li>
 </ul>
 
 <div>
@@ -535,41 +548,37 @@ top-left postion.</p>
 
 <p>Note that these 4 buttons act as radio buttons.</p>
 
-<p>These four basic options set the XOffset and YOffset of the GCode calculation. After a GCode generation, it is still
-possible to modify the XOffset and YOffset to fit at best how to user wants to have the origin be located with the help
-of the 2 spin boxes. Infact, modifying "per hand" the X or Y offset recalculate the GCode, so this is a costly
+<div class="info">
+<p><strong>Note</strong>: In case of lower left (bottom) of the material, the Y size of the material is extracted form the svg file: the svg
+"height" attribute.</p>
+</div>
+
+<p>These four basic options set the X-Offset and Y-Offset of the GCode calculation. After a GCode generation, it is still
+possible to modify the X-Offset and Y-Offset to fit at best how to user wants to have the origin be located with the help
+of the 2 spin boxes. Infact, modifying "per hand" the X or Y offsets recalculate the GCode, so this is a costly
 operation.</p>
 
-<p>The checkbox "Use Offset" is used, as example, as the following: the user can select first only one CAM operation, 
-with for example the option <strong>Zero Center (Op)</strong>. An X and Y offset are thus calculated. Then the user checks 
-"on" the <b>"Use Offset"</b>
+<p>The checkbox "Use Offset" is used, as example, as the following: first, the checkbox is unset. 
+The user selects only one CAM operation, with for example the option <strong>Zero Center (Op)</strong>. 
+The X and Y offsets are thus automatically evaluated. Then the user checks  "on" the <b>"Use Offset"</b>
 checkbox, so that these offsets are frozen and become the references for the further CAM operations and their produced
-gcode. </p>
-
-<div class="warning">
-<p><strong>Info</strong>: The option <strong>"Zero Center (Op)"</strong> is particularely usefull when the user wants to run 2
-differents G-Code files produced on the same workpiece with 2 different tool diameters (as <strong>PyCut</strong> 
-can only produce GCode with only 1 tool setting). By ensuring that the center of
-the operations are the same, at the end of the first operation (first GCode file), the user can change the tool in the
-machine and load/start the second G-Code file. This occurs when some holes have to be drilled in the first operation
-and a contour or pocket operation has to be performed in the second operation with a much larger tool. </p>
-</div>
+gcodes. </p>
 
 <div class="warning">
 <p><strong>Info</strong>: The two SpinBox entries are "debounced" when entering the values from the keyboard, as each change of
-value calls the GCode generator, which is a costly operation. With "Enter", the GCode generator is then called.
-Utilizing the spin boxes arrows is not debounced.</p>
+value calls the GCode generator, which is a costly operation. So only by typing "Enter", the GCode generator is then called.
+Utilizing the spin boxes arrows is not debounced, so at every step the GCode is recalculated.</p>
 </div>
 
-<p>Lets give an example: in a SVG file, two circles are defined, one has to be pocketed with 10mm , the other with 5
-mm. So two operation are needed. Imagine the center of the first circle is at (10,15) and the center of the second
+<p>Lets give an example: in a SVG file, two circles are defined, one has to be pocketed with a depth of 10mm, the other with 5
+mm. So two operations are needed. Imagine the center of the first circle is at (10,15) and the center of the second
 circle is at (20,25). If boths operations are relative from the "Zero top-Left material" reference, no problem. You
 have to position your bit exactly at the "top-left" of your material in order to mill the first hole at exactly (10,15)
 from this initial position. </p>
 
 <p>But imagine you want the reference to be the center of the first circle. After having generated the GCode for the
-first circle, click on "Zero Center (Op)" and observe and memorize what are the resulting X an Y offsets (it will be
-(-10, 15)). Now select the 2 operations and generate the GCode. The offsets will certainly chande, but then type in the
+first circle, click on "Zero Center (Op)" and observe and carefully note what are the resulting X an Y offsets (it will be
+(-10, 15)). Now select the second operation and generate the GCode. The offsets will certainly chande, but then type in the
 offsets the memorized X and Y offsets. The GCode will be reevaluated with the offsets (-10,15) and thus the GCode 0,0
 position will be the center of the first circle.</p>
 
@@ -578,6 +587,17 @@ holes in your workpiece maybe you may want to position the bit at a given positi
 location mill the second holes, the first hole beeing milled exactly when you have positioned your bit. Because what
 was important was the relative position of the two holes, while the absolute position of the first hole was to be
 determinated by yourself on the workpiece.</p>
+
+<p>An other use case is when 2 oparations have to be performed with a different tool diameter.</p>
+
+<div class="warning">
+<p><strong>Info</strong>: The option <strong>"Zero Center (Op)"</strong> is particularely usefull when the user wants to run 2
+differents G-Code files produced from 2 different CAM operations. A use case is when these 2 CAM operations have 2 different tool diameters.
+By ensuring that the center of
+the operations are the same, at the end of the first operation (first GCode file), the user can change the tool in the
+machine and load/start the second G-Code file. This occurs when some holes have to be drilled in the first operation
+and a contour or pocket operation has to be performed in the second operation with a much larger tool. </p>
+</div>
 
 <p></p>
 
@@ -592,8 +612,6 @@ to carve something like 16x10 cm without rotating all items in the source svg. <
 
 <p></p>
 
-<p>In case of Bottom-Left location of the material, the Y size of the material is extracted form the svg file: the svg
-"height" attribute.</p>
 
 <h3 id="P-04-07">GCode Generation</h3>
 
@@ -1412,14 +1430,14 @@ yours svgs are then "<strong>clean</strong>" and easily modificable. </p>
 
 <p>Of course, CANDLE offers a GCODE viewer. There nevertheless a few ones (to my knowledge) worth a mention:</p>
 <ul>
-  <li>NCnetics <span style="color:#ff00ff"><strong>****EXCELLENT****</strong></span></li>
+  <li>NCnetic <span style="color:#ff00ff"><strong>****EXCELLENT****</strong></span></li>
   <li>PlanetCNC (which is a GCode sender -with dedicated hardware- as well)</li>
   <li>what else ?</li>
 </ul>
 
 <p>Just search in the Internet for them.</p>
 
-<p>Real GCODE simulators (I mean simulation with material removal) are on the other way seldom.</p>
+<p>Real GCODE simulators (with material removal) are on the other way seldom.</p>
 <ul>
   <li>Camotics: unfortunately very resources intensive and not so accurate in the details</li>
   <li>CNCSimulator PRO (not free)</li>
