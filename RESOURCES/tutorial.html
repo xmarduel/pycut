@@ -101,20 +101,21 @@
 <p>Welcome to <strong>PyCut</strong>, a clone of <strong>jsCut</strong>, the excellent (at least for beginners) CAM,
 web-based programm, that takes as input <strong>SVG</strong> files and generates G-Code. So why this rewrite ?</p>
 
-<p>As <strong>jsut</strong> is a Web application written is javascript, <strong>PyCut</strong> is written is python and is
-a desktop application. So few python modules have to be installed first, as well as python itself of course.</p>
+<p><strong>PyCut</strong> is written is python, and as such few python modules have to be installed first, 
+as well as python interpreter itself of course, in order to run <strong>PyCut</strong>.</p>
 
 <p><strong>PyCut</strong> aims to offer all the (minimalistics) features found in jsCut, with some improvements.
 Hopefully you will find <strong>PyCut</strong> usefull when learning CNC and producing your first GCode files.</p>
 
-<p>Starting point of <strong>PyCut</strong> are <strong>SVG</strong> files, your designs. In the following, we will
-point out what has to be taken into consideration when creating "usable" <strong>SVG</strong> files for
-<strong>PyCut</strong>.</p>
+<p>Starting point of <strong>PyCut</strong> are <strong>SVG</strong> files, your designs. Indeed, 
+with <strong>PyCut</strong>, you do not need to do 3D modelling. For simple milling tasks SVG files (2D) are perfectly OK. 
+Granted, SVG shapes (paths) definition is not so straightforward as one could think, 
+and free software lacks good SVG paths modelling applications. Infact, writing a SVG file with a text editor is
+sometimes the best way. To generate complex svg paths, other tools may be used, and the results may be paste into the hand-written
+files. We recommand the online tool <strong>SvgPathEditor</strong> for this purpose, see Appendix.</p>
 
-<p>Indeed, with <strong>PyCut</strong>, you do not need to do 3D modelling. SVG files (2D) are <strong>PyCut</strong> input
-format, and for simple milling tasks it is perfectly OK. Granted, SVG shapes (paths) definition is not so straightforward as one
-could think, and free software lacks good SVG paths modelling applications. Infact, writing a SVG file with a text editor is
-sometimes the best way. For non trivial svg paths, other tools may be used, see Appendix.</p>
+<p>In the following, we point out what has to be taken into consideration when creating "usable" <strong>SVG</strong> files for
+<strong>PyCut</strong>.
 
 <h2 id="P-02">SVG Documents</h2>
 
@@ -622,6 +623,8 @@ to carve something like 16x10 cm without rotating all items in the source svg. <
   <li><strong>M2</strong> code</li>
 </ul>
 
+<p>Note that the generated GCode is meant to be used for a GRBL control board, so only "lines" are generated, 
+no "arcs" or other fancy GCode directives.</p>
 <div>
 <img src="doc/pycut_gcode_generation.png" width="310" /></div>
 <!-- ----------------------------------------------------------------------------------------------------------->
