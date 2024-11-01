@@ -25,7 +25,7 @@ from typing import Tuple
 from PySide6.QtCore import qIsNaN
 from PySide6.QtGui import QVector3D
 
-from gcodesimulator_python.candle_parser.parser import CandleParser
+from gcodesimulator_python.parser.parser import CandleParser
 
 sNaN = float("NaN")
 
