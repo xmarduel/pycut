@@ -141,7 +141,7 @@ class GcodeParser:
         # Get precalculated stuff.
         start = startSegment.point()
         end = lastSegment.point()
-        center = cast(QVector3D, lastSegment.center())
+        center = lastSegment.center()
         radius = lastSegment.getRadius()
         clockwise = lastSegment.isClockwise()
         plane = startSegment.plane()
@@ -201,7 +201,7 @@ class GcodeParser:
         return result
 
     def preprocessCommand(self, command: str) -> List[str]:
-        result = []
+        result: List[str] = []
         hasComment = False
 
         # Remove comments from command.

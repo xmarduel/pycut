@@ -104,7 +104,7 @@ class GcodeViewParse:
                         ps.plane(),
                         cast(QVector3D, start),
                         cast(QVector3D, end),
-                        cast(QVector3D, ps.center()),
+                        ps.center(),
                         ps.isClockwise(),
                         ps.getRadius(),
                         minArcLength,

@@ -102,9 +102,9 @@ class GcodePreprocessorUtils:
             pos = match.capturedStart()
             lenn = match.capturedLength()
 
-            newNum = "%.*f" % (length, float(match.captured(1)))
-            res = res[:pos] + newNum + res[pos + lenn :]
-            pos += len(newNum) + 1
+            new_num = "%.*f" % (length, float(match.captured(1)))
+            res = res[:pos] + new_num + res[pos + lenn :]
+            pos += len(new_num) + 1
             match = cls.re_truncate_decimals.match(res, pos)
 
         return res

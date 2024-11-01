@@ -167,7 +167,7 @@ class PointSegment:
 
         return points
 
-    def center(self) -> QVector3D | None:
+    def center(self) -> QVector3D:
         if self.m_arcProperties != None:
             arcProps = cast(ArcProperties, self.m_arcProperties)
             return arcProps.center
