@@ -316,7 +316,7 @@ class GcodeParser:
         for code in gCodes:
             ps = self.handleGCode(code, args)
 
-        return ps
+        return cast(PointSegment, ps)
 
     def handleMCode(self, code: float, args: List[str]):
         spindleSpeed = GcodePreprocessorUtils.parseCoord(args, "S")
@@ -362,7 +362,7 @@ class GcodeParser:
         if code == 0.0 or code == 1.0 or code == 2.0 or code == 3.0 or code == 38.2:
             self.m_lastGcodeCommand = code
 
-        return ps
+        return cast(PointSegment, ps)
 
     def addLinearPointSegment(
         self, nextPoint: QVector3D, fastTraverse: bool

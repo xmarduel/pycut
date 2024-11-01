@@ -6,6 +6,8 @@ import numpy as np
 
 from typing import List
 from typing import Dict
+from typing import Any
+from typing import cast
 
 # works great !
 from numba import jit
@@ -195,7 +197,7 @@ class Scene:
         # make a scene
         self.vertices: List[Scene.VertexData] = self.make_scene()
 
-        self.array = None  # all vertices as np float array
+        self.array: np.array | None = None  # all vertices as np float array
         # fill the numpy array from the scene ("path") and gets its buffer
         self.pathBufferContent = self.make_buffer()
 
@@ -2021,8 +2023,10 @@ class SimulationControls(QtWidgets.QWidget):
 class GCodeSimulator(QtWidgets.QWidget):
     """ """
 
-    def __init__(self, parent: QtWidgets.QWidget, options: Dict[str, str]):
+    def __init__(self, parent: QtWidgets.QWidget, options: Dict[str, Any]):
         QtWidgets.QWidget.__init__(self)
+
+        use_candle_parser = True
 
         self.gcode = gcode = options["gcode"]
         self.cutter_diameter = cutter_diameter = options["cutter_diameter"]
@@ -2033,11 +2037,13 @@ class GCodeSimulator(QtWidgets.QWidget):
         self.setLayout(layout)
 
         self.gcode_textviewer = GCodeFileViewer(self)
-        self.gcode_textviewer.load_data(gcode)
+        self.gcode_textviewer.load_data(gcode, use_candle_parser)
 
         self.gl_with_controls_layout = QtWidgets.QVBoxLayout()
 
-        self.gl_widget = GLView(gcode, cutter_diameter, cutter_height, cutter_angle)
+        self.gl_widget = GLView(
+            gcode, cutter_diameter, cutter_height, cutter_angle, use_candle_parser
+        )
         self.gl_with_controls_layout.addWidget(self.gl_widget)
 
         self.controls = SimulationControls(self, self.gl_widget, self.gcode_textviewer)
