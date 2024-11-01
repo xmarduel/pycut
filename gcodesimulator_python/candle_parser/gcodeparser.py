@@ -10,13 +10,16 @@ from functools import singledispatchmethod
 import math
 
 from typing import List
+from typing import cast
 
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QMatrix4x4
 from PySide6.QtCore import qIsNaN
 
-from gcodeviewer.parser.pointsegment import PointSegment
-from gcodeviewer.parser.gcodepreprocessorutils import GcodePreprocessorUtils
+from gcodesimulator_python.candle_parser.pointsegment import PointSegment
+from gcodesimulator_python.candle_parser.gcodepreprocessorutils import (
+    GcodePreprocessorUtils,
+)
 
 from gcodeviewer.util.util import qQNaN
 
@@ -106,11 +109,11 @@ class GcodeParser:
         )
 
     @singledispatchmethod
-    def addCommand(self, command) -> PointSegment:
+    def addCommand(self, command) -> PointSegment | None:
         raise NotImplementedError("Cannot addCommand command")
 
     @addCommand.register
-    def _(self, command: str) -> PointSegment:
+    def _(self, command: str) -> PointSegment | None:
         stripped = GcodePreprocessorUtils.removeComment(command)
         args = GcodePreprocessorUtils.splitCommand(stripped)
         return self.addCommand(args)
@@ -138,7 +141,7 @@ class GcodeParser:
         # Get precalculated stuff.
         start = startSegment.point()
         end = lastSegment.point()
-        center = lastSegment.center()
+        center = cast(QVector3D, lastSegment.center())
         radius = lastSegment.getRadius()
         clockwise = lastSegment.isClockwise()
         plane = startSegment.plane()
@@ -190,10 +193,10 @@ class GcodeParser:
         return psl
 
     def preprocessCommands(self, commands: List[str]) -> List[str]:
-        result = []
+        result: List[str] = []
 
         for command in commands:
-            result.append(self.preprocessCommand(command))
+            result.extend(self.preprocessCommand(command))
 
         return result
 
@@ -225,7 +228,7 @@ class GcodeParser:
             if self.m_convertArcsToLines:  # || this.expandCannedCycles) {
                 arcLines = self.convertArcsToLines(newCommand)
                 if len(arcLines) > 0:
-                    result.append(arcLines)
+                    result.extend(arcLines)
                 else:
                     result.append(newCommand)
 
@@ -242,13 +245,13 @@ class GcodeParser:
         return result
 
     def convertArcsToLines(self, command: str) -> List[str]:
-        result = []
+        result: List[str] = []
 
         start = self.m_currentPoint
 
         ps = self.addCommand(command)
 
-        if ps == None or not ps.isArc():
+        if ps == None or not cast(PointSegment, ps).isArc():
             return result
 
         psl = self.expandArc()
@@ -283,7 +286,7 @@ class GcodeParser:
 
     def processCommand(self, args: List[str]) -> PointSegment:
         gCodes = []
-        # ps = None
+        ps = None
 
         # Handle F code
         speed = GcodePreprocessorUtils.parseCoord(args, "F")
@@ -321,7 +324,7 @@ class GcodeParser:
             self.m_lastSpindleSpeed = spindleSpeed
 
     def handleGCode(self, code: float, args: List[str]) -> PointSegment:
-        # ps = None
+        ps = None
 
         nextPoint = GcodePreprocessorUtils.updatePointWithCommand(
             args, self.m_currentPoint, self.m_inAbsoluteMode

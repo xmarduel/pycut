@@ -15,8 +15,8 @@ from gcodesimulator_python.candle_parser.gcodepreprocessorutils import (
 )
 from gcodesimulator_python.candle_parser.gcodeparser import GcodeParser
 
-from gcodeviewer.parser.linesegment import LineSegment
-from gcodeviewer.util.util import qQNaN
+from gcodesimulator_python.candle_parser.linesegment import LineSegment
+from gcodesimulator_python.util.util import qQNaN
 
 
 PROGRESSMINLINES = 10000

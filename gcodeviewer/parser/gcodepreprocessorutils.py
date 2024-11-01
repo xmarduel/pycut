@@ -11,6 +11,7 @@ import re
 
 from typing import List
 from typing import Any
+from typing import cast
 
 from PySide6.QtGui import QMatrix4x4
 from PySide6.QtGui import QVector3D
@@ -38,7 +39,9 @@ class GcodePreprocessorUtils:
     M_PI = math.acos(-1)
 
     @classmethod
-    def overrideSpeed(cls, command: str, speed: float, original: float = None) -> str:
+    def overrideSpeed(
+        cls, command: str, speed: float, original: float | None = None
+    ) -> str:
         """
         Searches the command string for an 'f' and replaces the speed value
         between the 'f' and the next space with a percentage of that speed.
@@ -47,7 +50,7 @@ class GcodePreprocessorUtils:
         """
         match = cls.re_speed.match(command)
         if match.hasMatch():
-            command = "F%d" % float(match.captured(1) / 100 * speed)
+            command = "F%d" % (float(match.captured(1)) / 100 * speed)
 
             # BUG: original does not comes back
             if original:
@@ -161,11 +164,11 @@ class GcodePreprocessorUtils:
         Update a point given the arguments of a command.
         """
         if command.__class__.__name__ == "str":
-            str_command: str = command
+            str_command = cast(str, command)
             l = cls.splitCommand(str_command)
             return cls.updatePointWithCommand(l, initial, absoluteMode)
         else:
-            list_command: List[str] = command
+            list_command = cast(List[str], command)
             return cls.updatePointWithCommand_FromStringList(
                 list_command, initial, absoluteMode
             )
@@ -507,7 +510,7 @@ class GcodePreprocessorUtils:
         if radius == 0:
             radius = math.sqrt(
                 math.pow((start.x() - center.x()), 2.0)
-                + pow((start.y() - center.y()), 2.0)
+                + math.pow((end.y() - center.y()), 2.0)
             )
 
         startAngle = cls.getAngle(center, start)

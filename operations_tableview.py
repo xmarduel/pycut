@@ -1,6 +1,7 @@
 from typing import List
 from typing import Any
 from typing import Dict
+from typing import cast
 
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -226,8 +227,10 @@ class PyCutDoubleSpinBoxDelegate(QtWidgets.QStyledItemDelegate):
     ):
         editor = PyCutDoubleSpinBox(parent)
 
-        op = index.model().get_operation(index)
-        attr = index.model().get_operation_attr(index)
+        model = cast(PyCutSimpleTableModel, index.model())
+
+        op = model.get_operation(index)
+        attr = model.get_operation_attr(index)
 
         editor.assign_object(op)
         editor.assign_object_attribute(attr)
@@ -275,8 +278,10 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
     ):
         editor = PyCutCheckBox(parent)
 
-        op = index.model().get_operation(index)
-        attr = index.model().get_operation_attr(index)
+        model = cast(PyCutSimpleTableModel, index.model())
+
+        op = model.get_operation(index)
+        attr = model.get_operation_attr(index)
 
         editor.assign_object(op)
         editor.assign_object_attribute(attr)
@@ -358,8 +363,10 @@ class PyCutComboBoxDelegate(QtWidgets.QStyledItemDelegate):
 
         editor = PyCutComboBox(parent, self.items)
 
-        op = index.model().get_operation(index)
-        attr = index.model().get_operation_attr(index)
+        model = cast(PyCutSimpleTableModel, index.model())
+
+        op = model.get_operation(index)
+        attr = model.get_operation_attr(index)
 
         editor.assign_object(op)
         editor.assign_object_attribute(attr)

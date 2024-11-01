@@ -24,6 +24,7 @@ from typing import List
 from typing import Dict
 from typing import Tuple
 from typing import Any
+from typing import cast
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -1994,7 +1995,7 @@ class NibblePocketCalculator:
                 yy.extend(y)
 
             elif type(element).__name__ == "Line":
-                elt: geometry.LineData = element
+                elt = cast(geometry.LineData, element)
                 print("k = ", k, type(elt).__name__, elt.move_style)
 
                 x, y = element.path.xy

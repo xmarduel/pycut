@@ -8,6 +8,7 @@
 
 from functools import singledispatchmethod
 from typing import List
+from typing import cast
 
 from PySide6.QtGui import QVector3D
 
@@ -79,8 +80,8 @@ class GcodeViewParse:
         # For a line segment list ALL arcs must be converted to lines.
         minArcLength = 0.1
 
-        start = None
-        end = None
+        start: QVector3D | None = None
+        end: QVector3D | None = None
 
         # Prepare segments indexes
         self.m_lineIndexes = [[] for _ in range(len(psl))]
@@ -99,8 +100,8 @@ class GcodeViewParse:
                 if ps.isArc():
                     points = GcodePreprocessorUtils.generatePointsAlongArcBDring(
                         ps.plane(),
-                        start,
-                        end,
+                        cast(QVector3D, start),
+                        cast(QVector3D, end),
                         ps.center(),
                         ps.isClockwise(),
                         ps.getRadius(),
@@ -178,7 +179,7 @@ class GcodeViewParse:
                     ls.m_dwell = ps.m_dwell
 
                     self.testExtremes(end)
-                    self.testLength(start, end)
+                    self.testLength(cast(QVector3D, start), end)
                     self.m_lines.append(ls)
                     self.m_lineIndexes[ps.getLineNumber()].append(len(self.m_lines) - 1)
 

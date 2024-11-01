@@ -1345,13 +1345,20 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             tree = etree.fromstring(svg)
             tree_attrib = tree.attrib
 
-            title = tree_attrib["title"]
-            id = tree_attrib["id"]
+            if hasattr(tree_attrib, "title"):
+                title = tree_attrib["title"]
+            else:
+                title = ""
+
+            if hasattr(tree_attrib, "id"):
+                idd = tree_attrib["id"]
+            else:
+                idd = ""
 
             if title:
                 return title
-            if id:
-                return id
+            if idd:
+                return idd
 
             return ""
 

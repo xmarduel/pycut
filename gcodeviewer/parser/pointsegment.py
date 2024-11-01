@@ -7,6 +7,8 @@
 # Copyright 2020-2030 Xavier Marduel
 
 from typing import List
+from typing import cast
+
 from enum import Enum
 
 from PySide6.QtGui import QVector3D
@@ -22,7 +24,7 @@ class PointSegment:
         ZX = 1
         YZ = 2
 
-    def __init__(self):
+    def __init__(self, vec: QVector3D | None = None, num: int | None = None):
         """ """
         self.m_toolhead = 0
         self.m_isMetric = True
@@ -31,13 +33,19 @@ class PointSegment:
         self.m_isArc = False
         self.m_isFastTraverse = False
         self.m_lineNumber = -1
-        self.m_arcProperties = None
-        self.m_speed = 0
-        self.m_spindleSpeed = 0
-        self.m_dwell = 0
+        self.m_arcProperties: ArcProperties | None = None
+        self.m_speed = 0.0
+        self.m_spindleSpeed = 0.0
+        self.m_dwell = 0.0
         self.m_plane = self.Plane.XY
 
-        self.m_point = None
+        self.m_point: QVector3D | None = None
+
+        if vec != None and num != None:
+            v = cast(QVector3D, vec)
+            n = cast(int, num)
+            self.m_point = QVector3D(v.x(), v.y(), v.z())
+            self.m_lineNumber = n
 
     @classmethod
     def PointSegment_FromSegment(cls, ps: "PointSegment"):
@@ -87,12 +95,15 @@ class PointSegment:
         self.m_point = m_point
 
     def point(self) -> QVector3D:
-        return self.m_point
+        return cast(QVector3D, self.m_point)
 
     def points(self) -> List[float]:
         points = []
-        points.append(self.m_point.x())
-        points.append(self.m_point.y())
+
+        pt = cast(QVector3D, self.m_point)
+
+        points.append(pt.x())
+        points.append(pt.y())
 
         return points
 
@@ -147,27 +158,34 @@ class PointSegment:
     def centerPoints(self) -> List[float]:
         points = []
 
-        if self.m_arcProperties != None and self.m_arcProperties.center != None:
-            points.append(self.m_arcProperties.center.x())
-            points.append(self.m_arcProperties.center.y())
-            points.append(self.m_arcProperties.center.z())
+        if self.m_arcProperties != None:
+            arcProps = cast(ArcProperties, self.m_arcProperties)
+            if arcProps.center != None:
+                points.append(arcProps.center.x())
+                points.append(arcProps.center.y())
+                points.append(arcProps.center.z())
 
         return points
 
     def center(self) -> QVector3D:
-        if self.m_arcProperties != None and self.m_arcProperties.center != None:
-            return self.m_arcProperties.center
-        return None
+        if self.m_arcProperties != None:
+            arcProps = cast(ArcProperties, self.m_arcProperties)
+            return arcProps.center
+
+        return QVector3D(0, 0, 0)
 
     def setIsClockwise(self, clockwise: bool):
         if self.m_arcProperties == None:
             self.m_arcProperties = ArcProperties()
 
-        self.m_arcProperties.isClockwise = clockwise
+        arcProps = cast(ArcProperties, self.m_arcProperties)
+        arcProps.isClockwise = clockwise
 
     def isClockwise(self) -> bool:
-        if self.m_arcProperties != None and self.m_arcProperties.center != None:
-            return self.m_arcProperties.isClockwise
+        if self.m_arcProperties != None:
+            arcProps = cast(ArcProperties, self.m_arcProperties)
+            if arcProps.center != None:
+                return arcProps.isClockwise
 
         return False
 
@@ -175,13 +193,16 @@ class PointSegment:
         if self.m_arcProperties == None:
             self.m_arcProperties = ArcProperties()
 
-        self.m_arcProperties.radius = rad
+        arcProps = cast(ArcProperties, self.m_arcProperties)
+        arcProps.radius = rad
 
     def getRadius(self) -> float:
-        if self.m_arcProperties != None and self.m_arcProperties.center != None:
-            return self.m_arcProperties.radius
+        if self.m_arcProperties != None:
+            arcProps = cast(ArcProperties, self.m_arcProperties)
+            if arcProps.center != None:
+                return arcProps.radius
 
-        return 0
+        return 0.0
 
     def convertToMetric(self):
         if self.m_isMetric:

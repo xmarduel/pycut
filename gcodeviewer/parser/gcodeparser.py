@@ -10,6 +10,7 @@ from functools import singledispatchmethod
 import math
 
 from typing import List
+from typing import cast
 
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QMatrix4x4
@@ -89,7 +90,7 @@ class GcodeParser:
     def setTruncateDecimalLength(self, truncateDecimalLength: int):
         self.m_truncateDecimalLength = truncateDecimalLength
 
-    def reset(self, initialPoint: QVector3D = None):
+    def reset(self, initialPoint: QVector3D | None = None):
         # print("reseting gp %s" % initialPoint)
 
         if initialPoint is None:
@@ -106,17 +107,17 @@ class GcodeParser:
         )
 
     @singledispatchmethod
-    def addCommand(self, command) -> PointSegment:
+    def addCommand(self, command) -> PointSegment | None:
         raise NotImplementedError("Cannot addCommand command")
 
     @addCommand.register
-    def _(self, command: str) -> PointSegment:
+    def _(self, command: str) -> PointSegment | None:
         stripped = GcodePreprocessorUtils.removeComment(command)
         args = GcodePreprocessorUtils.splitCommand(stripped)
         return self.addCommand(args)
 
     @addCommand.register
-    def _(self, command: list) -> PointSegment:
+    def _(self, command: list) -> PointSegment | None:
         if len(command) == 0:
             return None
 
@@ -129,7 +130,7 @@ class GcodeParser:
         startSegment = self.m_points[-2]
         lastSegment = self.m_points[-1]
 
-        empty = []
+        empty: List[PointSegment] = []
 
         # Can only expand arcs.
         if not lastSegment.isArc():
@@ -189,16 +190,16 @@ class GcodeParser:
 
         return psl
 
-    def preprocessCommands(self, commands: List[str]) -> List[List[str]]:
-        result = []
+    def preprocessCommands(self, commands: List[str]) -> List[str]:
+        result: List[str] = []
 
         for command in commands:
-            result.append(self.preprocessCommand(command))
+            result.extend(self.preprocessCommand(command))
 
         return result
 
-    def preprocessCommand(self, command: str) -> List[List[str]]:
-        result = []
+    def preprocessCommand(self, command: str) -> List[str]:
+        result: List[str] = []
         hasComment = False
 
         # Remove comments from command.
@@ -225,7 +226,7 @@ class GcodeParser:
             if self.m_convertArcsToLines:  # || this.expandCannedCycles) {
                 arcLines = self.convertArcsToLines(newCommand)
                 if len(arcLines) > 0:
-                    result.append(arcLines)
+                    result.extend(arcLines)
                 else:
                     result.append(newCommand)
 
@@ -242,13 +243,13 @@ class GcodeParser:
         return result
 
     def convertArcsToLines(self, command: str) -> List[str]:
-        result = []
+        result: List[str] = []
 
         start = self.m_currentPoint
 
         ps = self.addCommand(command)
 
-        if ps == None or not ps.isArc():
+        if ps == None or not cast(PointSegment, ps).isArc():
             return result
 
         psl = self.expandArc()
@@ -313,7 +314,7 @@ class GcodeParser:
         for code in gCodes:
             ps = self.handleGCode(code, args)
 
-        return ps
+        return cast(PointSegment, ps)
 
     def handleMCode(self, code: float, args: List[str]):
         spindleSpeed = GcodePreprocessorUtils.parseCoord(args, "S")
@@ -321,6 +322,7 @@ class GcodeParser:
             self.m_lastSpindleSpeed = spindleSpeed
 
     def handleGCode(self, code: float, args: List[str]) -> PointSegment:
+        ps = None
 
         nextPoint = GcodePreprocessorUtils.updatePointWithCommand(
             args, self.m_currentPoint, self.m_inAbsoluteMode
@@ -358,7 +360,7 @@ class GcodeParser:
         if code == 0.0 or code == 1.0 or code == 2.0 or code == 3.0 or code == 38.2:
             self.m_lastGcodeCommand = code
 
-        return ps
+        return cast(PointSegment, ps)
 
     def addLinearPointSegment(
         self, nextPoint: QVector3D, fastTraverse: bool
@@ -414,10 +416,13 @@ class GcodeParser:
             elif self.m_currentPlane == PointSegment.Plane.YZ:
                 m.rotate(-90, 0.0, 1.0, 0.0)
 
-            radius = math.sqrt(
-                math.pow(((m * self.m_currentPoint).x() - (m * center).x()), 2.0)
-                + math.pow(((m * self.m_currentPoint).y() - (m * center).y()), 2.0)
-            )
+            x1 = (m * self.m_currentPoint).x()
+            x2 = (m * center).x()
+
+            y1 = (m * self.m_currentPoint).y()
+            y2 = (m * center).y()
+
+            radius = math.sqrt(math.pow((x1 - x2), 2.0) + math.pow((y1 - y2), 2.0))
 
         ps.setIsMetric(self.m_isMetric)
         ps.setArcCenter(center)

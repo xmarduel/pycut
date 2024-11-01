@@ -1839,9 +1839,9 @@ class SimulationControls(QtWidgets.QWidget):
         current_tick_changed = QtCore.Signal(int)
 
         def __init__(self, parent: "SimulationControls", init_tick: int, end_tick: int):
-            QtCore.QObject.__init__(self)
+            QtCore.QObject.__init__(self, parent)
 
-            self.parent = parent
+            self.sim_controls = parent
 
             self.base_speed = 1
             self.speed = 1
@@ -1857,7 +1857,7 @@ class SimulationControls(QtWidgets.QWidget):
 
             self.set_current_tick(self.end_tick)
             self.current_tick_changed.connect(
-                self.parent.OnSimAtTickFromSimulatorRunner
+                self.sim_controls.OnSimAtTickFromSimulatorRunner
             )
 
             self.timer = QtCore.QTimer()
