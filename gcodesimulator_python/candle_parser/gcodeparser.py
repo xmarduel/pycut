@@ -89,7 +89,7 @@ class GcodeParser:
     def setTruncateDecimalLength(self, truncateDecimalLength: int):
         self.m_truncateDecimalLength = truncateDecimalLength
 
-    def reset(self, initialPoint: QVector3D = None):
+    def reset(self, initialPoint: QVector3D | None = None):
         # print("reseting gp %s" % initialPoint)
 
         if initialPoint is None:
@@ -116,7 +116,7 @@ class GcodeParser:
         return self.addCommand(args)
 
     @addCommand.register
-    def _(self, command: list) -> PointSegment:
+    def _(self, command: list) -> PointSegment | None:
         if len(command) == 0:
             return None
 

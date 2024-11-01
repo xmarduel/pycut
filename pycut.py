@@ -914,7 +914,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 msgbox = QtWidgets.QMessageBox()
                 msgbox.setWindowTitle("PyCut")
                 msgbox.setText("Svg File %s not found" % svg_file)
-                msgbox.setDefaultButton(QtWidgets.QMessageBox.Save)
+                msgbox.setDefaultButton(QtWidgets.QMessageBox.StandardButton.Save)
                 msgbox.exec()
                 return
 
@@ -1044,7 +1044,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 msgbox.setText(
                     "No tool diameter found in file, using current tool diameter for GCode Simulator"
                 )
-                msgbox.setDefaultButton(QtWidgets.QMessageBox.Save)
+                msgbox.setDefaultButton(QtWidgets.QMessageBox.StandardButton.Save)
                 msgbox.exec()
 
             self.display_gcode(gcode)
@@ -1338,6 +1338,23 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         svg = fp.read()
         fp.close()
 
+        def extract_svg_title(svg: str) -> str:
+            """
+            Title or id of the svg
+            """
+            tree = etree.fromstring(svg)
+            tree_attrib = tree.attrib
+
+            title = tree_attrib["title"]
+            id = tree_attrib["id"]
+
+            if title:
+                return title
+            if id:
+                return id
+
+            return ""
+
         def extract_svg_dimensions(svg: str) -> Tuple[str, str]:
             """
             Dimension of the svg are of importance when making gcode from the lower left
@@ -1352,6 +1369,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             return w, h
 
         # extract dimension of material as global variables in the SvgModel
+        title = extract_svg_title(svg)
         size_xstr, size_ystr = extract_svg_dimensions(svg)
 
         suffix = ""
@@ -1379,6 +1397,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         else:
             suffix = "mm"
             size_x, size_y = float(size_xstr), float(size_ystr)
+
+        self.ui.SvgTitle.setText(title)
 
         self.ui.SvgModelWidth.setValue(size_x)
         self.ui.SvgModelHeight.setValue(size_y)
@@ -1436,7 +1456,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             settings["Tool"]["helix_pitch"], tool_model.units
         )
 
-        cnc_ops : List[CncOp] = []
+        cnc_ops: List[CncOp] = []
 
         for op_model in operations:
             if not op_model.enabled:

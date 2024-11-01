@@ -772,15 +772,15 @@ class Drawable:
 
         self.program_path = QOpenGLShaderProgram()
         self.vao_path = QOpenGLVertexArrayObject()
-        self.vbo_path = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
+        self.vbo_path = QOpenGLBuffer(QOpenGLBuffer.Type.VertexBuffer)
 
         self.program_heightmap = QOpenGLShaderProgram()
         self.vao_heightmap = QOpenGLVertexArrayObject()
-        self.vbo_heightmap = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
+        self.vbo_heightmap = QOpenGLBuffer(QOpenGLBuffer.Type.VertexBuffer)
 
         self.program_cutter = QOpenGLShaderProgram()
         self.vao_cutter = QOpenGLVertexArrayObject()
-        self.vbo_cutter = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
+        self.vbo_cutter = QOpenGLBuffer(QOpenGLBuffer.Type.VertexBuffer)
 
         self.model = QMatrix4x4()
         self.model.setToIdentity()
@@ -1698,9 +1698,9 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
 
     def mouseMoveEvent(self, event: QtGui.QMouseEvent):
         if (
-            event.buttons() & QtGui.Qt.MiddleButton
-            and (not (event.modifiers() & QtGui.Qt.ShiftModifier))
-        ) or event.buttons() & QtCore.Qt.LeftButton:
+            event.buttons() & QtGui.Qt.MouseButton.MiddleButton
+            and (not (event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier))
+        ) or event.buttons() & QtCore.Qt.MouseButton.LeftButton:
             self.m_yRot = self.normalizeAngle(
                 self.m_yLastRot - (event.position().x() - self.m_lastPos.x()) * 0.5
             )
@@ -1717,9 +1717,9 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
             self.rotationChanged.emit()
 
         if (
-            event.buttons() & QtCore.Qt.MiddleButton
-            and event.modifiers() & QtGui.Qt.ShiftModifier
-        ) or event.buttons() & QtCore.Qt.RightButton:
+            event.buttons() & QtCore.Qt.MouseButton.MiddleButton
+            and event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier
+        ) or event.buttons() & QtCore.Qt.MouseButton.RightButton:
             self.m_xPan = self.m_xLastPan - (
                 event.position().x() - self.m_lastPos.x()
             ) * 1 / (float)(self.width())

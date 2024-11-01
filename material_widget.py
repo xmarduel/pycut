@@ -26,11 +26,11 @@ class MaterialWidget(QtSvgWidgets.QSvgWidget):
 
     """
 
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget):
         super(MaterialWidget, self).__init__(parent)
 
         renderer = self.renderer()
-        renderer.setAspectRatioMode(QtCore.Qt.KeepAspectRatio)
+        renderer.setAspectRatioMode(QtCore.Qt.AspectRatioMode.KeepAspectRatio)
 
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self)

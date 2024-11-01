@@ -39,7 +39,7 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
         self.setPos(bounds.topLeft())
 
         # and its flags
-        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
+        self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, True)
 
         self.selected_effect = None
         self.makeGraphicsEffect()
@@ -486,7 +486,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
             self.tabs = tabs
             self.display_tabs(self.tabs)
 
-    def mousePressEvent(self, event: "QtWidgets.QGraphicsSceneMouseEvent"):
+    def mousePressEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent) -> None:
         self.in_dnd = True
 
         print("SvgViewer - mousePressEvent()")
@@ -510,7 +510,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         self.update_selected_items_list(do_reset_selection)
 
-    def mouseReleaseEvent(self, event: "QtWidgets.QGraphicsSceneMouseEvent"):
+    def mouseReleaseEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent) -> None:
         print("SvgViewer - mouseReleaseEvent()")
         super().mouseReleaseEvent(event)
 

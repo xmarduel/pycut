@@ -47,7 +47,7 @@ class GcodePreprocessorUtils:
         """
         match = cls.re_speed.match(command)
         if match.hasMatch():
-            command = "F%d" % float(match.captured(1)) / 100 * speed
+            command = "F%d" % float(match.captured(1) / 100 * speed)
 
             # BUG: original does not comes back
             if original:
@@ -97,10 +97,10 @@ class GcodePreprocessorUtils:
 
         while match.hasMatch():
             pos = match.capturedStart()
-            len = match.capturedLength()
+            lenn = match.capturedLength()
 
             newNum = "%.*f" % (length, float(match.captured(1)))
-            res = res[:pos] + newNum + res[pos + len :]
+            res = res[:pos] + newNum + res[pos + lenn :]
             pos += len(newNum) + 1
             match = cls.re_truncate_decimals.match(res, pos)
 
@@ -155,17 +155,19 @@ class GcodePreprocessorUtils:
 
     @classmethod
     def updatePointWithCommand(
-        cls, command: str, initial: QVector3D, absoluteMode: bool
+        cls, command: str | List[str], initial: QVector3D, absoluteMode: bool
     ) -> QVector3D:
         """
         Update a point given the arguments of a command.
         """
         if command.__class__.__name__ == "str":
-            l = cls.splitCommand(command)
+            str_command: str = command
+            l = cls.splitCommand(str_command)
             return cls.updatePointWithCommand(l, initial, absoluteMode)
         else:
+            list_command: List[str] = command
             return cls.updatePointWithCommand_FromStringList(
-                command, initial, absoluteMode
+                list_command, initial, absoluteMode
             )
 
     @classmethod
@@ -264,18 +266,18 @@ class GcodePreprocessorUtils:
 
         if absoluteMode:
             if not qIsNaN(end.x()):
-                sb.append("X" + "%.*f" % (precision, end.x()))
+                sb = sb + "X" + "%.*f" % (precision, end.x())
             if not qIsNaN(end.y()):
-                sb.append("Y" + "%.*f" % (precision, end.y()))
+                sb = sb + "Y" + "%.*f" % (precision, end.y())
             if not qIsNaN(end.z()):
-                sb.append("Z" + "%.*f" % (precision, end.z()))
+                sb = sb + "Z" + "%.*f" % (precision, end.z())
         else:
             if not qIsNaN(end.x()):
-                sb.append("X" + "%.*f" % (precision, end.x() - start.x()))
+                sb = sb + "X" + "%.*f" % (precision, end.x() - start.x())
             if not qIsNaN(end.y()):
-                sb.append("Y" + "%.*f" % (precision, end.y() - start.y()))
+                sb = sb + "Y" + "%.*f" % (precision, end.y() - start.y())
             if not qIsNaN(end.z()):
-                sb.append("Z" + "%.*f" % (precision, end.z() - start.z()))
+                sb = sb + "Z" + "%.*f" % (precision, end.z() - start.z())
 
         return sb
 
@@ -504,9 +506,8 @@ class GcodePreprocessorUtils:
         # Calculate radius if necessary.
         if radius == 0:
             radius = math.sqrt(
-                math.pow(
-                    (start.x() - center.x(), 2.0) + math.pow(end.y() - center.y(), 2.0)
-                )
+                math.pow((start.x() - center.x()), 2.0)
+                + pow((start.y() - center.y()), 2.0)
             )
 
         startAngle = cls.getAngle(center, start)
@@ -519,7 +520,7 @@ class GcodePreprocessorUtils:
         numPoints = 0
 
         if arcDegreeMode and arcPrecision > 0:
-            numPoints = max(1.0, sweep / (cls.M_PI * arcPrecision / 180))
+            numPoints = math.floor(max(1.0, sweep / (cls.M_PI * arcPrecision / 180)))
         else:
             if arcPrecision <= 0 and minArcLength > 0:
                 arcPrecision = minArcLength

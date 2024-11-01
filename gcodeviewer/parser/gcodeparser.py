@@ -189,7 +189,7 @@ class GcodeParser:
 
         return psl
 
-    def preprocessCommands(self, commands: List[str]) -> List[str]:
+    def preprocessCommands(self, commands: List[str]) -> List[List[str]]:
         result = []
 
         for command in commands:
@@ -197,7 +197,7 @@ class GcodeParser:
 
         return result
 
-    def preprocessCommand(self, command: str) -> List[str]:
+    def preprocessCommand(self, command: str) -> List[List[str]]:
         result = []
         hasComment = False
 
@@ -321,7 +321,6 @@ class GcodeParser:
             self.m_lastSpindleSpeed = spindleSpeed
 
     def handleGCode(self, code: float, args: List[str]) -> PointSegment:
-        ps = None
 
         nextPoint = GcodePreprocessorUtils.updatePointWithCommand(
             args, self.m_currentPoint, self.m_inAbsoluteMode

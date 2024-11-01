@@ -38,7 +38,7 @@ class GcodeAtomicMvt:
     """ """
 
     def __init__(self, pos: QVector3D, feedrate: float):
-        self.at_time = None
+        self.at_time: int | float = 0
         self.pos = pos
         self.feedrate = feedrate  # mm per minutes or inches per minutes
 
@@ -121,7 +121,7 @@ class GcodeMiniParser:
                 end = self.char_no
                 return float(self.gcode[begin:end])
             except Exception:
-                return None
+                return 0.0
 
         self.char_no = 0
         self.line_no = 0
@@ -204,7 +204,7 @@ class GcodeMiniParser:
 
         total_time = 0.0
 
-        self.path[0].at_time = 0.0
+        self.path[0].at_time = 0
 
         for idx, mvt in enumerate(self.path):
             if idx == 0:

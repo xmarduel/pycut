@@ -1,16 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" width="90mm" height="111mm" viewBox="0 0 90 111" id="spindle-D52">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" title="spindle-D52" width="90mm" height="111mm" viewBox="0 0 90 111" id="spindle-D52">
   <g id="layer1">
-    <path id="contour" d="M 0,0 l 90.0000486,0 l 0,66.00003564 a 45,45 0 0,1 -90.0000486,0 z" style="fill:none;stroke:#0000ff;stroke-width:0.25"/>
-    <circle id="screw_central_hole" cx="45.000" cy="16.000" r="11.000" style="fill:#ff0000;fill-opacity:1"/>
+    <path id="contour" d="M 2.00000108,0 l 86.00004644,0 a 2,2 0 0,1 2.00000108,2.00000108 l 0,64.00003456 a 45,45 0 0,1 -90.0000486,0" style="fill:none;stroke:#0000ff;stroke-width:0.25"/>
+    <g id="layer_motor">
+      <!-- just as indicator , the spindle must "touch" the motor -->
+      <rect width="42.000" height="42.000" x="24.000" y="-5.000" rx="4.000" ry="4.000" style="fill:#000000; fill-opacity:0.2"/>
+    </g>
     <!-- backlash -->
     <g id="backlash">
+      <circle id="screw_central_hole" cx="45.000" cy="16.000" r="11.000" style="fill:#ff0000;fill-opacity:1"/>
       <!-- cut through -->
-      <circle id="backlash_item_hole" cx="45.000" cy="16.000" r="5.100" style="fill:#ff00ff;fill-opacity:1"/>
+      <circle id="backlash_item_hole" cx="45.000" cy="16.000" r="5.000" style="fill:#ff00ff;fill-opacity:1"/>
       <!-- cut through -->
-      <circle id="backlash_item_screw_3.0mm_E" cx="53.000" cy="16.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
-      <circle id="backlash_item_screw_3.0mm_S" cx="45.000" cy="24.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
-      <circle id="backlash_item_screw_3.0mm_W" cx="37.000" cy="16.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
-      <circle id="backlash_item_screw_3.0mm_N" cx="45.000" cy="8.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
+      <circle id="backlash_screw_M3_thread_hole_E" cx="45.000" cy="24.000" r="1.250" style="fill:#ff00ff;fill-opacity:1"/>
+      <circle id="backlash_screw_M3_thread_hole_W" cx="45.000" cy="8.000" r="1.250" style="fill:#ff00ff;fill-opacity:1"/>
+      <circle id="backlash_screw_M3_S" cx="53.000" cy="16.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
+      <circle id="backlash_screw_M3_N" cx="37.000" cy="16.000" r="1.500" style="fill:#ff00ff;fill-opacity:1"/>
     </g>
     <!-- bearing 1 -->
     <g id="bearing_1">
@@ -18,10 +22,18 @@
       <g id="bearing_1_items">
         <!-- reference is the center of the bearing item -->
         <circle id="bearing_1_cylinder" cx="16.000" cy="16.000" r="10.500" style="fill:#ff0000;fill-opacity:1"/>
-        <circle id="bearing_1_screw_4.0mm_SE" cx="27.314" cy="27.314" r="2.000" style="fill:#000080;fill-opacity:1"/>
-        <circle id="bearing_1_screw_4.0mm_SW" cx="4.686" cy="27.314" r="2.000" style="fill:#000080;fill-opacity:1"/>
-        <circle id="bearing_1_screw_4.0mm_NW" cx="4.686" cy="4.686" r="2.000" style="fill:#000080;fill-opacity:1"/>
-        <circle id="bearing_1_screw_4.0mm_NE" cx="27.314" cy="4.686" r="2.000" style="fill:#000080;fill-opacity:1"/>
+        <circle id="bearing_1_screw_hole_4.5mm_SE" cx="27.314" cy="27.314" r="2.250" style="fill:#000080;fill-opacity:0.4"/>
+        <circle id="bearing_1_screw_hole_4.5mm_SW" cx="4.686" cy="27.314" r="2.250" style="fill:#000080;fill-opacity:0.4"/>
+        <circle id="bearing_1_screw_hole_4.5mm_NW" cx="4.686" cy="4.686" r="2.250" style="fill:#000080;fill-opacity:0.4"/>
+        <circle id="bearing_1_screw_hole_4.5mm_NE" cx="27.314" cy="4.686" r="2.250" style="fill:#000080;fill-opacity:0.4"/>
+        <circle id="bearing_1_screw_4.0mm_SE" cx="27.314" cy="27.314" r="2.000" style="fill:#000080;fill-opacity:0"/>
+        <circle id="bearing_1_screw_4.0mm_SW" cx="4.686" cy="27.314" r="2.000" style="fill:#000080;fill-opacity:0"/>
+        <circle id="bearing_1_screw_4.0mm_NW" cx="4.686" cy="4.686" r="2.000" style="fill:#000080;fill-opacity:0"/>
+        <circle id="bearing_1_screw_4.0mm_NE" cx="27.314" cy="4.686" r="2.000" style="fill:#000080;fill-opacity:0"/>
+        <circle id="bearing_1_screw_gew_3.2mm_SE" cx="27.314" cy="27.314" r="1.600" style="fill:#008080;fill-opacity:1"/>
+        <circle id="bearing_1_screw_gew_3.2mm_SW" cx="4.686" cy="27.314" r="1.600" style="fill:#008080;fill-opacity:1"/>
+        <circle id="bearing_1_screw_gew_3.2mm_NW" cx="4.686" cy="4.686" r="1.600" style="fill:#008080;fill-opacity:1"/>
+        <circle id="bearing_1_screw_gew_3.2mm_NE" cx="27.314" cy="4.686" r="1.600" style="fill:#008080;fill-opacity:1"/>
       </g>
     </g>
     <!-- bearing 2 -->
@@ -30,24 +42,49 @@
       <g id="bearing_2_items">
         <!-- reference is the center of the bearing item -->
         <circle id="bearing_2_cylinder" cx="74.000" cy="16.000" r="10.500" style="fill:#ff0000;fill-opacity:1"/>
-        <circle id="bearing_2_screw_4.0mm_SE" cx="85.314" cy="27.314" r="2.000" style="fill:#000080;fill-opacity:1"/>
-        <circle id="bearing_2_screw_4.0mm_SW" cx="62.686" cy="27.314" r="2.000" style="fill:#000080;fill-opacity:1"/>
-        <circle id="bearing_2_screw_4.0mm_NW" cx="62.686" cy="4.686" r="2.000" style="fill:#000080;fill-opacity:1"/>
-        <circle id="bearing_2_screw_4.0mm_NE" cx="85.314" cy="4.686" r="2.000" style="fill:#000080;fill-opacity:1"/>
+        <circle id="bearing_2_screw_hole_4.5mm_SE" cx="85.314" cy="27.314" r="2.250" style="fill:#000080;fill-opacity:0.4"/>
+        <circle id="bearing_2_screw_hole_4.5mm_SW" cx="62.686" cy="27.314" r="2.250" style="fill:#000080;fill-opacity:0.4"/>
+        <circle id="bearing_2_screw_hole_4.5mm_NW" cx="62.686" cy="4.686" r="2.250" style="fill:#000080;fill-opacity:0.4"/>
+        <circle id="bearing_2_screw_hole_4.5mm_NE" cx="85.314" cy="4.686" r="2.250" style="fill:#000080;fill-opacity:0.4"/>
+        <circle id="bearing_2_screw_4.0mm_SE" cx="85.314" cy="27.314" r="2.000" style="fill:#000080;fill-opacity:0"/>
+        <circle id="bearing_2_screw_4.0mm_SW" cx="62.686" cy="27.314" r="2.000" style="fill:#000080;fill-opacity:0"/>
+        <circle id="bearing_2_screw_4.0mm_NW" cx="62.686" cy="4.686" r="2.000" style="fill:#000080;fill-opacity:0"/>
+        <circle id="bearing_2_screw_4.0mm_NE" cx="85.314" cy="4.686" r="2.000" style="fill:#000080;fill-opacity:0"/>
+        <circle id="bearing_2_screw_gew_3.2mm_SE" cx="85.314" cy="27.314" r="1.600" style="fill:#008080;fill-opacity:1"/>
+        <circle id="bearing_2_screw_gew_3.2mm_SW" cx="62.686" cy="27.314" r="1.600" style="fill:#008080;fill-opacity:1"/>
+        <circle id="bearing_2_screw_gew_3.2mm_NW" cx="62.686" cy="4.686" r="1.600" style="fill:#008080;fill-opacity:1"/>
+        <circle id="bearing_2_screw_gew_3.2mm_NE" cx="85.314" cy="4.686" r="1.600" style="fill:#008080;fill-opacity:1"/>
       </g>
     </g>
-    <circle id="spindle-hole" cx="45.000" cy="66.000" r="26.000" style="fill:#ff0000;fill-opacity:1.0"/>
-    <circle id="large_circle_indicator" cx="45.000" cy="66.000" r="45.000" style="fill:#ff00ff;fill-opacity:0.2"/>
-    <circle id="spacer_pocket_NW" cx="15.000" cy="42.000" r="6.000" style="fill:#ff0000;fill-opacity:1"/>
-    <circle id="spacer_pocket_NE" cx="75.000" cy="42.000" r="6.000" style="fill:#ff0000;fill-opacity:1"/>
-    <circle id="spacer_pocket_SW" cx="15.000" cy="86.000" r="6.000" style="fill:#ff0000;fill-opacity:1"/>
-    <circle id="spacer_pocket_SE" cx="75.000" cy="86.000" r="6.000" style="fill:#ff0000;fill-opacity:1"/>
-    <circle id="spacer_screw_5.0mm_NW" cx="15.000" cy="42.000" r="2.500" style="fill:#0000ff;fill-opacity:1"/>
-    <circle id="spacer_screw_5.0mm_NE" cx="75.000" cy="42.000" r="2.500" style="fill:#0000ff;fill-opacity:1"/>
-    <circle id="spacer_screw_5.0mm_SW" cx="15.000" cy="86.000" r="2.500" style="fill:#0000ff;fill-opacity:1"/>
-    <circle id="spacer_screw_5.0mm_SE" cx="75.000" cy="86.000" r="2.500" style="fill:#0000ff;fill-opacity:1"/>
-    <text id="legend" x="20.000" y="62.000" style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583">Spindle Diameter: 52 mm</text>
-    <path id="horizontal_line" d="M 0,66.00003564 L 90.0000486,66.00003564" style="fill:none;stroke:#000000;stroke-width:0.1"/>
-    <path id="vertical_line" d="M 45.0000243,0 L 45.0000243,111.00005994" style="fill:none;stroke:#000000;stroke-width:0.1"/>
+    <g id="spindle">
+      <circle id="large_circle_indicator" cx="45.000" cy="66.000" r="45.000" style="fill:#ff00ff;fill-opacity:0.1"/>
+      <!-- alu parts -->
+      <circle id="spindle-hole" cx="45.000" cy="66.000" r="26.000" style="fill:#ff0000;fill-opacity:1"/>
+      <!-- "small base": diam = 26mm , height = 6mm -->
+      <circle id="spindle-small-base" cx="45.000" cy="66.000" r="13.000" style="fill:#ffff00;fill-opacity:1"/>
+      <!-- mounting holes -->
+      <circle id="spindle_screw_M4_NW" cx="45.000" cy="83.678" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="spindle_screw_M4_NE" cx="62.678" cy="66.000" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="spindle_screw_M4_SW" cx="27.322" cy="66.000" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="spindle_screw_M4_SE" cx="45.000" cy="48.322" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="spindle_screw_M4_thread_hole_NW" cx="45.000" cy="83.678" r="1.600" style="fill:#008080;fill-opacity:1"/>
+      <circle id="spindle_screw_M4_thread_hole_NE" cx="62.678" cy="66.000" r="1.600" style="fill:#008080;fill-opacity:1"/>
+      <circle id="spindle_screw_M4_thread_hole_SW" cx="27.322" cy="66.000" r="1.600" style="fill:#008080;fill-opacity:1"/>
+      <circle id="spindle_screw_M4_thread_hole_SE" cx="45.000" cy="48.322" r="1.600" style="fill:#008080;fill-opacity:1"/>
+    </g>
+    <g id="spacers">
+      <circle id="spacer_pocket_SW" cx="74.016" cy="85.572" r="6.000" style="fill:#ff0000;fill-opacity:1"/>
+      <circle id="spacer_pocket_NW" cx="74.016" cy="43.428" r="6.000" style="fill:#ff0000;fill-opacity:1"/>
+      <circle id="spacer_pocket_NE" cx="15.984" cy="43.428" r="6.000" style="fill:#ff0000;fill-opacity:1"/>
+      <circle id="spacer_pocket_SE" cx="15.984" cy="85.572" r="6.000" style="fill:#ff0000;fill-opacity:1"/>
+      <circle id="spacer_screw_hole_5.0mm_SW" cx="74.016" cy="85.572" r="2.500" style="fill:#0000ff;fill-opacity:1"/>
+      <circle id="spacer_screw_hole_5.0mm_NW" cx="74.016" cy="43.428" r="2.500" style="fill:#0000ff;fill-opacity:1"/>
+      <circle id="spacer_screw_hole_5.0mm_NE" cx="15.984" cy="43.428" r="2.500" style="fill:#0000ff;fill-opacity:1"/>
+      <circle id="spacer_screw_hole_5.0mm_SE" cx="15.984" cy="85.572" r="2.500" style="fill:#0000ff;fill-opacity:1"/>
+    </g>
+    <g id="lines">
+      <path id="horizontal_line" d="M 0,66.00003564 L 90.0000486,66.00003564" style="fill:none;stroke:#000000;stroke-width:0.1"/>
+      <path id="vertical_line" d="M 45.0000243,0 L 45.0000243,111.00005994" style="fill:none;stroke:#000000;stroke-width:0.1"/>
+    </g>
   </g>
 </svg>

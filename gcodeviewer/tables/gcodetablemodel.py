@@ -31,14 +31,21 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
         self.m_data: List[GCodeItem] = []
         self.m_headers = ["#", "Command", "State", "Response", "Line", "Args"]
 
-    def data(self, index: QtCore.QModelIndex, role=QtCore.Qt.DisplayRole) -> Any:
+    def data(
+        self,
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
+        role=QtCore.Qt.ItemDataRole.DisplayRole,
+    ) -> Any:
         if not index.isValid():
             return None  # QVariant()
 
         if index.row() >= len(self.m_data):
             return None  # QVariant()
 
-        if role == QtCore.Qt.DisplayRole or role == QtCore.Qt.EditRole:
+        if (
+            role == QtCore.Qt.ItemDataRole.DisplayRole
+            or role == QtCore.Qt.ItemDataRole.EditRole
+        ):
             if index.column() == 0:
                 return (
                     "" if index.row() == self.rowCount() - 1 else str(index.row() + 1)
@@ -65,10 +72,10 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
             elif index.column() == 5:
                 return self.m_data[index.row()].args
 
-        if role == QtCore.Qt.TextAlignmentRole:
-            return QtCore.Qt.AlignVCenter
+        if role == QtCore.Qt.ItemDataRole.TextAlignmentRole:
+            return QtCore.Qt.AlignmentFlag.AlignVCenter
 
-        if role == QtCore.Qt.FontRole:
+        if role == QtCore.Qt.ItemDataRole.FontRole:
             if index.column() == 1:  # text items are bold.
                 font = QtGui.QFont()
                 font.setBold(True)
@@ -77,9 +84,12 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
         return None  # QVariant()
 
     def setData(
-        self, index: QtCore.QModelIndex, value: Any, role=QtCore.Qt.EditRole
+        self,
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
+        value: Any,
+        role=QtCore.Qt.ItemDataRole.EditRole,
     ) -> bool:
-        if index.isValid() and role == QtCore.Qt.EditRole:
+        if index.isValid() and role == QtCore.Qt.ItemDataRole.EditRole:
             if index.column() == 0:
                 return False
             elif index.column() == 1:
@@ -99,7 +109,11 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
         return False
 
     def insertRow(
-        self, row: int, parent: QtCore.QModelIndex = QtCore.QModelIndex()
+        self,
+        row: int,
+        parent: (
+            QtCore.QModelIndex | QtCore.QPersistentModelIndex
+        ) = QtCore.QModelIndex(),
     ) -> bool:
         if row > self.rowCount():
             return False
@@ -111,7 +125,11 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
         return True
 
     def removeRow(
-        self, row: int, parent: QtCore.QModelIndex = QtCore.QModelIndex()
+        self,
+        row: int,
+        parent: (
+            QtCore.QModelIndex | QtCore.QPersistentModelIndex
+        ) = QtCore.QModelIndex(),
     ) -> bool:
         self.beginRemoveRows(parent, row, row)
         self.m_data.pop(row)
@@ -120,7 +138,12 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
         return True
 
     def removeRows(
-        self, row: int, count: int, parent: QtCore.QModelIndex = QtCore.QModelIndex()
+        self,
+        row: int,
+        count: int,
+        parent: (
+            QtCore.QModelIndex | QtCore.QPersistentModelIndex
+        ) = QtCore.QModelIndex(),
     ) -> bool:
         self.beginRemoveRows(parent, row, row + count - 1)
         self.m_data = self.m_data[:row] + self.m_data[row + count :]
@@ -133,28 +156,41 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
         self.m_data = []
         self.endResetModel()
 
-    def rowCount(self, index: QtCore.QModelIndex = QtCore.QModelIndex()) -> int:
+    def rowCount(
+        self,
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex = QtCore.QModelIndex(),
+    ) -> int:
         return len(self.m_data)
 
-    def columnCount(self, parent: QtCore.QModelIndex = QtCore.QModelIndex()) -> int:
+    def columnCount(
+        self,
+        parent: (
+            QtCore.QModelIndex | QtCore.QPersistentModelIndex
+        ) = QtCore.QModelIndex(),
+    ) -> int:
         return 6
 
     def headerData(
-        self, section: int, orientation: QtCore.Qt.Orientation, role: int
+        self,
+        section: int,
+        orientation: QtCore.Qt.Orientation,
+        role: int = QtCore.Qt.ItemDataRole.DisplayRole,
     ) -> Any:
-        if role != QtCore.Qt.DisplayRole:
+        if role != QtCore.Qt.ItemDataRole.DisplayRole:
             return None  # QVariant()
-        if orientation == QtCore.Qt.Horizontal:
+        if orientation == QtCore.Qt.Orientation.Horizontal:
             return self.m_headers[section]
         else:
             return str(section + 1)
 
-    def flags(self, index: QtCore.QModelIndex) -> QtCore.Qt.ItemFlags:
+    def flags(
+        self, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
+    ) -> QtCore.Qt.ItemFlag:
         if not index.isValid():
-            return None
+            return QtCore.Qt.ItemFlag.NoItemFlags
 
         if index.column() == 1:
             # not editable
-            return super().flags(index) | ~QtCore.Qt.ItemIsEditable
+            return super().flags(index) | ~QtCore.Qt.ItemFlag.ItemIsEditable
         else:
             return super().flags(index)

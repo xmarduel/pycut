@@ -1,114 +1,138 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg version="1.1" width="90mm" height="110mm" viewBox="0 0 90 110" id="spindle-D52" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
-	<defs id="defs">
-		<circle id="screw_central_hole_ref"    style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="11" />
-		<circle id="backlash_item_hole_10.0mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.0" />
-		<circle id="backlash_item_screw_3.0mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="1.5" />
-		<rect   id="bearing_base_ref"          style="fill:#000080;fill-opacity:0.2" width="32" height="32" x="0" y="0" rx="4" ry="4" />
-		<circle id="bearing_cylinder"          style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="10.5" />
-		<circle id="bearing_screw_4.0mm"       style="fill:#000080;fill-opacity:1" cx="0" cy="0" r="2.00" />
-		<circle id="bearing_screw_gew_3.2mm"   style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="1.60" />
-		<circle id="spacer_pocket_6.0mm"       style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="6" />
-		<circle id="spacer_screw_5.0mm"        style="fill:#0000ff;fill-opacity:1" cx="0" cy="0" r="2.5" />
-		<circle id="spindle_screw_4.0mm"       style="fill:#000080;fill-opacity:1" cx="0" cy="0" r="2.00" />
-		<circle id="spindle_screw_gew_3.2mm"   style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="1.60" />
-	</defs>
-	
-	<g id="layer1">
-		<!--
-		<path id="contour" style="fill:none;stroke:#0000ff;stroke-width:0.25"
-		d="M 0.0,0.0 h 90 v 65 a 45,45 0 0 1 -90,0 z" />
-		-->
-		<path id="contour" style="fill:none;stroke:#0000ff;stroke-width:0.25"  
-		d="M 2.0,0.0 h 86
+<svg version="1.1" title="spindle-D52" width="90mm" height="110mm" viewBox="0 0 90 110" id="spindle-D52" 
+  xmlns="http://www.w3.org/2000/svg" 
+  xmlns:svg="http://www.w3.org/2000/svg">
+  <defs id="defs">
+    <circle id="leadscrew_central_hole_ref"     style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="11" />
+    
+	  <!-- backlash device -->
+	  <circle id="backlash_item_hole_10mm"        style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.0" />
+    <!-- M3 screws -->
+	  <circle id="backlash_screw_M3"              style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="1.5" />
+    <!-- M3 screws thread holes are smaller (2.5mm) -->
+    <circle id="backlash_screw_M3_thread_hole"  style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="1.25" />
+    
+    <!-- bearings -->
+	  <rect   id="bearing_base_ref"             style="fill:#000080;fill-opacity:0.2" width="32" height="32" x="0" y="0" rx="4" ry="4" />
+    <circle id="bearing_cylinder"             style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="10.5" />
+    <circle id="bearing_screw_pocket_4.5mm"   style="fill:#000080;fill-opacity:0.4" cx="0" cy="0" r="2.25" />
+    <!-- M4 screws -->
+	  <circle id="bearing_screw_M4"             style="fill:#000080;fill-opacity:0" cx="0" cy="0" r="2.0" />
+    <!-- M3 screws thread holes are smaller (3.2mm) -->
+  	<circle id="bearing_screw_M3_thread_hole" style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="1.60" />
+    
+  	<!-- spacers -->
+	  <circle id="spacer_pocket_6.0mm"          style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="6" />
+    <!-- M5 screws -->
+	  <circle id="spacer_screw_hole_5.0mm"      style="fill:#0000ff;fill-opacity:1" cx="0" cy="0" r="2.5" />
+    
+    <!--spindle :  M4 screws attachments / threading here ? -->
+	  <circle id="spindle_screw_M4"             style="fill:#000080;fill-opacity:1" cx="0" cy="0" r="2.00" />
+    <circle id="spindle_screw_M4_thread_hole" style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="1.60" />
+  </defs>
+  
+  <g id="layer1">
+    <path id="contour" style="fill:none;stroke:#0000ff;stroke-width:0.25"  
+    d="M 2.0,0.0 h 86
       a 2 2 0 0 1 2 2 
-	  v 63 
-	  a 45,45 0 0 1 -90,0 
-	  v -63 
-	  a 2 2 0 0 1 2 -2
-	  z" />
-	 
-		<g id="layer_motor" transform="translate(24,-5)">
+    v 63 
+    a 45,45 0 0 1 -90,0 
+    v -63 
+    a 2 2 0 0 1 2 -2
+    z" />
+   
+    <g id="layer_motor" transform="translate(24,-5)">
          <!-- just as indicator , the spindle must "touch" the motor -->
-          <rect rx="4" ry="4" width="42" height="42" style="fill:#000000; fill-opacity:0.0" /> 
+          <rect rx="4" ry="4" width="42" height="42" style="fill:#000000; fill-opacity:0.2" /> 
         </g>
-		
-		<!-- backlash -->
-		<g id="backlash" transform="translate(45,16)">
-		    <use href="#screw_central_hole_ref" id="screw_central_hole" />
-		
-			<!-- cut through -->
-			<use href="#backlash_item_hole_10.0mm" id="backlash_item_hole" />
-			<!-- cut through -->
-			<use href="#backlash_item_screw_3.0mm" transform="rotate(0)   translate(8,0)" id="backlash_item_screw_3.0mm_E" />
-			<use href="#backlash_item_screw_3.0mm" transform="rotate(90)  translate(8,0)" id="backlash_item_screw_3.0mm_S" />
-			<use href="#backlash_item_screw_3.0mm" transform="rotate(180) translate(8,0)" id="backlash_item_screw_3.0mm_W" />
-			<use href="#backlash_item_screw_3.0mm" transform="rotate(270) translate(8,0)" id="backlash_item_screw_3.0mm_N" />
-		</g>
-		<!-- bearing 1 -->
-		<g id="bearing_1" transform="translate(0,0)">
-			<use href="#bearing_base_ref" id="bearing_1_base" />
-			<g id="bearing_1_items" transform="translate(16,16)">
-				<!-- reference is the center of the bearing item -->
-				<use href="#bearing_cylinder" id="bearing_1_cylinder" />
-				<use href="#bearing_screw_4.0mm" transform="rotate( 45) translate(16 0)" id="bearing_1_screw_4.0mm_SE" />
-				<use href="#bearing_screw_4.0mm" transform="rotate(135) translate(16 0)" id="bearing_1_screw_4.0mm_SW" />
-				<use href="#bearing_screw_4.0mm" transform="rotate(225) translate(16 0)" id="bearing_1_screw_4.0mm_NW" />
-				<use href="#bearing_screw_4.0mm" transform="rotate(315) translate(16 0)" id="bearing_1_screw_4.0mm_NE" />
-				<use href="#bearing_screw_gew_3.2mm" transform="rotate( 45) translate(16 0)" id="bearing_1_screw_gew_3.2mm_SE" />
-				<use href="#bearing_screw_gew_3.2mm" transform="rotate(135) translate(16 0)" id="bearing_1_screw_gew_3.2mm_SW" />
-				<use href="#bearing_screw_gew_3.2mm" transform="rotate(225) translate(16 0)" id="bearing_1_screw_gew_3.2mm_NW" />
-				<use href="#bearing_screw_gew_3.2mm" transform="rotate(315) translate(16 0)" id="bearing_1_screw_gew_3.2mm_NE" />
-			</g>
-		</g>
-		<!-- bearing 2 -->
-		<g id="bearing_2" transform="translate(58,0)">
-			<use href="#bearing_base_ref" id="bearing_2_base" />
-			<g id="bearing_2_items" transform="translate(16,16)">
-				<!-- reference is the center of the bearing item -->
-				<use href="#bearing_cylinder" id="bearing_2_cylinder" />
-				<use href="#bearing_screw_4.0mm" transform="rotate( 45) translate(16 0)" id="bearing_2_screw_4.0mm_SE" />
-				<use href="#bearing_screw_4.0mm" transform="rotate(135) translate(16 0)" id="bearing_2_screw_4.0mm_SW" />
-				<use href="#bearing_screw_4.0mm" transform="rotate(225) translate(16 0)" id="bearing_2_screw_4.0mm_NW" />
-				<use href="#bearing_screw_4.0mm" transform="rotate(315) translate(16 0)" id="bearing_2_screw_4.0mm_NE" />
-				<use href="#bearing_screw_gew_3.2mm" transform="rotate( 45) translate(16 0)" id="bearing_2_screw_gew_3.2mm_SE" />
-				<use href="#bearing_screw_gew_3.2mm" transform="rotate(135) translate(16 0)" id="bearing_2_screw_gew_3.2mm_SW" />
-				<use href="#bearing_screw_gew_3.2mm" transform="rotate(225) translate(16 0)" id="bearing_2_screw_gew_3.2mm_NW" />
-				<use href="#bearing_screw_gew_3.2mm" transform="rotate(315) translate(16 0)" id="bearing_2_screw_gew_3.2mm_NE" />
-			</g>
-		</g>
-		
-		<g id="spindle" transform="translate(45,65)">
-		    <circle id="large_circle_indicator" style="fill:#ff00ff;fill-opacity:0.2" r="45" />
-		    <circle id="spindle-hole" style="fill:#ff0000;fill-opacity:1" r="26.0" />
-		    <circle id="spindle-small-base" style="fill:#ffff00;fill-opacity:1" r="13.0" />
-		    <!-- diam = 26mm , height = 6mm -->
-		
-			<use href="#spindle_screw_4.0mm" transform="rotate(45) translate(12.5 12.5)" id="spindle_screw_4.0mm_NW" />
-			<use href="#spindle_screw_4.0mm" transform="rotate(45) translate(12.5 -12.5)" id="spindle_screw_4.0mm_NE" />
-			<use href="#spindle_screw_4.0mm" transform="rotate(45) translate(-12.5 12.5)" id="spindle_screw_4.0mm_SW" />
-			<use href="#spindle_screw_4.0mm" transform="rotate(45) translate(-12.5 -12.5)" id="spindle_screw_4.0mm_SE" />
-			<use href="#spindle_screw_gew_3.2mm" transform="rotate(45) translate(12.5 12.5)" id="spindle_screw_gew_3.2mm_NW" />
-			<use href="#spindle_screw_gew_3.2mm" transform="rotate(45) translate(12.5 -12.5)" id="spindle_screw_gew_3.2mm_NE" />
-			<use href="#spindle_screw_gew_3.2mm" transform="rotate(45) translate(-12.5 12.5)" id="spindle_screw_gew_3.2mm_SW" />
-			<use href="#spindle_screw_gew_3.2mm" transform="rotate(45) translate(-12.5 -12.5)" id="spindle_screw_gew_3.2mm_SE" />
-		</g>
-		
-		<g id="spacers"  transform="translate(45,65)">
-		   <use href="#spacer_pocket_6.0mm" transform="rotate(34) translate(35 0)" id="spacer_pocket_SW" />
-		   <use href="#spacer_pocket_6.0mm" transform="translate(0 -3) rotate(-34) translate(35 0)" id="spacer_pocket_NW" />
-		   <use href="#spacer_pocket_6.0mm" transform="translate(0 -3) rotate(34) translate(-35 0)" id="spacer_pocket_NE" />
-		   <use href="#spacer_pocket_6.0mm" transform="rotate(-34) translate(-35 0)" id="spacer_pocket_SE" />
-		   
-		   <use href="#spacer_screw_5.0mm" transform="rotate(34) translate(35 0)" id="spacer_screw_5.0mm_SW" />
-		   <use href="#spacer_screw_5.0mm" transform="translate(0 -3) rotate(-34) translate(35 0)" id="spacer_screw_5.0mm_NW" />
-		   <use href="#spacer_screw_5.0mm" transform="translate(0 -3) rotate(34) translate(-35 0)" id="spacer_screw_5.0mm_NE" />
-		   <use href="#spacer_screw_5.0mm" transform="rotate(-34) translate(-35 0)" id="spacer_screw_5.0mm_SE" />
-		</g>
-		
-		<g id="lines">
-		    <path id="horizontal_line" style="fill:none;stroke:#000000;stroke-width:0.1" d="M 0,65 90,65" />
-		    <path id="vertical_line" style="fill:none;stroke:#000000;stroke-width:0.1" d="M 45,0  45,110" />
-		</g>
-	</g>
+    
+    <!-- backlash -->
+    <g id="backlash" transform="translate(45,16)">
+        <use href="#leadscrew_central_hole_ref" id="screw_central_hole" />
+    
+      <!-- cut through -->
+      <use href="#backlash_item_hole_10mm" id="backlash_item_hole" />
+      <!-- cut through -->
+      <use href="#backlash_screw_M3_thread_hole" transform="rotate(90)  translate(8,0)" id="backlash_screw_M3_thread_hole_E" />
+      <use href="#backlash_screw_M3_thread_hole" transform="rotate(270) translate(8,0)" id="backlash_screw_M3_thread_hole_W" />
+      <use href="#backlash_screw_M3" transform="rotate(0)   translate(8,0)" id="backlash_screw_M3_S" />
+      <use href="#backlash_screw_M3" transform="rotate(180) translate(8,0)" id="backlash_screw_M3_N" />
+    </g>
+    <!-- bearing 1 -->
+    <g id="bearing_1" transform="translate(0,0)">
+      <use href="#bearing_base_ref" id="bearing_1_base" />
+      <g id="bearing_1_items" transform="translate(16,16)">
+        <!-- reference is the center of the bearing item -->
+        <use href="#bearing_cylinder" id="bearing_1_cylinder" />
+        <use href="#bearing_screw_pocket_4.5mm" transform="rotate( 45) translate(16 0)" id="bearing_1_screw_hole_4.5mm_SE" />
+        <use href="#bearing_screw_pocket_4.5mm" transform="rotate(135) translate(16 0)" id="bearing_1_screw_hole_4.5mm_SW" />
+        <use href="#bearing_screw_pocket_4.5mm" transform="rotate(225) translate(16 0)" id="bearing_1_screw_hole_4.5mm_NW" />
+        <use href="#bearing_screw_pocket_4.5mm" transform="rotate(315) translate(16 0)" id="bearing_1_screw_hole_4.5mm_NE" />
+        <use href="#bearing_screw_M4" transform="rotate( 45) translate(16 0)" id="bearing_1_screw_4.0mm_SE" />
+        <use href="#bearing_screw_M4" transform="rotate(135) translate(16 0)" id="bearing_1_screw_4.0mm_SW" />
+        <use href="#bearing_screw_M4" transform="rotate(225) translate(16 0)" id="bearing_1_screw_4.0mm_NW" />
+        <use href="#bearing_screw_M4" transform="rotate(315) translate(16 0)" id="bearing_1_screw_4.0mm_NE" />
+        <use href="#bearing_screw_M3_thread_hole" transform="rotate( 45) translate(16 0)" id="bearing_1_screw_gew_3.2mm_SE" />
+        <use href="#bearing_screw_M3_thread_hole" transform="rotate(135) translate(16 0)" id="bearing_1_screw_gew_3.2mm_SW" />
+        <use href="#bearing_screw_M3_thread_hole" transform="rotate(225) translate(16 0)" id="bearing_1_screw_gew_3.2mm_NW" />
+        <use href="#bearing_screw_M3_thread_hole" transform="rotate(315) translate(16 0)" id="bearing_1_screw_gew_3.2mm_NE" />
+      </g>
+    </g>
+    <!-- bearing 2 -->
+    <g id="bearing_2" transform="translate(58,0)">
+      <use href="#bearing_base_ref" id="bearing_2_base" />
+      <g id="bearing_2_items" transform="translate(16,16)">
+        <!-- reference is the center of the bearing item -->
+        <use href="#bearing_cylinder" id="bearing_2_cylinder" />
+        <use href="#bearing_screw_pocket_4.5mm" transform="rotate( 45) translate(16 0)" id="bearing_2_screw_hole_4.5mm_SE" />
+        <use href="#bearing_screw_pocket_4.5mm" transform="rotate(135) translate(16 0)" id="bearing_2_screw_hole_4.5mm_SW" />
+        <use href="#bearing_screw_pocket_4.5mm" transform="rotate(225) translate(16 0)" id="bearing_2_screw_hole_4.5mm_NW" />
+        <use href="#bearing_screw_pocket_4.5mm" transform="rotate(315) translate(16 0)" id="bearing_2_screw_hole_4.5mm_NE" />
+        <use href="#bearing_screw_M4" transform="rotate( 45) translate(16 0)" id="bearing_2_screw_4.0mm_SE" />
+        <use href="#bearing_screw_M4" transform="rotate(135) translate(16 0)" id="bearing_2_screw_4.0mm_SW" />
+        <use href="#bearing_screw_M4" transform="rotate(225) translate(16 0)" id="bearing_2_screw_4.0mm_NW" />
+        <use href="#bearing_screw_M4" transform="rotate(315) translate(16 0)" id="bearing_2_screw_4.0mm_NE" />
+        <use href="#bearing_screw_M3_thread_hole" transform="rotate( 45) translate(16 0)" id="bearing_2_screw_gew_3.2mm_SE" />
+        <use href="#bearing_screw_M3_thread_hole" transform="rotate(135) translate(16 0)" id="bearing_2_screw_gew_3.2mm_SW" />
+        <use href="#bearing_screw_M3_thread_hole" transform="rotate(225) translate(16 0)" id="bearing_2_screw_gew_3.2mm_NW" />
+        <use href="#bearing_screw_M3_thread_hole" transform="rotate(315) translate(16 0)" id="bearing_2_screw_gew_3.2mm_NE" />
+      </g>
+    </g>
+    
+
+    <g id="spindle" transform="translate(45,65)">
+      <circle id="large_circle_indicator" style="fill:#ff00ff;fill-opacity:0.1" r="45" />
+      <!-- alu parts -->
+      <circle id="spindle-hole" style="fill:#ff0000;fill-opacity:1"  r="26.0" />
+      <!-- "small base": diam = 26mm , height = 6mm -->
+      <circle id="spindle-small-base" style="fill:#ffff00;fill-opacity:1"  r="13.0" />
+        
+      <!-- mounting holes -->
+      <use href="#spindle_screw_M4" transform="rotate(45) translate(12.5 12.5)" id="spindle_screw_M4_NW" />
+      <use href="#spindle_screw_M4" transform="rotate(45) translate(12.5 -12.5)" id="spindle_screw_M4_NE" />
+      <use href="#spindle_screw_M4" transform="rotate(45) translate(-12.5 12.5)" id="spindle_screw_M4_SW" />
+      <use href="#spindle_screw_M4" transform="rotate(45) translate(-12.5 -12.5)" id="spindle_screw_M4_SE" />
+      <use href="#spindle_screw_M4_thread_hole" transform="rotate(45) translate(12.5 12.5)" id="spindle_screw_M4_thread_hole_NW" />
+      <use href="#spindle_screw_M4_thread_hole" transform="rotate(45) translate(12.5 -12.5)" id="spindle_screw_M4_thread_hole_NE" />
+      <use href="#spindle_screw_M4_thread_hole" transform="rotate(45) translate(-12.5 12.5)" id="spindle_screw_M4_thread_hole_SW" />
+      <use href="#spindle_screw_M4_thread_hole" transform="rotate(45) translate(-12.5 -12.5)" id="spindle_screw_M4_thread_hole_SE" />
+    </g>
+    
+    <g id="spacers"  transform="translate(45,65)">
+       <use href="#spacer_pocket_6.0mm" transform="rotate(34) translate(35 0)" id="spacer_pocket_SW" />
+       <use href="#spacer_pocket_6.0mm" transform="translate(0 -3) rotate(-34) translate(35 0)" id="spacer_pocket_NW" />
+       <use href="#spacer_pocket_6.0mm" transform="translate(0 -3) rotate(34) translate(-35 0)" id="spacer_pocket_NE" />
+       <use href="#spacer_pocket_6.0mm" transform="rotate(-34) translate(-35 0)" id="spacer_pocket_SE" />
+       
+       <use href="#spacer_screw_hole_5.0mm" transform="rotate(34) translate(35 0)" id="spacer_screw_hole_5.0mm_SW" />
+       <use href="#spacer_screw_hole_5.0mm" transform="translate(0 -3) rotate(-34) translate(35 0)" id="spacer_screw_hole_5.0mm_NW" />
+       <use href="#spacer_screw_hole_5.0mm" transform="translate(0 -3) rotate(34) translate(-35 0)" id="spacer_screw_hole_5.0mm_NE" />
+       <use href="#spacer_screw_hole_5.0mm" transform="rotate(-34) translate(-35 0)" id="spacer_screw_hole_5.0mm_SE" />
+    </g>
+    
+    <g id="lines">
+        <path id="horizontal_line" style="fill:none;stroke:#000000;stroke-width:0.1" d="M 0,65 90,65" />
+        <path id="vertical_line"   style="fill:none;stroke:#000000;stroke-width:0.1" d="M 45,0  45,110" />
+    </g>
+  </g>
 </svg>

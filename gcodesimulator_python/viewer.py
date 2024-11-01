@@ -3,9 +3,10 @@ the viewer includes
 - the gcode simulator - in pyside6-opengl + its controls
 - the gcode file browser
 """
+
 import math
 
-from typing import Dict
+from typing import Any, Dict
 
 from PySide6 import QtWidgets
 
@@ -16,7 +17,7 @@ from gcodesimulator_python import gcodefileviewer
 class GCodeViewer(QtWidgets.QWidget):
     """ """
 
-    def __init__(self, parent: QtWidgets.QWidget, options: Dict[str, str]):
+    def __init__(self, parent: QtWidgets.QWidget, options: Dict[str, Any]):
         QtWidgets.QWidget.__init__(self)
 
         self.gcode = gcode = options["gcode"]
@@ -35,10 +36,14 @@ class GCodeViewer(QtWidgets.QWidget):
 
         self.gl_with_controls_layout = QtWidgets.QVBoxLayout()
 
-        self.gcode_glviewer = glviewer.GLView(gcode, cutter_diameter, cutter_height, cutter_angle, use_candle_parser)
+        self.gcode_glviewer = glviewer.GLView(
+            gcode, cutter_diameter, cutter_height, cutter_angle, use_candle_parser
+        )
         self.gl_with_controls_layout.addWidget(self.gcode_glviewer)
 
-        self.controls = glviewer.SimulationControls(self, self.gcode_glviewer, self.gcode_textbrowser)
+        self.controls = glviewer.SimulationControls(
+            self, self.gcode_glviewer, self.gcode_textbrowser
+        )
         self.gl_with_controls_layout.addWidget(self.controls)
 
         self.gl_with_controls_layout.setStretch(0, 1)

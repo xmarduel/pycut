@@ -41,8 +41,8 @@ class GCodeSyntaxHighlightDelegate(QtWidgets.QStyledItemDelegate):
         self,
         painter: QtGui.QPainter,
         option: QtWidgets.QStyleOptionViewItem,
-        index: QtCore.QModelIndex,
-    ):
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
+    ) -> None:
         painter.save()
 
         options = QtWidgets.QStyleOptionViewItem(option)

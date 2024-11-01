@@ -15,8 +15,9 @@ misc_private/cnc1419/stl2vtk.py
 misc_private/cnc1419/cnc1419-v2x-v0.stl
 misc_private/cnc1419/cnc1419-v2x-v0.vtk
 #misc_private/cnc3018-frames-parts
-#misc_private/others_stuff
+misc_private/others_stuff
 misc_private/images
+misc_private/cnc1310/freeCAD
 
 gcodesimulator_webgl/RESOURCES
 

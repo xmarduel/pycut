@@ -88,11 +88,15 @@ class PyCutDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
     def __init__(self, parent):
         QtWidgets.QItemDelegate.__init__(self, parent)
 
-    def createEditor(self, parent, option, index: QtCore.QModelIndex):
+    def createEditor(
+        self, parent, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
+    ):
         editor = PyCutDoubleSpinBox(parent)
 
-        tab = index.model().get_tab(index)
-        attr = index.model().get_tab_attr(index)
+        model: PyCutSimpleTableModel = index.model()
+
+        tab = model.get_tab(index)
+        attr = model.get_tab_attr(index)
 
         editor.assign_object(tab)
         editor.assign_object_attribute(attr)
@@ -107,17 +111,27 @@ class PyCutDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
         if editor:
             self.commitData.emit(editor)
 
-    def setEditorData(self, spinBox: PyCutDoubleSpinBox, index: QtCore.QModelIndex):
+    def setEditorData(
+        self,
+        spinBox: PyCutDoubleSpinBox,
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
+    ):
         spinBox.set_value()
 
     def setModelData(
-        self, spinBox: PyCutDoubleSpinBox, model, index: QtCore.QModelIndex
+        self,
+        spinBox: PyCutDoubleSpinBox,
+        model,
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
         model.handleNewvalue(index, spinBox.value())
         return
 
     def updateEditorGeometry(
-        self, editor: PyCutDoubleSpinBox, option, index: QtCore.QModelIndex
+        self,
+        editor: PyCutDoubleSpinBox,
+        option,
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
         editor.setGeometry(option.rect)
 
@@ -169,11 +183,15 @@ class PyCutCheckBox(QtWidgets.QCheckBox):
 
 
 class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
-    def createEditor(self, parent, option, index: QtCore.QModelIndex):
+    def createEditor(
+        self, parent, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
+    ):
         editor = PyCutCheckBox(parent)
 
-        tab = index.model().get_tab(index)
-        attr = index.model().get_tab_attr(index)
+        model: PyCutSimpleTableModel = index.model()
+
+        tab = model.get_tab(index)
+        attr = model.get_tab_attr(index)
 
         editor.assign_object(tab)
         editor.assign_object_attribute(attr)
@@ -184,7 +202,7 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
         checkWidget = QtWidgets.QWidget(parent)
         checkLayout = QtWidgets.QHBoxLayout(checkWidget)
         checkLayout.addWidget(editor)
-        checkLayout.setAlignment(QtCore.Qt.AlignCenter)
+        checkLayout.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         checkLayout.setContentsMargins(0, 0, 0, 0)
 
         # to flush an "setModelData" in place - it works!
@@ -198,13 +216,20 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
             checkWidget = editor.parent()
             self.commitData.emit(checkWidget)
 
-    def setEditorData(self, checkWidget: QtWidgets.QWidget, index: QtCore.QModelIndex):
+    def setEditorData(
+        self,
+        checkWidget: QtWidgets.QWidget,
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
+    ):
         checkBoxItem = checkWidget.layout().itemAt(0)
         checkBox: PyCutCheckBox = checkBoxItem.widget()
         checkBox.set_value()
 
     def setModelData(
-        self, checkWidget: QtWidgets.QWidget, model, index: QtCore.QModelIndex
+        self,
+        checkWidget: QtWidgets.QWidget,
+        model,
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
         checkBoxItem = checkWidget.layout().itemAt(0)
         checkBox: PyCutCheckBox = checkBoxItem.widget()
@@ -212,7 +237,9 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
         model.handleNewvalue(index, checkBox.isChecked())
         return
 
-    def updateEditorGeometry(self, editor, option, index: QtCore.QModelIndex):
+    def updateEditorGeometry(
+        self, editor, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
+    ):
         editor.setGeometry(option.rect)
 
 
@@ -277,11 +304,11 @@ class PyCutTabsTableViewManager(QtWidgets.QWidget):
         """
         returns the list of tabs ready to be saved as json data
         """
-        tabs = []
+        tabs: List[Dict] = []
 
         for tab in self.get_model_tabs():
-            tab = tabs.to_dict()
-            tabs.append(tab)
+            atab = tab.to_dict()
+            tabs.append(atab)
 
         return tabs
 
@@ -459,9 +486,15 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
             print(tab)
 
     def headerData(
-        self, col: int, orientation: QtCore.Qt.Orientation, role: QtCore.Qt.EditRole
-    ):
-        if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
+        self,
+        col: int,
+        orientation: QtCore.Qt.Orientation,
+        role: int = QtCore.Qt.ItemDataRole.EditRole,
+    ) -> str | None:
+        if (
+            orientation == QtCore.Qt.Orientation.Horizontal
+            and role == QtCore.Qt.ItemDataRole.DisplayRole
+        ):
             return self.header[col]
         return None
 
@@ -471,17 +504,26 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
     def columnCount(self, parent):
         return len(self.header)
 
-    def setData(self, index: QtCore.QModelIndex, value, role=QtCore.Qt.EditRole):
+    def setData(
+        self,
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
+        value,
+        role: int = QtCore.Qt.ItemDataRole.EditRole,
+    ):
         """
         for the cells without delegate
         """
         tab = self.get_tab(index)
         attr = self.get_tab_attr(index)
 
-        if role == QtCore.Qt.EditRole:
+        if role == QtCore.Qt.ItemDataRole.EditRole:
             setattr(tab, attr, value)
 
-    def data(self, index: QtCore.QModelIndex, role: QtCore.Qt.EditRole):
+    def data(
+        self,
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
+        role: int = QtCore.Qt.ItemDataRole.EditRole,
+    ):
         tab = self.get_tab(index)
         attr = self.get_tab_attr(index)
 
@@ -495,25 +537,27 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
         if col == 3:  # checkbox
             return None
 
-        if role == QtCore.Qt.DisplayRole:
+        if role == QtCore.Qt.ItemDataRole.DisplayRole:
             val = getattr(tab, attr)
 
             return val
-        if role == QtCore.Qt.EditRole:
+        if role == QtCore.Qt.ItemDataRole.EditRole:
             val = getattr(tab, attr)
 
             return val
 
         return None
 
-    def flags(self, index: QtCore.QModelIndex) -> QtCore.Qt.ItemFlags:
+    def flags(
+        self, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
+    ) -> QtCore.Qt.ItemFlag:
         flags = super(PyCutSimpleTableModel, self).flags(index)
 
-        flags |= QtCore.Qt.ItemIsEditable
-        flags |= QtCore.Qt.ItemIsSelectable
-        flags |= QtCore.Qt.ItemIsEnabled
-        flags |= QtCore.Qt.ItemIsDragEnabled
-        flags |= QtCore.Qt.ItemIsDropEnabled
+        flags |= QtCore.Qt.ItemFlag.ItemIsEditable
+        flags |= QtCore.Qt.ItemFlag.ItemIsSelectable
+        flags |= QtCore.Qt.ItemFlag.ItemIsEnabled
+        flags |= QtCore.Qt.ItemFlag.ItemIsDragEnabled
+        flags |= QtCore.Qt.ItemFlag.ItemIsDropEnabled
 
         return flags
 

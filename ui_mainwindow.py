@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.7.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -61,7 +61,7 @@ class Ui_mainwindow(object):
         self.scrollArea_left.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 318, 986))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 304, 999))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSpacing(22)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -79,13 +79,30 @@ class Ui_mainwindow(object):
 
         self.verticalLayoutSettingsContent.addWidget(self.label_SvgSettings)
 
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.horizontalLayout_7.setContentsMargins(8, -1, -1, -1)
+        self.label_title = QLabel(self.scrollAreaWidgetContents)
+        self.label_title.setObjectName(u"label_title")
+        font1 = QFont()
+        font1.setBold(True)
+        self.label_title.setFont(font1)
+
+        self.horizontalLayout_7.addWidget(self.label_title)
+
+        self.SvgTitle = QLabel(self.scrollAreaWidgetContents)
+        self.SvgTitle.setObjectName(u"SvgTitle")
+
+        self.horizontalLayout_7.addWidget(self.SvgTitle)
+
+
+        self.verticalLayoutSettingsContent.addLayout(self.horizontalLayout_7)
+
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(8, -1, -1, -1)
         self.label_PxPerInch = QLabel(self.scrollAreaWidgetContents)
         self.label_PxPerInch.setObjectName(u"label_PxPerInch")
-        font1 = QFont()
-        font1.setBold(True)
         self.label_PxPerInch.setFont(font1)
 
         self.horizontalLayout.addWidget(self.label_PxPerInch)
@@ -791,7 +808,7 @@ class Ui_mainwindow(object):
         if QIcon.hasThemeIcon(iconThemeName):
             icon = QIcon.fromTheme(iconThemeName)
         else:
-            icon.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+            icon.addFile(u".", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
 
         self.GCodeConversion_ZeroTopLeftOfMaterial.setIcon(icon)
         self.GCodeConversion_ZeroTopLeftOfMaterial.setCheckable(True)
@@ -1020,6 +1037,8 @@ class Ui_mainwindow(object):
         self.actionSettings.setText(QCoreApplication.translate("mainwindow", u"Viewers Settings...", None))
         self.actionOpenGCode.setText(QCoreApplication.translate("mainwindow", u"Load GCode", None))
         self.label_SvgSettings.setText(QCoreApplication.translate("mainwindow", u" Svg Settings", None))
+        self.label_title.setText(QCoreApplication.translate("mainwindow", u"title", None))
+        self.SvgTitle.setText(QCoreApplication.translate("mainwindow", u"<html><head/><body><p>[title]</p></body></html>", None))
         self.label_PxPerInch.setText(QCoreApplication.translate("mainwindow", u"user units scale factor", None))
         self.label_SvgModelWidth.setText(QCoreApplication.translate("mainwindow", u"width", None))
         self.SvgModelWidth.setSuffix(QCoreApplication.translate("mainwindow", u"mm", None))

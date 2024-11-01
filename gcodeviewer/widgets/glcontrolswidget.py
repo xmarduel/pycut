@@ -23,7 +23,7 @@ class GCodeControlsWidget(QtWidgets.QWidget):
         hbox = self.hbox = QtWidgets.QHBoxLayout()
         hbox.setContentsMargins(0, 0, 0, 0)
 
-        slider = self.slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+        slider = self.slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal)
         slider.setRange(0, 1000)
 
         vbox.addWidget(slider)

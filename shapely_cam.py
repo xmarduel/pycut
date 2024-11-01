@@ -1994,17 +1994,18 @@ class NibblePocketCalculator:
                 yy.extend(y)
 
             elif type(element).__name__ == "Line":
-                print("k = ", k, type(element).__name__, element.move_style)
+                elt: geometry.LineData = element
+                print("k = ", k, type(elt).__name__, elt.move_style)
 
                 x, y = element.path.xy
 
-                if element.move_style == geometry.MoveStyle.RAPID_INSIDE:
+                if elt.move_style == geometry.MoveStyle.RAPID_INSIDE:
                     # plt.plot(x, y, linestyle="--", c=rapid_inside_colour, linewidth=1)
 
                     xx.extend(x)
                     yy.extend(y)
 
-                elif element.move_style == geometry.MoveStyle.RAPID_OUTSIDE:
+                elif elt.move_style == geometry.MoveStyle.RAPID_OUTSIDE:
                     # plt.plot(x, y, c=rapid_outside_colour, linewidth=1)
 
                     self.add_campath(xx, yy, True)
@@ -2013,7 +2014,7 @@ class NibblePocketCalculator:
                     yy = []
 
                 else:
-                    assert element.move_style == geometry.MoveStyle.CUT
+                    assert elt.move_style == geometry.MoveStyle.CUT
 
                     # actually the beginning of a new "path"
                     # so the old path is finished, but it should only be
