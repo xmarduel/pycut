@@ -36,7 +36,8 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
         super(WebGlViewer, self).__init__(parent)
 
         self.setSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+            QtWidgets.QSizePolicy.Policy.Expanding,
+            QtWidgets.QSizePolicy.Policy.Expanding,
         )
 
         shader_basicFragmentShader = self.get_shader_source(
@@ -127,7 +128,9 @@ class WebGlViewer(QtWebEngineWidgets.QWebEngineView):
 
         shader_source = ""
 
-        if fd.open(QtCore.QIODevice.ReadOnly | QtCore.QFile.Text):
+        if fd.open(
+            QtCore.QIODevice.OpenModeFlag.ReadOnly | QtCore.QFile.OpenModeFlag.Text
+        ):
             shader_source = QtCore.QTextStream(fd).readAll()
             fd.close()
 

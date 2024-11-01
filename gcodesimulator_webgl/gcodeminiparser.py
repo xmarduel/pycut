@@ -95,7 +95,7 @@ class GcodeMiniParser:
                 end = self.char_no
                 return float(self.gcode[begin:end])
             except Exception:
-                return None
+                return 0.0
 
         self.char_no = 0
         self.line_no = 0
@@ -131,28 +131,41 @@ class GcodeMiniParser:
                 if not qIsNaN(x):
                     if qIsNaN(lastX):
                         for j in range(len(self.path)):
-                            self.path[j][0] = x
+                            # self.path[j][0] = x
+                            pp = self.path[j]
+                            item = (x, pp[1], pp[2], pp[3])
+                            self.path[j] = item
+
                     lastX = x
 
                 if not qIsNaN(y):
                     if qIsNaN(lastY):
                         for j in range(len(self.path)):
-                            self.path[j][1] = y
+                            # self.path[j][1] = y
+                            pp = self.path[j]
+                            item = (pp[0], y, pp[2], pp[3])
+                            self.path[j] = item
                     lastY = y
 
                 if not qIsNaN(z):
                     if qIsNaN(lastZ):
                         for j in range(len(self.path)):
-                            self.path[j][2] = z
+                            # self.path[j][2] = z
+                            pp = self.path[j]
+                            item = (pp[0], pp[1], z, pp[3])
+                            self.path[j] = item
                     lastZ = z
 
                 if not qIsNaN(f):
                     if qIsNaN(lastF):
                         for j in range(len(self.path)):
-                            self.path[j][3] = f
+                            # self.path[j][3] = f
+                            pp = self.path[j]
+                            item = (pp[0], pp[1], pp[2], f)
+                            self.path[j] = item
                     lastF = f
 
-                self.path.append([lastX, lastY, lastZ, lastF])
+                self.path.append((lastX, lastY, lastZ, lastF))
                 self.path_idx_line_no[len(self.path) - 1] = self.line_no
 
             while (

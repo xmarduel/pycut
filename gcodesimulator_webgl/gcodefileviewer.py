@@ -197,10 +197,13 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
         self.highligh_current_line()
 
         if self.curr_line_no > -1:
-            if event.key() == QtCore.Qt.Key_Down or event.key() == QtCore.Qt.Key_Up:
-                if event.key() == QtCore.Qt.Key_Down:
+            if (
+                event.key() == QtCore.Qt.Key.Key_Down
+                or event.key() == QtCore.Qt.Key.Key_Up
+            ):
+                if event.key() == QtCore.Qt.Key.Key_Down:
                     self.curr_line_no += 1
-                elif event.key() == QtCore.Qt.Key_Up:
+                elif event.key() == QtCore.Qt.Key.Key_Up:
                     self.curr_line_no -= 1
 
                 # from the python "miniparser"
@@ -215,7 +218,7 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
     def lineNumberAreaPaintEvent(self, event: QtGui.QPaintEvent):
         """ """
         painter = QtGui.QPainter(self.line_number_area)
-        painter.fillRect(event.rect(), QtCore.Qt.lightGray)
+        painter.fillRect(event.rect(), QtCore.Qt.GlobalColor.lightGray)
 
         block = self.firstVisibleBlock()
         blockNumber = block.blockNumber()
@@ -225,13 +228,13 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
         while block.isValid() and top <= event.rect().bottom():
             if block.isVisible() and bottom >= event.rect().top():
                 number = " %d " % blockNumber
-                painter.setPen(QtCore.Qt.black)
+                painter.setPen(QtCore.Qt.GlobalColor.black)
                 painter.drawText(
                     0,
-                    top,
+                    math.floor(top),
                     self.line_number_area.width(),
                     self.fontMetrics().height(),
-                    QtCore.Qt.AlignRight,
+                    QtCore.Qt.AlignmentFlag.AlignRight,
                     number,
                 )
 
@@ -242,7 +245,7 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
 
     def lineNumberAreaWidth(self) -> int:
         digits = 1
-        the_max = max(1, self.blockCount())
+        the_max = 1.0 * max(1, self.blockCount())
         while the_max >= 10:
             the_max /= 10
             digits = digits + 1

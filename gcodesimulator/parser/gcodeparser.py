@@ -401,7 +401,7 @@ class GcodeParser:
 
         self.m_commandNumber += 1
 
-        center = GcodePreprocessorUtils.updateCenterWithCommand(
+        center: QVector3D = GcodePreprocessorUtils.updateCenterWithCommand(
             args, self.m_currentPoint, nextPoint, self.m_inAbsoluteIJKMode, clockwise
         )
         radius = GcodePreprocessorUtils.parseCoord(args, "R")
