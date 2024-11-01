@@ -37,10 +37,10 @@ from OpenGL import GL
 
 from PySide6.QtUiTools import QUiLoader
 
-from gcodesimulator_python.gcodeminiparser import GcodeAtomicMvt
-from gcodesimulator_python.gcodeminiparser import GcodeMiniParser
+from gcodesimulator.gcodeminiparser import GcodeAtomicMvt
+from gcodesimulator.gcodeminiparser import GcodeMiniParser
 
-from gcodesimulator_python.gcodefileviewer import GCodeFileViewer
+from gcodesimulator.gcodefileviewer import GCodeFileViewer
 
 sNaN = float("NaN")
 
@@ -719,7 +719,7 @@ class Drawable:
     @classmethod
     def set_pycut_prefix(cls):
         """inside pycut"""
-        cls.PYCUT_PREFIX = "gcodesimulator_python/"
+        cls.PYCUT_PREFIX = "gcodesimulator/"
 
     def __init__(
         self,

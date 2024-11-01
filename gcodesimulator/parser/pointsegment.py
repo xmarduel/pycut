@@ -13,7 +13,7 @@ from enum import Enum
 
 from PySide6.QtGui import QVector3D
 
-from gcodesimulator_python.parser.arcproperties import ArcProperties
+from gcodesimulator.parser.arcproperties import ArcProperties
 
 
 class PointSegment:

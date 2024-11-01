@@ -9,14 +9,14 @@ from PySide6.QtCore import qIsNaN
 
 from PySide6.QtGui import QVector3D
 
-from gcodesimulator_python.parser.gcodeviewparse import GcodeViewParse
-from gcodesimulator_python.parser.gcodepreprocessorutils import (
+from gcodesimulator.parser.gcodeviewparse import GcodeViewParse
+from gcodesimulator.parser.gcodepreprocessorutils import (
     GcodePreprocessorUtils,
 )
-from gcodesimulator_python.parser.gcodeparser import GcodeParser
+from gcodesimulator.parser.gcodeparser import GcodeParser
 
-from gcodesimulator_python.parser.linesegment import LineSegment
-from gcodesimulator_python.util.util import qQNaN
+from gcodesimulator.parser.linesegment import LineSegment
+from gcodesimulator.util.util import qQNaN
 
 
 PROGRESSMINLINES = 10000

@@ -15,14 +15,14 @@ from PySide6.QtGui import QVector3D
 from PySide6 import QtCore
 from PySide6.QtCore import qIsNaN
 
-from gcodesimulator_python.parser.linesegment import LineSegment
-from gcodesimulator_python.parser.gcodeparser import GcodeParser
-from gcodesimulator_python.parser.gcodepreprocessorutils import (
+from gcodesimulator.parser.linesegment import LineSegment
+from gcodesimulator.parser.gcodeparser import GcodeParser
+from gcodesimulator.parser.gcodepreprocessorutils import (
     GcodePreprocessorUtils,
 )
 
-from gcodesimulator_python.util.util import Util
-from gcodesimulator_python.util.util import qQNaN
+from gcodesimulator.util.util import Util
+from gcodesimulator.util.util import qQNaN
 
 
 class GcodeViewParse:

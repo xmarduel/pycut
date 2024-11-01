@@ -10,8 +10,8 @@ from typing import Any, Dict
 
 from PySide6 import QtWidgets
 
-from gcodesimulator_python import glviewer
-from gcodesimulator_python import gcodefileviewer
+from gcodesimulator import glviewer
+from gcodesimulator import gcodefileviewer
 
 
 class GCodeViewer(QtWidgets.QWidget):
