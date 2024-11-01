@@ -129,7 +129,7 @@ class GcodeParser:
         startSegment = self.m_points[-2]
         lastSegment = self.m_points[-1]
 
-        empty = []
+        empty: List[PointSegment] = []
 
         # Can only expand arcs.
         if not lastSegment.isArc():
@@ -283,7 +283,7 @@ class GcodeParser:
 
     def processCommand(self, args: List[str]) -> PointSegment:
         gCodes = []
-        ps = None
+        # ps = None
 
         # Handle F code
         speed = GcodePreprocessorUtils.parseCoord(args, "F")
@@ -321,7 +321,7 @@ class GcodeParser:
             self.m_lastSpindleSpeed = spindleSpeed
 
     def handleGCode(self, code: float, args: List[str]) -> PointSegment:
-        ps = None
+        # ps = None
 
         nextPoint = GcodePreprocessorUtils.updatePointWithCommand(
             args, self.m_currentPoint, self.m_inAbsoluteMode
@@ -415,10 +415,13 @@ class GcodeParser:
             elif self.m_currentPlane == PointSegment.Plane.YZ:
                 m.rotate(-90, 0.0, 1.0, 0.0)
 
-            radius = math.sqrt(
-                math.pow(((m * self.m_currentPoint).x() - (m * center).x()), 2.0)
-                + math.pow(((m * self.m_currentPoint).y() - (m * center).y()), 2.0)
-            )
+            x1 = (m * self.m_currentPoint).x()
+            x2 = (m * center).x()
+
+            y1 = (m * self.m_currentPoint).y()
+            y2 = (m * center).y()
+
+            radius = math.sqrt(math.pow((x1 - x2), 2.0) + math.pow((y1 - y2), 2.0))
 
         ps.setIsMetric(self.m_isMetric)
         ps.setArcCenter(center)

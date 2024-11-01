@@ -1,4 +1,5 @@
 from typing import List
+from typing import Dict
 
 from PySide6.QtCore import QElapsedTimer
 from PySide6.QtCore import QFile
@@ -14,6 +15,7 @@ from gcodesimulator_python.candle_parser.gcodepreprocessorutils import (
 )
 from gcodesimulator_python.candle_parser.gcodeparser import GcodeParser
 
+from gcodeviewer.parser.linesegment import LineSegment
 from gcodeviewer.util.util import qQNaN
 
 
@@ -30,10 +32,10 @@ class CandleParser:
     def __init__(self, filename: str):
         self.filename = filename
         self.m_viewParser = GcodeViewParse()
-        self.linesegments = []
+        self.linesegments: List[LineSegment] = []
 
         # store mapping of gcode instruction no -> fileline no
-        self.lineno2filelineno = {}
+        self.lineno2filelineno: Dict[int, int] = {}
 
     def loadFile(self):
         file = QFile(self.filename)

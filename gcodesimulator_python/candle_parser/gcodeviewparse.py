@@ -79,8 +79,8 @@ class GcodeViewParse:
         # For a line segment list ALL arcs must be converted to lines.
         minArcLength = 0.1
 
-        start = None
-        end = None
+        start: QVector3D = None
+        end: QVector3D = None
 
         # Prepare segments indexes
         self.m_lineIndexes = [[] for _ in range(len(psl))]

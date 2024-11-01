@@ -85,7 +85,7 @@ class LineSegment:
         self.m_isZMovement = isZ
 
     def isZMovement(self) -> bool:
-        return self.isZMovement
+        return self.m_isZMovement
 
     def setIsArc(self, isA: bool):
         self.m_isArc = isA
@@ -153,7 +153,7 @@ class LineSegment:
         return self.m_isClockwise
 
     def setIsClockwise(self, isClockwise: bool):
-        self.isClockwise = isClockwise
+        self.m_isClockwise = isClockwise
 
     def plane(self) -> PointSegment.Plane:
         return self.m_plane

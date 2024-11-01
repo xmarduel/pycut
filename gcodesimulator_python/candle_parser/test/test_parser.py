@@ -11,6 +11,7 @@ from PySide6.QtCore import QIODevice
 from gcodeviewer.parser.gcodeviewparse import GcodeViewParse
 from gcodeviewer.parser.gcodepreprocessorutils import GcodePreprocessorUtils
 from gcodeviewer.parser.gcodeparser import GcodeParser
+from gcodeviewer.parser.linesegment import LineSegment
 
 from gcodeviewer.tables.gcodetablemodel import GCodeItem
 
@@ -24,7 +25,7 @@ class CandleParser:
     def __init__(self, filename: str):
         self.filename = filename
         self.m_viewParser = GcodeViewParse()
-        self.linesegments = []
+        self.linesegments: List[LineSegment] = []
 
     def loadFile(self):
         file = QFile(self.filename)
