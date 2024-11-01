@@ -1,6 +1,6 @@
 # This Python file uses the following encoding: utf-8
 
-VERSION = "0_6_5_RC3"
+VERSION = "0_7_1"
 
 import sys
 import os
