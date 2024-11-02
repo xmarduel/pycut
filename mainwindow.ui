@@ -32,7 +32,7 @@
          <x>0</x>
          <y>0</y>
          <width>304</width>
-         <height>999</height>
+         <height>993</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,1">
@@ -67,81 +67,14 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0">
             <property name="leftMargin">
-             <number>8</number>
+             <number>2</number>
             </property>
-            <item>
-             <widget class="QLabel" name="label_title">
-              <property name="font">
-               <font>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>title</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="SvgTitle">
-              <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;[title]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <property name="leftMargin">
-             <number>8</number>
+            <property name="rightMargin">
+             <number>1</number>
             </property>
-            <item>
-             <widget class="QLabel" name="label_PxPerInch">
-              <property name="font">
-               <font>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>user units scale factor</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QDoubleSpinBox" name="PxPerInch">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="maximum">
-               <double>999.990000000000009</double>
-              </property>
-              <property name="value">
-               <double>1.000000000000000</double>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_4">
-            <property name="leftMargin">
-             <number>8</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="label_SvgModelWidth">
-              <property name="font">
-               <font>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>width</string>
-              </property>
-             </widget>
-            </item>
-            <item>
+            <item row="3" column="1" colspan="2">
              <widget class="QDoubleSpinBox" name="SvgModelWidth">
               <property name="enabled">
                <bool>false</bool>
@@ -154,14 +87,32 @@
               </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <property name="leftMargin">
-             <number>8</number>
-            </property>
-            <item>
+            <item row="2" column="1" colspan="2">
+             <widget class="QDoubleSpinBox" name="PxPerInch">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="maximum">
+               <double>999.990000000000009</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_title">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Title</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
              <widget class="QLabel" name="label_SvgModelHeight">
               <property name="font">
                <font>
@@ -169,11 +120,35 @@
                </font>
               </property>
               <property name="text">
-               <string>height</string>
+               <string>Height</string>
               </property>
              </widget>
             </item>
-            <item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_SvgModelWidth">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Width</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_PxPerInch">
+              <property name="font">
+               <font>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>user u sfact</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1" colspan="2">
              <widget class="QDoubleSpinBox" name="SvgModelHeight">
               <property name="enabled">
                <bool>false</bool>
@@ -183,6 +158,16 @@
               </property>
               <property name="maximum">
                <double>999.990000000000009</double>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1" colspan="2">
+             <widget class="QLabel" name="SvgTitle">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;[title]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="indent">
+               <number>2</number>
               </property>
              </widget>
             </item>
@@ -214,7 +199,10 @@
           <item>
            <layout class="QGridLayout" name="gridLayout_Tool">
             <property name="leftMargin">
-             <number>8</number>
+             <number>2</number>
+            </property>
+            <property name="rightMargin">
+             <number>1</number>
             </property>
             <item row="1" column="1">
              <widget class="QLabel" name="label_Tool_Diameter_UnitsDescr">
@@ -506,7 +494,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayoutCurveToLineConversion">
+         <layout class="QVBoxLayout" name="verticalLayoutCurveToLineConversion" stretch="0,0">
           <property name="spacing">
            <number>6</number>
           </property>
@@ -538,10 +526,13 @@
              <number>6</number>
             </property>
             <property name="leftMargin">
-             <number>8</number>
+             <number>2</number>
             </property>
             <property name="topMargin">
              <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>1</number>
             </property>
             <item row="0" column="0">
              <widget class="QLabel" name="label_CurveToLineConversion_MinimumNbSegments">
@@ -640,13 +631,13 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0">
              <property name="leftMargin">
-              <number>8</number>
+              <number>2</number>
              </property>
              <property name="topMargin">
               <number>0</number>
              </property>
              <property name="rightMargin">
-              <number>0</number>
+              <number>1</number>
              </property>
              <property name="bottomMargin">
               <number>9</number>
@@ -992,6 +983,12 @@
             <property name="formAlignment">
              <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
             </property>
+            <property name="leftMargin">
+             <number>2</number>
+            </property>
+            <property name="rightMargin">
+             <number>1</number>
+            </property>
             <item row="0" column="0">
              <widget class="QLabel" name="label_Material_Units">
               <property name="font">
@@ -1124,6 +1121,12 @@
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout_GCodeConversion">
+            <property name="leftMargin">
+             <number>2</number>
+            </property>
+            <property name="rightMargin">
+             <number>1</number>
+            </property>
             <item row="7" column="1">
              <widget class="QLabel" name="label_GCodeConversion_YOffset_UnitsDescr">
               <property name="text">
@@ -1497,6 +1500,12 @@
             <property name="formAlignment">
              <set>Qt::AlignCenter</set>
             </property>
+            <property name="leftMargin">
+             <number>2</number>
+            </property>
+            <property name="rightMargin">
+             <number>2</number>
+            </property>
             <item row="0" column="0">
              <widget class="QLabel" name="label_GCodeGeneration_ReturnToZeroAtEnd">
               <property name="font">
@@ -1618,6 +1627,12 @@
            <layout class="QFormLayout" name="formLayout_GCodeStatistics">
             <property name="formAlignment">
              <set>Qt::AlignCenter</set>
+            </property>
+            <property name="leftMargin">
+             <number>2</number>
+            </property>
+            <property name="rightMargin">
+             <number>1</number>
             </property>
             <item row="0" column="0">
              <widget class="QLabel" name="label_GCodeStatistics_RunTime">

@@ -6,7 +6,7 @@
       "type": "Inside",
       "cut_depth": 12.0,
       "paths": [
-        "motor_base_hole_24mm"
+        "motor_base_hole_22mm"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -76,7 +76,7 @@
       "type": "Pocket",
       "cut_depth": 2.1,
       "paths": [
-        "spacer_screw_5.0mm_hole_11.0mm_R1"
+        "spacer_screw_5.0mm_pocket_11.0mm_R1"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -90,7 +90,7 @@
       "type": "Pocket",
       "cut_depth": 2.1,
       "paths": [
-        "spacer_screw_5.0mm_hole_11.0mm_L1"
+        "spacer_screw_5.0mm_pocket_11.0mm_L1"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -104,7 +104,7 @@
       "type": "Pocket",
       "cut_depth": 2.1,
       "paths": [
-        "spacer_screw_5.0mm_hole_11.0mm_L2"
+        "spacer_screw_5.0mm_pocket_11.0mm_L2"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",
@@ -118,7 +118,7 @@
       "type": "Pocket",
       "cut_depth": 2.1,
       "paths": [
-        "spacer_screw_5.0mm_hole_11.0mm_R2"
+        "spacer_screw_5.0mm_pocket_11.0mm_R2"
       ],
       "ramp_plunge": false,
       "combinaison": "Union",

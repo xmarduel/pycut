@@ -61,7 +61,7 @@ class Ui_mainwindow(object):
         self.scrollArea_left.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 304, 999))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 304, 993))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSpacing(22)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -79,33 +79,15 @@ class Ui_mainwindow(object):
 
         self.verticalLayoutSettingsContent.addWidget(self.label_SvgSettings)
 
-        self.horizontalLayout_7 = QHBoxLayout()
-        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
-        self.horizontalLayout_7.setContentsMargins(8, -1, -1, -1)
-        self.label_title = QLabel(self.scrollAreaWidgetContents)
-        self.label_title.setObjectName(u"label_title")
-        font1 = QFont()
-        font1.setBold(True)
-        self.label_title.setFont(font1)
+        self.gridLayout = QGridLayout()
+        self.gridLayout.setObjectName(u"gridLayout")
+        self.gridLayout.setContentsMargins(2, -1, 1, -1)
+        self.SvgModelWidth = QDoubleSpinBox(self.scrollAreaWidgetContents)
+        self.SvgModelWidth.setObjectName(u"SvgModelWidth")
+        self.SvgModelWidth.setEnabled(False)
+        self.SvgModelWidth.setMaximum(999.990000000000009)
 
-        self.horizontalLayout_7.addWidget(self.label_title)
-
-        self.SvgTitle = QLabel(self.scrollAreaWidgetContents)
-        self.SvgTitle.setObjectName(u"SvgTitle")
-
-        self.horizontalLayout_7.addWidget(self.SvgTitle)
-
-
-        self.verticalLayoutSettingsContent.addLayout(self.horizontalLayout_7)
-
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.horizontalLayout.setContentsMargins(8, -1, -1, -1)
-        self.label_PxPerInch = QLabel(self.scrollAreaWidgetContents)
-        self.label_PxPerInch.setObjectName(u"label_PxPerInch")
-        self.label_PxPerInch.setFont(font1)
-
-        self.horizontalLayout.addWidget(self.label_PxPerInch)
+        self.gridLayout.addWidget(self.SvgModelWidth, 3, 1, 1, 2)
 
         self.PxPerInch = QDoubleSpinBox(self.scrollAreaWidgetContents)
         self.PxPerInch.setObjectName(u"PxPerInch")
@@ -113,48 +95,49 @@ class Ui_mainwindow(object):
         self.PxPerInch.setMaximum(999.990000000000009)
         self.PxPerInch.setValue(1.000000000000000)
 
-        self.horizontalLayout.addWidget(self.PxPerInch)
+        self.gridLayout.addWidget(self.PxPerInch, 2, 1, 1, 2)
 
+        self.label_title = QLabel(self.scrollAreaWidgetContents)
+        self.label_title.setObjectName(u"label_title")
+        font1 = QFont()
+        font1.setBold(True)
+        self.label_title.setFont(font1)
 
-        self.verticalLayoutSettingsContent.addLayout(self.horizontalLayout)
+        self.gridLayout.addWidget(self.label_title, 1, 0, 1, 1)
 
-        self.horizontalLayout_4 = QHBoxLayout()
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.horizontalLayout_4.setContentsMargins(8, -1, -1, -1)
-        self.label_SvgModelWidth = QLabel(self.scrollAreaWidgetContents)
-        self.label_SvgModelWidth.setObjectName(u"label_SvgModelWidth")
-        self.label_SvgModelWidth.setFont(font1)
-
-        self.horizontalLayout_4.addWidget(self.label_SvgModelWidth)
-
-        self.SvgModelWidth = QDoubleSpinBox(self.scrollAreaWidgetContents)
-        self.SvgModelWidth.setObjectName(u"SvgModelWidth")
-        self.SvgModelWidth.setEnabled(False)
-        self.SvgModelWidth.setMaximum(999.990000000000009)
-
-        self.horizontalLayout_4.addWidget(self.SvgModelWidth)
-
-
-        self.verticalLayoutSettingsContent.addLayout(self.horizontalLayout_4)
-
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.horizontalLayout_3.setContentsMargins(8, -1, -1, -1)
         self.label_SvgModelHeight = QLabel(self.scrollAreaWidgetContents)
         self.label_SvgModelHeight.setObjectName(u"label_SvgModelHeight")
         self.label_SvgModelHeight.setFont(font1)
 
-        self.horizontalLayout_3.addWidget(self.label_SvgModelHeight)
+        self.gridLayout.addWidget(self.label_SvgModelHeight, 4, 0, 1, 1)
+
+        self.label_SvgModelWidth = QLabel(self.scrollAreaWidgetContents)
+        self.label_SvgModelWidth.setObjectName(u"label_SvgModelWidth")
+        self.label_SvgModelWidth.setFont(font1)
+
+        self.gridLayout.addWidget(self.label_SvgModelWidth, 3, 0, 1, 1)
+
+        self.label_PxPerInch = QLabel(self.scrollAreaWidgetContents)
+        self.label_PxPerInch.setObjectName(u"label_PxPerInch")
+        self.label_PxPerInch.setFont(font1)
+
+        self.gridLayout.addWidget(self.label_PxPerInch, 2, 0, 1, 1)
 
         self.SvgModelHeight = QDoubleSpinBox(self.scrollAreaWidgetContents)
         self.SvgModelHeight.setObjectName(u"SvgModelHeight")
         self.SvgModelHeight.setEnabled(False)
         self.SvgModelHeight.setMaximum(999.990000000000009)
 
-        self.horizontalLayout_3.addWidget(self.SvgModelHeight)
+        self.gridLayout.addWidget(self.SvgModelHeight, 4, 1, 1, 2)
+
+        self.SvgTitle = QLabel(self.scrollAreaWidgetContents)
+        self.SvgTitle.setObjectName(u"SvgTitle")
+        self.SvgTitle.setIndent(2)
+
+        self.gridLayout.addWidget(self.SvgTitle, 1, 1, 1, 2)
 
 
-        self.verticalLayoutSettingsContent.addLayout(self.horizontalLayout_3)
+        self.verticalLayoutSettingsContent.addLayout(self.gridLayout)
 
 
         self.verticalLayout_2.addLayout(self.verticalLayoutSettingsContent)
@@ -171,7 +154,7 @@ class Ui_mainwindow(object):
 
         self.gridLayout_Tool = QGridLayout()
         self.gridLayout_Tool.setObjectName(u"gridLayout_Tool")
-        self.gridLayout_Tool.setContentsMargins(8, -1, -1, -1)
+        self.gridLayout_Tool.setContentsMargins(2, -1, 1, -1)
         self.label_Tool_Diameter_UnitsDescr = QLabel(self.scrollAreaWidgetContents)
         self.label_Tool_Diameter_UnitsDescr.setObjectName(u"label_Tool_Diameter_UnitsDescr")
 
@@ -356,7 +339,7 @@ class Ui_mainwindow(object):
         self.formLayoutCurveToLineConversion.setLabelAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.formLayoutCurveToLineConversion.setFormAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
         self.formLayoutCurveToLineConversion.setVerticalSpacing(6)
-        self.formLayoutCurveToLineConversion.setContentsMargins(8, 0, -1, -1)
+        self.formLayoutCurveToLineConversion.setContentsMargins(2, 0, 1, -1)
         self.label_CurveToLineConversion_MinimumNbSegments = QLabel(self.scrollAreaWidgetContents)
         self.label_CurveToLineConversion_MinimumNbSegments.setObjectName(u"label_CurveToLineConversion_MinimumNbSegments")
         self.label_CurveToLineConversion_MinimumNbSegments.setMinimumSize(QSize(189, 0))
@@ -409,7 +392,7 @@ class Ui_mainwindow(object):
         self.tabsGlobals.setMinimumSize(QSize(0, 0))
         self.verticalLayout_4 = QVBoxLayout(self.tabsGlobals)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.verticalLayout_4.setContentsMargins(8, 0, 0, 9)
+        self.verticalLayout_4.setContentsMargins(2, 0, 1, 9)
         self.formLayout_Tabs = QFormLayout()
         self.formLayout_Tabs.setObjectName(u"formLayout_Tabs")
         self.formLayout_Tabs.setLabelAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
@@ -585,6 +568,7 @@ class Ui_mainwindow(object):
         self.formLayout_Material.setObjectName(u"formLayout_Material")
         self.formLayout_Material.setLabelAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.formLayout_Material.setFormAlignment(Qt.AlignRight|Qt.AlignTop|Qt.AlignTrailing)
+        self.formLayout_Material.setContentsMargins(2, -1, 1, -1)
         self.label_Material_Units = QLabel(self.scrollAreaWidgetContents_2)
         self.label_Material_Units.setObjectName(u"label_Material_Units")
         self.label_Material_Units.setFont(font1)
@@ -658,6 +642,7 @@ class Ui_mainwindow(object):
 
         self.gridLayout_GCodeConversion = QGridLayout()
         self.gridLayout_GCodeConversion.setObjectName(u"gridLayout_GCodeConversion")
+        self.gridLayout_GCodeConversion.setContentsMargins(2, -1, 1, -1)
         self.label_GCodeConversion_YOffset_UnitsDescr = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeConversion_YOffset_UnitsDescr.setObjectName(u"label_GCodeConversion_YOffset_UnitsDescr")
 
@@ -868,6 +853,7 @@ class Ui_mainwindow(object):
         self.formLayout_GCodeGeneration = QFormLayout()
         self.formLayout_GCodeGeneration.setObjectName(u"formLayout_GCodeGeneration")
         self.formLayout_GCodeGeneration.setFormAlignment(Qt.AlignCenter)
+        self.formLayout_GCodeGeneration.setContentsMargins(2, -1, 2, -1)
         self.label_GCodeGeneration_ReturnToZeroAtEnd = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeGeneration_ReturnToZeroAtEnd.setObjectName(u"label_GCodeGeneration_ReturnToZeroAtEnd")
         self.label_GCodeGeneration_ReturnToZeroAtEnd.setFont(font1)
@@ -936,6 +922,7 @@ class Ui_mainwindow(object):
         self.formLayout_GCodeStatistics = QFormLayout()
         self.formLayout_GCodeStatistics.setObjectName(u"formLayout_GCodeStatistics")
         self.formLayout_GCodeStatistics.setFormAlignment(Qt.AlignCenter)
+        self.formLayout_GCodeStatistics.setContentsMargins(2, -1, 1, -1)
         self.label_GCodeStatistics_RunTime = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeStatistics_RunTime.setObjectName(u"label_GCodeStatistics_RunTime")
         self.label_GCodeStatistics_RunTime.setMinimumSize(QSize(120, 0))
@@ -1037,13 +1024,13 @@ class Ui_mainwindow(object):
         self.actionSettings.setText(QCoreApplication.translate("mainwindow", u"Viewers Settings...", None))
         self.actionOpenGCode.setText(QCoreApplication.translate("mainwindow", u"Load GCode", None))
         self.label_SvgSettings.setText(QCoreApplication.translate("mainwindow", u" Svg Settings", None))
-        self.label_title.setText(QCoreApplication.translate("mainwindow", u"title", None))
-        self.SvgTitle.setText(QCoreApplication.translate("mainwindow", u"<html><head/><body><p>[title]</p></body></html>", None))
-        self.label_PxPerInch.setText(QCoreApplication.translate("mainwindow", u"user units scale factor", None))
-        self.label_SvgModelWidth.setText(QCoreApplication.translate("mainwindow", u"width", None))
         self.SvgModelWidth.setSuffix(QCoreApplication.translate("mainwindow", u"mm", None))
-        self.label_SvgModelHeight.setText(QCoreApplication.translate("mainwindow", u"height", None))
+        self.label_title.setText(QCoreApplication.translate("mainwindow", u"Title", None))
+        self.label_SvgModelHeight.setText(QCoreApplication.translate("mainwindow", u"Height", None))
+        self.label_SvgModelWidth.setText(QCoreApplication.translate("mainwindow", u"Width", None))
+        self.label_PxPerInch.setText(QCoreApplication.translate("mainwindow", u"user u sfact", None))
         self.SvgModelHeight.setSuffix(QCoreApplication.translate("mainwindow", u"mm", None))
+        self.SvgTitle.setText(QCoreApplication.translate("mainwindow", u"<html><head/><body><p>[title]</p></body></html>", None))
         self.label_Tool.setText(QCoreApplication.translate("mainwindow", u" Tool (shared for all operations)", None))
         self.label_Tool_Diameter_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_Tool_Cut_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" width="110mm" height="110mm" viewBox="0 0 110 110" version="1.1" id="cnc1310-spindle-holder-horizontal-sides">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" title="cnc1310 horizontal plate" width="110mm" height="110mm" viewBox="0 0 110 110" version="1.1" id="cnc1310-spindle-holder-horizontal-sides">
   <g id="main">
     <path id="contour" d="M 11.00000594,15.50000837 l 52.00002808,0 a 4,4 0 0,1 4.00000216,4.00000216 l 0,27.50001485 C 67.00003618,51.00002754 74.00003996,51.00002754 74.00003996,55.0000297 l 0,42.00002268 a 4,4 0 0,1 -4.00000216,4.00000216 l -66.00003564,0 a 4,4 0 0,1 -4.00000216,-4.00000216 l 0,-42.00002268 C 0,51.00002754 7.00000378,51.00002754 7.00000378,47.00002538 l 0,-27.50001485 a 4,4 0 0,1 4.00000216,-4.00000216 z" style="fill:rgb(0,125,125);stroke:#0000ff;stroke-width:0.261315px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"/>
     <g id="g_motor_base">

@@ -127,6 +127,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui = Ui_mainwindow()
         self.ui.setupUi(self)
 
+        self.ui.label_PxPerInch.setVisible(False)
+        self.ui.PxPerInch.setVisible(False)
+
         # simulator: python ON, webgl OFF
         if self.SIMULATOR_WEB_GL == False:
             self.ui.tabWidget.setTabVisible(2, False)
@@ -1345,15 +1348,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             tree = etree.fromstring(svg)
             tree_attrib = tree.attrib
 
-            if hasattr(tree_attrib, "title"):
-                title = tree_attrib["title"]
-            else:
-                title = ""
-
-            if hasattr(tree_attrib, "id"):
-                idd = tree_attrib["id"]
-            else:
-                idd = ""
+            title = tree_attrib.get("title")
+            idd = tree_attrib.get("id")
 
             if title:
                 return title
