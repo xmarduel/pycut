@@ -121,7 +121,7 @@ class GcodeMiniParser:
                 end = self.char_no
                 return float(self.gcode[begin:end])
             except Exception:
-                return 0.0
+                return None  # important 1 keep it like this ! FIXME later
 
         self.char_no = 0
         self.line_no = 0
@@ -217,7 +217,8 @@ class GcodeMiniParser:
 
             dist = mvt.pos.distanceToPoint(prev_mvt.pos)
 
-            total_time = total_time + 60 * dist / f
+            if not (f < 0.0001):
+                total_time = total_time + 60 * dist / f
 
             # ------------------------------------------
             # fill self.line_no_time_map

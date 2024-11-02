@@ -3,6 +3,7 @@ import time
 from collections import namedtuple
 
 import numpy as np
+import numpy.typing as npt
 
 from typing import List
 from typing import Dict
@@ -51,7 +52,7 @@ ZOOMSTEP = 1.1
 
 
 @jit(nopython=True)
-def make_scene_numba(resolution) -> np.array:
+def make_scene_numba(resolution) -> npt.NDArray[np.float32]:
     print("START NUMBA!")
 
     meshNumVertexes = resolution * (resolution - 1)
@@ -197,7 +198,7 @@ class Scene:
         # make a scene
         self.vertices: List[Scene.VertexData] = self.make_scene()
 
-        self.array: np.array | None = None  # all vertices as np float array
+        self.array: npt.NDArray[np.float32] = None  # all vertices as np float array
         # fill the numpy array from the scene ("path") and gets its buffer
         self.pathBufferContent = self.make_buffer()
 

@@ -1,5 +1,9 @@
+from typing import List
+from typing import Any
+
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 
 import shapely.geometry
 
@@ -15,7 +19,7 @@ class MatplotLibUtils:
     cnt = 0  # matplotlib figures
 
     @classmethod
-    def plot(cls, pts: any, title: str, style: str = "ro-"):
+    def plot(cls, pts: npt.NDArray[np.complex128], title: str, style: str = "ro-"):
         """ """
         plt.figure(cls.cnt)
         plt.title(title + f" [{cls.cnt}]")
@@ -30,18 +34,18 @@ class MatplotLibUtils:
         plt.pause(1)
 
     @classmethod
-    def plot_geom(cls, title: str, geom: any, force: bool = False) -> int:
+    def plot_geom(cls, title: str, geom: Any, force: bool = False) -> int:
         """ """
         return cls.display(title, geom, force)
 
     @classmethod
-    def display(cls, title: str, geom: any, force: bool = False) -> int:
+    def display(cls, title: str, geom: Any, force: bool = False) -> int:
         """ """
         # a counter
         cls.cnt += 1
 
         if cls.MAPLOTLIB_DEBUG == False and force == False:
-            return
+            return cls.cnt
 
         # dispatch
         if geom.geom_type == "LineString":

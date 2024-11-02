@@ -312,7 +312,7 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
         checkBoxItem = checkWidget.layout().itemAt(0)
-        checkBox: PyCutCheckBox = checkBoxItem.widget()
+        checkBox = cast(PyCutCheckBox, checkBoxItem.widget())
         checkBox.set_value()
 
     def setModelData(
@@ -322,7 +322,7 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
         checkBoxItem = checkWidget.layout().itemAt(0)
-        checkBox: PyCutCheckBox = checkBoxItem.widget()
+        checkBox = cast(PyCutCheckBox, checkBoxItem.widget())
 
         model.handleNewvalue(index, checkBox.isChecked())
         return

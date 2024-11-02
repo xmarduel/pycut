@@ -13,6 +13,7 @@ G1 Z2.54 F2540      ; Move to clearance level
 ; Plunge rate:  127
 ; Cut rate:     1016
 ;
+; Diameter:     2
 
 ; Path 0
 ; Rapid to initial position

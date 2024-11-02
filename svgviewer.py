@@ -608,7 +608,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.storeZoomFactor()
         self.zoomChanged.emit()
 
-    def make_tabs_svg_paths(self, tabs: List[Dict[str, any]]) -> List[SvgPath]:
+    def make_tabs_svg_paths(self, tabs: List[Dict[str, Any]]) -> List[SvgPath]:
         """ """
         from gcode_generator import Tab
 

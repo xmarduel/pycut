@@ -9,6 +9,7 @@ from typing import Dict
 import io
 
 import numpy as np
+import numpy.typing as npt
 
 import svgelements
 import xml.etree.ElementTree as etree
@@ -203,11 +204,11 @@ class SvgPath:
         """ """
         return self.svgelt_path.segments()[-1].__class__.__name__ == "Close"
 
-    def discretize_closed_path(self) -> np.array:
+    def discretize_closed_path(self) -> npt.NDArray[np.complex128]:
         """ """
         return SvgPathDiscretizer(self.svgelt_path).discretize_closed_path()
 
-    def discretize_open_path(self) -> np.array:
+    def discretize_open_path(self) -> npt.NDArray[np.complex128]:
         """ """
         return SvgPathDiscretizer(self.svgelt_path).discretize_open_path()
 
@@ -690,14 +691,14 @@ class SvgPathDiscretizer:
         """ """
         cls.PYCUT_SAMPLE_MIN_NB_SEGMENTS = arc_min_nb_segments
 
-    def discretize(self) -> np.array:
+    def discretize(self) -> npt.NDArray[np.complex128]:
         """ """
         if self.svgelt_path.closed:
             return self.discretize_closed_path()
         else:
             return self.discretize_open_path()
 
-    def discretize_closed_path(self) -> np.array:
+    def discretize_closed_path(self) -> npt.NDArray[np.complex128]:
         """
         Transform the svgelt_path (a list of svgelement Segments) into a list of 'complex' points
         - Line: only 2 points
@@ -763,7 +764,8 @@ class SvgPathDiscretizer:
                 else:
                     _pts = [segment.point(1.0)]
 
-                pts = [complex(_pt.x, +_pt.y) for _pt in _pts]
+                _pts = [complex(_pt.x, +_pt.y) for _pt in _pts]
+                pts = np.array(_pts, dtype=np.complex128)
 
             elif segment.__class__.__name__ == "Arc":
                 # no 'points' method for 'Arc'!
@@ -823,7 +825,7 @@ class SvgPathDiscretizer:
 
         return points
 
-    def discretize_open_path(self) -> np.array:
+    def discretize_open_path(self) -> npt.NDArray[np.complex128]:
         """
         Transform the svgelt_path (a list of svgelement Segments) into a list of 'complex' points
         - Line: only 2 points
@@ -886,7 +888,8 @@ class SvgPathDiscretizer:
                 else:
                     _pts = [segment.point(1.0)]
 
-                pts = [complex(_pt.x, +_pt.y) for _pt in _pts]
+                _pts = [complex(_pt.x, +_pt.y) for _pt in _pts]
+                pts = np.array(_pts, dtype=np.complex128)
 
             elif segment.__class__.__name__ == "Arc":
                 # no 'points' method for 'Arc'!
