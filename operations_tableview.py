@@ -714,6 +714,10 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
             paths = op.paths
 
             for path_id in paths:
+
+                if not path_id in self.manager.svg_viewer.svg_shapes:
+                    continue
+
                 tag = self.manager.svg_viewer.svg_shapes[path_id].shape_tag
 
                 comboxbox = self.delegate_col_op.xeditors[(row, 1)]
@@ -914,6 +918,14 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
         #    if col == 3:
         #        val = getattr(op, attr)
         #        return val
+
+        if role == QtCore.Qt.ItemDataRole.BackgroundRole:
+            # non-existant paths marked as red
+            paths = op.paths
+            for path_id in paths:
+                view = cast(PyCutSimpleTableView, self.view)
+                if not path_id in view.manager.svg_viewer.svg_shapes:
+                    return QtGui.QBrush(QtCore.Qt.GlobalColor.red)  # red background
 
         return None
 

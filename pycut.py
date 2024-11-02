@@ -1055,7 +1055,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             # quick stats
             miniparser = GcodeMiniParser()
             miniparser.parse_gcode(gcode)
-            path_time = math.floor(miniparser.path_time)
+            path_time = miniparser.path_time
             self.ui.GCodeStatistics_RunTime.setText(
                 f"{path_time//60} [min] {path_time%60} [s]"
             )

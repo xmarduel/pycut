@@ -121,7 +121,7 @@ class GcodeMiniParser:
                 end = self.char_no
                 return float(self.gcode[begin:end])
             except Exception:
-                return None  # important 1 keep it like this ! FIXME later
+                return None  # important ! keep it like this ! FIXME later
 
         self.char_no = 0
         self.line_no = 0
@@ -140,6 +140,12 @@ class GcodeMiniParser:
                 and self.gcode[self.char_no] != "\n"
             ):
                 letter = self.gcode[self.char_no]
+
+                if letter == ";" or letter == "(":
+                    # do not parse the remaining line
+                    self.char_no += 1
+                    continue
+
                 if letter == "G" or letter == "g":
                     g = parse()
                 elif letter == "X" or letter == "x":
