@@ -2,7 +2,7 @@
 
 clone of jscut in python
 
-![pycut](RESOURCES/pycut_img.png)
+![pycut](resources/pycut_img.png)
 
 Disclamer: This software is used at the user's own risk. No responsibility is accepted by its creator.
 
