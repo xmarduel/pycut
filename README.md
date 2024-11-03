@@ -61,6 +61,6 @@ start the program from the installation folder
 - tabs "on the fly" (no need to define them in the svg file)
 - flip X/Y in GCode (good for my machine - the "1419" one -)
 - can handle polygons as well as lines ("closed paths" and "opened paths")
-- ![new](RESOURCES/new_img.png) toolpaths with HSM_nibbles optional.
+- ![new](resources/new_img.png) toolpaths with HSM_nibbles optional.
 
 See the Wiki page for more.
