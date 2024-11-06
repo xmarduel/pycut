@@ -1586,7 +1586,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         cnc_ops = self.get_jobmodel_operations()
 
         job = JobModel(
-            self.svg_viewer,
+            self.svg_viewer.svg_shapes,
             cnc_ops,
             material_model,
             svg_model,

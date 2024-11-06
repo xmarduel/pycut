@@ -9,12 +9,14 @@ import copy
 
 from PySide6 import QtCore
 from PySide6 import QtWidgets
+from PySide6 import QtGui
 
 from PySide6 import QtSvg
 from PySide6 import QtSvgWidgets
 
 import xml.etree.ElementTree as etree
 
+from gcode_generator import CncOp, JobModel
 from shapely_svgpath_io import SvgPath
 
 from val_with_unit import ValWithUnit
@@ -645,7 +647,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         return tabs_svg_paths
 
     def make_cnc_ops_preview_geometry_svg_paths(
-        self, cnc_ops: List["CncOp"]
+        self, cnc_ops: List[CncOp]
     ) -> List[SvgPath]:
         """ """
         geometry_svg_paths = []
@@ -745,7 +747,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         self.display_extra_paths(svg_paths)
 
-    def display_job(self, job: "JobModel"):
+    def display_job(self, job: JobModel):
         """ """
         self.display_job_geometry(job.operations)
         self.display_job_toolpaths(job.operations)

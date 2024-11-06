@@ -303,7 +303,7 @@ class MouseButtonSignaler(QtCore.QObject):
 
     def eventFilter(self, obj: QtCore.QObject, ev: QtCore.QEvent):
         """ """
-        ev_ok = ev.type() == QtCore.QEvent.MouseButtonRelease
+        ev_ok = ev.type() == QtCore.QEvent.Type.MouseButtonRelease
 
         if ev_ok and obj.isWidgetType():
             self.mouseButtonEvent.emit(obj, ev)

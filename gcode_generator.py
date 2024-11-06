@@ -31,8 +31,6 @@ from shapely_utils import ShapelyUtils
 from shapely_svgpath_io import SvgPath
 from shapely_matplotlib import MatplotLibUtils
 
-from svgviewer import SvgViewer
-
 from shapely_cam import cam
 from shapely_cam import CamPath
 
@@ -321,11 +319,9 @@ class CncOp:
             self.enabled,
         )
 
-    def setup(self, svg_viewer: SvgViewer):
+    def setup(self, svg_shapes: Dict[str, SvgPath]):
         """ """
-        self.svg_paths = [
-            svg_viewer.svg_shapes[svg_path_id] for svg_path_id in self.paths
-        ]
+        self.svg_paths = [svg_shapes[svg_path_id] for svg_path_id in self.paths]
 
     def is_closed_paths_op(self) -> bool:
         """ """
@@ -869,7 +865,7 @@ class JobModel:
 
     def __init__(
         self,
-        svg_viewer: SvgViewer,
+        svg_shapes: Dict[str, SvgPath],
         cnc_ops: List[CncOp],
         material_model: MaterialModel,
         svg_model: SvgModel,
@@ -877,7 +873,7 @@ class JobModel:
         tabs_model: TabsModel,
         gcode_model: GcodeModel,
     ):
-        self.svg_viewer = svg_viewer
+        self.svg_shapes = svg_shapes
 
         self.operations = cnc_ops
 
@@ -900,7 +896,7 @@ class JobModel:
     def calculate_operation_cam_paths(self):
         for op in self.operations:
             if op.enabled:
-                op.setup(self.svg_viewer)
+                op.setup(self.svg_shapes)
                 op.calculate_geometry(self.tool_model)
                 op.calculate_toolpaths(
                     self.svg_model, self.tool_model, self.material_model

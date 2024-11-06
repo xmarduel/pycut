@@ -36,7 +36,7 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
         self.setPos(bounds.topLeft())
 
         # and its flags
-        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, True)
+        self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, True)
 
         self.selected_effect = None
         self.makeGraphicsEffect()
@@ -98,7 +98,8 @@ class SvgViewerWidget(QtSvgWidgets.QSvgWidget):
 
     def set_svg_string(self, svg_string: str):
         """ """
-        self.load(QtCore.QByteArray(svg_string))
+        self.load(bytes(svg_string, "utf-8"))
+        # self.load(QtCore.QByteArray(svg_string))
 
 
 class SvgViewer(QtWidgets.QGraphicsView):
