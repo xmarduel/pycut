@@ -13,6 +13,7 @@ from typing import cast
 # works great !
 from numba import jit
 
+from PySide6.QtGui import QWidget
 from PySide6.QtCore import QSize, QPoint
 from PySide6.QtGui import (
     QOpenGLFunctions,
@@ -42,6 +43,8 @@ from gcodesimulator.gcodeminiparser import GcodeAtomicMvt
 from gcodesimulator.gcodeminiparser import GcodeMiniParser
 
 from gcodesimulator.gcodefileviewer import GCodeFileViewer
+
+from gcodesimulator.ui_simcontrols import Ui_SimControlWidget
 
 sNaN = float("NaN")
 
@@ -613,7 +616,7 @@ class SceneCutter:
             self.vPos = QVector3D()
             self.vColor = QVector3D()
 
-    def __init__(self, cutterDiameter, cutterHeight, cutterAngle):
+    def __init__(self, cutterDiameter: float, cutterHeight: float, cutterAngle: float):
         """infact mormalize dim here"""
         self.cutterDiameter = cutterDiameter  # not used here
         self.cutterAngle = cutterAngle  # not used
@@ -1826,7 +1829,7 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
         self.update()
 
     def setStopAtTime(self, stopAtTime: float):
-        self.drawable.stopAtTime = stopAtTime
+        self.drawable.stopAtTime = math.floor(stopAtTime)
         self.update()
 
 
@@ -1926,7 +1929,8 @@ class SimulationControls(QtWidgets.QWidget):
 
         loader = QUiLoader(parent)
 
-        self.control = loader.load(Drawable.PYCUT_PREFIX + "simcontrols.ui")
+        # self.control = loader.load(Drawable.PYCUT_PREFIX + "simcontrols.ui")
+        self.control = cast(QWidget, Ui_SimControlWidget())
 
         self.setLayout(QtWidgets.QHBoxLayout())
         self.layout().addWidget(self.control)

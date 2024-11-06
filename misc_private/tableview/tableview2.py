@@ -2,6 +2,8 @@ import sys
 
 from typing import List
 from typing import Any
+from typing import Dict
+from typing import cast
 
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -68,6 +70,7 @@ class CncOp:
         self.direction = data.get("direction", "Conventional")
         self.units = data.get("units", "inch")
         self.margin = data.get("margin", 0.0)
+        self.width = data.get("width", 0.0)
 
         # not in the data
         self.enabled = False
@@ -82,11 +85,26 @@ class CncOp:
             self.name,
             self.cam_op,
             self.cut_depth,
-            self.ramp,
+            self.ramp_plunge,
             self.enabled,
             self.combinaison,
             self.cut_depth,
         )
+
+    def to_dict(self) -> Dict[str, Any]:
+        """ """
+        return {
+            "name": self.name,
+            "type": self.cam_op,
+            "cut_depth": self.cut_depth,
+            "paths": self.paths,
+            "ramp_plunge": self.ramp_plunge,
+            "combinaison": self.combinaison,
+            "direction": self.direction,
+            "units": self.units,
+            "margin": self.margin,
+            "width": self.width,
+        }
 
 
 class PMFDoubleSpinBox(QtWidgets.QDoubleSpinBox):
@@ -101,7 +119,7 @@ class PMFDoubleSpinBox(QtWidgets.QDoubleSpinBox):
 
         self.setMinimum(0)
         self.setMaximum(100)
-        self.setSingleStep(0.001)
+        self.setSingleStep(0.1)
         self.setDecimals(3)
 
         self.valueChanged.connect(self.cb_spinbox)
@@ -221,7 +239,7 @@ class PMFComboBox(QtWidgets.QComboBox):
         """ """
         self.cb_disconnect()
         self.clear()
-        self.add_items(self.items)
+        self.addItems(self.items)
         self.cb_connect()
 
     def set_value(self):
@@ -248,148 +266,20 @@ class PMFComboBox(QtWidgets.QComboBox):
         self.o.put_value(self.attribute, val)
 
 
-class PMFCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
-    def createEditor(
-        self, parent, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
-    ):
-        editor = PMFCheckBox(parent)
-
-        op = index.model().get_operation(index)
-        attr = index.model().get_operation_attr(index)
-
-        editor.assign_object(op)
-        editor.assign_object_attribute(attr)
-
-        # return editor # -> ugly checkbox on the left of the cell
-
-        # -> for checkboxes to be centered: embed into a widget
-        checkWidget = QtWidgets.QWidget(parent)
-        checkLayout = QtWidgets.QHBoxLayout(checkWidget)
-        checkLayout.addWidget(editor)
-        checkLayout.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        checkLayout.setContentsMargins(0, 0, 0, 0)
-
-        # to flush an "setModelData" in place - it works!
-        editor.stateChanged.connect(self.onEditorStateChanged)
-
-        return checkWidget
-
-    def onEditorStateChanged(self):
-        editor = self.sender()
-        if editor:
-            print("onEditorStateChanged - PMFCheckBoxDelegate - editor", editor)
-            checkWidget = editor.parent()
-            self.commitData.emit(checkWidget)
-
-    def setEditorData(
-        self,
-        checkWidget: QtWidgets.QWidget,
-        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
-    ):
-        checkBoxItem = checkWidget.layout().itemAt(0)
-        checkBox: PMFCheckBox = checkBoxItem.widget()
-        checkBox.set_value()
-
-    def setModelData(
-        self,
-        checkWidget: QtWidgets.QWidget,
-        model,
-        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
-    ):
-        print("PMFCheckBoxDelegate::setModelData - editor", checkWidget)
-
-        checkBoxItem = checkWidget.layout().itemAt(0)
-        checkBox: PMFCheckBox = checkBoxItem.widget()
-
-        model.handleNewvalue(index, checkBox.isChecked())
-        return
-
-    def updateEditorGeometry(
-        self, editor, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
-    ):
-        editor.setGeometry(option.rect)
-
-
-class PMFComboBoxDelegate(QtWidgets.QItemDelegate):
-    def createEditor(
-        self, parent, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
-    ):
-        col = index.column()
-
-        self.items = []
-        if col == 2:
-            self.items = [
-                "Pocket",
-                "Inside",
-                "Outside",
-                "Engrave",
-                "Drill",
-                "Peck",
-                "Helix",
-            ]
-        if col == 7:
-            self.items = ["Union", "Intersection", "Difference", "Xor"]
-        if col == 8:
-            self.items = ["Conventional", "Climb"]
-        if col == 9:
-            self.items = ["inch", "mm"]
-
-        editor = PMFComboBox(parent, self.items)
-
-        op = index.model().get_operation(index)
-        attr = index.model().get_operation_attr(index)
-
-        editor.assign_object(op)
-        editor.assign_object_attribute(attr)
-        editor.fill_control()
-
-        # to flush a "setModelData" in place - it works! but model still has old value -
-        editor.currentIndexChanged.connect(self.onEditorCurrentIndexChanged)
-
-        return editor
-
-    def onEditorCurrentIndexChanged(self, idx):
-        editor = self.sender()
-        if editor:
-            print("onEditorCurrentIndexChanged - PMFComboBoxDelegate")
-            self.commitData.emit(editor)
-
-    def setEditorData(
-        self,
-        comboBox: PMFComboBox,
-        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
-    ):
-        comboBox.set_value()
-
-    def setModelData(
-        self,
-        comboBox: PMFComboBox,
-        model,
-        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
-    ):
-        model.handleNewvalue(index, comboBox.currentText())
-        return
-
-    def updateEditorGeometry(
-        self,
-        comboBox: PMFComboBox,
-        option,
-        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
-    ):
-        comboBox.setGeometry(option.rect)
-
-
 class PMFDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
     def __init__(self, parent):
-        QtWidgets.QItemDelegate.__init__(self, parent)
+        super().__init__(parent)
+        self.xeditors = {}
 
     def createEditor(
         self, parent, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
     ):
         editor = PMFDoubleSpinBox(parent)
 
-        op = index.model().get_operation(index)
-        attr = index.model().get_operation_attr(index)
+        model = cast(PMFSimpleTableModel, index.model())
+
+        op = model.get_operation(index)
+        attr = model.get_operation_attr(index)
 
         editor.assign_object(op)
         editor.assign_object_attribute(attr)
@@ -397,12 +287,13 @@ class PMFDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
         # to flush an "setModelData" in place - it works!
         editor.valueChanged.connect(self.onEditorValueChanged)
 
+        self.xeditors[(index.row(), index.column())] = editor
+
         return editor
 
     def onEditorValueChanged(self):
         editor = self.sender()
         if editor:
-            print("onEditorValueChanged - PMFDoubleSpinBoxDelegate")
             self.commitData.emit(editor)
 
     def setEditorData(
@@ -430,11 +321,148 @@ class PMFDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
         editor.setGeometry(option.rect)
 
 
+class PMFCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
+    def createEditor(
+        self, parent, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
+    ):
+        editor = PMFCheckBox(parent)
+
+        model = cast(PMFSimpleTableModel, index.model())
+
+        op = model.get_operation(index)
+        attr = model.get_operation_attr(index)
+
+        editor.assign_object(op)
+        editor.assign_object_attribute(attr)
+
+        # return editor # -> ugly checkbox on the left of the cell
+
+        # -> for checkboxes to be centered: embed into a widget
+        checkWidget = QtWidgets.QWidget(parent)
+        checkLayout = QtWidgets.QHBoxLayout(checkWidget)
+        checkLayout.addWidget(editor)
+        checkLayout.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        checkLayout.setContentsMargins(0, 0, 0, 0)
+
+        # to flush an "setModelData" in place - it works!
+        editor.stateChanged.connect(self.onEditorStateChanged)
+
+        return checkWidget
+
+    def onEditorStateChanged(self):
+        editor = self.sender()
+        if editor:
+            checkWidget = editor.parent()
+            self.commitData.emit(checkWidget)
+
+    def setEditorData(
+        self,
+        checkWidget: QtWidgets.QWidget,
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
+    ):
+        checkBoxItem = checkWidget.layout().itemAt(0)
+        checkBox: PMFCheckBox = checkBoxItem.widget()
+        checkBox.set_value()
+
+    def setModelData(
+        self,
+        checkWidget: QtWidgets.QWidget,
+        model,
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
+    ):
+        checkBoxItem = checkWidget.layout().itemAt(0)
+        checkBox: PMFCheckBox = checkBoxItem.widget()
+
+        model.handleNewvalue(index, checkBox.isChecked())
+        return
+
+    def updateEditorGeometry(
+        self, editor, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
+    ):
+        editor.setGeometry(option.rect)
+
+
+class PMFComboBoxDelegate(QtWidgets.QStyledItemDelegate):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.xeditors = {}
+
+    def createEditor(
+        self, parent, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
+    ):
+        col = index.column()
+
+        self.items = []
+        if col == 2:
+            self.items = [
+                "Pocket",
+                "Inside",
+                "Outside",
+                "Engrave",
+                "Drill",
+                "Peck",
+                "Helix",
+            ]
+        if col == 7:
+            self.items = ["Union", "Intersection", "Difference", "Xor"]
+        if col == 8:
+            self.items = ["Conventional", "Climb"]
+        if col == 9:
+            self.items = ["inch", "mm"]
+
+        editor = PMFComboBox(parent, self.items)
+
+        model = cast(PMFSimpleTableModel, index.model())
+
+        op = model.get_operation(index)
+        attr = model.get_operation_attr(index)
+
+        editor.assign_object(op)
+        editor.assign_object_attribute(attr)
+        editor.fill_control()
+
+        # to flush a "setModelData" in place - it works! but model still has old value -
+        editor.currentIndexChanged.connect(self.onEditorCurrentIndexChanged)
+
+        self.xeditors[(index.row(), index.column())] = editor
+
+        return editor
+
+    def onEditorCurrentIndexChanged(self, idx):
+        editor = self.sender()
+        if editor:
+            self.commitData.emit(editor)
+
+    def setEditorData(
+        self,
+        comboBox: PMFComboBox,
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
+    ):
+        comboBox.set_value()
+
+    def setModelData(
+        self,
+        comboBox: PMFComboBox,
+        model,
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
+    ):
+        model.handleNewvalue(index, comboBox.currentText())
+        return
+
+    def updateEditorGeometry(
+        self,
+        comboBox: PMFComboBox,
+        option,
+        index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
+    ):
+        comboBox.setGeometry(option.rect)
+
+
 class PMFTableViewManager(QtWidgets.QWidget):
 
     def __init__(self, parent):
         """ """
-        QtWidgets.QWidget.__init__(self, parent)
+        super().__init__(parent)
 
         cnc_ops = []
         for op in operations:
@@ -442,7 +470,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
             cnc_ops.append(cnc_op)
 
         # main section of the window
-        vbox = QtWidgets.QVBoxLayout()
+        vbox = self.vbox = QtWidgets.QVBoxLayout()
         vbox.setContentsMargins(0, 0, 0, 0)
 
         # let's add two views of the same data source we just created:
@@ -458,7 +486,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
 
         # bottom section of the window:
         # let's have a text input and a pushbutton that add an item to our model.
-        hbox = QtWidgets.QHBoxLayout()
+        hbox_add = QtWidgets.QHBoxLayout()
 
         # create the button, and hook it up to the slot below.
         self._button_add = QtWidgets.QPushButton("Add Item")
@@ -475,17 +503,17 @@ class PMFTableViewManager(QtWidgets.QWidget):
         self._button_down.clicked.connect(self.down_item)
         self._button_down.setIcon(QtGui.QIcon("./images/tango/32x32/actions/go-down"))
 
-        hbox.addWidget(self._button_add)
-        hbox.addWidget(self._button_up)
-        hbox.addWidget(self._button_down)
+        hbox_add.addWidget(self._button_add)
+        hbox_add.addWidget(self._button_up)
+        hbox_add.addWidget(self._button_down)
 
         # add bottom to main window layout
-        vbox.addLayout(hbox)
+        vbox.addLayout(hbox_add)
 
         # set layout on the window
         self.setLayout(vbox)
 
-    def set_operations(self, operations):
+    def set_operations(self, operations: List[Dict[str, str]]):
         """ """
         cnc_ops = []
         for op in operations:
@@ -496,18 +524,40 @@ class PMFTableViewManager(QtWidgets.QWidget):
         self.table.setModel(self.model)
         self.table.setup()
 
-        self.vbox.addWidget(self._table)
+        self.vbox.addWidget(self.table)
+
+    def get_operations(self) -> List[Dict]:
+        """
+        returns the list of operations ready to br saved as json data
+        """
+        ops = []
+
+        for operation in self.get_model_operations():
+            op = operation.to_dict()
+            ops.append(op)
+
+        return ops
 
     def set_model(self, model):
         """ """
         self.table.setModel(model)
 
+    def get_model(self) -> "PMFSimpleTableModel":
+        """ """
+        return self.table.model()
+
+    def get_model_operations(self) -> List[CncOp]:
+        """ """
+        return self.get_model().operations
+
     def add_item(self):
-        # instruct the model to add an item
+        """
+        instruct the model to add an item
+        """
         self.table.add_item()
 
         print("ADD")
-        for op in self.table.model().operations:
+        for op in self.get_model_operations():
             print(op)
 
     def del_item(self):
@@ -550,11 +600,11 @@ class PMFTableViewManager(QtWidgets.QWidget):
 class PMFSimpleTableView(QtWidgets.QTableView):
     """ """
 
-    def __init__(self, parent=None):
+    def __init__(self, parent):
         """ """
-        QtWidgets.QTableView.__init__(self, parent)
+        super().__init__(parent)
 
-        self.parent = parent
+        self.manager = parent
 
         self.resizeColumnsToContents()
         # Fixes the width of columns and the height of rows.
@@ -593,7 +643,11 @@ class PMFSimpleTableView(QtWidgets.QTableView):
         delegate = PMFDoubleSpinBoxDelegate(self)
         self.setItemDelegateForColumn(10, delegate)
 
-        # Make the combo boxes / check boxes / others spacials always displayed.
+        self.setup_persistent_editors()
+
+    def setup_persistent_editors(self):
+        """ """
+        # Make the combo boxes / check boxes / others specials always displayed.
         for k in range(self.model().rowCount(None)):
             self.openPersistentEditor(self.model().index(k, 2))
             self.openPersistentEditor(self.model().index(k, 3))
@@ -671,8 +725,8 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
     model for the table view
     """
 
-    def __init__(self, operations):
-        super(PMFSimpleTableModel, self).__init__()
+    def __init__(self, operations: List[OpItem], mainwindow):
+        super().__init__()
 
         self.operations = operations
 
@@ -694,8 +748,6 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
         self.cnt = 0
 
     def handleNewvalue(self, index: QtCore.QModelIndex, value: Any):
-        print("--------------------------------", "handleNewvalue")
-
         row = index.row()
         col = index.column()
 
@@ -721,7 +773,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
 
     def headerData(
         self,
-        col,
+        col: int,
         orientation: QtCore.Qt.Orientation,
         role: int = QtCore.Qt.ItemDataRole.EditRole,
     ):
@@ -757,7 +809,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
         self,
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
         role: int = QtCore.Qt.ItemDataRole.EditRole,
-    ) -> Any:
+    ):
         op = self.get_operation(index)
         attr = self.get_operation_attr(index)
 
@@ -792,10 +844,17 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
 
             return val
 
+        # if role == QtCore.Qt.ToolTipRole:
+        #    if col == 3:
+        #        val = getattr(op, attr)
+        #        return val
+
         return None
 
-    def flags(self, index):
-        flags = super(PMFSimpleTableModel, self).flags(index)
+    def flags(
+        self, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
+    ) -> QtCore.Qt.ItemFlag:
+        flags = super().flags(index)
 
         flags |= QtCore.Qt.ItemFlag.ItemIsEditable
         flags |= QtCore.Qt.ItemFlag.ItemIsSelectable
@@ -808,13 +867,13 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
     def add_item(self):
         op = CncOp({})
 
-        self.beginInsertRows(
-            QtCore.QModelIndex(), len(self.operations), len(self.operations)
-        )
+        idx = len(self.operations)
+
+        self.beginInsertRows(QtCore.QModelIndex(), idx, idx)
         self.operations.append(op)
         self.endInsertRows()
 
-    def del_item(self, idx):
+    def del_item(self, idx: int):
         op = self.operations[idx]
 
         self.beginRemoveRows(QtCore.QModelIndex(), idx, idx)
@@ -823,7 +882,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
 
         self.dump()
 
-    def swap_items(self, idx1, idx2):
+    def swap_items(self, idx1: int, idx2: int):
         self.beginResetModel()
         self.operations[idx1], self.operations[idx2] = (
             self.operations[idx2],
@@ -833,10 +892,12 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
 
         self.dump()
 
-    def get_operation(self, index):
+    def get_operation(self, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex):
         return self.operations[index.row()]
 
-    def get_operation_attr(self, index):
+    def get_operation_attr(
+        self, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
+    ):
         return self.header[index.column()]
 
 
