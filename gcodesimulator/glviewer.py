@@ -13,7 +13,7 @@ from typing import cast
 # works great !
 from numba import jit
 
-from PySide6.QtGui import QWidget
+from PySide6.QtWidgets import QWidget
 from PySide6.QtCore import QSize, QPoint
 from PySide6.QtGui import (
     QOpenGLFunctions,
@@ -1929,8 +1929,8 @@ class SimulationControls(QtWidgets.QWidget):
 
         loader = QUiLoader(parent)
 
-        # self.control = loader.load(Drawable.PYCUT_PREFIX + "simcontrols.ui")
-        self.control = cast(QWidget, Ui_SimControlWidget())
+        self.control = loader.load(Drawable.PYCUT_PREFIX + "simcontrols.ui")
+        # self.control = cast(QWidget, Ui_SimControlWidget())
 
         self.setLayout(QtWidgets.QHBoxLayout())
         self.layout().addWidget(self.control)

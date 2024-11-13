@@ -23,7 +23,7 @@ class SvgSetMissingIds:
         self.filename = filename
         self.filename_id = os.path.splitext(self.filename)[0] + ".with_ids.svg"
 
-        self.svg = None
+        self.svg: io.StringIO | None = None
         self.tree = None
 
     def process(self):
@@ -34,7 +34,7 @@ class SvgSetMissingIds:
 
         self.add_id_to_elements(root)
         # self.write(root)
-        self.get_svg_data(root)
+        self.get_svg_data()
 
     def add_id_to_elements(self, item: etree.Element):
         """for all shaped without "id", gives one "id" """
@@ -57,7 +57,7 @@ class SvgSetMissingIds:
 
             self.add_id_to_elements(child)
 
-    def get_svg_data(self, root: etree.Element):
+    def get_svg_data(self):
         """Get tree as StringIO"""
         tree_bytes = etree.tostring(self.tree, pretty_print=True)
 
@@ -97,7 +97,6 @@ class SvgResolver:
         # - defined in "mm" -> use ppi=25.4
         # - defined in "in" -> use ppi=1
 
-        source_data = self.filename
         source_data = self.handle.svg
 
         if options.units == "px":
@@ -252,7 +251,7 @@ class SvgResolver:
 
             self.make_xml_group(item, group)
 
-        if item.tag == "{http://www.w3.org/2000/svg}g":
+        if item.tag == self.NS + "g":
             if "transform" in item.attrib:
                 del item.attrib["transform"]
 
@@ -261,7 +260,7 @@ class SvgResolver:
             if not isinstance(ch.tag, str):  # a comment ?
                 continue
             # leaves defs unchanged
-            if ch.tag == "{http://www.w3.org/2000/svg}defs":
+            if ch.tag == self.NS + "defs":
                 continue
 
             self.replace_elements(ch)
@@ -337,10 +336,6 @@ class SvgResolver:
         f.write(tree_str.decode("utf-8"))
         f.close()
 
-        # formatted = self.resolved_filename + ".x"
-        # os.system("xmllint --format %s > %s" % (self.resolved_filename, formatted))
-        # shutil.move(formatted, self.resolved_filename)
-
     def resolve_id(self, shape: svgelements.Shape) -> str | None:
         """
         if not in "id_mapping":
@@ -407,7 +402,7 @@ class SvgResolver:
 
             return ";".join(merge_style)
 
-        except:
+        except Exception:
             return ref_style
 
     @classmethod
@@ -568,8 +563,6 @@ class SvgResolver:
     def make_xml_line(self, item: etree.Element, shape: svgelements.Shape):
         """ """
         print("SimpleLine!")
-
-        the_id = self.resolve_id(shape)
 
         l = etree.Element("line")
 

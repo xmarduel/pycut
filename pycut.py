@@ -1484,7 +1484,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             cnc_ops.append(cnc_op)
 
         for cnc_op in cnc_ops:
-            cnc_op.setup(self.svg_viewer)
+            cnc_op.setup(self.svg_viewer.svg_shapes)
             cnc_op.calculate_geometry(tool_model)
 
         self.svg_viewer.reinit()
