@@ -249,23 +249,22 @@ class PyCutDoubleSpinBoxDelegate(QtWidgets.QStyledItemDelegate):
 
     def setEditorData(
         self,
-        spinBox: PyCutDoubleSpinBox,
+        spinBox: PyCutDoubleSpinBox,  # type: ignore [override]
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
         spinBox.set_value()
 
     def setModelData(
         self,
-        spinBox: PyCutDoubleSpinBox,
+        spinBox: PyCutDoubleSpinBox,  # type: ignore [override]
         model,
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
         model.handleNewvalue(index, spinBox.value())
-        return
 
     def updateEditorGeometry(
         self,
-        editor: PyCutDoubleSpinBox,
+        editor: PyCutDoubleSpinBox,  # type: ignore [override]
         option,
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
@@ -325,7 +324,6 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
         checkBox = cast(PyCutCheckBox, checkBoxItem.widget())
 
         model.handleNewvalue(index, checkBox.isChecked())
-        return
 
     def updateEditorGeometry(
         self, editor, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
@@ -386,14 +384,14 @@ class PyCutComboBoxDelegate(QtWidgets.QStyledItemDelegate):
 
     def setEditorData(
         self,
-        comboBox: PyCutComboBox,
+        comboBox: PyCutComboBox,  # type: ignore [override]
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
         comboBox.set_value()
 
     def setModelData(
         self,
-        comboBox: PyCutComboBox,
+        comboBox: PyCutComboBox,  # type: ignore [override]
         model,
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
@@ -402,7 +400,7 @@ class PyCutComboBoxDelegate(QtWidgets.QStyledItemDelegate):
 
     def updateEditorGeometry(
         self,
-        comboBox: PyCutComboBox,
+        comboBox: PyCutComboBox,  # type: ignore [override]
         option,
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):

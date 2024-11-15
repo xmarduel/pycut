@@ -49,7 +49,7 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
     def makeGraphicsEffect(self):
         if self.selected_effect is None:
             self.selected_effect = QtWidgets.QGraphicsColorizeEffect()
-            self.selected_effect.setColor(QtCore.Qt.darkYellow)
+            self.selected_effect.setColor(QtCore.Qt.GlobalColor.darkYellow)
             self.selected_effect.setStrength(1)
 
     def mousePressEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
@@ -86,7 +86,9 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
             # -> strange behaviour, all spinboxes cells are selected
 
             # so update the model
-            model = self.view.mainwindow.ui.tabsview_manager.get_model()
+            mainwindow: Any = self.view.mainwindow
+
+            model = mainwindow.ui.tabsview_manager.get_model()
             model.tabs[idx].x = center[0]
             model.tabs[idx].y = center[1]
             model.dataChanged.emit(model.index(idx, 0), model.index(idx, 1))
@@ -184,7 +186,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
     DEFAULT_TOOLPATHS = {"stroke": "#00ff00", "stroke-width": "0.2"}
 
-    def __init__(self, parent):
+    def __init__(self, parent: QtWidgets.QWidget | None):
         """ """
         super(SvgViewer, self).__init__(parent)
         self.mainwindow = None
@@ -196,24 +198,26 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.in_dnd = False
 
         # the content of the svg file as string
-        self.svg = None
+        self.svg = ""
         # and the extra tabs contained in the job description
-        self.tabs = []
+        self.tabs: List[Dict[str, Any]] = []
 
         # when loading a svg with shapes
-        self.svg_shapes = {}  # path id -> SvgPath
+        self.svg_shapes: Dict[str, SvgPath] = {}  # path id -> SvgPath
 
         # the graphical items in the view
-        self.items: List[SvgItem] = []
+        self.svg_items: List[SvgItem] = []
         # ordered list of selected items
         self.selected_items: List[SvgItem] = []
 
         # extra items (geometry selections / tabs / toolpaths)
-        self.extra_items = []
-        self.extra_renderers = []
+        self.extra_items: List[SvgItem] = []
+        self.extra_renderers: List[QtSvg.QSvgRenderer] = []
 
-        # self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
-        self.setViewportUpdateMode(QtWidgets.QGraphicsView.FullViewportUpdate)
+        # self.setDragMode(QtWidgets.QGraphicsView.DragMode.ScrollHandDrag)
+        self.setViewportUpdateMode(
+            QtWidgets.QGraphicsView.ViewportUpdateMode.FullViewportUpdate
+        )
 
         # keep zoom factor (used when reloading augmented svg: zoom should be kept)
         self.current_zoom = self.zoomFactor()
@@ -315,10 +319,10 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         self.svg_shapes = {}
 
-        self.items: List[SvgItem] = []
-        self.selected_items: List[SvgItem] = []
+        self.svg_items = []
+        self.selected_items = []
 
-        self.extra_items: List[SvgItem] = []
+        self.extra_items = []
         self.extra_renderers = []
 
     def clean(self):
@@ -431,7 +435,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
             self.scene().addItem(item)
 
             if initial_svg:
-                self.items.append(item)
+                self.svg_items.append(item)
             else:
                 self.extra_items.append(item)
 
@@ -459,7 +463,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
             self.scene().addItem(item)
 
             if initial_svg:
-                self.items.append(item)
+                self.svg_items.append(item)
             else:
                 self.extra_items.append(item)
 
@@ -488,7 +492,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
             self.tabs = tabs
             self.display_tabs(self.tabs)
 
-    def mousePressEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent) -> None:
+    def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:
         self.in_dnd = True
 
         print("SvgViewer - mousePressEvent()")
@@ -506,13 +510,13 @@ class SvgViewer(QtWidgets.QGraphicsView):
             do_reset_selection = True
 
         print("    --> List of selected items")
-        for item in self.items:
+        for item in self.svg_items:
             print("    item %s -> %s" % (item.elementId(), item.isSelected()))
             item.colorizeWhenSelected()
 
         self.update_selected_items_list(do_reset_selection)
 
-    def mouseReleaseEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent) -> None:
+    def mouseReleaseEvent(self, event: QtGui.QMouseEvent) -> None:
         print("SvgViewer - mouseReleaseEvent()")
         super().mouseReleaseEvent(event)
 
@@ -526,7 +530,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
             do_reset_selection = True
 
         print("    --> List of selected items")
-        for item in self.items:
+        for item in self.svg_items:
             print("    item %s -> %s" % (item.elementId(), item.isSelected()))
             item.colorizeWhenSelected()
 
@@ -543,7 +547,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         the selection ordering has to be preserved
         """
         selected_items = []
-        for item in self.items:
+        for item in self.svg_items:
             if item.isSelected():
                 selected_items.append(item)
 
@@ -580,7 +584,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         for item in self.selected_items:
             print("        %s -> %s" % (item.elementId(), item.isSelected()))
 
-    def wheelEvent(self, event):
+    def wheelEvent(self, event: QtGui.QWheelEvent):
         self.zoomBy(math.pow(1.2, event.angleDelta().y() / 240.0))
 
     def storeZoomFactor(self):

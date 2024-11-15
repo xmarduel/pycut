@@ -11,7 +11,7 @@ from typing import Any
 from typing import cast
 
 # works great !
-from numba import jit
+from numba import jit  # type: ignore [import-untyped]
 
 from PySide6.QtWidgets import QWidget
 from PySide6.QtCore import QSize, QPoint
@@ -35,7 +35,7 @@ from PySide6.QtOpenGL import (
 )
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 
-from OpenGL import GL
+from OpenGL import GL  # type: ignore [import-untyped]
 
 from PySide6.QtUiTools import QUiLoader
 
@@ -1696,7 +1696,7 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
         self.drawable.model.translate(position)
 
     def mousePressEvent(self, event: QtGui.QMouseEvent):
-        self.m_lastPos = event.position()
+        self.m_lastPos = event.position()  # type: ignore [assignment]
         self.m_xLastRot = self.m_xRot
         self.m_yLastRot = self.m_yRot
         self.m_xLastPan = self.m_xPan

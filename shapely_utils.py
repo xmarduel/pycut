@@ -3,12 +3,12 @@ import math
 from typing import List
 from typing import Tuple
 
-import shapely.geometry
-import shapely.ops
-from shapely.validation import make_valid
-from shapely.validation import explain_validity
+import shapely.geometry  # type: ignore [import-untyped]
+import shapely.ops  # type: ignore [import-untyped]
+from shapely.validation import make_valid  # type: ignore [import-untyped]
+from shapely.validation import explain_validity  # type: ignore [import-untyped]
 
-from shapely_matplotlib import MatplotLibUtils
+from shapely_matplotlib import MatplotLibUtils  # type: ignore [import-untyped]
 
 
 class ShapelyUtils:
@@ -48,7 +48,7 @@ class ShapelyUtils:
         """
         if bounds == None:
             return True
-        if p1[0] == p2[0] and p1[0] == p2[0]:
+        if p1[0] == p2[0] and p1[1] == p2[1]:
             return False
 
         # JSCUT clipper.AddPath([p1, p2], ClipperLib.PolyType.ptSubject, False)
@@ -466,8 +466,6 @@ class ShapelyUtils:
             holes.append(shapely.geometry.LineString(pts_ii))
 
         return shapely.geometry.Polygon(pts, holes=holes)
-
-        return poly
 
     @classmethod
     def fix_multipoly(

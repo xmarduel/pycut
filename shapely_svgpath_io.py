@@ -11,11 +11,11 @@ import io
 import numpy as np
 import numpy.typing as npt
 
-import svgelements
+import svgelements  # type: ignore [import-untyped]
 import xml.etree.ElementTree as etree
 
-import shapely.geometry
-import shapely.validation
+import shapely.geometry  # type: ignore [import-untyped]
+import shapely.validation  # type: ignore [import-untyped]
 from shapely.validation import make_valid
 from shapely.validation import explain_validity
 
@@ -306,13 +306,7 @@ class SvgPath:
 
             cx = x + w / 2
             cy = y + h / 2
-        elif self.shape_tag == "polygon":
-            self.import_as_polygons_list()
-            centroid = self.polys[0].centroid
-
-            cx = centroid.xy[0][0]
-            cy = centroid.xy[1][0]
-        elif self.shape_tag == "path":
+        elif self.shape_tag == "polygon" or self.shape_tag == "path":
             self.import_as_polygons_list()
             centroid = self.polys[0].centroid
 
@@ -684,7 +678,7 @@ class SvgPathDiscretizer:
     @classmethod
     def set_arc_precision(cls, arc_precision: float):
         """ """
-        cls.PYCUT_SAMPLE_LEN_COEFF = 1.0 / arc_precision
+        cls.PYCUT_SAMPLE_LEN_COEFF = 1.0 / arc_precision  # type: ignore [assignment]
 
     @classmethod
     def set_arc_min_nb_segments(cls, arc_min_nb_segments: int):

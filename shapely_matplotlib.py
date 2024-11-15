@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 
-import shapely.geometry
+import shapely.geometry  # type: ignore [import-untyped]
 
 
 class MatplotLibUtils:

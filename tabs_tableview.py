@@ -1,6 +1,7 @@
 from typing import List
 from typing import Any
 from typing import Dict
+from typing import cast
 
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -93,7 +94,7 @@ class PyCutDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
     ):
         editor = PyCutDoubleSpinBox(parent)
 
-        model: PyCutSimpleTableModel = index.model()
+        model = cast(PyCutSimpleTableModel, index.model())
 
         tab = model.get_tab(index)
         attr = model.get_tab_attr(index)
@@ -113,23 +114,24 @@ class PyCutDoubleSpinBoxDelegate(QtWidgets.QItemDelegate):
 
     def setEditorData(
         self,
-        spinBox: PyCutDoubleSpinBox,
+        spinBox: PyCutDoubleSpinBox,  # type: ignore [override]
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
+        spinBox = cast(PyCutDoubleSpinBox, spinBox)
+
         spinBox.set_value()
 
     def setModelData(
         self,
-        spinBox: PyCutDoubleSpinBox,
+        spinBox: PyCutDoubleSpinBox,  # type: ignore [override]
         model,
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
-        model.handleNewvalue(index, spinBox.value())
-        return
+        model.handleNewvalue(index, cast(PyCutDoubleSpinBox, spinBox).value())
 
     def updateEditorGeometry(
         self,
-        editor: PyCutDoubleSpinBox,
+        editor: PyCutDoubleSpinBox,  # type: ignore [override]
         option,
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
@@ -188,7 +190,7 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
     ):
         editor = PyCutCheckBox(parent)
 
-        model: PyCutSimpleTableModel = index.model()
+        model = cast(PyCutSimpleTableModel, index.model())
 
         tab = model.get_tab(index)
         attr = model.get_tab_attr(index)
@@ -222,7 +224,7 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
         checkBoxItem = checkWidget.layout().itemAt(0)
-        checkBox: PyCutCheckBox = checkBoxItem.widget()
+        checkBox = cast(PyCutCheckBox, checkBoxItem.widget())
         checkBox.set_value()
 
     def setModelData(
@@ -232,10 +234,9 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
         checkBoxItem = checkWidget.layout().itemAt(0)
-        checkBox: PyCutCheckBox = checkBoxItem.widget()
+        checkBox = cast(PyCutCheckBox, checkBoxItem.widget())
 
         model.handleNewvalue(index, checkBox.isChecked())
-        return
 
     def updateEditorGeometry(
         self, editor, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex

@@ -102,18 +102,20 @@
 <p>Welcome to <strong>PyCut</strong>, a clone of <strong>jsCut</strong>, the excellent (at least for beginners) CAM,
 web-based programm, that takes as input <strong>SVG</strong> files and generates G-Code. So why this rewrite ?</p>
 
-<p><strong>PyCut</strong> is written is python, and as such few python modules have to be installed first, 
-as well as python interpreter itself of course, in order to run <strong>PyCut</strong>.</p>
-
 <p><strong>PyCut</strong> aims to offer all the (minimalistics) features found in jsCut, with some improvements.
 Hopefully you will find <strong>PyCut</strong> usefull when learning CNC and producing your first GCode files.</p>
 
+<p><strong>PyCut</strong> is written is python, and as such few python modules have to be installed first, 
+as well as python interpreter itself of course, in order to run <strong>PyCut</strong> (there is no installer yet).</p>
+
+
 <p>Starting point of <strong>PyCut</strong> are <strong>SVG</strong> files, your designs. Indeed, 
 with <strong>PyCut</strong>, you do not need to do 3D modelling. For simple milling tasks SVG files (2D) are perfectly OK. 
-Granted, SVG shapes (paths) definition is not so straightforward as one could think, 
-and free software lacks good SVG paths modelling applications. Infact, writing a SVG file with a text editor is
-sometimes the best way. To generate complex svg paths, other tools may be used, and the results may be paste into the hand-written
-files. We recommand the online tool <strong>SvgPathEditor</strong> for this purpose, see Appendix.</p>
+Granted, if it is easy to define circles, rectangles  etc. in SVG, unfortunately SVG paths (for complex shapes) definition 
+is not so straightforward as one could think,  and free software lacks good SVG paths modelling applications. 
+Infact, writing a SVG file with a text editor is sometimes the best way to go. To generate complex svg paths, 
+other tools may be used, and the results may be paste into the hand-written files. 
+We recommand the online tool <strong>SvgPathEditor</strong> for this purpose, see Appendix.</p>
 
 <p>In the following, we point out what has to be taken into consideration when creating "usable" <strong>SVG</strong> files for
 <strong>PyCut</strong>.
@@ -137,7 +139,8 @@ files. We recommand the online tool <strong>SvgPathEditor</strong> for this purp
  
 <div class="info">
 <p><strong>Note:</strong> The specified units are not necessarely the ones specified in the generated GCode(s). There is
-is another setting to set the GCode units elsewhere in <strong>PyCut</strong>. Admittingly they should correspond.</p>
+is another setting to set the GCode units elsewhere in <strong>PyCut</strong>. Admittingly they should correspond for the sake
+of good documentation.</p>
 </div>
 
 <p>As an example:</p>
@@ -160,17 +163,17 @@ user to define cnc operations on the "shapes" defined inside the svg file. Of co
 
 <p>The shapes inside a svg file are the following:</p>
 <ul>
-  <li><span style="color:#0000ff">&lt;rect&gt;</span></li>
-  <li><span style="color:#0000ff">&lt;circle&gt;</span></li>
-  <li><span style="color:#0000ff">&lt;ellipse&gt;</span></li>
-  <li><span style="color:#0000ff">&lt;polygon&gt;</span></li>
-  <li><span style="color:#0000ff">&lt;line&gt;</span></li>
-  <li><span style="color:#0000ff">&lt;polyline&gt;</span></li>
+  <li><code class="svg_tag">&lt;rect&gt;</code></li>
+  <li><code class="svg_tag">&lt;circle&gt;</code></li>
+  <li><code class="svg_tag">&lt;ellipse&gt;</code></li>
+  <li><code class="svg_tag">&lt;polygon&gt;</code></li>
+  <li><code class="svg_tag">&lt;line&gt;</code></li>
+  <li><code class="svg_tag">&lt;polyline&gt;</code></li>
 </ul>
 
 <p>The powerfull</p>
 <ul>
-  <li><span style="color:#0000ff">&lt;path&gt;</span></li>
+  <li><code class="svg_tag">&lt;path&gt;</code></li>
 </ul>
 
 <p>can define in a single path definition many closed or opened (sub)paths.</p>
@@ -189,7 +192,7 @@ only" svgs.</p>
 
 <p>Finally, the user will maybe also want to process the strings written in the svg file:</p>
 <ul>
-  <li><span style="color:#0000ff">&lt;text&gt;</span></li>
+  <li><code class="svg_tag">&lt;text&gt;</code></li>
 </ul>
 
 
@@ -209,6 +212,10 @@ wishes to process an unique id.</p>
 <p><strong>Note:</strong> PyCut will only display shapes in its viewer which have an id.</p>
 </div>
 
+<div class="info">
+<p><strong>Note:</strong> These ids play the role of the shapes name, so a good practivce is to give them meaningfull values (names).</p>
+</div>
+
 <h4 id="P-02-02-01">Opened and closed paths</h4>
 
 <p>A path can be closed or not. This is not a matter if the path's first point is equal to its last point. A closed path or
@@ -225,10 +232,9 @@ imported as "MultiLineString", but here the sake of simplicity, we will only ref
 
 <p><strong>PyCut</strong> will import the other shapes either as "<span style="color:#0000ff">Polygon</span>"
 (i.e. <strong>closed items</strong>) or as "<span style="color:#0000ff">LineString</span>" (i.e.
-<strong>opened items</strong>). Of course, svg <span style="color:#0000ff">&lt;rect&gt;</span>, <span
-style="color:#0000ff">&lt;circle&gt;</span>, <span style="color:#0000ff">&lt;ellipse&gt;</span> and <span
-style="color:#0000ff">&lt;polygon&gt;</span> are closed items, while <span style="color:#0000ff">&lt;line&gt;</span>
-and <span style="color:#0000ff">&lt;polyline&gt;</span> are opened items. When importing a <span
+<strong>opened items</strong>). Of course, svg <code class="svg_tag">&lt;rect&gt;</code>, <code class="svg_tag">&lt;circle&gt;</code>, 
+<code class="svg_tag">&lt;ellipse&gt;</code> and <code class="svg_tag">&lt;polygon&gt;</code> are closed items, 
+while <code class="svg_tag">&lt;line&gt;</code> and <code class="svg_tag">&lt;polyline&gt;</code> are opened items. When importing a <span
 style="color:#0000ff">&lt;path&gt;</span>, things are more complicated, as a path can be composed of many subpaths
 (starting with [<strong>Mm</strong>]) and every subpath can be closed or not (ending with [<strong>Zz</strong>]).
 <strong>PyCut</strong> will try to import these paths definitions right, and in case of closed paths will also try to
@@ -242,17 +248,17 @@ three "contours".</p>
 
 <h4 id="P-02-02-02">Text shapes</h4>
 
-<p><strong>PyCut</strong> cannot process yet <span style="color:#0000ff">&lt;text&gt;</span> items directly.
-Fortunately, <span style="color:#0000ff">&lt;text&gt;</span> items can be converted into <span
-style="color:#0000ff">&lt;path&gt;</span> items, sonce they will be ignored by <strong>PyCut</strong>.
+<p><strong>PyCut</strong> cannot process yet <code class="svg_tag">&lt;text&gt;</code> items directly.
+Fortunately, <code class="svg_tag">&lt;text&gt;</code> items can be converted into<code class="svg_tag">&lt;path&gt;</code> items,
+sonce they will be ignored by <strong>PyCut</strong>.
 <strong>PyCut</strong> also comes with the utiilty <strong>svgtext2svgpath.py</strong> which will also convert your
-<code><span style="color:#0000ff">&lt;text&gt;</span></code> items. How to use it? just call the
-<strong>svgtext2svgpath.py</strong> program which outputs in a new svg the <span
-style="color:#0000ff">&lt;text&gt;</span> items as <span style="color:#0000ff">&lt;path&gt;</span> items. Copy/paste
-the result of a <span style="color:#0000ff">&lt;text&gt;</span> conversion into your own svg. A successfull conversion
-will only occurs if the <span style="color:#0000ff">&lt;text&gt;</span> item is simple enough: the text "value" should
-not be splitted into several <span style="color:#0000ff">&lt;tspan&gt;</span> items with different fonts. No <span
-style="color:#0000ff">&lt;tspan&gt;</span> tag at all is also possible (and simpler). <strong><span
+<code class="svg_tag">&lt;text&gt;</code> items. How to use it? just call the
+<strong>svgtext2svgpath.py</strong> program which outputs in a new svg the <code class="svg_tag">&lt;text&gt;</code> 
+items as <code class="svg_tag">&lt;path&gt;</code> items. Copy/paste
+the result of a <code class="svg_tag">&lt;text&gt;</code> conversion into your own svg. A successfull conversion
+will only occurs if the <code class="svg_tag">&lt;text&gt;</code> item is simple enough: the text "value" should
+not be splitted into several <code class="svg_tag">&lt;tspan&gt;</code> items with different fonts. 
+No <code class="svg_tag">&lt;tspan&gt;</code> tag at all is also possible (and simpler). <strong><span
 style="color:#8000ff">IN PROGRESS</span></strong>.</p>
 
 <p>This utility is found in the source code inside the folder "<strong>utilities/svgtext2svgpath.</strong>"
@@ -277,7 +283,7 @@ and outputs a new SVG where all <code>&lt;defs&gt;/&lt;use&gt;</code> have been 
 <h4 id="P-02-02-04">Transformations</h4>
 
 <div class="info">
-<p><strong>Info:</strong>Transformations can be defined on every shapes or groups, but are often use in combinaison of 
+<p><strong>Info:</strong>Transformations can be defined on every shapes or groups, and are often used in combinaison with the 
 <strong>&lt;defs&gt;</strong> and <strong>&lt;use&gt;</strong> tags.</p>
 </div>
 
@@ -288,10 +294,11 @@ and outputs a new SVG where all <code>&lt;defs&gt;/&lt;use&gt;</code> have been 
 <p>Nevertheless, it is also possible to "resolve" the shapes transformations with the previously mentined utility
 <strong>svgresolver.py</strong>. this utility also processes all transformations found in the svg file, 
 while keeping the<strong>"id"</strong>s right. It work best in
-combinaison of the <code>&lt;use&gt;</code> tag in the <code>&lt;defs&gt;</code> section, as a single item defined in
-the <code>&lt;defs&gt;</code> section can then be re-used at many locations. Obviously, not everything is possible: for
-example, transforming a <code>&lt;rect&gt;</code> element with a rotate transformation does not result in a
-<code>&lt;rect&gt;</code> (but a <code>&lt;polygon&gt;</code>) and <strong>svgresolver.py</strong> cannot handle this.</p>
+combinaison of the <code>&lt;use&gt;</code> tag in the <code><span style="color:#0000ff">&lt;defs&gt;</span></code> section, 
+as a single item defined in the <code><span style="color:#0000ff">&lt;defs&gt;</span></code> section can then be re-used at
+many locations. Obviously, not everything is possible: for example, transforming a <code><span style="color:#0000ff">&lt;rect&gt;</span></code>
+element with a rotate transformation does not result in a <code><span style="color:#0000ff">&lt;rect&gt;</span></code> 
+(but a <code><span style="color:#0000ff">&lt;polygon&gt;</span></code>) and <strong>svgresolver.py</strong> cannot handle this.</p>
 
 <p><strong><span style="color:#8000ff">IN PROGRESS</span></strong>: this utility should be integrated into
 <strong>PyCut</strong> so that the user can spare this step.</p>

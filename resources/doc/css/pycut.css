@@ -60,6 +60,10 @@ body {
   color: green;
 }
 
+.svg_tag {
+  color: blue;
+}
+
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;

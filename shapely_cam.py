@@ -32,9 +32,9 @@ from shapely_svgpath_io import SvgPath
 
 from val_with_unit import ValWithUnit
 
-import shapely
-import shapely.geometry
-import shapely.ops
+import shapely  # type: ignore [import-untyped]
+import shapely.geometry  # type: ignore [import-untyped]
+import shapely.ops  # type: ignore [import-untyped]
 
 from shapely_utils import ShapelyUtils
 from shapely_ext import ShapelyMultiPolygonOffset

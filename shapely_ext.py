@@ -15,10 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with pycut.  If not, see <http:#www.gnu.org/licenses/>.
 
-import shapely.geometry
-import shapely.ops
+import shapely.geometry  # type: ignore [import-untyped]
+import shapely.ops  # type: ignore [import-untyped]
 
-from shapely.geometry.base import JOIN_STYLE
+from shapely.geometry.base import JOIN_STYLE  # type: ignore [import-untyped]
 
 from shapely_utils import ShapelyUtils
 from shapely_matplotlib import MatplotLibUtils

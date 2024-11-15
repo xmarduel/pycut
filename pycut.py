@@ -875,7 +875,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.ui.GCodeConversion_FlipXY.clicked.disconnect(self.cb_generate_gcode)
         except Exception as e:
             print(e)
-            pass
 
         self.open_project(projfilename)
 

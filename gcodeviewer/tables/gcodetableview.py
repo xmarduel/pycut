@@ -48,7 +48,10 @@ class GCodeSyntaxHighlightDelegate(QtWidgets.QStyledItemDelegate):
         options = QtWidgets.QStyleOptionViewItem(option)
         self.initStyleOption(options, index)
 
-        painter.translate(options.rect.left(), options.rect.top())
+        left = options.rect.left()  # type: ignore [attr-defined]
+        top = options.rect.top()  # type: ignore [attr-defined]
+
+        painter.translate(left, top)
 
         doc = QtGui.QTextDocument()
         doc.setHtml(self.makeHtml(index.data()))
