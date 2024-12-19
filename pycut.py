@@ -116,7 +116,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     IMG_TANGO_APP_SYSTEM = ":/images/tango/32x32/categories/applications-system.png"
     IMG_TANGO_SAVE_AS = ":/images/tango/22x22/actions/document-save-as.png"
 
-    RECENT_PROJECTS = "./recent_projects.json"
+    RECENT_PROJECTS_FILENAME = "./recent_projects.json"
 
     def __init__(self, options):
         """ """
@@ -1715,18 +1715,18 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.display_gcode(gcode)
 
-    def read_recent_projects(self):
+    def read_recent_projects(self) -> List[str]:
         """
-        Returns the list of recent projects fron the setting file
+        Returns the list of recent projects from the rlevant file
         """
         self.recent_projects = []
 
-        if not os.path.exists(self.RECENT_PROJECTS):
-            fp = open(self.RECENT_PROJECTS, "w")
+        if not os.path.exists(self.RECENT_PROJECTS_FILENAME):
+            fp = open(self.RECENT_PROJECTS_FILENAME, "w")
             json.dump([], fp, indent=2)
             fp.close()
 
-        with open(self.RECENT_PROJECTS, "r") as f:
+        with open(self.RECENT_PROJECTS_FILENAME, "r") as f:
             self.recent_projects = json.load(f)
 
         return self.recent_projects
@@ -1735,7 +1735,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         """
         Write the list of recent projects to the settings file
         """
-        with open(self.RECENT_PROJECTS, "w") as json_file:
+        with open(self.RECENT_PROJECTS_FILENAME, "w") as json_file:
             json.dump(self.recent_projects, json_file, indent=2)
 
     def prepend_recent_projects(self, projfile):

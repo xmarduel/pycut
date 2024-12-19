@@ -33,7 +33,7 @@ import argparse
 from typing import List
 from typing import Dict
 
-from lxml import etree
+from lxml import etree  # type: ignore [import-untyped]
 import numpy as np
 
 import freetype

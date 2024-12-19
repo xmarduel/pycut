@@ -34,12 +34,12 @@ from typing import List
 from typing import Dict
 from typing import Any
 
-from lxml import etree
+from lxml import etree  # type: ignore [import-untyped]
 import numpy as np
 
-import freetype
+import freetype  # type: ignore [import-untyped]
 
-from svgelements import Line, QuadraticBezier, Path, Move, Close, Matrix
+from svgelements import Line, QuadraticBezier, Path, Move, Close, Matrix  # type: ignore [import-untyped]
 
 # import ziafont
 import gpos

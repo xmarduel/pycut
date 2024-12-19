@@ -252,14 +252,14 @@ class cam:
 
         while current_width <= width:
             if need_reverse:
-                reversed = []
+                reversed_paths = []
                 for path in current.geoms:
                     coords = list(
                         path.coords
                     )  # is a tuple!  JSCUT current reversed in place
                     coords.reverse()
-                    reversed.append(shapely.geometry.LineString(coords))
-                all_paths = reversed + all_paths
+                    reversed_paths.append(shapely.geometry.LineString(coords))
+                all_paths = reversed_paths + all_paths
             else:
                 all_paths = [p for p in current.geoms] + all_paths
 
@@ -274,14 +274,14 @@ class cam:
 
                 if current:
                     if need_reverse:
-                        reversed = []
+                        reversed_paths = []
                         for path in current.geoms:
                             coords = list(
                                 path.coords
                             )  # is a tuple!  JSCUT current reversed in place
                             coords.reverse()
-                            reversed.append(shapely.geometry.LineString(coords))
-                        all_paths = reversed + all_paths
+                            reversed_paths.append(shapely.geometry.LineString(coords))
+                        all_paths = reversed_paths + all_paths
                     else:
                         all_paths = [p for p in current.geoms] + all_paths
                     break
@@ -368,14 +368,14 @@ class cam:
 
         while True and current_width <= width:
             if need_reverse:
-                reversed = []
+                reversed_paths = []
                 for path in current.geoms:
                     coords = list(
                         path.coords
                     )  # is a tuple!  JSCUT current reversed in place
                     coords.reverse()
-                    reversed.append(shapely.geometry.LineString(coords))
-                all_paths = reversed + all_paths
+                    reversed_paths.append(shapely.geometry.LineString(coords))
+                all_paths = reversed_paths + all_paths
             else:
                 all_paths = [p for p in current.geoms] + all_paths
 
@@ -390,14 +390,14 @@ class cam:
 
                 if current:
                     if need_reverse:
-                        reversed = []
+                        reversed_paths = []
                         for path in current.geoms:
                             coords = list(
                                 path.coords
                             )  # is a tuple!  JSCUT current reversed in place
                             coords.reverse()
-                            reversed.append(shapely.geometry.LineString(coords))
-                        all_paths = reversed + all_paths
+                            reversed_paths.append(shapely.geometry.LineString(coords))
+                        all_paths = reversed_paths + all_paths
                     else:
                         all_paths = [p for p in current.geoms] + all_paths
                     break
@@ -1782,7 +1782,11 @@ class SpiralePocketCalculator:
                 (v - self.ty) / self.pocket_radius,
             ]
 
-        def to_square_x(self, u, v):
+        def get_signum(self, o: float) -> float:
+            """ """
+            return 0.0 if o == 0.0 else (1 if o > 0 else -1)
+
+        def to_square_x(self, u: float, v: float):
             """
             from unit circle to unit square
 
@@ -1794,12 +1798,12 @@ class SpiralePocketCalculator:
             uu = u * u
             vv = v * v
 
-            sgn_u = 0.0 if u == 0.0 else (1 if u > 0 else -1)
-            sgn_v = 0.0 if v == 0.0 else (1 if v > 0 else -1)
+            sgn_u = self.get_signum(u)
+            sgn_v = self.get_signum(v)
 
             # stretch method
             if u == 0.0 and v == 0.0:
-                x = 0
+                x = 0.0
 
             if uu >= vv:
                 x = sgn_u * sqrt(uu + vv)
@@ -1839,8 +1843,8 @@ class SpiralePocketCalculator:
             uu = u * u
             vv = v * v
 
-            sgn_u = 0.0 if u == 0.0 else (1 if u > 0 else -1)
-            sgn_v = 0.0 if v == 0.0 else (1 if v > 0 else -1)
+            sgn_u = self.get_signum(u)
+            sgn_v = self.get_signum(v)
 
             # stretch method
             if u == 0.0 and v == 0.0:

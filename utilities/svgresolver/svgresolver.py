@@ -6,8 +6,8 @@ import os
 import argparse
 import io
 
-from lxml import etree
-import svgelements
+from lxml import etree  # type: ignore [import-untyped]
+import svgelements  # type: ignore [import-untyped]
 
 
 class SvgSetMissingIds:

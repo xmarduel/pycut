@@ -632,7 +632,7 @@ class SceneCutter:
         self.buffer = self.make_buffer()
 
     def make_scene(self) -> List[VertexData]:
-        Color = namedtuple("color", ["r", "g", "b"])
+        Color = namedtuple("Color", ["r", "g", "b"])
 
         cyl_color = Color(0.2, 0.5, 0.3)
         top_color = Color(0.0, 0.0, 0.0)
