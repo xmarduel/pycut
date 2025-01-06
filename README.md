@@ -8,10 +8,9 @@ Disclamer: This software is used at the user's own risk. No responsibility is ac
 
 ## Why PyCut
 
-With <strong>PyCut</strong>, you do not need to do 3D modelling. SVG files (2D) are <strong>PyCut</strong> input format, and for simple milling tasks it is perfectly OK. Granted, SVG shapes (paths) definition is not so straightforward as one could think, and free software lacks good SVG paths modelling applications. Infact, writing a SVG file with a text editor is sometimes the best way. To generate complex SVG paths, other tools may be used (see Tutorial), and the results 
-may be paste into the hand-written files.
+With <strong>PyCut</strong>, you do not need to do 3D modelling. SVG files (2D) are <strong>PyCut</strong> input format, and for simple milling tasks it is perfectly OK. Granted, SVG shapes (paths) definition is not so straightforward as one could think, and free software lacks good SVG paths modelling applications. Infact, writing a SVG file with a text editor is sometimes the best way. To generate complex SVG paths, other tools may be used (see Tutorial), and the results may be paste into the hand-written files.
 
-Before starting, please have a look at the tutorial to be sure your SVG input files follow the PyCut requirements (mostly: how to define the view box).
+Before starting, please have a look at the tutorial to be sure your SVG input files follow the PyCut requirements (mostly: how to define the view box; shapes must have an unique id in order to be imported in the viewer).
 
 ## Usage
 
@@ -28,7 +27,7 @@ start the program from the installation folder
 
 - Python 3.11
 - PySide6 6.7.2
-- shapely 1.8.5 
+- shapely 1.8.5
 - PyOpenGL (latest)
 - svgelements (latest)
 - lxml (latest)
