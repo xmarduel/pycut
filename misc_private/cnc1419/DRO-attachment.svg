@@ -5,43 +5,38 @@
 	-->
 	<title>KT150 dro x axis attachment</title>
 	<defs id="defs">
-	   <polyline  id="bridge_upper" points="0,0 27.5,0  27.5,17, 26,17 26,1.5 1.5,1.5 1.5,17 0,17 0,0" fill="none" stroke-width="0.1"
-	   stroke="black" />
-	   <polyline  id="bridge_lower" points="0,0  1.5,0  1.5,15.5  25.5,15.5 25.5,0  27,0 27,17  0,17 0,0  " fill="none" stroke-width="0.1"
-	   stroke="black" />
-	   <polyline  id="bridge_lower_cut" points="0,0  1.5,0  1.5,15.5  25.5,15.5 25.5,17  0,17 0,0  " fill="none" stroke-width="0.1"
-	   stroke="black" />
-	   
-	    <polyline  id="schraube1" points="0,0  0,10  5,10  5,8 35,8, 35,2, 5,2 5,0, 0,0 " style="fill:black;fill-opacity:0.8;stroke:black;stroke-width:0.1" />
-		<polyline  id="schraube2" points="0,0  0,10  5,10  5,8 35,8, 35,2, 5,2 5,0, 0,0 " style="fill:blue;fill-opacity:0.8;stroke:black;stroke-width:0.1" />
+	   <polyline  id="bridge" points="0,0 0,27.5  17,27.5, 17,26 1.5,26 1.5,1.5 17,1.5 17,0 0,0" fill="none" stroke-width="0.1" stroke="black" />
+	  
+	   <polyline  id="M4" points="0,0  0,8  4,8  4,6   40,6,   40,2    4,2    4,0, 0,0 " style="fill:black;fill-opacity:0.8;stroke:black;stroke-width:0.1" />
+	   <polyline  id="M3" points="0,0  0,6  3,6  3,4.5 18,4.5, 18,1.5  3,1.5  3,0, 0,0 " style="fill:blue;fill-opacity:0.8;stroke:black;stroke-width:0.1" />
 	   
 	   <rect  id="magnetic_band"  style="fill:black;fill-opacity:0.8;stroke:black;stroke-width:0.1" width="2"     height="10" x="0" y="0" />
 	   <rect  id="device"         style="fill:black;fill-opacity:0.8;stroke:black;stroke-width:0.1" width="15.2"  height="10" x="0" y="0" />
-	  
 	</defs>
 	
 	<g id="root" transform="translate(10,20)">
-	 
-	   <use href="#bridge_upper"     id="bridge1" transform="translate(50,0)" />
-	  
-	   <rect  id="link"         style="fill:black;fill-opacity:0.6;stroke:black;stroke-width:0.1" width="10"  height="50" x="40" y="0.0" />
-	   <rect  id="KT150-corps1" style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.1" width="8.5" height="62" x="67.5" y="1.5" />
-	   <rect  id="KT150-corps2" style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.1" width="40.0" height="8" x="57.5" y="-9" />
-     
-	   <use href="#bridge_lower_cut" id="bridge2" transform="translate(-1.5,0) translate(40.0,34.5) " />
-	  
-	   <rect  id="protection"        style="fill:black;fill-opacity:0.9;stroke:black;stroke-width:0.1" width="8"  height="8" x="59.5" y="40.0" />
+
+	   <polyline id="plate1b"   style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.1" points="46,12 46,22  67.8,22  68.4,12 46,12" />
 	   
+	   <rect  id="plate2"       style="fill:black;fill-opacity:0.6;stroke:black;stroke-width:0.1" width="17"  height="2" x="46"  y="22.0" />
+	  
+	   <rect  id="KT150-top"    style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.1" width="60.0" height="8"  x="35" y="0" />
+	   <rect  id="KT150-base"   style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.1" width="60.0" height="18" x="35" y="64" />
+	   
+	   <polyline id="KT150-corps" style="fill:black;fill-opacity:0.4;stroke:black;stroke-width:0.1" points="68.5,9  76,9  75,29  75,64 67.5,64, 67.5,29 68.5,9" />
+     
+	  
+	   <use href="#bridge" transform="translate(46,24) " />
+	  
+	   <rect  id="protection"        style="fill:black;fill-opacity:0.9;stroke:black;stroke-width:0.1" width="8"  height="8" x="59.5" y="41.0" />
 	   
 	   <use  href="#magnetic_band"  transform="translate(65.5,51.5)" />
 	   <use  href="#device"         transform="translate(49.0,51.5)" />
+	  
+       <use  href="#M3" transform="translate(50,63) rotate(-90)" />
+	   <use  href="#M3" transform="translate(56,11) rotate(90)" />
 	   
-	   <use  href="#schraube1"      transform="translate(32.5,6)" />
-	   
-	   <use  href="#schraube1"      transform="scale(0.5) translate(75.5,5)" />
-	   <use  href="#schraube1"      transform="scale(0.5) translate(72.0,80.5)" />
-
-       <use  href="#schraube2"      transform="translate(50.5,63.0) scale(0.5)  rotate(-90)" />
+	   <use  href="#M4" transform="translate(42,13.0)" />
  
 	 </g>
 </svg>

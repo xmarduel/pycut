@@ -1,5 +1,5 @@
 {
-  "svg_file": "./test/helix_tests.svg",
+  "svg_file": "./helix_tests.svg",
   "operations": [
     {
       "name": "circle8mm_helix",
@@ -86,7 +86,7 @@
       "width": 0.0
     },
     {
-      "name": "nb_op",
+      "name": "hsm_op",
       "type": "Pocket",
       "cut_depth": 3.175,
       "paths": [

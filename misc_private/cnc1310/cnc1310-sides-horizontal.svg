@@ -39,7 +39,7 @@
       a 4,4 0 0 1 4,-4   z" />
 
     <g id="g_motor_base" transform="translate(16 43.5)">
-      <!-- +++++++++++++++++++++++++++++++++++++++  jsut visualisation +++++++++++++++++++++++++++++++++++++++++++++++++-->
+      <!-- +++++++++++++++++++++++++++++++++++++++  just visualisation +++++++++++++++++++++++++++++++++++++++++++++++++-->
       <rect id="motor_base" rx="4" ry="4" width="42" height="42" style="fill:rgb(0,0,0);opacity:0.4;stroke-width:0;stroke:rgb(0,0,0)" />
       
       <g id="motor_center" transform="translate(21 21)">

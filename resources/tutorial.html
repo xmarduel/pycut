@@ -105,20 +105,40 @@ web-based programm, that takes as input <strong>SVG</strong> files and generates
 <p><strong>PyCut</strong> aims to offer all the (minimalistics) features found in jsCut, with some improvements.
 Hopefully you will find <strong>PyCut</strong> usefull when learning CNC and producing your first GCode files.</p>
 
-<p><strong>PyCut</strong> is written is python, and as such few python modules have to be installed first, 
-as well as python interpreter itself of course, in order to run <strong>PyCut</strong> (there is no installer yet).</p>
-
-
 <p>Starting point of <strong>PyCut</strong> are <strong>SVG</strong> files, your designs. Indeed, 
 with <strong>PyCut</strong>, you do not need to do 3D modelling. For simple milling tasks SVG files (2D) are perfectly OK. 
-Granted, if it is easy to define circles, rectangles  etc. in SVG, unfortunately SVG paths (for complex shapes) definition 
-is not so straightforward as one could think,  and free software lacks good SVG paths modelling applications. 
+Granted, while it is easy to define circles, rectangles  etc. in SVG, SVG paths definitions (for complex shapes)
+are unfortunately not so straightforward as one could think, and free software lacks good SVG paths modelling applications. 
 Infact, writing a SVG file with a text editor is sometimes the best way to go. To generate complex svg paths, 
-other tools may be used, and the results may be paste into the hand-written files. 
-We recommand the online tool <strong>SvgPathEditor</strong> for this purpose, see Appendix.</p>
+other tools may be used, and the results may be copy/pasted into the hand-written files. 
+<strong>PyCut</strong> recommands the online tool <strong>SvgPathEditor</strong> for this purpose, see Appendix.</p>
 
 <p>In the following, we point out what has to be taken into consideration when creating "usable" <strong>SVG</strong> files for
 <strong>PyCut</strong>.
+
+<h2 id="P-01b">Installation</h2>
+
+<p><strong>PyCut</strong> is written in python, and as such few python modules have to be installed first, 
+as well as python interpreter itself of course, in order to run <strong>PyCut</strong> (there is no installer yet).</p>
+
+<p>
+<ul>
+    <li><strong>pyside6 version: 6.7.2</strong></li> 
+	<li><strong>shapely version: 1.8.5</strong></li> 
+    <li><strong>svgelements version: latest</strong></li> 
+    <li><strong>lxml version: latest</strong></li>
+    <li><strong>matplotlib version: latest</strong></li> 
+    <li><strong>freetype-py version: latest</strong></li> 
+    <li><strong>numba version: latest</strong></li> 
+    <li><strong>pyvoronoi version: latest</strong></li> 
+</ul>
+</p>
+
+
+<p>Then download the source files of <strong>PyCut</strong> and install them in a folder of your choice. You can then start 
+the application by typing from the console</p>
+
+<pre><code class="language-bash">> python pycut.py</code></pre>
 
 <h2 id="P-02">SVG Documents</h2>
 
@@ -206,14 +226,14 @@ Strings are not (yet) imported directly. They have first to be converted to path
 
 <p>In order to reference the shapes, the shapes must have their own <strong>"id"</strong>, hopefully unique inside the
 svg document. The user, having edited the svg file "per hand" or not, should not forget to check and give the shapes he
-wishes to process an unique id.</p>
+wishes to process unique ids.</p>
 
 <div class="info">
 <p><strong>Note:</strong> PyCut will only display shapes in its viewer which have an id.</p>
 </div>
 
 <div class="info">
-<p><strong>Note:</strong> These ids play the role of the shapes name, so a good practivce is to give them meaningfull values (names).</p>
+<p><strong>Note:</strong> These ids play the role of the shapes name, so a good practice is to give them meaningfull values (names).</p>
 </div>
 
 <h4 id="P-02-02-01">Opened and closed paths</h4>
@@ -291,10 +311,10 @@ and outputs a new SVG where all <code>&lt;defs&gt;/&lt;use&gt;</code> have been 
 <p><strong>PyCut</strong> cannot handle "out of the box" svg datas where shapes are defined with "transform" operations
 (translate, rotate etc.).</p>
 
-<p>Nevertheless, it is also possible to "resolve" the shapes transformations with the previously mentined utility
-<strong>svgresolver.py</strong>. this utility also processes all transformations found in the svg file, 
-while keeping the<strong>"id"</strong>s right. It work best in
-combinaison of the <code>&lt;use&gt;</code> tag in the <code><span style="color:#0000ff">&lt;defs&gt;</span></code> section, 
+<p>Nevertheless, it is also possible to "resolve" the shapes transformations with the previously mentioned utility
+<strong>svgresolver.py</strong>. This utility also processes all transformations found in the svg file, 
+while keeping the<strong>"id"</strong>s right. It works best in
+combinaison of the <code><span style="color:#0000ff">&lt;use&gt;</span></code> tag, 
 as a single item defined in the <code><span style="color:#0000ff">&lt;defs&gt;</span></code> section can then be re-used at
 many locations. Obviously, not everything is possible: for example, transforming a <code><span style="color:#0000ff">&lt;rect&gt;</span></code>
 element with a rotate transformation does not result in a <code><span style="color:#0000ff">&lt;rect&gt;</span></code> 
@@ -636,6 +656,12 @@ G code to your machine. Have fun...</p>
 
 <h2 id="P-05">CAM Operations</h2>
 
+<h3>Outside</h3>
+
+<p>While the name speaks for itself, be aware that it is possible to make a cut from a virtual "stock" by setting the "width" of the operation.
+This does not however allow to cut any kind of stock as the "width" is constant all over the coutour we wish to cut from the ouside. Nevertheless,
+knowing the exact dimensions of the material you are cutting, it is possible to define fake shapes in order to cut them as a virtual stocks.</p>
+
 <h3 id="P-05-01">Pockets</h2>
 
 <p>The standard pocket algorithm is the so-called "<strong>contour</strong>" algorithm. Starting from the outside border,
@@ -721,7 +747,6 @@ library and its "offset curve" functionality. But the <strong>Spirale</strong> c
 path points from a circle to an ellipse/rectangle. The middle of these shaped has to be evaluated first, and the
 mapping between circle and ellipses/rectangles as well.</p>
 
-<p></p>
 
 <p></p>
 

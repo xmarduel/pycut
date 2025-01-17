@@ -16,7 +16,7 @@
       "width": 0.0
     },
     {
-      "name": "nb_circle",
+      "name": "hsm_circle",
       "type": "Pocket",
       "cut_depth": 3.175,
       "paths": [
@@ -30,7 +30,7 @@
       "width": 0.0
     },
     {
-      "name": "nb_ellipse",
+      "name": "hsm_ellipse",
       "type": "Pocket",
       "cut_depth": 3.175,
       "paths": [
@@ -44,7 +44,7 @@
       "width": 0.0
     },
     {
-      "name": "nb_polygon",
+      "name": "hsm_polygon",
       "type": "Pocket",
       "cut_depth": 3.175,
       "paths": [
@@ -58,7 +58,7 @@
       "width": 0.0
     },
     {
-      "name": "nb_rect",
+      "name": "hsm_rect",
       "type": "Pocket",
       "cut_depth": 3.175,
       "paths": [
