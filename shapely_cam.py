@@ -205,7 +205,7 @@ class cam:
         multiline = ShapelyUtils.multipoly_exteriors_to_multiline(geometry)
 
         current_width = cutter_dia
-        each_width = cutter_dia * (1 - overlap)
+        step_width = cutter_dia * (1 - overlap)
 
         all_paths: List[shapely.geometry.LineString] = []
 
@@ -217,7 +217,7 @@ class cam:
             )
             # bounds = ShapelyUtils.diff(current, offset)
             bounds = current
-            each_offset = each_width
+            each_offset = step_width
             need_reverse = climb
         else:
             direction = "inner2outer"
@@ -244,7 +244,7 @@ class cam:
                 # bounds = ShapelyUtils.diff(current, offset)
                 bounds = current
 
-            each_offset = each_width
+            each_offset = step_width
             need_reverse = not climb
 
             # TEST
@@ -263,7 +263,7 @@ class cam:
             else:
                 all_paths = [p for p in current.geoms] + all_paths
 
-            next_width = current_width + each_width
+            next_width = current_width + step_width
             if next_width > width and (width - current_width) > 0:
                 # >>> XAM fix
                 last_delta = width - current_width
@@ -331,7 +331,7 @@ class cam:
         multiline = geometry
 
         current_width = cutter_dia / 2.0  # to cut just at the border
-        each_width = cutter_dia * (1 - overlap)
+        step_width = cutter_dia * (1 - overlap)
 
         all_paths: List[shapely.geometry.LineString] = []
 
@@ -339,7 +339,7 @@ class cam:
             # because we always start from the outer ring -> we go "inside"
             current = ShapelyUtils.offset_multiline(multiline, current_width, "left")
 
-            each_offset = each_width
+            std_offset = step_width
             need_reverse = climb
         else:
             direction = "inner2outer"
@@ -356,13 +356,13 @@ class cam:
                     multiline, current_width, "left"
                 )
 
-            each_offset = each_width
+            std_offset = step_width
             need_reverse = not climb
 
             # TEST
             # all_paths = [p for p in current.geoms]
 
-        while True and current_width <= width:
+        while True and current_width <= width - cutter_dia / 2.0:
             if need_reverse:
                 reversed_paths = []
                 for path in current.geoms:
@@ -375,12 +375,12 @@ class cam:
             else:
                 all_paths = [p for p in current.geoms] + all_paths
 
-            next_width = current_width + each_width
-            if next_width > width and (width - current_width) > 0:
+            next_width = current_width + step_width
+            if next_width > width - cutter_dia / 2.0 and (width - current_width) > 0:
                 # >>> XAM fix
-                last_delta = width - current_width
+                last_offset = width - cutter_dia / 2.0 - current_width
                 # <<< XAM fix
-                current = ShapelyUtils.offset_multiline(current, last_delta, "left")
+                current = ShapelyUtils.offset_multiline(current, last_offset, "left")
                 if current:
                     current = ShapelyUtils.simplify_multiline(current, 0.01)
 
@@ -404,7 +404,7 @@ class cam:
                 break
 
             current = ShapelyUtils.offset_multiline(
-                current, each_offset, "left", resolution=16
+                current, std_offset, "left", resolution=16
             )
             if current:
                 current = ShapelyUtils.simplify_multiline(current, 0.01)

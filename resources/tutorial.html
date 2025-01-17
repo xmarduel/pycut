@@ -58,7 +58,11 @@
   </li>
   <li><a href="#P-05">CAM Operations</a>
     <ul>
-      <li><a href="#P-05-01">Pockets</a></li>
+      <li><a href="#P-05-01">Inside</a></li>
+      <li><a href="#P-05-02">Outside</a></li>
+      <li><a href="#P-05-03">Engrave</a></li>
+      <li><a href="#P-05-04">Helix</a></li>
+      <li><a href="#P-05-05">Pocket</a></li>
     </ul>	</li>
   <li><a href="#P-06">GCode DressUp</a> </li>
   <li><a href="#APPENDIX-01">Appendix-1: SVG Editors</a></li>
@@ -116,29 +120,6 @@ other tools may be used, and the results may be copy/pasted into the hand-writte
 <p>In the following, we point out what has to be taken into consideration when creating "usable" <strong>SVG</strong> files for
 <strong>PyCut</strong>.
 
-<h2 id="P-01b">Installation</h2>
-
-<p><strong>PyCut</strong> is written in python, and as such few python modules have to be installed first, 
-as well as python interpreter itself of course, in order to run <strong>PyCut</strong> (there is no installer yet).</p>
-
-<p>
-<ul>
-    <li><strong>pyside6 version: 6.7.2</strong></li> 
-	<li><strong>shapely version: 1.8.5</strong></li> 
-    <li><strong>svgelements version: latest</strong></li> 
-    <li><strong>lxml version: latest</strong></li>
-    <li><strong>matplotlib version: latest</strong></li> 
-    <li><strong>freetype-py version: latest</strong></li> 
-    <li><strong>numba version: latest</strong></li> 
-    <li><strong>pyvoronoi version: latest</strong></li> 
-</ul>
-</p>
-
-
-<p>Then download the source files of <strong>PyCut</strong> and install them in a folder of your choice. You can then start 
-the application by typing from the console</p>
-
-<pre><code class="language-bash">> python pycut.py</code></pre>
 
 <h2 id="P-02">SVG Documents</h2>
 
@@ -656,13 +637,34 @@ G code to your machine. Have fun...</p>
 
 <h2 id="P-05">CAM Operations</h2>
 
-<h3>Outside</h3>
+<h3 id="P-05-01">Inside</h2>
+
+<h3 id="P-05-02">Outside</h2>
 
 <p>While the name speaks for itself, be aware that it is possible to make a cut from a virtual "stock" by setting the "width" of the operation.
 This does not however allow to cut any kind of stock as the "width" is constant all over the coutour we wish to cut from the ouside. Nevertheless,
 knowing the exact dimensions of the material you are cutting, it is possible to define fake shapes in order to cut them as a virtual stocks.</p>
 
-<h3 id="P-05-01">Pockets</h2>
+<h3 id="P-05-03">Engrave</h2>
+
+<p>This cuts exactly on the shapes borders. Be aware that the cutter has a diameter!.</p>
+
+<h3 id="P-05-04">Helix</h2>
+
+<p>The helix's center will be the <strong>center of the (closed) shape</strong>. For a circle, this is obviously the
+center of the circle shape. Considering the case where the center of the helix is [0,0], <strong>on which "orbit" will
+move the cutter</strong>? Well in case of an Helix operation, the "<strong>width</strong>" operation corresponds to the
+helix outer radius. This means that the <strong>radius</strong> of the orbit, the circle on which the cutter center
+travels, is <code>width - cutter_radius</code>. So the width has to be larger than the cutter radius, sonce the
+helix will be infact a drill operation. A value larger than the cutter diameter generates a ring (with an inner hole),
+and the helix is then simular to an "Inside" or "Outside"operation for an imaginary circle shape, however with a
+"smoother" cut. </p>
+
+<p>The helix pitch (revolution depth) is the most important parameter. Theoretically, the Helix operation could perform
+threads cutting by generating first an hole, then an helix "inside the hole" where the outer radius of the helix would
+be smaller than the hole radius, and utilizing a dedicated cutter.</p>
+
+<h3 id="P-05-05">Pockets</h2>
 
 <p>The standard pocket algorithm is the so-called "<strong>contour</strong>" algorithm. Starting from the outside border,
 offset curves are generated one after the other until the whole pocket "space" is processed. At the end, ordering of
@@ -677,10 +679,10 @@ toolpaths<strong>.</strong></p>
 <p><strong>PyCut</strong> will try to implement this <strong>pocket</strong> algorithm in two steps: first an
 "<strong>Helix</strong>" operation, then a "<strong>Pocket</strong>" operation.<p>
 
-<p> <strong
-style="color:#8000ff">Trick</strong>: to "activate" the spirale algorithm, just name the pocket operation with a
-"<strong>sp_</strong>" prefix! To "activate" the HSM_nibbler algorithm, just name the pocket operation with a
-"<strong>hsm_</strong>" prefix! </p>
+<p> <strong style="color:#8000ff">Trick</strong>: to "activate" the spirale algorithm, just name the pocket 
+operation with a "<strong>sp_</strong>" prefix! 
+<p> <strong style="color:#8000ff">Trick</strong>: to "activate" the HSM_nibbler algorithm, just name the pocket 
+operation with a "<strong>hsm_</strong>" prefix! </p>
 
 <div class="info">
 <p><strong>Note:</strong> To enable the Spirale pocket toolpaths, prefix the pocket operation with "sp_"</p>
@@ -704,21 +706,6 @@ pocket for non-trivial geometries. But the HSM_nibblers toopaths are there for t
 overlap</strong> (value close to 1) and <strong>a larger pass depth</strong> (rather than a standard overlap and a tiny
 pass depth that is used for standard pockets)</p>
 </div>
-
-<h4>Helix</h4>
-
-<p>The helix's center will be the <strong>center of the (closed) shape</strong>. For a circle, this is obviously the
-center of the circle shape. Considering the case where the center of the helix is [0,0], <strong>on which "orbit" will
-move the cutter</strong>? Well in case of an Helix operation, the "<strong>width</strong>" operation corresponds to the
-helix outer radius. This means that the <strong>radius</strong> of the orbit, the circle on which the cutter center
-travels, is <string>width - cutter_radius</string>. So the width has to be larger than the cutter radius, sonce the
-helix will be infact a drill operation. A value larger than the cutter diameter generates a ring (with an inner hole),
-and the helix is then simular to an "Inside" or "Outside"operation for an imaginary circle shape, however with a
-"smoother" cut. </p>
-
-<p>The helix pitch (revolution depth) is the most important parameter. Theoretically, the Helix operation could perform
-threads cutting by generating first an hole, then an helix "inside the hole" where the outer radius of the helix would
-be smaller than the hole radius, and utilizing a dedicated cutter.</p>
 
 <h4>Pocket/Spirale</h4>
 
