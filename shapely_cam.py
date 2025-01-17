@@ -330,17 +330,15 @@ class cam:
         # use lines, not polygons
         multiline = geometry
 
-        current_width = cutter_dia
+        current_width = cutter_dia / 2.0  # to cut just at the border
         each_width = cutter_dia * (1 - overlap)
 
         all_paths: List[shapely.geometry.LineString] = []
 
         if is_inside:
             # because we always start from the outer ring -> we go "inside"
-            current = ShapelyUtils.offset_multiline(multiline, 0.0, "left")
-            offset = ShapelyUtils.offset_multiline(multiline, width - 0.0, "left")
-            # bounds = ShapelyUtils.diff(current, offset)
-            bounds = current
+            current = ShapelyUtils.offset_multiline(multiline, current_width, "left")
+
             each_offset = each_width
             need_reverse = climb
         else:
@@ -349,16 +347,14 @@ class cam:
 
             if direction == "inner2outer":
                 # because we always start from the inner ring -> we go "outside"
-                current = ShapelyUtils.offset_multiline(multiline, 0.0, "right")
-                offset = ShapelyUtils.offset_multiline(multiline, width - 0.0, "right")
-                # bounds = ShapelyUtils.diff(current, offset)
-                bounds = current
+                current = ShapelyUtils.offset_multiline(
+                    multiline, current_width, "right"
+                )
             else:
                 # because we always start from the outer ring -> we go "inside"
-                current = ShapelyUtils.offset_multiline(multiline, 0.0, "left")
-                offset = ShapelyUtils.offset_multiline(multiline, width - 0.0, "left")
-                # bounds = ShapelyUtils.diff(current, offset)
-                bounds = current
+                current = ShapelyUtils.offset_multiline(
+                    multiline, current_width, "left"
+                )
 
             each_offset = each_width
             need_reverse = not climb
