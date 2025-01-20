@@ -315,6 +315,7 @@ class cam:
         geometry: shapely.geometry.MultiLineString,
         cutter_dia: float,
         is_inside: bool,
+        margin: float,
         width: float,
         overlap: float,
         climb: bool,
@@ -330,7 +331,9 @@ class cam:
         # use lines, not polygons
         multiline = geometry
 
-        current_width = cutter_dia / 2.0  # to cut just at the border
+        current_width = (
+            margin + cutter_dia / 2.0
+        )  # to cut just at the border (+ margin)
         step_width = cutter_dia * (1 - overlap)
 
         all_paths: List[shapely.geometry.LineString] = []
@@ -419,7 +422,7 @@ class cam:
         # merge_paths need MultiPolygon
         bounds = shapely.geometry.MultiPolygon()
 
-        return cls.merge_paths(bounds, all_paths, closed_path=False)
+        return cls.create_paths(bounds, all_paths, closed_path=False)
 
     @classmethod
     def engrave(
@@ -473,6 +476,23 @@ class cam:
             all_paths.append(shapely.geometry.LineString(coords))
 
         cam_paths = [CamPath(path, False) for path in all_paths]
+        return cam_paths
+
+    @classmethod
+    def create_paths(
+        cls,
+        _bounds: shapely.geometry.MultiPolygon,
+        paths: List[shapely.geometry.LineString],
+        closed_path=True,
+    ) -> List[CamPath]:
+        """
+        for opened path - no merge of paths
+        """
+        cam_paths: List[CamPath] = []
+        for path in paths:
+            safe_to_close = False
+            cam_paths.append(CamPath(shapely.geometry.LineString(path), safe_to_close))
+
         return cam_paths
 
     @classmethod

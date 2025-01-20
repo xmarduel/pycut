@@ -524,12 +524,12 @@ class SvgPath:
 
     @classmethod
     def from_shapely_linestring_for_preview_opened_path(
-        cls, prefix: str, linestring: shapely.geometry.LineString, cutter_diamter: float
+        cls, prefix: str, linestring: shapely.geometry.LineString, width: float
     ) -> "SvgPath":
         """ """
-        # SHAPELY: default width = 2.0 * scale_factor => scale_factor = cutter_diam / 2.0
+        # SHAPELY: default width = 2.0 * scale_factor => scale_factor = width / 2.0
 
-        path_str = linestring.svg(scale_factor=cutter_diamter / 2.0)
+        path_str = linestring.svg(scale_factor=width / 2.0)
         # gives an id
         path_str = path_str.replace("/>", ' id="%s" />' % prefix)
 

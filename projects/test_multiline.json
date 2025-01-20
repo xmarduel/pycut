@@ -1,5 +1,5 @@
 {
-  "svg_file": "../misc_private/cnc1310/cnc1310-s42-92x90mm-original.resolved2.svg",
+  "svg_file": "../misc_private/cnc1310/cnc1310-s42-92x90mm-original.resolved_openpath.svg",
   "operations": [
     {
       "name": "op",
@@ -28,6 +28,20 @@
       "units": "mm",
       "margin": 0.0,
       "width": 10.500000000000005
+    },
+    {
+      "name": "op",
+      "type": "Engrave",
+      "cut_depth": 3.175,
+      "paths": [
+        "contour"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 0.0
     }
   ],
   "settings": {

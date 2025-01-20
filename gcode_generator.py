@@ -491,10 +491,12 @@ class CncOp:
         """ """
         if self.geometry is not None:
             margin = self.margin.to_mm()
+            width = self.width.to_mm()
 
-            if margin != 0:
+            if margin != 0 or width > 0:
+                offset = margin + width / 2.0
                 self.preview_geometry = ShapelyUtils.offset_multiline(
-                    self.geometry, margin, "left"
+                    self.geometry, offset, "left"
                 )
             else:
                 self.preview_geometry = self.geometry
@@ -508,7 +510,7 @@ class CncOp:
 
         for line in self.preview_geometry.geoms:
             geometry_svg_path = SvgPath.from_shapely_linestring_for_preview_opened_path(
-                "pycut_geometry_opened_path_inside", line, tool_model.diameter
+                "pycut_geometry_opened_path_inside", line, width
             )
             self.geometry_svg_paths.append(geometry_svg_path)
 
@@ -516,10 +518,12 @@ class CncOp:
         """ """
         if self.geometry is not None:
             margin = self.margin.to_mm()
+            width = self.width.to_mm()
 
-            if margin != 0:
+            if margin != 0 or width > 0:
+                offset = margin + width / 2.0
                 self.preview_geometry = ShapelyUtils.offset_multiline(
-                    self.geometry, margin, "right"
+                    self.geometry, offset, "right"
                 )
             else:
                 self.preview_geometry = self.geometry
@@ -532,10 +536,9 @@ class CncOp:
 
         self.geometry_svg_paths = []
 
-        # should have 2 paths, one inner, one outer -> show the "ring"
         for line in self.preview_geometry.geoms:
             geometry_svg_path = SvgPath.from_shapely_linestring_for_preview_opened_path(
-                "pycut_geometry_opened_path_outside", line, tool_model.diameter
+                "pycut_geometry_opened_path_outside", line, width
             )
             self.geometry_svg_paths.append(geometry_svg_path)
 
@@ -815,7 +818,7 @@ class CncOp:
                         geometry, direction == "Climb"
                     )
                 elif cam_op == "Inside" or cam_op == "Outside":
-                    geometry = self.preview_geometry
+                    geometry = self.geometry
 
                     width = width.to_mm()
                     if width < tool_data["diameter_tool"]:
@@ -824,6 +827,7 @@ class CncOp:
                         geometry,
                         tool_data["diameter_tool"],
                         cam_op == "Inside",
+                        margin,
                         width,
                         tool_data["overlap"],
                         direction == "Climb",
