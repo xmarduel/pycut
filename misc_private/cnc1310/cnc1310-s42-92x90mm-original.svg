@@ -17,7 +17,7 @@
   <g id="layer1" transform="translate(0,0)">
     <path id="contour" 
       style="fill:none;stroke:#0000ff;stroke-width:0.25"
-      d="M 0.0,0.0 h 92 v 68 h -15.6 a 32.0 32.0 0 0 1  -60.8 0 h -15.6 z" />
+      d="M 0.0,0.0 h 92 v 68 h -15.6 a 32.0 32.0 0 0 1  -60.8 0 h -15.6 v -68 z" />
   
     <use href="#lead_screw_central_hole_ref" x="46"  y="16"  id="lead_screw_central_hole" />
 

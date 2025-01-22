@@ -123,14 +123,15 @@ Also note how the opacity values in the styles are merged in the resolved items'
 <h3>Bugs</h3>
 
 <ul>
-  <li><p>can only process "translate" transformations!</p></li>
-  <li><p>rotate -> NOP for circles, other shapes are not processes at all</p>
+  <li><p>rotate</p>
     <ul>
-	    <li>rectangle -> polygon TODO</li>
-	    <li>polygon -> polygon TODO</li>
-	    <li>line -> line TODO</li>
-	    <li>polyline -> polyline TODO</li>
-	    <li>path -> path TODO</li>
+      <li>circles : ok </li>
+	    <li>rectangle : NOT ok</li>
+	    <li>polygon : ok</li>
+	    <li>line : ok</li>
+	    <li>polyline : ok</li>
+	    <li>ellipse : NOT ok</li>
+      <li>path : ok</li>
 	  </ul>
   </li>
 </ul>
