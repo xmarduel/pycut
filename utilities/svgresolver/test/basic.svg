@@ -5,7 +5,7 @@
   xmlns:svg="http://www.w3.org/2000/svg">
   <defs id="defs">
     <circle id="my_circle" cx="0" cy="0" r="2.25"
-      style="opacity:1;fill:#080080;stroke:#ff0000;stroke-width:1.0;stroke-opacity:0.5;"
+      style="opacity:1;fill:#080080;stroke:#ff0000;stroke-width:1.0"
        />
     <rect id="my_rect" x="0" y="0" width="10" height="20"
       style="opacity:1;fill:#800080;stroke-width:0.2;"
@@ -13,10 +13,10 @@
   </defs>
   <g id="layer1">
     <g id="layer2">
-      <use href="#my_circle" transform="translate(10,10)" style="opacity:0.1;fill:#0000ff;stroke:#00ff00;stroke-width:2.5;" id="circle_left" />
-      <use href="#my_circle" x="10" y="15" style="stroke-width:2.5"                                 />
+      <use href="#my_circle" transform="translate(10,10)" style="opacity:0.2" id="circle_left" />
+      <use href="#my_circle" x="10" y="15"                style="opacity:0.6" />
       <use href="#my_rect" x="30" y="10" id="rect_1" />
-      <use href="#my_rect" transform="translate(50,10)" id="rect_2" style="opacity:0.1" />
+      <use href="#my_rect" transform="translate(50,10)" id="rect_2" style="opacity:0.2" />
     </g>
   </g>
 </svg>
