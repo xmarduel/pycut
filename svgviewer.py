@@ -25,96 +25,8 @@ from val_with_unit import ValWithUnit
 # https://stackoverflow.com/questions/53288926/qgraphicssvgitem-event-propagation-interactive-svg-viewer
 
 
-class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
-    def __init__(
-        self, id: str, view: "SvgViewer", renderer: QtSvg.QSvgRenderer, parent=None
-    ):
-        super(SvgItem, self).__init__(parent)
-        self.view = view
-        self.setSharedRenderer(renderer)
-        self.setElementId(id)
-
-        # set the position of the item
-        bounds = renderer.boundsOnElement(id)
-        # print("bounds on id=", bounds)
-        # print("bounds  rect=", self.boundingRect())
-        self.setPos(bounds.topLeft())
-
-        # and its flags
-        self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, True)
-
-        self.selected_effect = None
-        self.makeGraphicsEffect()
-
-    def makeGraphicsEffect(self):
-        if self.selected_effect is None:
-            self.selected_effect = QtWidgets.QGraphicsColorizeEffect()
-            self.selected_effect.setColor(QtCore.Qt.GlobalColor.darkYellow)
-            self.selected_effect.setStrength(1)
-
-    def mousePressEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
-        print(
-            "svg item: "
-            + self.elementId()
-            + " - mousePressEvent()  isSelected="
-            + str(self.isSelected())
-        )
-        print("svg item: " + str(self.pos()))
-        super().mousePressEvent(event)
-
-    def mouseReleaseEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
-        print(
-            "svg item: "
-            + self.elementId()
-            + " - mouseReleaseEvent() isSelected="
-            + str(self.isSelected())
-        )
-        print("svg item: " + str(self.pos()))
-        if self.elementId().startswith("pycut_tab"):
-            # actualize tab object and the mainwindow tabs table
-            str_idx = self.elementId().split("pycut_tab_")[1]
-            idx = int(str_idx)
-            tabs = self.view.tabs
-            tab = tabs[idx]
-            radius = tab["radius"]
-            center = [int(self.pos().x()), int(self.pos().y())]
-            center[0] = center[0] + radius
-            center[1] = center[1] + radius
-            tab["center"] = center
-            # brutal force - redraw tabs list with new model
-            # self.view.mainwindow.assign_tabs(tabs)
-            # -> strange behaviour, all spinboxes cells are selected
-
-            # so update the model
-            mainwindow: Any = self.view.mainwindow
-
-            model = mainwindow.ui.tabsview_manager.get_model()
-            model.tabs[idx].x = center[0]
-            model.tabs[idx].y = center[1]
-            model.dataChanged.emit(model.index(idx, 0), model.index(idx, 1))
-            # ok, but to avoid event chaining, I 've got this flag "in_dnd"
-
-        super().mouseReleaseEvent(event)
-
-    def colorizeWhenSelected(self):
-        if self.isSelected():
-            self.makeGraphicsEffect()
-            self.setGraphicsEffect(self.selected_effect)
-        else:
-            self.setGraphicsEffect(None)
-            self.selected_effect = None
-
-
 class SvgViewer(QtWidgets.QGraphicsView):
-    """
-    The SvgViewer can 'only' load full svg files.
-    It cannot increment the view with single "Paths"
-
-    So when augmenting the view, we have to pass all cnc operations
-    and build a custom svg file on its own with all these new paths.
-
-    Note that still only the paths from the original svg are selectable.
-    """
+    """ """
 
     zoomChanged = QtCore.Signal()
 
@@ -338,7 +250,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
     def reinit(self):
         """ """
         self.clean()
-        # self.fill_svg_viewer(self.svg)
+
         self.display_tabs(self.tabs)
 
     def set_svg(self, svg: str):
@@ -372,26 +284,15 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # TODO -----------------------------------------------------
 
         self.svg = svg
-        self.fill_svg_viewer(self.svg, initial_svg=True)
+        self.fill_svg_viewer(self.svg)
 
-    def fill_svg_viewer(self, svg: str, initial_svg=True):
+    def fill_svg_viewer(self, svg: str):
         """ """
-        if initial_svg:
-            # read all shapes/paths of the svg with svgelement as "paths"
-            self.svg_shapes = SvgPath.read_svg_shapes_and_paths(svg)
+        # read all shapes/paths of the svg with svgelement as "paths"
+        self.svg_shapes = SvgPath.read_svg_shapes_and_paths(svg)
 
-        curr_renderer = None
-
-        if initial_svg:
-            self.renderer.load(bytes(svg, "utf-8"))
-            curr_renderer = self.renderer
-        else:
-            renderer = QtSvg.QSvgRenderer()
-            renderer.load(bytes(svg, "utf-8"))
-
-            self.extra_renderers.append(renderer)
-
-            curr_renderer = renderer
+        renderer = self.renderer
+        renderer.load(bytes(svg, "utf-8"))
 
         # python xml module can load with svg xml header with encoding utf-8
         tree = etree.fromstring(svg)
@@ -406,6 +307,8 @@ class SvgViewer(QtWidgets.QGraphicsView):
             "line",
             "polyline",
         ]
+
+        shapes: List[etree.Element] = []
 
         images_types = ["image"]
 
@@ -430,14 +333,55 @@ class SvgViewer(QtWidgets.QGraphicsView):
                 print("    -> ignoring")
                 continue
 
-            item = SvgItem(image_id, self, curr_renderer)
+            item = SvgItem(image_id, self, renderer)
             # does not work
             self.scene().addItem(item)
 
-            if initial_svg:
-                self.svg_items.append(item)
-            else:
-                self.extra_items.append(item)
+            self.svg_items.append(item)
+
+        for element in elements:
+            if not element.tag.startswith("{http://www.w3.org/2000/svg}"):
+                continue
+
+            tag = element.tag.split("{http://www.w3.org/2000/svg}")[1]
+
+            if tag in shapes_types:
+                shapes.append(element)
+
+        for shape in shapes:
+            shape_id = shape.attrib.get("id", None)
+
+            # print("svg : found shape %s : id='%s'" % (shape.tag, shape_id))
+
+            if shape_id is None:
+                print("    -> ignoring")
+                continue
+
+            item = SvgItem(shape_id, self, renderer)
+            self.scene().addItem(item)
+
+            self.svg_items.append(item)
+
+    def fill_svg_viewer_extra_items(self, svg: str):
+        """ """
+        renderer = QtSvg.QSvgRenderer()
+        renderer.load(bytes(svg, "utf-8"))
+
+        self.extra_renderers.append(renderer)
+
+        # python xml module can load with svg xml header with encoding utf-8
+        tree = etree.fromstring(svg)
+        elements = tree.findall(".//*")
+
+        shapes_types = [
+            "path",
+            "rect",
+            "circle",
+            "ellipse",
+            "polygon",
+            "line",
+            "polyline",
+        ]
 
         shapes: List[etree.Element] = []
 
@@ -459,13 +403,10 @@ class SvgViewer(QtWidgets.QGraphicsView):
                 print("    -> ignoring")
                 continue
 
-            item = SvgItem(shape_id, self, curr_renderer)
+            item = SvgItem(shape_id, self, renderer)
             self.scene().addItem(item)
 
-            if initial_svg:
-                self.svg_items.append(item)
-            else:
-                self.extra_items.append(item)
+            self.extra_items.append(item)
 
             # tabs can be dragged
             if shape_id.startswith("pycut_tab"):
@@ -478,9 +419,6 @@ class SvgViewer(QtWidgets.QGraphicsView):
                 item.setFlag(
                     QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, False
                 )
-
-        # zoom with the initial zoom factor
-        # self.scale(self.current_zoom, self.current_zoom)
 
     def set_tabs(self, tabs: List[Dict[str, Any]]):
         """ """
@@ -731,7 +669,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         self.display_extra_paths(svg_paths)
 
-    def display_job_geometry(self, cnc_ops: List["CncOp"]):
+    def display_job_preview_geometry(self, cnc_ops: List["CncOp"]):
         """
         The list of "preview geometries" results of the geometries calculation for given ops
         The resulting geometries will the displayed in black together with the original svg and tabs
@@ -753,7 +691,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
     def display_job(self, job: JobModel):
         """ """
-        self.display_job_geometry(job.operations)
+        self.display_job_preview_geometry(job.operations)
         self.display_job_toolpaths(job.operations)
 
     def display_extra_paths(self, svg_paths: List[SvgPath]):
@@ -766,7 +704,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         extra_items_svg = maker.build(svg_paths)
 
         # done
-        self.fill_svg_viewer(extra_items_svg, initial_svg=False)
+        self.fill_svg_viewer_extra_items(extra_items_svg)
 
     def svg_text_to_paths(self, svg: str) -> str:
         """
@@ -775,15 +713,95 @@ class SvgViewer(QtWidgets.QGraphicsView):
         return svg  # TODO
 
 
+class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
+    def __init__(
+        self, id: str, view: SvgViewer, renderer: QtSvg.QSvgRenderer, parent=None
+    ):
+        super(SvgItem, self).__init__(parent)
+        self.view = view
+        self.setSharedRenderer(renderer)
+        self.setElementId(id)
+
+        # set the position of the item
+        bounds = renderer.boundsOnElement(id)
+        # print("bounds on id=", bounds)
+        # print("bounds  rect=", self.boundingRect())
+        self.setPos(bounds.topLeft())
+
+        # and its flags
+        self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, True)
+
+        self.selected_effect = None
+        self.makeGraphicsEffect()
+
+    def makeGraphicsEffect(self):
+        if self.selected_effect is None:
+            self.selected_effect = QtWidgets.QGraphicsColorizeEffect()
+            self.selected_effect.setColor(QtCore.Qt.GlobalColor.darkYellow)
+            self.selected_effect.setStrength(1)
+
+    def mousePressEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
+        print(
+            "svg item: "
+            + self.elementId()
+            + " - mousePressEvent()  isSelected="
+            + str(self.isSelected())
+        )
+        print("svg item: " + str(self.pos()))
+        super().mousePressEvent(event)
+
+    def mouseReleaseEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent):
+        print(
+            "svg item: "
+            + self.elementId()
+            + " - mouseReleaseEvent() isSelected="
+            + str(self.isSelected())
+        )
+        print("svg item: " + str(self.pos()))
+        if self.elementId().startswith("pycut_tab"):
+            # actualize tab object and the mainwindow tabs table
+            str_idx = self.elementId().split("pycut_tab_")[1]
+            idx = int(str_idx)
+            tabs = self.view.tabs
+            tab = tabs[idx]
+            radius = tab["radius"]
+            center = [int(self.pos().x()), int(self.pos().y())]
+            center[0] = center[0] + radius
+            center[1] = center[1] + radius
+            tab["center"] = center
+            # brutal force - redraw tabs list with new model
+            # self.view.mainwindow.assign_tabs(tabs)
+            # -> strange behaviour, all spinboxes cells are selected
+
+            # so update the model
+            mainwindow: Any = self.view.mainwindow
+
+            model = mainwindow.ui.tabsview_manager.get_model()
+            model.tabs[idx].x = center[0]
+            model.tabs[idx].y = center[1]
+            model.dataChanged.emit(model.index(idx, 0), model.index(idx, 1))
+            # ok, but to avoid event chaining, I 've got this flag "in_dnd"
+
+        super().mouseReleaseEvent(event)
+
+    def colorizeWhenSelected(self):
+        if self.isSelected():
+            self.makeGraphicsEffect()
+            self.setGraphicsEffect(self.selected_effect)
+        else:
+            self.setGraphicsEffect(None)
+            self.selected_effect = None
+
+
 class SvgMaker:
     """
-    To build a "compatible" svg with calculated svg paths, while the width/height of the svg data
+    To build a "compatible" svg with extra calculated svg paths, while the width/height of the svg data
     is identical to the initial svg
     """
 
-    def __init__(self, svg: str):
+    def __init__(self, initial_svg: str):
         """the initial svg"""
-        self.svg = svg
+        self.initial_svg = initial_svg
 
     def build(self, svg_paths: List[SvgPath]) -> str:
         """ """
@@ -818,7 +836,7 @@ class SvgMaker:
 
             paths_str.append(path_str)
 
-        root = etree.fromstring(self.svg)
+        root = etree.fromstring(self.initial_svg)
         root_attrib = root.attrib
 
         svg = """<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"

@@ -2,6 +2,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
   <link href="prism.css" rel="stylesheet">
+  <link href="svgresolver.css" rel="stylesheet" />
   <style>
     pre[class*="language-"] {
           font-size: 12px;
@@ -44,17 +45,17 @@ for a given element.</p>
   xmlns="http://www.w3.org/2000/svg"
   xmlns:svg="http://www.w3.org/2000/svg"&gt;
   &lt;defs id="defs"&gt;
-    &lt;circle id="my_circle" cx="0" cy="0" r="2.25" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-opacity:0.5;stroke-width:0.2" /&gt;
-    &lt;rect id="my_rect" x="0" y="0" width="10" height="20" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-width:0.2;" /&gt;
+    &lt;circle id="my_circle" cx="0" cy="0" r="2.25"             style="opacity:1;fill:#880088;stroke:#00ffff;stroke-width:0.2;" /&gt;
+    &lt;rect   id="my_rect"   x="0" y="0" width="10" height="20" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-width:0.6;" /&gt;
   &lt;/defs&gt;
   &lt;g id="layer1"&gt;
     &lt;g id="layer_circle"&gt;
-      &lt;use href="#my_circle" transform="translate(10,10)" style="opacity:0.5;stroke-opacity:0.25" id="circle_left" /&gt;
-      &lt;use href="#my_circle" x="10" y="15"                                                        id="circle_right" /&gt;
+      &lt;use href="#my_circle" transform="translate(10,10)"  id="circle_left"  style="opacity:0.5;" /&gt;
+      &lt;use href="#my_circle" x="10" y="15"                 id="circle_right" style="opacity:0.9;"/&gt;
     &lt;/g&gt;
     &lt;g id="layer_rect"&gt;
-      &lt;use href="#my_rect"   x="30" y="10"                id="rect_1" /&gt;
-      &lt;use href="#my_rect"   transform="translate(50,10)" id="rect_2" /&gt;
+      &lt;use href="#my_rect"   x="30" y="10"                 id="rect_1" /&gt;
+      &lt;use href="#my_rect"   transform="translate(50,10)"  id="rect_2" /&gt;
     &lt;/g&gt;
   &lt;/g&gt;
 &lt;/svg&gt;</code></pre>
@@ -72,18 +73,13 @@ does not). It also manages to preserve the <code>id</code>s of the
 resolved items as well as merging the styles of the referenced items with
 the used items.</p>
 
-<p><em>Note: By experimenting with styles within the <code>use</code>
-elements, it seems that the opacities (fill or stroke) defined in the <code>use</code>
-elements overwrite the opacities defined in the referenced <code>defs</code>,
-but the colors (fill or stroke) do not! I did not check for other style
-properties. There is also a strange (to me) dependency between opacity
-and stroke-opacity that I do not completely understand... So the rule(s)
-concerning the style in use elements remain a somehow mystery for me.</em></p>
+<p><em>Note: Styles attributes defined in the use do not overwrite those defined in the defs (fill, stroke). But
+<ul>
+<li>opacity</li>
+</ul>
+is.
+</em></p>
 
-<p><em>Finally, the utility will only overwrite in the shapes the <code>opacity</code>
-        and <code>stroke-opacity</code>, but for the stroke opacity **only** in
-        the case it is defined in the def element and if it is different from
-        the normal <code>opacity</code> (seems to be the rule!).</em></p>
     
 <h3>Usage</h3>
 
@@ -101,12 +97,12 @@ concerning the style in use elements remain a somehow mystery for me.</em></p>
   xmlns:svg="http://www.w3.org/2000/svg" &gt;
   &lt;g id="layer1"&gt;
     &lt;g id="layer_circle"&gt;
-      &lt;circle id="circle_left" cx="10.000" cy="10.000" r="2.250" style="opacity:0.5;fill:#880088;stroke:#00ffff;stroke-opacity:0.25;stroke-width:0.2"/&gt;
-      &lt;circle id="circle_right" cx="10.000" cy="15.000" r="2.250" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-opacity:0.5;stroke-width:0.2"/&gt;
+      &lt;circle id="circle_left"  cx="10.000" cy="10.000" r="2.250" style="opacity:0.5;fill:#880088;stroke:#00ffff;stroke-width:0.2;"/&gt;
+      &lt;circle id="circle_right" cx="10.000" cy="15.000" r="2.250" style="opacity:0.9;fill:#880088;stroke:#00ffff;stroke-width:0.2;"/&gt;
     &lt;/g&gt;
     &lt;g id="layer_rect"&gt;
-      &lt;rect id="rect_1" width="10.000" height="20.000" x="30.000" y="10.000" rx="0.000" ry="0.000" style="opacity:1;fill:#880088;stroke-width:0.2;"/&gt;
-      &lt;rect id="rect_2" width="10.000" height="20.000" x="50.000" y="10.000" rx="0.000" ry="0.000" style="opacity:1;fill:#880088;stroke-width:0.2;"/&gt;
+      &lt;rect id="rect_1" width="10.000" height="20.000" x="30.000" y="10.000" rx="0.000" ry="0.000" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-width:0.6;"/&gt;
+      &lt;rect id="rect_2" width="10.000" height="20.000" x="50.000" y="10.000" rx="0.000" ry="0.000" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-width:0.6;"/&gt;
     &lt;/g&gt;
   &lt;/g&gt;
 &lt;/svg&gt;</pre></code>
@@ -138,5 +134,6 @@ Also note how the opacity values in the styles are merged in the resolved items'
 <!--
 <p><em>Note for "tatarize": load the svg in chrome and from the DOM tree take a view at both circles Properties (Properties Tab): ids are indeed "circle-left" or "circle-right" ! (but this is still OK as you made)</em></p>
 -->
+
 </body>
 </html>
