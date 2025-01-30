@@ -377,13 +377,15 @@ class SvgResolver:
 
             ref_style_items = ref_style.split(";")
             for item in ref_style_items:
-                key, value = item.split(":")
-                the_ref_style[key] = value
+                if ":" in item:
+                    key, value = item.split(":")
+                    the_ref_style[key] = value
 
             style_items = style.split(";")
             for item in style_items:
-                key, value = item.split(":")
-                the_style[key] = value
+                if ":" in item:
+                    key, value = item.split(":")
+                    the_style[key] = value
 
             # only the opacity styles should be merged!
             the_style_opacity_items = {}
@@ -402,7 +404,8 @@ class SvgResolver:
 
             return ";".join(merge_style)
 
-        except Exception:
+        except Exception as e:
+            print("ERROR merge_styles", the_ref_style, style, e)
             return ref_style
 
     @classmethod
