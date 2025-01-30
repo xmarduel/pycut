@@ -11,39 +11,6 @@ body {
   font-size: 15px;
 }
 
-.sidenav {
-  height: 99%;
-  width: 300px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: #FFE5CC;
-  overflow-x: hidden;
-  padding-top: 20px;
-}
-
-.sidenav a {
-  padding: 6px 8px 6px 16px;
-  text-decoration: none;
-  font-size: 15px;
-  color: #000000;
-  display: block;
-}
-
-.sidenav a:hover {
-  color: #0000ff;
-}
-
-.title_sidenav {
-  padding: 0px 0px 0px 25px;
-}
-
-.main {
-  margin-left: 300px; /* Same as the width of the sidenav */
-  padding: 0px 10px;
-}
-
 .etitle {
 	text-align:center;
 	margin-left:auto;

@@ -26,7 +26,7 @@ start the program from the installation folder
 ## Dependencies
 
 - Python 3.11
-- PySide6 6.7.2
+- PySide6 6.8.1
 - shapely 1.8.5
 - PyOpenGL (latest)
 - svgelements (latest)
@@ -34,7 +34,7 @@ start the program from the installation folder
 - freetype-py (latest) - used in svgtext2svgpath.py utility
 - matplotlib (latest) - to debug/view shapely offsets ops
 - numba (latest) - for python simulator optimization
-- pyvoronoi (latest) - for HSM nibble toolpaths
+- pyvoronoi (latest) - for HSM nibbler toolpaths
 
 ## Features
 

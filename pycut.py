@@ -1487,7 +1487,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             cnc_op.calculate_geometry(tool_model)
 
         self.svg_viewer.reinit()
-        self.svg_viewer.display_job_geometry(cnc_ops)
+        self.svg_viewer.display_job_preview_geometry(cnc_ops)
 
     def get_jobmodel_operations(self) -> List[CncOp]:
         """ """
