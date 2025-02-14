@@ -1263,6 +1263,16 @@ concatenation of lines/arcs with splines?</strong></p>
 <p>Conclusion: <strong><span style="color:#008000">A good SVG "path" generator/exporter that is unfortunately not
 completely finished.</span></strong></p>
 
+<h4>Dia  <span style="color:#008000">****NEARLY GOOD****</span></h4>
+
+<p>At first sight seems to be "optimal". The SVG export is clean. But it cannot generate "paths" mixing
+items of different types: grouping items (lines, arcs, beziers) is possible in the GUI, but the SVG export 
+still consider them as separate entities (lines are exported as line(s), arcs as path(s) with an "A", 
+beziers as paths with a "C"). What a pity!</p>
+<p>The SVG export has also a strange viewbox and items have coordinates different of what is given in the GUI.
+Items in the GUI cannot be edited with a "formular" ie one cannot set their coordinate "per hand". Really, is it
+too much asking?</p>
+
 <h4>SolveSpace <span style="color:#ff00ff">****BEST****</span></h4>
 
 <p>Ever heard of it? A parametric system as known from the 3D modellers. <strong>Incredible!</strong> The GUI looks
