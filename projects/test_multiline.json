@@ -119,7 +119,7 @@
     },
     "gcode_viewer": {},
     "gcode_simulator": {
-      "fb": 1
+      "fb": 2
     }
   }
 }

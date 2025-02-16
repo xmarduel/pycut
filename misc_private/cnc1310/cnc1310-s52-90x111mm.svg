@@ -27,7 +27,7 @@
     <circle id="spacer_screw_hole_5.0mm"      style="fill:#0000ff;fill-opacity:1" cx="0" cy="0" r="2.5" />
     
     <!--spindle :  M4 screws attachments / threading here ? -->
-	  <circle id="spindle_screw_M4"             style="fill:#000080;fill-opacity:1" cx="0" cy="0" r="2.00" />
+    <circle id="spindle_screw_M4"             style="fill:#000080;fill-opacity:1" cx="0" cy="0" r="2.00" />
     <circle id="spindle_screw_M4_thread_hole" style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="1.60" />
   </defs>
   

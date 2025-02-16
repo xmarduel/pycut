@@ -10,7 +10,7 @@ Disclamer: This software is used at the user's own risk. No responsibility is ac
 
 With <strong>PyCut</strong>, you do not need to do 3D modelling. SVG files (2D) are <strong>PyCut</strong> input format, and for simple milling tasks it is perfectly OK. Granted, SVG shapes (paths) definition is not so straightforward as one could think, and free software lacks good SVG paths modelling applications. Infact, writing a SVG file with a text editor is sometimes the best way. To generate complex SVG paths, other tools may be used (see Tutorial), and the results may be paste into the hand-written files.
 
-Before starting, please have a look at the tutorial to be sure your SVG input files follow the PyCut requirements (mostly: how to define the view box; shapes must have an unique id in order to be imported in the viewer).
+Before starting, please have a look at the tutorial to be sure your SVG input files follow the PyCut requirements (mostly: how to define the view box; shapes must have an unique id in order to be imported in the viewer; take care if paths definitions are closed (Z) or not).
 
 ## Usage
 
@@ -28,13 +28,13 @@ start the program from the installation folder
 - Python 3.11
 - PySide6 6.8.1
 - shapely 1.8.5
-- PyOpenGL (latest)
-- svgelements (latest)
-- lxml (latest)
-- freetype-py (latest) - used in svgtext2svgpath.py utility
-- matplotlib (latest) - to debug/view shapely offsets ops
-- numba (latest) - for python simulator optimization
-- pyvoronoi (latest) - for HSM nibbler toolpaths
+- PyOpenGL (latest)  [3.1.9]
+- svgelements (latest)  [1.9.6]
+- lxml (latest)  [5.3.1]
+- freetype-py (latest) - used in svgtext2svgpath.py utility  [2.5.1]
+- matplotlib (latest) - to debug/view shapely offsets ops  [3.10.0]
+- numba (latest) - for python simulator optimization  [0.61.0]
+- pyvoronoi (latest) - for HSM nibbler toolpaths  [1.1.6]
 
 ## Features
 
