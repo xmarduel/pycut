@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.8.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -51,6 +51,8 @@ class Ui_mainwindow(object):
         self.actionSettings.setObjectName(u"actionSettings")
         self.actionOpenGCode = QAction(mainwindow)
         self.actionOpenGCode.setObjectName(u"actionOpenGCode")
+        self.actionCnCTutorial = QAction(mainwindow)
+        self.actionCnCTutorial.setObjectName(u"actionCnCTutorial")
         self.centralwidget = QWidget(mainwindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout_2 = QHBoxLayout(self.centralwidget)
@@ -61,7 +63,7 @@ class Ui_mainwindow(object):
         self.scrollArea_left.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 304, 993))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 388, 974))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSpacing(22)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -530,7 +532,7 @@ class Ui_mainwindow(object):
         self.scrollArea_right.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 300, 998))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 320, 974))
         self.verticalLayout_5 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_5.setSpacing(22)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
@@ -958,7 +960,7 @@ class Ui_mainwindow(object):
         mainwindow.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(mainwindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1226, 21))
+        self.menubar.setGeometry(QRect(0, 0, 1226, 26))
         self.menuSvg = QMenu(self.menubar)
         self.menuSvg.setObjectName(u"menuSvg")
         self.menuFile = QMenu(self.menubar)
@@ -986,6 +988,7 @@ class Ui_mainwindow(object):
         self.menuFile.addAction(self.actionSaveProjectAs)
         self.menuFile.addAction(self.actionSaveProject)
         self.menuHelp.addAction(self.actionTutorial)
+        self.menuHelp.addAction(self.actionCnCTutorial)
         self.menuHelp.addAction(self.actionAboutQt)
         self.menuHelp.addAction(self.actionAboutPyCut)
         self.menuSettings.addAction(self.actionSettings)
@@ -1023,6 +1026,7 @@ class Ui_mainwindow(object):
         self.actionAboutPyCut.setText(QCoreApplication.translate("mainwindow", u"About PyCut", None))
         self.actionSettings.setText(QCoreApplication.translate("mainwindow", u"Viewers Settings...", None))
         self.actionOpenGCode.setText(QCoreApplication.translate("mainwindow", u"Load GCode", None))
+        self.actionCnCTutorial.setText(QCoreApplication.translate("mainwindow", u"CnC Tutorial", None))
         self.label_SvgSettings.setText(QCoreApplication.translate("mainwindow", u" Svg Settings", None))
         self.SvgModelWidth.setSuffix(QCoreApplication.translate("mainwindow", u"mm", None))
         self.label_title.setText(QCoreApplication.translate("mainwindow", u"Title", None))

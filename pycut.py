@@ -177,6 +177,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.actionOpenGCode.triggered.connect(self.cb_open_gcode)
 
         self.ui.actionTutorial.triggered.connect(self.cb_show_tutorial_qt)
+        self.ui.actionCnCTutorial.triggered.connect(self.cb_show_cnc_tutorial_qt)
         self.ui.actionAboutQt.triggered.connect(self.cb_show_about_qt)
         self.ui.actionAboutPyCut.triggered.connect(self.cb_show_about_pycut)
 
@@ -402,6 +403,33 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         dlg.setModal(True)
 
         filename = ":/tutorial.html"
+        file = QtCore.QFile(filename)
+        if file.open(QtCore.QIODevice.ReadOnly):
+            data = str(file.readAll(), "utf-8")  # explicit encoding
+        else:
+            data = "ERROR"
+
+        file.close()
+
+        htmlview.setHtml(data, baseUrl=QtCore.QUrl("qrc:/"))
+
+        dlg.show()
+
+    def cb_show_cnc_tutorial_qt(self):
+        """ """
+        dlg = QtWidgets.QDialog(self)
+
+        htmlview = QtWebEngineWidgets.QWebEngineView(dlg)
+        htmlview.setMinimumSize(1100, 600)
+
+        main_layout = QtWidgets.QVBoxLayout()
+        main_layout.addWidget(htmlview)
+
+        dlg.setLayout(main_layout)
+        dlg.setWindowTitle("CnC Tutorial")
+        dlg.setModal(True)
+
+        filename = ":/cnc-tutorial.html"
         file = QtCore.QFile(filename)
         if file.open(QtCore.QIODevice.ReadOnly):
             data = str(file.readAll(), "utf-8")  # explicit encoding

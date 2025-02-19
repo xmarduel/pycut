@@ -31,8 +31,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>304</width>
-         <height>993</height>
+         <width>388</width>
+         <height>974</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,1">
@@ -55,6 +55,7 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
+              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -104,6 +105,7 @@
              <widget class="QLabel" name="label_title">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -116,6 +118,7 @@
              <widget class="QLabel" name="label_SvgModelHeight">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -128,6 +131,7 @@
              <widget class="QLabel" name="label_SvgModelWidth">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -140,6 +144,7 @@
              <widget class="QLabel" name="label_PxPerInch">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -185,6 +190,7 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
+              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -248,6 +254,7 @@
              <widget class="QLabel" name="label_Tool_Cut">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -267,6 +274,7 @@
              <widget class="QLabel" name="label_Tool_PassDepth">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -279,6 +287,7 @@
              <widget class="QLabel" name="label_Tool_Angle">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -291,6 +300,7 @@
              <widget class="QLabel" name="label_Tool_Diameter">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -303,6 +313,7 @@
              <widget class="QLabel" name="label_Tool_Plunge">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -388,6 +399,7 @@
              <widget class="QLabel" name="label_Tool_Units">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -414,6 +426,7 @@
              <widget class="QLabel" name="label_Tool_Rapid">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -436,6 +449,7 @@
              <widget class="QLabel" name="label_Tool_Overlap">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -464,6 +478,7 @@
              <widget class="QLabel" name="label_Tool_HelixPitch">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -503,6 +518,7 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
+              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -544,6 +560,7 @@
               </property>
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -569,6 +586,7 @@
              <widget class="QLabel" name="label_CurveToLineConversion_MinimumSegmentsLength">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -610,6 +628,7 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
+              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -654,6 +673,7 @@
                 <widget class="QLabel" name="label_TabsUnits">
                  <property name="font">
                   <font>
+                   <weight>75</weight>
                    <bold>true</bold>
                   </font>
                  </property>
@@ -683,6 +703,7 @@
                 <widget class="QLabel" name="label_Tabs_Height">
                  <property name="font">
                   <font>
+                   <weight>75</weight>
                    <bold>true</bold>
                   </font>
                  </property>
@@ -712,6 +733,7 @@
                 <widget class="QCheckBox" name="Tabs_hideAllTabs">
                  <property name="font">
                   <font>
+                   <weight>75</weight>
                    <bold>true</bold>
                   </font>
                  </property>
@@ -724,6 +746,7 @@
                 <widget class="QCheckBox" name="Tabs_hideDisabledTabs">
                  <property name="font">
                   <font>
+                   <weight>75</weight>
                    <bold>true</bold>
                   </font>
                  </property>
@@ -900,8 +923,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>300</width>
-         <height>998</height>
+         <width>320</width>
+         <height>974</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,0,0,0,1">
@@ -918,6 +941,7 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
+              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -993,6 +1017,7 @@
              <widget class="QLabel" name="label_Material_Units">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1019,6 +1044,7 @@
              <widget class="QLabel" name="label_Material_Thickness">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1041,6 +1067,7 @@
              <widget class="QLabel" name="label_Material_ZOrigin">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1073,6 +1100,7 @@
              <widget class="QLabel" name="label_Material_Clearance">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1108,6 +1136,7 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
+              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -1138,6 +1167,7 @@
              <widget class="QLabel" name="label_GCodeConversion_YOffset">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1163,6 +1193,7 @@
              <widget class="QLabel" name="label_GCodeConversion_GCodeUnits">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1188,6 +1219,7 @@
              <widget class="QLabel" name="label_GCodeConversion_MaxY">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1210,6 +1242,7 @@
               </property>
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                 <kerning>false</kerning>
                </font>
@@ -1252,6 +1285,7 @@
              <widget class="QLabel" name="label_GCodeConversion_MinX">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1264,6 +1298,7 @@
              <widget class="QLabel" name="label_GCodeConversion_MaxX">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1333,6 +1368,7 @@
              <widget class="QLabel" name="label_GCodeConversion_MinY">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1345,6 +1381,7 @@
              <widget class="QLabel" name="label_GCodeConversion_XOffset">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1371,6 +1408,7 @@
              <widget class="QPushButton" name="GCodeConversion_ZeroTopLeftOfMaterial">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1396,6 +1434,7 @@
              <widget class="QPushButton" name="GCodeConversion_ZeroLowerLeftOfMaterial">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1418,6 +1457,7 @@
              <widget class="QPushButton" name="GCodeConversion_ZeroLowerLeftOfOp">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1440,6 +1480,7 @@
              <widget class="QPushButton" name="GCodeConversion_ZeroCenterOfOp">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1462,6 +1503,7 @@
              <widget class="QCheckBox" name="GCodeConversion_UseOffset">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1484,6 +1526,7 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
+              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -1510,6 +1553,7 @@
              <widget class="QLabel" name="label_GCodeGeneration_ReturnToZeroAtEnd">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1532,6 +1576,7 @@
              <widget class="QLabel" name="label_GCodeGeneration_SpindleControl">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1544,6 +1589,7 @@
              <widget class="QCheckBox" name="GCodeGeneration_SpindleControl">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1556,6 +1602,7 @@
              <widget class="QLabel" name="label_GCodeGeneration_SpindleSpeed">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1578,6 +1625,7 @@
              <widget class="QLabel" name="label_GCodeGeneration_ProgramEnd">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1590,6 +1638,7 @@
              <widget class="QCheckBox" name="GCodeGeneration_ProgramEnd">
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1612,6 +1661,7 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
+              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -1644,6 +1694,7 @@
               </property>
               <property name="font">
                <font>
+                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1692,7 +1743,7 @@
      <x>0</x>
      <y>0</y>
      <width>1226</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSvg">
@@ -1722,6 +1773,7 @@
      <string>Help</string>
     </property>
     <addaction name="actionTutorial"/>
+    <addaction name="actionCnCTutorial"/>
     <addaction name="actionAboutQt"/>
     <addaction name="actionAboutPyCut"/>
    </widget>
@@ -1803,6 +1855,11 @@
   <action name="actionOpenGCode">
    <property name="text">
     <string>Load GCode</string>
+   </property>
+  </action>
+  <action name="actionCnCTutorial">
+   <property name="text">
+    <string>CnC Tutorial</string>
    </property>
   </action>
  </widget>

@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'simcontrols.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.8.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -23,7 +23,7 @@ class Ui_SimControlWidget(object):
     def setupUi(self, SimulationControls):
         if not SimulationControls.objectName():
             SimulationControls.setObjectName(u"SimulationControls")
-        SimulationControls.setProperty("modal", False)
+        SimulationControls.setProperty(u"modal", False)
         SimulationControls.resize(674, 69)
         SimulationControls.setStyleSheet(u"/*QWidget {\n"
 "	font-size: 9pt;\n"
