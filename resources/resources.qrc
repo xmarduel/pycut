@@ -77,7 +77,8 @@
 		<file>cnc-doc/images/04_CandleReference/CNC13.PNG</file>
 		<file>cnc-doc/images/04_CandleReference/CNC14.PNG</file>
 		<file>cnc-doc/images/04_CandleReference/CNC15.PNG</file>
-		<file>cnc-doc/images/04_Fusion/001.png</file>
+		<!--
+        <file>cnc-doc/images/04_Fusion/001.png</file>
         <file>cnc-doc/images/04_Fusion/002.png</file>
         <file>cnc-doc/images/04_Fusion/003.png</file>
         <file>cnc-doc/images/04_Fusion/004.png</file>
@@ -123,8 +124,12 @@
         <file>cnc-doc/images/04_Fusion/044.png</file>
         <file>cnc-doc/images/04_Fusion/045.png</file>
         <file>cnc-doc/images/04_Fusion/046.png</file>
+        -->
+        <!--
         <file>cnc-doc/images/04_Inkscape/Inkscape-1.png</file>
         <file>cnc-doc/images/04_Inkscape/Inkscape-2.png</file>
+        -->
+        <!--
         <file>cnc-doc/images/04_JSCut/svg_with_tabs-0.png</file>
         <file>cnc-doc/images/04_JSCut/svg_with_tabs-1.png</file>
         <file>cnc-doc/images/04_JSCut/svg_with_tabs-10.png</file>
@@ -136,6 +141,8 @@
         <file>cnc-doc/images/04_JSCut/svg_with_tabs-7.png</file>
         <file>cnc-doc/images/04_JSCut/svg_with_tabs-8.png</file>
         <file>cnc-doc/images/04_JSCut/svg_with_tabs-9.png</file>
+        -->
+        <!--
         <file>cnc-doc/images/04_LaserGRBLeference/IMG1.PNG</file>
         <file>cnc-doc/images/04_LaserGRBLeference/IMG10.PNG</file>
         <file>cnc-doc/images/04_LaserGRBLeference/IMG11.PNG</file>
@@ -170,40 +177,62 @@
         <file>cnc-doc/images/04_LaserGRBLeference/IMG9.PNG</file>
         <file>cnc-doc/images/04_LaserGRBLeference/LaserGRBL.PNG</file>
         <file>cnc-doc/images/04_LaserGRBLeference/raster_image.JPG</file>
-        <file>cnc-doc/images/06_CncOffsets/CNC1.PNG</file>
-        <file>cnc-doc/images/06_CncOffsets/CNC2.PNG</file>
-        <file>cnc-doc/images/06_CncOffsets/CNC3.PNG</file>
-        <file>cnc-doc/images/06_CncOffsets/CNC4.PNG</file>
-        <file>cnc-doc/images/06_CncOffsets/CNC5.PNG</file>
-        <file>cnc-doc/images/06_CncOffsets/CNC6.PNG</file>
-        <file>cnc-doc/images/07_SettingTheDatums/CNC1.PNG</file>
-        <file>cnc-doc/images/07_SettingTheDatums/CNC2.PNG</file>
-        <file>cnc-doc/images/07_SettingTheDatums/CNC3.PNG</file>
-        <file>cnc-doc/images/07_SettingTheDatums/CNC4.PNG</file>
-        <file>cnc-doc/images/07_SettingTheDatums/CNC5.PNG</file>
-        <file>cnc-doc/images/08_ToolLength/CNC1.PNG</file>
-        <file>cnc-doc/images/08_ToolLength/CNC2.PNG</file>
-        <file>cnc-doc/images/08_ToolLength/CNC3.PNG</file>
-        <file>cnc-doc/images/08_ToolLength/CNC4.PNG</file>
-        <file>cnc-doc/images/08_ToolLength/CNC5.PNG</file>
-        <file>cnc-doc/images/09_G28Code/CNC1.PNG</file>
-        <file>cnc-doc/images/10_LimitSwitchs/CNC1.PNG</file>
-        <file>cnc-doc/images/10_LimitSwitchs/CNC2.PNG</file>
-        <file>cnc-doc/images/10_LimitSwitchs/CNC3.PNG</file>
-        <file>cnc-doc/images/10_LimitSwitchs/CNC4.PNG</file>
-        <file>cnc-doc/images/10_LimitSwitchs/CNC5.PNG</file>
-        <file>cnc-doc/images/10_LimitSwitchs/CNC6.PNG</file>
-        <file>cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-1.PNG</file>
-        <file>cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-10.PNG</file>
-        <file>cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-11.PNG</file>
-        <file>cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-2.PNG</file>
-        <file>cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-3.PNG</file>
-        <file>cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-4.PNG</file>
-        <file>cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-5.PNG</file>
-        <file>cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-6.PNG</file>
-        <file>cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-7.PNG</file>
-        <file>cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-8.PNG</file>
-        <file>cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-9.PNG</file>
+        -->
+
+        <file>cnc-doc/images/06_CncOffsets/cartesian2.png</file>
+         <file>cnc-doc/images/06_CncOffsets/front-view-with-arrows.jpg</file>
+        <file>cnc-doc/images/06_CncOffsets/save-work-offsets-1024x759.webp</file>
+        <file>cnc-doc/images/06_CncOffsets/Taig-front-view-home-pos.jpg</file>
+        <file>cnc-doc/images/06_CncOffsets/top-view-home-pos.jpg</file>
+        <file>cnc-doc/images/06_CncOffsets/top-view-with-arrows.jpg</file>
+
+        <file>cnc-doc/images/07_SettingTheDatums/dial-sweep.jpg</file>
+        <file>cnc-doc/images/07_SettingTheDatums/dowel-offset-1024x634.jpg</file>
+        <file>cnc-doc/images/07_SettingTheDatums/edgefinding-1024x769.jpg</file>
+        <file>cnc-doc/images/07_SettingTheDatums/save-work-offset-table.jpg</file>
+        <file>cnc-doc/images/07_SettingTheDatums/z-axis-touch-1024x683.jpg</file>
+
+        <file>cnc-doc/images/08_ToolLength/mach3-offset-page-e1567304671891-1024x750.webp</file>
+        <file>cnc-doc/images/08_ToolLength/plunge-mill-1-1024x691.jpg</file>
+        <file>cnc-doc/images/08_ToolLength/Taig-front-view-tool-length.jpg</file>
+        <file>cnc-doc/images/08_ToolLength/tool-length-table-e1565819249919.jpg</file>
+        <file>cnc-doc/images/08_ToolLength/z-axis-touch-1024x683.jpg</file>
+
+        <file>cnc-doc/images/09_G28Code/Taig-front-view-G28.jpg</file>
+
+        <file>cnc-doc/images/10_LimitSwitchs/junction-box-1-1024x683.jpg</file>
+        <file>cnc-doc/images/10_LimitSwitchs/limit-switch-1024x683.jpg</file>
+        <file>cnc-doc/images/10_LimitSwitchs/limit-switch-set-1024x683.jpg</file>
+        <file>cnc-doc/images/10_LimitSwitchs/soft-limit-boundary.jpg</file>
+        <file>cnc-doc/images/10_LimitSwitchs/soft-limits-1024x761.webp</file>
+        <file>cnc-doc/images/10_LimitSwitchs/soft-limits-table-1.jpg</file>
+
+        <file>cnc-doc/images/18_MillingEquipment/1-2-3-Blocks-300x214.jpg</file>
+        <file>cnc-doc/images/18_MillingEquipment/Bench-mill-1-1024x969.jpg</file>
+        <file>cnc-doc/images/18_MillingEquipment/clamps-1024x683.webp</file>
+        <file>cnc-doc/images/18_MillingEquipment/compressor-1-768x512.jpg</file>
+        <file>cnc-doc/images/18_MillingEquipment/cutters-2-1024x683.webp</file>
+        <file>cnc-doc/images/18_MillingEquipment/dial-calipers-768x512.jpg</file>
+        <file>cnc-doc/images/18_MillingEquipment/dial-indicator-300x200.jpg</file>
+        <file>cnc-doc/images/18_MillingEquipment/Dial-on-lathe-300x200.webp</file>
+        <file>cnc-doc/images/18_MillingEquipment/er16-collets-768x512.webp</file>
+        <file>cnc-doc/images/18_MillingEquipment/mpg-pendant-768x512.webp</file>
+        <file>cnc-doc/images/18_MillingEquipment/parallels-768x512.webp</file>
+        <file>cnc-doc/images/18_MillingEquipment/tap-die-set-768x512.webp</file>
+        <file>cnc-doc/images/18_MillingEquipment/toolpath-1024x764.webp</file>
+
+        <file>cnc-doc/images/12_TypesOfMillCutters/ali-endmill.jpg</file>
+        <file>cnc-doc/images/12_TypesOfMillCutters/ball-nose-end-mill.jpg</file>
+        <file>cnc-doc/images/12_TypesOfMillCutters/big-carbide-burr.jpg</file>
+        <file>cnc-doc/images/12_TypesOfMillCutters/center-cutting-end-mill.jpg</file>
+        <file>cnc-doc/images/12_TypesOfMillCutters/down-cut-end-mill.jpg</file>
+        <file>cnc-doc/images/12_TypesOfMillCutters/high-feed-endmill.jpg</file>
+        <file>cnc-doc/images/12_TypesOfMillCutters/milling-machine-slot-drill.jpg</file>
+        <file>cnc-doc/images/12_TypesOfMillCutters/non-center-cutting-end-mills.jpg</file>
+        <file>cnc-doc/images/12_TypesOfMillCutters/selection-of-end-mills.jpg</file>
+        <file>cnc-doc/images/12_TypesOfMillCutters/single-flute-end-mill.jpg</file>
+        <file>cnc-doc/images/12_TypesOfMillCutters/tapered-ball-ends.jpg</file>
+
         <file>cnc-doc/images/20_GcodeReference/G2-example1.svg</file>
         <file>cnc-doc/images/20_GcodeReference/G2-G3-example1.svg</file>
         <file>cnc-doc/images/20_GcodeReference/G5.2-example1.png</file>
@@ -216,6 +245,7 @@
         <file>cnc-doc/images/20_GcodeReference/G81-example3.svg</file>
         <file>cnc-doc/images/20_GcodeReference/G81-example4.svg</file>
         <file>cnc-doc/images/20_GcodeReference/G81-example5.svg</file>
+
         <file>cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-1.png</file>
         <file>cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-2.png</file>
         <file>cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-3.png</file>
@@ -223,6 +253,7 @@
         <file>cnc-doc/images/22_CnC1419_Upgrade/tb6600.jpg</file>
         <file>cnc-doc/images/22_CnC1419_Upgrade/tmc2209-zoom.jpg</file>
         <file>cnc-doc/images/22_CnC1419_Upgrade/tmc2209.jpg</file>
+        
         <file>cnc-doc/images/99_Arduino_Grbl/arduino.png</file>
         <file>cnc-doc/images/99_Arduino_Grbl/arduino_board_selection.png</file>
 		<file>cnc-tutorial.html</file>

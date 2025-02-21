@@ -93,6 +93,7 @@
   <li><a href="#P-08">Tool length Compensation Explained</a></li>
   <li><a href="#P-09">G28 Code demistified</a></li>
   <li><a href="#P-10">Limits Switches</a></li>
+  <li><a href="#P-18">Cnc MillingEquipment</a></li>
   <li><a href="#P-11">Cnc Milling Machine Terminology</a></li>
   <li><a href="#P-12">Types of Mill Cutters</a></li>
   <li><a href="#P-19">MCode Reference</a> 
@@ -1820,7 +1821,7 @@ Z. </p>
 
 <p>If you can remember back to when you were at school and you drew points on graphs, cnc machines
 use the same system to move to specific points in its work area.</p>
-<img src="cnc-doc/images/06_CncOffsets/CNC1.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/06_CncOffsets/cartesian2.png" height="33%" alt=""> 
 
 <p>There is an X axis, travelling left to right, a Y axis travelling front to back and a Z axis
 travelling up and down. If you have a position for each axis, x y and z, you can plot that exact
@@ -1839,7 +1840,7 @@ you. If you specify a negative Y value e.g. Y-1.5 it will be behind the origin, 
 
 <p>If you specify a positive Z value e.g. Z2. the position will be above the origin. If you specify
 a negative Z value e.g. Z-1.5 it will be below the origin.</p>
-<img src="cnc-doc/images/06_CncOffsets/CNC2.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/06_CncOffsets/top-view-with-arrows.jpg" height="25%" alt=""> 
 
 <p>One other important point to note is that the direction of travel refers to the movement of the
 tool. </p>
@@ -1849,7 +1850,7 @@ This makes the tool move to the right in relation to the part you are machining.
 
 <p>Likewise, to make a Y positive move, the table will need to move toward you. Moving the tool in
 a positive direction in relation to the part on the table.</p>
-<img src="cnc-doc/images/06_CncOffsets/CNC3.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/06_CncOffsets/front-view-with-arrows.jpg" height="25%" alt=""> 
 
 <h3>What is a machine reference position?</h3>
 
@@ -1894,7 +1895,7 @@ from your machines home position. </p>
 
 <p>You can set multiple offsets in a program.This is usually done when machining several parts at
 the same time. The offset positions are given Gcode numbers, most commonly G54 through G59.</p>
-<img src="cnc-doc/images/06_CncOffsets/CNC4.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/06_CncOffsets/save-work-offsets-1024x759.webp" height="50%" alt=""> 
 
 <p>When you set an offset, for example G54, you will locate a position for each axis on the part to
 be machined. Setting these positions to G54 in the machine software offset table. G54 will then be
@@ -1908,7 +1909,7 @@ machine is with regard to the active offset.</p>
 machines home position. If you cancelled the offset in the program with a G53, (offset cancel
 command), the machine would run the program relative to its home position. Also the readout in the
 machine control software would reflect this change.</p>
-<img src="cnc-doc/images/06_CncOffsets/CNC5.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/06_CncOffsets/top-view-home-pos.jpg" height="25%" alt=""> 
 
 <p>So what would your offset values look like? Well, if you positioned your machine reference point
 at all three axes most positive position, all three of your offset values will be negative.
@@ -1925,7 +1926,7 @@ can change it.</p>
 damaging it.</p>
 
 <p>I have written an article explaining how to set your datums here.</p>
-<img src="cnc-doc/images/06_CncOffsets/CNC6.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/06_CncOffsets/Taig-front-view-home-pos.jpg" height="25%" alt=""> 
 
 <h4>A quick overview of setting your offsets to machine a part</h4>
 <ol>
@@ -1984,7 +1985,7 @@ different way.</div>
 
 <p>The most common tool for a hobbyist to set the X and Y datums is a cnc edge finder. There are
 different variations of edge finder design but they all operate the same way.</p>
-<img src="cnc-doc/images/07_SettingTheDatums/CNC1.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/07_SettingTheDatums/edgefinding-1024x769.jpg" height="33%" alt=""> 
 
 <p>The end of the edge finder has a separate part that is held with a spring. Move the end so it is
 slightly offset. It will now wobble when it is rotated. Load the edge finder in the spindle and
@@ -2026,7 +2027,7 @@ magazine full of tools at the operators disposal.</p>
 <div class="info">
 The simplest and best way is to tighten a tool in the spindle and manually touch it off onto the
 face of the part you have chosen as your Z datum.</div>
-<img src="cnc-doc/images/07_SettingTheDatums/CNC2.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/07_SettingTheDatums/z-axis-touch-1024x683.jpg" height="33%" alt=""> 
 
 <p>All you do is jog the tool down slowly onto the top of the part, without it spinning. Do this in
 the same way as setting your X and Y datums with the edge finder. When you get close, but still
@@ -2065,7 +2066,7 @@ most common.</p>
 <div class="info">
 Using these means you can use all six of these offsets at any time and even in the same
 program.</div>
-<img src="cnc-doc/images/07_SettingTheDatums/CNC3.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/07_SettingTheDatums/save-work-offset-table.jpg" height="33%" alt=""> 
 
 <p>This would be useful if you had a fixture that held six identical parts, you could write one
 program then copy and paste it six times using a different offset code, each offset code being set
@@ -2088,7 +2089,7 @@ Y datums.</p>
 <p>The simplest way is to use a dowel or turn a cutter upside down in the spindle. All you do is
 jog the dowel carefully towards the edge of the part. Then you place a piece of paper or feeler
 gauge between the dowel and the part until the dowel grips the paper or feeler gauge.</p>
-<img src="cnc-doc/images/07_SettingTheDatums/CNC4.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/07_SettingTheDatums/dowel-offset-1024x634.jpg" height="33%" alt=""> 
 
 <p>You can then set the position taking into account the radius of the dowel (or cutter) and the
 thickness of the paper. This is a similar method to how I described setting your Z offset.</p>
@@ -2102,7 +2103,7 @@ dial.</div>
 
 <p>Then note the machine position value and move the dial to the other side of the part and
 repeat.</p>
-<img src="cnc-doc/images/07_SettingTheDatums/CNC5.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/07_SettingTheDatums/dial-sweep.jpg" height="33%" alt=""> 
 
 <p>You now have two values for that axis. All you do is add them together, divide the result by 2
 and the answer will give you the middle of the part. Manually type this value into the offset
@@ -2130,7 +2131,7 @@ program.</p>
 <p>The machine can change tools automatically, enabling the machine to finish the part quicker than
 if the tools were changed by an operator. All the tools are loaded in interchangeable chucks or
 arbors with a standard taper clamping system that all cnc machine tools use.</p>
-<img src="cnc-doc/images/08_ToolLength/CNC1.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/08_ToolLength/plunge-mill-1-1024x691.jpg" height="33%" alt=""> 
 
 <h3>Tool Length Compensation G Codes</h3>
 <ul>
@@ -2160,7 +2161,7 @@ moving the machine the exact length of the tool away from the workpiece.</p>
 
 <p>Using multiple tools means the Z datum has to be set to the face of the spindle without having
 any tool loaded.</p>
-<img src="cnc-doc/images/08_ToolLength/CNC2.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/08_ToolLength/Taig-front-view-tool-length.jpg" height="25%" alt=""> 
 
 <h3>G44</h3>
 
@@ -2199,14 +2200,14 @@ machine does not have a tool changer, what do I do?”.</p>
 face of the part you want to set as the datum. When it is in position at the Z datum face you can
 store that position in the datum offset page. Then, in the tool length offset page, make sure the
 value is set at zero.</p>
-<img src="cnc-doc/images/08_ToolLength/CNC3.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/08_ToolLength/z-axis-touch-1024x683.jpg" height="33%" alt=""> 
 
 <p>Then you can still use the G43 Gcode command and an H value, as you would if your machine has a
 tool changer.</p>
 
 <p>The reason you should do it this way is because it is a good habit to get into and if you use a
 Cad/Cam program the post processor will probably create the program using these commands anyway.</p>
-<img src="cnc-doc/images/08_ToolLength/CNC4.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/08_ToolLength/tool-length-table-e1565819249919.jpg" height="33%" alt=""> 
 
 <h3>How Do I Check My Z Datum Value?</h3>
 
@@ -2231,7 +2232,7 @@ length correctly.</p>
 <p>Using a safety line when using rapid moves in between milling or drilling will prevent you
 crashing into clamps or fixturing. Just make sure you program your safety line higher than any
 obstacle.</p>
-<img src="cnc-doc/images/08_ToolLength/CNC5.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/08_ToolLength/mach3-offset-page-e1567304671891-1024x750.webp" height="50%" alt=""> 
 
 <h3>What Do You Do If Your Datum Reference Face Gets Machined Away?</h3>
 
@@ -2313,7 +2314,7 @@ nutshell, using the command this way will make the machine move straight to the 
 <p>The fact that I specified all three axes means it will go to the home position of all three
 axes.</p>
 </div>
-<img src="cnc-doc/images/09_G28Code/CNC1.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/09_G28Code/Taig-front-view-G28.jpg" height="25%" alt=""> 
 
 <p>I always use it this way in every program I write. It is good practice to send your machine to
 its home position in all axes when it has finished running a program.</p>
@@ -2496,9 +2497,9 @@ discussion on the need for limit switches on a hobby cnc machine</p>
 <p>Every machine I have run in my career as a machinist has had limit switches built into it. The
 difference with these “industrial” machines is that the software is designed to use them and
 they are essential for it to operate correctly.</p>
-<img src="cnc-doc/images/10_LimitSwitchs/CNC1.PNG" height="50%" alt=""> <img
-src="cnc-doc/images/10_LimitSwitchs/CNC2.PNG" height="50%" alt=""> <img
-src="cnc-doc/images/10_LimitSwitchs/CNC3.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/10_LimitSwitchs/limit-switch-set-1024x683.jpg" height="33%" alt=""> <img
+src="cnc-doc/images/10_LimitSwitchs/junction-box-1-1024x683.jpg" height="33%" alt=""> <img
+src="cnc-doc/images/10_LimitSwitchs/limit-switch-1024x683.jpg" height="33%" alt=""> 
 
 <p>When I ordered my Taig cnc desktop mill I added some limit switches to my order thinking I would
 need to use them as homing switches.</p>
@@ -2564,7 +2565,7 @@ although they can be used to do both jobs</p>
 <p>I never did install the limit switches I ordered because the mach3 software I use has a feature
 called “soft limits”. This enables you to set up virtual limit switches that are referenced to
 the machine home position.</p>
-<img src="cnc-doc/images/10_LimitSwitchs/CNC4.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/10_LimitSwitchs/soft-limits-1024x761.webp" height="50%" alt=""> 
 
 <p>To access this feature go to the “config” menu, then select “homing/limits”. A table
 will appear where you can set your distances in each axis from the reference position.</p>
@@ -2576,12 +2577,12 @@ doesn’t stop too close.</p>
 <p>There is also a “slow zone” column in the table which gives a distance away from the limits
 where the machine will slow down by a percentage of the feed rate. This amount can be entered in
 the “speed%” column.</p>
-<img src="cnc-doc/images/10_LimitSwitchs/CNC5.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/10_LimitSwitchs/soft-limits-table-1.jpg" height="33%" alt=""> 
 
 <p>Once you have your distances set in the “homing/limits” table, you will need to switch on
 the “soft limits” switch on the program run page. The border of the “soft limits” switch
 will turn green when it is active.</p>
-<img src="cnc-doc/images/10_LimitSwitchs/CNC6.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/10_LimitSwitchs/soft-limit-boundary.jpg" height="33%" alt=""> 
 
 <p>Then you will need to toggle the “display mode” button to switch on the table display in the
 graphics window.</p>
@@ -2621,9 +2622,317 @@ digital soft limits or physical limit switches.</p>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
+<h2 id="P-18">Cnc MillingEquipment</h2>
+
+<p><span style="color:#8000ff">https://cncphilosophy.com/cnc-milling-equipment/</span></p>
+
+<p>I’m going to give you a quick rundown on what equipment you will need to get started with a benchtop 
+cnc milling machine in your workshop.</p>
+
+<h3>What equipment will you need to operate benchtop cnc mill?</h3>
+
+<p>There is going to be a bare minimum of equipment that you will need to run your cnc machine. 
+Some of these are going to be dependant on what type of machine you have or want…</p>
+
+<p>The first most essential part will be a room or workshop.</p>
+
+<p>You don’t want to put your machine in your bedroom.</p>
+
+<div class="info">
+<p>I use a room in the basement, this is ideal for keeping the noise away from the rest of the house.</p>
+</div>
+
+<p>Small machines are not very loud, but it could get old quickly for anyone else in the house if they can hear it running.</p>
+
+
+<h3>A bench</h3>
+
+<p>Once you have your room, a sturdy bench will be necessary for all but the smallest cnc engraving machine</p>
+
+<div class="info"><p>A desktop cnc mill like a taig will need bolting to the bench to keep it from moving about.</p></div>
+
+<p>This is certainly a safety issue, so make sure your machine is secured properly.</p>
+
+<img src="cnc-doc/images/18_MillingEquipment/Bench-mill-1-1024x969.jpg" height="50%" alt=""> 
+
+<h3>Windows PC</h3>
+
+<p>You will need a computer to run your machine. It can be done with a laptop, but ideally you will want a desktop computer.</p>
+
+
+<p>You will not need an expensive PC, most people have an old desktop they are not using. You can pick up a cheap second hand machine from local classified ads if you don’t have one.</p>
+
+<p>Don’t bother trying with an apple computer. I’m sure it can be done, but just don’t..</p>
+
+
+<h3>Cnc control software</h3>
+
+<p>Once you have your PC you will need software on it to control your machine. Popular choices are Mach3 or universal gcode sender. </p>
+
+<p>I wrote a post about connecting a cnc machine to a computer, you can read it through this link.</p>
+
+<img src="cnc-doc/images/18_MillingEquipment/toolpath-1024x764.webp" height="50%" alt=""> 
+
+
+<h4>G-Code Visualizer</h4>
+
+<p>Writing your own G-Code programs can be tricky, being able to check them visually before running them on your machine is recommended.
+
+<p>You can do this using G-Code visualizer software. Although not essential, there are free ones available, 
+so they are worth mentioning.</p>
+
+<p>Check out my ‘G Code simulator‘ article.</p>
+
+
+<h4>An endmill or engraving tool</h4>
+
+<p>This one is pretty obvious. If your machine didn’t come with an endmill you will have to get one.</p>
+
+<p>The cheapest one you can find will do if you are a noob and need to practice. </p>
+
+<div class="info"><p>I would suggest getting the largest size dia that your machine will take. The bigger the diameter, 
+the less likely they are to break if you abuse it.</p></div>
+
+<p>You can get a set of endmills from Amazon like these, they certainly won’t break the bank.</p>
+
+<p>No products found.</p>
+
+
+<h4>Something to test your programs on</h4>
+
+<div class="info"><p>
+One trick I do occasionally is to do a test run on a piece of throw away material, such as wood or insulation foam.</p></div>
+
+<p>It will help me prove out a program and see if it might cause any problems when it gets run in aluminum or steel.</p>
+
+<p>Insulation foam only needs some double sided tape to keep it in place while you practice.</p>
+
+<div class="info">
+<p>If you do mill wood or foam, use a shop vac to suck up the dust while it runs, don’t breathe it in…</p></div>
+
+<h4>Safety glasses</h4>
+
+<p>Speaking of safety, getting some glasses and wearing them will stop you from losing your eyesight. They are super cheap.</p>
+
+<p>I have had metal in my eye more than a few times, it’s not fun. Don’t try it.</p>
+
+
+<h3>Recommended equipment needed for your cnc machine</h3>
+
+<p>After you have the basics and have got your machine running, there is a ton of other equipment you could invest in.
+ A lot of choices will depend on the type of machine you have and what you want to make with it.</p>
+
+<p>I will list what I think is recommended based mainly on machining metal projects. There will be some equipment that will be usable for any type of machine and some that will be specific for metalwork. </p>
+
+
+<h4>Fixturing, vise, clamps etc</h4>
+
+<p>This is a big one. Not having anything to hold your projects will stop you before you even get started. </p>
+
+<div class="info"><p>
+A vise suited to the size of your machine is essential. I have two, this helps if your part is quite long, 
+both ends of the part can be clamped in each vise.</p></div>
+
+<p>The other fixturing essential are clamps, threaded studs and t-slot nuts. 
+These are the standard for clamping larger parts to the table.</p>
+
+<p>They can be used to clamp custom made fixture plates to the table for holding many smaller parts.</p>
+
+<img src="cnc-doc/images/18_MillingEquipment/clamps-1024x683.webp" height="50%" alt="">
+
+<h3>MPG Pendant </h3>
+
+<p>I consider an MPG Pendant is an essential accessory. The machines I use at work always have an MPG, (
+manual pulse generator).</p>
+
+<div class="info"><p>
+As soon as you use one you will wonder how you managed before.</p></div>
+
+<p>They make manually jogging your machine to set your datums a breeze. 
+You will have more control over your machine making it less likely to crash when setting up your machine.</p>
+
+<p>The tactile feel you have when using it beats pressing soft keys with your mouse any day.</p>
+
+<p>A newer version of the Vista cnc pendant that I own and recommend is available on Amazon.</p>
+
+<p>You can check out my full review of the Vistacnc pendant shown below.</p>
+
+<img src="cnc-doc/images/18_MillingEquipment/mpg-pendant-768x512.webp" height="50%" alt="">
+
+
+<h4>Endmills and drills</h4>
+
+<p>A larger selection of endmills of various sizes will be needed if you want to machine more complex parts.</p>
+
+<div class="info"><p>
+Ball endmills are essential if you want to do surface machining of 3D forms and angles.</p></div>
+
+<p>A drill index in both imperial and metric will be almost a necessity so you never get stuck trying to make a part.</p>
+
+<p>Holes can be machined on a mill but drilling is quicker and can go a lot deeper than using an endmill.
+ A center drill will also be needed if you are using drill bits.</p>
+
+<img src="cnc-doc/images/18_MillingEquipment/cutters-2-1024x683.webp" height="50%" alt="">
+
+
+
+<h4>Air compressor</h4>
+<p>A source of compressed air is extremely useful, keeping your parts clear of chips will help prevent cutters from breaking.</p>
+
+<div class="info"><p>
+A big compressor is not necessary, a small d.i.y. unit is all you will need.</p></div>
+
+<p>The big issue with these budget compressors is the noise they produce.
+ It can be really bad in a small room and definitely a no go in a house.</p>
+
+<div class="info"><p>
+I avoid this problem by using an old fridge compressor retrofitted to the tank of a “donor” compressor.</p></div>
+
+<p>It buzzes like a fridge.</p>
+
+<img src="cnc-doc/images/18_MillingEquipment/compressor-1-768x512.jpg" height="50%" alt="">
+
+
+
+
+<h4>Edge finder</h4>
+
+<p>To accurately find the edge of a part to set your datum you will need some type of edge finder or wobbler.</p>
+
+<div class="info"><p>
+There are various types available from the classic wobbler to an electronic edge finder that lights up when 
+it touches the edge.</p></div>
+
+<p>Here is an article dedicated to edge finders, it explains how they are used and which type is recommended 
+for use on a hobby machine.</p>
+
+<h4>Measuring Equipment</h4>
+<p>If you want to make accurate components for your hobby that may even be part of an assembly you will need measuring tools.</p>
+
+<p>This will include dial or digital calipers, micrometers, gauges of all types and even a steel rule will be essential.</p>
+<img src="cnc-doc/images/18_MillingEquipment/dial-calipers-768x512.jpg" height="50%" alt="">
+
+<p>Here is an article dedicated to micrometers, explaining which ones are recommended for use in a home workshop.</p>
+
+
+<h4>Dial test indicator</h4>
+<p>These are important whatever type of machine you own.</p>
+
+<div class="info"><p>
+I have one permanently attached to my manual micro lathe. I use it with an extra long tip for the Z axis. 
+It’s basically a poor man’s readout. </p></div>
+
+<p>The main use is to check for flatness or angle. It can also be used to measure depths and distances.</p>
+
+<div class="info"><p>
+I find that a smaller finger dial is more useful for a small desktop cnc.</p></div>
+
+<p>They are more compact and can be mounted in the machine spindle. 
+This enables it to be used for setting datums to the center of a part by “sweeping” against an edge or diameter.</p>
+
+<img src="cnc-doc/images/18_MillingEquipment/dial-indicator-300x200.jpg" height="25%" alt=""><br/>
+<img src="cnc-doc/images/18_MillingEquipment/Dial-on-lathe-300x200.webp" height="25%" alt=""><br/>
+
+
+<p>I have an article explaining the uses of different dial indicators and recommending the dials I use.</p>
+
+<h4>1-2-3 Blocks</h4>
+<p>These are precision ground steel blocks. They measure 3” by 2” by 1”. </p>
+<p>They are very useful, you can check the price on Amazon here.</p>
+
+<p>I couldn’t possibly list everything they can be used for but here are a few.</p>
+
+<ul>
+<li>As a square</li>
+<li>As a fixture block or a stop</li>
+<li>Check the calibration of micrometers</li>
+<li>Set the height offset of tools</li>
+</ul>
+
+<p>I have written a full article on 1-2-3 blocks, click the link to read it.</p>
+<img src="cnc-doc/images/18_MillingEquipment/1-2-3-Blocks-300x214.jpg" height="25%" alt=""><br/>
+
+<h4>ER collet sets</h4>
+<p>Having a spindle that takes ER collets makes your machine very versatile when it comes to tool 
+choices for your machine. </p>
+
+<div class="info"><p>
+Having a full set of imperial and metric collets will ensure you are very rarely limited to the size of
+ drills and cutters you can use.
+</p></div>
+
+<p>I have found that using a drill chuck in your mill takes up way too much space. Having a 
+good choice of ER collets eliminates this problem.
+</p>
+
+<p>You can read my article on ER Collets if you need to know more.</p>
+
+<p>These can be found on Amazon.</p>
+<img src="cnc-doc/images/18_MillingEquipment/er16-collets-768x512.webp" height="25%" alt=""><br/>
+
+<p>ER Collet racks are also available, or you can make your own with G Code available in the Cnc Philosophy store.</p>
+
+<h4>Parallel set</h4>
+<p>If you have a vise for your machine you will need some parallels.</p>
+
+<div class="info"><p>
+These will lift your part above the vise jaws while keeping them level to the table. </p></div>
+
+<p>A small cnc machine vice will only need a couple of small pairs of parallels but they are only available in sets.</p>
+
+<p>I have written a full article about parallels, you can read it here. .</p>
+<img src="cnc-doc/images/18_MillingEquipment/parallels-768x512.webp" height="25%" alt=""><br/>
+
+<h4>Soft blow hammer</h4>
+<p>These hammers or mallets have heads on them made of plastic or leather.</p>
+
+<div class="info"><p>
+They are designed to avoid leaving dents or marks on the face you are hitting.</p></div>
+
+<p>They are most useful for making sure a part is sat down firmly on a pair of parallels in the vise.</p>
+
+<h4>Small shop vac</h4>
+<p>Once you have made a mess you need to clean it up.</p>
+
+<div class="info"><p>
+Using a small shop vac has to be the easiest and most efficient way of doing this.</p></div>
+
+<p>One of those purchases that will always get used.</p>
+
+<h4>Selection of hand tools</h4>
+<p>A set of small hand files and a hole deburring tool are just a few of the hand tools you should consider owning. 
+I just collect them as they are needed.</p>
+
+<h4>Tap and die sets</h4>
+<p>I’ll let you into a big secret. The tap and die sets you can buy from the big box stores or Amazon are shit.</p>
+<p>They can be useful, mainly for repairing or cleaning out rusty or damaged threads.
+ So if that is something you need to do then these sets certainly have value.</p>
+
+<div class="info"><p>
+The difference between tapping a hole with a cheap tap and a good quality tap is like night and day. </p></div>
+
+<p>
+I would recommend buying individual good quality taps from an industrial supplier such as mcmaster carr. If they are available, choose HSS taps, (high speed steel), then it should last you a few hundred holes.</p>
+<img src="cnc-doc/images/18_MillingEquipment/tap-die-set-768x512.webp" height="50%" alt=""><br/>
+
+
+<h4>Micro lathe</h4>
+<p>I know this might seem extreme for an accessory for your mill, but as you start doing more projects 
+you will discover that they are pretty much a necessity.</p>
+
+<div class="info"><p>
+I own the Taig micro lathe and I probably use it more than my mill. It really comes in handy for quick fix it jobs.</p></div>
+
+<p>I used it to make an arbor for a slitting saw, fixturing parts and prepping round stock for my A axis on my cnc mill.</p>
+
+<p>Then, once you own a lathe, you will need accessories for it…. 🙂</p>
+
+
+
 <h2 id="P-11">Cnc Milling Machine Terminology</h2>
 
 <p><span style="color:#8000ff">https://cncphilosophy.com/cnc-milling-machine-terminology/</span></p>
+
 
 <h3>G codes and M codes</h3>
 
@@ -2883,7 +3192,7 @@ and way too much for one book, never mind one blog article.</p>
 <p>So, the main type of tools that cnc hobbyists use, and sometimes the only type they use, are end
 mills and ball end mills. Drills are used a lot if you work with metals, but this article will
 focus only on end mills and ball nose end mills.</p>
-<img src="cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-1.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/12_TypesOfMillCutters/selection-of-end-mills.jpg" height="50%" alt=""> 
 
 <p>I have curated a list of common questions that people ask and have given an answer that best
 fits the concerns a cnc hobbyist may have.</p>
@@ -2920,7 +3229,7 @@ extra expense more cost effective, especially for a hobbyist.</p>
 <h3>Can you drill with an end mill?</h3>
 
 <p>If it has cutting edges on the bottom face, yes, you can drill with an end mill.</p>
-<img src="cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-2.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/12_TypesOfMillCutters/center-cutting-end-mill.jpg" height="50%" alt=""> 
 
 <p>This is mainly described as ‘plunging’ and enables you to open up an ‘internal’ pocket
 without having to use another tool to open up a space for the end mill to move down into.</p>
@@ -2939,7 +3248,7 @@ diameter.</p>
 
 <p>Two flute end mills are known as slot drills. They are primarily used for milling slots or
 pockets.</p>
-<img src="cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-3.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/12_TypesOfMillCutters/milling-machine-slot-drill.jpg" height="50%" alt=""> 
 
 <h3>What is the difference between an end mill and a slot drill?</h3>
 
@@ -2987,7 +3296,7 @@ flutes and out of the hole.</p>
 <p>A down cut end mill is when the spiral of the side flutes is raked forward. This forces the
 material being removed downward. These types of tools are primarily used on softer materials such
 as wood and plastic.</p>
-<img src="cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-4.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/12_TypesOfMillCutters/down-cut-end-mill.jpg" height="50%" alt=""> 
 
 <div class="info">
 <p>This design feature prevents the material splintering or chipping on the top edge improving the
@@ -2999,7 +3308,7 @@ finish and appearance.</p>
 <h3>How can you tell if an endmill is center cut?</h3>
 
 <p>The cutting edges on the bottom face will extend all the way to the center.</p>
-<img src="cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-5.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/12_TypesOfMillCutters/non-center-cutting-end-mills.jpg" height="50%" alt=""> 
 
 <p>Some slot drills will have opposing flutes that meet slightly off center (asymmetrical). This
 helps the tool cut in the middle where the rotational speed is at its slowest.</p>
@@ -3010,7 +3319,7 @@ helps the tool cut in the middle where the rotational speed is at its slowest.</
 flutes can dictate what abilities the tool may have that make it better for specific operations.</p>
 
 <p>For example, slot drills have two flutes and are designed for plunging.</p>
-<img src="cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-6.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/12_TypesOfMillCutters/high-feed-endmill.jpg" height="50%" alt=""> 
 
 <div class="info">
 <p>An eight flute end mill will be able to feed faster using the same feed per tooth than a four
@@ -3035,7 +3344,7 @@ just a fancy way of saying they are machinable.</p>
 <p>There are end mills designed specifically for aluminum. They usually have a steep rake angle on
 the helix and have only two flutes. This is to take advantage of higher speeds and feeds that
 industrial machines can run at with aluminum, i.e. very fast.</p>
-<img src="cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-7.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/12_TypesOfMillCutters/ali-endmill.jpg" height="50%" alt=""> 
 
 <div class="info">
 <p>For hobby machines these high spindle speeds and feeds are not possible so just using an
@@ -3054,7 +3363,7 @@ machine has the power to handle it.</p>
 <p>Two flute and even one flute end mills, small dia ball end mills for finishing complex reliefs.
 There are also the burr style bits for machining wood. Upcut and downcut styles to suit different
 densities of wood etc.</p>
-<img src="cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-8.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/12_TypesOfMillCutters/big-carbide-burr.jpg" height="50%" alt=""> 
 
 <p>Wood is quite forgiving to machine, so test different styles and find what suits your needs.</p>
 
@@ -3062,7 +3371,7 @@ densities of wood etc.</p>
 
 <p>Single flute end mills are the best for cutting acrylic. This enables the machine to run at a
 high rpm yet still maintain an achievable feedrate for the required feed per tooth.</p>
-<img src="cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-9.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/12_TypesOfMillCutters/single-flute-end-mill.jpg" height="50%" alt=""> 
 
 <h3>How do I know if my end mill is carbide?</h3>
 
@@ -3091,7 +3400,7 @@ the endmill is stronger than the machine.</p>
 
 <p>A ball nose end mill is just another name for a ball end mill. This type of cutter has a full
 radius on the end.</p>
-<img src="cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-10.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/12_TypesOfMillCutters/ball-nose-end-mill.jpg" height="50%" alt=""> 
 
 <p>There are also bull nose end mills, these have radiused corners that are smaller than the radius
 of the cutter.</p>
@@ -3108,7 +3417,7 @@ projects.</p>
 
 <p>These end mills are ideal for machining reliefs and decorative projects. The radius on the end
 can be very small for detail work, but the taper will add a lot of strength to prevent breakage.</p>
-<img src="cnc-doc/images/12_TypesOfMillCutters/MILL_CUTTER-11.PNG" height="50%" alt=""> 
+<img src="cnc-doc/images/12_TypesOfMillCutters/tapered-ball-ends.jpg" height="50%" alt=""> 
 
 <p>The taper will prevent you from being able to mill a vertical face but it will not be a problem
 on a relief, for example.</p>
