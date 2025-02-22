@@ -221,6 +221,16 @@
         <file>cnc-doc/images/18_MillingEquipment/tap-die-set-768x512.webp</file>
         <file>cnc-doc/images/18_MillingEquipment/toolpath-1024x764.webp</file>
 
+        <file>cnc-doc/images/11_Cnc_Milling_Machine_Terminology/A-axis.jpg</file>
+        <file>cnc-doc/images/11_Cnc_Milling_Machine_Terminology/center-drill-768x512.jpg</file>
+        <file>cnc-doc/images/11_Cnc_Milling_Machine_Terminology/Drill-bits-768x512.jpg</file>
+        <file>cnc-doc/images/11_Cnc_Milling_Machine_Terminology/example-slot-drill-768x512.jpg</file>
+        <file>cnc-doc/images/11_Cnc_Milling_Machine_Terminology/fixture-1-768x512.jpg</file>
+        <file>cnc-doc/images/11_Cnc_Milling_Machine_Terminology/fusion-360-768x407.jpg</file>
+        <file>cnc-doc/images/11_Cnc_Milling_Machine_Terminology/high-feed-endmill-768x549.jpg</file>
+        <file>cnc-doc/images/11_Cnc_Milling_Machine_Terminology/mach3-offset-page-e1567304671891-768x563.jpg</file>
+        <file>cnc-doc/images/11_Cnc_Milling_Machine_Terminology/spotdrill-300x300.jpg</file>
+
         <file>cnc-doc/images/12_TypesOfMillCutters/ali-endmill.jpg</file>
         <file>cnc-doc/images/12_TypesOfMillCutters/ball-nose-end-mill.jpg</file>
         <file>cnc-doc/images/12_TypesOfMillCutters/big-carbide-burr.jpg</file>
@@ -253,7 +263,7 @@
         <file>cnc-doc/images/22_CnC1419_Upgrade/tb6600.jpg</file>
         <file>cnc-doc/images/22_CnC1419_Upgrade/tmc2209-zoom.jpg</file>
         <file>cnc-doc/images/22_CnC1419_Upgrade/tmc2209.jpg</file>
-        
+
         <file>cnc-doc/images/99_Arduino_Grbl/arduino.png</file>
         <file>cnc-doc/images/99_Arduino_Grbl/arduino_board_selection.png</file>
 		<file>cnc-tutorial.html</file>
