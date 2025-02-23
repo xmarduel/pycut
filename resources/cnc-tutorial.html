@@ -5,7 +5,7 @@
   <link href="doc/css/prism.css" rel="stylesheet">
   <link href="doc/css/simpletree.css" rel="stylesheet">
   <link href="cnc-doc/css/cnc.css" rel="stylesheet"> 
-  <script type="text/javascript" src="js/prism.js">
+  <script type="text/javascript" src="doc/js/prism.js">
  </script>
 </head>
 
@@ -92,6 +92,33 @@
   <li><a href="#P-07">Setting the datums on your cnc machine</a></li>
   <li><a href="#P-08">Tool length Compensation Explained</a></li>
   <li><a href="#P-09">G28 Code demistified</a></li>
+  <li><a href="#P-17">Most useful G Codes</a> 
+    <ul>
+      <li><a href="#P17-G00">G00 G-Code Command</a></li>
+	  <li><a href="#P17-G01">G01 G-Code Command</a></li>
+	  <li><a href="#P17-G02">G02 G-Code Command</a></li>
+	  <li><a href="#P17-G03">G03 G-Code Command</a></li>
+	  <li><a href="#P17-G04">G04 G-Code Command</a></li>
+	  <li><a href="#P17-G17">G17 G-Code Command</a></li>
+	  <li><a href="#P17-G18">G18 G-Code Command</a></li>
+	  <li><a href="#P17-G19">G19 G-Code Command</a></li>
+	  <li><a href="#P17-G21">G21 G-Code Command</a></li>
+	  <li><a href="#P17-G20">G20 G-Code Command</a></li>
+	  <li><a href="#P17-G40">G40 G-Code Command</a></li>
+	  <li><a href="#P17-G41">G41 G-Code Command</a></li>
+	  <li><a href="#P17-G42">G42 G-Code Command</a></li>
+	  <li><a href="#P17-G43">G43 G-Code Command</a></li>
+	  <li><a href="#P17-G53">G53 G-Code Command</a></li>
+	  <li><a href="#P17-G54">G54 G-Code Command</a></li>
+      <li><a href="#P17-G77">G77 G-Code Command</a></li>
+      <li><a href="#P17-G80">G80 G-Code Command</a></li>
+      <li><a href="#P17-G81">G81 G-Code Command</a></li>
+	  <li><a href="#P17-G83">G83 G-Code Command</a></li>
+      <li><a href="#P17-G84">G84 G-Code Command</a></li>
+	  <li><a href="#P17-G98">G98 G-Code Command</a></li>
+      <li><a href="#P17-G99">G99 G-Code Command</a></li>
+    </ul>
+  </li>
   <li><a href="#P-10">Limits Switches</a></li>
   <li><a href="#P-18">Cnc Milling Equipment</a></li>
   <li><a href="#P-11">Cnc Milling Machine Terminology</a></li>
@@ -2460,8 +2487,252 @@ M30
 <p>If you haven’t seen any G code before and all these codes have you scratching your head take a
 quick look at my G code programming article and an explanation of cnc terminology.</p>
 
-<div style="height:30px">
-</div>
+<br/>
+<br/>
+
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+
+
+<h2 id="P-17">Most usuful G Codes</h2>
+
+<h3 id="P17-G00">G00 G-Code Command</h3>
+<h3 id="P17-G01">G01 G-Code Command</h3>
+<h3 id="P17-G02">G02 G-Code Command</h3>
+<h3 id="P17-G03">G03 G-Code Command</h3>
+
+<p>G03 is a G-code command used in CNC machining to specify a counter clockwise circular movement of the cutting tool. It is used to create circular cuts, arcs, and contours in the workpiece. The G03 command requires parameters to define the center point of the arc, the radius of the arc, and the end point of the arc. The command is typically followed by an X, Y, and Z coordinate to specify the end point of the arc.</p>
+
+<h3 id="P17-G04">G04 G-Code Command</h3>
+<h3 id="P17-G17">G17 G-Code Command</h3>
+
+<p>G17 is a code used in CNC machining that specifies the plane in which circular interpolation will occur. In particular, G17 specifies that circular interpolation will occur in the XY plane. This means that any circular movements made by the CNC machine will be constrained to the XY plane, with the Z-axis remaining fixed. This code is particularly useful when machining parts with circular features or contours, as it allows the machine to move in a smooth and accurate circular motion in the specified plane.</p>
+
+<h4>How G17 G-Code Command is used</h4>
+<p>Here’s an example of how G17 might be used in a G code program:</p>
+
+<pre><code class="language-gcode">G90 ; Set absolute coordinates
+G17 ; Set circular interpolation plane to XY
+G0 X0 Y0 Z0 ; Move to starting position
+G2 X10 Y10 I5 J0 ; Move in a clockwise arc from current position to X=10, Y=10, with a center point of X=5, Y=0 (in the XY plane)
+G1 X20 Y10 ; Move in a straight line to X=20, Y=10
+G3 X30 Y0 I5 J-10 ; Move in a counterclockwise arc from current position to X=30, Y=0, with a center point of X=5, Y=-10 (in the XY plane)
+G1 X30 Y-20 ; Move in a straight line to X=30, Y=-20</code></pre>
+
+<p>In this example, we start by setting the absolute coordinates and then setting the circular interpolation plane to XY using the G17 command. We then move to the starting position at X=0, Y=0, Z=0.</p>
+
+
+<p>Next, we use the G2 command to move in a clockwise arc from the current position to X=10, Y=10, with a center point of X=5, Y=0 (in the XY plane). The I and J parameters specify the distance from the current position to the center point of the arc in the X and Y directions, respectively.</p>
+
+<p>We then use the G1 command to move in a straight line to X=20, Y=10.</p>
+
+
+<p>Next, we use the G3 command to move in a counterclockwise arc from the current position to X=30, Y=0, with a center point of X=5, Y=-10 (in the XY plane). The I and J parameters are again used to specify the distance from the current position to the center point of the arc.</p>
+
+<p>Finally, we use the G1 command to move in a straight line to X=30, Y=-20.</p>
+
+
+<h3 id="P17-G18">G18 G-Code Command</h3>
+
+<p>G18 is a G-code command used in CNC machining that specifies the plane of movement for circular interpolation in the X-Z plane, which is perpendicular to the Y-axis. This command is often used in conjunction with G02 and G03 commands, which respectively specify clockwise and counterclockwise circular interpolation movements. By using G18 along with these commands, CNC machines can create circular shapes and contours in the X-Z plane with precision and accuracy.</p>
+
+<h4>How G18 G-Code Command is used</h4>
+<p>Here’s an example of G18 being used in a G-code program with comments:</p>
+
+<pre><code class="language-gcode">G90                        // Absolute positioning
+G54                        // Work coordinate system 1
+G00 X0 Y0 Z0               // Rapid move to starting position
+M03 S1000                  // Spindle on, clockwise rotation at 1000 RPM
+G01 Z-0.5 F100             // Move down to cutting depth at a feed rate of 100 mm/min
+G18                        // Select X-Z plane for circular interpolation
+G02 X50 Z-25 R25           // Move in a clockwise circular arc with a radius of 25 mm
+G01 X70 F200               // Move linearly to the right at a feed rate of 200 mm/min
+G03 X90 Z-45 R25           // Move in a counterclockwise circular arc with a radius of 25 mm
+G01 X110 F200              // Move linearly to the right at a feed rate of 200 mm/min
+G00 Z10                    // Rapid move up to retract the tool
+M05                        // Spindle off</code></pre>
+
+<p>In this example, the G18 command is used after the tool has reached the cutting depth to specify that the subsequent circular interpolation movements will be in the X-Z plane. The G02 and G03 commands are then used to create clockwise and counterclockwise circular arcs in the X-Z plane, respectively.</p>
+
+
+<h3 id="P17-G19">G19 G-Code Command</h3>
+
+<p>G19 is a G-code command used in CNC machining to specify the plane in which circular interpolation is to be performed. Specifically, G19 commands the machine to perform circular interpolation in the YZ plane. This means that the machine will move the cutting tool in a circular path in the YZ plane, as specified by the parameters of the G-code command.</p>
+
+<p>In contrast, G17 specifies circular interpolation in the XY plane, and G18 specifies circular interpolation in the XZ plane. These commands are important for controlling the movement of the cutting tool in CNC machining, and they allow for precise and complex shapes to be cut with high accuracy.</p>
+
+<h4>How G19 G-Code Command is used</h4>
+
+<p>Here’s an example of G19 being used in a G-code program with comments:</p>
+
+<pre><code class="language-gcode">G00 X0 Y0 Z0    ; Rapid move to the starting position
+G90             ; Set absolute positioning mode
+G19             ; Set circular interpolation plane to YZ
+G02 X10 Y10 I5 J0  ; Perform a clockwise circular interpolation in the YZ plane, with a center point at (5,0) and a radius of 10 units
+G01 X20 Y0       ; Move in a straight line to (20,0)
+G03 X30 Y10 I5 J0  ; Perform a counterclockwise circular interpolation in the YZ plane, with a center point at (25,0) and a radius of 10 units
+G00 X0 Y0       ; Rapid move back to the starting position
+In this example, the G-code program starts by moving the cutting tool to the starting position at (0,0,0) using a rapid move (G00). It then sets the absolute positioning mode (G90) and specifies that circular interpolation should be performed in the YZ plane (G19).</code></pre>
+
+<p>The program then performs two circular interpolations using G02 and G03 commands. The first interpolation is a clockwise circle with a center point at (5,0) and a radius of 10 units. The second interpolation is a counterclockwise circle with a center point at (25,0) and a radius of 10 units. Both of these circular interpolations are performed in the YZ plane, as specified by the G19 command.<p>
+
+<p>Finally, the program moves the cutting tool back to the starting position using a rapid move (G00).</p>
+
+<h3 id="P17-G20">G20 G-Code Command</h3>
+
+
+<h3 id="P17-G21">G21 G-Code Command</h3>
+
+<p>G21 is a G-code command used in CNC machining to set the machine to operate in metric units. This means that all subsequent commands and measurements will be interpreted in millimeters instead of inches. G20, on the other hand, is the G-code command used to set the machine to operate in inches. The choice between G20 and G21 depends on the specific requirements of the machining project and the preferences of the operator.</p>
+
+<h4>How G21 G-Code Command is used</h4>
+<p>Here’s an example of how G21 can be used in a G-code program:</p>
+
+<pre><code class="language-gcode">G21         (Switch to metric units)
+G90         (Set absolute positioning mode)
+G1 X50 Y50  (Move to X=50mm, Y=50mm)
+G1 X100 Y100 (Move to X=100mm, Y=100mm)</code></pre>
+
+<p>In this example, the first line (G21) tells the machine to operate in metric units. The second line (G90) sets the positioning mode to absolute, meaning that the machine will move to the exact coordinates specified in the subsequent commands. The third and fourth lines (G1 X50 Y50 and G1 X100 Y100) are movement commands that tell the machine to move to the specified X and Y coordinates in millimeters.</p>
+
+<p>The comments in brackets are added for human readability and do not affect the operation of the machine.</p>
+
+
+<h3 id="P17-G40">G40 G-Code Command</h3>
+<h3 id="P17-G41">G41 G-Code Command</h3>
+<h3 id="P17-G42">G42 G-Code Command</h3>
+<h3 id="P17-G43">G43 G-Code Command</h3>
+<h3 id="P17-G53">G53 G-Code Command</h3>
+
+<p>The G53 command is used to cancel all work offsets, such as G54, G55 etc. If the machine was programmed to continue running with all offsets cancelled it would use its home positions as its reference. In my experience this command is not used very often, only in very specific cases. An example would be during an automated probing cycle, if you wanted the probe to reference a position from the machine reference (home position) a G53 would be used in the program to clear the active offset. If G53 was not used the probe would reference from the currently active offset.</p>
+
+<h4>How G53 G-Code Command is used</h4>
+<p>Here’s an example of how the G53 command might be used in a G-code program, with comments in brackets and a spindle on command for 2000 RPM:</p>
+
+<pre><code class="language-gcode">G90          ; Set absolute coordinates
+G53 X0 Y0    ; Move the tool to the machine's home position [cancels all work offsets]
+G01 Z0 F1000 ; Move the tool to the top of the workpiece at a feedrate of 1000 mm/min
+M03 S2000    ; Turn on the spindle and set it to 2000 RPM
+G01 X10 Y10  ; Move the tool to a specific position on the workpiece
+G02 X20 Y10 I5 J0 ; Perform a clockwise arc from the current position to X20 Y10, with a radius of 5 mm
+G01 X30 Y20  ; Move the tool to another position on the workpiece
+M05         ; Turn off the spindle
+G53 Z0      ; Move the tool to the machine's home position [cancels all work offsets]</code></pre>
+
+<p>In this example, the G53 command is used instead of a typical offset call, such as G54: This would force the machine to reference its home positions when running the program. At the beginning of the program it will move the tool to the machine’s home position (cancelling all work offsets), and again at the end of the program to return the tool to the Z home position. The M03 command is used to turn on the spindle and set it to 2000 RPM, and the M05 command is used to turn off the spindle. The other G-code commands are used to move the tool to specific positions on the workpiece and perform machining operations.</p>
+
+<h3 id="P17-G54">G54 G-Code Command</h3>
+<h3 id="P17-G77">G77 G-Code Command</h3>
+<h3 id="P17-G80">G80 G-Code Command</h3>
+
+<p>G80 is a common code used in CNC machining that refers to canceling a canned cycle. A canned cycle is a pre-programmed sequence of operations that is commonly used in CNC machining to simplify the programming process.</p>
+
+<p>When a G80 command is executed, it cancels the current canned cycle.</p>
+
+<p>It’s worth noting that the specific functionality of G80 may vary depending on the specific CNC machine being used, as different machines may have different interpretations of the code.</p>
+
+<h4>How G80 G-Code Command Is Used</h4>
+<p>Here’s an example of how G80 might be used in a G code program:</p>
+
+<pre><code class="language-gcode">G90  (Set absolute positioning mode)
+G54  (Select work offset 1)
+G00 X0 Y0 Z0  (Rapid move to starting position)
+G81 R1.0 Z-10.0 F100.0  (Begin drilling cycle at depth -10.0mm, feed rate 100.0mm/min)
+G80  (Cancel drilling cycle)
+G00 Z10.0  (Rapid move to clear workpiece)
+M30  (End of program)</code></pre>
+
+<p>In this example, the program begins by setting the machine to absolute positioning mode and selecting the first work offset. It then rapidly moves to the starting position and begins a drilling cycle with a retract distance of 1.0mm, a depth of -10.0mm, and a feed rate of 100.0mm/min.</p>
+
+<p>Then the G80 command is executed, canceling the cycle and returning the machine to the starting position. The program then rapidly moves to clear the workpiece and ends with the M30 command.</p>
+
+
+<h3 id="P17-G81">G81 G-Code Command</h3>
+<h3 id="P17-G83">G83 G-Code Command</h3>
+
+<p>G83 is a G-code used in CNC machining to drill holes with peck drilling. Peck drilling is a technique used to drill deep holes in metal or other materials by retracting the drill bit periodically to clear chips and cool the bit. G83 is used to control the peck drilling process and specifies the depth, feed rate, and retract distance for each peck. It is commonly used in machining operations that require deep holes, such as in the aerospace and automotive industries.</p>
+
+<h4>How G83 G-Code Command Is Used</h4>
+
+<p>Here is an example of how G83 could be used in a G-code program for drilling a hole with peck drilling, with comments in brackets and a spindle on command for 725 RPM:</p>
+
+<pre><code class="language-gcode">T01 M06          (Select tool 1, perform tool change)
+G90              (Set absolute positioning mode)
+G54              (Select work offset coordinate system)
+M03 S725         (Turn on spindle clockwise at 725 RPM)
+G00 X0 Y0     (Rapid move to start position)
+G43 Z10 H01      (Rapid move to Z safe height position, activate tool length compensation)
+G00 X10 Y10      (Rapid move to hole position)
+G83 Z-20 R5 Q2 F100  (Peck drilling cycle with a depth of -20mm, peck increment of 2mm, clearance height of 5mm and a feed rate of 100 mm/min.)
+G80             (Cancel peck drilling cycle)
+M05             (Stop spindle)
+G00 Z50         (Rapid move to clearance height)
+M30             (End of program)</code></pre>
+
+<p>In this example, the program begins by performing a tool change, setting the machine to absolute positioning mode, selecting a work offset coordinate system, and turning on the spindle at 725 RPM. The program then moves to the hole position, and initiates the G83 peck drilling cycle with specified parameters. After the cycle is complete, the program cancels the cycle, stops the spindle, and moves to a clearance height before ending the program. Another peck drilling cycle is the G73 G-Code command.</p>
+
+
+<h3 id="P17-G84">G84 G-Code Command</h3>
+<h3 id="P17-G98">G98 G-Code Command</h3>
+
+<p>G98 is a G-code command used in CNC machining to specify a canned cycle return to the initial point. This means that the Z-axis returns to its initial starting point between each X/Y position, which allows for programming up and around areas of the part, clamps, and fixtures. This command is one that is used most commonly with G81 and G83 canned drilling cycles.</p>
+
+<h4>How G98 G-Code Command Is Used</h4>
+
+<p>Here’s an example of a G-code program that uses G98 in a drilling canned cycle with comments in brackets and a spindle on command for 2000 rpm:</p>
+
+<pre><code class="language-gcode">O0001 (Drilling Canned Cycle with G98 and Spindle On)
+G90 G54 G00 X0 Y0 (Absolute positioning, rapid move to X0 Y0)
+M03 S2000 (Spindle on clockwise at 2000 rpm)
+G43 H01 Z50 (Tool Length on, move to Z50)
+G98 G81 Z-10. R2. F50. (Drilling canned cycle with G98)
+X10. Y10. (Move to 2nd drilling position at X10.0 Y10.0)
+G80 (End drilling canned cycle)
+M05 (Spindle off)
+G91 G28 X0 Y0 Z0 (Return to home position)
+G90 (reset absolute positioning)
+M30 (End of program)</code></pre>
+
+<p>In this example, the program starts by setting up the work coordinate system and turning on the spindle at 2000 rpm. The program then runs a G81 drilling cycle using G98 to return to the initial Z position, in this case Z50, before moving to the 2nd drilling position at X10 Y10. The program then turns off the spindle and returns to the home position.</p>
+
+<p>Specifying the G98 with the G81 drilling cycle lifts the drill up to Z50 enabling the tool to clear any clamps or protruding features in the workpiece. The other alternative is to use G99 which you can read about here.</p>
+
+
+<h3 id="P17-G99">G99 G-Code Command</h3>
+
+<p>G99 is a G-code command used in CNC machining that instructs the machine to return to the initial level of the Z-axis after completing a drilling cycle. This command is often used in combination with G81, which is a drilling cycle command that instructs the machine to perform a series of holes at a specific depth. After completing each drilling cycle, the G99 command tells the machine to retract only to the ‘R’ value specified in the canned cycle, making it ready for the next operation.</p>
+
+<h4>How The G99 G-Code Command is Used</h4>
+
+<p>Here’s an example G-code program that uses G99 with a drilling canned cycle and spindle on command for 2000 RPM, with comments in brackets:</p>
+
+<pre><code class="language-gcode">% O1234 (Program name)
+G90 (Absolute programming)
+G54 (Work offset)
+M03 S2000 (Spindle on clockwise at 2000 RPM)
+G00 X0 Y0 (Rapid move to first hole position)
+G43 H01 Z50 (Tool length offset and rapid move to approach position)
+G99 G81 R5 Z-10 F10 (Drilling canned cycle, R is the retract height, Z is the drill depth, F is the feed rate)
+X10 Y10 (drill another hole)
+G80 (cancel canned cycle)
+G00 Z50 (Rapid move to safe height)
+M05 (Spindle stop)
+G91 G28 X0 Y0 Z0 (send the machine to home position)
+G90 (re establish absolute positioning)
+M30 (Program end)</code></pre>
+
+<p>In this example, the program starts by setting up some basic parameters, such as the program name, absolute programming, and work offset. Then, the spindle is turned on clockwise at 2000 RPM.</p>
+
+<p>The program then moves the tool to the starting position, sets the tool length offset, and moves to the approach position using a rapid move. The drilling canned cycle with G99 is then initiated with a retract height of 5 units, a drill depth of -10 units, and a feed rate of 10 units per minute.</p>
+
+<p>After completing the first hole, the G99 command returns the tool to the initial level of the Z-axis, in this example it is Z5 as specified by the ‘R’ value in the G81 canned cycle. The program then moves to the next hole position and drills the second hole. The drilling cycle is then cancelled with the G80 G-Code command. Then the tool retracts to a safe height, M05 stops the spindle, and the program ends with the M30 command.</p>
+
+
+<p>This is typically used when the drill does not have to avoid any clamps or features on the workpiece. The G99 G-Code command is especially useful when lots of holes are being drilled as it eliminates a longer retract movement, thus speeding up the cycle time.</p>
+
+<p>If the drill has to avoid clamps or features on the workpiece, G98 can be used instead to move the tool higher.</p>
+
+
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
