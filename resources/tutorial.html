@@ -1262,20 +1262,20 @@ completely finished.</span></strong></p>
 caveats: </p>
 <ul>
   <li>The viewbox is calculated on the base of the items in the sketcher, and thus typically will not be from 0,0.
-    Width and height are also calculated from theses items: These values are the ones that one finds in the
-  viewbox.</li>
+    Width and height are also calculated from theses items</li>
   <li>The base layer has a transformation with a translate (to view all items nicely in a browser) and a scale (1,-1)
     so that the Y coordinates of all items are "inversed" (and thus follow the natural direction, the opposite of the
     SVG standard. <strong>This means that the output will have to pass through the "svgresolver" utility to remove all
     transformations in order to be used by PyCut</strong>.</li>
   <li>Circles are exported as <code>circle</code> (Ok). Lines, Rectangles, Polygons and Ellipses are exported as
     <code>path</code> (not Ok)</li>
+  <li>Quadratic bezier  and cubic betier are supported</li>
   <li>No <strong>Z</strong> at the end of a closed path</li>
 </ul>
 
 <p>Conclusion: <strong style="color:#008000">A very promising SVG generator/exporter </strong>that could be better if
-Rectangles were to be exported as <code>rect</code>, Ellipses as <code>ellipse</code>, Polygons as <code>polygon</code>
-etc.</p>
+Line were to be exported as <code>line</code>, Polyline as <code>polyline</code>, Rectangles as <code>rect</code>, 
+Polygons as <code>polygon</code>. I also would rather like an output without transformation.</p>
 
 <p>But it is good enough to become my potential default SVG editor.</p>
 
@@ -1287,8 +1287,7 @@ like from the beginning of the '80s, but <strong>usability/features more than to
 <p><strong>SVG export perfect (well, nearly perfect)</strong> . The construction constraints can also be exported, so
 there are a lot of "paths" in the svg export, even if you have drawn only 1 path. Unfortunately, you cannot give your
 paths some ids. It would be nice if these "contraints" paths could be grouped into their own group in order to isolated
-them from the real paths. There are only cubic bezier curves, quadratic bezier curves are unfortunately missing (not
-sure), but one can avoid these in a design. The SVG closed path "Z" is also missing (have submitted a patch!).</p>
+them from the real paths. There are only cubic bezier curves, quadratic bezier curves are unfortunately missing, but one can avoid these in a design. The SVG closed path "Z" is also missing (have submitted a patch!).</p>
 
 <p>Conclusion: <strong style="color:#008000">The best SVG "path" generator/exporter </strong>I have found so far. </p>
 
