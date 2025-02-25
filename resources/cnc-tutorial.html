@@ -229,7 +229,7 @@
 	<li><a href="#P-98-03">NCCorrector</a></li>
 	<li><a href="#P-98-04">SunSpire</a></li>
 	</ul>
-  <li>
+  </li>
 </ul>
 
 <script type="text/javascript">
@@ -265,37 +265,39 @@ for (var i = 0; i < tree.length; i++){
 <h2 id="P-01">Introduction</h2>
 
 <p>This tutorial is designed for beginners. With the relatively cheap CNC routers from China as the
-<strong>3018</strong>, <strong>1419</strong> or the small <strong>1310</strong>, everybody is able to start milling a piece of wood.
-I have started writting this tutorial for my own purposes, and hopefully you will find it usefull.</p>
+<strong>3018</strong>, <strong>1419</strong> or the small <strong>1310</strong>, everybody is able
+to start milling a piece of wood. I have started writting this tutorial for my own purposes, and
+hopefully you will find it usefull.</p>
 
 <p>I personnaly own the <strong>1419</strong>, which I find to be beautiful and quite capable, and
-the <strong>1310</strong> too. Both were very cheap at the beginning of the 2020's.
-Note that the <strong>3018</strong> is explicitely sold as an "engraving" machine, so don't be surprised if you
-encounter problems milling with this machine. Sure, there are plenty of YouTube channels showing how "versatile" 
-the 3018 is. But these as often experienced users which already have plenty of experience and know how to take the
-best from it, all things that a beginner cannot. As they certainly own better machines anyway, I do not see their point. 
-The YouTube channel "Cosmo Channel" (italian) describes carefully how to assemble the <strong>1419</strong>. 
-The <strong>1310</strong> is quite small but very well constructed, thus very sturdy. There are also vidoes in Internet 
-showing how to assemble it. Unfortunately upgrading it is
-not straightforward. A better spindle mounted on it out of the box would be best.
-The reality for a machine is: the more expensive, the better, or, as americans say: "you get what you've paid for"! </p> 
+the <strong>1310</strong> too. Both were very cheap at the beginning of the 2020's. Note that the
+<strong>3018</strong> is explicitely sold as an "engraving" machine, so don't be surprised if you
+encounter problems milling with this machine. Sure, there are plenty of YouTube channels showing
+how "versatile" the 3018 is. But these as often experienced users which already have plenty of
+experience and know how to take the best from it, all things that a beginner cannot. As they
+certainly own better machines anyway, I do not see their point. The YouTube channel "Cosmo Channel"
+(italian) describes carefully how to assemble the <strong>1419</strong>. The <strong>1310</strong>
+is quite small but very well constructed, thus very sturdy. There are also vidoes in Internet
+showing how to assemble it. Unfortunately upgrading it is not straightforward. A better spindle
+mounted on it out of the box would be best. The reality for a machine is: the more expensive, the
+better, or, as americans say: "you get what you've paid for"! </p>
 
 <p>Nervertheless, to be able to setup and use the machine properly, knowledge of the <strong>Grbl
 Settings</strong> is a must. <strong>Grbl</strong> is the low level software (the "firmware") that
-is already installed on the control board. Furthermore, to become proefficient in CNC, basic 
-<strong>G-Code</strong> and
-<strong>M-Code</strong> knowledge in needed. <strong>G/M-Code</strong> instructions are what
-<strong>Grbl</strong> (as well as every other CNC controller) handles: the user writes a
-<strong>G-Code</strong> file constituted of M/G codes directives, send it to the control board and
-<strong>Grbl</strong> processes this <strong>G-Code</strong> by driving the stepper motors of the
-machine as well as the spindle or others hardware.</p>
+is already installed on the control board. Furthermore, to become proefficient in CNC, basic
+<strong>G-Code</strong> and <strong>M-Code</strong> knowledge in needed. <strong>G/M-Code</strong>
+instructions are what <strong>Grbl</strong> (as well as every other CNC controller) handles: the
+user writes a <strong>G-Code</strong> file constituted of M/G codes directives, send it to the
+control board and <strong>Grbl</strong> processes this <strong>G-Code</strong> by driving the
+stepper motors of the machine as well as the spindle or others hardware.</p>
 
 <p>Usually, the user does not write <strong>G-Code</strong> per hand. A CAD/CAM program can
 generate a <strong>G-Code</strong> file from the workpiece and the CAM operations (pocket, etc.)
 defined on it. To send the <strong>G-Code</strong> file to the control board, standard,
 user-friendly desktop computer programs can be used. The most common ones are
-<strong>Candle</strong> and <strong>UGS</strong>. As CAD/CAM programs, we will use 
-<strong>Easel</strong>, <strong>JSCut/PyCut</strong> [<strong>Fusion360</strong> for advanced users].</p>
+<strong>Candle</strong> and <strong>UGS</strong>. As CAD/CAM programs, we will use
+<strong>Easel</strong>, <strong>JSCut/PyCut</strong> [<strong>Fusion360</strong> for advanced
+users].</p>
 
 <p>So CAD/CAM programs produce <strong>G-Code</strong>, and this <strong>G-Code</strong> highly
 depends on the "options" that are set in the defined CAM operations. So understanding at least the
@@ -306,55 +308,57 @@ programs are better and a lot easier to handle: <strong>Easel</strong> is a Web 
 simple forms can be edited and directly transformed into <strong>G-Code</strong>. It is free and
 has a non-free "pro" version. Unfortunately, the free version is limited to only a few character
 fonts. But there are also plenty of geometric patterns ready to use. Default values for the options
-are given for the CAM operations, and this tutorial will explain them. <strong>JSCut</strong> is a 
+are given for the CAM operations, and this tutorial will explain them. <strong>JSCut</strong> is a
 also a web based application that has SVG as input format and produces <strong>G-Code</strong>.</p>
 
-<p>So <strong>SVG</strong> can also be used as an input format for some CAM programs</strong>. 
-Unfortunately there are not a lot of programs that create "robust" SVG files, and by "robust" 
-I mean SVG files containing well defined and clean (human readable for modifications) SVG paths (your design). 
-<strong>Inkscape</strong>, a well-known free SVG program, is unfortunately not a good choice. 
-But SVG files can also be edited per hand, which is quite handy, and leads in my opinion to the best results.
-Infact, in the documentation of <strong>my own CAM program named PyCut</strong> (available for free from GitHub), 
-I list some programs that can create 
-SVG files, and unfortunately there are only a few that allow to write SVG files in a decent manner.
-So this "toolchain" (editing per hand SVGs, loading them in the CAM program, generating G-Code, 
-utilizing a G-Code sender to the machine) is somehow more complex, but still simple enough.
-However, these simple CAM programs have also settings which are quite important and impact the content of the produced G-Code.</p>
+<p>So <strong>SVG</strong> can also be used as an input format for some CAM programs. Unfortunately
+there are not a lot of programs that create "robust" SVG files, and by "robust" I mean SVG files
+containing well defined and clean (human readable for modifications) SVG paths (your design).
+<strong>Inkscape</strong>, a well-known free SVG program, is unfortunately not a good choice. But
+SVG files can also be edited per hand, which is quite handy, and leads in my opinion to the best
+results. Infact, in the documentation of <strong>my own CAM program named PyCut</strong> (available
+for free from GitHub), I list some programs that can create SVG files, and unfortunately there are
+only a few that allow to write SVG files in a decent manner. So this "toolchain" (editing per hand
+SVGs, loading them in the CAM program, generating G-Code, utilizing a G-Code sender to the machine)
+is somehow more complex, but still simple enough. However, these simple CAM programs have also
+settings which are quite important and impact the content of the produced G-Code.</p>
 
 <p>So first , references to <strong>Grbl Settings</strong> are given. The most important settings
-are highlighted. Note that the routers are usually already set up per default. Then full reference to 
-<strong>M-Code</strong> and <strong>G-Code</strong> is also given (duplicated from the LinuxCNC pages).
-When using <strong>Grbl</strong>, only very few of them are worth to know, as <strong>Grbl</strong> is so basic.
-Nevertheless, having a look at all the possibilities is worth a look. Note that <strong>Grbl_ESP32</strong> or 
-<strong>Grbl_HAL</strong> are much more capable and can process much more G-Codes.</p>
+are highlighted. Note that the routers are usually already set up per default. Then full reference
+to <strong>M-Code</strong> and <strong>G-Code</strong> is also given (duplicated from the LinuxCNC
+pages). When using <strong>Grbl</strong>, only very few of them are worth to know, as
+<strong>Grbl</strong> is so basic. Nevertheless, having a look at all the possibilities is worth a
+look. Note that <strong>Grbl_ESP32</strong> or <strong>Grbl_HAL</strong> are much more capable and
+can process much more G-Codes.</p>
 
-<p>Many chapters here are also simply copy-pasted from <a href="https://cncphilosophy.com">
-https://cncphilosophy.com</a>. This is because they are so excellent. There is only 1 downsize for them:
-they are completely plagued with ads, which make them - for me - unreadable. This is the reason I have 
-painfully copy-pasted them for my own reading. Finally, a large part of the tools tutorials are copy-pasted 
-as well from <a href="https://cncphilosophy.com">https://cncphilosophy.com</a>.</p>
-
-<br/>
-
+<p>Many chapters here are also simply copy-pasted from <a
+href="https://cncphilosophy.com">https://cncphilosophy.com</a>. This is because they are so
+excellent. There is only 1 downsize for them: they are completely plagued with ads, which make them
+- for me - unreadable. This is the reason I have painfully copy-pasted them for my own reading.
+Finally, a large part of the tools tutorials are copy-pasted as well from <a
+href="https://cncphilosophy.com">https://cncphilosophy.com</a>.</p>
+<br>
 <!-- ----------------------------------------------------------------------------------------------------------->
-<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- -----------------------------------------------------------------------------------------------------------> 
 
 <h2 id="P-02">Grbl Settings</h2>
 
 <p>First, connect "physically" your computer to the control board with an USB cable, then connect
 "logically" to the <strong>Grbl board</strong> by starting the <strong>Candle</strong> program and
-setting in it the right "port" and "Baud rate". You have to tell <strong>Candle</strong> (see "Settings") which port
-is related to our <strong>Grbl</strong> control board. <strong>Candle</strong> should infact find it alone. Set the
-baud rate to 115200 as 8-N-1 (8-bits, no parity, and 1-stop bit.) Once connected you should get the
-Grbl-prompt, which looks like this:</p>
+setting in it the right "port" and "Baud rate". You have to tell <strong>Candle</strong> (see
+"Settings") which port is related to our <strong>Grbl</strong> control board.
+<strong>Candle</strong> should infact find it alone. Set the baud rate to 115200 as 8-N-1 (8-bits,
+no parity, and 1-stop bit.) Once connected you should get the Grbl-prompt, which looks like
+this:</p>
 <pre><code>Grbl 1.1f ['$' for help]</code></pre>
 
 <div class="warning">
 <p>Note that for some old controller boards, Grbl-0.9 might be pre-installed.</p>
 
-<p>Unfortunaltely, <strong>Candle</strong> doesn't play well with this version (jog buttons may not work), so you'll
-have to install Grbl-1.1 on the board. For this you have to install the Arduino IDE on your
-computer, load the Grbl project and compile it, connect to the board and flash the Grbl-1.1 in the board.</p>
+<p>Unfortunaltely, <strong>Candle</strong> doesn't play well with this version (jog buttons may not
+work), so you'll have to install Grbl-1.1 on the board. For this you have to install the Arduino
+IDE on your computer, load the Grbl project and compile it, connect to the board and flash the
+Grbl-1.1 in the board.</p>
 </div>
 
 <p>There are 3 types of settings:</p>
@@ -922,7 +926,9 @@ direction, the homing direction mask can invert the axes' direction. It works ju
 port invert and direction port invert masks, where all you have to do is send the value in the
 table to indicate what axes you want to invert and search for in the opposite direction.</p>
 
-<p>Sets direction of travel for homing cycle for each axis. Last 3 bits set direction for ZYX respectively.</p>
+<p>Sets direction of travel for homing cycle for each axis. Last 3 bits set direction for ZYX
+respectively.</p>
+
 <p></p>
 
 <h3 id="P-GRBL-024">$24 - Homing feed, mm/mink</h3>
@@ -939,8 +945,8 @@ table to indicate what axes you want to invert and search for in the opposite di
 
 <h3 id="P-GRBL-027">$27 - homing pull-off, millimeters</h3>
 
-<p>Amount of pullback when homing routine hits a switch. Ensures that switches are not still activated after homing
-cycle if limit switches are enabled.</p>
+<p>Amount of pullback when homing routine hits a switch. Ensures that switches are not still
+activated after homing cycle if limit switches are enabled.</p>
 
 <h3 id="P-GRBL-030">$30 - Max spindle speed, RPM</h3>
 
@@ -1158,22 +1164,24 @@ if you have exceeded your machine limits with a motion command.</p>
 
 <h2 id="P-22">Upgrading the CNC 1419</h2>
 
-<p>A YouTube channel called <strong>"Propeller Labs"</strong> demonstrates various upgrades of the CNC 1419. </p>
+<p>A YouTube channel called <strong>"Propeller Labs"</strong> demonstrates various upgrades of the
+CNC 1419. </p>
 
 <h3>Spindle</h3>
 
-<p>AliExpress sells a whole family of brushless spindles, with power of 300, 400, 500 or 600 W. 
-It seems the 600W spindle has only 9000 rpms, compared to 12000 rpms for the 500 W one for example.</p>
+<p>AliExpress sells a whole family of brushless spindles, with power of 300, 400, 500 or 600 W. It
+seems the 600W spindle has only 9000 rpms, compared to 12000 rpms for the 500 W one for example.</p>
 
 <h4>Mouting the spindle on the machine</h4>
 
-<p>A straightforward upgrade consists in installing this 500W spindle on the machine. 
-Yes, mounting it does not required any special skills, as its bracket can be attached on the machine with
-only 4 T-Nut 6mm, also purchasable on AliExpress as well (these T-Nut 6mm are by the way quite practical,
+<p>A straightforward upgrade consists in installing this 500W spindle on the machine. Yes, mounting
+it does not required any special skills, as its bracket can be attached on the machine with only 4
+T-Nut 6mm, also purchasable on AliExpress as well (these T-Nut 6mm are by the way quite practical,
 and I have bought a bunch of them). </p>
 
-<p>There are also T-Nut 5mm, and <strong>Propeller Labs</strong> uses theses ones, and encloses the (not so) corresponding 
-5mm bracket screws in some plastics tubes to fit in the spindle bracket, whose holes are infact 6mm diameter as the standard screws.</p>
+<p>There are also T-Nut 5mm, and <strong>Propeller Labs</strong> uses theses ones, and encloses the
+(not so) corresponding 5mm bracket screws in some plastics tubes to fit in the spindle bracket,
+whose holes are infact 6mm diameter as the standard screws.</p>
 
 <p>What is better ? </p>
 
@@ -1181,164 +1189,207 @@ and I have bought a bunch of them). </p>
 
 <h4>Controlling the spindle from the software</h4>
 
-<p>With the standard spindle, this occurs. But when installing  the 500W brushless spindle, the controller board does not
-know anymore the spindle. See <strong>Propeller Labs</strong> episode <strong>#8. CNC 1419</strong> how to fix this!</p>
+<p>With the standard spindle, this occurs. But when installing the 500W brushless spindle, the
+controller board does not know anymore the spindle. See <strong>Propeller Labs</strong> episode
+<strong>#8. CNC 1419</strong> how to fix this!</p>
 
-<p>Basically, one has to connect the board spindle + pin and the board 5V output +, - and ground pins (find them!) to a device transforming the voltage
-to 0 - 24 V , and connecting this device to the brushless motor driver.</p>
+<p>Basically, one has to connect the board spindle + pin and the board 5V output +, - and ground
+pins (find them!) to a device transforming the voltage to 0 - 24 V , and connecting this device to
+the brushless motor driver.</p>
+<img src="cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-1.png"> <br>
+<img src="cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-2.png"> <br>
+<img src="cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-3.png"> 
 
-<img src="cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-1.png">
-<br/>
-<img src="cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-2.png">
-<br/>
-<img src="cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-3.png">
+<p>Just be sure of what you are doing if you don#t want to burn your board.</p>
 
-<p>Just be sure of what you are doing if you don#t want to burn your board.<p>
+<p></p>
 
 <h3>Stepper Motors and Stepper Motor Drivers</h3>
 
-<p>Reference: <a href="https://www.pololu.com/category/120/stepper-motor-drivers">https://www.pololu.com/category/120/stepper-motor-drivers</a>
-<p>Reference: <a href="https://3dwork.io/en/tmc-drivers/">https://3dwork.io/en/tmc-drivers/</a>
+<p>Reference: <a
+href="https://www.pololu.com/category/120/stepper-motor-drivers">https://www.pololu.com/category/120/stepper-motor-drivers</a>
+</p>
 
-<p>Stepper motor drivers are specifically designed to drive stepper motors, which are capable of continuous rotation with precise position control, 
-even without a feedback system. These modules are generally basic carrier boards for a variety of stepper motor driver ICs that offer low-level interfaces like inputs for directly initiating each step. 
-An external microcontroller is typically required for generating these low-level signals.</p>
+<p>Reference: <a href="https://3dwork.io/en/tmc-drivers/">https://3dwork.io/en/tmc-drivers/</a> </p>
+
+<p>Stepper motor drivers are specifically designed to drive stepper motors, which are capable of
+continuous rotation with precise position control, even without a feedback system. These modules
+are generally basic carrier boards for a variety of stepper motor driver ICs that offer low-level
+interfaces like inputs for directly initiating each step. An external microcontroller is typically
+required for generating these low-level signals.</p>
 
 <p>The following table, organized by increasing operating voltage, compare some drivers:</p>
 
-<p>Added to the table is the widely used TMC-2209 driver in 3D printers and pins compatibles with the A4988, as well as the TMC-5160 and TB-6600 for information:</p>
-
+<p>Added to the table is the widely used TMC-2209 driver in 3D printers and pins compatibles with
+the A4988, as well as the TMC-5160 and TB-6600 for information:</p>
 <style type="text/css">
 table.active_controller_comparison td.spacer {border: none; background: white;}
-table.active_controller_comparison td.white {background: white;}
-</style>
+table.active_controller_comparison td.white {background: white;}</style>
+
 <div style="text-align: center;">
+
 <div style="display: inline-block; max-width: 100%; overflow: auto; margin-bottom: 1em;">
-<table style="min-width: 600px;" class="active_controller_comparison"><tbody>
-	<tr>
-		<td> </td>
-		<th style="text-align:center;vertical-align:top;"><a href="/product/1182"><img src="https://a.pololu-files.com/picture/0J4576.80.jpg?919b80dbdadf6ef1f6be3993fabbefbc" alt=""></a><br><a href="/product/1182">A4988<br>(original)</a></th>
-		<th style="vertical-align:top;"><a href="/product/2128"><img src="https://a.pololu-files.com/picture/0J4071.80.jpg?5f72a61139d94f2b8aca55d7727ccced" alt=""></a><br><a href="/product/2128">A4988,<br>Black&nbsp;Ed.</a></th>
-		<th style="vertical-align:top;"><a href="/product/2133"><img src="https://a.pololu-files.com/picture/0J4225.85.jpg?e6be11fb1f0070573e1feee735e58660" alt=""></a><br><a href="/product/2133">DRV8825</a></th>
-		<th style="vertical-align:top;"><a href="/product/3096"><img src="https://a.pololu-files.com/picture/0J9585.80.jpg?26b6148a468d49021b4b206a5d1e5b5a" alt=""></a><br><a href="/product/3096">TB67S249-FTG</a></th>
-		<th style="vertical-align:top;"><img src="cnc-doc/images/22_CnC1419_Upgrade/tmc2209-zoom.jpg" width="58px" alt=""></a><br><a href="/product/2878">TMC-2209</a></th>
-		<th style="vertical-align:top;"><img src="cnc-doc/images/22_CnC1419_Upgrade/tmc5160-zoom.jpg" width="58px" alt=""></a><br><a href="/product/2878">TMC-5160</a></th>
-		<th style="vertical-align:top;"><img src="cnc-doc/images/22_CnC1419_Upgrade/tb6600-zoom.jpg" width="58px" alt=""></a><br><a href="/product/2878">TB-6600</a></th>
-	</tr>
-	<tr>
-		<th>Driver chip:</th>
-		<td colspan="2">Allegro A4988</td>
-		<td>TI<br/>DRV8825</td>
-		<td>Toshiba<br>TB67S249-FTG</td>
-		<td>Trinamic <br/>TMC-2209</td>
-		<td>Trinamic <br/>TMC-5160</td>
-		<td>Toshiba <br/>TB-6600</td>
-	</tr>
-	<tr>
-		<th>Min operating voltage:</th>
-		<td colspan="2">8&nbsp;V</td>
-		<td>8.2&nbsp;V</td>
-		<td>10&nbsp;V</td>
-		<td>4.75&nbsp;V</td>
-		<td>8&nbsp;V</td>
-		<td>9&nbsp;V</td>
-	</tr>
-	<tr>
-		<th>Max operating voltage:</th>
-		<td colspan="2">35&nbsp;V</td>
-		<td>45&nbsp;V</td>
-		<td>47&nbsp;V</td>
-		<td>29&nbsp;V</td>
-		<td>60&nbsp;V</td>
-		<td>40&nbsp;V</td>
-	</tr>
-	<tr>
-		<th>Max continuous current per phase:<sup><strong>(1)</strong></sup></th>
-		<td>1&nbsp;A</td>
-		<td>1.2&nbsp;A</td>
-		<td>1.5&nbsp;A</td>
-		<td>1.6&nbsp;A</td>
-		<td><strong>2.0&nbsp;A</strong></td>
-		<td><strong>3.0&nbsp;A</strong></td>
-		<td>3.5&nbsp;A</td>
-	</tr>
-	<tr>
-		<th>Peak current per phase:<sup><strong>(2)</strong></sup></th>
-		<td colspan="2">2&nbsp;A</td>
-		<td>2.2&nbsp;A</td>
-		<td>4.5&nbsp;A</td>
-		<td><strong>2.8&nbsp;A</strong></td>
-		<td><strong>3.0&nbsp;A</strong></td>
-		<td>4.0&nbsp;A</td>
-	</tr>
-	<tr>
-		<th>Microstepping down to:</th>
-		<td colspan="2">1/16</td>
-		<td>1/32</td>
-		<td>1/32</td>
-		<td>1/64</td>
-		<td>1/64</td>
-		<td>1/32</td>
-	</tr>
-	<tr class="price">
-		<th>1-piece price:</th>
-		<td><span class="price">$1.00</span></td>
-		<td><span class="price">$1.00</span></td>
-		<td><span class="price">$1.00</span></td>
-		<td><span class="price">$12.95</span></td>
-		<td><span class="price">$6.00</span></td>
-		<td><span class="price">$20.00</span></td>
-		<td><span class="price">$8.00</span></td>
-	</tr>
-	<tr>
-		<td class="spacer" colspan="7"></td>
-	</tr>
-	<tr>
-		<td style="text-align: left;" class="spacer" colspan="7"><strong>1</strong> without additional cooling.<br><strong>2</strong> additional cooling required.</td>
-	</tr>
-</tbody></table>
+
+<table style="min-width: 600px;" class="active_controller_comparison">
+  <tbody>
+    <tr>
+      <td></td>
+      <th style="text-align:center;vertical-align:top;"><a href="/product/1182"><img
+        src="https://a.pololu-files.com/picture/0J4576.80.jpg?919b80dbdadf6ef1f6be3993fabbefbc"
+        alt=""></a><br>
+        <a href="/product/1182">A4988<br>
+        (original)</a></th>
+      <th style="vertical-align:top;"><a href="/product/2128"><img
+        src="https://a.pololu-files.com/picture/0J4071.80.jpg?5f72a61139d94f2b8aca55d7727ccced"
+        alt=""></a><br>
+        <a href="/product/2128">A4988,<br>
+        Black Ed.</a></th>
+      <th style="vertical-align:top;"><a href="/product/2133"><img
+        src="https://a.pololu-files.com/picture/0J4225.85.jpg?e6be11fb1f0070573e1feee735e58660"
+        alt=""></a><br>
+        <a href="/product/2133">DRV8825</a></th>
+      <th style="vertical-align:top;"><a href="/product/3096"><img
+        src="https://a.pololu-files.com/picture/0J9585.80.jpg?26b6148a468d49021b4b206a5d1e5b5a"
+        alt=""></a><br>
+        <a href="/product/3096">TB67S249-FTG</a></th>
+      <th style="vertical-align:top;"><img src="cnc-doc/images/22_CnC1419_Upgrade/tmc2209-zoom.jpg"
+        width="58px" alt=""><br>
+        <a href="/product/2878">TMC-2209</a></th>
+      <th style="vertical-align:top;"><img src="cnc-doc/images/22_CnC1419_Upgrade/tmc5160-zoom.jpg"
+        width="58px" alt=""><br>
+        <a href="/product/2878">TMC-5160</a></th>
+      <th style="vertical-align:top;"><img src="cnc-doc/images/22_CnC1419_Upgrade/tb6600-zoom.jpg"
+        width="58px" alt=""><br>
+        <a href="/product/2878">TB-6600</a></th>
+    </tr>
+    <tr>
+      <th>Driver chip:</th>
+      <td colspan="2">Allegro A4988</td>
+      <td>TI<br>
+        DRV8825</td>
+      <td>Toshiba<br>
+        TB67S249-FTG</td>
+      <td>Trinamic <br>
+        TMC-2209</td>
+      <td>Trinamic <br>
+        TMC-5160</td>
+      <td>Toshiba <br>
+        TB-6600</td>
+    </tr>
+    <tr>
+      <th>Min operating voltage:</th>
+      <td colspan="2">8 V</td>
+      <td>8.2 V</td>
+      <td>10 V</td>
+      <td>4.75 V</td>
+      <td>8 V</td>
+      <td>9 V</td>
+    </tr>
+    <tr>
+      <th>Max operating voltage:</th>
+      <td colspan="2">35 V</td>
+      <td>45 V</td>
+      <td>47 V</td>
+      <td>29 V</td>
+      <td>60 V</td>
+      <td>40 V</td>
+    </tr>
+    <tr>
+      <th>Max continuous current per phase:<sup><strong>(1)</strong></sup></th>
+      <td>1 A</td>
+      <td>1.2 A</td>
+      <td>1.5 A</td>
+      <td>1.6 A</td>
+      <td><strong>2.0 A</strong></td>
+      <td><strong>3.0 A</strong></td>
+      <td>3.5 A</td>
+    </tr>
+    <tr>
+      <th>Peak current per phase:<sup><strong>(2)</strong></sup></th>
+      <td colspan="2">2 A</td>
+      <td>2.2 A</td>
+      <td>4.5 A</td>
+      <td><strong>2.8 A</strong></td>
+      <td><strong>3.0 A</strong></td>
+      <td>4.0 A</td>
+    </tr>
+    <tr>
+      <th>Microstepping down to:</th>
+      <td colspan="2">1/16</td>
+      <td>1/32</td>
+      <td>1/32</td>
+      <td>1/64</td>
+      <td>1/64</td>
+      <td>1/32</td>
+    </tr>
+    <tr class="price">
+      <th>1-piece price:</th>
+      <td><span class="price">$1.00</span></td>
+      <td><span class="price">$1.00</span></td>
+      <td><span class="price">$1.00</span></td>
+      <td><span class="price">$12.95</span></td>
+      <td><span class="price">$6.00</span></td>
+      <td><span class="price">$20.00</span></td>
+      <td><span class="price">$8.00</span></td>
+    </tr>
+    <tr>
+      <td class="spacer" colspan="7"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td style="text-align: left;" class="spacer" colspan="7"><strong>1</strong> without
+        additional cooling.<br>
+        <strong>2</strong> additional cooling required.</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 </div>
 </div>
 
-<p>As you can see, the <strong>TMC-2209</strong> supports up to 2.0 Amperes (while the <strong>A4988</strong> only 2 Amp at peak) it is therefore
-a perfect driver to run a Nema 17 motor of greater power than those driven by a <strong>A4988</strong>.
+<p>As you can see, the <strong>TMC-2209</strong> supports up to 2.0 Amperes (while the
+<strong>A4988</strong> only 2 Amp at peak) it is therefore a perfect driver to run a Nema 17 motor
+of greater power than those driven by a <strong>A4988</strong>. </p>
 
-<p>Typically, the <strong>A4988</strong> drives small Nema-17 motors. 
-These motors are circa 34 cm long and I think they run at 1.2 or 1.5 Amp and have a torque of 42 Ncm. Consider the 
-<strong>Nema17 17HS19-2004S1</strong> motor of 48cm (19 inches) length: its torque is 59 Ncm and runs at 2 Amp, which 
-is the upper limit for a <strong>A4988</strong> and thus not well suited for long jobs. But the <strong>TMC-2209</strong> is 
-perfectly suited.</p>
+<p>Typically, the <strong>A4988</strong> drives small Nema-17 motors. These motors are circa 34 cm
+long and I think they run at 1.2 or 1.5 Amp and have a torque of 42 Ncm. Consider the
+<strong>Nema17 17HS19-2004S1</strong> motor of 48cm (19 inches) length: its torque is 59 Ncm and
+runs at 2 Amp, which is the upper limit for a <strong>A4988</strong> and thus not well suited for
+long jobs. But the <strong>TMC-2209</strong> is perfectly suited.</p>
 
 <div class="info">
-<strong>Info: </strong>See how <strong>Propeller Labs</strong> "prepares" these <strong>Nema17 17HS19-2004S1</strong> motors for the CNC1419. 
-Looking at the motors's shafts which have (strangly) some play, I have inserted, similarly to <strong>Propeller Labs</strong>, a small plastic washer on the shaft inside
-the motor so that there is no play anymore. See <strong>Propeller Labs</strong> episodes <strong>#6 - #7. CNC 1419</strong></div> 
+<strong>Info: </strong>See how <strong>Propeller Labs</strong> "prepares" these <strong>Nema17
+17HS19-2004S1</strong> motors for the CNC1419. Looking at the motors's shafts which have (strangly)
+some play, I have inserted, similarly to <strong>Propeller Labs</strong>, a small plastic washer on
+the shaft inside the motor so that there is no play anymore. See <strong>Propeller Labs</strong>
+episodes <strong>#6 - #7. CNC 1419</strong></div>
 
-<p>Now the neccessary power to run a board with 3 <strong>Nema17 17HS19-2004S1</strong> motors is 3 times (24 Volt * 2 Amp) = 3 x 48 W. 
-So a better power supply than the (junk) one given as standard for the CNC 1419 which has a max of 100W (or 120W) is needed. 
-I found 3 ("brick" like) suitable power supply:
-
+<p>Now the neccessary power to run a board with 3 <strong>Nema17 17HS19-2004S1</strong> motors is 3
+times (24 Volt * 2 Amp) = 3 x 48 W. So a better power supply than the (junk) one given as standard
+for the CNC 1419 which has a max of 100W (or 120W) is needed. I found 3 ("brick" like) suitable
+power supply: </p>
 <ul>
-<li>Liteon 120 W at 24 Volt - if you do not upgrade your motors -</li>
-<li>Dell Notebook power supply 180 W at 19.5 Volt</li>
-<li>Samsung power supply 180 W at 24 Volt</li>
+  <li>Liteon 120 W at 24 Volt - if you do not upgrade your motors -</li>
+  <li>Dell Notebook power supply 180 W at 19.5 Volt</li>
+  <li>Samsung power supply 180 W at 24 Volt</li>
 </ul>
 
 <p>You just need the right adaptor for the connector output.</p>
-
 
 <h3>Controller Boards</h3>
 
 <h4>Grbl Boards</h4>
 
-<p>These boards are run by the ATMega328P 8-bits chip. They are basically Arduino Uno R3 clones. 
-There are plenty of those on AliExpress</p> 
+<p>These boards are run by the ATMega328P 8-bits chip. They are basically Arduino Uno R3 clones.
+There are plenty of those on AliExpress</p>
 
-<p>As done in <strong>Propeller Labs</strong>, ii is possible to connect this kind of board with the <strong>TB6600</strong> drivers which supports higher current.
-It is nevertheless not straightforward because of its box enclosure so that connections (wires) from the controller board to the drivers have to be soldered (at best) 
-or plugged into the board stepper motors receptors modules.. 
-This adds quite a lot of electric cables and is place consuming. And the drivers needs an extra power supply together with the board own 
-power supply and the 500W spindle power supply too.</p>
+<p>As done in <strong>Propeller Labs</strong>, ii is possible to connect this kind of board with
+the <strong>TB6600</strong> drivers which supports higher current. It is nevertheless not
+straightforward because of its box enclosure so that connections (wires) from the controller board
+to the drivers have to be soldered (at best) or plugged into the board stepper motors receptors
+modules.. This adds quite a lot of electric cables and is place consuming. And the drivers needs an
+extra power supply together with the board own power supply and the 500W spindle power supply
+too.</p>
 
 <h4>Grbl_ESP32 Boards</h4>
 
@@ -1346,19 +1397,23 @@ power supply and the 500W spindle power supply too.</p>
 
 <h5>MakerBase MKS DLC32 V2.1 Board</h5>
 
-<p>Easy to buy on AliExpress. Its pre-installed firmware (Marlin) is a clone of the FluidNC firmware and supports the 
-<strong>MKT TS35-R V2.0</strong> external display for an easy "offline" control.</p> 
+<p>Easy to buy on AliExpress. Its pre-installed firmware (Marlin) is a clone of the FluidNC
+firmware and supports the <strong>MKT TS35-R V2.0</strong> external display for an easy "offline"
+control.</p>
 
-<p>Note: You can install the FluidNC firmware on the MKS board, but this latter does not support the <strong>MKT TS35-R</strong> display.
+<p>Note: You can install the FluidNC firmware on the MKS board, but this latter does not support
+the <strong>MKT TS35-R</strong> display. </p>
 
-<p>Why using this board? well it supports the <strong>TMC-2209</strong> stepper motor driver. I consider utilizing the <strong>MKS DLC32 V2.1</strong> board as a perfect 
-and easy replacement for the CNC-1419 standard Grbl board, with the <strong>TMC-2209</strong> drivers and the <strong>Nema17 17HS19-2004S1</strong> motors.</p>
+<p>Why using this board? well it supports the <strong>TMC-2209</strong> stepper motor driver. I
+consider utilizing the <strong>MKS DLC32 V2.1</strong> board as a perfect and easy replacement for
+the CNC-1419 standard Grbl board, with the <strong>TMC-2209</strong> drivers and the <strong>Nema17
+17HS19-2004S1</strong> motors.</p>
 
 <h5>FluidNC Boards</h5>
 
-<p>FluidNC proposes some "officially" supported boards. Among them are also boards for the <strong>TMC-2209</strong> and <strong>TMC-5160</strong>. 
-The drivers can be placed on a module or be already soldered on the board, depending on the board.</p>
-
+<p>FluidNC proposes some "officially" supported boards. Among them are also boards for the
+<strong>TMC-2209</strong> and <strong>TMC-5160</strong>. The drivers can be placed on a module or
+be already soldered on the board, depending on the board.</p>
 
 <h3>Reducing the backlash</h3>
 
@@ -1367,12 +1422,10 @@ The drivers can be placed on a module or be already soldered on the board, depen
 <h3>Better bearings</h3>
 
 <p>See <strong>Propeller Labs</strong> episode <strong>#19. CNC 1419</strong> solution.</p>
-
-<br/>
-<br/>
-
+<br>
+<br>
 <!-- ----------------------------------------------------------------------------------------------------------->
-<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- -----------------------------------------------------------------------------------------------------------> 
 
 <h2 id="P-03">First Steps - How to (not) crash the machine</h2>
 
@@ -1381,31 +1434,32 @@ The drivers can be placed on a module or be already soldered on the board, depen
 <p>You crash the machine when you tell the machine to go 200 mm right when there is only place for
 a travel of 100mm. This happens if you are already quite on the right.</p>
 
-<p>You crash the machine in all case when you tell the 1419 machine to go up 100mm. The machine has a
-max travel of about 45mm in the Z direction...</p>
+<p>You crash the machine in all case when you tell the 1419 machine to go up 100mm. The machine has
+a max travel of about 45mm in the Z direction...</p>
 
-<p>Well, the max travel settings of GRBL should protect you "a little bit", but certainly not
-in all cases.</p>
+<p>Well, the max travel settings of GRBL should protect you "a little bit", but certainly not in
+all cases.</p>
 
 <div class="warning">
-<strong>Warning: </strong>In <strong>Candle</strong> the X/Y buttons to move the spindle are very near the ones the
-move the Z axis . If you choose for X a step of 100mm in 1 click (funny, isn't it), then you will
-certainly without noticing it also click on the Z "up" or Z "down" button. This is far less
-funny... So just stick to low values for the step size (10mm).</div>
+<strong>Warning: </strong>In <strong>Candle</strong> the X/Y buttons to move the spindle are very
+near the ones the move the Z axis . If you choose for X a step of 100mm in 1 click (funny, isn't
+it), then you will certainly without noticing it also click on the Z "up" or Z "down" button. This
+is far less funny... So just stick to low values for the step size (10mm).</div>
 
 <div class="warning">
 <strong>Warning: </strong>Take the habit, before you click on the Z "up" or Z "down", to always
 look look first at the step size. Look too at the position of the spindle: is it already very low
-or very high ? UGS solves this issue better than <strong>Candle</strong> because there is a step size for X/Y and
-another step step for Z, which can be kept low (10mm or event lower, 1mm)</div>
+or very high ? UGS solves this issue better than <strong>Candle</strong> because there is a step
+size for X/Y and another step step for Z, which can be kept low (10mm or event lower, 1mm)</div>
 
 <div class="warning">
-<strong>Warning: </strong>It it easy to evaluate the position of the X and Y axis your your own eyes.
-When experimeting, try to stay in the middle of the bed.</div>
+<strong>Warning: </strong>It it easy to evaluate the position of the X and Y axis your your own
+eyes. When experimeting, try to stay in the middle of the bed.</div>
 
 <p>Actually, <strong>limits switches</strong> can avoid these problems. Limits switches are simple
 ON/OFF interuptors which turn off the machine when the bounds the machine are reached. But the
-CNC-1419 has no limit switches, and for small machines it may be not easy or even wise to mount some. </p>
+CNC-1419 has no limit switches, and for small machines it may be not easy or even wise to mount
+some. </p>
 
 <p><strong>Now, what does mean "crashing the machine" ?</strong> : for X/Y directions, the gantry
 cannot move anymore as the motors are trying to do, so in case the the 1419, the couplers will
@@ -1422,8 +1476,7 @@ the machine. You just have to abort the job and tighten the coupler again with t
 
 <p>Note: What is the best way to tighten the coupler to the shaft . Nowhere in the web I found a
 reasonable explaination..... Maybe like this, or should it be only 1 screw ?:</p>
-<img src="cnc-doc/images/coupling.svg" width="600"> 
-
+<img src="cnc-doc/images/coupling.svg" width="600"></img> 
 
 <p>The second way to crash the machine as describe above is to ask "to much" to the machine.</p>
 
@@ -1456,19 +1509,19 @@ values.</strong></p>
 
 <p>These settings are typically in the "transform CAD to G-CODE" section</p>
 
-<p>Remember, the 3018 is quite weak, and is sold as a carving machine, not a milling machine. Milling is
-funny too, use only best quality wood (Buche) or very light one as plywood (Sperrholz) for this
-purpose.</p>
+<p>Remember, the 3018 is quite weak, and is sold as a carving machine, not a milling machine.
+Milling is funny too, use only best quality wood (Buche) or very light one as plywood (Sperrholz)
+for this purpose.</p>
 
 <p>If these values are too high, it happens what must happend: one coupler "breaks" the connection,
 often in the middle of the job. So the job is ruined</p>
 
 <p>You will crash the machine too when you start a job <strong>while the spindle is not
-running</strong>. It is impossible for the bit to "enter" into the material. Something bad
-will happen.</p>
+running</strong>. It is impossible for the bit to "enter" into the material. Something bad will
+happen.</p>
 
 <p>So it is better in the G-Code generation to tell the spindle to start "automatically" (and not
-"manuallly"). When setting are on "starting manually", you will automatically forget soon or late 
+"manuallly"). When setting are on "starting manually", you will automatically forget soon or late
 to start yourself the spindle!</p>
 
 <div style="height:30px">
@@ -1550,8 +1603,8 @@ story)</p>
 
 <h3 id="P-04-01-02">Testing the Max Travels</h3>
 
-<p>The machine dimensions are known, so the <strong>Max Travelling</strong> parameters can be
-set: as test, set</p>
+<p>The machine dimensions are known, so the <strong>Max Travelling</strong> parameters can be set:
+as test, set</p>
 <pre><code class="language-gcode">$130=20
 $131=20
 $132=10</code></pre>
@@ -1560,17 +1613,16 @@ $132=10</code></pre>
 
 <h3 id="P-04-01-03">Testing the Soft Limits</h3>
 
-<p>Softs limits are meant to be used with homing. But the <strong>1419</strong> has no homing. However I would like to
-test Grbl on theses settings.</p>
+<p>Softs limits are meant to be used with homing. But the <strong>1419</strong> has no homing.
+However I would like to test Grbl on theses settings.</p>
 
-<p>First I positionate the spindle in the middle of the machine. Then I set the Grbl settings $20 = 1 (soft limits "on"), 
-and the max X travel to 20 mm ($130 = 20). Now I try to move the spindle in the X direction of 10mm, then again of 20mm 
-to see what happends.</p>
+<p>First I positionate the spindle in the middle of the machine. Then I set the Grbl settings $20 =
+1 (soft limits "on"), and the max X travel to 20 mm ($130 = 20). Now I try to move the spindle in
+the X direction of 10mm, then again of 20mm to see what happends.</p>
 
-<p>After this test, don't forget to reset $20 = 0. Try to move in the X direction 30mm. See what happens.</p>
-
-
-<br/>
+<p>After this test, don't forget to reset $20 = 0. Try to move in the X direction 30mm. See what
+happens.</p>
+<br>
 
 
 <h2 id="P-04-02">Candle</h2>
@@ -1660,7 +1712,6 @@ M5        // stop</code></pre>
 <pre><code class="language-gcode">G92 Z0</code></pre>
 
 <p>Setting Zeros coordinates is different than "Homing".</p>
-
 
 <h2 id="P-04-09">LaserGRBL</h2>
 
@@ -1827,7 +1878,6 @@ G1 Z3.810 F50.0             ( go up - notice plunge rate )
 G0 X0.000 Y0.000            ( go to origin )
 G4 P0.1                     ( G4: Dwell P seconds to dwell )
 M5                          ( M5: stop the spindle)</code></pre>
-
 
 <p></p>
 <!-- ----------------------------------------------------------------------------------------------------------->
@@ -2266,7 +2316,8 @@ length correctly.</p>
 <p>Using a safety line when using rapid moves in between milling or drilling will prevent you
 crashing into clamps or fixturing. Just make sure you program your safety line higher than any
 obstacle.</p>
-<img src="cnc-doc/images/08_ToolLength/mach3-offset-page-e1567304671891-1024x750.webp" height="50%" alt=""> 
+<img src="cnc-doc/images/08_ToolLength/mach3-offset-page-e1567304671891-1024x750.webp" height="50%"
+alt=""> 
 
 <h3>What Do You Do If Your Datum Reference Face Gets Machined Away?</h3>
 
@@ -2493,31 +2544,41 @@ M30
 
 <p>If you haven’t seen any G code before and all these codes have you scratching your head take a
 quick look at my G code programming article and an explanation of cnc terminology.</p>
-
-<br/>
-<br/>
-
+<br>
+<br>
 <!-- ----------------------------------------------------------------------------------------------------------->
-<!-- ----------------------------------------------------------------------------------------------------------->
-
+<!-- -----------------------------------------------------------------------------------------------------------> 
 
 <h2 id="P-17">Most usuful G Codes</h2>
 
 <h3 id="P17-G00">G00 G-Code Command</h3>
+
 <h3 id="P17-G01">G01 G-Code Command</h3>
+
 <h3 id="P17-G02">G02 G-Code Command</h3>
+
 <h3 id="P17-G03">G03 G-Code Command</h3>
 
-<p>G03 is a G-code command used in CNC machining to specify a counter clockwise circular movement of the cutting tool. It is used to create circular cuts, arcs, and contours in the workpiece. The G03 command requires parameters to define the center point of the arc, the radius of the arc, and the end point of the arc. The command is typically followed by an X, Y, and Z coordinate to specify the end point of the arc.</p>
+<p>G03 is a G-code command used in CNC machining to specify a counter clockwise circular movement
+of the cutting tool. It is used to create circular cuts, arcs, and contours in the workpiece. The
+G03 command requires parameters to define the center point of the arc, the radius of the arc, and
+the end point of the arc. The command is typically followed by an X, Y, and Z coordinate to specify
+the end point of the arc.</p>
 
 <h3 id="P17-G04">G04 G-Code Command</h3>
+
 <h3 id="P17-G17">G17 G-Code Command</h3>
 
-<p>G17 is a code used in CNC machining that specifies the plane in which circular interpolation will occur. In particular, G17 specifies that circular interpolation will occur in the XY plane. This means that any circular movements made by the CNC machine will be constrained to the XY plane, with the Z-axis remaining fixed. This code is particularly useful when machining parts with circular features or contours, as it allows the machine to move in a smooth and accurate circular motion in the specified plane.</p>
+<p>G17 is a code used in CNC machining that specifies the plane in which circular interpolation
+will occur. In particular, G17 specifies that circular interpolation will occur in the XY plane.
+This means that any circular movements made by the CNC machine will be constrained to the XY plane,
+with the Z-axis remaining fixed. This code is particularly useful when machining parts with
+circular features or contours, as it allows the machine to move in a smooth and accurate circular
+motion in the specified plane.</p>
 
 <h4>How G17 G-Code Command is used</h4>
-<p>Here’s an example of how G17 might be used in a G code program:</p>
 
+<p>Here’s an example of how G17 might be used in a G code program:</p>
 <pre><code class="language-gcode">G90 ; Set absolute coordinates
 G17 ; Set circular interpolation plane to XY
 G0 X0 Y0 Z0 ; Move to starting position
@@ -2526,26 +2587,33 @@ G1 X20 Y10 ; Move in a straight line to X=20, Y=10
 G3 X30 Y0 I5 J-10 ; Move in a counterclockwise arc from current position to X=30, Y=0, with a center point of X=5, Y=-10 (in the XY plane)
 G1 X30 Y-20 ; Move in a straight line to X=30, Y=-20</code></pre>
 
-<p>In this example, we start by setting the absolute coordinates and then setting the circular interpolation plane to XY using the G17 command. We then move to the starting position at X=0, Y=0, Z=0.</p>
+<p>In this example, we start by setting the absolute coordinates and then setting the circular
+interpolation plane to XY using the G17 command. We then move to the starting position at X=0, Y=0,
+Z=0.</p>
 
-
-<p>Next, we use the G2 command to move in a clockwise arc from the current position to X=10, Y=10, with a center point of X=5, Y=0 (in the XY plane). The I and J parameters specify the distance from the current position to the center point of the arc in the X and Y directions, respectively.</p>
+<p>Next, we use the G2 command to move in a clockwise arc from the current position to X=10, Y=10,
+with a center point of X=5, Y=0 (in the XY plane). The I and J parameters specify the distance from
+the current position to the center point of the arc in the X and Y directions, respectively.</p>
 
 <p>We then use the G1 command to move in a straight line to X=20, Y=10.</p>
 
-
-<p>Next, we use the G3 command to move in a counterclockwise arc from the current position to X=30, Y=0, with a center point of X=5, Y=-10 (in the XY plane). The I and J parameters are again used to specify the distance from the current position to the center point of the arc.</p>
+<p>Next, we use the G3 command to move in a counterclockwise arc from the current position to X=30,
+Y=0, with a center point of X=5, Y=-10 (in the XY plane). The I and J parameters are again used to
+specify the distance from the current position to the center point of the arc.</p>
 
 <p>Finally, we use the G1 command to move in a straight line to X=30, Y=-20.</p>
 
-
 <h3 id="P17-G18">G18 G-Code Command</h3>
 
-<p>G18 is a G-code command used in CNC machining that specifies the plane of movement for circular interpolation in the X-Z plane, which is perpendicular to the Y-axis. This command is often used in conjunction with G02 and G03 commands, which respectively specify clockwise and counterclockwise circular interpolation movements. By using G18 along with these commands, CNC machines can create circular shapes and contours in the X-Z plane with precision and accuracy.</p>
+<p>G18 is a G-code command used in CNC machining that specifies the plane of movement for circular
+interpolation in the X-Z plane, which is perpendicular to the Y-axis. This command is often used in
+conjunction with G02 and G03 commands, which respectively specify clockwise and counterclockwise
+circular interpolation movements. By using G18 along with these commands, CNC machines can create
+circular shapes and contours in the X-Z plane with precision and accuracy.</p>
 
 <h4>How G18 G-Code Command is used</h4>
-<p>Here’s an example of G18 being used in a G-code program with comments:</p>
 
+<p>Here’s an example of G18 being used in a G-code program with comments:</p>
 <pre><code class="language-gcode">G90                        // Absolute positioning
 G54                        // Work coordinate system 1
 G00 X0 Y0 Z0               // Rapid move to starting position
@@ -2559,19 +2627,26 @@ G01 X110 F200              // Move linearly to the right at a feed rate of 200 m
 G00 Z10                    // Rapid move up to retract the tool
 M05                        // Spindle off</code></pre>
 
-<p>In this example, the G18 command is used after the tool has reached the cutting depth to specify that the subsequent circular interpolation movements will be in the X-Z plane. The G02 and G03 commands are then used to create clockwise and counterclockwise circular arcs in the X-Z plane, respectively.</p>
-
+<p>In this example, the G18 command is used after the tool has reached the cutting depth to specify
+that the subsequent circular interpolation movements will be in the X-Z plane. The G02 and G03
+commands are then used to create clockwise and counterclockwise circular arcs in the X-Z plane,
+respectively.</p>
 
 <h3 id="P17-G19">G19 G-Code Command</h3>
 
-<p>G19 is a G-code command used in CNC machining to specify the plane in which circular interpolation is to be performed. Specifically, G19 commands the machine to perform circular interpolation in the YZ plane. This means that the machine will move the cutting tool in a circular path in the YZ plane, as specified by the parameters of the G-code command.</p>
+<p>G19 is a G-code command used in CNC machining to specify the plane in which circular
+interpolation is to be performed. Specifically, G19 commands the machine to perform circular
+interpolation in the YZ plane. This means that the machine will move the cutting tool in a circular
+path in the YZ plane, as specified by the parameters of the G-code command.</p>
 
-<p>In contrast, G17 specifies circular interpolation in the XY plane, and G18 specifies circular interpolation in the XZ plane. These commands are important for controlling the movement of the cutting tool in CNC machining, and they allow for precise and complex shapes to be cut with high accuracy.</p>
+<p>In contrast, G17 specifies circular interpolation in the XY plane, and G18 specifies circular
+interpolation in the XZ plane. These commands are important for controlling the movement of the
+cutting tool in CNC machining, and they allow for precise and complex shapes to be cut with high
+accuracy.</p>
 
 <h4>How G19 G-Code Command is used</h4>
 
 <p>Here’s an example of G19 being used in a G-code program with comments:</p>
-
 <pre><code class="language-gcode">G00 X0 Y0 Z0    ; Rapid move to the starting position
 G90             ; Set absolute positioning mode
 G19             ; Set circular interpolation plane to YZ
@@ -2581,41 +2656,65 @@ G03 X30 Y10 I5 J0  ; Perform a counterclockwise circular interpolation in the YZ
 G00 X0 Y0       ; Rapid move back to the starting position
 In this example, the G-code program starts by moving the cutting tool to the starting position at (0,0,0) using a rapid move (G00). It then sets the absolute positioning mode (G90) and specifies that circular interpolation should be performed in the YZ plane (G19).</code></pre>
 
-<p>The program then performs two circular interpolations using G02 and G03 commands. The first interpolation is a clockwise circle with a center point at (5,0) and a radius of 10 units. The second interpolation is a counterclockwise circle with a center point at (25,0) and a radius of 10 units. Both of these circular interpolations are performed in the YZ plane, as specified by the G19 command.<p>
+<p>The program then performs two circular interpolations using G02 and G03 commands. The first
+interpolation is a clockwise circle with a center point at (5,0) and a radius of 10 units. The
+second interpolation is a counterclockwise circle with a center point at (25,0) and a radius of 10
+units. Both of these circular interpolations are performed in the YZ plane, as specified by the G19
+command.</p>
 
-<p>Finally, the program moves the cutting tool back to the starting position using a rapid move (G00).</p>
+<p></p>
+
+<p>Finally, the program moves the cutting tool back to the starting position using a rapid move
+(G00).</p>
 
 <h3 id="P17-G20">G20 G-Code Command</h3>
 
-
 <h3 id="P17-G21">G21 G-Code Command</h3>
 
-<p>G21 is a G-code command used in CNC machining to set the machine to operate in metric units. This means that all subsequent commands and measurements will be interpreted in millimeters instead of inches. G20, on the other hand, is the G-code command used to set the machine to operate in inches. The choice between G20 and G21 depends on the specific requirements of the machining project and the preferences of the operator.</p>
+<p>G21 is a G-code command used in CNC machining to set the machine to operate in metric units.
+This means that all subsequent commands and measurements will be interpreted in millimeters instead
+of inches. G20, on the other hand, is the G-code command used to set the machine to operate in
+inches. The choice between G20 and G21 depends on the specific requirements of the machining
+project and the preferences of the operator.</p>
 
 <h4>How G21 G-Code Command is used</h4>
-<p>Here’s an example of how G21 can be used in a G-code program:</p>
 
+<p>Here’s an example of how G21 can be used in a G-code program:</p>
 <pre><code class="language-gcode">G21         (Switch to metric units)
 G90         (Set absolute positioning mode)
 G1 X50 Y50  (Move to X=50mm, Y=50mm)
 G1 X100 Y100 (Move to X=100mm, Y=100mm)</code></pre>
 
-<p>In this example, the first line (G21) tells the machine to operate in metric units. The second line (G90) sets the positioning mode to absolute, meaning that the machine will move to the exact coordinates specified in the subsequent commands. The third and fourth lines (G1 X50 Y50 and G1 X100 Y100) are movement commands that tell the machine to move to the specified X and Y coordinates in millimeters.</p>
+<p>In this example, the first line (G21) tells the machine to operate in metric units. The second
+line (G90) sets the positioning mode to absolute, meaning that the machine will move to the exact
+coordinates specified in the subsequent commands. The third and fourth lines (G1 X50 Y50 and G1
+X100 Y100) are movement commands that tell the machine to move to the specified X and Y coordinates
+in millimeters.</p>
 
-<p>The comments in brackets are added for human readability and do not affect the operation of the machine.</p>
-
+<p>The comments in brackets are added for human readability and do not affect the operation of the
+machine.</p>
 
 <h3 id="P17-G40">G40 G-Code Command</h3>
+
 <h3 id="P17-G41">G41 G-Code Command</h3>
+
 <h3 id="P17-G42">G42 G-Code Command</h3>
+
 <h3 id="P17-G43">G43 G-Code Command</h3>
+
 <h3 id="P17-G53">G53 G-Code Command</h3>
 
-<p>The G53 command is used to cancel all work offsets, such as G54, G55 etc. If the machine was programmed to continue running with all offsets cancelled it would use its home positions as its reference. In my experience this command is not used very often, only in very specific cases. An example would be during an automated probing cycle, if you wanted the probe to reference a position from the machine reference (home position) a G53 would be used in the program to clear the active offset. If G53 was not used the probe would reference from the currently active offset.</p>
+<p>The G53 command is used to cancel all work offsets, such as G54, G55 etc. If the machine was
+programmed to continue running with all offsets cancelled it would use its home positions as its
+reference. In my experience this command is not used very often, only in very specific cases. An
+example would be during an automated probing cycle, if you wanted the probe to reference a position
+from the machine reference (home position) a G53 would be used in the program to clear the active
+offset. If G53 was not used the probe would reference from the currently active offset.</p>
 
 <h4>How G53 G-Code Command is used</h4>
-<p>Here’s an example of how the G53 command might be used in a G-code program, with comments in brackets and a spindle on command for 2000 RPM:</p>
 
+<p>Here’s an example of how the G53 command might be used in a G-code program, with comments in
+brackets and a spindle on command for 2000 RPM:</p>
 <pre><code class="language-gcode">G90          ; Set absolute coordinates
 G53 X0 Y0    ; Move the tool to the machine's home position [cancels all work offsets]
 G01 Z0 F1000 ; Move the tool to the top of the workpiece at a feedrate of 1000 mm/min
@@ -2626,21 +2725,32 @@ G01 X30 Y20  ; Move the tool to another position on the workpiece
 M05         ; Turn off the spindle
 G53 Z0      ; Move the tool to the machine's home position [cancels all work offsets]</code></pre>
 
-<p>In this example, the G53 command is used instead of a typical offset call, such as G54: This would force the machine to reference its home positions when running the program. At the beginning of the program it will move the tool to the machine’s home position (cancelling all work offsets), and again at the end of the program to return the tool to the Z home position. The M03 command is used to turn on the spindle and set it to 2000 RPM, and the M05 command is used to turn off the spindle. The other G-code commands are used to move the tool to specific positions on the workpiece and perform machining operations.</p>
+<p>In this example, the G53 command is used instead of a typical offset call, such as G54: This
+would force the machine to reference its home positions when running the program. At the beginning
+of the program it will move the tool to the machine’s home position (cancelling all work
+offsets), and again at the end of the program to return the tool to the Z home position. The M03
+command is used to turn on the spindle and set it to 2000 RPM, and the M05 command is used to turn
+off the spindle. The other G-code commands are used to move the tool to specific positions on the
+workpiece and perform machining operations.</p>
 
 <h3 id="P17-G54">G54 G-Code Command</h3>
+
 <h3 id="P17-G77">G77 G-Code Command</h3>
+
 <h3 id="P17-G80">G80 G-Code Command</h3>
 
-<p>G80 is a common code used in CNC machining that refers to canceling a canned cycle. A canned cycle is a pre-programmed sequence of operations that is commonly used in CNC machining to simplify the programming process.</p>
+<p>G80 is a common code used in CNC machining that refers to canceling a canned cycle. A canned
+cycle is a pre-programmed sequence of operations that is commonly used in CNC machining to simplify
+the programming process.</p>
 
 <p>When a G80 command is executed, it cancels the current canned cycle.</p>
 
-<p>It’s worth noting that the specific functionality of G80 may vary depending on the specific CNC machine being used, as different machines may have different interpretations of the code.</p>
+<p>It’s worth noting that the specific functionality of G80 may vary depending on the specific
+CNC machine being used, as different machines may have different interpretations of the code.</p>
 
 <h4>How G80 G-Code Command Is Used</h4>
-<p>Here’s an example of how G80 might be used in a G code program:</p>
 
+<p>Here’s an example of how G80 might be used in a G code program:</p>
 <pre><code class="language-gcode">G90  (Set absolute positioning mode)
 G54  (Select work offset 1)
 G00 X0 Y0 Z0  (Rapid move to starting position)
@@ -2649,20 +2759,29 @@ G80  (Cancel drilling cycle)
 G00 Z10.0  (Rapid move to clear workpiece)
 M30  (End of program)</code></pre>
 
-<p>In this example, the program begins by setting the machine to absolute positioning mode and selecting the first work offset. It then rapidly moves to the starting position and begins a drilling cycle with a retract distance of 1.0mm, a depth of -10.0mm, and a feed rate of 100.0mm/min.</p>
+<p>In this example, the program begins by setting the machine to absolute positioning mode and
+selecting the first work offset. It then rapidly moves to the starting position and begins a
+drilling cycle with a retract distance of 1.0mm, a depth of -10.0mm, and a feed rate of
+100.0mm/min.</p>
 
-<p>Then the G80 command is executed, canceling the cycle and returning the machine to the starting position. The program then rapidly moves to clear the workpiece and ends with the M30 command.</p>
-
+<p>Then the G80 command is executed, canceling the cycle and returning the machine to the starting
+position. The program then rapidly moves to clear the workpiece and ends with the M30 command.</p>
 
 <h3 id="P17-G81">G81 G-Code Command</h3>
+
 <h3 id="P17-G83">G83 G-Code Command</h3>
 
-<p>G83 is a G-code used in CNC machining to drill holes with peck drilling. Peck drilling is a technique used to drill deep holes in metal or other materials by retracting the drill bit periodically to clear chips and cool the bit. G83 is used to control the peck drilling process and specifies the depth, feed rate, and retract distance for each peck. It is commonly used in machining operations that require deep holes, such as in the aerospace and automotive industries.</p>
+<p>G83 is a G-code used in CNC machining to drill holes with peck drilling. Peck drilling is a
+technique used to drill deep holes in metal or other materials by retracting the drill bit
+periodically to clear chips and cool the bit. G83 is used to control the peck drilling process and
+specifies the depth, feed rate, and retract distance for each peck. It is commonly used in
+machining operations that require deep holes, such as in the aerospace and automotive
+industries.</p>
 
 <h4>How G83 G-Code Command Is Used</h4>
 
-<p>Here is an example of how G83 could be used in a G-code program for drilling a hole with peck drilling, with comments in brackets and a spindle on command for 725 RPM:</p>
-
+<p>Here is an example of how G83 could be used in a G-code program for drilling a hole with peck
+drilling, with comments in brackets and a spindle on command for 725 RPM:</p>
 <pre><code class="language-gcode">T01 M06          (Select tool 1, perform tool change)
 G90              (Set absolute positioning mode)
 G54              (Select work offset coordinate system)
@@ -2676,18 +2795,26 @@ M05             (Stop spindle)
 G00 Z50         (Rapid move to clearance height)
 M30             (End of program)</code></pre>
 
-<p>In this example, the program begins by performing a tool change, setting the machine to absolute positioning mode, selecting a work offset coordinate system, and turning on the spindle at 725 RPM. The program then moves to the hole position, and initiates the G83 peck drilling cycle with specified parameters. After the cycle is complete, the program cancels the cycle, stops the spindle, and moves to a clearance height before ending the program. Another peck drilling cycle is the G73 G-Code command.</p>
-
+<p>In this example, the program begins by performing a tool change, setting the machine to absolute
+positioning mode, selecting a work offset coordinate system, and turning on the spindle at 725 RPM.
+The program then moves to the hole position, and initiates the G83 peck drilling cycle with
+specified parameters. After the cycle is complete, the program cancels the cycle, stops the
+spindle, and moves to a clearance height before ending the program. Another peck drilling cycle is
+the G73 G-Code command.</p>
 
 <h3 id="P17-G84">G84 G-Code Command</h3>
+
 <h3 id="P17-G98">G98 G-Code Command</h3>
 
-<p>G98 is a G-code command used in CNC machining to specify a canned cycle return to the initial point. This means that the Z-axis returns to its initial starting point between each X/Y position, which allows for programming up and around areas of the part, clamps, and fixtures. This command is one that is used most commonly with G81 and G83 canned drilling cycles.</p>
+<p>G98 is a G-code command used in CNC machining to specify a canned cycle return to the initial
+point. This means that the Z-axis returns to its initial starting point between each X/Y position,
+which allows for programming up and around areas of the part, clamps, and fixtures. This command is
+one that is used most commonly with G81 and G83 canned drilling cycles.</p>
 
 <h4>How G98 G-Code Command Is Used</h4>
 
-<p>Here’s an example of a G-code program that uses G98 in a drilling canned cycle with comments in brackets and a spindle on command for 2000 rpm:</p>
-
+<p>Here’s an example of a G-code program that uses G98 in a drilling canned cycle with comments
+in brackets and a spindle on command for 2000 rpm:</p>
 <pre><code class="language-gcode">O0001 (Drilling Canned Cycle with G98 and Spindle On)
 G90 G54 G00 X0 Y0 (Absolute positioning, rapid move to X0 Y0)
 M03 S2000 (Spindle on clockwise at 2000 rpm)
@@ -2700,19 +2827,28 @@ G91 G28 X0 Y0 Z0 (Return to home position)
 G90 (reset absolute positioning)
 M30 (End of program)</code></pre>
 
-<p>In this example, the program starts by setting up the work coordinate system and turning on the spindle at 2000 rpm. The program then runs a G81 drilling cycle using G98 to return to the initial Z position, in this case Z50, before moving to the 2nd drilling position at X10 Y10. The program then turns off the spindle and returns to the home position.</p>
+<p>In this example, the program starts by setting up the work coordinate system and turning on the
+spindle at 2000 rpm. The program then runs a G81 drilling cycle using G98 to return to the initial
+Z position, in this case Z50, before moving to the 2nd drilling position at X10 Y10. The program
+then turns off the spindle and returns to the home position.</p>
 
-<p>Specifying the G98 with the G81 drilling cycle lifts the drill up to Z50 enabling the tool to clear any clamps or protruding features in the workpiece. The other alternative is to use G99 which you can read about here.</p>
-
+<p>Specifying the G98 with the G81 drilling cycle lifts the drill up to Z50 enabling the tool to
+clear any clamps or protruding features in the workpiece. The other alternative is to use G99 which
+you can read about here.</p>
 
 <h3 id="P17-G99">G99 G-Code Command</h3>
 
-<p>G99 is a G-code command used in CNC machining that instructs the machine to return to the initial level of the Z-axis after completing a drilling cycle. This command is often used in combination with G81, which is a drilling cycle command that instructs the machine to perform a series of holes at a specific depth. After completing each drilling cycle, the G99 command tells the machine to retract only to the ‘R’ value specified in the canned cycle, making it ready for the next operation.</p>
+<p>G99 is a G-code command used in CNC machining that instructs the machine to return to the
+initial level of the Z-axis after completing a drilling cycle. This command is often used in
+combination with G81, which is a drilling cycle command that instructs the machine to perform a
+series of holes at a specific depth. After completing each drilling cycle, the G99 command tells
+the machine to retract only to the ‘R’ value specified in the canned cycle, making it ready for
+the next operation.</p>
 
 <h4>How The G99 G-Code Command is Used</h4>
 
-<p>Here’s an example G-code program that uses G99 with a drilling canned cycle and spindle on command for 2000 RPM, with comments in brackets:</p>
-
+<p>Here’s an example G-code program that uses G99 with a drilling canned cycle and spindle on
+command for 2000 RPM, with comments in brackets:</p>
 <pre><code class="language-gcode">% O1234 (Program name)
 G90 (Absolute programming)
 G54 (Work offset)
@@ -2728,18 +2864,27 @@ G91 G28 X0 Y0 Z0 (send the machine to home position)
 G90 (re establish absolute positioning)
 M30 (Program end)</code></pre>
 
-<p>In this example, the program starts by setting up some basic parameters, such as the program name, absolute programming, and work offset. Then, the spindle is turned on clockwise at 2000 RPM.</p>
+<p>In this example, the program starts by setting up some basic parameters, such as the program
+name, absolute programming, and work offset. Then, the spindle is turned on clockwise at 2000
+RPM.</p>
 
-<p>The program then moves the tool to the starting position, sets the tool length offset, and moves to the approach position using a rapid move. The drilling canned cycle with G99 is then initiated with a retract height of 5 units, a drill depth of -10 units, and a feed rate of 10 units per minute.</p>
+<p>The program then moves the tool to the starting position, sets the tool length offset, and moves
+to the approach position using a rapid move. The drilling canned cycle with G99 is then initiated
+with a retract height of 5 units, a drill depth of -10 units, and a feed rate of 10 units per
+minute.</p>
 
-<p>After completing the first hole, the G99 command returns the tool to the initial level of the Z-axis, in this example it is Z5 as specified by the ‘R’ value in the G81 canned cycle. The program then moves to the next hole position and drills the second hole. The drilling cycle is then cancelled with the G80 G-Code command. Then the tool retracts to a safe height, M05 stops the spindle, and the program ends with the M30 command.</p>
+<p>After completing the first hole, the G99 command returns the tool to the initial level of the
+Z-axis, in this example it is Z5 as specified by the ‘R’ value in the G81 canned cycle. The
+program then moves to the next hole position and drills the second hole. The drilling cycle is then
+cancelled with the G80 G-Code command. Then the tool retracts to a safe height, M05 stops the
+spindle, and the program ends with the M30 command.</p>
 
+<p>This is typically used when the drill does not have to avoid any clamps or features on the
+workpiece. The G99 G-Code command is especially useful when lots of holes are being drilled as it
+eliminates a longer retract movement, thus speeding up the cycle time.</p>
 
-<p>This is typically used when the drill does not have to avoid any clamps or features on the workpiece. The G99 G-Code command is especially useful when lots of holes are being drilled as it eliminates a longer retract movement, thus speeding up the cycle time.</p>
-
-<p>If the drill has to avoid clamps or features on the workpiece, G98 can be used instead to move the tool higher.</p>
-
-
+<p>If the drill has to avoid clamps or features on the workpiece, G98 can be used instead to move
+the tool higher.</p>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
@@ -2904,12 +3049,12 @@ digital soft limits or physical limit switches.</p>
 
 <p><span style="color:#8000ff">https://cncphilosophy.com/cnc-milling-equipment/</span></p>
 
-<p>I’m going to give you a quick rundown on what equipment you will need to get started with a benchtop 
-cnc milling machine in your workshop.</p>
+<p>I’m going to give you a quick rundown on what equipment you will need to get started with a
+benchtop cnc milling machine in your workshop.</p>
 
 <h3>What equipment will you need to operate benchtop cnc mill?</h3>
 
-<p>There is going to be a bare minimum of equipment that you will need to run your cnc machine. 
+<p>There is going to be a bare minimum of equipment that you will need to run your cnc machine.
 Some of these are going to be dependant on what type of machine you have or want…</p>
 
 <p>The first most essential part will be a room or workshop.</p>
@@ -2917,300 +3062,344 @@ Some of these are going to be dependant on what type of machine you have or want
 <p>You don’t want to put your machine in your bedroom.</p>
 
 <div class="info">
-<p>I use a room in the basement, this is ideal for keeping the noise away from the rest of the house.</p>
+<p>I use a room in the basement, this is ideal for keeping the noise away from the rest of the
+house.</p>
 </div>
 
-<p>Small machines are not very loud, but it could get old quickly for anyone else in the house if they can hear it running.</p>
-
+<p>Small machines are not very loud, but it could get old quickly for anyone else in the house if
+they can hear it running.</p>
 
 <h3>A bench</h3>
 
-<p>Once you have your room, a sturdy bench will be necessary for all but the smallest cnc engraving machine</p>
+<p>Once you have your room, a sturdy bench will be necessary for all but the smallest cnc engraving
+machine</p>
 
-<div class="info"><p>A desktop cnc mill like a taig will need bolting to the bench to keep it from moving about.</p></div>
+<div class="info">
+<p>A desktop cnc mill like a taig will need bolting to the bench to keep it from moving about.</p>
+</div>
 
 <p>This is certainly a safety issue, so make sure your machine is secured properly.</p>
-
 <img src="cnc-doc/images/18_MillingEquipment/Bench-mill-1-1024x969.jpg" height="50%" alt=""> 
 
 <h3>Windows PC</h3>
 
-<p>You will need a computer to run your machine. It can be done with a laptop, but ideally you will want a desktop computer.</p>
+<p>You will need a computer to run your machine. It can be done with a laptop, but ideally you will
+want a desktop computer.</p>
 
-
-<p>You will not need an expensive PC, most people have an old desktop they are not using. You can pick up a cheap second hand machine from local classified ads if you don’t have one.</p>
+<p>You will not need an expensive PC, most people have an old desktop they are not using. You can
+pick up a cheap second hand machine from local classified ads if you don’t have one.</p>
 
 <p>Don’t bother trying with an apple computer. I’m sure it can be done, but just don’t..</p>
 
-
 <h3>Cnc control software</h3>
 
-<p>Once you have your PC you will need software on it to control your machine. Popular choices are Mach3 or universal gcode sender. </p>
+<p>Once you have your PC you will need software on it to control your machine. Popular choices are
+Mach3 or universal gcode sender. </p>
 
-<p>I wrote a post about connecting a cnc machine to a computer, you can read it through this link.</p>
-
+<p>I wrote a post about connecting a cnc machine to a computer, you can read it through this
+link.</p>
 <img src="cnc-doc/images/18_MillingEquipment/toolpath-1024x764.webp" height="50%" alt=""> 
-
 
 <h4>G-Code Visualizer</h4>
 
-<p>Writing your own G-Code programs can be tricky, being able to check them visually before running them on your machine is recommended.
+<p>Writing your own G-Code programs can be tricky, being able to check them visually before running
+them on your machine is recommended. </p>
 
-<p>You can do this using G-Code visualizer software. Although not essential, there are free ones available, 
-so they are worth mentioning.</p>
+<p>You can do this using G-Code visualizer software. Although not essential, there are free ones
+available, so they are worth mentioning.</p>
 
 <p>Check out my ‘G Code simulator‘ article.</p>
 
-
 <h4>An endmill or engraving tool</h4>
 
-<p>This one is pretty obvious. If your machine didn’t come with an endmill you will have to get one.</p>
+<p>This one is pretty obvious. If your machine didn’t come with an endmill you will have to get
+one.</p>
 
 <p>The cheapest one you can find will do if you are a noob and need to practice. </p>
 
-<div class="info"><p>I would suggest getting the largest size dia that your machine will take. The bigger the diameter, 
-the less likely they are to break if you abuse it.</p></div>
+<div class="info">
+<p>I would suggest getting the largest size dia that your machine will take. The bigger the
+diameter, the less likely they are to break if you abuse it.</p>
+</div>
 
 <p>You can get a set of endmills from Amazon like these, they certainly won’t break the bank.</p>
 
 <p>No products found.</p>
 
-
 <h4>Something to test your programs on</h4>
 
-<div class="info"><p>
-One trick I do occasionally is to do a test run on a piece of throw away material, such as wood or insulation foam.</p></div>
+<div class="info">
+<p>One trick I do occasionally is to do a test run on a piece of throw away material, such as wood
+or insulation foam.</p>
+</div>
 
-<p>It will help me prove out a program and see if it might cause any problems when it gets run in aluminum or steel.</p>
+<p>It will help me prove out a program and see if it might cause any problems when it gets run in
+aluminum or steel.</p>
 
 <p>Insulation foam only needs some double sided tape to keep it in place while you practice.</p>
 
 <div class="info">
-<p>If you do mill wood or foam, use a shop vac to suck up the dust while it runs, don’t breathe it in…</p></div>
+<p>If you do mill wood or foam, use a shop vac to suck up the dust while it runs, don’t breathe
+it in…</p>
+</div>
 
 <h4>Safety glasses</h4>
 
-<p>Speaking of safety, getting some glasses and wearing them will stop you from losing your eyesight. They are super cheap.</p>
+<p>Speaking of safety, getting some glasses and wearing them will stop you from losing your
+eyesight. They are super cheap.</p>
 
 <p>I have had metal in my eye more than a few times, it’s not fun. Don’t try it.</p>
 
-
 <h3>Recommended equipment needed for your cnc machine</h3>
 
-<p>After you have the basics and have got your machine running, there is a ton of other equipment you could invest in.
- A lot of choices will depend on the type of machine you have and what you want to make with it.</p>
+<p>After you have the basics and have got your machine running, there is a ton of other equipment
+you could invest in. A lot of choices will depend on the type of machine you have and what you want
+to make with it.</p>
 
-<p>I will list what I think is recommended based mainly on machining metal projects. There will be some equipment that will be usable for any type of machine and some that will be specific for metalwork. </p>
-
+<p>I will list what I think is recommended based mainly on machining metal projects. There will be
+some equipment that will be usable for any type of machine and some that will be specific for
+metalwork. </p>
 
 <h4>Fixturing, vise, clamps etc</h4>
 
-<p>This is a big one. Not having anything to hold your projects will stop you before you even get started. </p>
+<p>This is a big one. Not having anything to hold your projects will stop you before you even get
+started. </p>
 
-<div class="info"><p>
-A vise suited to the size of your machine is essential. I have two, this helps if your part is quite long, 
-both ends of the part can be clamped in each vise.</p></div>
+<div class="info">
+<p>A vise suited to the size of your machine is essential. I have two, this helps if your part is
+quite long, both ends of the part can be clamped in each vise.</p>
+</div>
 
-<p>The other fixturing essential are clamps, threaded studs and t-slot nuts. 
-These are the standard for clamping larger parts to the table.</p>
+<p>The other fixturing essential are clamps, threaded studs and t-slot nuts. These are the standard
+for clamping larger parts to the table.</p>
 
-<p>They can be used to clamp custom made fixture plates to the table for holding many smaller parts.</p>
-
-<img src="cnc-doc/images/18_MillingEquipment/clamps-1024x683.webp" height="50%" alt="">
+<p>They can be used to clamp custom made fixture plates to the table for holding many smaller
+parts.</p>
+<img src="cnc-doc/images/18_MillingEquipment/clamps-1024x683.webp" height="50%" alt=""> 
 
 <h3>MPG Pendant </h3>
 
-<p>I consider an MPG Pendant is an essential accessory. The machines I use at work always have an MPG, (
-manual pulse generator).</p>
+<p>I consider an MPG Pendant is an essential accessory. The machines I use at work always have an
+MPG, ( manual pulse generator).</p>
 
-<div class="info"><p>
-As soon as you use one you will wonder how you managed before.</p></div>
+<div class="info">
+<p>As soon as you use one you will wonder how you managed before.</p>
+</div>
 
-<p>They make manually jogging your machine to set your datums a breeze. 
-You will have more control over your machine making it less likely to crash when setting up your machine.</p>
+<p>They make manually jogging your machine to set your datums a breeze. You will have more control
+over your machine making it less likely to crash when setting up your machine.</p>
 
 <p>The tactile feel you have when using it beats pressing soft keys with your mouse any day.</p>
 
 <p>A newer version of the Vista cnc pendant that I own and recommend is available on Amazon.</p>
 
 <p>You can check out my full review of the Vistacnc pendant shown below.</p>
-
-<img src="cnc-doc/images/18_MillingEquipment/mpg-pendant-768x512.webp" height="50%" alt="">
-
+<img src="cnc-doc/images/18_MillingEquipment/mpg-pendant-768x512.webp" height="50%" alt=""> 
 
 <h4>Endmills and drills</h4>
 
-<p>A larger selection of endmills of various sizes will be needed if you want to machine more complex parts.</p>
+<p>A larger selection of endmills of various sizes will be needed if you want to machine more
+complex parts.</p>
 
-<div class="info"><p>
-Ball endmills are essential if you want to do surface machining of 3D forms and angles.</p></div>
+<div class="info">
+<p>Ball endmills are essential if you want to do surface machining of 3D forms and angles.</p>
+</div>
 
-<p>A drill index in both imperial and metric will be almost a necessity so you never get stuck trying to make a part.</p>
+<p>A drill index in both imperial and metric will be almost a necessity so you never get stuck
+trying to make a part.</p>
 
-<p>Holes can be machined on a mill but drilling is quicker and can go a lot deeper than using an endmill.
- A center drill will also be needed if you are using drill bits.</p>
-
-<img src="cnc-doc/images/18_MillingEquipment/cutters-2-1024x683.webp" height="50%" alt="">
-
-
+<p>Holes can be machined on a mill but drilling is quicker and can go a lot deeper than using an
+endmill. A center drill will also be needed if you are using drill bits.</p>
+<img src="cnc-doc/images/18_MillingEquipment/cutters-2-1024x683.webp" height="50%" alt=""> 
 
 <h4>Air compressor</h4>
-<p>A source of compressed air is extremely useful, keeping your parts clear of chips will help prevent cutters from breaking.</p>
 
-<div class="info"><p>
-A big compressor is not necessary, a small d.i.y. unit is all you will need.</p></div>
+<p>A source of compressed air is extremely useful, keeping your parts clear of chips will help
+prevent cutters from breaking.</p>
 
-<p>The big issue with these budget compressors is the noise they produce.
- It can be really bad in a small room and definitely a no go in a house.</p>
+<div class="info">
+<p>A big compressor is not necessary, a small d.i.y. unit is all you will need.</p>
+</div>
 
-<div class="info"><p>
-I avoid this problem by using an old fridge compressor retrofitted to the tank of a “donor” compressor.</p></div>
+<p>The big issue with these budget compressors is the noise they produce. It can be really bad in a
+small room and definitely a no go in a house.</p>
+
+<div class="info">
+<p>I avoid this problem by using an old fridge compressor retrofitted to the tank of a “donor”
+compressor.</p>
+</div>
 
 <p>It buzzes like a fridge.</p>
-
-<img src="cnc-doc/images/18_MillingEquipment/compressor-1-768x512.jpg" height="50%" alt="">
-
-
-
+<img src="cnc-doc/images/18_MillingEquipment/compressor-1-768x512.jpg" height="50%" alt=""> 
 
 <h4>Edge finder</h4>
 
-<p>To accurately find the edge of a part to set your datum you will need some type of edge finder or wobbler.</p>
+<p>To accurately find the edge of a part to set your datum you will need some type of edge finder
+or wobbler.</p>
 
-<div class="info"><p>
-There are various types available from the classic wobbler to an electronic edge finder that lights up when 
-it touches the edge.</p></div>
+<div class="info">
+<p>There are various types available from the classic wobbler to an electronic edge finder that
+lights up when it touches the edge.</p>
+</div>
 
-<p>Here is an article dedicated to edge finders, it explains how they are used and which type is recommended 
-for use on a hobby machine.</p>
+<p>Here is an article dedicated to edge finders, it explains how they are used and which type is
+recommended for use on a hobby machine.</p>
 
 <h4>Measuring Equipment</h4>
-<p>If you want to make accurate components for your hobby that may even be part of an assembly you will need measuring tools.</p>
 
-<p>This will include dial or digital calipers, micrometers, gauges of all types and even a steel rule will be essential.</p>
-<img src="cnc-doc/images/18_MillingEquipment/dial-calipers-768x512.jpg" height="50%" alt="">
+<p>If you want to make accurate components for your hobby that may even be part of an assembly you
+will need measuring tools.</p>
 
-<p>Here is an article dedicated to micrometers, explaining which ones are recommended for use in a home workshop.</p>
+<p>This will include dial or digital calipers, micrometers, gauges of all types and even a steel
+rule will be essential.</p>
+<img src="cnc-doc/images/18_MillingEquipment/dial-calipers-768x512.jpg" height="50%" alt=""> 
 
+<p>Here is an article dedicated to micrometers, explaining which ones are recommended for use in a
+home workshop.</p>
 
 <h4>Dial test indicator</h4>
+
 <p>These are important whatever type of machine you own.</p>
 
-<div class="info"><p>
-I have one permanently attached to my manual micro lathe. I use it with an extra long tip for the Z axis. 
-It’s basically a poor man’s readout. </p></div>
+<div class="info">
+<p>I have one permanently attached to my manual micro lathe. I use it with an extra long tip for
+the Z axis. It’s basically a poor man’s readout. </p>
+</div>
 
-<p>The main use is to check for flatness or angle. It can also be used to measure depths and distances.</p>
+<p>The main use is to check for flatness or angle. It can also be used to measure depths and
+distances.</p>
 
-<div class="info"><p>
-I find that a smaller finger dial is more useful for a small desktop cnc.</p></div>
+<div class="info">
+<p>I find that a smaller finger dial is more useful for a small desktop cnc.</p>
+</div>
 
-<p>They are more compact and can be mounted in the machine spindle. 
-This enables it to be used for setting datums to the center of a part by “sweeping” against an edge or diameter.</p>
+<p>They are more compact and can be mounted in the machine spindle. This enables it to be used for
+setting datums to the center of a part by “sweeping” against an edge or diameter.</p>
+<img src="cnc-doc/images/18_MillingEquipment/dial-indicator-300x200.jpg" height="25%" alt=""><br>
+<img src="cnc-doc/images/18_MillingEquipment/Dial-on-lathe-300x200.webp" height="25%" alt=""><br>
 
-<img src="cnc-doc/images/18_MillingEquipment/dial-indicator-300x200.jpg" height="25%" alt=""><br/>
-<img src="cnc-doc/images/18_MillingEquipment/Dial-on-lathe-300x200.webp" height="25%" alt=""><br/>
 
-
-<p>I have an article explaining the uses of different dial indicators and recommending the dials I use.</p>
+<p>I have an article explaining the uses of different dial indicators and recommending the dials I
+use.</p>
 
 <h4>1-2-3 Blocks</h4>
+
 <p>These are precision ground steel blocks. They measure 3” by 2” by 1”. </p>
+
 <p>They are very useful, you can check the price on Amazon here.</p>
 
 <p>I couldn’t possibly list everything they can be used for but here are a few.</p>
-
 <ul>
-<li>As a square</li>
-<li>As a fixture block or a stop</li>
-<li>Check the calibration of micrometers</li>
-<li>Set the height offset of tools</li>
+  <li>As a square</li>
+  <li>As a fixture block or a stop</li>
+  <li>Check the calibration of micrometers</li>
+  <li>Set the height offset of tools</li>
 </ul>
 
 <p>I have written a full article on 1-2-3 blocks, click the link to read it.</p>
-<img src="cnc-doc/images/18_MillingEquipment/1-2-3-Blocks-300x214.jpg" height="25%" alt=""><br/>
+<img src="cnc-doc/images/18_MillingEquipment/1-2-3-Blocks-300x214.jpg" height="25%" alt=""><br>
+
 
 <h4>ER collet sets</h4>
-<p>Having a spindle that takes ER collets makes your machine very versatile when it comes to tool 
+
+<p>Having a spindle that takes ER collets makes your machine very versatile when it comes to tool
 choices for your machine. </p>
 
-<div class="info"><p>
-Having a full set of imperial and metric collets will ensure you are very rarely limited to the size of
- drills and cutters you can use.
-</p></div>
+<div class="info">
+<p>Having a full set of imperial and metric collets will ensure you are very rarely limited to the
+size of drills and cutters you can use. </p>
+</div>
 
-<p>I have found that using a drill chuck in your mill takes up way too much space. Having a 
-good choice of ER collets eliminates this problem.
-</p>
+<p>I have found that using a drill chuck in your mill takes up way too much space. Having a good
+choice of ER collets eliminates this problem. </p>
 
 <p>You can read my article on ER Collets if you need to know more.</p>
 
 <p>These can be found on Amazon.</p>
-<img src="cnc-doc/images/18_MillingEquipment/er16-collets-768x512.webp" height="25%" alt=""><br/>
+<img src="cnc-doc/images/18_MillingEquipment/er16-collets-768x512.webp" height="25%" alt=""><br>
 
-<p>ER Collet racks are also available, or you can make your own with G Code available in the Cnc Philosophy store.</p>
+
+<p>ER Collet racks are also available, or you can make your own with G Code available in the Cnc
+Philosophy store.</p>
 
 <h4>Parallel set</h4>
+
 <p>If you have a vise for your machine you will need some parallels.</p>
 
-<div class="info"><p>
-These will lift your part above the vise jaws while keeping them level to the table. </p></div>
+<div class="info">
+<p>These will lift your part above the vise jaws while keeping them level to the table. </p>
+</div>
 
-<p>A small cnc machine vice will only need a couple of small pairs of parallels but they are only available in sets.</p>
+<p>A small cnc machine vice will only need a couple of small pairs of parallels but they are only
+available in sets.</p>
 
 <p>I have written a full article about parallels, you can read it here. .</p>
-<img src="cnc-doc/images/18_MillingEquipment/parallels-768x512.webp" height="25%" alt=""><br/>
+<img src="cnc-doc/images/18_MillingEquipment/parallels-768x512.webp" height="25%" alt=""><br>
+
 
 <h4>Soft blow hammer</h4>
+
 <p>These hammers or mallets have heads on them made of plastic or leather.</p>
 
-<div class="info"><p>
-They are designed to avoid leaving dents or marks on the face you are hitting.</p></div>
+<div class="info">
+<p>They are designed to avoid leaving dents or marks on the face you are hitting.</p>
+</div>
 
-<p>They are most useful for making sure a part is sat down firmly on a pair of parallels in the vise.</p>
+<p>They are most useful for making sure a part is sat down firmly on a pair of parallels in the
+vise.</p>
 
 <h4>Small shop vac</h4>
+
 <p>Once you have made a mess you need to clean it up.</p>
 
-<div class="info"><p>
-Using a small shop vac has to be the easiest and most efficient way of doing this.</p></div>
+<div class="info">
+<p>Using a small shop vac has to be the easiest and most efficient way of doing this.</p>
+</div>
 
 <p>One of those purchases that will always get used.</p>
 
 <h4>Selection of hand tools</h4>
-<p>A set of small hand files and a hole deburring tool are just a few of the hand tools you should consider owning. 
-I just collect them as they are needed.</p>
+
+<p>A set of small hand files and a hole deburring tool are just a few of the hand tools you should
+consider owning. I just collect them as they are needed.</p>
 
 <h4>Tap and die sets</h4>
-<p>I’ll let you into a big secret. The tap and die sets you can buy from the big box stores or Amazon are shit.</p>
-<p>They can be useful, mainly for repairing or cleaning out rusty or damaged threads.
- So if that is something you need to do then these sets certainly have value.</p>
 
-<div class="info"><p>
-The difference between tapping a hole with a cheap tap and a good quality tap is like night and day. </p></div>
+<p>I’ll let you into a big secret. The tap and die sets you can buy from the big box stores or
+Amazon are shit.</p>
 
-<p>
-I would recommend buying individual good quality taps from an industrial supplier such as mcmaster carr. If they are available, choose HSS taps, (high speed steel), then it should last you a few hundred holes.</p>
-<img src="cnc-doc/images/18_MillingEquipment/tap-die-set-768x512.webp" height="50%" alt=""><br/>
+<p>They can be useful, mainly for repairing or cleaning out rusty or damaged threads. So if that is
+something you need to do then these sets certainly have value.</p>
+
+<div class="info">
+<p>The difference between tapping a hole with a cheap tap and a good quality tap is like night and
+day. </p>
+</div>
+
+<p>I would recommend buying individual good quality taps from an industrial supplier such as
+mcmaster carr. If they are available, choose HSS taps, (high speed steel), then it should last you
+a few hundred holes.</p>
+<img src="cnc-doc/images/18_MillingEquipment/tap-die-set-768x512.webp" height="50%" alt=""><br>
 
 
 <h4>Micro lathe</h4>
-<p>I know this might seem extreme for an accessory for your mill, but as you start doing more projects 
-you will discover that they are pretty much a necessity.</p>
 
-<div class="info"><p>
-I own the Taig micro lathe and I probably use it more than my mill. It really comes in handy for quick fix it jobs.</p></div>
+<p>I know this might seem extreme for an accessory for your mill, but as you start doing more
+projects you will discover that they are pretty much a necessity.</p>
 
-<p>I used it to make an arbor for a slitting saw, fixturing parts and prepping round stock for my A axis on my cnc mill.</p>
+<div class="info">
+<p>I own the Taig micro lathe and I probably use it more than my mill. It really comes in handy for
+quick fix it jobs.</p>
+</div>
 
-<p>Then, once you own a lathe, you will need accessories for it…. 🙂</p>
+<p>I used it to make an arbor for a slitting saw, fixturing parts and prepping round stock for my A
+axis on my cnc mill.</p>
 
-
+<p>Then, once you own a lathe, you will need accessories for it…. </p>
 
 <h2 id="P-11">Cnc Milling Machine Terminology</h2>
 
 <p><span style="color:#8000ff">https://cncphilosophy.com/cnc-milling-machine-terminology/</span></p>
-
 
 <h3>G codes and M codes</h3>
 
@@ -3273,8 +3462,8 @@ huge list I considered the most likely ones a hobby cnc user might come across.<
 <p>Endmill is a general term used to identify a milling cutter. Specifically one that uses its edge
 to do the machining. Although most newer (modern?) carbide endmills are capable of cutting on both
 the face and the edge. This means the tool is able to plunge, i.e. drill into the workpiece.</p>
-
-<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/high-feed-endmill-768x549.jpg" height="50%" alt=""><br/>
+<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/high-feed-endmill-768x549.jpg"
+height="50%" alt=""><br>
 
 
 <h4>Slot drill</h4>
@@ -3282,8 +3471,8 @@ the face and the edge. This means the tool is able to plunge, i.e. drill into th
 <p>A slot drill is just a 2 flute endmill and as such it is more able to plunge faster enabling it
 to be the tool of choice for machining slots. The extra clearance with only having 2 flutes leaves
 more room for the chips to evacuate helping to prevent the tool from clogging up and breaking.</p>
-
-<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/example-slot-drill-768x512.jpg" height="50%" alt=""><br/>
+<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/example-slot-drill-768x512.jpg"
+height="50%" alt=""><br>
 
 
 <h4>Center drill</h4>
@@ -3292,8 +3481,8 @@ more room for the chips to evacuate helping to prevent the tool from clogging up
 has two diameters, the smaller diameter prevents the lathe center point from bottoming out in the
 hole. It can also be used for creating a guide hole for a HSS drill. The hole it creates is used to
 guide a HSS drill bit so that it does not wander when it starts to drill into the part.</p>
-
-<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/center-drill-768x512.jpg" height="50%" alt=""><br/>
+<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/center-drill-768x512.jpg" height="50%"
+alt=""><br>
 
 
 <h4>Spot Drill</h4>
@@ -3301,8 +3490,8 @@ guide a HSS drill bit so that it does not wander when it starts to drill into th
 <p>A spot drill is similar to a center drill but its only purpose is to create a positioning guide
 for a HSS drill. It can also be used to chamfer small holes. To program a spot drill you would use
 a G81 canned cycle, e.g. G81 R.1 Z-.02 F2.</p>
-
-<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/spotdrill-300x300.jpg" height="50%" alt=""><br/>
+<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/spotdrill-300x300.jpg" height="50%"
+alt=""><br>
 
 
 <h4>Drill Bit</h4>
@@ -3311,8 +3500,8 @@ a G81 canned cycle, e.g. G81 R.1 Z-.02 F2.</p>
 cycle.</p>
 
 <p>e.g. G83 R.1 Q.05 Z-.5 F2.5</p>
-
-<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/Drill-bits-768x512.jpg" height="50%" alt=""><br/>
+<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/Drill-bits-768x512.jpg" height="50%"
+alt=""><br>
 
 
 <h4>Fixture Plate</h4>
@@ -3323,8 +3512,8 @@ customised clamping features for a specific type of milling operation.</p>
 <p>I even have a fixture plate made from melamine board. This is useful for machining wood or
 plastic with the board being a sacrificial piece. This means a profile can be machined deeper than
 the part without damaging the actual table of the machine.</p>
-
-<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/fixture-1-768x512.jpg" height="50%" alt=""><br/>
+<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/fixture-1-768x512.jpg" height="50%"
+alt=""><br>
 
 
 <h4>Spindle speed</h4>
@@ -3398,8 +3587,9 @@ be done on a manual machine.
 datum offset values for each stored offset, G54, G55 etc and your tool length offsets for each tool
 e.g. T1, T2, T3, etc. The offset page will also show the Diameter or radius offsets for each tool.
 </p>
-
-<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/mach3-offset-page-e1567304671891-768x563.jpg" height="50%" alt=""><br/>
+<img
+src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/mach3-offset-page-e1567304671891-768x563.jpg"
+height="50%" alt=""><br>
 
 
 <h4>Work Offsets</h4>
@@ -3432,8 +3622,7 @@ axes, X, Y and Z. A 4th axis is usually rotary and will be clamped to the table 
 
 <p>It doesn’t spin like a lathe chuck, but is powered by a stepper motor so it can programmed to
 move measured amounts just like any of the main machine axes. </p>
-
-<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/A-axis.jpg" height="33%" alt=""><br/>
+<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/A-axis.jpg" height="33%" alt=""><br>
 
 
 <h4>CAD/CAM</h4>
@@ -3442,8 +3631,8 @@ move measured amounts just like any of the main machine axes. </p>
 These can be separate software programs or combined. Cad is used to design or draw the part to be
 machined, and Cam is used to create the cutter paths and also post process the cutter paths into a
 G code program. </p>
-
-<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/fusion-360-768x407.jpg" height="42%" alt=""><br/>
+<img src="cnc-doc/images/11_Cnc_Milling_Machine_Terminology/fusion-360-768x407.jpg" height="42%"
+alt=""><br>
 
 
 <h4>Post Processor</h4>
@@ -3613,7 +3802,8 @@ finish and appearance.</p>
 <h3>How can you tell if an endmill is center cut?</h3>
 
 <p>The cutting edges on the bottom face will extend all the way to the center.</p>
-<img src="cnc-doc/images/12_TypesOfMillCutters/non-center-cutting-end-mills.jpg" height="50%" alt=""> 
+<img src="cnc-doc/images/12_TypesOfMillCutters/non-center-cutting-end-mills.jpg" height="50%"
+alt=""> 
 
 <p>Some slot drills will have opposing flutes that meet slightly off center (asymmetrical). This
 helps the tool cut in the middle where the rotational speed is at its slowest.</p>
@@ -3737,161 +3927,149 @@ degrees.</p>
 <p>If I was able to answer your question with this article, you can check out my site map. You will
 see a list of all my posts and I might be able to help you with some more cnc topics.</p>
 </div>
-
-
-<br/>
-<br/>
-
+<br>
+<br>
 <!-- ----------------------------------------------------------------------------------------------------------->
-<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- -----------------------------------------------------------------------------------------------------------> 
 
 <h2 id="P-16">Feeds And Speeds</h2>
 
-<p>Feed refers to the rate of movement of the axes of your machine, it is programmed in inches per minute (IPM) 
-or millimeters per minute for metric.</p>
+<p>Feed refers to the rate of movement of the axes of your machine, it is programmed in inches per
+minute (IPM) or millimeters per minute for metric.</p>
 
-<p>Speed refers to the RPM of the machine spindle, i.e. the rotational speed of the tool on a mill or workpiece 
-for a lathe.</p>
+<p>Speed refers to the RPM of the machine spindle, i.e. the rotational speed of the tool on a mill
+or workpiece for a lathe.</p>
 
-<p>Establishing the rpm and feed rate for end mills and drills can seem like sorcery to many people, especially hobby 
-machinists.</p>
+<p>Establishing the rpm and feed rate for end mills and drills can seem like sorcery to many
+people, especially hobby machinists.</p>
 
-<p>There will always be variations between different machines, different setups, different materials, different tools, 
-the list goes on.</p>
+<p>There will always be variations between different machines, different setups, different
+materials, different tools, the list goes on.</p>
+<figure><img src="cnc-doc/images/16_Feeds_And_Speeds/carbide-endmill2-768x512.jpg" height="33%"
+alt=""> <figcaption>A typical good quality carbide endmill</figcaption></figure>
 
-<figure>
- <img src="cnc-doc/images/16_Feeds_And_Speeds/carbide-endmill2-768x512.jpg" height="33%" alt=""> 
- <figcaption>A typical good quality carbide endmill</figcaption>
-</figure>
- 
 <h3>How to calculate feeds and speeds</h3>
 
-<p>What I can do is show a formula that will give you a starting point from which you can adjust to suit your
- machine and the type of material you are milling.</p>
+<p>What I can do is show a formula that will give you a starting point from which you can adjust to
+suit your machine and the type of material you are milling.</p>
 
 <h3>Feeds and speeds formula</h3>
 
 <h4>Calculate RPM</h4>
-
 <pre><code class="language-gcode">RPM = SFM * X 3.82 / diameter of the tool (* SFM = Surface Feet per Minute)</code></pre>
-
 
 <p>Next, the formula for the feedrate uses the RPM from the previous calculation,</p>
 
-
 <h4>Calculate Feedrate</h4>
-
 <pre><code class="language-gcode">Feedrate = RPM X Feed per tooth X Number of teeth</code></pre>
 
 <p>or</p>
-
 <pre><code class="language-gcode">Feedrate = RPM X Feed per rev</code></pre>
-
-<br/>
-
-<div  class="info">
-To use these simple formulas, you need to find out what ‘SFM’ (surface feet / min) that your milling tool is designed 
-to operate at with the particular metal you are milling.</div>
+<br>
 
 
-<p>I am going to recommend that you only use carbide endmills when machining metals, they are inexpensive enough 
-and make the task a lot easier than using HSS (high speed steel) endmills.</p>
+<div class="info">
+To use these simple formulas, you need to find out what ‘SFM’ (surface feet / min) that your
+milling tool is designed to operate at with the particular metal you are milling.</div>
 
-<p>A safe starting point for a good quality carbide endmill machining a typical ‘soft’ alloy steel would be approximately
- 250 SFM. (a HSS endmill will be considerably slower, around 120)</p>
+<p>I am going to recommend that you only use carbide endmills when machining metals, they are
+inexpensive enough and make the task a lot easier than using HSS (high speed steel) endmills.</p>
 
-<p>Using 250 SFM in the formula above, with a .25” (¼”) dia endmill results in an RPM of 3,820.</p>
+<p>A safe starting point for a good quality carbide endmill machining a typical ‘soft’ alloy
+steel would be approximately 250 SFM. (a HSS endmill will be considerably slower, around 120)</p>
 
-<p>To calculate the feedrate we need to find out the feed per tooth or the feed per rev. Again a good starting point 
-using a good quality endmill would be .002” per tooth. So if we had a 4 flute cutter this 
-would be .008” per REV, (4 X .002”).</p>
+<p>Using 250 SFM in the formula above, with a .25” (¼”) dia endmill results in an RPM of
+3,820.</p>
+
+<p>To calculate the feedrate we need to find out the feed per tooth or the feed per rev. Again a
+good starting point using a good quality endmill would be .002” per tooth. So if we had a 4 flute
+cutter this would be .008” per REV, (4 X .002”).</p>
 
 <p>Now you can use the second formula using the rpm we just calculated, </p>
 
 <p>3,820rpm X .002” X 4 flutes = 30.56 inches/minute feedrate.</p>
 
-<div  class="info">So now we have a good starting point of 3,820 RPM with a feedrate of 30 inches/min.</div>
-
+<div class="info">
+So now we have a good starting point of 3,820 RPM with a feedrate of 30 inches/min.</div>
 <img src="cnc-doc/images/16_Feeds_And_Speeds/ali-endmill-768x512.jpg" height="33%" alt=""> 
 
-<p>Next we can consider machining some aluminum stock. A SFM, on a benchtop mill or router, of 500 would be a safe 
-starting point. </p>
+<p>Next we can consider machining some aluminum stock. A SFM, on a benchtop mill or router, of 500
+would be a safe starting point. </p>
 
-<p>Using the same end mill as in the previous calculation you get an RPM of 7,640 which, as you would expect, 
-is double the previous result.</p>
+<p>Using the same end mill as in the previous calculation you get an RPM of 7,640 which, as you
+would expect, is double the previous result.</p>
 
 <p>Again when you calculate the feedrate it is double the previous result at 61 in/min.</p>
 
 <h3>Hobby mill limitationsy</h3>
 
-<p>Now we have to consider the type of machine you are running. Most hobby machines have a limited RPM range 
-and limited feedrate capabilities. To get around this we will need to make adjustments.</p>
+<p>Now we have to consider the type of machine you are running. Most hobby machines have a limited
+RPM range and limited feedrate capabilities. To get around this we will need to make
+adjustments.</p>
 
-<p>For example a router usually has a very high RPM, 12,000 and up, so to enable a higher RPM you can use a 
-smaller dia cutter. </p>
+<p>For example a router usually has a very high RPM, 12,000 and up, so to enable a higher RPM you
+can use a smaller dia cutter. </p>
 
-<p>Using a ⅛” (.125”) diameter cutter instead of a ¼” (.25”) cutter the required RPM for aluminum example will be:-</p>
+<p>Using a ⅛” (.125”) diameter cutter instead of a ¼” (.25”) cutter the required RPM for
+aluminum example will be:-</p>
 
 <p>500SFM X 3.82 / .125 = 15,280rpm. </p>
 
 <p>This would be in the range of a typical cnc router. </p>
 
-<p>The next issue would be the feedrate. Using an RPM of 15,280 would give a feedrate of 122 in/min. 
-This is too fast a feedrate for many hobby machines. So what you can do is use an endmill with only 2 flutes. 
-This will half the feedrate down to 61 in/min. </p>
+<p>The next issue would be the feedrate. Using an RPM of 15,280 would give a feedrate of 122
+in/min. This is too fast a feedrate for many hobby machines. So what you can do is use an endmill
+with only 2 flutes. This will half the feedrate down to 61 in/min. </p>
 
 <h3>Variable speed spindle?</h3>
 
-<p>Using the calculations above is ok if you have a variable speed spindle, but what if you don’t? My Taig benchtop
- cnc mill has a series of pulleys to control its spindle speed.</p>
-
-<figure>
-<img src="cnc-doc/images/16_Feeds_And_Speeds/pulleys-768x512.jpg" height="33%" alt=""/> 
-<figcaption>Taig mill spindle pulleys for changing the spindle speed</figcaption>
-</figure>
-
+<p>Using the calculations above is ok if you have a variable speed spindle, but what if you
+don’t? My Taig benchtop cnc mill has a series of pulleys to control its spindle speed.</p>
+<figure><img src="cnc-doc/images/16_Feeds_And_Speeds/pulleys-768x512.jpg" height="33%" alt="">
+<figcaption>Taig mill spindle pulleys for changing the spindle speed</figcaption></figure>
 
 <p>The RPM speeds available are:-</p>
-
 <ul>
-<li>1100rpm</li>
-<li>1900rpm</li>
-<li>2900rpm</li>
-<li>4300rpm</li>
-<li>6500rpm</li>
-<li>10500rpm</li>
+  <li>1100rpm</li>
+  <li>1900rpm</li>
+  <li>2900rpm</li>
+  <li>4300rpm</li>
+  <li>6500rpm</li>
+  <li>10500rpm</li>
 </ul>
 
-<p>Using the calculation of 3820rpm and 30ipm, for my machine I would set it to the 2900rpm pulley and adjust the 
-feedrate to suit the slower rpm.</p>
+<p>Using the calculation of 3820rpm and 30ipm, for my machine I would set it to the 2900rpm pulley
+and adjust the feedrate to suit the slower rpm.</p>
 
 <p>2900 X .002” X 4flutes = 23.2ipm, </p>
 
 <p>so I would set the feedrate at 23 inches/min in the G-code program.</p>
 
-<div class="info">You will find that setting the speeds and feeds slower usually helps tool life and can save a lot
- of frustration.</div>
+<div class="info">
+You will find that setting the speeds and feeds slower usually helps tool life and can save a lot
+of frustration.</div>
 
-<p>I have found that milling aluminum at speeds and feeds you would expect to use on a soft alloy steel on an 
-industrial machine will produce effortless results. </p>
+<p>I have found that milling aluminum at speeds and feeds you would expect to use on a soft alloy
+steel on an industrial machine will produce effortless results. </p>
 
 <h3>Speeds and Feeds for Drilling</h3>
 
-<p>Although I suggested only using carbide for your endmills, high speed steel (HSS) drill bits will work perfectly fine.</p>
+<p>Although I suggested only using carbide for your endmills, high speed steel (HSS) drill bits
+will work perfectly fine.</p>
 
-<div class="info">Just make sure to check they are sharp by looking at the cutting edges with a loupe or magnifier.</div>
+<div class="info">
+Just make sure to check they are sharp by looking at the cutting edges with a loupe or
+magnifier.</div>
 
 <p>It is really easy to break a drill if it is blunt or damaged.</p>
+<figure><img src="cnc-doc/images/16_Feeds_And_Speeds/hss-stub-drill-768x512.jpg" height="33%"
+alt=""> <figcaption>A HSS Driil Bit</figcaption></figure>
 
-<figure>
-<img src="cnc-doc/images/16_Feeds_And_Speeds/hss-stub-drill-768x512.jpg" height="33%" alt=""/> 
-<figcaption>A HSS Driil Bit</figcaption>
-</figure>
+<p>A good starting point for drilling steel with a HSS drill bit would be 75 SFM with a feedrate of
+ .001/tooth or .002” per rev.</p>
 
-<p>A good starting point for drilling steel with a HSS drill bit would be 75 SFM with a feedrate of .001/tooth or .002” 
-per rev.</p>
-
-<p>For aluminum I would use 130 SFM and keep the feedrate at .002” per rev, at least initially.</p>
+<p>For aluminum I would use 130 SFM and keep the feedrate at .002” per rev, at least
+initially.</p>
 
 <p>Using a ⅛” (.125”) drill as an example:-</p>
 
@@ -3899,169 +4077,171 @@ per rev.</p>
 
 <p>2292 x .002” = 4.5 ipm</p>
 
-<p>It is important to use a pecking drill cycle (G83) and use a lubricant. If your machine isn’t equipped with a coolant 
-system you can use WD40. Just spray it occasionally as it is drilling and don’t let it get dry.</p>
-
-<figure>
-<img src="cnc-doc/images/16_Feeds_And_Speeds/wd40-268x300.jpg" height="33%" alt=""/> 
-<figcaption>Poor mans coolant!</figcaption>
-</figure>
+<p>It is important to use a pecking drill cycle (G83) and use a lubricant. If your machine isn’t
+equipped with a coolant system you can use WD40. Just spray it occasionally as it is drilling and
+don’t let it get dry.</p>
+<figure><img src="cnc-doc/images/16_Feeds_And_Speeds/wd40-268x300.jpg" height="33%" alt="">
+<figcaption>Poor mans coolant!</figcaption></figure>
 
 <p>The depth of the peck is not too critical until you start using small diameter drills.</p>
 
-<div  class="info">
+<div class="info">
 When drilling with drills .125” diameter and smaller I always use a very shallow peck depth.</div>
 
-<p>To give you an example, when drilling with a 1/16” drill or smaller I will set the peck depth at .01” or 
-less and reduce the feedrate to about .0005″/rev. </p>
+<p>To give you an example, when drilling with a 1/16” drill or smaller I will set the peck depth
+at .01” or less and reduce the feedrate to about .0005″/rev. </p>
 
-<p>It will take a while to drill a hole but it will drill it and come out of the hole in one piece. 
-Again use a lubricant and always check the cutting edges on the drill look good before you use it.</p>
+<p>It will take a while to drill a hole but it will drill it and come out of the hole in one piece.
+Again use a lubricant and always check the cutting edges on the drill look good before you use
+it.</p>
 
 <h3>Troubleshooting Feeds and Speeds</h3>
 
-<p>Using the calculations I have given above should be a good starting point for getting the ideal speeds and 
-feeds for your programs. But there are hundreds of variations that can affect the results you are getting. </p>
+<p>Using the calculations I have given above should be a good starting point for getting the ideal
+speeds and feeds for your programs. But there are hundreds of variations that can affect the
+results you are getting. </p>
 
 <p>Some of the problems you may encounter:-</p>
-
 <ul>
-<li>Vibration</li>
-<li>Spindle stalling</li>
-<li>Poor surface finish</li>
-<li>Tools breaking</li>
+  <li>Vibration</li>
+  <li>Spindle stalling</li>
+  <li>Poor surface finish</li>
+  <li>Tools breaking</li>
 </ul>
 
 <h4>Vibration</h4>
 
 <p>This will probably be the most common problem which may be caused by:-</p>
-
 <ul>
-<li>Incorrect spindle speed, typically too fast</li>
-<li>Poorly clamped workpiece</li>
-<li>Machine lacking rigidity (budget machine)</li>
-<li>Poor quality tooling or the wrong choice of tool</li>
-<li>A combination of all or some of the above</li>
+  <li>Incorrect spindle speed, typically too fast</li>
+  <li>Poorly clamped workpiece</li>
+  <li>Machine lacking rigidity (budget machine)</li>
+  <li>Poor quality tooling or the wrong choice of tool</li>
+  <li>A combination of all or some of the above</li>
 </ul>
 
 <h4>Spindle Stalling</h4>
 
-<p>This will be caused by a lack of power in your spindle motor. Slow down both spindle and feed. 
-On machines with a pulley system to control RPM, a slower spindle pulley will generate more torque.</p>
-
+<p>This will be caused by a lack of power in your spindle motor. Slow down both spindle and feed.
+On machines with a pulley system to control RPM, a slower spindle pulley will generate more
+torque.</p>
 
 <h4>Poor Surface Finish</h4>
 
 <p>Potential causes include:-</p>
-
 <ul>
-<li>Poorly clamped workpiece</li>
-<li>Worn, chipped or poor quality tools</li>
-<li>Incorrect SFM for the tool or material</li>
-<li>Lack of lubrication</li>
-<li>A combination of all or some of the above</li>
+  <li>Poorly clamped workpiece</li>
+  <li>Worn, chipped or poor quality tools</li>
+  <li>Incorrect SFM for the tool or material</li>
+  <li>Lack of lubrication</li>
+  <li>A combination of all or some of the above</li>
 </ul>
 
 <h4>Tools Breaking</h4>
-
 <ul>
-<li>Poor quality tooling</li>
-<li>Wrong choice of tool for the operation</li>
-<li>Lack of lubrication</li>
-<li>Too aggressive depth of cut</li>
+  <li>Poor quality tooling</li>
+  <li>Wrong choice of tool for the operation</li>
+  <li>Lack of lubrication</li>
+  <li>Too aggressive depth of cut</li>
 </ul>
 
-<div  class="info">
-A good practice to follow when a tool breaks is to make sure to change your procedure for that operation. 
-Don’t just put another tool in and try again, it will break again.</div>
-
+<div class="info">
+A good practice to follow when a tool breaks is to make sure to change your procedure for that
+operation. Don’t just put another tool in and try again, it will break again.</div>
 
 <h4>Suggested SFM for different materials</h4>
 
-<p>This is a difficult question to answer for a hobby cnc machine. They all have different qualities and an 
-ideal SFM on one machine may be a lot different on another.</p>
+<p>This is a difficult question to answer for a hobby cnc machine. They all have different
+qualities and an ideal SFM on one machine may be a lot different on another.</p>
 
-<div class="info">A typical SFM for aluminum on an industrial machine can be as fast as 1200.
-</div>
+<div class="info">
+A typical SFM for aluminum on an industrial machine can be as fast as 1200. </div>
 
-<p>This would be way too much for a small benchtop cnc machine. Hobby machines are too limited in their spindle 
-speeds and movement. </p>
+<p>This would be way too much for a small benchtop cnc machine. Hobby machines are too limited in
+their spindle speeds and movement. </p>
 
 <p>Use what I have suggested and work with an SFM that is within your machines capabilities. </p>
 
 <h4>Steel</h4>
 
-<p>As previously suggested, start at around 250 SFM or maybe lower and test, working up, or down, 
-until you find what works for your machine. You may have to go slower and RPM may restrict how low you can go.
- If so, use a smaller diameter tool to stay within your machines RPM range.</p>
+<p>As previously suggested, start at around 250 SFM or maybe lower and test, working up, or down,
+until you find what works for your machine. You may have to go slower and RPM may restrict how low
+you can go. If so, use a smaller diameter tool to stay within your machines RPM range.</p>
 
 <h4>Aluminum</h4>
 
-<p>I would start at 500 SFM and work up, your machines RPM or feedrate may dictate how far you can go.</p>
+<p>I would start at 500 SFM and work up, your machines RPM or feedrate may dictate how far you can
+go.</p>
 
 <p>I want to make a point of mentioning that not all metals are made equally.</p>
 
-<div  class="info">I would strongly suggest not buying steel or aluminum from a ‘big box store’.</div>
+<div class="info">
+I would strongly suggest not buying steel or aluminum from a ‘big box store’.</div>
 
-<p>The metal they sell can be close to unmachinable. The aluminum can be really soft and gummy, you could struggle 
-to get good results which can be confusing and fustrating when you are trying to learn how to machine.</p>
+<p>The metal they sell can be close to unmachinable. The aluminum can be really soft and gummy, you
+could struggle to get good results which can be confusing and fustrating when you are trying to
+learn how to machine.</p>
 
 <h4>Plastics</h4>
 
-<p>This is a tricky one because there are probably hundreds of different plastics with different properties.</p>
+<p>This is a tricky one because there are probably hundreds of different plastics with different
+properties.</p>
 
-<div class="info">You will have to test yourself, but be aware not to have too high an RPM with a low feed per tooth, 
+<div class="info">
+You will have to test yourself, but be aware not to have too high an RPM with a low feed per tooth,
 the plastic can heat up and melt.</div>
 
-<p>There are endmills specifically designed for acrylics, some being single flute. This will give you more 
-control with your feedrate, you will be able to run a slower feed reducing the risk of overheating the plastic.</p>
+<p>There are endmills specifically designed for acrylics, some being single flute. This will give
+you more control with your feedrate, you will be able to run a slower feed reducing the risk of
+overheating the plastic.</p>
 
 <h4>Wood</h4>
 
-<p>There are a large variations of hardness in wood, but luckily it is very forgiving to machine, 
+<p>There are a large variations of hardness in wood, but luckily it is very forgiving to machine,
 just pick a speed and go for it.</p>
 
 <p>HSS (high speed steel) endmills are perfect for wood and they cost less than carbide. </p>
 
-<div  class="info">Just remember to always try and get good quality tooling, it can prevent a lot of
-frustration and head scratching.</div>
+<div class="info">
+Just remember to always try and get good quality tooling, it can prevent a lot of frustration and
+head scratching.</div>
 
-<p>One note to keep in mind is you don’t have to go faster just because a material is softer. 
+<p>One note to keep in mind is you don’t have to go faster just because a material is softer.
 Start slow and if it works for you, just stick with it.</p>
 
 <h3>Feed and speed calculators</h3>
 
-<p>There are machinists calculators available which are helpful to have on hand in your workshop.</p>
+<p>There are machinists calculators available which are helpful to have on hand in your
+workshop.</p>
 
-<p>They have functions to call up the SFM for the most common materials. It will take the guesswork out of 
-your calculations for many areas of machining. </p>
+<p>They have functions to call up the SFM for the most common materials. It will take the guesswork
+out of your calculations for many areas of machining. </p>
 
-<div class="info">But you have to remember that they will only be suggested starting values and you will also have to compensate for using a smaller, 
-less powerful machine.</div>
+<div class="info">
+But you have to remember that they will only be suggested starting values and you will also have to
+compensate for using a smaller, less powerful machine.</div>
 
 <p>There are some available on Amazon, such as the calculated industries machining calculator.</p>
 
 <h3>Loupe</h3>
 
-<p>I highly recommend getting a Loupe, they are really cheap and you will be surprised how much clearer 
-you can see the condition of your tooling. Especially useful when using the smaller tooling that a hobby mill will use. 
-This jewelry loupe on Amazon looks perfect for this purpose.</p>
+<p>I highly recommend getting a Loupe, they are really cheap and you will be surprised how much
+clearer you can see the condition of your tooling. Especially useful when using the smaller tooling
+that a hobby mill will use. This jewelry loupe on Amazon looks perfect for this purpose.</p>
 
 <h3>Final Thoughts</h3>
 
-<p>Although it is not possible to give a definitive answer to what feed and speed you should use for any milling 
-or turning operation, using the information in this article should help establish a baseline for your machine. </p>
+<p>Although it is not possible to give a definitive answer to what feed and speed you should use
+for any milling or turning operation, using the information in this article should help establish a
+baseline for your machine. </p>
 
-<p>Once I discovered the ‘sweet spots’ for my Taig mill I was able to produce repeatable results that prolonged
-the life of my endmills and reduced potential ‘wear and tear’ on my machine.</p>
-
-
-
-<br/>
-<br/>
-
+<p>Once I discovered the ‘sweet spots’ for my Taig mill I was able to produce repeatable
+results that prolonged the life of my endmills and reduced potential ‘wear and tear’ on my
+machine.</p>
+<br>
+<br>
 <!-- ----------------------------------------------------------------------------------------------------------->
-<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- -----------------------------------------------------------------------------------------------------------> 
 
 <h2 id="P-19">MCode Reference <a href="http://linuxcnc.org/docs/html/gcode/m-code.html">[linux
 cnc]</a></h2>
@@ -4557,6 +4737,7 @@ are connected in your hal file to outputs.
   <li><p>Mode 0 is the only one permitted for an analog input.</p>
   </li>
 </ul>
+
 <p class="parag">M66 Example Lines</p>
 <pre><code class="language-gcode">M66 P0 L3 Q5 (wait up to 5 seconds for digital input 0 to turn on)</code></pre>
 
@@ -4577,7 +4758,8 @@ motion.analog-in-nn pins are connected in your hal file to an input.
 
 <p></p>
 </div>
-<p class="parag">Example HAL Connection</p> 
+
+<p class="parag">Example HAL Connection</p>
 <pre><code class="language-gcode">net signal-name motion.digital-in-00 &lt;= parport.0.pin10-in</code></pre>
 
 <h3 id="mcode:m67">M67 Analog Output,Synchronized</h3>
@@ -4922,7 +5104,8 @@ command.</p>
 eog /home/john/linuxcnc/nc_files/message.png &amp;
 exit 0</code></pre>
 
-<h2 id="P-20">GCode Reference <a href="http://linuxcnc.org/docs/html/gcode/g-code.html">[linuxcnc]</a></h2>
+<h2 id="P-20">GCode Reference <a
+href="http://linuxcnc.org/docs/html/gcode/g-code.html">[linuxcnc]</a></h2>
 
 <p></p>
 
@@ -5375,22 +5558,20 @@ and 0 in the Y axis. In this case only an I offset is needed.</p>
 <p class="parag">G2 Example Line</p>
 <pre><code class="language-gcode">G0 X0 Y0
 G2 X1 Y1 I1 F10 (clockwise arc in the XY plane)</code></pre>
+<img src="cnc-doc/images/20_GcodeReference/G2-example1.svg"></img> 
 
-<img src="cnc-doc/images/20_GcodeReference/G2-example1.svg"/>
 <p>Figure 1. G2 Example</p>
 
 <p>In the next example we see the difference between the offsets for Y if we are doing a
 <em>G2</em> or a G3 move. For the <em>G2</em> move the start position is X0 Y0, for the <em>G3</em>
 move it is X0 Y1. The arc center is at X1 Y0.5 for both moves. The <em>G2</em> move the J offset is
 0.5 and the <em>G3</em> move the J offset is -0.5.</p>
+<img src="cnc-doc/images/20_GcodeReference/G2-G3-example1.svg"></img> 
 
-<img src="cnc-doc/images/20_GcodeReference/G2-G3-example1.svg"/>
 <p>Figure 2. G2-G3 Example Line</p>
-
 <pre><code class="language-gcode">G0 X0 Y0
 G2 X0 Y1 I1 J0.5 F25 (clockwise arc in the XY plane)
 G3 X0 Y0 I1 J-0.5 F25 (counterclockwise arc in the XY plane)</code></pre>
-
 
 <p>In the next example we show how the arc can make a helix in the Z axis by adding the Z word.</p>
 
@@ -5560,12 +5741,11 @@ X0 Y0
 M2</code></pre>
 
 <p>Sample NURBS Output</p>
+<img src="cnc-doc/images/20_GcodeReference/G5.2-example1.png" width="335"> 
 
-<img src="cnc-doc/images/20_GcodeReference/G5.2-example1.png" width="335"/>
-
-<p>More information on NURBS can be found here:
-<a
-href="http://wiki.linuxcnc.org/cgi-bin/wiki.pl?NURBS">http://wiki.linuxcnc.org/cgi-bin/wiki.pl?NURBS</a> </p>
+<p>More information on NURBS can be found here: <a
+href="http://wiki.linuxcnc.org/cgi-bin/wiki.pl?NURBS">http://wiki.linuxcnc.org/cgi-bin/wiki.pl?NURBS</a>
+</p>
 
 <h3 id="gcode:g7">G7 Lathe Diameter Mode</h3>
 <pre><code class="language-gcode">G7</code></pre>
@@ -5587,11 +5767,10 @@ that is 2" in diameter. <em>G8</em> is default at power up.</p>
 <p>G10 L0 reload all tool table data. Requires that there is no current tool loaded in spindle.</p>
 
 <div class="info">
-<strong>Note: </strong>
-When using G10 L0, tool parameters (#5401-#5413) will be updated immediately and any altered tool diameters will be used for 
-subsequent G41,42 cutter radius compensation commands. 
-Existing G43 tool length compensation values will remain in effect until updated by new G43 commands.</div>
-
+<strong>Note: </strong> When using G10 L0, tool parameters (#5401-#5413) will be updated
+immediately and any altered tool diameters will be used for subsequent G41,42 cutter radius
+compensation commands. Existing G43 tool length compensation values will remain in effect until
+updated by new G43 commands.</div>
 
 <h3 id="gcode:g10-L1">G10 L1 Set Tool Table</h3>
 <pre><code class="language-gcode">G10 L1 P- axes &lt;R- I- J- Q-&gt;</code></pre>
@@ -6059,48 +6238,63 @@ the programmed point would take the specified time. The move stops (within machi
 limits) when the programmed point is reached, or when the requested change in the probe input takes
 place, whichever occurs first.</p>
 
-<table class="linuxcnc" rules="all" class="tableblock" width="90%" frame="border" cellspacing="0" cellpadding="4">
-<caption class="title">Table 2. Probing G-Codes</caption>
-<colgroup>
-<col width="25%">
-<col width="25%">
-<col width="25%">
-<col width="25%">
-</colgroup>
-<thead>
-<tr class="linuxcnc">
-<th align="left" valign="top"> Code  </th>
-<th align="left" valign="top"> Target State    </th>
-<th align="left" valign="top"> Move orientation </th>
-<th align="left" valign="top"> Error Signal</th>
-</tr>
-</thead>
-<tbody>
-<tr class="linuxcnc">
-<td align="left" valign="top"><p class="table">G38.2</p></td>
-<td align="left" valign="top"><p class="table">Touched</p></td>
-<td align="left" valign="top"><p class="table">Toward piece</p></td>
-<td align="left" valign="top"><p class="table">Yes</p></td>
-</tr>
-<tr class="linuxcnc">
-<td align="left" valign="top"><p class="table">G38.3</p></td>
-<td align="left" valign="top"><p class="table">Touched</p></td>
-<td align="left" valign="top"><p class="table">Toward piece</p></td>
-<td align="left" valign="top"><p class="table">No</p></td>
-</tr>
-<tr class="linuxcnc">
-<td align="left" valign="top"><p class="table">G38.4</p></td>
-<td align="left" valign="top"><p class="table">Untouched</p></td>
-<td align="left" valign="top"><p class="table">From piece</p></td>
-<td align="left" valign="top"><p class="table">Yes</p></td>
-</tr>
-<tr class="linuxcnc">
-<td align="left" valign="top"><p class="table">G38.5</p></td>
-<td align="left" valign="top"><p class="table">Untouched</p></td>
-<td align="left" valign="top"><p class="table">From piece</p></td>
-<td align="left" valign="top"><p class="table">No</p></td>
-</tr>
-</tbody>
+<table class="tableblock" rules="all" width="90%" frame="border" cellspacing="0" cellpadding="4">
+  <caption class="title">Table 2. Probing G-Codes</caption>
+  <colgroup><col width="25%">
+    <col width="25%">
+    <col width="25%">
+    <col width="25%">
+  </colgroup>
+  <thead>
+    <tr class="linuxcnc">
+      <th align="left" valign="top">Code </th>
+      <th align="left" valign="top">Target State </th>
+      <th align="left" valign="top">Move orientation </th>
+      <th align="left" valign="top">Error Signal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="linuxcnc">
+      <td align="left" valign="top"><p class="table">G38.2</p>
+      </td>
+      <td align="left" valign="top"><p class="table">Touched</p>
+      </td>
+      <td align="left" valign="top"><p class="table">Toward piece</p>
+      </td>
+      <td align="left" valign="top"><p class="table">Yes</p>
+      </td>
+    </tr>
+    <tr class="linuxcnc">
+      <td align="left" valign="top"><p class="table">G38.3</p>
+      </td>
+      <td align="left" valign="top"><p class="table">Touched</p>
+      </td>
+      <td align="left" valign="top"><p class="table">Toward piece</p>
+      </td>
+      <td align="left" valign="top"><p class="table">No</p>
+      </td>
+    </tr>
+    <tr class="linuxcnc">
+      <td align="left" valign="top"><p class="table">G38.4</p>
+      </td>
+      <td align="left" valign="top"><p class="table">Untouched</p>
+      </td>
+      <td align="left" valign="top"><p class="table">From piece</p>
+      </td>
+      <td align="left" valign="top"><p class="table">Yes</p>
+      </td>
+    </tr>
+    <tr class="linuxcnc">
+      <td align="left" valign="top"><p class="table">G38.5</p>
+      </td>
+      <td align="left" valign="top"><p class="table">Untouched</p>
+      </td>
+      <td align="left" valign="top"><p class="table">From piece</p>
+      </td>
+      <td align="left" valign="top"><p class="table">No</p>
+      </td>
+    </tr>
+  </tbody>
 </table>
 
 <p>After successful probing, parameters #5061 to #5069 will be set to the X, Y, Z, A, B, C, U, V, W
@@ -6110,11 +6304,11 @@ programmed point. Parameter 5070 is set to 1 if the probe succeeded and 0 if the
 the probing operation failed, <em>G38.2</em> and <em>G38.4</em> will signal an error by posting an
 message on screen if the selected GUI supports that. And by halting program execution.</p>
 
-<p>Here is an example formula to probe tool height with conversion from a local coordinate system Z offset
-to machine coordinates which is stored in the tool table. The existing tool height compensation is first 
-cancelled with G49 to avoid including it in the calculation of height, and the new height is loaded
-from the tool table. The start position must be high enough above the tool height probe to compensate for the use of G49.
-</p>
+<p>Here is an example formula to probe tool height with conversion from a local coordinate system Z
+offset to machine coordinates which is stored in the tool table. The existing tool height
+compensation is first cancelled with G49 to avoid including it in the calculation of height, and
+the new height is loaded from the tool table. The start position must be high enough above the tool
+height probe to compensate for the use of G49. </p>
 
 <p class="parag">G38.2 Example</p>
 <pre><code class="language-gcode">G49
@@ -6370,7 +6564,7 @@ parameters shown in the following table.</p>
 <p class="parag">Table 3. Coordinate System Parameters</p>
 
 <table class="linuxcnc">
-  <tbody  class="linuxcnc">
+  <tbody class="linuxcnc">
     <tr class="linuxcnc">
       <th>Select</th>
       <th>CS</th>
@@ -6539,23 +6733,23 @@ parameters shown in the following table.</p>
 <ul>
   <li><em>P</em> - motion blending tolerance</li>
   <li><em>Q</em> - naive cam tolerance</li>
-  <li><em>G64</em> - best possible speed. Without P means to keep the best speed possible, 
-   no matter how far away from the programmed point you end up.</li>
+  <li><em>G64</em> - best possible speed. Without P means to keep the best speed possible, no
+    matter how far away from the programmed point you end up.</li>
   <li><em>G64 P-</em> - Blend between best speed and deviation tolerance</li>
-  <li><em>G64 P- &lt;Q- &gt;</em> blending with tolerance.
-  It is a way to fine tune your system for best compromise between speed and accuracy.
-    The P- tolerance means that the actual path will be no more than P- away from the programmed
-    endpoint. The velocity will be reduced if needed to maintain the path. In addition, when you
-    activate G64 P- Q- it turns on the naive cam detector; when there are a series of linear XYZ
-    feed moves at the same feed rate that are less than Q- away from being collinear, they are
-    collapsed into a single linear move. On G2/G3 moves in the G17 (XY) plane when the maximum
-    deviation of an arc from a straight line is less than the G64 P- tolerance the arc is broken
-    into two lines (from start of arc to midpoint, and from midpoint to end). those lines are then
-    subject to the naive cam algorithm for lines. Thus, line-arc, arc-arc, and arc-line cases as
-    well as line-line benefit from the naive cam detector. This improves contouring performance by
-    simplifying the path. It is OK to program for the mode that is already active. See also the
-    Trajectory Control Section for more information on these modes. If Q is not specified then it
-    will have the same behavior as before and use the value of P-. Set Q to zero to disable the Naive CAM Detector.</li>
+  <li><em>G64 P- &lt;Q- &gt;</em> blending with tolerance. It is a way to fine tune your system for
+    best compromise between speed and accuracy. The P- tolerance means that the actual path will be
+    no more than P- away from the programmed endpoint. The velocity will be reduced if needed to
+    maintain the path. In addition, when you activate G64 P- Q- it turns on the naive cam detector;
+    when there are a series of linear XYZ feed moves at the same feed rate that are less than Q-
+    away from being collinear, they are collapsed into a single linear move. On G2/G3 moves in the
+    G17 (XY) plane when the maximum deviation of an arc from a straight line is less than the G64
+    P- tolerance the arc is broken into two lines (from start of arc to midpoint, and from midpoint
+    to end). those lines are then subject to the naive cam algorithm for lines. Thus, line-arc,
+    arc-arc, and arc-line cases as well as line-line benefit from the naive cam detector. This
+    improves contouring performance by simplifying the path. It is OK to program for the mode that
+    is already active. See also the Trajectory Control Section for more information on these modes.
+    If Q is not specified then it will have the same behavior as before and use the value of P-.
+    Set Q to zero to disable the Naive CAM Detector.</li>
 </ul>
 
 <p class="parag">G64 P- Example Line</p>
@@ -6564,10 +6758,8 @@ parameters shown in the following table.</p>
 <p>It is a good idea to include a path control specification in the preamble of each G code
 file.</p>
 
-
 <h3 id="gcode:g70">G70 Lathe finishing cycle</h3>
 <pre><code class="language-gcode">G70 Q- &lt;X-&gt; &lt;Z-&gt; &lt;D-&gt; &lt;E-&gt; &lt;P-&gt;</code></pre>
-
 <ul>
   <li><em>Q</em> - The subroutine number.</li>
   <li><em>X</em> - The starting X position, defaults to the initial position.</li>
@@ -6577,25 +6769,29 @@ file.</p>
   <li><em>P</em> - The number of passes to use, defaults to 1.</li>
 </ul>
 
-<p>The G70 cycle is intended to be used after the shape of the profile given in the subroutine with number Q has been cut with G71 or G72.</p>
-
+<p>The G70 cycle is intended to be used after the shape of the profile given in the subroutine with
+number Q has been cut with G71 or G72.</p>
 <ul>
-<li>Preliminary motion.
-  <ul>
-  <li>If Z or X are used a rapid move to that position is done. This position is also used between each finishing pass.</li>
-  <li>Then a rapid move to the start of the profile is executed.</li>
-  <li>The path given in Q- is followed using the G1 and [gcode:g2-g3] commands.</li>
-  <li>If a next pass is required there is another rapid to the intermediate location, before a rapid is done to the start of the profile.</li>
-  <li>After the final pass, the tool is left at the end of the profile including E-.</li>
-  </ul>
-  <li>Multiple passes. The distance between the pass and the final profile is (pass-1)*(D-E)/P+E. 
-   Where pass the pass number and D,E and P are the D/E/P numbers.</li>
-  <li>The distance is computed using the starting position of the cycle, with a positive distance towards this point.</li>
-  <li>Fillet and chamfers in the profile. It is possible to add fillets or chamfers in the profile, see [gcode:g71-g72] for more details.</li>
+  <li>Preliminary motion. 
+    <ul>
+      <li>If Z or X are used a rapid move to that position is done. This position is also used
+        between each finishing pass.</li>
+      <li>Then a rapid move to the start of the profile is executed.</li>
+      <li>The path given in Q- is followed using the G1 and [gcode:g2-g3] commands.</li>
+      <li>If a next pass is required there is another rapid to the intermediate location, before a
+        rapid is done to the start of the profile.</li>
+      <li>After the final pass, the tool is left at the end of the profile including E-.</li>
+    </ul>
+  </li>
+  <li>Multiple passes. The distance between the pass and the final profile is (pass-1)*(D-E)/P+E.
+    Where pass the pass number and D,E and P are the D/E/P numbers.</li>
+  <li>The distance is computed using the starting position of the cycle, with a positive distance
+    towards this point.</li>
+  <li>Fillet and chamfers in the profile. It is possible to add fillets or chamfers in the profile,
+    see [gcode:g71-g72] for more details.</li>
 </ul>
 
 <p>It is an error if:</p>
-
 <ul>
   <li>There is no subroutine defined with the number given in Q.</li>
   <li>The path given in the profile is not monotonic in Z or X.</li>
@@ -6605,54 +6801,64 @@ file.</p>
 <h3 id="gcode:g70">G71 G72 Lathe roughing cycles</h3>
 
 <div class="info">
-<strong>Note: </strong>The G71 and G72 cycles are currently somewhat fragile. See issues #707 and #1146.</div>
-
-
+<strong>Note: </strong>The G71 and G72 cycles are currently somewhat fragile. See issues #707 and
+#1146.</div>
 <pre><code class="language-gcode">G71   Q- &lt;X-&gt; &lt;Z-&gt; &lt;D-&gt; &lt;I-&gt; &lt;R-&gt;
 G71.1 Q- &lt;X-&gt; &lt;Z-&gt; &lt;D-&gt; &lt;I-&gt; &lt;R-&gt;
 G71.2 Q- &lt;X-&gt; &lt;Z-&gt; &lt;D-&gt; &lt;I-&gt; &lt;R-&gt;
 G72   Q- &lt;X-&gt; &lt;Z-&gt; &lt;D-&gt; &lt;I-&gt; &lt;R-&gt;
 G72.1 Q- &lt;X-&gt; &lt;Z-&gt; &lt;D-&gt; &lt;I-&gt; &lt;R-&gt;
 G72.2 Q- &lt;X-&gt; &lt;Z-&gt; &lt;D-&gt; &lt;I-&gt; &lt;R-&gt;</code></pre>
-
 <ul>
-<li><em>Q</em> - The subroutine number.</li>
-<li><em>X</em> - The starting X position, defaults to the initial position.</li>
-<li><em>Z</em> - The starting Z position, defaults to the initial position.</li>
-<li><em>D</em> - The remaining distance to the profile, defaults to 0.</li>
-<li><em>I</em> - The cutting increment, defaults to 1.</li>
-<li><em>R</em> - The retracting distance, defaults to 0.5.</li>
+  <li><em>Q</em> - The subroutine number.</li>
+  <li><em>X</em> - The starting X position, defaults to the initial position.</li>
+  <li><em>Z</em> - The starting Z position, defaults to the initial position.</li>
+  <li><em>D</em> - The remaining distance to the profile, defaults to 0.</li>
+  <li><em>I</em> - The cutting increment, defaults to 1.</li>
+  <li><em>R</em> - The retracting distance, defaults to 0.5.</li>
 </ul>
 
-<p>The G71/G72 cycle is intended to rough cut a profile on a lathe. The G71 cycles remove layers of the material while traversing in the Z direction. The G72 cycles remove material while traversing the X axis, the so called facing cycle. The direction of travel is the same as in the path given in the subroutine. For the G71 cycle the Z coordinate must be monotonically changing, for the G72 this is required for the X axis.</p>
-
-</p>The profile is given in a subroutine with number Q-. This subroutine may contain G0, G1, G2 and G3 motion commands. All other commands are ignored, including feed and speed settings. The [gcode:g0] commands are interpreted as G1 commands. Each motion command may also include an optional A- or C- number. If the number A- is added a fillet with the radius given by A will be inserted at the endpoint of that motion, if this radius is too large the algorithm will fail with a non-monotonic path error. It is also possible to use the C- number, which allows a chamfer to be inserted. This chamfer has the same endpoints as a fillet of the same dimension would have but a straight line is inserted instead of an arc.</p>
+<p>The G71/G72 cycle is intended to rough cut a profile on a lathe. The G71 cycles remove layers of
+the material while traversing in the Z direction. The G72 cycles remove material while traversing
+the X axis, the so called facing cycle. The direction of travel is the same as in the path given in
+the subroutine. For the G71 cycle the Z coordinate must be monotonically changing, for the G72 this
+is required for the X axis.</p>
+The profile is given in a subroutine with number Q-. This subroutine may contain G0, G1, G2 and G3
+motion commands. All other commands are ignored, including feed and speed settings. The [gcode:g0]
+commands are interpreted as G1 commands. Each motion command may also include an optional A- or C-
+number. If the number A- is added a fillet with the radius given by A will be inserted at the
+endpoint of that motion, if this radius is too large the algorithm will fail with a non-monotonic
+path error. It is also possible to use the C- number, which allows a chamfer to be inserted. This
+chamfer has the same endpoints as a fillet of the same dimension would have but a straight line is
+inserted instead of an arc.
 
 <p>When in absolute mode the U (for X) and W (for Z) can be used as incremental displacements.</p>
 
-<p>The G7x.1 cycles do not cut pockets. The G7x.2 cycles only cut after the first pocket and continue where G7x.1 stopped. It is advisible to leave some additional material to cut before the G7x.2 cycle, so if G7x.1 used a D1.0 the G7x.2 can use D0.5 and 0.5mm will be removed while moving from one pocket to the next.</p>
+<p>The G7x.1 cycles do not cut pockets. The G7x.2 cycles only cut after the first pocket and
+continue where G7x.1 stopped. It is advisible to leave some additional material to cut before the
+G7x.2 cycle, so if G7x.1 used a D1.0 the G7x.2 can use D0.5 and 0.5mm will be removed while moving
+from one pocket to the next.</p>
 
 <p>The normal G7x cycles cut the entire profile in one cycle.</p>
-
-
 <ol>
-  <li>Preliminary motion.
-  <ul>
-    <li>If Z or X are used a rapid move to that position is done.</li>
-    <li>After the profile has been cut, the tool stops at the end of the profile, including the distance specified in D.</li>
-  </ul>
+  <li>Preliminary motion. 
+    <ul>
+      <li>If Z or X are used a rapid move to that position is done.</li>
+      <li>After the profile has been cut, the tool stops at the end of the profile, including the
+        distance specified in D.</li>
+    </ul>
   </li>
-  <li>The D number is used to keep a distance from the final profile, to allow material to remain for finishing.</li>
+  <li>The D number is used to keep a distance from the final profile, to allow material to remain
+    for finishing.</li>
 </ol>
 
 <p>It is an error if:</p>
 <ul>
-<li>There is no subroutine defined with the number given in Q.</li>
-<li>The path given in the profile is not monotonic in Z or X.</li>
-<li>[gcode:g17-g19.1] has not been used to select the ZX plane.</li>
-<li>[gcode:g41-g42] is active.</li>
+  <li>There is no subroutine defined with the number given in Q.</li>
+  <li>The path given in the profile is not monotonic in Z or X.</li>
+  <li>[gcode:g17-g19.1] has not been used to select the ZX plane.</li>
+  <li>[gcode:g41-g42] is active.</li>
 </ul>
-
 
 <h3 id="gcode:g73">G73 Drilling Cycle with Chip Breaking</h3>
 <pre><code class="language-gcode">G73 X- Y- Z- R- Q- &lt;L-&gt;</code></pre>
@@ -6687,23 +6893,21 @@ which represents a delta increment along the Z axis.</p>
 
 <h3 id="gcode:g74">G74 Left-hand Tapping Cycle, Dwell</h3>
 <pre><code class="language-gcode">G74 (X- Y- Z-) or (U- V- W-) R- L- P- $-</code></pre>
-
 <ul>
-<li><em>R-</em> - Retract position along the Z axis.</li>
-<li><em>L-</em> - Used in incremental mode; number of times to repeat the cycle. See G81 for examples.</li>
-<li><em>P-</em> - Dwell time (seconds).</li>
-<li><em>$-</em> - Selected spindle.
-<li><em>F-</em> - Feed rate (spindle speed multiplied by distance traveled per revolution (thread pitch)).</li>
+  <li><em>R-</em> - Retract position along the Z axis.</li>
+  <li><em>L-</em> - Used in incremental mode; number of times to repeat the cycle. See G81 for
+    examples.</li>
+  <li><em>P-</em> - Dwell time (seconds).</li>
+  <li><em>$-</em> - Selected spindle. </li>
+  <li><em>F-</em> - Feed rate (spindle speed multiplied by distance traveled per revolution (thread
+    pitch)).</li>
 </ul>
-
 
 <div class="warning">
 <strong>Warning: </strong>G74 does not use synchronized motion.</div>
 
-
 <p>The <em>G74</em> cycle is intended for tapping with floating chuck and dwell at the bottom of
 the hole.</p>
-
 <ol>
   <li>Preliminary motion, as described in the Preliminary and In-Between Motion section.</li>
   <li>Disable Feed and Speed Overrides.</li>
@@ -6719,16 +6923,15 @@ the hole.</p>
 divided by S. In example S100 F125 gives pitch of 1.25MM per revolution.</p>
 
 <h3 id="gcode:g76">G76 Threading Cycle</h3>
-
 <pre><code class="language-gcode">G76 P- Z- I- J- R- K- Q- H- E- L- $-</code></pre>
+<img src="cnc-doc/images/20_GcodeReference/G76-example1.svg"></img> 
 
-<img src="cnc-doc/images/20_GcodeReference/G76-example1.svg"/>
 <p class="parag">Figure 3. G76 Threading</p>
 <ul>
   <li><em>Drive Line</em> - A line through the initial X position parallel to the Z.</li>
   <li><em>P-</em> - The thread pitch in distance per revolution.</li>
-  <li><em>Z-</em> - The final position of threads. At the end of the cycle the tool will be at this Z
-    position.</li>
+  <li><em>Z-</em> - The final position of threads. At the end of the cycle the tool will be at this
+    Z position.</li>
 </ul>
 
 <div class="info">
@@ -6736,39 +6939,40 @@ divided by S. In example S100 F125 gives pitch of 1.25MM per revolution.</p>
 are diameter measurements. When <em>G8</em> Lathe Radius Mode is in force the values for I, J and K
 are radius measurements.</div>
 <ul>
-  <li><em>I-</em> - The thread peak offset from the drive line. Negative I values are external threads, and
-    positive I values are internal threads. Generally the material has been turned to this size
-    before the <em>G76</em> cycle.</li>
-  <li><em>J-</em> - A positive value specifying the initial cut depth. The first threading cut will be J
-    beyond the thread peak position.</li>
-  <li><em>K-</em> - A positive value specifying the full thread depth. The final threading cut will be K
-    beyond the thread peak position.</li>
+  <li><em>I-</em> - The thread peak offset from the drive line. Negative I values are external
+    threads, and positive I values are internal threads. Generally the material has been turned to
+    this size before the <em>G76</em> cycle.</li>
+  <li><em>J-</em> - A positive value specifying the initial cut depth. The first threading cut will
+    be J beyond the thread peak position.</li>
+  <li><em>K-</em> - A positive value specifying the full thread depth. The final threading cut will
+    be K beyond the thread peak position.</li>
 </ul>
 
 <p>Optional settings</p>
 <ul>
-  <li><em>$-</em> - The spindle number to which the motion will be synchronised (default 0). For example is
-    $1 is programmed then the motion will begin on the reset od spindle.1.index-enable and proceed
-    in synchrony with the value of spindle.1.revs</li>
-  <li><em>R-</em> - The depth degression. R1.0 selects constant depth on successive threading passes. R2.0
-    selects constant area. Values between 1.0 and 2.0 select decreasing depth but increasing area.
-    Values above 2.0 select decreasing area. Beware that unnecessarily high degression values will
-    cause a large number of passes to be used. (degression = a descent by stages or steps.)</li>
-  <li><em>Q-</em> - The compound slide angle is the angle (in degrees) describing to what extent successive
-    passes should be offset along the drive line. This is used to cause one side of the tool to
-    remove more material than the other. A positive Q value causes the leading edge of the tool to
-    cut more heavily. Typical values are 29, 29.5 or 30.</li>
-  <li><em>H-</em> - The number of spring passes. Spring passes are additional passes at full thread depth.
-    If no additional passes are desired, program H0.</li>
-  <li><em>E-</em> - Specifies the distance along the drive line used for the taper. The angle of the taper
-    will be so the last pass tapers to the thread crest over the distance specified with E.' E0.2'
-    will give a taper for the first/last 0.2 length units along the thread. For a 45 degree taper
-    program E the same as K</li>
-  <li><em>L-</em> - Specifies which ends of the thread get the taper. Program L0 for no taper (the default),
-    L1 for entry taper, L2 for exit taper, or L3 for both entry and exit tapers. Entry tapers will
-    pause at the drive line to synchronize with the index pulse then move at the feed rate in to
-    the beginning of the taper. No entry taper and the tool will rapid to the cut depth then
-    synchronize and begin the cut.</li>
+  <li><em>$-</em> - The spindle number to which the motion will be synchronised (default 0). For
+    example is $1 is programmed then the motion will begin on the reset od spindle.1.index-enable
+    and proceed in synchrony with the value of spindle.1.revs</li>
+  <li><em>R-</em> - The depth degression. R1.0 selects constant depth on successive threading
+    passes. R2.0 selects constant area. Values between 1.0 and 2.0 select decreasing depth but
+    increasing area. Values above 2.0 select decreasing area. Beware that unnecessarily high
+    degression values will cause a large number of passes to be used. (degression = a descent by
+    stages or steps.)</li>
+  <li><em>Q-</em> - The compound slide angle is the angle (in degrees) describing to what extent
+    successive passes should be offset along the drive line. This is used to cause one side of the
+    tool to remove more material than the other. A positive Q value causes the leading edge of the
+    tool to cut more heavily. Typical values are 29, 29.5 or 30.</li>
+  <li><em>H-</em> - The number of spring passes. Spring passes are additional passes at full thread
+    depth. If no additional passes are desired, program H0.</li>
+  <li><em>E-</em> - Specifies the distance along the drive line used for the taper. The angle of
+    the taper will be so the last pass tapers to the thread crest over the distance specified with
+    E.' E0.2' will give a taper for the first/last 0.2 length units along the thread. For a 45
+    degree taper program E the same as K</li>
+  <li><em>L-</em> - Specifies which ends of the thread get the taper. Program L0 for no taper (the
+    default), L1 for entry taper, L2 for exit taper, or L3 for both entry and exit tapers. Entry
+    tapers will pause at the drive line to synchronize with the index pulse then move at the feed
+    rate in to the beginning of the taper. No entry taper and the tool will rapid to the cut depth
+    then synchronize and begin the cut.</li>
 </ul>
 
 <p>The tool is moved to the initial X and Z positions prior to issuing the <em>G76</em>. The X
@@ -6819,8 +7023,8 @@ G76 P0.05 Z-1 I-.075 J0.008 K0.045 Q29.5 L2 E0.045</code></pre>
 <p>In the figure the tool is in the final position after the <em>G76</em> cycle is completed. You
 can see the entry path on the right from the Q29.5 and the exit path on the left from the L2
 E0.045. The white lines are the cutting moves.</p>
+<img src="cnc-doc/images/20_GcodeReference/G76-example2.png" width="488"> 
 
-<img src="cnc-doc/images/20_GcodeReference/G76-example2.png"width="488"/>
 <p class="parag">Figure 4. G76 Example</p>
 
 <h3>G80-G89 Canned Cycles</h3>
@@ -6939,8 +7143,7 @@ N170 M2 (program end)</code></pre>
 
 <p>The <em>G98</em> to the second line above means that the return move will be to the value of Z
 in the first line since it is higher that the R value specified.</p>
-
-<img src="cnc-doc/images/20_GcodeReference/G80-example1.svg"/>
+<img src="cnc-doc/images/20_GcodeReference/G80-example1.svg"></img> 
 
 <p class="parag">Twelve Holes in a Square</p>
 
@@ -6958,17 +7161,15 @@ N1070 G90 G0 X0 (rapid move home)
 N1080 Y0
 N1090 Z0
 N1100 M2 (program end)</code></pre>
-
-<img src="cnc-doc/images/20_GcodeReference/G80-example2.svg"/>
+<img src="cnc-doc/images/20_GcodeReference/G80-example2.svg"></img> 
 
 <p>The second reason to use a canned cycle is that they all produce preliminary moves and returns
 that you can anticipate and control regardless of the start point of the canned cycle.</p>
 
 <h3 id="gcode:g80">G80 Cancel Canned Cycle</h3>
-
 <ul>
-<li><em>G80</em> - cancel canned cycle modal motion. G80 is part of modal group 1, so programming any other G
-code from modal group 1 will also cancel the canned cycle.</li>
+  <li><em>G80</em> - cancel canned cycle modal motion. G80 is part of modal group 1, so programming
+    any other G code from modal group 1 will also cancel the canned cycle.</li>
 </ul>
 
 <p>It is an error if:</p>
@@ -7035,8 +7236,7 @@ belong to the canned cycle.</p>
   <li>Move the Z-axis at the current feed rate to the Z position.</li>
   <li>The Z-axis does a rapid move to clear Z.</li>
 </ul>
-
-<img src="cnc-doc/images/20_GcodeReference/G81-example1.svg"/>
+<img src="cnc-doc/images/20_GcodeReference/G81-example1.svg"></img> 
 
 <p class="parag">Example 1 - Absolute Position G81</p>
 
@@ -7046,12 +7246,11 @@ interpreted.</p>
 
 <p>This calls for absolute distance mode (G90) and OLD_Z retract mode (G98) and calls for the G81
 drilling cycle to be performed once.</p>
-
 <ul>
-<li>The X value and X position are 4.</li>
-<li>The Y value and Y position are 5.</li>
-<li>The Z value and Z position are 1.5.</li>
-<li>The R value and clear Z are 2.8. OLD_Z is 3.</li>
+  <li>The X value and X position are 4.</li>
+  <li>The Y value and Y position are 5.</li>
+  <li>The Z value and Z position are 1.5.</li>
+  <li>The R value and clear Z are 2.8. OLD_Z is 3.</li>
 </ul>
 
 <p>The following moves take place:</p>
@@ -7061,9 +7260,7 @@ drilling cycle to be performed once.</p>
   <li>move parallel to the Z-axis at the feed rate to (Z1.5)</li>
   <li>a rapid move parallel to the Z-axis to (Z3)</li>
 </ul>
-
-
-<img src="cnc-doc/images/20_GcodeReference/G81-example2.svg"/>
+<img src="cnc-doc/images/20_GcodeReference/G81-example2.svg"></img> 
 
 <p class="parag">Example 2 - Relative Position G81</p>
 
@@ -7102,8 +7299,7 @@ is 7 (=2+5), the clear Z position is 4.8 (=1.8+3), and the Z position is 4.2 (=4
   <li>move parallel to the Z-axis at the feed rate to (X13, Y17, Z4.2)</li>
   <li>a rapid move parallel to the Z-axis to (X13, Y17, Z4.8)</li>
 </ul>
-
-<img src="cnc-doc/images/20_GcodeReference/G81-example3.svg"/>
+<img src="cnc-doc/images/20_GcodeReference/G81-example3.svg"></img> 
 
 <p class="parag">Example 3 - Relative Position G81</p>
 
@@ -7114,8 +7310,7 @@ than from (X1, Y2, Z3).</p>
 <p>Since OLD_Z is below the R value, it adds nothing for the motion but since the initial value of
 Z is less than the value specified in R, there will be an initial Z move during the preliminary
 moves.</p>
-
-<img src="cnc-doc/images/20_GcodeReference/G81-example4.svg" width="640"/>
+<img src="cnc-doc/images/20_GcodeReference/G81-example4.svg" width="640"></img> 
 
 <p class="parag">Example 4 - Absolute G81 R &gt; Z</p>
 
@@ -7126,8 +7321,7 @@ moves.</p>
 <p>Since this plot starts with (X0, Y0, Z0), the interpreter adds the initial Z0 and R1.8 and rapid
 moves to that location. After that initial Z move, the repeat feature works the same as it did in
 example 3 with the final Z depth being 0.6 below the R value.</p>
-
-<img src="cnc-doc/images/20_GcodeReference/G81-example5.svg"/>
+<img src="cnc-doc/images/20_GcodeReference/G81-example5.svg"></img> 
 
 <p class="parag">Example 5 - Relative position R &gt; Z</p>
 <pre><code class="language-gcode">G90 G98 G81 X4 Y5 Z-0.6 R1.8</code></pre>
@@ -7151,10 +7345,10 @@ the same location again.</p>
 <p>The motion of a <em>G82</em> canned cycle looks just like <em>G81</em> with the addition of a
 dwell at the bottom of the Z move. The length of the dwell is specified by a P- word in the
 <em>G82</em> block.</p>
-
 <pre><code class="language-gcode">G90 G82 G98 X4 Y5 Z1.5 R2.8 P2</code></pre>
 
-<p>This will be similar to example 3 above, just with an added dwell of 2 seconds at the bottom of the hole.</p>
+<p>This will be similar to example 3 above, just with an added dwell of 2 seconds at the bottom of
+the hole.</p>
 
 <h3 id="gcode:g83">G83 Peck Drilling Cycle</h3>
 <pre><code class="language-gcode">G83 (X- Y- Z-) or (U- V- W-) R- L- Q-</code></pre>
@@ -7183,19 +7377,18 @@ operation.</p>
 
 <h3 id="gcode:g84">G84 Right-hand Tapping Cycle, Dwell</h3>
 <pre><code class="language-gcode">G84 (X- Y- Z-) or (U- V- W-) R- L- P- $-</code></pre>
-
-
 <ul>
-<li><em>R-</em> - Retract position along the Z axis.</li>
-<li><em>L-</em> - Used in incremental mode; number of times to repeat the cycle. See G81 for examples.</li>
-<li><em>P-</em> - Dwell time (seconds).</li>
-<li><em>$-</em> - Selected spindle.</li>
-<li><em>F-</em> - Feed rate (spindle speed multiplied by distance traveled per revolution (thread pitch)).</li>
+  <li><em>R-</em> - Retract position along the Z axis.</li>
+  <li><em>L-</em> - Used in incremental mode; number of times to repeat the cycle. See G81 for
+    examples.</li>
+  <li><em>P-</em> - Dwell time (seconds).</li>
+  <li><em>$-</em> - Selected spindle.</li>
+  <li><em>F-</em> - Feed rate (spindle speed multiplied by distance traveled per revolution (thread
+    pitch)).</li>
 </ul>
 
 <div class="warning">
-<strong>Warning: </strong>
-G84 does not use synchronized motion.</div>
+<strong>Warning: </strong> G84 does not use synchronized motion.</div>
 
 <p>The <em>G84</em> cycle is intended for tapping with floating chuck and dwell at the bottom of
 the hole.</p>
@@ -7398,22 +7591,21 @@ G97 S- &lt;$-&gt; (RPM Mode)</code></pre>
 <ul>
   <li><em>D</em> - maximum spindle RPM</li>
   <li><em>S</em> - surface speed</li>
-  <li><em>$</em> - the spindle of which the speed will be varied, optional
+  <li><em>$</em> - the spindle of which the speed will be varied, optional 
     <ul>
       <li><em>G96 D- S-</em> - selects constant surface speed of S 
-	    <ul>
-		  <li>In feet per minute if <em>G20</em> is in effect</li>
+        <ul>
+          <li>In feet per minute if <em>G20</em> is in effect</li>
           <li>or meters per minute if <em>G21</em> is in effect</li>
-		</ul>
+        </ul>
       </li>
     </ul>
-   </li>
-</ul>   
-    
-<p>When using G96, ensure that X0 in the current coordinate system (including offsets and tool
-    lengths) is the center of rotation or LinuxCNC will not give the desired ssurface speed.
-    <em>G96</em> is not affected by radius or diameter mode.</p>
+  </li>
+</ul>
 
+<p>When using G96, ensure that X0 in the current coordinate system (including offsets and tool
+lengths) is the center of rotation or LinuxCNC will not give the desired ssurface speed.
+<em>G96</em> is not affected by radius or diameter mode.</p>
 
 <p>To achieve CSS mode on selected spindles programme successive <em>G96</em> commands for each
 spindle prior to issuing M3.</p>
@@ -7459,23 +7651,25 @@ in the first line since it is higher that the R value specified.</p>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
-
 <h2 id="P-98">Resources</h2>
 
 <h3 id="P-98-01">Candle</h3>
+
 <p>The well known Grbl controller</p>
-	
+
 <h3 id="P-98-02"><a href="https://ncnetic.com/">NCnetic</a></h3>
+
 <p>A excellent gcode viewer, standalone app or as plugin for notepad++</p>
 
 <h3 id="P-98-03">NCCorrector</h3>
+
 <p>Similar to NCnetic, not yet tested by myself</p>
 
-<h3 id="P-98-04"><a href="https://sunspire.site/software-products/cnc-milling-simulator">SunSpire</a></h3>
+<h3 id="P-98-04"><a
+href="https://sunspire.site/software-products/cnc-milling-simulator">SunSpire</a></h3>
+
 <p>Superb GCode simulator - 3 € on googleplay or applestore/ipad, 25€ on desktop</p>
-
-
- <!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
 <h2 id="P-99">Spindles Kits</h2>
@@ -7505,7 +7699,8 @@ in the first line since it is higher that the R value specified.</p>
 
 <h4>Advantages</h4>
 <ul>
-  <li>pro: ok for CNC-1310 (correction: not exactly. shaft hole in the lower holding plate must be enlarged (1mm) and needs new holes for the screws)</li>
+  <li>pro: ok for CNC-1310 (correction: not exactly. shaft hole in the lower holding plate must be
+    enlarged (1mm) and needs new holes for the screws)</li>
   <li>contra: heats a lot (needs for a fan)</li>
 </ul>
 
@@ -7536,12 +7731,13 @@ in the first line since it is higher that the R value specified.</p>
 <div style="height:20px">
 </div>
 
-<h3 id="P-99-03">Machifit Brushless 300W / 400W / 500W / 600 W + Driver WS55-140/220 [Banggood - 130€]</h3>
+<h3 id="P-99-03">Machifit Brushless 300W / 400W / 500W / 600 W + Driver WS55-140/220 [Banggood -
+130€]</h3>
 
 <p>Dimensions</p>
 <ul>
   <li>Diameter : 55 mm.</li>
-  <li>300W : length : 140 mm =  99 mm + 06 + shaft : 35 mm</li>
+  <li>300W : length : 140 mm = 99 mm + 06 + shaft : 35 mm</li>
   <li>400W : length : 166 mm = 120 mm + 06 + shaft : 40 mm</li>
   <li>500W : length : 192 mm = 138 mm + 14 + shaft : 40 mm</li>
   <li>600W : length : 213 mm = 158 mm + 15 + shaft : 40 mm</li>
@@ -7569,270 +7765,290 @@ in the first line since it is higher that the R value specified.</p>
   <li>contra:</li>
 </ul>
 
-
-
-
-
-
 <h3>Flashing GRBL on the board with Arduino IDE</h3>
 
 <p>We will use the arduino IDE for this task. GRBL is indeed an arduino program.</p>
 
 <h4>Load into the arduino IDE the grblUpload sketch</h4>
-<img src="cnc-doc/images/99_Arduino_Grbl/arduino.png" width="791" height="903" /> 
+<img src="cnc-doc/images/99_Arduino_Grbl/arduino.png" width="791" height="903"> 
 
 <h4>Select the right board</h4>
-<img src="cnc-doc/images/99_Arduino_Grbl/arduino_board_selection.png" width="793" height="904" /> 
-
+<img src="cnc-doc/images/99_Arduino_Grbl/arduino_board_selection.png" width="793" height="904"> 
 
 <h3>Android GRBL-CONTROLLER App</h3>
 
 <p>After having connected my machine with my phone with the GRBL-CONTROLLER App installed on it,
-Candle did not get the machine coordinates anymore. And setting the X/Y to ZERO do not work either.</p>
+Candle did not get the machine coordinates anymore. And setting the X/Y to ZERO do not work
+either.</p>
 
-<p>But when using the Android GRBL-CONTROLLER App, it does work !!?? Obviously, the GRBL-CONTROLLER App
-has overwritten something on the board. </p>
-
+<p>But when using the Android GRBL-CONTROLLER App, it does work !!?? Obviously, the GRBL-CONTROLLER
+App has overwritten something on the board. </p>
 
 <p>Let's compare the GRBL settings with the (saved) initial settings</p>
-
 
 <table>
   <tbody>
     <tr>
-	  <th width="50px"></th>
-	  <th width="250px"></th>
+      <th width="50px"></th>
+      <th width="250px"></th>
       <th width="150px">Board overwritten</th>
       <th width="150px">Initial Settings</th>
-	  <th width="600px">Commentar</th>
+      <th width="600px">Commentar</th>
     </tr>
-	<tr>
-	   <td>$0</td>
-	   <td>Step pulse, microseconds</td>
-	   <td>10</td>
-	   <td>10</td>
+    <tr>
+      <td>$0</td>
+      <td>Step pulse, microseconds</td>
+      <td>10</td>
+      <td>10</td>
+      <td></td>
     </tr>
-<tr>
-       <td>$1</td>
-	   <td>Step idle delay, milliseconds</td>
-	   <td>25</td>
-	   <td>25</td>
+    <tr>
+      <td>$1</td>
+      <td>Step idle delay, milliseconds</td>
+      <td>25</td>
+      <td>25</td>
+      <td></td>
     </tr>
-<tr>
-       <td>$2</td>
-	   <td>Step port invert, mask</td>
-	   <td>0</td>
-	   <td>0</td>
+    <tr>
+      <td>$2</td>
+      <td>Step port invert, mask</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
     </tr>
-<tr>
-       <td>$3</td>
-	   <td>Direction port invert, mask</td>
-	   <td>1</td>
-	   <td>2</td>
-	   <td>Every board has its own settings for the directions of movement</td>
+    <tr>
+      <td>$3</td>
+      <td>Direction port invert, mask</td>
+      <td>1</td>
+      <td>2</td>
+      <td>Every board has its own settings for the directions of movement</td>
     </tr>
-<tr>
-	   <td>$4</td>
-	   <td>Step enable invert, boolean</td>
-	   <td>0</td>
-	   <td>0</td>
+    <tr>
+      <td>$4</td>
+      <td>Step enable invert, boolean</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
     </tr>
-<tr>
-	   <td>$5</td>
-	   <td>Limit pins invert, boolean</td>
-	   <td>0</td>
-	   <td>0</td>
+    <tr>
+      <td>$5</td>
+      <td>Limit pins invert, boolean</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
     </tr>
-<tr>
-	   <td>$6</td>
-	   <td>Probe pin invert, boolean</td>
-	   <td>0</td>
-	   <td>0</td>
+    <tr>
+      <td>$6</td>
+      <td>Probe pin invert, boolean</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
     </tr>
-<tr>
-	   <td>$10</td>
-	   <td>Status report, mask</td>
-	   <td>2</td>
-	   <td>1</td>
-	   <td><span style="color:red"><strong>Wow! this caused the board to be 'broken' (with Candle)</strong></span></td>
-</tr>
-<tr> 
-	   <td>$11</td>
-	   <td>Junction deviation, mm</td>
-	   <td>0.010</td>
-	   <td>0.010</td>
+    <tr>
+      <td>$10</td>
+      <td>Status report, mask</td>
+      <td>2</td>
+      <td>1</td>
+      <td><span style="color:red"><strong>Wow! this caused the board to be 'broken' (with
+        Candle)</strong></span></td>
     </tr>
-<tr>
-	   <td>$12</td>
-	   <td>rc tolerance, mm</td>
-	   <td>0.002</td>
-	   <td>0.002</td>
+    <tr>
+      <td>$11</td>
+      <td>Junction deviation, mm</td>
+      <td>0.010</td>
+      <td>0.010</td>
+      <td></td>
     </tr>
-<tr>
-	   <td>$13</td>
-	   <td>Report inches, boolean</td>
-	   <td>0</td>
-	   <td>0</td>
+    <tr>
+      <td>$12</td>
+      <td>rc tolerance, mm</td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td></td>
     </tr>
-<tr>
-	   <td>$20</td>
-	   <td>Soft limits, boolean</td>
-	   <td>0</td>
-	   <td>0</td>
+    <tr>
+      <td>$13</td>
+      <td>Report inches, boolean</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
     </tr>
-<tr>
-	   <td>$21</td>
-	   <td>Hard limits, boolean</td>
-	   <td>0</td>
-	   <td>1</td>
-	   <td><strong>Hard limits</strong> : better set it to 0 on machines without limit swithes</td>
+    <tr>
+      <td>$20</td>
+      <td>Soft limits, boolean</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
     </tr>
-<tr>
-	   <td>$22</td>
-	   <td>Homing cycle, boolean</td>
-	   <td>0</td>
-	   <td>1</td>
-	   <td><strong>Homing cycle: guess it should be 0</strong></td>
+    <tr>
+      <td>$21</td>
+      <td>Hard limits, boolean</td>
+      <td>0</td>
+      <td>1</td>
+      <td><strong>Hard limits</strong> : better set it to 0 on machines without limit swithes</td>
     </tr>
-<tr>
-	   <td>$23</td>
-	   <td>Homing dir invert, mask</td>
-	   <td>0</td>
-	   <td>7</td>
-	   <td><strong>I guess not used if $22 = 0</strong></td>
+    <tr>
+      <td>$22</td>
+      <td>Homing cycle, boolean</td>
+      <td>0</td>
+      <td>1</td>
+      <td><strong>Homing cycle: guess it should be 0</strong></td>
     </tr>
-<tr>
-	   <td>$24</td>
-	   <td>Homing feed, mm/min</td>
-	   <td>25.00</td>
-	   <td>25.00</td>
+    <tr>
+      <td>$23</td>
+      <td>Homing dir invert, mask</td>
+      <td>0</td>
+      <td>7</td>
+      <td><strong>I guess not used if $22 = 0</strong></td>
     </tr>
-<tr>
-	   <td>$25</td>
-	   <td>Homing seek, mm/min</td>
-	   <td>500.00</td>
-	   <td>500.00</td>
+    <tr>
+      <td>$24</td>
+      <td>Homing feed, mm/min</td>
+      <td>25.00</td>
+      <td>25.00</td>
+      <td></td>
     </tr>
-<tr>
-	   <td>$26</td>
-	   <td>Homing debounce, milliseconds</td>
-	   <td>250</td>
-	   <td>250</td>
+    <tr>
+      <td>$25</td>
+      <td>Homing seek, mm/min</td>
+      <td>500.00</td>
+      <td>500.00</td>
+      <td></td>
     </tr>
-<tr>
-	   <td>$27</td>
-	   <td>Homing pull-off, mm</td>
-	   <td>1.00</td>
-	   <td>2.00</td>
+    <tr>
+      <td>$26</td>
+      <td>Homing debounce, milliseconds</td>
+      <td>250</td>
+      <td>250</td>
+      <td></td>
     </tr>
-<tr>
-	   <td>$30</td>
-	   <td>Max spindle speed, RPM</td>
-	   <td>1000</td>
-	   <td>1000</td>
+    <tr>
+      <td>$27</td>
+      <td>Homing pull-off, mm</td>
+      <td>1.00</td>
+      <td>2.00</td>
+      <td></td>
     </tr>
-<tr>
-	   <td>$31</td>
-	   <td>Min spindle speed, RPM</td>
-	   <td>0</td>
-	   <td>0</td>
+    <tr>
+      <td>$30</td>
+      <td>Max spindle speed, RPM</td>
+      <td>1000</td>
+      <td>1000</td>
+      <td></td>
     </tr>
-<tr>
-	   <td>$32</td>
-	   <td>Laser mode, boolean</td>
-	   <td>0</td>
-	   <td>0</td>
+    <tr>
+      <td>$31</td>
+      <td>Min spindle speed, RPM</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
     </tr>
-<tr>
-	   <td>$100</td>
-	   <td>X steps/mm</td>
-	   <td>800.00</td>
-	   <td>800.00</td>
+    <tr>
+      <td>$32</td>
+      <td>Laser mode, boolean</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
     </tr>
-<tr>
-	   <td>$101</td>
-	   <td>Y steps/mm</td>
-	   <td>800.00</td>
-	   <td>800.00</td>
-</tr>
-<tr>
-	   <td>$102</td>
-	   <td>Z steps/mm</td>
-	   <td>800.00</td>
-	   <td>800.00</td>
+    <tr>
+      <td>$100</td>
+      <td>X steps/mm</td>
+      <td>800.00</td>
+      <td>800.00</td>
+      <td></td>
     </tr>
-<tr>
-	   <td>$110</td>
-	   <td>X Max rate, mm/min</td>
-	   <td>500.00</td>
-	   <td>2000.00</td>
-</tr>	
-<tr>
-	   <td>$111</td>
-	   <td>Y Max rate, mm/min</td>
-	   <td>500.00 </td>
-	   <td>2000.00</td>
-</tr>
-<tr>
-	   <td>$112</td>
-	   <td>Z Max rate, mm/min</td>
-	   <td>500.00</td>
-	   <td>100.00</td>
-</tr>
-<tr>
-	   <td>$120</td>
-	   <td>X Acceleration, mm/sec^2</td>
-	   <td>10.00</td>
-	   <td>20.00</td>
-</tr>
-<tr>
-	   <td>$121</td>
-	   <td>Y Acceleration, mm/sec^2</td>
-	   <td>10.00</td>
-	   <td>20.00</td>
-</tr>
-<tr>
-	   <td>$122</td>
-	   <td>Z Acceleration, mm/sec^2</td>
-	   <td>10.00</td>
-	   <td>20.00</td>
-</tr>
-<tr>
-	   <td>$130</td>
-	   <td>X Max travel, mm</td>
-	   <td>200.00</td>
-	   <td>500.00</td>
-</tr>
-<tr>
-	   <td>$131</td>
-	   <td>Y Max travel, mm</td>
-	   <td>200.00</td>
-	   <td>500.00</td>
-</tr>
-<tr>
-	   <td>$132</td>
-	   <td>Z Max travel, mm</td>
-	   <td>200.00</td>
-	   <td>200.00</td>
-</tr>
+    <tr>
+      <td>$101</td>
+      <td>Y steps/mm</td>
+      <td>800.00</td>
+      <td>800.00</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>$102</td>
+      <td>Z steps/mm</td>
+      <td>800.00</td>
+      <td>800.00</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>$110</td>
+      <td>X Max rate, mm/min</td>
+      <td>500.00</td>
+      <td>2000.00</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>$111</td>
+      <td>Y Max rate, mm/min</td>
+      <td>500.00 </td>
+      <td>2000.00</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>$112</td>
+      <td>Z Max rate, mm/min</td>
+      <td>500.00</td>
+      <td>100.00</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>$120</td>
+      <td>X Acceleration, mm/sec^2</td>
+      <td>10.00</td>
+      <td>20.00</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>$121</td>
+      <td>Y Acceleration, mm/sec^2</td>
+      <td>10.00</td>
+      <td>20.00</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>$122</td>
+      <td>Z Acceleration, mm/sec^2</td>
+      <td>10.00</td>
+      <td>20.00</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>$130</td>
+      <td>X Max travel, mm</td>
+      <td>200.00</td>
+      <td>500.00</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>$131</td>
+      <td>Y Max travel, mm</td>
+      <td>200.00</td>
+      <td>500.00</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>$132</td>
+      <td>Z Max travel, mm</td>
+      <td>200.00</td>
+      <td>200.00</td>
+      <td></td>
+    </tr>
   </tbody>
 </table>
 
 <h4>Acrylic settings</h4>
-
 <ul>
-<li>Bit: 3.0 mm</li>
+  <li>Bit: 3.0 mm</li>
 </ul>
 
 <p>Cut Settings:</p>
 <ul>
-<li>Feed Rate: 200 mm/min</li>
-<li> Plunge Rate: 120 mm/min</li>
-<li> Depth per pass: 0.5</li>
+  <li>Feed Rate: 200 mm/min</li>
+  <li>Plunge Rate: 120 mm/min</li>
+  <li>Depth per pass: 0.5</li>
 </ul>
-
 </div>
 </div>
-
 </body>
 </html>
