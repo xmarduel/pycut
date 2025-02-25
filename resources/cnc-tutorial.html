@@ -68,6 +68,8 @@
       <li><a href="#P-04-01">Offline Controller</a> 
         <ul>
           <li><a href="#P-04-01-01">Zero positionning</a></li>
+		  <li><a href="#P-04-01-02">Testing the Max Travels</a></li>
+		  <li><a href="#P-04-01-03">Testing the Soft Limits</a></li>
         </ul>
       </li>
       <li><a href="#P-04-02">Candle</a> 
@@ -76,7 +78,6 @@
           <li><a href="#P-04-02-02">Lesson2 - Calibration</a></li>
           <li><a href="#P-04-02-03">Lesson3 - Controlling the spindle</a></li>
           <li><a href="#P-04-02-04">Lesson4 - Setting Machine Zeros Coordinates</a></li>
-          <li><a href="#P-04-02-05">Lesson5 - Testing the soft limits</a></li>
         </ul>
       </li>
       <li><a href="#P-04-09">Laser GRBL</a> </li>
@@ -123,6 +124,7 @@
   <li><a href="#P-18">Cnc Milling Equipment</a></li>
   <li><a href="#P-11">Cnc Milling Machine Terminology</a></li>
   <li><a href="#P-12">Types of Mill Cutters</a></li>
+  <li><a href="#P-16">Feeds And Speeds</a></li>
   <li><a href="#P-19">MCode Reference</a> 
     <ul>
       <li><a href="#mcode:m0-m1">M0 M1 - Program Pause</a></li>
@@ -1546,6 +1548,31 @@ So it could reach the maximal height faster than you thought...</p>
 <p><strong>Note too that JSCut ommits M3 codes at start and end </strong> (but this is an other
 story)</p>
 
+<h3 id="P-04-01-02">Testing the Max Travels</h3>
+
+<p>The machine dimensions are known, so the <strong>Max Travelling</strong> parameters can be
+set: as test, set</p>
+<pre><code class="language-gcode">$130=20
+$131=20
+$132=10</code></pre>
+
+<p>Then try to jog of a distance of 30mm</p>
+
+<h3 id="P-04-01-03">Testing the Soft Limits</h3>
+
+<p>Softs limits are meant to be used with homing. But the <strong>1419</strong> has no homing. However I would like to
+test Grbl on theses settings.</p>
+
+<p>First I positionate the spindle in the middle of the machine. Then I set the Grbl settings $20 = 1 (soft limits "on"), 
+and the max X travel to 20 mm ($130 = 20). Now I try to move the spindle in the X direction of 10mm, then again of 20mm 
+to see what happends.</p>
+
+<p>After this test, don't forget to reset $20 = 0. Try to move in the X direction 30mm. See what happens.</p>
+
+
+<br/>
+
+
 <h2 id="P-04-02">Candle</h2>
 
 <h3 id="P-04-02-01">Lesson 1: Jogging - Moving the axis</h3>
@@ -1587,22 +1614,6 @@ G1  X-10       (move back)</code></pre>
 <p>If one of the axis is moving in the <strong>wrong direction</strong>, then the $3 parameter has
 to be set correctly</p>
 <span style="color:#0080ff">$3= &lt;value&gt;</span> 
-
-<p>The CNC 1419 Pro has <strong>no Limit Switsches</strong>, so set the relevant parameter to 0:</p>
-<pre><code class="language-gcode">$21=0 </code></pre>
-
-<p>The machine dimensions are known, so the <strong>Max Travelling</strong> parameters can be
-set:</p>
-<pre><code class="language-gcode">$130=260
-$131=158
-$132=34</code></pre>
-
-<p></p>
-
-<p>Setting the <strong>Soft Limits <span style="color:#8000ff">CHECKME</span></strong></p>
-<pre><code class="language-gcode">$20=???? </code></pre>
-
-<p></p>
 
 <p>It is important to calibrate the axis: the relevant parameters are:</p>
 <pre><code class="language-gcode">$100
@@ -1650,10 +1661,6 @@ M5        // stop</code></pre>
 
 <p>Setting Zeros coordinates is different than "Homing".</p>
 
-<h3 id="P-04-02-05">Lesson-5: Testing the Soft Limits</h3>
-
-<div style="height:16px">
-</div>
 
 <h2 id="P-04-09">LaserGRBL</h2>
 
@@ -3731,8 +3738,328 @@ degrees.</p>
 see a list of all my posts and I might be able to help you with some more cnc topics.</p>
 </div>
 
-<div style="height:30px">
+
+<br/>
+<br/>
+
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+
+<h2 id="P-16">Feeds And Speeds</h2>
+
+<p>Feed refers to the rate of movement of the axes of your machine, it is programmed in inches per minute (IPM) 
+or millimeters per minute for metric.</p>
+
+<p>Speed refers to the RPM of the machine spindle, i.e. the rotational speed of the tool on a mill or workpiece 
+for a lathe.</p>
+
+<p>Establishing the rpm and feed rate for end mills and drills can seem like sorcery to many people, especially hobby 
+machinists.</p>
+
+<p>There will always be variations between different machines, different setups, different materials, different tools, 
+the list goes on.</p>
+
+<figure>
+ <img src="cnc-doc/images/16_Feeds_And_Speeds/carbide-endmill2-768x512.jpg" height="33%" alt=""> 
+ <figcaption>A typical good quality carbide endmill</figcaption>
+</figure>
+ 
+<h3>How to calculate feeds and speeds</h3>
+
+<p>What I can do is show a formula that will give you a starting point from which you can adjust to suit your
+ machine and the type of material you are milling.</p>
+
+<h3>Feeds and speeds formula</h3>
+
+<h4>Calculate RPM</h4>
+
+<pre><code class="language-gcode">RPM = SFM * X 3.82 / diameter of the tool (* SFM = Surface Feet per Minute)</code></pre>
+
+
+<p>Next, the formula for the feedrate uses the RPM from the previous calculation,</p>
+
+
+<h4>Calculate Feedrate</h4>
+
+<pre><code class="language-gcode">Feedrate = RPM X Feed per tooth X Number of teeth</code></pre>
+
+<p>or</p>
+
+<pre><code class="language-gcode">Feedrate = RPM X Feed per rev</code></pre>
+
+<br/>
+
+<div  class="info">
+To use these simple formulas, you need to find out what ‘SFM’ (surface feet / min) that your milling tool is designed 
+to operate at with the particular metal you are milling.</div>
+
+
+<p>I am going to recommend that you only use carbide endmills when machining metals, they are inexpensive enough 
+and make the task a lot easier than using HSS (high speed steel) endmills.</p>
+
+<p>A safe starting point for a good quality carbide endmill machining a typical ‘soft’ alloy steel would be approximately
+ 250 SFM. (a HSS endmill will be considerably slower, around 120)</p>
+
+<p>Using 250 SFM in the formula above, with a .25” (¼”) dia endmill results in an RPM of 3,820.</p>
+
+<p>To calculate the feedrate we need to find out the feed per tooth or the feed per rev. Again a good starting point 
+using a good quality endmill would be .002” per tooth. So if we had a 4 flute cutter this 
+would be .008” per REV, (4 X .002”).</p>
+
+<p>Now you can use the second formula using the rpm we just calculated, </p>
+
+<p>3,820rpm X .002” X 4 flutes = 30.56 inches/minute feedrate.</p>
+
+<div  class="info">So now we have a good starting point of 3,820 RPM with a feedrate of 30 inches/min.</div>
+
+<img src="cnc-doc/images/16_Feeds_And_Speeds/ali-endmill-768x512.jpg" height="33%" alt=""> 
+
+<p>Next we can consider machining some aluminum stock. A SFM, on a benchtop mill or router, of 500 would be a safe 
+starting point. </p>
+
+<p>Using the same end mill as in the previous calculation you get an RPM of 7,640 which, as you would expect, 
+is double the previous result.</p>
+
+<p>Again when you calculate the feedrate it is double the previous result at 61 in/min.</p>
+
+<h3>Hobby mill limitationsy</h3>
+
+<p>Now we have to consider the type of machine you are running. Most hobby machines have a limited RPM range 
+and limited feedrate capabilities. To get around this we will need to make adjustments.</p>
+
+<p>For example a router usually has a very high RPM, 12,000 and up, so to enable a higher RPM you can use a 
+smaller dia cutter. </p>
+
+<p>Using a ⅛” (.125”) diameter cutter instead of a ¼” (.25”) cutter the required RPM for aluminum example will be:-</p>
+
+<p>500SFM X 3.82 / .125 = 15,280rpm. </p>
+
+<p>This would be in the range of a typical cnc router. </p>
+
+<p>The next issue would be the feedrate. Using an RPM of 15,280 would give a feedrate of 122 in/min. 
+This is too fast a feedrate for many hobby machines. So what you can do is use an endmill with only 2 flutes. 
+This will half the feedrate down to 61 in/min. </p>
+
+<h3>Variable speed spindle?</h3>
+
+<p>Using the calculations above is ok if you have a variable speed spindle, but what if you don’t? My Taig benchtop
+ cnc mill has a series of pulleys to control its spindle speed.</p>
+
+<figure>
+<img src="cnc-doc/images/16_Feeds_And_Speeds/pulleys-768x512.jpg" height="33%" alt=""/> 
+<figcaption>Taig mill spindle pulleys for changing the spindle speed</figcaption>
+</figure>
+
+
+<p>The RPM speeds available are:-</p>
+
+<ul>
+<li>1100rpm</li>
+<li>1900rpm</li>
+<li>2900rpm</li>
+<li>4300rpm</li>
+<li>6500rpm</li>
+<li>10500rpm</li>
+</ul>
+
+<p>Using the calculation of 3820rpm and 30ipm, for my machine I would set it to the 2900rpm pulley and adjust the 
+feedrate to suit the slower rpm.</p>
+
+<p>2900 X .002” X 4flutes = 23.2ipm, </p>
+
+<p>so I would set the feedrate at 23 inches/min in the G-code program.</p>
+
+<div class="info">You will find that setting the speeds and feeds slower usually helps tool life and can save a lot
+ of frustration.</div>
+
+<p>I have found that milling aluminum at speeds and feeds you would expect to use on a soft alloy steel on an 
+industrial machine will produce effortless results. </p>
+
+<h3>Speeds and Feeds for Drilling</h3>
+
+<p>Although I suggested only using carbide for your endmills, high speed steel (HSS) drill bits will work perfectly fine.</p>
+
+<div class="info">Just make sure to check they are sharp by looking at the cutting edges with a loupe or magnifier.</div>
+
+<p>It is really easy to break a drill if it is blunt or damaged.</p>
+
+<figure>
+<img src="cnc-doc/images/16_Feeds_And_Speeds/hss-stub-drill-768x512.jpg" height="33%" alt=""/> 
+<figcaption>A HSS Driil Bit</figcaption>
+</figure>
+
+<p>A good starting point for drilling steel with a HSS drill bit would be 75 SFM with a feedrate of .001/tooth or .002” 
+per rev.</p>
+
+<p>For aluminum I would use 130 SFM and keep the feedrate at .002” per rev, at least initially.</p>
+
+<p>Using a ⅛” (.125”) drill as an example:-</p>
+
+<p>75 X 3.82 / .125 = 2,292rpm</p>
+
+<p>2292 x .002” = 4.5 ipm</p>
+
+<p>It is important to use a pecking drill cycle (G83) and use a lubricant. If your machine isn’t equipped with a coolant 
+system you can use WD40. Just spray it occasionally as it is drilling and don’t let it get dry.</p>
+
+<figure>
+<img src="cnc-doc/images/16_Feeds_And_Speeds/wd40-268x300.jpg" height="33%" alt=""/> 
+<figcaption>Poor mans coolant!</figcaption>
+</figure>
+
+<p>The depth of the peck is not too critical until you start using small diameter drills.</p>
+
+<div  class="info">
+When drilling with drills .125” diameter and smaller I always use a very shallow peck depth.</div>
+
+<p>To give you an example, when drilling with a 1/16” drill or smaller I will set the peck depth at .01” or 
+less and reduce the feedrate to about .0005″/rev. </p>
+
+<p>It will take a while to drill a hole but it will drill it and come out of the hole in one piece. 
+Again use a lubricant and always check the cutting edges on the drill look good before you use it.</p>
+
+<h3>Troubleshooting Feeds and Speeds</h3>
+
+<p>Using the calculations I have given above should be a good starting point for getting the ideal speeds and 
+feeds for your programs. But there are hundreds of variations that can affect the results you are getting. </p>
+
+<p>Some of the problems you may encounter:-</p>
+
+<ul>
+<li>Vibration</li>
+<li>Spindle stalling</li>
+<li>Poor surface finish</li>
+<li>Tools breaking</li>
+</ul>
+
+<h4>Vibration</h4>
+
+<p>This will probably be the most common problem which may be caused by:-</p>
+
+<ul>
+<li>Incorrect spindle speed, typically too fast</li>
+<li>Poorly clamped workpiece</li>
+<li>Machine lacking rigidity (budget machine)</li>
+<li>Poor quality tooling or the wrong choice of tool</li>
+<li>A combination of all or some of the above</li>
+</ul>
+
+<h4>Spindle Stalling</h4>
+
+<p>This will be caused by a lack of power in your spindle motor. Slow down both spindle and feed. 
+On machines with a pulley system to control RPM, a slower spindle pulley will generate more torque.</p>
+
+
+<h4>Poor Surface Finish</h4>
+
+<p>Potential causes include:-</p>
+
+<ul>
+<li>Poorly clamped workpiece</li>
+<li>Worn, chipped or poor quality tools</li>
+<li>Incorrect SFM for the tool or material</li>
+<li>Lack of lubrication</li>
+<li>A combination of all or some of the above</li>
+</ul>
+
+<h4>Tools Breaking</h4>
+
+<ul>
+<li>Poor quality tooling</li>
+<li>Wrong choice of tool for the operation</li>
+<li>Lack of lubrication</li>
+<li>Too aggressive depth of cut</li>
+</ul>
+
+<div  class="info">
+A good practice to follow when a tool breaks is to make sure to change your procedure for that operation. 
+Don’t just put another tool in and try again, it will break again.</div>
+
+
+<h4>Suggested SFM for different materials</h4>
+
+<p>This is a difficult question to answer for a hobby cnc machine. They all have different qualities and an 
+ideal SFM on one machine may be a lot different on another.</p>
+
+<div class="info">A typical SFM for aluminum on an industrial machine can be as fast as 1200.
 </div>
+
+<p>This would be way too much for a small benchtop cnc machine. Hobby machines are too limited in their spindle 
+speeds and movement. </p>
+
+<p>Use what I have suggested and work with an SFM that is within your machines capabilities. </p>
+
+<h4>Steel</h4>
+
+<p>As previously suggested, start at around 250 SFM or maybe lower and test, working up, or down, 
+until you find what works for your machine. You may have to go slower and RPM may restrict how low you can go.
+ If so, use a smaller diameter tool to stay within your machines RPM range.</p>
+
+<h4>Aluminum</h4>
+
+<p>I would start at 500 SFM and work up, your machines RPM or feedrate may dictate how far you can go.</p>
+
+<p>I want to make a point of mentioning that not all metals are made equally.</p>
+
+<div  class="info">I would strongly suggest not buying steel or aluminum from a ‘big box store’.</div>
+
+<p>The metal they sell can be close to unmachinable. The aluminum can be really soft and gummy, you could struggle 
+to get good results which can be confusing and fustrating when you are trying to learn how to machine.</p>
+
+<h4>Plastics</h4>
+
+<p>This is a tricky one because there are probably hundreds of different plastics with different properties.</p>
+
+<div class="info">You will have to test yourself, but be aware not to have too high an RPM with a low feed per tooth, 
+the plastic can heat up and melt.</div>
+
+<p>There are endmills specifically designed for acrylics, some being single flute. This will give you more 
+control with your feedrate, you will be able to run a slower feed reducing the risk of overheating the plastic.</p>
+
+<h4>Wood</h4>
+
+<p>There are a large variations of hardness in wood, but luckily it is very forgiving to machine, 
+just pick a speed and go for it.</p>
+
+<p>HSS (high speed steel) endmills are perfect for wood and they cost less than carbide. </p>
+
+<div  class="info">Just remember to always try and get good quality tooling, it can prevent a lot of
+frustration and head scratching.</div>
+
+<p>One note to keep in mind is you don’t have to go faster just because a material is softer. 
+Start slow and if it works for you, just stick with it.</p>
+
+<h3>Feed and speed calculators</h3>
+
+<p>There are machinists calculators available which are helpful to have on hand in your workshop.</p>
+
+<p>They have functions to call up the SFM for the most common materials. It will take the guesswork out of 
+your calculations for many areas of machining. </p>
+
+<div class="info">But you have to remember that they will only be suggested starting values and you will also have to compensate for using a smaller, 
+less powerful machine.</div>
+
+<p>There are some available on Amazon, such as the calculated industries machining calculator.</p>
+
+<h3>Loupe</h3>
+
+<p>I highly recommend getting a Loupe, they are really cheap and you will be surprised how much clearer 
+you can see the condition of your tooling. Especially useful when using the smaller tooling that a hobby mill will use. 
+This jewelry loupe on Amazon looks perfect for this purpose.</p>
+
+<h3>Final Thoughts</h3>
+
+<p>Although it is not possible to give a definitive answer to what feed and speed you should use for any milling 
+or turning operation, using the information in this article should help establish a baseline for your machine. </p>
+
+<p>Once I discovered the ‘sweet spots’ for my Taig mill I was able to produce repeatable results that prolonged
+the life of my endmills and reduced potential ‘wear and tear’ on my machine.</p>
+
+
+
+<br/>
+<br/>
+
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 

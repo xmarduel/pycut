@@ -243,6 +243,13 @@
         <file>cnc-doc/images/12_TypesOfMillCutters/single-flute-end-mill.jpg</file>
         <file>cnc-doc/images/12_TypesOfMillCutters/tapered-ball-ends.jpg</file>
 
+        <file>cnc-doc/images/16_Feeds_And_Speeds/ali-endmill-768x512.jpg</file>
+        <file>cnc-doc/images/16_Feeds_And_Speeds/carbide-endmill2-768x512.jpg</file>
+        <file>cnc-doc/images/16_Feeds_And_Speeds/hss-stub-drill-768x512.jpg</file>
+        <file>cnc-doc/images/16_Feeds_And_Speeds/pulleys-768x512.jpg</file>
+        <file>cnc-doc/images/16_Feeds_And_Speeds/wd40-268x300.jpg</file>
+
+
         <file>cnc-doc/images/20_GcodeReference/G2-example1.svg</file>
         <file>cnc-doc/images/20_GcodeReference/G2-G3-example1.svg</file>
         <file>cnc-doc/images/20_GcodeReference/G5.2-example1.png</file>
