@@ -1258,36 +1258,50 @@ completely finished.</span></strong></p>
 
 <h4>FreeCAD <span style="color:#008000">****VERY GOOD****</span></h4>
 
-<p>As of version 1.0, the sketcher has an SVG export which works quite nicely. I found nevertheless the following
-caveats: </p>
+<p>As of version 1.0 (2025), the sketcher has dramatically improved compared to previous versions and has an SVG export which 
+works quite nicely. I found nevertheless the following caveats: </p>
 <ul>
   <li>The viewbox is calculated on the base of the items in the sketcher, and thus typically will not be from 0,0.
     Width and height are also calculated from theses items</li>
-  <li>The base layer has a transformation with a translate (to view all items nicely in a browser) and a scale (1,-1)
+  <li>The svg root layer has a transformation with a translate (to view all items nicely in a browser) and a scale (1,-1)
     so that the Y coordinates of all items are "inversed" (and thus follow the natural direction, the opposite of the
     SVG standard. <strong>This means that the output will have to pass through the "svgresolver" utility to remove all
     transformations in order to be used by PyCut</strong>.</li>
   <li>Circles are exported as <code>circle</code> (Ok). Lines, Rectangles, Polygons and Ellipses are exported as
-    <code>path</code> (not Ok)</li>
-  <li>Quadratic bezier  and cubic betier are supported</li>
+    <code>path</code> (not Ok). The exporter should recognize when a "shape" is formed only with straight lines,
+	so that it is exported as polygon, polyline, line or even rectangle when it is the case.</li>
+  <li>Quadratic bezier  and cubic bezier are supported</li>
   <li>No <strong>Z</strong> at the end of a closed path</li>
 </ul>
+
+<p>But it is good enough to become my potential default SVG editor.</p>
 
 <p>Conclusion: <strong style="color:#008000">A very promising SVG generator/exporter </strong>that could be better if
 Line were to be exported as <code>line</code>, Polyline as <code>polyline</code>, Rectangles as <code>rect</code>, 
 Polygons as <code>polygon</code>. I also would rather like an output without transformation.</p>
 
-<p>But it is good enough to become my potential default SVG editor.</p>
 
 <h4>SolveSpace <span style="color:#ff00ff">****BEST****</span></h4>
 
 <p>Ever heard of it? A parametric system as known from the 3D modellers. <strong>Incredible!</strong> The GUI looks
 like from the beginning of the '80s, but <strong>usability/features more than top</strong>.</p>
 
-<p><strong>SVG export perfect (well, nearly perfect)</strong> . The construction constraints can also be exported, so
-there are a lot of "paths" in the svg export, even if you have drawn only 1 path. Unfortunately, you cannot give your
-paths some ids. It would be nice if these "contraints" paths could be grouped into their own group in order to isolated
-them from the real paths. There are only cubic bezier curves, quadratic bezier curves are unfortunately missing, but one can avoid these in a design. The SVG closed path "Z" is also missing (have submitted a patch!).</p>
+<p><strong>SVG export perfect (well, nearly perfect)</strong>. I found nevertheless the following caveats:</p>
+
+<ul>
+<li>The paths have no id, but ids are mandatory for <strong>PyCut</strong>.</li>
+<li>Always be sure to hide the constraints so that they are not exported in the svg.</li>
+<li>There are only cubic bezier curves, quadratic bezier curves are missing.</li>
+<li>The SVG closed path "Z" is also missing.</li>
+</ul>
+</p>
+
+<div class="info">
+<p><strong>Note</strong>: To achieve a quadratic bezier from a cubic one, the vector C1-C2 from the 2 control points must only be
+a third of the vector AB the start and end points! This constraint on the control points could be added in SolveSpace! Or a real
+quadratic entity could be built in. Note that making the two control points coincident is not a solution, this does not lead to 
+a quadratic bezier although it looks similar</p>
+</div>
 
 <p>Conclusion: <strong style="color:#008000">The best SVG "path" generator/exporter </strong>I have found so far. </p>
 
@@ -1319,19 +1333,12 @@ this one:</p>
 <h4>SvgPathEditor <span style="color:#ff00ff"><span style="color:#ff00ff"></span></span><span
 style="color:#ff00ff">****EXCELLENT****</span></h4>
 
-<p>Really excellent, maybe because solely focused on editing svg paths. You can try it at <a
+<p>It is solely focused on editing svg paths. You can try it at <a
 href="https://yqnn.github.io/svg-path-editor/">https://yqnn.github.io/svg-path-editor/</a>.</p>
 
-<p>Of course it cannot compare to <strong>SolveSpace</strong>, but its concept is excellent, which makes it so easy to
-generate a path, segment after segment. For use for <strong>PyCut</strong>, one has to take care that only 1 path can
-be generated, with possibly some "<strong>M</strong>" (move), so the path will be imported as MultiPolygon possibly
-with holes.</p>
-
-<p><strong>You will also have to edit</strong> the resulting svg file for PyCut by defining the <strong>width</strong>
-and <strong>height</strong> of the svg and also add some "<strong>id</strong>" for the generated paths. </p>
-
-<p><strong>Unfortunately</strong> it does not support SVG "shapes", as well as multiple paths in one svg file export
-(will submit a feature request!).</p>
+<p>Of course it cannot compare to <strong>FreeCAD</strong> or <strong>SolveSpace</strong>, but its concept is excellent, 
+which makes it so easy to generate a path, segment after segment. The result can then be copy/pasted into your SVGs,
+editted per hand.</p>
 
 <h4>Others:</h4>
 
@@ -1352,8 +1359,8 @@ no SVG export at all. "Schade".</p>
 
 <h4>Draftsight 2D (Dassault)</h4>
 
-<p>Only a 30 days trial version - TO SEE. Oh my God! There is this "Power Tool" named "2D G-Code generator"! Forget
-PyCutl! (or not) . SVG export seems to be more meant as a picture for display only purpose.</p>
+<p>Only a 30 days trial version. It has a "Power Tool" named "2D G-Code generator"! Should I forget
+PyCutl? (No). SVG export seems to be more meant as a picture for display only purpose.</p>
 
 <h4>What else?</h4>
 
@@ -1364,16 +1371,17 @@ PyCutl! (or not) . SVG export seems to be more meant as a picture for display on
 <p>The fact that it is so difficult to find an acceptable SVG path "writer" program let me wonder why it is the case.
 And why does only <strong>FreeCAD</strong> and <strong>SolveSpace</strong> perform the task correctly?</p>
 
-<p>The primary usage of SVG is displaying images, not being a format for (CAM) input. So why bother exporting it clean.
-The svg standard, the svg path definition is too complicated, parsing it is a difficult task, and thus in return exporting 
-a custom data format as svg data in a right and clean manner is also not straightforward. But who else would want to import 
-svg files as a kind of CAM format? Response: the applications that do not want to use an other (maybe more complicated) 
-format, because yes, SVG can be indeed simple when utilizing only its basic features.</p>
+<p>The primary usage of SVG is displaying images, not being a format for CAM input. So why bother exporting it clean.
+The svg standard is huge, the svg path definition is quite complicated, parsing it is a difficult task, and thus in 
+return exporting a custom data format as svg data in a right and clean manner is also not straightforward (when the
+data format is not well suited for such an export). 
+But who else would want to import svg files as a kind of CAM format? Response: the applications that do not want to use 
+an other (maybe more complicated) format, because yes, SVG can be indeed simple when utilizing only its basic features.</p>
 
 <p>The SVG format, sure, can be viewed in a browser, can be edited with a text editor, and in some points is very practical 
-(that's why <strong>PyCut</strong> use it). But concerning the svg path definition, what is the point for example of 
-allowing paths with sub-paths? The SVG format completely ignores the concept of multiline/multipolygon etc. Polygons have no 
-"interiors" so they must be defined as such in a path composed of 2 or more subpaths for this purpose.</p>
+(that's why <strong>PyCut</strong> use it). By the way, unfortunately the SVG format completely ignores the concept of 
+multiline/multipolygon etc. Polygons have no "interiors" so they must be defined as such in a path composed of 2 or more 
+subpaths for this purpose. Not very practicable.</p>
 
 <p><strong>All in all very desapointing, excepted <span style="color:#008000">FreeCAD</span>, <span
 style="color:#008000">SolveSpace</span> and <span style="color:#008000">SvgPathEditor</span>!</strong></p>
@@ -1383,9 +1391,9 @@ style="color:#008000">SolveSpace</span> and <span style="color:#008000">SvgPathE
 <p>Finally my prefered method! Per hand you can also write items in the <code>&lt;defs&gt;</code> section, and use
 these items repeatidly with transformations with the <code>&lt;use&gt;</code> tag. My utility
 <strong>svgresolver.py</strong> then transforms this svg file into another one, usable for <strong>PyCut. Not the
-perfect toolchain I admit, but well my svgs are not that complicated</strong>. You have to understand how to write an
+perfect toolchain I admit, but well my svgs are not that complicated</strong>. One has to understand how to write an
 arc/bezier curve per hand, it is not that difficult and can always use the <strong>SvgPathEditor</strong> tool. And
-yours svgs are then "<strong>clean</strong>" and easily modificable. </p>
+your hand written svgs are then "<strong>clean</strong>" and easily modificable. </p>
 
 <p></p>
 
