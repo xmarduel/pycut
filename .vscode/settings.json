@@ -2,4 +2,7 @@
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",
     },
+    "workbench.editorAssociations": {
+         "*.svg": "default"
+    }
 }
