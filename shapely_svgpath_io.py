@@ -72,14 +72,38 @@ class SvgPath:
     """
 
     @classmethod
+    def get_viewbox_origin(cls, svg_str: str):
+        """
+        parsing the initial svg : get the viewbox origin
+
+        for subsequent stuff (objects evaluated) no viewbox origin are needed"""
+        root = etree.fromstring(svg_str)
+
+        if "viewBox" in root.attrib:
+            viewBox = root.attrib["viewBox"].split()
+
+            x = float(viewBox[0])
+            y = float(viewBox[1])
+
+            return (x, y)
+
+        else:
+
+            return (0.0, 0.0)
+
+    @classmethod
     def svg_paths_from_svg_string(cls, svg_str: str) -> List["SvgPath"]:
         """
         From a svg file content, read all paths (and those from the std svg shapes)
         """
+        # view box not from 0 0 -> apply transform as translate(-x -y)  TODO
+        orig_x, orig_y = cls.get_viewbox_origin(svg_str)
+        transform = "translate(%d %d)" % (orig_x, orig_y)
+
         data = io.StringIO(svg_str)
 
         svg = svgelements.SVG.parse(
-            data, reify=True, ppi=25.4
+            data, reify=True, ppi=25.4, transform=transform
         )  # so that there is no "scaling" : 1 inch = 25.4 mm
 
         paths = []

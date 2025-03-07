@@ -1,3 +1,7 @@
+# 0.7.3
+
+svg viewbox can have non zero origin
+
 # 0.7.2
 
 some fixes for opened paths

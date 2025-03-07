@@ -141,6 +141,10 @@ is is another setting to set the GCode units elsewhere in <strong>PyCut</strong>
 for the sake of good documentation.</p>
 </div>
 
+<div class="info">
+<p><strong>Note:</strong> New! viewbox x and y attributes are allowed to be non zero!</p>
+</div>
+
 <p>As an example:</p>
 <pre><code class="language-html">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
 &lt;svg version="1.1" width="200mm" height="100mm" viewBox="0 0 200 100" id="test" 
@@ -1181,9 +1185,7 @@ the comment lines </p>
 
 <p>I will simply try <strong>to edit and save a closed path</strong> composed of lines, arcs and bezier curves similar
 to what I've edited per hand: about 20 segments representing my workpiece, with mixed straight lines, arcs and bezier
-curves.</p>
-
-<p><strong>I know that every app has its own learning curve</strong>, but I try use the apps without investing to much
+curves. <strong>I know that every app has its own learning curve</strong>, but I try use the apps without investing to much
 time. This means, I act as a very basic user. If I do not succeed, this is due in part to my inexperience, but also in
 part to the difficulty of use of the app.</p>
 
@@ -1265,7 +1267,7 @@ works quite nicely. I found nevertheless the following caveats: </p>
     Width and height are also calculated from theses items</li>
   <li>The svg root layer has a transformation with a translate (to view all items nicely in a browser) and a scale (1,-1)
     so that the Y coordinates of all items are "inversed" (and thus follow the natural direction, the opposite of the
-    SVG standard. <strong>This means that the output will have to pass through the "svgresolver" utility to remove all
+    SVG standard. X coordinates are the real ones. <strong>This means that the output will have to pass through the "svgresolver" utility to remove all
     transformations in order to be used by PyCut</strong>.</li>
   <li>Circles are exported as <code>circle</code> (Ok). Lines, Rectangles, Polygons and Ellipses are exported as
     <code>path</code> (not Ok). The exporter should recognize when a "shape" is formed only with straight lines,
@@ -1292,14 +1294,16 @@ like from the beginning of the '80s, but <strong>usability/features more than to
 <li>The paths have no id, but ids are mandatory for <strong>PyCut</strong>.</li>
 <li>Always be sure to hide the constraints so that they are not exported in the svg.</li>
 <li>There are only cubic bezier curves, quadratic bezier curves are missing.</li>
+<li>Entities coordinates are not the true ones, but are shifted (translated) in X and Y directions. Very ennoying.</li>
 <li>The SVG closed path "Z" is also missing.</li>
 </ul>
 </p>
 
 <div class="info">
-<p><strong>Note</strong>: To achieve a quadratic bezier from a cubic one, the vector C1-C2 from the 2 control points must only be
-a third of the vector AB the start and end points! This constraint on the control points could be added in SolveSpace! Or a real
-quadratic entity could be built in. Note that making the two control points coincident is not a solution, this does not lead to 
+<p><strong>Note</strong>: To achieve a quadratic bezier from a cubic one, the vector C1C2 from the 2 control points must only be
+a third of the vector AB the start and end points! The quadratic curve control point Q0 is then the intersection of AC1 and BC2.
+And AC1 = 2/3 AQo, BC2 = 2/3 BQ0.  This constraint on the control points could be added in SolveSpace! Or a real
+quadratic entity could be built in (but it won't happen). Note that making the two control points coincident is not a solution, this does not lead to 
 a quadratic bezier although it looks similar</p>
 </div>
 
@@ -1307,8 +1311,8 @@ a quadratic bezier although it looks similar</p>
 
 <div class="info">
 <p><strong>Note</strong>: in 2023, a <strong>Blender</strong> add-on called <strong>CAD Sketcher</strong> is in
-development, which utilize the SolveSpace library for sketching. Maybe the user interface will be there even better
-(and offers the SVG export functionality).</p>
+development, which utilizes the SolveSpace library for sketching. Maybe the user interface will be there even better
+(and offers the SVG export functionality, which is still missing in 2025. Bezier curves are also still missing).</p>
 </div>
 
 <h4>Fusion 360</h4>
@@ -1360,7 +1364,7 @@ no SVG export at all. "Schade".</p>
 <h4>Draftsight 2D (Dassault)</h4>
 
 <p>Only a 30 days trial version. It has a "Power Tool" named "2D G-Code generator"! Should I forget
-PyCutl? (No). SVG export seems to be more meant as a picture for display only purpose.</p>
+PyCut? (No). SVG export seems to be more meant as a picture for display only purpose.</p>
 
 <h4>What else?</h4>
 
@@ -1378,10 +1382,9 @@ data format is not well suited for such an export).
 But who else would want to import svg files as a kind of CAM format? Response: the applications that do not want to use 
 an other (maybe more complicated) format, because yes, SVG can be indeed simple when utilizing only its basic features.</p>
 
-<p>The SVG format, sure, can be viewed in a browser, can be edited with a text editor, and in some points is very practical 
-(that's why <strong>PyCut</strong> use it). By the way, unfortunately the SVG format completely ignores the concept of 
-multiline/multipolygon etc. Polygons have no "interiors" so they must be defined as such in a path composed of 2 or more 
-subpaths for this purpose. Not very practicable.</p>
+<p>The SVG format, sure, can be viewed in a browser and can be edited with a text editor. Unfortunately it completely
+ignores the concept of multiline/multipolygon etc. Polygons have no "interiors" so they must be defined as such in a path 
+composed of 2 or more subpaths for this purpose. Not very practicable.</p>
 
 <p><strong>All in all very desapointing, excepted <span style="color:#008000">FreeCAD</span>, <span
 style="color:#008000">SolveSpace</span> and <span style="color:#008000">SvgPathEditor</span>!</strong></p>
