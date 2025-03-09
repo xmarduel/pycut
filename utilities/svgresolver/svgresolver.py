@@ -99,17 +99,24 @@ class SvgResolver:
 
         source_data = self.handle.svg
 
+        orig_x, orig_y = self.get_viewbox_origin(self.handle.svg.getvalue())
+        transform = "translate(%d %d)" % (orig_x, orig_y)
+
         if options.units == "px":
             self.svg = svgelements.SVG.parse(
-                source_data, reify=True, ppi=svgelements.DEFAULT_PPI
+                source_data,
+                reify=True,
+                ppi=svgelements.DEFAULT_PPI,
+                transform=transform,
             )
         if options.units == "mm":
+            print("transform =", transform)
             self.svg = svgelements.SVG.parse(
-                source_data, reify=True, ppi=25.4
+                source_data, reify=True, ppi=25.4, transform=transform
             )  # so that there is no "scaling" : 1 inch = 25.4 mm
         if options.units == "in":
             self.svg = svgelements.SVG.parse(
-                source_data, reify=True, ppi=1
+                source_data, reify=True, ppi=1, transform=transform
             )  # so that there is no "scaling" : 1 inch <-> 96 px
 
         # print("======================================")
@@ -125,6 +132,20 @@ class SvgResolver:
         # parser = etree.XMLParser(remove_blank_text=True)
         # self.tree = etree.parse(self.filename, parser)
         self.tree = self.handle.tree
+
+    def get_viewbox_origin(cls, svg_str: str):
+        """
+        parsing the initial svg : get the viewbox origin
+
+        for subsequent stuff (objects evaluated) no viewbox origin are needed"""
+        root = etree.fromstring(svg_str)
+
+        viewBox = root.attrib["viewBox"].split()
+
+        x = float(viewBox[0])
+        y = float(viewBox[1])
+
+        return (x, y)
 
     def resolve(self):
         """
@@ -510,6 +531,25 @@ class SvgResolver:
         style = self.merge_styles(shape.values.get("style", {}), the_style)
         if style:
             r.attrib["style"] = style
+
+        mm = shape.transform
+        if not mm.is_identity():
+            # negativ scales (ex: (1,-1) not finished in for rectangles!
+            # we do it here per hand
+
+            # rectangle top left corner
+            corner = svgelements.Point(shape.x, shape.y)
+            # ... is transformed
+            tr_corner = mm.transform_point(corner)
+            # if flipped, take extra care : consider the width and height
+            #   of the rectangle
+            dx = -shape.width if mm.a < 0 else 0
+            dy = -shape.height if mm.d < 0 else 0
+            # and translate the result
+            final_corner = svgelements.Point(tr_corner.x + dx, tr_corner.y + dy)
+
+            r.attrib["x"] = self.lf_format % final_corner.x
+            r.attrib["y"] = self.lf_format % final_corner.y
 
         item.addnext(r)
         item.getparent().remove(item)
