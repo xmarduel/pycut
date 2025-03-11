@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="140mm" height="200mm" viewBox="0 0 140 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+  <defs>
+    <circle id="cutter" cx="0" cy="0" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
+  </defs>
+  
+  <g id="angle_60" transform="translate(20 10)">
+    <polyline points="13,22.5   60,0   107,22.5" fill="none" stroke="black" stroke-width="0.5"/>
+	<polyline points="20,30  60,11.5  100,30" fill="none" stroke="blue" stroke-width="20" stroke-opacity="0.2" stroke-linecap="round"/>
+    <polyline points="20,30  60,11.5  100,30" fill="none" stroke="red"  stroke-width="0.2"/>
+	<use href="#cutter" x="60" y="11.5" />
+  </g>
+  <g id="angle_45" transform="translate(30 50)">
+    <polyline points=" 7.5,42.5  50,0  92.5,42.5" fill="none" stroke="black" stroke-width="0.5"/>
+    <polyline points="14,50  50,14  86,50" fill="none" stroke="blue" stroke-width="20" stroke-opacity="0.2" stroke-linecap="round"/>
+	<polyline points="14,50  50,14  86,50" fill="none" stroke="red"  stroke-width="0.2"/>
+	<use href="#cutter" x="50" y="14" />
+  </g>
+  <g id="angle_30" transform="translate(40 100)">
+    <polyline points=" -3,76  40,0   83,76" fill="none" stroke="black" stroke-width="0.5"/>
+    <polyline points="  6,80  40,20  74,80" fill="none" stroke="blue"  stroke-width="20" stroke-opacity="0.2" stroke-linecap="round"/>
+    <polyline points="  6,80  40,20  74,80" fill="none" stroke="red"   stroke-width="0.2"/>
+    <use href="#cutter" x="40" y="20" />
+  </g>
+</svg>

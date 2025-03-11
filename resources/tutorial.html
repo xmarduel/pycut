@@ -770,53 +770,8 @@ mapping between circle and ellipses/rectangles as well.</p>
 
 <p>When milling a pocket or a contour, the cutter is not able to mill into convex angles perfectly (yes the cutter is
 round). </p>
-<svg width="400mm" height="80mm" viewBox="0 0 400 80" version="1.1">
-  <g id="layer1">
-    <polyline points="10,10 70,10 113,53" stroke-width="0.5" fill="none" stroke="black"/>
-    <polyline points="10,20 66.2,20 106.2,60" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="20px"
-              stroke-opacity="0.2"/>
-    <polyline points="10,20 66.2,20 106.2,60" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
-              stroke-opacity="0.8"/>
-    <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
-              stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-    <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        -->
-    <circle cx="66.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
-  </g>
-  <g id="layer1" transform="translate(120 0)">
-    <polyline points="10,10 70,10 100,53" stroke-width="0.5" fill="none" stroke="black"/>
-    <polyline points="10,20 65.0,20 93.2,60" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="20px"
-              stroke-opacity="0.2"/>
-    <polyline points="10,20 65.0,20 93.2,60" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
-              stroke-opacity="0.8"/>
-    <polyline points="10,30 80,30" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
-              stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-    <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <polyline points="70,10 66.2,20" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2" stroke-opacity="0.8" stroke-dasharray="0 1 0"/>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      -->
-    <circle cx="65.2" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
-  </g>
-</svg>
-<svg width="400mm" height="80mm" viewBox="0 0 400 80" version="1.1">
-  <g id="layer1" transform="translate(120 0)">
-    <polyline points="10,70 10,10 100,10 100,70" stroke-width="0.5" fill="none" stroke="black"/>
-    <polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="20px"
-              stroke-opacity="0.2"/>
-    <polyline points="20,70 20,20 90,20 90,70" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
-              stroke-opacity="0.8"/>
-    <circle cx="20" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
-    <circle cx="90" cy="20" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
-  </g>
-  <g id="layer1">
-    <polyline points="10,10 110,10 60,60" stroke-width="0.5" fill="none" stroke="black"/>
-    <polyline points="10,20  86,20 46,60" fill="none" stroke="blue" stroke-linejoin="round" stroke-width="20px"
-              stroke-opacity="0.2"/>
-    <polyline points="10,20  86,20 46,60" fill="none" stroke="black" stroke-linejoin="round" stroke-width="0.2"
-              stroke-opacity="0.8"/>
-    <circle cx="86" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
-  </g>
-</svg>
+
+<img src="doc/dogbones1.svg" />
 
 <p>Note that the amount of material not removed by the cutter depends on the angle of the corner and the radius of the
 cutter.</p>
@@ -848,70 +803,8 @@ to mill an inner square hole, so the "convex angle" corner problem occurs. We ha
 square to fit in the milled hole. Strategy "1" is shown on the left, strategy "2" on the right: the extra tool path is
 displayed with the cutter at the end of the extra tool path (as well as the standard cutter position at the toolpath
 corner).</p>
-<svg width="200mm" height="100mm" viewBox="0 0 200 100" version="1.1">
-  <style>
-    .small {font: italic 3px sans-serif;}</style>
-  <g id="layer">
-    <line x1="10" x2="10" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
-    <line x1="20" x2="20" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
-    <line x1="30" x2="30" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
-    <line x1="40" x2="40" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
-    <line x1="50" x2="50" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
-    <line x1="60" x2="60" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
-    <line x1="70" x2="70" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
-    <line x1="80" x2="80" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
-    <line x1="90" x2="90" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
-    <line x1="100" x2="100" y1="95" y2="90" stroke-width="0.5" fill="none" stroke="black"/>
-    <text x="8" y="100" class="small">7</text>
-    <text x="18" y="100" class="small">10</text>
-    <text x="28" y="100" class="small">13</text>
-    <text x="38" y="100" class="small">16</text>
-    <text x="48" y="100" class="small">19</text>
-    <text x="58" y="100" class="small">22</text>
-    <text x="68" y="100" class="small">25</text>
-    <text x="78" y="100" class="small">28</text>
-    <text x="88" y="100" class="small">31</text>
-    <text x="98" y="100" class="small">34</text>
-    <line x1="105" x2="110" y1="10" y2="10" stroke-width="0.5" fill="none" stroke="black"/>
-    <line x1="105" x2="110" y1="20" y2="20" stroke-width="0.5" fill="none" stroke="black"/>
-    <line x1="105" x2="110" y1="30" y2="30" stroke-width="0.5" fill="none" stroke="black"/>
-    <line x1="105" x2="110" y1="40" y2="40" stroke-width="0.5" fill="none" stroke="black"/>
-    <line x1="105" x2="110" y1="50" y2="50" stroke-width="0.5" fill="none" stroke="black"/>
-    <line x1="105" x2="110" y1="60" y2="60" stroke-width="0.5" fill="none" stroke="black"/>
-    <line x1="105" x2="110" y1="70" y2="70" stroke-width="0.5" fill="none" stroke="black"/>
-    <line x1="105" x2="110" y1="80" y2="80" stroke-width="0.5" fill="none" stroke="black"/>
-    <text x="112" y="11" class="small">23</text>
-    <text x="112" y="21" class="small">20</text>
-    <text x="112" y="31" class="small">17</text>
-    <text x="112" y="41" class="small">14</text>
-    <text x="112" y="51" class="small">11</text>
-    <text x="112" y="61" class="small">8</text>
-    <text x="112" y="71" class="small">5</text>
-    <text x="112" y="81" class="small">2</text>
-    <rect x="10" y="10" width="90" height="70" stroke-width="0.4" fill="none" stroke="black"/>
-    <rect x="20" y="20" width="70" height="50" stroke-width="0.2" fill="none" stroke="red"/>
-    <rect x="20" y="20" width="70" height="50" stroke-width="20px" fill="none" stroke="blue" stroke-linejoin="round"
-          stroke-opacity="0.2"/>
-    <circle cx="20" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
-    <circle cx="90" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
-    <text x="11" y="13" class="small">C</text>
-    <text x="97" y="13" class="small">D</text>
-    <text x="21" y="23" class="small">A</text>
-    <!--
-                        	D = sqrt(10*10 + 10*10) = 14.14
-                            d = 14.14 -10 = 4.14dx = dy = d / sqrt(2) = 2.93
-                        	-->
-    <polyline id="dog-bone-path1" points="20,20 17.07,17.07" fill="none" stroke="blue" stroke-width="0.3"
-              stroke-opacity="0.5"/>
-    <circle id="dog-bone-path1-material" cx="17.07" cy="17.07" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2"
-            stroke-opacity="0.1"/>
-    <!--  other bone type -->
-    <polyline id="dog-bone-path2" points="90,20 90,10" fill="none" stroke="blue" stroke-width="0.3"
-              stroke-opacity="0.5"/>
-    <circle id="dog-bone-path2-material" cx="90" cy="10" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2"
-            stroke-opacity="0.1"/>
-  </g>
-</svg>
+
+<img src="doc/dogbones2.svg"/>
 
 <p>We see that the strategy "1" removes far less extra material than the strategy "2", so we will concentrate only on
 the strategy "1". </p>
@@ -1013,64 +906,12 @@ the cutter border and the stock corner. Infact the stock corner does not have to
 infact only function of the cutter diameter and the angle of the corner of the toolpath. The orientation of the corner
 indeed does not play a role (for the gap size). </p>
 
-<p><svg width="140mm" height="200mm" viewBox="0 0 140 200" version="1.1" id="svg5">
-  <g id="angle_60" transform="translate(20 10)">
-    <polyline points="0,30   60,0   120,30" fill="none" stroke="black" stroke-width="0.5"/>
-    <polygon points="0,30   60,0   120,30  78,30  60,23   42,30" fill="blue" fill-opacity="0.2"/>
-    <polyline points="20,30  60,11.5  100,30" fill="none" stroke="red" stroke-width="0.2"/>
-    <circle cx="60" cy="11.5" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
-  </g>
-  <g id="angle_45" transform="translate(30 50)">
-    <polyline points=" 0,50  50,0  100,50" fill="none" stroke="black" stroke-width="0.5"/>
-    <polygon points=" 0,50  50,0  100,50  72,50  50,28  28,50" fill="blue" fill-opacity="0.2"/>
-    <polyline points="14,50  50,14  86,50" fill="none" stroke="red" stroke-width="0.2"/>
-    <circle cx="50" cy="14" r="10px" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
-  </g>
-  <g id="angle_30" transform="translate(40 100)">
-    <polyline points=" -6,80  40,0   86,80" fill="none" stroke="black" stroke-width="0.5"/>
-    <polygon points=" -6,80  40,0   86,80  62,80  40,40  18,80" fill="blue" fill-opacity="0.2"/>
-    <polyline points="  6,80  40,20  74,80" fill="none" stroke="red" stroke-width="0.2"/>
-    <circle cx="40" cy="20" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
-  </g>
-</svg>
- </p>
+<img src="doc/dogbones3.svg" />
 
-<p>The gap (distance between corner and cutter border) is </p>
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-  <mi>gap</mi>
-  <mo>=</mo>
-  <mfrac>
-    <mrow>
-      <msub>
-        <mi>cutter</mi>
-        <mn>R</mn>
-      </msub>
-    </mrow>
-    <mrow>
-      <mi>sin(a)</mi>
-    </mrow>
-  </mfrac>
-  <mo>−</mo>
-  <msub>
-    <mi>cutter</mi>
-    <mn>R</mn>
-  </msub>
-  <mo>=</mo>
-  <mfrac>
-    <mrow>
-      <mi>1</mi>
-      <mo>−</mo>
-      <mi>sin(a)</mi>
-    </mrow>
-    <mrow>
-      <mi>sin(a)</mi>
-    </mrow>
-  </mfrac>
-  <msub>
-    <mi>cutter</mi>
-    <mn>R</mn>
-  </msub>
-</math>
+<p>The \(gap\) (distance between corner and cutter border) is </p>
+
+<p>\(gap = \displaystyle \frac{cutter_R}{sin(a)} - cutter_R = \frac{1 - sin(a)}{sin(a)} . cutter_R\)</p>
+
 <p>where \(a\) is the <strong>half the size of the corner's angle</strong>. So for a cutter radius of 1:</p>
 <ul>
   <li>\(a = 60^{\circ} \implies gap = 0.15 \)</li>

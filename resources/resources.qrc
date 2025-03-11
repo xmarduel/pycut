@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
+	      <file>doc/dogbones1.svg</file>
+		    <file>doc/dogbones2.svg</file>
+		    <file>doc/dogbones3.svg</file>
         <file>images/tango/32x32/categories/applications-system.png</file>
         <file>images/tango/22x22/categories/applications-system.png</file>
         <file>images/tango/22x22/actions/document-save-as.png</file>
