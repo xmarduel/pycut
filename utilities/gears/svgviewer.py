@@ -156,13 +156,13 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         viewbox = root.attrib["viewBox"].split()
 
-        x = int(viewbox[0])
-        y = int(viewbox[1])
-        w = int(viewbox[2])
-        h = int(viewbox[3])
+        x = float(viewbox[0])
+        y = float(viewbox[1])
+        w = float(viewbox[2])
+        h = float(viewbox[3])
 
         self.scene().setSceneRect(x, y, w, h)
-        self.renderer.setViewBox(QtCore.QRect(x, y, w, h))
+        self.renderer.setViewBox(QtCore.QRect(int(x), int(y), int(w), int(h)))
 
         viewbox_size = max(w, h)
         # eval initial zoom factor

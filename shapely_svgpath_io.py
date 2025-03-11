@@ -96,7 +96,7 @@ class SvgPath:
         """
         From a svg file content, read all paths (and those from the std svg shapes)
         """
-        # view box not from 0 0 -> apply transform as translate(-x -y)  TODO
+        # view box not from 0 0 -> set transform as translate(x y) i svgelements "parse"
         orig_x, orig_y = cls.get_viewbox_origin(svg_str)
         transform = "translate(%d %d)" % (orig_x, orig_y)
 

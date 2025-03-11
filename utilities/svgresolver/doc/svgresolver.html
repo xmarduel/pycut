@@ -69,7 +69,7 @@ transformations is not an easy task (indeed...).</p>
 <p>Fortunately, the package <code><strong>svgelements</strong></code> does the job...</p>
 
 <p>This utility uses <code><strong>svgelements</strong></code>, "resolves" all transformations
-and writes the result to a svg file (what <code><strong>svgelements</strong></code>
+and writes the result to a svg file as output (what <code><strong>svgelements</strong></code>
 does not). It also manages to preserve the <code>id</code>s of the
 resolved items as well as merging the styles of the referenced items with
 the used items.</p>
@@ -108,7 +108,8 @@ does.
   &lt;/g&gt;
 &lt;/svg&gt;</pre></code>
 
-<p>and <strong>PyCut</strong> can use this "resolved" svg data as valid input. Note how the <code>id</code>s are preserved. 
+<p>and <strong>PyCut</strong> can use this "resolved" svg data as valid input. Note how the <code>id</code>s of the 
+<code>use</code> elements are passed to the "resolved" items. 
 Also note how the opacity values in the styles are merged in the resolved items's styles.</p>
 
 <h3>ToDo</h3>
@@ -132,14 +133,13 @@ Also note how the opacity values in the styles are merged in the resolved items'
 	  </ul>
   </li>
   <li><p>scale</p>
-    <ul><li>rectangle: no transformation when the scale y coefficient is negative (rectangle flipped)</li>
+    <ul>
+      <li>rectangle: no transformation when the scale transformation is given with y coefficient negative (-1 for example) there the 
+      rectangle is flipped. <strong>FIXED</strong>FIXED
+      </li>
     </ul>
   </li>
 </ul>
-
-<!--
-<p><em>Note for "tatarize": load the svg in chrome and from the DOM tree take a view at both circles Properties (Properties Tab): ids are indeed "circle-left" or "circle-right" ! (but this is still OK as you made)</em></p>
--->
 
 </body>
 </html>
