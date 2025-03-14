@@ -133,9 +133,16 @@ a document with transformation, try the utility <strong>svgresolver.py</strong> 
 
 <h3 id="P-02-01">SVG ViewBox</h3>
 
-<p><strong>PyCut</strong>, in order to work accurately, need the SVG document to define its standard
+<p><strong>PyCut</strong>, in order to work accurately, needs the SVG document to define its standard
 <strong>width</strong> and <strong>height</strong> attributes with the units "<strong>mm</strong>" or
 "<strong>in</strong>". </p>
+
+<div class="info">
+<p><strong>Note:</strong> The specified units are not necessarely the ones specified in the generated GCode(s). There
+is is another setting to set the GCode units elsewhere in <strong>PyCut</strong>. Admittingly they should correspond
+for the sake of good documentation.</p>
+</div>
+
 <pre><code class="language-html">&lt;svg version="1.1" width="&lt;width&gt;mm" height="&lt;height&gt;mm" ... 
  ...
 &lt;/svg&gt;</code></pre>
@@ -144,19 +151,15 @@ a document with transformation, try the utility <strong>svgresolver.py</strong> 
 <pre><code class="language-html">viewBox="0 0 &lt;width&gt; &lt;height&gt;"</code></pre>
 
 <p><strong>with the viewbox width and height corresponding to the SVG attributes width</strong> and <strong>height</strong>.
-Notice that <strong>PyCut</strong> also recommends a viewbox origin to be (0, 0), but this is not mandatory.</p>
+Notice that <strong>PyCut</strong> strongly recommends a viewbox origin to be (0, 0), although this is not mandatory.</p>
 
 <div class="info">
-<p><strong>Note:</strong> The specified units are not necessarely the ones specified in the generated GCode(s). There
-is is another setting to set the GCode units elsewhere in <strong>PyCut</strong>. Admittingly they should correspond
-for the sake of good documentation.</p>
+<p><strong>Note:</strong> viewbox x and y attributes (origin) are allowed to be non zero! (but then take care of the produced
+GCode coordinates). When stucking to the (0,0) origin, all designs have positive X and Y coordinates (in the svg coordinates system), 
+and thus all produced GCode -when reference is top left of material- have positive X coordinates and negative Y coordinates 
+(standard orientation). Easy to remember!</p>
 </div>
 
-<div class="info">
-<p><strong>Note:</strong> New! viewbox x and y attributes are allowed to be non zero! (but then take care of the produced
-GCode coordinates). When stucking to the (0,0) origin, all designs have positive X and Y coordinates (in svg coordinates system), and thus all produced GCode -when reference is top left of material- have positive X coordinates and negative
-Y coordinates (standard orientation). Easy to remember!</p>
-</div>
 
 <p>As an example:</p>
 <pre><code class="language-html">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
