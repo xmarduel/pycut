@@ -61,6 +61,8 @@ from gcode_generator import Tab
 from gcode_generator import GcodeGenerator
 
 import resources_rc
+import resources_doc_rc
+
 from ui_mainwindow import Ui_mainwindow
 
 
