@@ -2,24 +2,50 @@
 <svg width="140mm" height="200mm" viewBox="0 0 140 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
   <defs>
     <circle id="cutter" cx="0" cy="0" r="10" fill="red" stroke-width="0.2" fill-opacity="0.2" stroke-opacity="0.1"/>
-  </defs>
+    
+    <g id="cutter_path_angle_60"> <!--  Everything outside the circle will be clipped and therefore invisible. -->
+      <polyline points="0,34   60,4   120,34" fill="none" stroke="black" stroke-width="0.5"/>
+      <polyline points="0,45   60,15  120,45" fill="none" stroke="blue" stroke-width="20" stroke-opacity="0.2" />
+      <polyline points="0,45   60,15  120,45" fill="none" stroke="red"  stroke-width="0.2"/>
+      <use href="#cutter" x="60" y="15" />
+    </g>
+    <g id="cutter_path_angle_45">
+      <polyline points="0,66.5   60,6.5  120,66.5" fill="none" stroke="black" stroke-width="0.5"/>
+      <polyline points="0,80     60,20   120,80" fill="none" stroke="blue" stroke-width="20" stroke-opacity="0.2" />
+      <polyline points="0,80     60,20   120,80" fill="none" stroke="red"  stroke-width="0.2"/>
+      <use href="#cutter" x="60" y="20" />
+    </g>
+    <g id="cutter_path_angle_30">
+      <polyline points="10 73   60,3    110,73" fill="none" stroke="black" stroke-width="0.5"/>
+      <polyline points="10,90   60,20   110,90" fill="none" stroke="blue"  stroke-width="20" stroke-opacity="0.2" />
+      <polyline points="10,90   60,20   110,90" fill="none" stroke="red"   stroke-width="0.2"/>
+      <use href="#cutter" x="60" y="20" />
+    </g>
+   </defs>
+
+  <clipPath  id="window1">
+    <rect x="0" y="0" width="140" height="40" /> 
+  </clipPath>
+
+  <clipPath  id="window2">
+    <rect x="0" y="0" width="140" height="60" /> 
+  </clipPath>
+
+  <clipPath  id="window3">
+    <rect x="0" y="0" width="140" height="70" /> 
+  </clipPath>
+
+
   
   <g id="angle_60" transform="translate(20 10)">
-    <polyline points="13,22.5   60,0   107,22.5" fill="none" stroke="black" stroke-width="0.5"/>
-	<polyline points="20,30  60,11.5  100,30" fill="none" stroke="blue" stroke-width="20" stroke-opacity="0.2" stroke-linecap="round"/>
-    <polyline points="20,30  60,11.5  100,30" fill="none" stroke="red"  stroke-width="0.2"/>
-	<use href="#cutter" x="60" y="11.5" />
+    <use  clip-path="url(#window1)" href="#cutter_path_angle_60" />
   </g>
-  <g id="angle_45" transform="translate(30 50)">
-    <polyline points=" 7.5,42.5  50,0  92.5,42.5" fill="none" stroke="black" stroke-width="0.5"/>
-    <polyline points="14,50  50,14  86,50" fill="none" stroke="blue" stroke-width="20" stroke-opacity="0.2" stroke-linecap="round"/>
-	<polyline points="14,50  50,14  86,50" fill="none" stroke="red"  stroke-width="0.2"/>
-	<use href="#cutter" x="50" y="14" />
+
+  <g id="angle_45" transform="translate(20 45)">
+    <use  clip-path="url(#window2)" href="#cutter_path_angle_45" />
   </g>
-  <g id="angle_30" transform="translate(40 100)">
-    <polyline points=" -3,76  40,0   83,76" fill="none" stroke="black" stroke-width="0.5"/>
-    <polyline points="  6,80  40,20  74,80" fill="none" stroke="blue"  stroke-width="20" stroke-opacity="0.2" stroke-linecap="round"/>
-    <polyline points="  6,80  40,20  74,80" fill="none" stroke="red"   stroke-width="0.2"/>
-    <use href="#cutter" x="40" y="20" />
+
+  <g id="angle_30" transform="translate(20 100)">
+    <use  clip-path="url(#window3)" href="#cutter_path_angle_30" />
   </g>
 </svg>

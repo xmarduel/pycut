@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="40mm" height="40mm" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<g transform="scale(1,-1)">
+  <rect width="20" height="15" x="10" y="-5.0"  style="fill:blue"/>
+  <rect width="20" height="15"  x="10" y="-25.0"  style="fill:orange"/>
+  <line x1="0" y1="0" x2="40" y2="0" style="stroke:red"/>
+  <line x1="0" y1="10" x2="40" y2="10" style="stroke:green"/>
+  <line x1="0" y1="-5" x2="40" y2="-5" style="stroke:cyan"/>
+</g>
+</svg>

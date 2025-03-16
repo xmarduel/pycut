@@ -1196,9 +1196,9 @@ controller board does not know anymore the spindle. See <strong>Propeller Labs</
 <p>Basically, one has to connect the board spindle + pin and the board 5V output +, - and ground
 pins (find them!) to a device transforming the voltage to 0 - 24 V , and connecting this device to
 the brushless motor driver.</p>
-<img src="cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-1.png"> <br>
-<img src="cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-2.png"> <br>
-<img src="cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-3.png"> 
+<img src="cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-1.png" width="800"> <br>
+<img src="cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-2.png" width="800"> <br>
+<img src="cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-3.png" width="800"> 
 
 <p>Just be sure of what you are doing if you don#t want to burn your board.</p>
 
@@ -1222,6 +1222,7 @@ required for generating these low-level signals.</p>
 
 <p>Added to the table is the widely used TMC-2209 driver in 3D printers and pins compatibles with
 the A4988, as well as the TMC-5160 and TB-6600 for information:</p>
+
 <style type="text/css">
 table.active_controller_comparison td.spacer {border: none; background: white;}
 table.active_controller_comparison td.white {background: white;}</style>
@@ -1255,8 +1256,8 @@ table.active_controller_comparison td.white {background: white;}</style>
       <th style="vertical-align:top;"><img src="cnc-doc/images/22_CnC1419_Upgrade/tmc2209-zoom.jpg"
         width="58px" alt=""><br>
         <a href="/product/2878">TMC-2209</a></th>
-      <th style="vertical-align:top;"><img src="cnc-doc/images/22_CnC1419_Upgrade/tmc5160-zoom.jpg"
-        width="58px" alt=""><br>
+      <th style="vertical-align:top;"><img src="cnc-doc/images/22_CnC1419_Upgrade/tmc5160-zoom.webp"
+        width="78px" alt=""><br>
         <a href="/product/2878">TMC-5160</a></th>
       <th style="vertical-align:top;"><img src="cnc-doc/images/22_CnC1419_Upgrade/tb6600-zoom.jpg"
         width="58px" alt=""><br>
@@ -1265,16 +1266,11 @@ table.active_controller_comparison td.white {background: white;}</style>
     <tr>
       <th>Driver chip:</th>
       <td colspan="2">Allegro A4988</td>
-      <td>TI<br>
-        DRV8825</td>
-      <td>Toshiba<br>
-        TB67S249-FTG</td>
-      <td>Trinamic <br>
-        TMC-2209</td>
-      <td>Trinamic <br>
-        TMC-5160</td>
-      <td>Toshiba <br>
-        TB-6600</td>
+      <td>TI<br>DRV8825</td>
+      <td>Toshiba<br>TB67S249-FTG</td>
+      <td>Trinamic <br>TMC-2209</td>
+      <td>Trinamic <br>TMC-5160</td>
+      <td>Toshiba <br>TB-6600</td>
     </tr>
     <tr>
       <th>Min operating voltage:</th>
@@ -1352,27 +1348,38 @@ table.active_controller_comparison td.white {background: white;}</style>
 of greater power than those driven by a <strong>A4988</strong>. </p>
 
 <p>Typically, the <strong>A4988</strong> drives small Nema-17 motors. These motors are circa 34 cm
-long and I think they run at 1.2 or 1.5 Amp and have a torque of 42 Ncm. Consider the
-<strong>Nema17 17HS19-2004S1</strong> motor of 48cm (19 inches) length: its torque is 59 Ncm and
-runs at 2 Amp, which is the upper limit for a <strong>A4988</strong> and thus not well suited for
-long jobs. But the <strong>TMC-2209</strong> is perfectly suited.</p>
+long and I think they run at 1.2 or 1.5 Amp and have a torque of 42 Ncm.</p>
+
+<p> Consider the <strong>Nema17 17HS19-2004S1</strong> motor of 48cm (19 inches) length: its holding 
+torque is 59 Ncm and runs at 2 Amp, which is the upper limit for a <strong>A4988</strong> and thus 
+not well suited for long jobs. But the <strong>TMC-2209</strong> is perfectly suited.</p>
+
+<p>An even more powerful motor could be the <strong>Nema17 17HS24-2104S</strong>, 
+which is 24 inchs long (60cm) and runs at 2.1 Amp. Its holding torque is 65Ncm, and its torque is higher
+of about 1 third than the <strong>Nema17 17HS19-2004S1</strong>, but only at low speed (500RPM or less). </p>
 
 <div class="info">
 <strong>Info: </strong>See how <strong>Propeller Labs</strong> "prepares" these <strong>Nema17
 17HS19-2004S1</strong> motors for the CNC1419. Looking at the motors's shafts which have (strangly)
-some play, I have inserted, similarly to <strong>Propeller Labs</strong>, a small plastic washer on
-the shaft inside the motor so that there is no play anymore. See <strong>Propeller Labs</strong>
+some play, I have inserted, similarly to <strong>Propeller Labs</strong>, a small plastic washer of
+1mm thickness on the shaft inside the motor so that there is no play anymore. See <strong>Propeller Labs</strong>
 episodes <strong>#6 - #7. CNC 1419</strong></div>
 
 <p>Now the neccessary power to run a board with 3 <strong>Nema17 17HS19-2004S1</strong> motors is 3
 times (24 Volt * 2 Amp) = 3 x 48 W. So a better power supply than the (junk) one given as standard
-for the CNC 1419 which has a max of 100W (or 120W) is needed. I found 3 ("brick" like) suitable
+for the CNC 1419 which has a max of 100W (or 120W) is needed. I found 4 ("brick" like) suitable
 power supply: </p>
 <ul>
   <li>Liteon 120 W at 24 Volt - if you do not upgrade your motors -</li>
+  <li>Dell Notebook power supply 130 W at 19.5 Volt</li>
   <li>Dell Notebook power supply 180 W at 19.5 Volt</li>
   <li>Samsung power supply 180 W at 24 Volt</li>
 </ul>
+
+<img src="cnc-doc\images\power_supply\liteon-120.jpg" width="200"></img> 
+<img src="cnc-doc\images\power_supply\dell-130.jpg" width="200"></img> 
+<img src="cnc-doc\images\power_supply\dell-180.jpg" width="200"></img> 
+<img src="cnc-doc\images\power_supply\samsung-180.jpg" width="200"></img> 
 
 <p>You just need the right adaptor for the connector output.</p>
 
@@ -1383,7 +1390,7 @@ power supply: </p>
 <p>These boards are run by the ATMega328P 8-bits chip. They are basically Arduino Uno R3 clones.
 There are plenty of those on AliExpress</p>
 
-<p>As done in <strong>Propeller Labs</strong>, ii is possible to connect this kind of board with
+<p>As done in <strong>Propeller Labs</strong>, it is possible to connect this kind of board with
 the <strong>TB6600</strong> drivers which supports higher current. It is nevertheless not
 straightforward because of its box enclosure so that connections (wires) from the controller board
 to the drivers have to be soldered (at best) or plugged into the board stepper motors receptors
@@ -1414,6 +1421,8 @@ the CNC-1419 standard Grbl board, with the <strong>TMC-2209</strong> drivers and
 <p>FluidNC proposes some "officially" supported boards. Among them are also boards for the
 <strong>TMC-2209</strong> and <strong>TMC-5160</strong>. The drivers can be placed on a module or
 be already soldered on the board, depending on the board.</p>
+
+<p>Boards for the TMC5160 seems to be expensive (see FluidNC hardware page).</p>
 
 <h3>Reducing the backlash</h3>
 

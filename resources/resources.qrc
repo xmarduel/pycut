@@ -1,8 +1,8 @@
 <RCC>
     <qresource prefix="/">
-	      <file>doc/dogbones1.svg</file>
-		    <file>doc/dogbones2.svg</file>
-		    <file>doc/dogbones3.svg</file>
+        <file>doc/dogbones1.svg</file>
+        <file>doc/dogbones2.svg</file>
+        <file>doc/dogbones3.svg</file>
         <file>images/tango/32x32/categories/applications-system.png</file>
         <file>images/tango/22x22/categories/applications-system.png</file>
         <file>images/tango/22x22/actions/document-save-as.png</file>
@@ -66,6 +66,10 @@
         <file>doc/css/bookmark-new.png</file>
 		<file>cnc-doc/css/cnc.css</file>
 		<file>cnc-doc/images/coupling.svg</file>
+        <file>cnc-doc/images/power_supply/liteon-120.jpg</file>
+		<file>cnc-doc/images/power_supply/dell-130.jpg</file>
+		<file>cnc-doc/images/power_supply/dell-180.jpg</file>
+		<file>cnc-doc/images/power_supply/samsung-180.jpg</file>
 		<file>cnc-doc/images/04_CandleReference/CNC2.PNG</file>
 		<file>cnc-doc/images/04_CandleReference/CNC3.PNG</file>
 		<file>cnc-doc/images/04_CandleReference/CNC4.PNG</file>
@@ -273,6 +277,7 @@
         <file>cnc-doc/images/22_CnC1419_Upgrade/tb6600.jpg</file>
         <file>cnc-doc/images/22_CnC1419_Upgrade/tmc2209-zoom.jpg</file>
         <file>cnc-doc/images/22_CnC1419_Upgrade/tmc2209.jpg</file>
+        <file>cnc-doc/images/22_CnC1419_Upgrade/tmc5160-zoom.webp</file>
 
         <file>cnc-doc/images/99_Arduino_Grbl/arduino.png</file>
         <file>cnc-doc/images/99_Arduino_Grbl/arduino_board_selection.png</file>
