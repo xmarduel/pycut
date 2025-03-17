@@ -154,10 +154,10 @@ for the sake of good documentation.</p>
 Notice that <strong>PyCut</strong> strongly recommends a viewbox origin to be (0, 0), although this is not mandatory.</p>
 
 <div class="info">
-<p><strong>Note:</strong> viewbox x and y attributes (origin) are allowed to be non zero! (but then take care of the produced
-GCode coordinates). When stucking to the (0,0) origin, all designs have positive X and Y coordinates (in the svg coordinates system), 
-and thus all produced GCode -when reference is top left of material- have positive X coordinates and negative Y coordinates 
-(standard orientation). Easy to remember!</p>
+<p><strong>Note:</strong> viewbox x and y attributes (origin) are allowed to be non zero! (but then take extra care of the produced
+GCode coordinates and your own machine coordinates). When stucking to the (0,0) origin, all (visible) designs have positive X and Y 
+coordinates (in the svg coordinates system), and thus all produced GCode -when reference is top left of material- have positive X 
+coordinates and negative Y coordinates (standard orientation). Easy to remember!</p>
 </div>
 
 
@@ -239,6 +239,11 @@ point of the path is equal to its last point, the path is only considered as clo
 <div class="warning">
 <p><strong>Warning:</strong> PyCut strongly relies on the <strong>[Zz]</strong> annotation to decide if the path is
 closed or not. When not closed, "Pocket" operations will not be allowed for this opened path.</p>
+</div>
+
+<div class="info">
+<p><strong>Note:</strong> It may looks at first sight a little pedandic, but then there is a clear flag whether the 
+path is closed or not, without further checks.</p>
 </div>
 
 <p><strong>PyCut</strong> imports closed paths as shapely "MultiPolygon", while opened paths are imported as
