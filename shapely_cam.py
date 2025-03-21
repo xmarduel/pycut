@@ -43,7 +43,7 @@ from shapely_matplotlib import MatplotLibUtils
 
 PI = math.pi
 
-from hsm_nibble import geometry
+from hsm_nibbler import geometry
 
 
 class CamPath:
@@ -179,7 +179,7 @@ class cam:
         cutter_dia is in "UserUnit" units.
         overlap is in the range [0, 1).
         """
-        pc = NibblePocketCalculator(multipoly, cutter_dia, overlap, climb)
+        pc = NibblerPocketCalculator(multipoly, cutter_dia, overlap, climb)
         pc.pocket()
         return pc.cam_paths
 
@@ -1928,7 +1928,7 @@ class SpiralePocketCalculator:
             return ellipse_pts
 
 
-class NibblePocketCalculator:
+class NibblerPocketCalculator:
     """ """
 
     def __init__(

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="200mm" height="200mm" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+   <defs id="defs">
+      <circle id="conn"  x="0" y="0" r="2.5" fill="black" />
+  </defs>
+  <g id="layer1">
+   
+	<g id="module" transform="translate(10 10)">
+	  <!-- cnc board -->
+	  <text x="145" y="17" stroke="black" font-size="6" font-family="courier"  stroke-width="0.1" >CNC BOARD</text>   
+	  <rect x="100" y="10" width="80" height="60" stroke="black" stroke-width="0.5" fill="none" />
+	  
+	  <use href="#conn" x="109" y="15" id="spindle +"/>
+	  <use href="#conn" x="115" y="15" id="spindle -"/>
+	  <use href="#conn" x="135" y="40" id="cnc-board 5V+"/>
+	  <use href="#conn" x="141" y="40" id="cnc-board EN"/>
+	  <use href="#conn" x="147" y="40" id="cnc-board GND"/>
+	   
+	  <text x="105" y="21" stroke="black" font-size="3" font-family="courier"  stroke-width="0.1" >SPINDLE PWM +/-</text>
+	  <text x="132" y="36" stroke="black" font-size="3" font-family="courier"  stroke-width="0.1" >5V+</text> 
+	  <text x="139" y="36" stroke="black" font-size="3" font-family="courier"  stroke-width="0.1" >EN</text> 
+	  <text x="145" y="36" stroke="black" font-size="3" font-family="courier"  stroke-width="0.1" >GND</text> 
+	  
+	  <!-- pwm 22 volts module -->
+	  <text x="125" y="117" stroke="black" font-size="5" font-family="courier"  stroke-width="0.1" >PWM MODULE</text> 
+	  <rect x="120" y="90"  width="50" height="50" stroke="black" stroke-width="0.5" fill="none" />
+	  
+	  <rect x="150" y="90"  width="15" height="10" stroke="black" stroke-width="0.5" fill="none" />
+	  <rect x="125" y="130" width="15" height="10" stroke="black" stroke-width="0.5" fill="none" />
+	  <rect x="150" y="130" width="15" height="10" stroke="black" stroke-width="0.5" fill="none" />
+
+	  <use href="#conn"  x="154" y="95" />
+	  <use href="#conn"  x="161" y="95" />
+	  <text x="150" y="104" stroke="black" font-size="3" font-family="courier"  stroke-width="0.1" >Vin</text> 
+	  <text x="159" y="104" stroke="black" font-size="3" font-family="courier"  stroke-width="0.1" >GND</text> 
+	  
+	  <use href="#conn"  x="154" y="135" />
+	  <use href="#conn"  x="161" y="135" />
+	  <text x="150" y="128" stroke="black" font-size="3" font-family="courier"  stroke-width="0.1" >Vout</text> 
+	  <text x="159" y="128" stroke="black" font-size="3" font-family="courier"  stroke-width="0.1" >GND</text> 
+	
+	  <use href="#conn"  x="129" y="135" />
+	  <use href="#conn"  x="136" y="135" />
+	  <text x="125" y="128" stroke="black" font-size="3" font-family="courier"  stroke-width="0.1" >PWM</text> 
+	  <text x="134" y="128" stroke="black" font-size="3" font-family="courier"  stroke-width="0.1" >GND</text>   
+
+	  <!-- spindle driver -->
+	  <text x="10" y="90" stroke="black" font-size="5" font-family="courier"  stroke-width="0.1" >WS55-220</text> 
+	  <rect x="0" y="10" width="70" height="150" stroke="black" stroke-width="0.5" fill="none" />
+	  
+	  <use href="#conn" x="65" y="25" id="driver c1"/>
+	  <use href="#conn" x="65" y="33" id="driver c2"/>
+	  <use href="#conn" x="65" y="41" id="driver c3"/>
+	  <use href="#conn" x="65" y="49" id="driver c4"/>
+	  <use href="#conn" x="65" y="57" id="driver c5"/>
+	  <use href="#conn" x="65" y="65" id="driver c6"/>
+	  <use href="#conn" x="65" y="73" id="driver c7"/>
+	  <use href="#conn" x="65" y="81" id="driver c8"/>
+	  <use href="#conn" x="65" y="89" id="driver c9"/>
+	  <use href="#conn" x="65" y="97" id="driver c10"/>
+	  
+	  <text x="54" y="27" stroke="black" font-size="4" font-family="courier"  stroke-width="0.1" >GND</text> 
+	  <text x="54" y="43" stroke="black" font-size="4" font-family="courier"  stroke-width="0.1" >EN</text> 
+	  <text x="54" y="67" stroke="black" font-size="4" font-family="courier"  stroke-width="0.1" >SV</text> 
+	  
+	</g>
+	
+	<g id="connections"  transform="translate(10 10)">
+	  <!-- spindle pwm -->
+	  <polyline points="109,15  109,145  129,145  129,135" fill="none"  stroke="red" stroke-width="0.5" />
+	  
+	  <!-- cnc board to module -->
+	  <polyline points="135,40  135,85  154,85  154,95" fill="none"  stroke="red" stroke-width="0.5" />
+	  <polyline points="147,40  147,80  161,80  161,95" fill="none"  stroke="red" stroke-width="0.5" />
+	  
+	  <!-- cnc board to spindle driver -->
+	  <polyline points="141,40  141,51 85,51 85,41 65,41" fill="none"  stroke="red" stroke-width="0.5" />
+	  
+	  <!-- module to spindle driver -->
+	  <polyline points="154,135  154,150  80,150 80,65 65,65 " fill="none"  stroke="red" stroke-width="0.5" />
+	  <polyline points="161,135  161,155  75,155 75,25 65,25 " fill="none"  stroke="red" stroke-width="0.5" />
+	</g>
+	
+  </g>
+</svg>

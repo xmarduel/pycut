@@ -1193,14 +1193,14 @@ whose holes are infact 6mm diameter as the standard screws.</p>
 controller board does not know anymore the spindle. See <strong>Propeller Labs</strong> episode
 <strong>#8. CNC 1419</strong> how to fix this!</p>
 
-<p>Basically, one has to connect the board spindle + pin and the board 5V output +, - and ground
-pins (find them!) to a device transforming the voltage to 0 - 24 V , and connecting this device to
+<p>Basically, one has to connect the board spindle + pin (PWM) and the board 5V+ output, Enable and Ground
+pins (find them!) to a device transforming the PWM signal to a voltage between 0 - 24 V, and connecting this device to
 the brushless motor driver.</p>
 <img src="cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-1.png" width="800"> <br>
 <img src="cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-2.png" width="800"> <br>
 <img src="cnc-doc/images/22_CnC1419_Upgrade/CNC1419-SpindleConnection-3.png" width="800"> 
 
-<p>Just be sure of what you are doing if you don#t want to burn your board.</p>
+<p>Just be sure of what you are doing if you don#t want to burn your board. There may be some complications!</p>
 
 <p></p>
 

@@ -1,22 +1,22 @@
 """
-    A CAM library for generating HSM "peeling" toolpaths from supplied geometry.
+A CAM library for generating HSM "peeling" toolpaths from supplied geometry.
 
-    Copyright (C) <2022>  <duncan law>
+Copyright (C) <2022>  <duncan law>
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-    mrdunk@gmail.com
+mrdunk@gmail.com
 """
 
 # pylint: disable=attribute-defined-outside-init
@@ -32,10 +32,15 @@ from shapely.geometry import box, GeometryCollection, LinearRing, LineString, Mu
 from shapely.ops import linemerge, split, unary_union  # type: ignore
 from shapely.errors import GeometryTypeError
 
-from hsm_nibble.debug import Display
-from hsm_nibble.voronoi_centers import (
-        round_coord, start_point_perimeter, start_point_widest, VoronoiCenters)  # type: ignore
-from hsm_nibble.helpers import log  # type: ignore
+from hsm_nibbler.debug import Display
+from hsm_nibbler.voronoi_centers import (
+    round_coord,
+    start_point_perimeter,
+    start_point_widest,
+    VoronoiCenters,
+)  # type: ignore
+from hsm_nibbler.helpers import log  # type: ignore
+
 DEBUG_DISPLAY = Display()
 
 
@@ -53,7 +58,7 @@ ITERATION_COUNT = 50
 # branches first.
 # TODO: We could use more long range path planning that take the shortest total
 # path into account.
-#BREADTH_FIRST = True
+# BREADTH_FIRST = True
 BREADTH_FIRST = False
 
 # When arc sizes drop below a certain point, we need to reduce the step size or
@@ -72,42 +77,50 @@ class ArcDir(Enum):
     CCW = 1
     Closest = 2
 
+
 class MoveStyle(Enum):
     RAPID_OUTSIDE = 0
     RAPID_INSIDE = 1
     CUT = 2
 
+
 class StartPointTactic(Enum):
     PERIMETER = 0  # Starting point hint for outer peel. On the outer perimeter.
-    WIDEST = 1     # Starting point hint for inner pockets.
+    WIDEST = 1  # Starting point hint for inner pockets.
 
 
-ArcData = NamedTuple("Arc", [
-    ("origin", Point),
-    ("radius", Optional[float]),
-    ("start", Optional[Point]),
-    ("end", Optional[Point]),
-    ("start_angle", Optional[float]),
-    ("span_angle", Optional[float]),
-    ("winding_dir", Optional[ArcDir]),
-    # TODO: ("widest_at", Optional[Point]),
-    # TODO: ("start_DOC", float),
-    # TODO: ("end_DOC", float),
-    # TODO: ("widest_DOC", float),
-    ("path", LineString),
-    ("debug", Optional[str])
-])
+ArcData = NamedTuple(
+    "Arc",
+    [
+        ("origin", Point),
+        ("radius", Optional[float]),
+        ("start", Optional[Point]),
+        ("end", Optional[Point]),
+        ("start_angle", Optional[float]),
+        ("span_angle", Optional[float]),
+        ("winding_dir", Optional[ArcDir]),
+        # TODO: ("widest_at", Optional[Point]),
+        # TODO: ("start_DOC", float),
+        # TODO: ("end_DOC", float),
+        # TODO: ("widest_DOC", float),
+        ("path", LineString),
+        ("debug", Optional[str]),
+    ],
+)
 
-LineData = NamedTuple("Line", [
-    ("start", Point),
-    ("end", Point),
-    ("path", LineString),
-    ("move_style", MoveStyle),
-])
+LineData = NamedTuple(
+    "Line",
+    [
+        ("start", Point),
+        ("end", Point),
+        ("path", LineString),
+        ("move_style", MoveStyle),
+    ],
+)
 
 
 def clean_linear_ring(ring: LinearRing) -> LinearRing:
-    """ Remove duplicate points in a LinearRing. """
+    """Remove duplicate points in a LinearRing."""
     new_ring = []
     prev_point = None
     first_point = None
@@ -123,6 +136,7 @@ def clean_linear_ring(ring: LinearRing) -> LinearRing:
 
     return LinearRing(new_ring)
 
+
 def clean_polygon(polygon: Polygon) -> Polygon:
     exterior = clean_linear_ring(polygon.exterior)
     holes = []
@@ -130,6 +144,7 @@ def clean_polygon(polygon: Polygon) -> Polygon:
         holes.append(clean_linear_ring(hole))
 
     return Polygon(exterior, holes=holes)
+
 
 def clean_multipolygon(multi: MultiPolygon) -> MultiPolygon:
     if multi.type != "MultiPolygon":
@@ -140,20 +155,34 @@ def clean_multipolygon(multi: MultiPolygon) -> MultiPolygon:
 
     return MultiPolygon(polygons)
 
-def create_circle(origin: Point, radius: float, winding_dir: Optional[ArcDir] = None) -> ArcData:
+
+def create_circle(
+    origin: Point, radius: float, winding_dir: Optional[ArcDir] = None
+) -> ArcData:
     """
     Generate a circle that will be split into arcs to be part of the toolpath later.
     """
     span_angle = 2 * math.pi
     return ArcData(
-        origin, radius, None, None, 0, span_angle, winding_dir, origin.buffer(radius).boundary, "")
+        origin,
+        radius,
+        None,
+        None,
+        0,
+        span_angle,
+        winding_dir,
+        origin.buffer(radius).boundary,
+        "",
+    )
+
 
 def create_arc(
-        origin: Point,
-        radius: float,
-        start_angle: float,
-        span_angle: float,
-        winding_dir: ArcDir) -> Optional[ArcData]:
+    origin: Point,
+    radius: float,
+    start_angle: float,
+    span_angle: float,
+    winding_dir: ArcDir,
+) -> Optional[ArcData]:
     """
     Generate a arc.
 
@@ -179,15 +208,16 @@ def create_arc(
 
     if abs(span_angle) == 2 * math.pi:
         return ArcData(
-                origin,
-                radius,
-                Point(circle_path.coords[0]),
-                Point(circle_path.coords[0]),
-                start_angle,
-                span_angle,
-                winding_dir,
-                circle_path,
-                "")
+            origin,
+            radius,
+            Point(circle_path.coords[0]),
+            Point(circle_path.coords[0]),
+            start_angle,
+            span_angle,
+            winding_dir,
+            circle_path,
+            "",
+        )
 
     # With shapely.affinity.rotate(...) -ive angles are clockwise.
     right_border = rotate(line_up, -span_angle, origin=origin, use_radians=True)
@@ -200,22 +230,24 @@ def create_arc(
 
     arc_path = rotate(arc_path, -start_angle, origin=origin, use_radians=True)
     return ArcData(
-            origin,
-            radius,
-            Point(arc_path.coords[0]),
-            Point(arc_path.coords[-1]),
-            start_angle,
-            span_angle,
-            winding_dir,
-            arc_path,
-            "")
+        origin,
+        radius,
+        Point(arc_path.coords[0]),
+        Point(arc_path.coords[-1]),
+        start_angle,
+        span_angle,
+        winding_dir,
+        arc_path,
+        "",
+    )
+
 
 def create_arc_from_path(
-        origin: Point,
-        path: LineString,
-        radius: float,
-        winding_dir: Optional[ArcDir] = None,
-        debug: str = None
+    origin: Point,
+    path: LineString,
+    radius: float,
+    winding_dir: Optional[ArcDir] = None,
+    debug: str = None,
 ) -> ArcData:
     """
     Save data for the arc sections of the path.
@@ -226,32 +258,26 @@ def create_arc_from_path(
     span_angle = None
 
     return ArcData(
-            origin,
-            radius,
-            start,
-            end,
-            start_angle,
-            span_angle,
-            winding_dir,
-            path,
-            debug)
+        origin, radius, start, end, start_angle, span_angle, winding_dir, path, debug
+    )
+
 
 def mirror_arc(
-        x_line: float,
-        arc_data: ArcData,
-        winding_dir: Optional[ArcDir] = None
-        ) -> ArcData:
+    x_line: float, arc_data: ArcData, winding_dir: Optional[ArcDir] = None
+) -> ArcData:
     """
     Mirror X axis of an arc about the origin point.
     """
 
     if winding_dir is None:
-        assert (arc_data.winding_dir == ArcDir.CW and
-                arc_data.span_angle is not None and 
-                arc_data.span_angle > 0 or
-                arc_data.winding_dir == ArcDir.CCW and
-                arc_data.span_angle is not None and 
-                arc_data.span_angle < 0)
+        assert (
+            arc_data.winding_dir == ArcDir.CW
+            and arc_data.span_angle is not None
+            and arc_data.span_angle > 0
+            or arc_data.winding_dir == ArcDir.CCW
+            and arc_data.span_angle is not None
+            and arc_data.span_angle < 0
+        )
 
         if arc_data.winding_dir == ArcDir.CW:
             winding_dir = ArcDir.CCW
@@ -262,25 +288,28 @@ def mirror_arc(
             return arc_data
 
     arc_path = LineString(
-            [((2 * x_line - point[0]), point[1]) for point in arc_data.path.coords]
-            )
+        [((2 * x_line - point[0]), point[1]) for point in arc_data.path.coords]
+    )
     origin = Point(2 * x_line - arc_data.origin.x, arc_data.origin.y)
-    
-    return ArcData(
-            origin,
-            arc_data.radius,
-            Point(arc_path.coords[0]),
-            Point(arc_path.coords[-1]),
-            -arc_data.start_angle % (math.pi * 2) if arc_data.start_angle is not None else None,
-            -arc_data.span_angle if arc_data.span_angle is not None else None,
-            winding_dir,
-            arc_path,
-            arc_data.debug)
 
-def complete_arc(
-        arc_data: ArcData,
-        winding_dir_: ArcDir = None
-        ) -> Optional[ArcData]:
+    return ArcData(
+        origin,
+        arc_data.radius,
+        Point(arc_path.coords[0]),
+        Point(arc_path.coords[-1]),
+        (
+            -arc_data.start_angle % (math.pi * 2)
+            if arc_data.start_angle is not None
+            else None
+        ),
+        -arc_data.span_angle if arc_data.span_angle is not None else None,
+        winding_dir,
+        arc_path,
+        arc_data.debug,
+    )
+
+
+def complete_arc(arc_data: ArcData, winding_dir_: ArcDir = None) -> Optional[ArcData]:
     """
     Calculate start_angle, span_angle and radius.
     Fix start, end and path direction based on winding_dir.
@@ -315,8 +344,9 @@ def complete_arc(
 
     ds = (start_angle - mid_angle) % (2 * math.pi)
     de = (mid_angle - end_angle) % (2 * math.pi)
-    if ((ds > 0 and de > 0 and winding_dir == ArcDir.CCW) or
-            (ds < 0 and de < 0 and winding_dir == ArcDir.CW)):
+    if (ds > 0 and de > 0 and winding_dir == ArcDir.CCW) or (
+        ds < 0 and de < 0 and winding_dir == ArcDir.CW
+    ):
         # Needs reversed.
         path = LineString(path.coords[::-1])
         start_angle, end_angle = end_angle, start_angle
@@ -333,23 +363,22 @@ def complete_arc(
     radius = arc_data.radius or arc_data.origin.distance(Point(path.coords[0]))
 
     return ArcData(
-            arc_data.origin,
-            radius,
-            Point(start_coord),
-            Point(end_coord),
-            start_angle % (2 * math.pi),
-            span_angle,
-            winding_dir,
-            path,
-            arc_data.debug)
+        arc_data.origin,
+        radius,
+        Point(start_coord),
+        Point(end_coord),
+        start_angle % (2 * math.pi),
+        span_angle,
+        winding_dir,
+        path,
+        arc_data.debug,
+    )
 
 
 def arcs_from_circle_diff(
-        circle: ArcData,
-        already_cut: Polygon,
-        debug: str = None
-        ) -> List[ArcData]:
-    """ Return any sections of circle that do not overlap already_cut. """
+    circle: ArcData, already_cut: Polygon, debug: str = None
+) -> List[ArcData]:
+    """Return any sections of circle that do not overlap already_cut."""
     if not already_cut:
         return [circle]
     if circle is None:
@@ -366,8 +395,15 @@ def arcs_from_circle_diff(
     arcs = []
     assert circle.radius is not None
     for arc in line_diff.geoms:
-        arcs.append(create_arc_from_path(
-            circle.origin, arc, circle.radius, winding_dir=circle.winding_dir, debug=debug))
+        arcs.append(
+            create_arc_from_path(
+                circle.origin,
+                arc,
+                circle.radius,
+                winding_dir=circle.winding_dir,
+                debug=debug,
+            )
+        )
     return arcs
 
 
@@ -388,7 +424,9 @@ def _colapse_dupe_points(line: LineString) -> Optional[LineString]:
     return LineString(points)
 
 
-def split_line_by_poly(line: LineString, poly: Union[Polygon, MultiPolygon]) -> MultiLineString:
+def split_line_by_poly(
+    line: LineString, poly: Union[Polygon, MultiPolygon]
+) -> MultiLineString:
     """
     split() sometimes fails if line shares a point with one of poly's rings.
     """
@@ -420,14 +458,16 @@ def split_line_by_poly(line: LineString, poly: Union[Polygon, MultiPolygon]) -> 
                 checked_lines.append(LineString([line.coords[0], new_line.coords[0]]))
         else:
             if last_new_line.coords[-1] != new_line.coords[0]:
-                checked_lines.append(LineString([last_new_line.coords[-1], new_line.coords[0]]))
+                checked_lines.append(
+                    LineString([last_new_line.coords[-1], new_line.coords[0]])
+                )
         checked_lines.append(new_line)
         last_new_line = new_line
     if last_new_line.coords[-1] != line.coords[-1]:
         checked_lines.append(LineString([last_new_line.coords[-1], line.coords[-1]]))
 
     return MultiLineString(checked_lines)
-    
+
 
 class BaseGeometry:
     # Area we have calculated arcs for. Calculated by appending full circles.
@@ -438,11 +478,11 @@ class BaseGeometry:
     starting_cut_area: Polygon
 
     def __init__(
-            self,
-            to_cut: Union[Polygon, MultiPolygon],
-            step: float,
-            winding_dir: ArcDir,
-            already_cut: Polygon = None,
+        self,
+        to_cut: Union[Polygon, MultiPolygon],
+        step: float,
+        winding_dir: ArcDir,
+        already_cut: Polygon = None,
     ) -> None:
         self.polygon: Union[Polygon, MultiPolygon] = to_cut
         self.step: float = step
@@ -462,14 +502,19 @@ class BaseGeometry:
         self.dilated_starting_polygon = self.polygon.buffer(self.step / 10)
 
     def _filter_input_geometry(self) -> None:
-        """Remove any tiny polygons from a MultiPolygon. """
+        """Remove any tiny polygons from a MultiPolygon."""
         min_area = (self.step / 20) ** 2
 
         if self.polygon.type != "MultiPolygon":
             self.polygon = MultiPolygon([self.polygon])
 
-        self.polygon = MultiPolygon([poly for poly in self.polygon.geoms
-                    if poly.buffer(-self.step / 20).area > min_area])
+        self.polygon = MultiPolygon(
+            [
+                poly
+                for poly in self.polygon.geoms
+                if poly.buffer(-self.step / 20).area > min_area
+            ]
+        )
 
     def _flush_arc_queues(self) -> None:
         while self.pending_arc_queues:
@@ -486,7 +531,7 @@ class BaseGeometry:
             False: If the proposed arc is blocked for this queue by as yet uncut arcs.
         """
         dilated_arc = arc.path.buffer(self.step)
-        for queue in self.pending_arc_queues[queue_index + 1:]:
+        for queue in self.pending_arc_queues[queue_index + 1 :]:
             for existing_arc in queue:
                 if existing_arc.path.intersects(dilated_arc):
                     return False
@@ -531,10 +576,12 @@ class BaseGeometry:
                         assert queue[-1].start is not None
                         assert queue[-1].end is not None
 
-                        seperate_dist = (
-                                queue[-1].start.distance(queue[-1].end) + arc.start.distance(arc.end))
-                        combined_dist = (
-                                queue[-1].start.distance(arc.end) + queue[-1].end.distance(arc.start))
+                        seperate_dist = queue[-1].start.distance(
+                            queue[-1].end
+                        ) + arc.start.distance(arc.end)
+                        combined_dist = queue[-1].start.distance(arc.end) + queue[
+                            -1
+                        ].end.distance(arc.start)
 
                     seperation = arc.path.distance(queue[-1].path)
                     if seperation < closest_dist or combined_dist < seperate_dist:
@@ -592,11 +639,13 @@ class BaseGeometry:
                     assert last_arc.start is not None
                     assert last_arc.end is not None
 
-                    if (last_arc.end.distance(arc.start) <
-                            last_arc.end.distance(arc.end)):
+                    if last_arc.end.distance(arc.start) < last_arc.end.distance(
+                        arc.end
+                    ):
                         winding_dir = ArcDir.CW
-                    if (last_arc.start.distance(arc.end) <
-                            last_arc.end.distance(arc.end)):
+                    if last_arc.start.distance(arc.end) < last_arc.end.distance(
+                        arc.end
+                    ):
                         winding_dir = ArcDir.CW
 
                 # TODO: Just reversing arc.path, arc.span_angle and arc.winding_dir
@@ -623,33 +672,36 @@ class BaseGeometry:
         assert self.last_arc
 
         # Add a section of the full circle to the cut area.
-        arc_poly = Polygon(list(next_arc.path.coords) + [next_arc.origin]).buffer(self.step / 20)
+        arc_poly = Polygon(list(next_arc.path.coords) + [next_arc.origin]).buffer(
+            self.step / 20
+        )
         to_cut_area_total = self.cut_area_total.union(arc_poly)
 
         lines = []
         path = LineString([self.last_arc.end, next_arc.start])
-        inside_pocket = (
-                path.covered_by(self.dilated_starting_polygon)
-                or path.covered_by(to_cut_area_total)
-                )
+        inside_pocket = path.covered_by(
+            self.dilated_starting_polygon
+        ) or path.covered_by(to_cut_area_total)
 
         if inside_pocket:
             # Whole path is inside pocket.
             if path.length <= self.step:
-                return [LineData(
+                return [
+                    LineData(
                         Point(path.coords[0]),
                         Point(path.coords[-1]),
                         path,
                         MoveStyle.CUT,
-                        )]
-            
+                    )
+                ]
+
             split_for_last = path.interpolate(-self.step)
             last_line = LineData(
-                    Point(split_for_last),
-                    Point(next_arc.start),
-                    LineString([split_for_last, next_arc.start]),
-                    MoveStyle.CUT,
-                    )
+                Point(split_for_last),
+                Point(next_arc.start),
+                LineString([split_for_last, next_arc.start]),
+                MoveStyle.CUT,
+            )
 
             remaining_path = LineString([self.last_arc.end, split_for_last])
 
@@ -660,15 +712,19 @@ class BaseGeometry:
                 assert len(part.coords) == 2
 
                 move_style = MoveStyle.CUT
-                if part.intersection(self.cut_area_total).length > part.length - self.step / 20:
-                #if part.covered_by(self.cut_area_total):
+                if (
+                    part.intersection(self.cut_area_total).length
+                    > part.length - self.step / 20
+                ):
+                    # if part.covered_by(self.cut_area_total):
                     move_style = MoveStyle.RAPID_INSIDE
 
                 line = LineData(
-                        Point(part.coords[0]),
-                        Point(part.coords[-1]),
-                        part,
-                        move_style,)
+                    Point(part.coords[0]),
+                    Point(part.coords[-1]),
+                    part,
+                    move_style,
+                )
 
                 if line.path.length > SHORTEST_RAPID:
                     lines.append(line)
@@ -676,7 +732,12 @@ class BaseGeometry:
         else:
             # Path is not entirely inside pocket or crosses uncut area.
             move_style = MoveStyle.RAPID_OUTSIDE
-            line = LineData(self.last_arc.end, next_arc.start, path, move_style,)
+            line = LineData(
+                self.last_arc.end,
+                next_arc.start,
+                path,
+                move_style,
+            )
             if line.path.length > SHORTEST_RAPID:
                 lines.append(line)
 
@@ -698,10 +759,16 @@ class BaseGeometry:
             if not new_arcs:
                 continue
 
-            new_arcs = list(filter(
-                None, [complete_arc(new_arc, new_arc.winding_dir)
-                    for new_arc in new_arcs if new_arc.path.length]
-                ))
+            new_arcs = list(
+                filter(
+                    None,
+                    [
+                        complete_arc(new_arc, new_arc.winding_dir)
+                        for new_arc in new_arcs
+                        if new_arc.path.length
+                    ],
+                )
+            )
 
             arc_set = set()
             for new_arc_index, new_arc in enumerate(new_arcs):
@@ -726,17 +793,17 @@ class Pocket(BaseGeometry):
     debug: bool = False
 
     def __init__(
-            self,
-            to_cut: Polygon,
-            step: float,
-            winding_dir: ArcDir,
-            already_cut: Polygon = None,
-            generate: bool = False,
-            voronoi: Optional[VoronoiCenters] = None,
-            starting_point_tactic: StartPointTactic = StartPointTactic.WIDEST,
-            starting_point: Point = None,
-            starting_radius: float = None,
-            debug: bool = False,
+        self,
+        to_cut: Polygon,
+        step: float,
+        winding_dir: ArcDir,
+        already_cut: Polygon = None,
+        generate: bool = False,
+        voronoi: Optional[VoronoiCenters] = None,
+        starting_point_tactic: StartPointTactic = StartPointTactic.WIDEST,
+        starting_point: Point = None,
+        starting_radius: float = None,
+        debug: bool = False,
     ) -> None:
         """
         Arguments:
@@ -788,10 +855,12 @@ class Pocket(BaseGeometry):
                 voronoi = VoronoiCenters(complete_pocket, starting_point=starting_point)
             elif starting_point_tactic == StartPointTactic.WIDEST:
                 voronoi = start_point_widest(
-                        self.starting_radius, step, complete_pocket, already_cut)
+                    self.starting_radius, step, complete_pocket, already_cut
+                )
             elif starting_point_tactic == StartPointTactic.PERIMETER:
                 voronoi = start_point_perimeter(
-                        self.starting_radius or step, complete_pocket, already_cut)
+                    self.starting_radius or step, complete_pocket, already_cut
+                )
 
             assert voronoi is not None
         self.voronoi = voronoi
@@ -799,9 +868,13 @@ class Pocket(BaseGeometry):
         # Calculate entry hole settings.
         self.max_starting_radius = voronoi.max_starting_radius
         if starting_radius and self.max_starting_radius < starting_radius:
-            print(f"Warning: Starting radius of {starting_radius} overlaps boundaries "
-                  f"at {voronoi.start_point}")
-            print(f" Largest possible at this location: {round(self.max_starting_radius, 3)}")
+            print(
+                f"Warning: Starting radius of {starting_radius} overlaps boundaries "
+                f"at {voronoi.start_point}"
+            )
+            print(
+                f" Largest possible at this location: {round(self.max_starting_radius, 3)}"
+            )
         if self.starting_radius is not None:
             radius = min(self.starting_radius, self.max_starting_radius)
             start_circle = voronoi.start_point.buffer(radius)
@@ -813,7 +886,7 @@ class Pocket(BaseGeometry):
         self.calculate_path()
 
     def _reset(self) -> None:
-        """ Cleanup and/or initialise everything. """
+        """Cleanup and/or initialise everything."""
 
         self.start_point: Point = self.voronoi.start_point
         self.start_radius: float = self.voronoi.start_distance or 0
@@ -838,25 +911,29 @@ class Pocket(BaseGeometry):
         for poly in multi.geoms:
             for ring in [poly.exterior] + list(poly.interiors):
                 self.dilated_polygon_boundaries.append(
-                        ring.buffer(self.step * SKIP_EDGE_ARCS))
+                    ring.buffer(self.step * SKIP_EDGE_ARCS)
+                )
 
         # Generate first circle from which other arcs expand.
         entry_circle = EntryCircle(
-                self.polygon,
-                self.start_point,
-                self.start_radius,
-                self.step,
-                self.winding_dir,
-                already_cut=self.calculated_area_total,
-                path=self.path)
+            self.polygon,
+            self.start_point,
+            self.start_radius,
+            self.step,
+            self.winding_dir,
+            already_cut=self.calculated_area_total,
+            path=self.path,
+        )
         entry_circle.spiral()
         entry_circle.circle()
 
         if self.starting_radius is not None:
             radius = min(self.starting_radius, self.max_starting_radius)
-            if (self.path and
-                    self.start_point.buffer(radius).distance(
-                        self.path[0].start) < self.step / 20):
+            if (
+                self.path
+                and self.start_point.buffer(radius).distance(self.path[0].start)
+                < self.step / 20
+            ):
                 assert self.path[0].start
                 dx = self.path[0].start.x - self.start_point.x
                 dy = self.path[0].start.y - self.start_point.y
@@ -865,12 +942,14 @@ class Pocket(BaseGeometry):
         self.last_arc = entry_circle.last_arc
 
         self.last_circle: Optional[ArcData] = create_circle(
-            self.start_point, self.start_radius)
+            self.start_point, self.start_radius
+        )
         self.calculated_area_total = self.calculated_area_total.union(
-                Polygon(self.last_circle.path))
+            Polygon(self.last_circle.path)
+        )
 
     def calculate_path(self) -> None:
-        """ Reset path and restart from beginning. """
+        """Reset path and restart from beginning."""
         # Create the generator.
         generator = self.get_arcs()
 
@@ -884,19 +963,18 @@ class Pocket(BaseGeometry):
     def done_generating(self):
         if DEBUG_DISPLAY:
             DEBUG_DISPLAY.display(
-                    polygons={
-                        "previously_cut": self.starting_cut_area,
-                        "to_cut": self.polygon,
-                        "to_cut_dilated": self.dilated_starting_polygon,
-                        #"cut_progress": self.calculated_area_total,
-                        },
-                    voronoi=self.voronoi,
-                    path=self.path
-                    )
+                polygons={
+                    "previously_cut": self.starting_cut_area,
+                    "to_cut": self.polygon,
+                    "to_cut_dilated": self.dilated_starting_polygon,
+                    # "cut_progress": self.calculated_area_total,
+                },
+                voronoi=self.voronoi,
+                path=self.path,
+            )
 
     def _choose_next_path(
-            self,
-            current_pos: Optional[Tuple[float, float]] = None
+        self, current_pos: Optional[Tuple[float, float]] = None
     ) -> Optional[Tuple[float, float]]:
         """
         Choose a vertex with an un-traveled voronoi edge leading from it.
@@ -946,10 +1024,12 @@ class Pocket(BaseGeometry):
         ratio_end = extra / LineString([coord_m2, coord_m1]).length
         coord_begin = Point(
             coord_0[0] + (coord_0[0] - coord_1[0]) * ratio_begin,
-            coord_0[1] + (coord_0[1] - coord_1[1]) * ratio_begin)
+            coord_0[1] + (coord_0[1] - coord_1[1]) * ratio_begin,
+        )
         coord_end = Point(
             coord_m1[0] + (coord_m1[0] - coord_m2[0]) * ratio_end,
-            coord_m1[1] + (coord_m1[1] - coord_m2[1]) * ratio_end)
+            coord_m1[1] + (coord_m1[1] - coord_m2[1]) * ratio_end,
+        )
         return LineString([coord_begin] + list(line.coords) + [coord_end])
 
     @classmethod
@@ -977,7 +1057,9 @@ class Pocket(BaseGeometry):
             prportional = kp * error
             value = prportional
 
-    def _arc_at_distance(self, distance: float, voronoi_edge: LineString) -> Tuple[Point, float]:
+    def _arc_at_distance(
+        self, distance: float, voronoi_edge: LineString
+    ) -> Tuple[Point, float]:
         """
         Calculate the center point and radius of the largest arc that fits at a
         set distance along a voronoi edge.
@@ -987,18 +1069,22 @@ class Pocket(BaseGeometry):
 
         return (pos, radius)
 
-    def _furthest_spacing_arcs(self, arcs: List[ArcData], last_circle: ArcData) -> float:
+    def _furthest_spacing_arcs(
+        self, arcs: List[ArcData], last_circle: ArcData
+    ) -> float:
         """
         Calculate maximum step_over between 2 arcs.
         """
-        #return self._furthest_spacing_shapely(arcs, last_circle.path)
+        # return self._furthest_spacing_shapely(arcs, last_circle.path)
         spacing = -self.voronoi.max_dist
 
         for arc in arcs:
-            spacing = max(spacing,
-                          last_circle.origin.hausdorff_distance(arc.path) - last_circle.radius)
+            spacing = max(
+                spacing,
+                last_circle.origin.hausdorff_distance(arc.path) - last_circle.radius,
+            )
 
-            #for index in range(0, len(arc.path.coords), 1):
+            # for index in range(0, len(arc.path.coords), 1):
             #    coord = arc.path.coords[index]
             #    spacing = max(spacing,
             #            Point(coord).distance(last_circle.origin) - last_circle.radius)
@@ -1007,7 +1093,8 @@ class Pocket(BaseGeometry):
 
     @classmethod
     def _furthest_spacing_shapely(
-            cls, arcs: List[ArcData], previous: LineString) -> float:
+        cls, arcs: List[ArcData], previous: LineString
+    ) -> float:
         """
         Calculate maximum step_over between 2 arcs.
 
@@ -1033,16 +1120,16 @@ class Pocket(BaseGeometry):
 
             for index in range(0, len(arc.path.coords), 1):
                 coord = arc.path.coords[index]
-                #spacing = max(spacing, Point(coord).distance(polygon))
+                # spacing = max(spacing, Point(coord).distance(polygon))
                 spacing = max(spacing, polygon.distance(Point(coord)))
 
         return spacing
 
     def _calculate_arc(
-            self,
-            voronoi_edge: LineString,
-            start_distance: float,
-            min_distance: float,
+        self,
+        voronoi_edge: LineString,
+        start_distance: float,
+        min_distance: float,
     ) -> Tuple[float, List[ArcData]]:
         """
         Calculate the arc that best fits within the path geometry.
@@ -1081,19 +1168,19 @@ class Pocket(BaseGeometry):
                 allong the voronoi edge.
         """
         # A generator to converge on desired spacing.
-        #converge = self._converge(0.75)
+        # converge = self._converge(0.75)
         converge = self._converge(0.76)
         converge.send(None)  # type: ignore
 
         coverage_algos = [
-                #self._converge(0.75),
-                self._converge(0.76),
-                self._converge(0.74),
-                self._converge(0.78),
-                self._converge(0.72),
-                self._converge(0.7),
-                self._converge(0.8),
-                ]
+            # self._converge(0.75),
+            self._converge(0.76),
+            self._converge(0.74),
+            self._converge(0.78),
+            self._converge(0.72),
+            self._converge(0.7),
+            self._converge(0.8),
+        ]
 
         color_overide = None
 
@@ -1112,10 +1199,10 @@ class Pocket(BaseGeometry):
 
         # Extrapolate line beyond it's actual distance to give the algorithm
         # room to overshoot while converging on an optimal position for the new arc.
-        edge_extended: LineString = self._extrapolate_line(
-            dist_offset, voronoi_edge)
-        assert abs(edge_extended.length -
-                   (voronoi_edge.length + 2 * dist_offset)) < 0.0001
+        edge_extended: LineString = self._extrapolate_line(dist_offset, voronoi_edge)
+        assert (
+            abs(edge_extended.length - (voronoi_edge.length + 2 * dist_offset)) < 0.0001
+        )
 
         assert self.calculated_area_total
         assert self.calculated_area_total.is_valid
@@ -1126,8 +1213,7 @@ class Pocket(BaseGeometry):
             count += 1
 
             # Propose an arc.
-            pos, radius = self._arc_at_distance(
-                distance + dist_offset, edge_extended)
+            pos, radius = self._arc_at_distance(distance + dist_offset, edge_extended)
             circle = create_circle(pos, radius, self.winding_dir)
 
             # Compare proposed arc to cut area.
@@ -1145,14 +1231,16 @@ class Pocket(BaseGeometry):
                 # Has not found any useful arc yet.
                 # Don't record it as an arc that needs drawn.
                 self.last_circle = circle
-                return(distance, [])
+                return (distance, [])
 
             # Progress is measured as the furthest point the proposed arc is
             # from the previous one. We are aiming for proposed == desired_step.
             if self.last_circle:
                 progress = self._furthest_spacing_arcs(arcs, self.last_circle)
             else:
-                progress = self._furthest_spacing_shapely(arcs, self.calculated_area_total)
+                progress = self._furthest_spacing_shapely(
+                    arcs, self.calculated_area_total
+                )
 
             desired_step = min(self.step, (voronoi_edge.length - start_distance))
             if radius < corner_zoom:
@@ -1184,11 +1272,14 @@ class Pocket(BaseGeometry):
         if best_distance > voronoi_edge.length:
             best_distance = voronoi_edge.length
 
-        if distance != best_distance or progress != best_progress or color_overide is not None:
+        if (
+            distance != best_distance
+            or progress != best_progress
+            or color_overide is not None
+        ):
             distance = best_distance
             progress = best_progress
-            pos, radius = self._arc_at_distance(
-                distance + dist_offset, edge_extended)
+            pos, radius = self._arc_at_distance(distance + dist_offset, edge_extended)
             circle = create_circle(Point(pos), radius, self.winding_dir)
             arcs = self._split_arcs([circle])
 
@@ -1196,17 +1287,20 @@ class Pocket(BaseGeometry):
             # Log some debug data.
             distance_remain = voronoi_edge.length - distance
             self.arc_fail_count += 1
-            log("\tDid not find an arc that fits. Spacing/Desired: "
+            log(
+                "\tDid not find an arc that fits. Spacing/Desired: "
                 f"{round(progress, 3)}/{desired_step}"
                 "\tdistance remaining: "
-                f"{round(distance_remain, 3)}")
+                f"{round(distance_remain, 3)}"
+            )
 
         self.loop_count += count
 
         assert circle is not None
         self.last_circle = circle
         self.calculated_area_total = self.calculated_area_total.union(
-                Polygon(circle.path))
+            Polygon(circle.path)
+        )
 
         filtered_arcs = []
         for arc in arcs:
@@ -1281,8 +1375,7 @@ class Pocket(BaseGeometry):
         """
         start_time = round(time.time() * 1000)  # ms
 
-        start_vertex: Optional[Tuple[float, float]
-                               ] = self.start_point.coords[0]
+        start_vertex: Optional[Tuple[float, float]] = self.start_point.coords[0]
         while start_vertex is not None:
             # This outer loop iterates through the voronoi vertexes, looking for
             # a voronoi edge that has not yet had arcs calculated for it.
@@ -1319,8 +1412,7 @@ class Pocket(BaseGeometry):
                         start_time = round(time.time() * 1000)  # (ms)
 
             if stuck_count <= 0:
-                print(
-                    f"stuck: {round(dist, 2)} / {round(combined_edge.length, 2)}")
+                print(f"stuck: {round(dist, 2)} / {round(combined_edge.length, 2)}")
                 self.path_fail_count += 1
 
             start_vertex = self._choose_next_path(combined_edge.coords[-1])
@@ -1360,7 +1452,8 @@ class Pocket(BaseGeometry):
         return arc
 
     def _start_point_perimeter(
-            self, polygons: MultiPolygon, already_cut: Polygon, step: float) -> VoronoiCenters:
+        self, polygons: MultiPolygon, already_cut: Polygon, step: float
+    ) -> VoronoiCenters:
         """
         Recalculate the start point to be inside the cut area, adjacent to the perimeter.
         """
@@ -1394,15 +1487,16 @@ class EntryCircle(BaseGeometry):
     path: List[Union[ArcData, LineData]]
 
     def __init__(
-            self,
-            to_cut: Polygon,
-            center: Point,
-            radius: float,
-            step: float,
-            winding_dir: ArcDir,
-            start_angle: float = 0,
-            already_cut: Optional[Polygon] = None,
-            path: Optional[List[Union[ArcData, LineData]]] = None) :
+        self,
+        to_cut: Polygon,
+        center: Point,
+        radius: float,
+        step: float,
+        winding_dir: ArcDir,
+        start_angle: float = 0,
+        already_cut: Optional[Polygon] = None,
+        path: Optional[List[Union[ArcData, LineData]]] = None,
+    ):
         super().__init__(to_cut, step, winding_dir, already_cut)
 
         self.center = center
@@ -1442,7 +1536,8 @@ class EntryCircle(BaseGeometry):
 
             section_center = Point(self.center.x + offset[0], self.center.y + offset[1])
             new_arc = create_arc(
-                    section_center, section_radius, start_angle, math.pi / 2, ArcDir.CW)
+                section_center, section_radius, start_angle, math.pi / 2, ArcDir.CW
+            )
 
             if new_arc.path.intersects(mask.exterior):
                 # Spiral has crossed bounding circle.
@@ -1461,7 +1556,8 @@ class EntryCircle(BaseGeometry):
                     masked_arc = longest
 
                 new_arc = create_arc_from_path(
-                        new_arc.origin, masked_arc, new_arc.radius, ArcDir.CW)
+                    new_arc.origin, masked_arc, new_arc.radius, ArcDir.CW
+                )
                 new_arc = complete_arc(new_arc, new_arc.winding_dir)
 
                 not_done = False
@@ -1472,7 +1568,7 @@ class EntryCircle(BaseGeometry):
             new_arcs.append(new_arc)
             loop += 0.25  # 1/4 turn.
 
-        #self._queue_arcs(new_arcs)
+        # self._queue_arcs(new_arcs)
 
         sorted_arcs = self._split_arcs(new_arcs)
         sorted_arcs = [complete_arc(sorted_arc) for sorted_arc in sorted_arcs]
@@ -1491,4 +1587,3 @@ class EntryCircle(BaseGeometry):
         sorted_arcs = [complete_arc(sorted_arc) for sorted_arc in sorted_arcs]
         self._queue_arcs(sorted_arcs)
         self._flush_arc_queues()
-
