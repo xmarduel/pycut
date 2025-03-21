@@ -27,7 +27,7 @@ class ShapelyUtils:
         paths2: shapely.geometry.MultiLineString,
     ) -> shapely.geometry.MultiLineString:
         """
-        Return difference between to Clipper geometries. Returns new geometry.
+        Return difference between to MultiLineString geometries. Returns new MultiLineString geometry.
         """
         diffs = [
             path1.difference(path2)
@@ -51,39 +51,19 @@ class ShapelyUtils:
         if p1[0] == p2[0] and p1[1] == p2[1]:
             return False
 
-        # JSCUT clipper.AddPath([p1, p2], ClipperLib.PolyType.ptSubject, False)
-        # JSCUT clipper.AddPaths(bounds, ClipperLib.PolyType.ptClip, True)
-
         p1_p2 = shapely.geometry.LineString([p1, p2])
 
-        if bounds.geom_type == "MultiPolygon":
-            compound = shapely.geometry.GeometryCollection([bounds, p1_p2])
-            MatplotLibUtils.display(
-                "mergePath bounds check crosses (multipoly) : %d" % cls.cnt,
-                compound,
-                force=False,
-            )
-        if bounds.geom_type == "MultiLineString":
-            compound = shapely.geometry.GeometryCollection([bounds, p1_p2])
-            MatplotLibUtils.display(
-                "mergePath bounds check crosses (multilines) : %d" % cls.cnt,
-                compound,
-                force=False,
-            )
+        collection = shapely.geometry.GeometryCollection([bounds, p1_p2])
+        MatplotLibUtils.display(
+            "mergePath bounds check crosses (multilines) : %d" % cls.cnt,
+            collection,
+            force=False,
+        )
 
         result = p1_p2.intersection(bounds)
 
-        # print("crosses: result intersection empty ? ", result.is_empty)
-
         if result.is_empty is True:
             return False
-            # child : ClipperLib.PolyNode = result.GetFirst()
-            # points = child.Contour
-            # if len(points) == 2:
-            #    if points[0].X == p1.X and points[1].X == p2.X and points[0].Y == p1.Y and points[1].Y == p2.Y :
-            #        return False
-            #    if points[0].X == p2.X and points[1].X == p1.X and points[0].Y == p2.Y and points[1].Y == p1.Y :
-            #        return False
 
         if result.geom_type == "Point":
             if result.x == p1[0] and result.y == p1[1]:
@@ -138,7 +118,7 @@ class ShapelyUtils:
         return res
 
     @classmethod
-    def offsetLine(
+    def offset_line(
         cls,
         line: shapely.geometry.LineString,
         amount: float,
@@ -172,7 +152,7 @@ class ShapelyUtils:
     ) -> shapely.geometry.MultiLineString:
         """ """
         offseted_lines = [
-            cls.offsetLine(line, amount, side, resolution, join_style, mitre_limit)
+            cls.offset_line(line, amount, side, resolution, join_style, mitre_limit)
             for line in multiline.geoms
         ]
 
@@ -428,17 +408,17 @@ class ShapelyUtils:
 
     @classmethod
     def reorder_poly_points(
-        cls, poly: shapely.geometry.Polygon
+        cls, polygon: shapely.geometry.Polygon
     ) -> shapely.geometry.Polygon:
         """
-        Problem: shapely bug when outsiding a polygon where the starting point
+        Problem: shapely bug when outsetting a polygon where the starting point
         is a convex corner: at that point, the offset line 'outside' is uncorrect.
 
         Solution: start the list of points at a point in the middle of a segment
         (if there is one)
         """
-        if not poly.geom_type == "Polygon":
-            return poly
+        if not polygon.geom_type == "Polygon":
+            return polygon
 
         # -----------------------------------------------------
         def make_no_edges(pts):
@@ -454,12 +434,12 @@ class ShapelyUtils:
 
         # -----------------------------------------------------
 
-        pts_e = list(poly.exterior.coords)
+        pts_e = list(polygon.exterior.coords)
         pts = make_no_edges(pts_e)
 
         holes = []
 
-        for interiors in poly.interiors:
+        for interiors in polygon.interiors:
             pts_i = list(interiors.coords)
             pts_ii = make_no_edges(pts_i)
 
