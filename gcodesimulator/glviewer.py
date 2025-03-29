@@ -1288,15 +1288,15 @@ class Drawable:
 
         self.program_cutter.setUniformValue(
             self.scaleLocation,
-            self.cutterDia * self.pathScale,
-            self.cutterDia * self.pathScale,
-            self.cutterH * self.pathScale,
+            float(self.cutterDia * self.pathScale),
+            float(self.cutterDia * self.pathScale),
+            float(self.cutterH * self.pathScale),
         )
         self.program_cutter.setUniformValue(
             self.translateLocation,
-            (0 + self.pathXOffset) * self.pathScale,
-            (0 + self.pathYOffset) * self.pathScale,
-            (0 - self.pathTopZ) * self.pathScale,
+            float((0 + self.pathXOffset) * self.pathScale),
+            float((0 + self.pathYOffset) * self.pathScale),
+            float((0 - self.pathTopZ) * self.pathScale),
         )
         self.program_cutter.setUniformValue(self.rotateLocation, self.rotate)
 
@@ -1378,15 +1378,15 @@ class Drawable:
 
         self.program_cutter.setUniformValue(
             self.scaleLocation,
-            self.cutterDia * self.pathScale,
-            self.cutterDia * self.pathScale,
-            self.cutterH * self.pathScale,
+            float(self.cutterDia * self.pathScale),
+            float(self.cutterDia * self.pathScale),
+            float(self.cutterH * self.pathScale),
         )
         self.program_cutter.setUniformValue(
             self.translateLocation,
-            (x + self.pathXOffset) * self.pathScale,
-            (y + self.pathYOffset) * self.pathScale,
-            (z - self.pathTopZ) * self.pathScale,
+            float((x + self.pathXOffset) * self.pathScale),
+            float((y + self.pathYOffset) * self.pathScale),
+            float((z - self.pathTopZ) * self.pathScale),
         )
         self.program_cutter.setUniformValue(self.rotateLocation, self.rotate)
 
