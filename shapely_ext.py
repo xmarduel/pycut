@@ -51,40 +51,38 @@ class ShapelyMultiPolygonOffset:
 
         for poly in self.multipoly.geoms:
             linearring = shapely.geometry.LineString(poly.exterior)
-            # offset of a linearring is !BUGGY!
-            linestring = ShapelyUtils.linearring_to_linestring(linearring)
             # unfortunately this generates others PYCUT bugs !!  (pocketing - FIXME - ) so reset
-            linestring = linearring
+            if side =='left':
+                # pocketing i.e. 'left'
+                linestring = linearring
+            else:
+                # outside i.e. 'right' -> offset of a linearring is !BUGGY!
+                linestring = ShapelyUtils.linearring_to_linestring(linearring)
+
 
             # cnt = MatplotLibUtils.display(
-            #    "linestring to offset", linestring, force=True
+            #    "linestring to offset", linestring
             # )
 
-            # shapely 2.0 fix : if amount = 0
-            if amount != 0.0:
-                ext_offset = linestring.parallel_offset(
-                    amount,
-                    side,
-                    resolution=resolution,
-                    join_style=join_style,
-                    mitre_limit=mitre_limit,
-                )
-            else:
-                ext_offset = shapely.geometry.LineString(linestring)
+            ext_offset = linestring.parallel_offset(
+                amount,
+                side,
+                resolution=resolution,
+                join_style=join_style,
+                mitre_limit=mitre_limit,
+            )
 
             # cnt = MatplotLibUtils.display(
-            #    f"offset {side} - as LineString|MultiLineString (from linestring)",
+            #    f"offset {side} - as LineString|MultiLineString (from linearring)",
             #    ext_offset,
-            #    force=True,
             # )
 
             # simplfy resulting offset  !WICHTIG!
             # print("offset: ", ext_offset)
             if ext_offset.geom_type == "LineString":
                 # cnt = MatplotLibUtils.display(
-                #    f"offset {side} - as LineString|MultiLineString (from linestring)",
+                #    f"offset {side} - as LineString|MultiLineString (from linearring)",
                 #    ext_offset,
-                #    force=True,
                 # )
                 print(
                     "offset length (1)= ",
@@ -100,7 +98,6 @@ class ShapelyMultiPolygonOffset:
                 # cnt = MatplotLibUtils.display(
                 #    f"offset {side} - as LineString|MultiLineString (from linestring)",
                 #    ext_offset,
-                #    force=True,
                 # )
             elif ext_offset.geom_type == "MultiLineString":
                 lines = []
@@ -116,8 +113,7 @@ class ShapelyMultiPolygonOffset:
             # print("exterior_multipoly VALID ? ", exterior_multipoly.is_valid)
 
             # MatplotLibUtils.display(
-            #    "geom multipoly from ext offset", exterior_multipoly, force=True
-            # )
+            #    "geom multipoly from ext offset", exterior_multipoly)
 
             # now consider the interiors
             if poly.interiors:
@@ -138,8 +134,7 @@ class ShapelyMultiPolygonOffset:
                 )
 
                 # cnt = MatplotLibUtils.display(
-                #    "starting interior offset from", interior_multipoly, force=True
-                # )
+                #    "starting interior offset from", interior_multipoly)
 
                 # consider interiors offsets
                 if consider_interiors_offsets == True:
@@ -148,26 +143,22 @@ class ShapelyMultiPolygonOffset:
                     )
 
                     # cnt = MatplotLibUtils.display(
-                    #    "interior first offset", interior_multipoly, force=True
-                    # )
+                    #    "interior first offset", interior_multipoly)
 
                 # the diff is the solution
                 try:
                     # if not exterior_multipoly.is_valid():
                     #    cnt = MatplotLibUtils.display(
-                    #        "diff ext", exterior_multipoly, force=True
-                    #    )
+                    #        "diff ext", exterior_multipoly)
 
                     # if not interior_multipoly.is_valid():
                     #    cnt = MatplotLibUtils.display(
-                    #        "diff int", interior_multipoly, force=True
-                    #    )
+                    #        "diff int", interior_multipoly)
 
                     sol_poly = exterior_multipoly.difference(interior_multipoly)
 
                     # cnt = MatplotLibUtils.display(
-                    #    "diff of interior offseting", sol_poly, force=True
-                    # )
+                    #    "diff of interior offseting", sol_poly)
 
                 except Exception as e:
                     print("ERROR difference")
@@ -226,7 +217,7 @@ class ShapelyMultiPolygonOffsetInteriors:
         """
         polys = []
 
-        MatplotLibUtils.display("geometry", self.multipoly, force=False)
+        # MatplotLibUtils.display("geometry", self.multipoly)
 
         for poly in self.multipoly.geoms:
             if not poly.interiors:
@@ -239,26 +230,20 @@ class ShapelyMultiPolygonOffsetInteriors:
 
             int_offsets = []
             for linestring in linestrings:
-                # shapely 2.0 fix : if amount = 0
-                if amount != 0.0:
-                    int_offset = linestring.parallel_offset(
-                        amount,
-                        side,
-                        resolution=resolution,
-                        join_style=join_style,
-                        mitre_limit=mitre_limit,
-                    )
-                else:
-                    int_offset = shapely.geometry.LineString(linestring)
+                int_offset = linestring.parallel_offset(
+                    amount,
+                    side,
+                    resolution=resolution,
+                    join_style=join_style,
+                    mitre_limit=mitre_limit,
+                )
 
                 int_offsets.append(int_offset)
 
             # from the offseted lines, build a multipolygon that we will diff with the exterior
             interior_multipoly = ShapelyUtils.build_multipoly_from_offsets(int_offsets)
 
-            MatplotLibUtils.display(
-                "interior_multipoly", interior_multipoly, force=False
-            )
+            MatplotLibUtils.display("interior_multipoly", interior_multipoly)
 
             if not interior_multipoly.is_valid:
                 interior_multipoly = ShapelyUtils.fix_multipoly(interior_multipoly)
@@ -267,9 +252,7 @@ class ShapelyMultiPolygonOffsetInteriors:
                 self.multipoly, amount, "left", consider_interiors_offsets=True
             )
 
-            MatplotLibUtils.display(
-                "exterior_multipoly", exterior_multipoly, force=False
-            )
+            MatplotLibUtils.display("exterior_multipoly", exterior_multipoly)
 
             # only exterior
             exterior_multipoly = ShapelyUtils.remove_multipoly_holes(exterior_multipoly)
@@ -280,9 +263,7 @@ class ShapelyMultiPolygonOffsetInteriors:
             )
             exterior_multipoly = ShapelyUtils.orient_multipolygon(exterior_multipoly)
 
-            MatplotLibUtils.display(
-                "exterior_multipoly", exterior_multipoly, force=False
-            )
+            MatplotLibUtils.display("exterior_multipoly", exterior_multipoly)
 
             if consider_exteriors_offsets == True:
                 # the diff ** with ~POLY ** is the solution

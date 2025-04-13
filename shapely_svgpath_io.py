@@ -603,8 +603,8 @@ class SvgPath:
         if polygon.is_valid:
             return polygon
 
-        print("not valid poly", explain_validity(polygon), polygon)
-        MatplotLibUtils.display("not valid poly", polygon, force=True)
+        print("invalid poly", explain_validity(polygon), polygon)
+        MatplotLibUtils.display("invalid poly", polygon)
 
         valid_poly = make_valid(polygon)
 

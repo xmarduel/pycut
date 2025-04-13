@@ -1,3 +1,8 @@
+# 0.8.0
+
+with shapely 2.1.0
+fix for outside offsets of non concave polygons with C2 sign changes
+
 # 0.7.3
 
 svg viewbox can have non zero origin

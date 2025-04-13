@@ -27,7 +27,7 @@ start the program from the installation folder
 
 - Python 3.11
 - PySide6 6.8.1
-- shapely 1.8.5
+- shapely 2.1.0
 - PyOpenGL (latest)  [3.1.9]
 - svgelements (latest)  [1.9.6]
 - lxml (latest)  [5.3.1]
@@ -60,6 +60,6 @@ start the program from the installation folder
 - tabs "on the fly" (no need to define them in the svg file)
 - flip X/Y in GCode (good for my machine - the "1419" one -)
 - can handle polygons as well as lines ("closed paths" and "opened paths")
-- ![new](resources/new_img.png) toolpaths with HSM_nibbles optional.
+- ![new](resources/new_img.png) toolpaths with HSM_nibbler optional.
 
 See the Wiki page for more.

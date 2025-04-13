@@ -10,7 +10,7 @@
 
 
 
-    
+
 
         {
             "name": "SVG RESOLVER",
@@ -303,13 +303,13 @@
             "args": ["-g", "misc_private\\gcode.nc"]
         },
         {
-          "name": "PYCUT test",
+          "name": "PYCUT OUTSIDE BUGGY",
           "type": "python",
           "request": "launch",
           "program": "pycut.py",
           "console": "integratedTerminal",
-          "cwd": "C:\\Users\\marduel\\Documents\\GITHUB\\pycut",
-          "args": [ "-p", "./projects/holes.json" ]
+          "cwd": "/Users/xavier/GITHUB/pycut",
+          "args": [ "--svg", "misc_private/unimat_cnc_kit/dc_motor_200w_holder.resolved.svg" ]
       },
     ]
 }

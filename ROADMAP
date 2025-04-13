@@ -1,9 +1,9 @@
-# 2.0.0
-
-dogbones
-
 # 1.0.0
 
-with shapely 2.1.0 (geos 3.12 lib with offsets fixes)
+dogbones
+clean clean clean
 
-Clean clean clean
+# 0.8.0
+
+with shapely 2.1.0 (geos 3.13 lib with offsets fixes)
+

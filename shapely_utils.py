@@ -56,9 +56,7 @@ class ShapelyUtils:
         collection = shapely.geometry.GeometryCollection([bounds, p1_p2])
         MatplotLibUtils.display(
             "mergePath bounds check crosses (multilines) : %d" % cls.cnt,
-            collection,
-            force=False,
-        )
+            collection)
 
         result = p1_p2.intersection(bounds)
 
@@ -128,17 +126,13 @@ class ShapelyUtils:
         mitre_limit=5.0,
     ) -> shapely.geometry.LineString | shapely.geometry.MultiLineString:
         """ """
-        # shapely 2.0 fix
-        if amount != 0.0:
-            return line.parallel_offset(
-                amount,
-                side,
-                resolution=resolution,
-                join_style=join_style,
-                mitre_limit=mitre_limit,
-            )
-        else:
-            return shapely.geometry.LineString(line)
+        return line.parallel_offset(
+            amount,
+            side,
+            resolution=resolution,
+            join_style=join_style,
+            mitre_limit=mitre_limit,
+        )
 
     @classmethod
     def offset_multiline(
@@ -353,7 +347,8 @@ class ShapelyUtils:
         lines = []
 
         for poly in multipoly.geoms:
-            line = shapely.geometry.LineString(poly.exterior)
+            linearring = poly.exterior
+            line = ShapelyUtils.linearring_to_linestring(linearring)
             lines.append(line)
 
         multiline = shapely.geometry.MultiLineString(lines)
@@ -553,7 +548,7 @@ class ShapelyUtils:
         cls, linearring: shapely.geometry.LinearRing
     ) -> shapely.geometry.LineString:
         """
-        remove duplicated last point
+        remove duplicated last point and returns as linestring
         """
         xs = linearring.coords.xy[0]
         ys = linearring.coords.xy[1]
@@ -563,7 +558,7 @@ class ShapelyUtils:
 
         dd = ShapelyUtils.dist(first, last)
 
-        if dd < 1.0e-4:
+        if dd < 1.0e-8:
             coordinates = list(zip(xs[:-1], ys[:-1]))
 
             return shapely.geometry.LineString(coordinates)

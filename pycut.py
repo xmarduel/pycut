@@ -1,6 +1,6 @@
 # This Python file uses the following encoding: utf-8
 
-VERSION = "0_7_3"
+VERSION = "0_8_0"
 
 import sys
 import os
@@ -289,6 +289,17 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 msgbox = QtWidgets.QMessageBox()
                 msgbox.setWindowTitle("PyCut")
                 msgbox.setText("GCode File %s not found" % options.gcode)
+                msgbox.setDefaultButton(QtWidgets.QMessageBox.Save)
+                msgbox.exec()
+
+        elif options.svg is not None:
+            if os.path.exists(options.svg):
+                self.open_svg(options.svg)
+            else:
+                # alert
+                msgbox = QtWidgets.QMessageBox()
+                msgbox.setWindowTitle("PyCut")
+                msgbox.setText("Svg File %s not found" % options.svg)
                 msgbox.setDefaultButton(QtWidgets.QMessageBox.Save)
                 msgbox.exec()
 
@@ -825,15 +836,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         viewers_settings_dialog.exec()
 
-    def cb_open_svg(self):
-        """
-        a svg only (not a project) -> no operations
-        """
-        xfilter = "SVG Files (*.svg)"
-        svg_file, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, caption="open file", dir=".", filter=xfilter
-        )
-
+    def open_svg(self, svg_file: str):
         if svg_file:
             svg_file = self.minify_path(svg_file)
 
@@ -847,7 +850,21 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.tabs = []
             self.ui.tabsview_manager.set_tabs(self.tabs)
 
-            self.display_svg(self.svg_file)
+            self.display_svg(self.svg_file)    
+      
+    def cb_open_svg(self):
+        """
+        a svg only (not a project) -> no operations
+        """
+        xfilter = "SVG Files (*.svg)"
+        svg_file, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, caption="open file", dir=".", filter=xfilter
+        )
+
+        if svg_file:
+            svg_file = self.minify_path(svg_file)
+
+            self.open_svg(svg_file)
 
     def cb_new_project(self):
         """ """
@@ -1866,6 +1883,14 @@ def main():
         nargs="?",
         default=None,
         help="load gcode file | empty",
+    )
+    parser.add_argument(
+        "-s",
+        "--svg",
+        dest="svg",
+        nargs="?",
+        default=None,
+        help="load svg file | empty",
     )
 
     # version info

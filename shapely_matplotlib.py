@@ -13,8 +13,8 @@ class MatplotLibUtils:
     Plot Shapely objects
     """
 
-    MAPLOTLIB_DEBUG = False
-    # MAPLOTLIB_DEBUG = True
+    #MAPLOTLIB_DEBUG = False
+    MAPLOTLIB_DEBUG = True
 
     cnt = 0  # matplotlib figures
 
@@ -34,17 +34,17 @@ class MatplotLibUtils:
         plt.pause(1)
 
     @classmethod
-    def plot_geom(cls, title: str, geom: Any, force: bool = False) -> int:
+    def plot_geom(cls, title: str, geom: Any) -> int:
         """ """
-        return cls.display(title, geom, force)
+        return cls.display(title, geom)
 
     @classmethod
-    def display(cls, title: str, geom: Any, force: bool = False) -> int:
+    def display(cls, title: str, geom: Any) -> int:
         """ """
         # a counter
         cls.cnt += 1
 
-        if cls.MAPLOTLIB_DEBUG == False and force == False:
+        if cls.MAPLOTLIB_DEBUG == False:
             return cls.cnt
 
         # dispatch
