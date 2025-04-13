@@ -32,21 +32,6 @@ svg_cubic_curve = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
   </g>
 </svg>"""
 
-svg_not_concave_exterior1 = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg version="1.1" id="test_circle" width="100mm" height="100mm"  viewBox="0 0 100 100"
-   xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
-  <g id="layer">
-<path id="contour" d="M 20, 10  h 20   l -5,5 h 11 l -5,-5 h 20 v 20 h -41  v -20 Z" style="fill:none;stroke:#00ff00;stroke-width:0.2"/>
-  </g>
-</svg>"""
-
-svg_not_concave_exterior2 = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg version="1.1" id="test_circle" width="100mm" height="100mm"  viewBox="0 0 100 100"
-   xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
-  <g id="layer">
-<path id="contour" d="M 20, 10  h 20   l -5,5 h 14 l -5,-5 h 20 v 20 h -44  v -20 Z" style="fill:none;stroke:#00ff00;stroke-width:0.2"/>
-  </g>
-</svg>"""
 
 OFFSET = 3.0
 
@@ -138,195 +123,6 @@ class CircleOffsetTests_10_5(unittest.TestCase):
 #
 # ----------------------------------------------------------------------
 
-
-@unittest.skip("x")
-class CubicCurveOffsetTests_5_2(unittest.TestCase):
-    """ """
-
-    def setUp(self):
-        """ """
-        SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF = 5
-        SvgPathDiscretizer.PYCUT_SAMPLE_MIN_NB_SEGMENTS = 2
-
-    def tearDown(self):
-        """ """
-
-    @unittest.skip("x")
-    def test_offset_left(self):
-        """ """
-        paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve)
-
-        self.assertEqual(len(paths), 1)
-        path = paths[0]
-
-        pts = path.discretize_closed_path()
-
-        self.assertEqual(path.shape_tag, "path")
-        self.assertEqual(path.p_id, "contour")
-        self.assertTrue(path.closed)
-
-        self.assertEqual(len(pts), 1325)
-
-        # now the offset
-        coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
-
-        line = shapely.geometry.LineString(coordinates)
-
-        offset = line.parallel_offset(
-            OFFSET, "left", resolution=16, join_style=1, mitre_limit=5
-        )
-
-        if offset.geom_type != "LineString":
-            pltutils.plot(pts, "contour")
-            pltutils.plot_geom("offset LEFT", offset)
-
-        self.assertEqual(offset.geom_type, "LineString")
-
-    # @unittest.skip("x")
-    def test_offset_right_flip_ordering(self):
-        """ """
-        paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve)
-
-        self.assertEqual(len(paths), 1)
-        path = paths[0]
-
-        pts = path.discretize_closed_path()
-
-        self.assertEqual(len(pts), 1325)  # (5,2)
-
-        # now the offset / reverse first
-        coordinates = [
-            (complex_pt.real, complex_pt.imag) for complex_pt in reversed(list(pts))
-        ]
-
-        line = shapely.geometry.LineString(coordinates)
-
-        offset = line.parallel_offset(
-            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5.0
-        )
-
-        if offset.geom_type != "LineString" or True:
-            pltutils.plot(pts, "contour SvgElements")
-            pltutils.plot_geom("offset RIGHT of reversed", offset)
-
-        self.assertEqual(offset.geom_type, "LineString")
-
-    @unittest.skip("x")
-    def test_offset_left_as_linearring(self):
-        """
-        with open("linearring.txt", "w") as f:
-           f.write(linearring.wkt)
-        """
-        paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve)
-
-        self.assertEqual(len(paths), 1)
-        path = paths[0]
-
-        pts = path.discretize_closed_path()
-
-        self.assertEqual(len(pts), 1325)
-
-        # now the offset
-        # coordinates = [
-        #    (complex_pt.real, complex_pt.imag) for complex_pt in reversed(list(pts))
-        # ]
-        coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
-
-        linearring = shapely.geometry.LinearRing(coordinates)
-
-        print("DEBUG  LINEARRING", len(linearring.coords))
-        self.assertEqual(len(linearring.coords), 1326)
-
-        offset = linearring.parallel_offset(
-            OFFSET, "left", resolution=16, join_style=1, mitre_limit=5
-        )
-
-        print("OFFSET -> ", offset.geom_type)
-
-        if offset.geom_type != "LineString":
-            pltutils.plot_geom("LINEARRING", linearring)
-            pltutils.plot_geom("offset LINEARRING", offset)
-
-        if offset.geom_type == "MultiLineString":
-            for linestring in offset.geoms:
-                print("OFFSET MULTILINE part-line -> ", len(linestring.coords))
-
-        self.assertEqual(offset.geom_type, "LineString")
-
-    # @unittest.skip("x")
-    def test_offset_left_as_poly_ext_no_orient(self):
-        """with open("poly_ext.txt", "w") as f:
-        f.write(poly_ext.wkt)
-        """
-        paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve)
-
-        self.assertEqual(len(paths), 1)
-        path = paths[0]
-
-        pts = path.discretize_closed_path()
-
-        self.assertEqual(len(pts), 1325)
-
-        # now the offset
-        coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
-
-        line = shapely.geometry.LineString(coordinates)
-        poly = shapely.geometry.Polygon(line)
-
-        poly_ext = poly.exterior
-
-        print("DEBUG  LINE", len(line.coords))
-        print("DEBUG  POLY-EXT", poly_ext.geom_type, len(poly_ext.coords))
-
-        self.assertEqual(len(poly_ext.coords), 1326)
-
-        offset = poly_ext.parallel_offset(
-            OFFSET, "left", resolution=16, join_style=1, mitre_limit=5
-        )
-
-        if offset.geom_type != "LineString" or True:
-            pltutils.plot_geom("poly ext as linearring", poly_ext)
-            pltutils.plot_geom("offset LEFT from poly_ext as linearring", offset)
-
-        self.assertEqual(offset.geom_type, "LineString")
-
-    # @unittest.skip("x")
-    def test_offset_right_as_poly_ext_orient(self):
-        """ """
-        paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve)
-
-        self.assertEqual(len(paths), 1)
-        path = paths[0]
-
-        pts = path.discretize_closed_path()
-
-        self.assertEqual(len(pts), 1325)
-
-        # now the offset
-        coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
-
-        line = shapely.geometry.LineString(coordinates)
-        poly = shapely.geometry.Polygon(line)
-        poly = shapely.geometry.polygon.orient(poly)
-
-        poly_ext = poly.exterior
-
-        print("DEBUG  LINE", len(line.coords))
-        print("DEBUG  POLY-EXT", poly_ext.geom_type, len(poly_ext.coords))
-
-        self.assertEqual(len(poly_ext.coords), 1326)
-
-        offset = poly_ext.parallel_offset(
-            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
-        )
-
-        if offset.geom_type != "LineString" or True:
-            pltutils.plot_geom("poly ext as linearring oriented", poly_ext)
-            pltutils.plot_geom("offset RIGHT from poly_ext as linearring - poly oriented", offset)
-
-        self.assertEqual(offset.geom_type, "LineString")
-
-
 # @unittest.skip("x")
 class CubicCurveOffsetTests_10_5(unittest.TestCase):
     """ """
@@ -335,12 +131,6 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
         SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF = 10
         SvgPathDiscretizer.PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5
 
-    def tearDown(self):
-        """ """
-
-    @unittest.skip("x")
-    def test_offset_left(self):
-        """ """
         paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve)
 
         self.assertEqual(len(paths), 1)
@@ -360,224 +150,145 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
         # now the offset
         coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
 
-        linestring = shapely.geometry.LineString(coordinates)
-
-        print(
-            "offset LEFT  linestring[0]=",
-            linestring.coords.xy[0][0],
-            linestring.coords.xy[1][0],
-        )
-        print(
-            "offset LEFT  linestring[1]=",
-            linestring.coords.xy[0][1],
-            linestring.coords.xy[1][1],
-        )
-        print(
-            "offset LEFT  linestring[2]=",
-            linestring.coords.xy[0][2],
-            linestring.coords.xy[1][2],
-        )
+        self.linestring = linestring = shapely.geometry.LineString(coordinates)
 
         with open("linestring.txt", "w") as f:
             f.write(linestring.wkt)
 
-        offset = linestring.parallel_offset(
+    def tearDown(self):
+        """ """
+
+    @unittest.skip("x")
+    def test_offset_linestring_left(self):
+        """ 
+        offset 'left' is 'outside' for this linestring
+
+        -> result is OK
+        """
+        offset = self.linestring.parallel_offset(
             OFFSET, "left", resolution=16, join_style=1, mitre_limit=5
         )
 
-        pltutils.plot_geom("offset LEFT", offset)
+        pltutils.plot_geom("offset LINESTRING LEFT", offset)
 
         self.assertEqual(offset.geom_type, "LineString")
 
     @unittest.skip("x")
-    def test_offset_right(self):
+    def test_offset_linestring_right(self):
         """ 
-        OK when offseting linestring
+        offset 'right' is 'outside' for this linestring oriented differently
+
+        -> result is OK
         """
-        paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve)
-
-        self.assertEqual(len(paths), 1)
-        path = paths[0]
-
-        pts = path.discretize_closed_path()
-
-        self.assertEqual(len(pts), 2653)
-
-        # now the offset / reverse first
-        coordinates = [
-            (complex_pt.real, complex_pt.imag) for complex_pt in reversed(list(pts))
-        ]
-
-        linestring = shapely.geometry.LineString(coordinates)
-        pltutils.plot_geom("linestring", linestring)
+        linestring = shapely.geometry.LineString(reversed(self.linestring.coords))
 
         offset = linestring.parallel_offset(
-            6.0, "right", resolution=16, join_style=1, mitre_limit=5.0
+            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5.0
         )
+        
+        pltutils.plot_geom("offset LINESTRING REV RIGHT", shapely.geometry.MultiLineString([linestring, offset]))
 
         self.assertEqual(offset.geom_type, "LineString")
-        
-        pltutils.plot_geom("offset RIGHT", shapely.geometry.MultiLineString([linestring, offset]))
 
-    #@unittest.skip("x")
-    def test_offset_right_as_poly_exterior(self):
+    @unittest.skip("x")
+    def test_offset_poly_exterior_outside(self):
         """
         GEOS BUG when offseting Polygon exteriors
+
+        -> result is a MultiLineString !
         """
-        paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve)
+        # TRANSFORM INTO POLYGON
+        poly = shapely.geometry.Polygon(self.linestring)
+        poly = shapely.geometry.polygon.orient(poly)
 
-        self.assertEqual(len(paths), 1)
-        path = paths[0]
+        linearring = poly.exterior
 
-        pts = path.discretize_closed_path()
+        print("DEBUG  LINE", self.linestring.geom_type, len(self.linestring.coords))
+        print("DEBUG  POLY-EXT", linearring.geom_type, len(linearring.coords))
 
-        self.assertEqual(len(pts), 2653)
-        
-        # now the offset / reverse first
-        coordinates = [
-            (complex_pt.real, complex_pt.imag) for complex_pt in reversed(list(pts))
-        ]
+        print("DEBUG linearring first point",
+            linearring.coords.xy[0][0],
+            linearring.coords.xy[1][0],
+        )
 
-        linestring = shapely.geometry.LineString(coordinates)
-        pltutils.plot_geom("linestring", linestring)
+        self.assertEqual(len(linearring.coords), 2654)
+
+        offset = linearring.parallel_offset(
+            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
+        )
+
+        self.assertEqual(offset.geom_type, "MultiLineString") # !! GEOS bug !!
+
+        pltutils.plot_geom("offset polygon exterior (as linearring) RIGHT", offset)
+
+
+    def test_offset_poly_exterior_outside(self):
+        """
+        GEOS BUG when offseting Polygon exteriors
+
+        try start point in the middle of an arc 
+        -> result is a MultiLineString !
+        """
+        linestring = shapely.geometry.LineString(self.linestring.coords[500:] + self.linestring.coords[:500])
 
         # TRANSFORM INTO POLYGON
         poly = shapely.geometry.Polygon(linestring)
         poly = shapely.geometry.polygon.orient(poly)
 
-        poly_ext = poly.exterior
+        linearring = poly.exterior
 
-        print("DEBUG  LINE", linestring.geom_type, len(linestring.coords))
-        print("DEBUG  POLY-EXT", poly_ext.geom_type, len(poly_ext.coords))
+        print("DEBUG  LINE", self.linestring.geom_type, len(self.linestring.coords))
+        print("DEBUG  POLY-EXT", linearring.geom_type, len(linearring.coords))
 
-        print("POLY-EXT first point",
-            poly_ext.coords.xy[0][0],
-            poly_ext.coords.xy[1][0],
-        )
-        print("POLY-EXT last point",
-            poly_ext.coords.xy[0][-1],
-            poly_ext.coords.xy[1][-1],
+        print("DEBUG linearring first point",
+            linearring.coords.xy[0][0],
+            linearring.coords.xy[1][0],
         )
 
-        self.assertEqual(len(poly_ext.coords), 2654)
+        self.assertEqual(len(linearring.coords), 2654)
 
-        line = ShapelyUtils.linearring_to_linestring(poly_ext)
-
-        offset = line.parallel_offset(
-            6.0, "right", resolution=16, join_style=1, mitre_limit=5
+        offset = linearring.parallel_offset(
+            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
         )
 
-        if offset.geom_type != "LineString":
-            pltutils.plot_geom("poly ext as linearring oriented", poly_ext)
-            pltutils.plot_geom("offset RIGHT from poly_ext as linearring - poly oriented", offset)
+        self.assertEqual(offset.geom_type, "MultiLineString") # !! GEOS bug !!
 
-        self.assertEqual(offset.geom_type, "LineString")
+        pltutils.plot_geom("offset polygon exterior (as linearring) RIGHT", offset)
 
-        pltutils.plot_geom("offset polygon exterior RIGHT", offset)
-
-
-@unittest.skip("x")
-class NotConvavePolygon_10_5(unittest.TestCase):
-    """ """
-    def setUp(self):
-        """ """
-        SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF = 10
-        SvgPathDiscretizer.PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5
-
-    def tearDown(self):
-        """ """
-
-    def test_offset_right(self):
+    @unittest.skip("x")
+    def test_offset_poly_exterior_to_linestring_outside(self):
         """
         """
-        paths = SvgPath.svg_paths_from_svg_string(svg_not_concave_exterior1)
-
-        self.assertEqual(len(paths), 1)
-        path = paths[0]
-
-        pts = path.discretize_closed_path()
-
-        self.assertEqual(len(pts), 9)
-
-        # now the offset
-        coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
-
-        line = shapely.geometry.LineString(coordinates)
-        poly = shapely.geometry.Polygon(line)
+        # TRANSFORM INTO POLYGON
+        poly = shapely.geometry.Polygon(self.linestring)
         poly = shapely.geometry.polygon.orient(poly)
 
-        #pltutils.plot_geom("not concave", poly)
+        linearring = poly.exterior
 
-        poly_ext = poly.exterior
+        print("DEBUG  LINESTRING", self.linestring.geom_type, len(self.linestring.coords))
+        print("DEBUG  LINEARRING", linearring.geom_type, len(linearring.coords))
 
-        print("DEBUG  LINE", len(line.coords))
-        print("DEBUG  POLY-EXT", poly_ext.geom_type, len(poly_ext.coords))
+        self.assertEqual(len(linearring.coords), 2654)
 
-        self.assertEqual(len(poly_ext.coords), 10)
+        linestring = ShapelyUtils.linearring_to_linestring(linearring)
 
-        offset = poly_ext.parallel_offset(1.5, "right", resolution=16, join_style=1, mitre_limit=5)
+        print("POLY-EXT linestring first point",
+            linestring.coords.xy[0][0],
+            linestring.coords.xy[1][0],
+        )
+        print("POLY-EXT linestring last point",
+            linestring.coords.xy[0][-1],
+            linestring.coords.xy[1][-1],
+        )
 
-        print("OFFSET", offset)
+        offset = linestring.parallel_offset(
+            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
+        )
 
-        lines = [poly_ext]
-        lines += list(offset.geoms)
-        line1 = offset.geoms[0]
-        line2 = offset.geoms[1]
-        pltutils.plot_geom("not concave", shapely.geometry.MultiLineString(lines))
+        self.assertEqual(offset.geom_type, "LineString") # !! as it should always be !!
 
-        print("XXX line1.is_ring", line1.is_ring)
-        print("XXX line1.is_simple", line1.is_simple)
+        pltutils.plot_geom("offset polygon exterior (as linestring) RIGHT", offset)
 
-        print("XXX line2.is_ring", line2.is_ring)
-        print("XXX line2.is_simple", line2.is_simple)
-
-        self.assertEqual(offset.geom_type, "LineString")
-
-
-@unittest.skip("x")
-class NotConvavePolygon_10_5_bis(unittest.TestCase):
-    """ """
-    def setUp(self):
-        """ """
-        SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF = 10
-        SvgPathDiscretizer.PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5
-
-    def tearDown(self):
-        """ """
-
-    def test_offset_right(self):
-        """
-        """
-        paths = SvgPath.svg_paths_from_svg_string(svg_not_concave_exterior2)
-
-        self.assertEqual(len(paths), 1)
-        path = paths[0]
-
-        pts = path.discretize_closed_path()
-
-        self.assertEqual(len(pts), 9)
-
-        # now the offset
-        coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
-
-        line = shapely.geometry.LineString(coordinates)
-        poly = shapely.geometry.Polygon(line)
-        poly = shapely.geometry.polygon.orient(poly)
-
-        pltutils.plot_geom("not concave", poly)
-
-        poly_ext = poly.exterior
-
-        print("DEBUG  LINE", len(line.coords))
-        print("DEBUG  POLY-EXT", poly_ext.geom_type, len(poly_ext.coords))
-
-        self.assertEqual(len(poly_ext.coords), 10)
-
-        offset = poly_ext.parallel_offset(1.5, "right", resolution=16, join_style=1, mitre_limit=5)
-
-        pltutils.plot_geom("not concave", offset)
-
-        self.assertEqual(offset.geom_type, "LineString")
 
 
 
@@ -588,8 +299,6 @@ def get_suite():
     #suite.addTest(unittest.TestLoader().loadTestsFromTestCase(CircleOffsetTests_10_5))
     #suite.addTest(unittest.TestLoader().loadTestsFromTestCase(CubicCurveOffsetTests_5_2))
     #suite.addTest(unittest.TestLoader().loadTestsFromTestCase(CubicCurveOffsetTests_10_5))
-    suite.addTest(unittest.TestLoader().loadTestsFromTestCase(NotConvavePolygon_10_5))
-    #suite.addTest(unittest.TestLoader().loadTestsFromTestCase(NotConvavePolygon_10_5_bis))
 
     return suite
 
