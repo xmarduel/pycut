@@ -54,9 +54,9 @@ class ShapelyUtils:
         p1_p2 = shapely.geometry.LineString([p1, p2])
 
         collection = shapely.geometry.GeometryCollection([bounds, p1_p2])
-        MatplotLibUtils.display(
-            "mergePath bounds check crosses (multilines) : %d" % cls.cnt,
-            collection)
+        # MatplotLibUtils.display(
+        #    "mergePath bounds check crosses (multilines) : %d" % cls.cnt,
+        #    collection)
 
         result = p1_p2.intersection(bounds)
 

@@ -52,13 +52,12 @@ class ShapelyMultiPolygonOffset:
         for poly in self.multipoly.geoms:
             linearring = shapely.geometry.LineString(poly.exterior)
             # unfortunately this generates others PYCUT bugs !!  (pocketing - FIXME - ) so reset
-            if side =='left':
+            if side == "left":
                 # pocketing i.e. 'left'
                 linestring = linearring
             else:
                 # outside i.e. 'right' -> offset of a linearring is !BUGGY!
                 linestring = ShapelyUtils.linearring_to_linestring(linearring)
-
 
             # cnt = MatplotLibUtils.display(
             #    "linestring to offset", linestring
@@ -243,7 +242,7 @@ class ShapelyMultiPolygonOffsetInteriors:
             # from the offseted lines, build a multipolygon that we will diff with the exterior
             interior_multipoly = ShapelyUtils.build_multipoly_from_offsets(int_offsets)
 
-            MatplotLibUtils.display("interior_multipoly", interior_multipoly)
+            # MatplotLibUtils.display("interior_multipoly", interior_multipoly)
 
             if not interior_multipoly.is_valid:
                 interior_multipoly = ShapelyUtils.fix_multipoly(interior_multipoly)
@@ -252,7 +251,7 @@ class ShapelyMultiPolygonOffsetInteriors:
                 self.multipoly, amount, "left", consider_interiors_offsets=True
             )
 
-            MatplotLibUtils.display("exterior_multipoly", exterior_multipoly)
+            # MatplotLibUtils.display("exterior_multipoly", exterior_multipoly)
 
             # only exterior
             exterior_multipoly = ShapelyUtils.remove_multipoly_holes(exterior_multipoly)
@@ -263,7 +262,7 @@ class ShapelyMultiPolygonOffsetInteriors:
             )
             exterior_multipoly = ShapelyUtils.orient_multipolygon(exterior_multipoly)
 
-            MatplotLibUtils.display("exterior_multipoly", exterior_multipoly)
+            # MatplotLibUtils.display("exterior_multipoly", exterior_multipoly)
 
             if consider_exteriors_offsets == True:
                 # the diff ** with ~POLY ** is the solution
