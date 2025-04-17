@@ -49,7 +49,7 @@ from hsm_nibbler import geometry
 class CamPath:
     """
     CamPath has this format: {
-      path:               Shapely LineString
+      path:               Shapely LineString or Point
       safe_to_close:      Is it safe to close the path without retracting?
     }
     """

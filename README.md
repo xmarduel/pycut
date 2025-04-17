@@ -21,6 +21,7 @@ start the program from the installation folder
 > python pycut.py
 > python pycut.py -p <path_to_project>
 > python pycut.py -g <path_to_gcode>   # view an external gcode data
+> python pycut.py -s <path_to_svge>    # load an svg file into the viewer
 ```
 
 ## Dependencies
@@ -28,13 +29,13 @@ start the program from the installation folder
 - Python 3.11
 - PySide6 6.8.1
 - shapely 2.1.0
-- PyOpenGL (latest)  [3.1.9]
-- svgelements (latest)  [1.9.6]
-- lxml (latest)  [5.3.1]
-- freetype-py (latest) - used in svgtext2svgpath.py utility  [2.5.1]
-- matplotlib (latest) - to debug/view shapely offsets ops  [3.10.0]
-- numba (latest) - for python simulator optimization  [0.61.0]
-- pyvoronoi (latest) - for HSM nibbler toolpaths  [1.1.6]
+- PyOpenGL (latest) [3.1.9]
+- svgelements (latest) [1.9.6]
+- lxml (latest) [5.3.1]
+- freetype-py (latest) - used in svgtext2svgpath.py utility [2.5.1]
+- matplotlib (latest) - to debug/view shapely offsets ops [3.10.0]
+- numba (latest) - for python simulator optimization [0.61.0]
+- pyvoronoi (latest) - for HSM nibbler toolpaths [1.1.6]
 
 ## Features
 

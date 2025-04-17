@@ -33,6 +33,15 @@ svg_cubic_curve = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 </svg>"""
 
 
+svg_cubic_curve2 = """
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" width="100mm" height="100mm" viewBox="0 0 100 100" id="unitmat-dc-motor">
+  <g id="layer">
+    <path id="contour" d="M 94.250050895,50.000027 C 94.250050895,44.00002376 87.00004698,48.00002592 84.4353455951,40.7731220175 A 35.65,35.65 0 0,0 59.2269319825,15.5647084049 C 52.00002808,13.00000702 56.00003024,5.750003105 50.000027,5.750003105 C 44.00002376,5.750003105 48.00002592,13.00000702 40.7731220175,15.5647084049 A 35.65,35.65 0 0,0 15.5647084049,40.7731220175 C 13.00000702,48.00002592 5.750003105,44.00002376 5.750003105,50.000027 C 5.750003105,56.00003024 13.00000702,52.00002808 15.5647084049,59.2269319825 A 35.65,35.65 0 0,0 40.7731220175,84.4353455951 C 48.00002592,87.00004698 44.03702378,94.250050895 50.000027,94.250050895 C 56.00003024,94.250050895 52.00002808,87.00004698 59.2269319825,84.4353455951 A 35.65,35.65 0 0,0 84.4353455951,59.2269319825 C 87.00004698,52.00002808 94.250050895,56.00003024 94.250050895,50.000027 Z" style="fill:none;stroke:red;stroke-width:0.1"/>
+  </g>
+</svg>
+"""
+
+
 OFFSET = 3.0
 
 
@@ -123,9 +132,11 @@ class CircleOffsetTests_10_5(unittest.TestCase):
 #
 # ----------------------------------------------------------------------
 
+
 # @unittest.skip("x")
 class CubicCurveOffsetTests_10_5(unittest.TestCase):
     """ """
+
     def setUp(self):
         """ """
         SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF = 10
@@ -160,7 +171,7 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
 
     @unittest.skip("x")
     def test_offset_linestring_left(self):
-        """ 
+        """
         offset 'left' is 'outside' for this linestring
 
         -> result is OK
@@ -175,7 +186,7 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
 
     @unittest.skip("x")
     def test_offset_linestring_right(self):
-        """ 
+        """
         offset 'right' is 'outside' for this linestring oriented differently
 
         -> result is OK
@@ -185,8 +196,11 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
         offset = linestring.parallel_offset(
             OFFSET, "right", resolution=16, join_style=1, mitre_limit=5.0
         )
-        
-        pltutils.plot_geom("offset LINESTRING REV RIGHT", shapely.geometry.MultiLineString([linestring, offset]))
+
+        pltutils.plot_geom(
+            "offset LINESTRING REV RIGHT",
+            shapely.geometry.MultiLineString([linestring, offset]),
+        )
 
         self.assertEqual(offset.geom_type, "LineString")
 
@@ -206,7 +220,8 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
         print("DEBUG  LINE", self.linestring.geom_type, len(self.linestring.coords))
         print("DEBUG  POLY-EXT", linearring.geom_type, len(linearring.coords))
 
-        print("DEBUG linearring first point",
+        print(
+            "DEBUG linearring first point",
             linearring.coords.xy[0][0],
             linearring.coords.xy[1][0],
         )
@@ -217,19 +232,20 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
             OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
         )
 
-        self.assertEqual(offset.geom_type, "MultiLineString") # !! GEOS bug !!
+        self.assertEqual(offset.geom_type, "MultiLineString")  # !! GEOS bug !!
 
         pltutils.plot_geom("offset polygon exterior (as linearring) RIGHT", offset)
-
 
     def test_offset_poly_exterior_outside(self):
         """
         GEOS BUG when offseting Polygon exteriors
 
-        try start point in the middle of an arc 
+        try start point in the middle of an arc
         -> result is a MultiLineString !
         """
-        linestring = shapely.geometry.LineString(self.linestring.coords[500:] + self.linestring.coords[:500])
+        linestring = shapely.geometry.LineString(
+            self.linestring.coords[500:] + self.linestring.coords[:500]
+        )
 
         # TRANSFORM INTO POLYGON
         poly = shapely.geometry.Polygon(linestring)
@@ -240,7 +256,8 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
         print("DEBUG  LINE", self.linestring.geom_type, len(self.linestring.coords))
         print("DEBUG  POLY-EXT", linearring.geom_type, len(linearring.coords))
 
-        print("DEBUG linearring first point",
+        print(
+            "DEBUG linearring first point",
             linearring.coords.xy[0][0],
             linearring.coords.xy[1][0],
         )
@@ -251,32 +268,35 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
             OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
         )
 
-        self.assertEqual(offset.geom_type, "MultiLineString") # !! GEOS bug !!
+        self.assertEqual(offset.geom_type, "MultiLineString")  # !! GEOS bug !!
 
         pltutils.plot_geom("offset polygon exterior (as linearring) RIGHT", offset)
 
     @unittest.skip("x")
     def test_offset_poly_exterior_to_linestring_outside(self):
-        """
-        """
+        """ """
         # TRANSFORM INTO POLYGON
         poly = shapely.geometry.Polygon(self.linestring)
         poly = shapely.geometry.polygon.orient(poly)
 
         linearring = poly.exterior
 
-        print("DEBUG  LINESTRING", self.linestring.geom_type, len(self.linestring.coords))
+        print(
+            "DEBUG  LINESTRING", self.linestring.geom_type, len(self.linestring.coords)
+        )
         print("DEBUG  LINEARRING", linearring.geom_type, len(linearring.coords))
 
         self.assertEqual(len(linearring.coords), 2654)
 
         linestring = ShapelyUtils.linearring_to_linestring(linearring)
 
-        print("POLY-EXT linestring first point",
+        print(
+            "POLY-EXT linestring first point",
             linestring.coords.xy[0][0],
             linestring.coords.xy[1][0],
         )
-        print("POLY-EXT linestring last point",
+        print(
+            "POLY-EXT linestring last point",
             linestring.coords.xy[0][-1],
             linestring.coords.xy[1][-1],
         )
@@ -285,20 +305,194 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
             OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
         )
 
-        self.assertEqual(offset.geom_type, "LineString") # !! as it should always be !!
+        self.assertEqual(offset.geom_type, "LineString")  # !! as it should always be !!
 
         pltutils.plot_geom("offset polygon exterior (as linestring) RIGHT", offset)
 
 
+class CubicCurveOffsetTests2(unittest.TestCase):
+    """ """
 
+    def setUp(self):
+        """ """
+        SvgPathDiscretizer.PYCUT_SAMPLE_LEN_COEFF = 10
+        SvgPathDiscretizer.PYCUT_SAMPLE_MIN_NB_SEGMENTS = 5
+
+        paths = SvgPath.svg_paths_from_svg_string(svg_cubic_curve2)
+
+        self.assertEqual(len(paths), 1)
+        path = paths[0]
+
+        pts = path.discretize_closed_path()
+        pltutils.plot(pts, "contour")
+
+        self.assertEqual(path.shape_tag, "path")
+        self.assertEqual(path.p_id, "contour")
+        self.assertTrue(path.closed)
+
+        self.assertEqual(len(path.svgelt_path.segments()), 14)
+
+        self.assertEqual(len(pts), 2645)
+
+        # now the offset
+        coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
+
+        self.linestring = linestring = LineString(coordinates)
+
+        with open("linestring.txt", "w") as f:
+            f.write(linestring.wkt)
+
+    def tearDown(self):
+        """ """
+
+    @unittest.skip("x")
+    def test_offset_linestring_left(self):
+        """
+        offset 'left' is 'outside' for this linestring
+
+        -> result is OK
+        """
+        offset = self.linestring.parallel_offset(
+            OFFSET, "left", resolution=16, join_style=1, mitre_limit=5
+        )
+
+        pltutils.plot_geom("offset LINESTRING LEFT", offset)
+
+        self.assertEqual(offset.geom_type, "LineString")
+
+    @unittest.skip("x")
+    def test_offset_linestring_right(self):
+        """
+        offset 'right' is 'outside' for this linestring oriented differently
+
+        -> result is OK
+        """
+        linestring = LineString(reversed(self.linestring.coords))
+
+        offset = linestring.parallel_offset(
+            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5.0
+        )
+
+        pltutils.plot_geom(
+            "offset LINESTRING REV RIGHT",
+            MultiLineString([linestring, offset]),
+        )
+
+        self.assertEqual(offset.geom_type, "LineString")
+
+    # @unittest.skip("x")
+    def test_offset_poly_exterior_outside(self):
+        """
+        GEOS BUG when offseting Polygon exteriors
+
+        -> result is a MultiLineString !
+        """
+        # TRANSFORM INTO POLYGON
+        poly = shapely.geometry.Polygon(self.linestring)
+        poly = shapely.geometry.polygon.orient(poly)
+
+        linearring = poly.exterior
+
+        print("DEBUG  LINE", self.linestring.geom_type, len(self.linestring.coords))
+        print("DEBUG  POLY-EXT", linearring.geom_type, len(linearring.coords))
+
+        print(
+            "DEBUG linearring first point",
+            linearring.coords.xy[0][0],
+            linearring.coords.xy[1][0],
+        )
+
+        self.assertEqual(len(linearring.coords), 2646)
+
+        offset = linearring.parallel_offset(
+            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
+        )
+
+        self.assertEqual(offset.geom_type, "MultiLineString")  # !! GEOS bug !!
+
+        pltutils.plot_geom("offset polygon exterior (as linearring) RIGHT", offset)
+
+    @unittest.skip("x")
+    def test_offset_poly_exterior_outside2(self):
+        """
+        GEOS BUG when offseting Polygon exteriors
+
+        try start point in the middle of an arc
+        -> result is a MultiLineString !
+        """
+        linestring = shapely.geometry.LineString(
+            self.linestring.coords[500:] + self.linestring.coords[:500]
+        )
+
+        # TRANSFORM INTO POLYGON
+        poly = shapely.geometry.Polygon(linestring)
+        poly = shapely.geometry.polygon.orient(poly)
+
+        linearring = poly.exterior
+
+        print("DEBUG  LINE", self.linestring.geom_type, len(self.linestring.coords))
+        print("DEBUG  POLY-EXT", linearring.geom_type, len(linearring.coords))
+
+        print(
+            "DEBUG linearring first point",
+            linearring.coords.xy[0][0],
+            linearring.coords.xy[1][0],
+        )
+
+        self.assertEqual(len(linearring.coords), 2646)
+
+        offset = linearring.parallel_offset(
+            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
+        )
+
+        self.assertEqual(offset.geom_type, "MultiLineString")  # !! GEOS bug !!
+
+        pltutils.plot_geom("offset polygon exterior (as linearring) RIGHT", offset)
+
+    # @unittest.skip("x")
+    def test_offset_poly_exterior_to_linestring_outside(self):
+        """ """
+        # TRANSFORM INTO POLYGON
+        poly = Polygon(self.linestring)
+        poly = shapely.geometry.polygon.orient(poly)
+
+        linearring = poly.exterior
+
+        print(
+            "DEBUG  LINESTRING", self.linestring.geom_type, len(self.linestring.coords)
+        )
+        print("DEBUG  LINEARRING", linearring.geom_type, len(linearring.coords))
+
+        self.assertEqual(len(linearring.coords), 2646)
+
+        linestring = ShapelyUtils.linearring_to_linestring(linearring)
+
+        print(
+            "POLY-EXT linestring first point",
+            linestring.coords.xy[0][0],
+            linestring.coords.xy[1][0],
+        )
+        print(
+            "POLY-EXT linestring last point",
+            linestring.coords.xy[0][-1],
+            linestring.coords.xy[1][-1],
+        )
+
+        offset = linestring.parallel_offset(
+            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
+        )
+
+        self.assertEqual(offset.geom_type, "LineString")  # !! as it should always be !!
+
+        pltutils.plot_geom("offset polygon exterior (as linestring) RIGHT", offset)
 
 
 def get_suite():
     suite = unittest.TestSuite()
-    #suite.addTest(unittest.TestLoader().loadTestsFromTestCase(CircleOffsetTests_5_2))
-    #suite.addTest(unittest.TestLoader().loadTestsFromTestCase(CircleOffsetTests_10_5))
-    #suite.addTest(unittest.TestLoader().loadTestsFromTestCase(CubicCurveOffsetTests_5_2))
-    #suite.addTest(unittest.TestLoader().loadTestsFromTestCase(CubicCurveOffsetTests_10_5))
+    # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(CircleOffsetTests_5_2))
+    # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(CircleOffsetTests_10_5))
+    # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(CubicCurveOffsetTests_5_2))
+    # suite.addTest(unittest.TestLoader().loadTestsFromTestCase(CubicCurveOffsetTests_10_5))
 
     return suite
 
