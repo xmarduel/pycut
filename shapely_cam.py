@@ -27,19 +27,17 @@ from typing import Any
 from typing import cast
 
 import numpy as np
-import matplotlib.pyplot as plt
-from shapely_svgpath_io import SvgPath
+
+import shapely
+import shapely.geometry 
+import shapely.ops
 
 from val_with_unit import ValWithUnit
 
-import shapely  # type: ignore [import-untyped]
-import shapely.geometry  # type: ignore [import-untyped]
-import shapely.ops  # type: ignore [import-untyped]
-
+from shapely_svgpath_io import SvgPath
 from shapely_utils import ShapelyUtils
 from shapely_ext import ShapelyMultiPolygonOffset
 from shapely_ext import ShapelyMultiPolygonOffsetInteriors
-from shapely_matplotlib import MatplotLibUtils
 
 PI = math.pi
 
@@ -272,7 +270,7 @@ class cam:
                 if current:
                     current = ShapelyUtils.simplify_multiline(current, 0.01)
 
-                if current:
+                if not current.is_empty:
                     if need_reverse:
                         reversed_paths = []
                         for path in current.geoms:
@@ -387,7 +385,7 @@ class cam:
                 if current:
                     current = ShapelyUtils.simplify_multiline(current, 0.01)
 
-                if current:
+                if not current.is_empty:
                     if need_reverse:
                         reversed_paths = []
                         for path in current.geoms:
@@ -442,20 +440,22 @@ class cam:
         )
 
         if full_line.geom_type == "LineString":
+            full_line = cast(shapely.geometry.LineString, full_line)
             cam_paths = [CamPath(full_line, False)]
             return cam_paths
+        else:
+            full_line = cast(shapely.geometry.MultiLineString, full_line)
+            all_paths = []
+            for line in full_line.geoms:
+                coords = list(line.coords)  # JSCUT: path = paths.slice(0)
+                if not climb:
+                    coords.reverse()
 
-        all_paths = []
-        for line in full_line.geoms:
-            coords = list(line.coords)  # JSCUT: path = paths.slice(0)
-            if not climb:
-                coords.reverse()
+                coords.append(coords[0])
+                all_paths.append(shapely.geometry.LineString(coords))
 
-            coords.append(coords[0])
-            all_paths.append(shapely.geometry.LineString(coords))
-
-        cam_paths = [CamPath(path, False) for path in all_paths]
-        return cam_paths
+            cam_paths = [CamPath(path, False) for path in all_paths]
+            return cam_paths
 
     @classmethod
     def engrave_opened_paths(
@@ -499,7 +499,7 @@ class cam:
     def merge_paths(
         cls,
         _bounds: shapely.geometry.MultiPolygon,
-        paths: List[shapely.geometry.LineString],
+        thepaths: List[shapely.geometry.LineString],
         closed_path=True,
     ) -> List[CamPath]:
         """
@@ -525,9 +525,7 @@ class cam:
             int_multipoly = None
 
         # std list
-        thepaths = [list(path.coords) for path in paths]
-
-        paths = thepaths
+        paths = [list(path.coords) for path in thepaths]
 
         current_path = paths[0]
 
@@ -603,7 +601,7 @@ class cam:
         return dx * dx + dy * dy
 
     @staticmethod
-    def distP(p1: Tuple[int, int], p2: Tuple[int, int]) -> float:
+    def distP(p1: Tuple[float, ...], p2: Tuple[float, ...]) -> float:
         dx = p2[0] - p1[0]
         dy = p2[1] - p1[1]
         return dx * dx + dy * dy
@@ -681,13 +679,13 @@ class cam:
             "G1 Z" + peckZ.to_fixed(decimal) + f"{rapid_feed_gcode}",
         ]
 
-        def get_x(p: Tuple[float, float]):
+        def get_x(p: Tuple[float, ...]):
             return p[0] + x_offset
 
-        def get_y(p: Tuple[float, float]):
+        def get_y(p: Tuple[float, ...]):
             return -p[1] + y_offset
 
-        def convert_point(p: Tuple[float, float] | Tuple[float, float, float]):
+        def convert_point(p: Tuple[float, ...] | Tuple[float, float, float]):
             x = p[0] + x_offset
             y = -p[1] + y_offset
 
@@ -1074,21 +1072,27 @@ class TabsSeparator:
         # 1. from the tabs, build shapely tab polygons
         for tab_def in self.tabs:
             tab = Tab(tab_def)
-            shapely_tabs = tab.svg_path.import_as_polygons_list()
-            shapely_tabs_ += shapely_tabs
+            s_tabs = tab.svg_path.import_as_polygons_list()
+            shapely_tabs_ += s_tabs
 
         # hey, multipolygons are good...
         shapely_tabs_union = shapely.ops.unary_union(shapely_tabs_)
+
         if shapely_tabs_union.geom_type == "MultiPolygon":
-            shapely_tabs = shapely_tabs_union
+            multipoly = cast(shapely.geometry.MultiPolygon, shapely_tabs_union)
+            shapely_tabs = multipoly
         elif shapely_tabs_union.geom_type == "Polygon":
-            shapely_tabs = shapely.geometry.MultiPolygon([shapely_tabs_union])
+            poly = cast(shapely.geometry.Polygon, shapely_tabs_union)
+            shapely_tabs = shapely.geometry.MultiPolygon([poly])
         elif shapely_tabs_union.geom_type == "GeometryCollection":
-            for geom in shapely_tabs_union.geoms:
+            collection = cast(shapely.geometry.GeometryCollection, shapely_tabs_union)
+            for geom in collection.geoms:
                 if geom.geom_type == "MultiPolygon":
-                    shapely_tabs = geom
+                    multi_poly = cast(shapely.geometry.MultiPolygon, geom)
+                    shapely_tabs = multi_poly
                 if geom.geom_type == "Polygon":
-                    shapely_tabs = geom
+                    poly = cast(shapely.geometry.Polygon, geom)
+                    shapely_tabs = shapely.geometry.MultiPolygon([poly])
 
         if not shapely_openpath.intersects(shapely_tabs):
             self.separated_paths = [path]
@@ -1102,12 +1106,14 @@ class TabsSeparator:
         # 3. that's it
         # print("splitted_paths", shapely_splitted_paths)
 
-        if shapely_splitted_paths.geom_type == "LineString":
-            shapely_splitted_paths = shapely.geometry.MultiLineString(
-                [shapely_splitted_paths]
-            )
+        paths: List[shapely.geometry.LineString] = []
 
-        paths: List[shapely.geometry.LineString] = list(shapely_splitted_paths.geoms)
+        if shapely_splitted_paths.geom_type == "LineString":
+            line = cast(shapely.geometry.LineString, shapely_splitted_paths)
+            paths = [line]
+        if shapely_splitted_paths.geom_type == "MultiLineString":
+            multi_line = cast(shapely.geometry.MultiLineString, shapely_splitted_paths)
+            paths = list(multi_line.geoms)
 
         paths = self.merge_compatible_paths(paths)
 
@@ -1321,9 +1327,12 @@ class PocketCalculator:
 
             if not current:
                 break
+
             current = ShapelyUtils.simplify_multipoly(current, 0.001)
-            if not current:
+            
+            if current.is_empty:
                 break
+            
             current = ShapelyUtils.orient_multipolygon(current)
 
         # last: make beautiful interiors, only 1 step
@@ -1389,7 +1398,7 @@ class PocketCalculator:
     def merge_paths(
         self,
         _bounds: shapely.geometry.MultiPolygon,
-        paths: List[shapely.geometry.LineString],
+        thepaths: List[shapely.geometry.LineString],
     ) -> List[CamPath]:
         """
         Try to merge paths. A merged path doesn't cross outside of bounds AND the interior polygons
@@ -1414,8 +1423,7 @@ class PocketCalculator:
             int_multipoly = None
 
         # std list
-        thepaths = [list(path.coords) for path in paths]
-        paths = thepaths
+        paths = [list(path.coords) for path in thepaths]
 
         current_path = paths[0]
 
@@ -2001,8 +2009,8 @@ class NibblerPocketCalculator:
 
     def toolpath_to_campaths(self, toolpath: geometry.Pocket):
         """ """
-        xx = []
-        yy = []
+        xx : list[float] = []
+        yy : list[float] = []
 
         for k, element in enumerate(toolpath.path):
 

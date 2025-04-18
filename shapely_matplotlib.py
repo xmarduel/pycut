@@ -1,11 +1,13 @@
 from typing import List
 from typing import Any
+from typing import cast
 
-import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 
-import shapely.geometry  # type: ignore [import-untyped]
+import matplotlib.pyplot as plt
+
+import shapely.geometry
 
 
 class MatplotLibUtils:
@@ -66,9 +68,12 @@ class MatplotLibUtils:
         return cls.cnt
 
     @classmethod
-    def rectify_y(cls, y:npt.NDArray) -> npt.NDArray:
-        return -y
-
+    def rectify_y(cls, y:npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
+        yy = []
+        for v in y:
+            yy.append(-v)
+        return np.array(yy)
+    
     @classmethod
     def _display_linestring(cls, title: str, linestring: shapely.geometry.LineString):
         """ """
@@ -219,6 +224,9 @@ class MatplotLibUtils:
 
         for geom in collection.geoms:
             if geom.geom_type == "MultiPolygon":
+                geom = cast(shapely.geometry.MultiPolygon, geom)
+
+
                 xx_ext = []
                 yy_ext = []
 
@@ -252,6 +260,8 @@ class MatplotLibUtils:
                     plt.plot(x, y, style_int[pp % 3])
 
             if geom.geom_type == "Polygon":
+                geom = cast(shapely.geometry.Polygon, geom)
+
                 x = geom.exterior.coords.xy[0]
                 y = geom.exterior.coords.xy[1]
 
@@ -276,6 +286,8 @@ class MatplotLibUtils:
                     plt.plot(ix, iy, style_int[pp % 3])
 
             if geom.geom_type == "MultiLineString":
+                geom = cast(shapely.geometry.MultiLineString, geom)
+
                 xx = []
                 yy = []
 

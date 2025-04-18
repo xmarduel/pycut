@@ -16,13 +16,12 @@
 # along with pycut.  If not, see <http:#www.gnu.org/licenses/>.
 
 from typing import Literal
+from typing import cast
 
 from shapely import BufferJoinStyle
 import shapely.geometry
-import shapely.ops
 
 from shapely_utils import ShapelyUtils
-from shapely_matplotlib import MatplotLibUtils
 
 
 class ShapelyMultiPolygonOffset:
@@ -74,34 +73,29 @@ class ShapelyMultiPolygonOffset:
             # simplfy resulting offset  !WICHTIG!
             # print("offset: ", ext_offset)
             if offset.geom_type == "LineString":
+                offset = cast(shapely.geometry.LineString, offset) 
+
                 # cnt = MatplotLibUtils.display(
                 #    f"offset {side} - as LineString|MultiLineString (from linearring)",
                 #    ext_offset,
                 # )
                 print(
-                    "offset length (1)= ",
-                    offset.length,
-                    len(list(offset.coords)),
-                )
-                offset = offset.simplify(0.005)
-                print(
-                    "offset length (2)= ",
-                    offset.length,
-                    len(list(offset.coords)),
-                )
+                    "(1) offset length = ", offset.length, len(list(offset.coords)))
+                
+                offset = ShapelyUtils.simplify_line(offset, 0.005)
+                
+                if offset.geom_type == 'LineString':
+                    print("(2) offset length = ", offset.length, len(list(offset.coords)))
+                if offset.geom_type == 'MultiLineString':
+                    pass
+
                 # cnt = MatplotLibUtils.display(
                 #    f"offset {side} - as LineString|MultiLineString (from linestring)",
                 #    ext_offset,
                 # )
             elif offset.geom_type == "MultiLineString":
-                lines: list[shapely.geometry.LineString] = []
-                for line in offset.geoms:
-                    # print("offset length (1)= ", line.length, len(list(line.coords)))
-                    s_line = line.simplify(0.005)
-                    # print("offset length (2)= ", s_line.length, len(list(s_line.coords)))
-                    if s_line.geom_type == shapely.geometry.LineString:
-                        lines.append(s_line)
-                offset = shapely.geometry.MultiLineString(lines)
+                offset = cast(shapely.geometry.MultiLineString, offset) 
+                offset = ShapelyUtils.simplify_multiline(offset, 0.005)
 
             # from the offseted lines, build a multipolygon that we diff with the interiors
             exterior_multipoly = ShapelyUtils.build_multipoly_from_offsets([offset])
@@ -119,10 +113,13 @@ class ShapelyMultiPolygonOffset:
                     # simplify the polygon
                     # this may be important so that the offset becomes Ok (example: tudor [AD])
                     # where of offset is a MultiLineString instead of a Linestring
-                    ipoly = ipoly.simplify(0.001)
-                    ipoly = shapely.geometry.polygon.orient(ipoly)
+                    simp_poly = ipoly.simplify(0.001)
 
-                    interior_polys.append(ipoly)
+                    if simp_poly.geom_type == 'Polygon':
+                        simp_poly = cast(shapely.geometry.Polygon, simp_poly) 
+                        ipoly = shapely.geometry.polygon.orient(simp_poly)
+
+                        interior_polys.append(ipoly)
 
                 interior_multipoly = ShapelyUtils.build_multipoly_from_list_of_polygons(
                     interior_polys
@@ -163,17 +160,22 @@ class ShapelyMultiPolygonOffset:
                     raise
 
                 if sol_poly.geom_type == "Polygon":
-                    polys.append(sol_poly)
+                    poly = cast(shapely.geometry.Polygon, sol_poly)
+                    polys.append(poly)
                 elif sol_poly.geom_type == "MultiPolygon":
-                    for geom in sol_poly.geoms:
-                        polys.append(geom)
+                    multi_poly = cast(shapely.geometry.MultiPolygon, sol_poly)
+                    for poly in multi_poly.geoms:
+                        polys.append(poly)
                 elif sol_poly.geom_type == "GeometryCollection":
-                    for geom in sol_poly.geoms:
+                    collection = cast(shapely.geometry.GeometryCollection, sol_poly)
+                    for geom in collection.geoms:
                         if geom.geom_type == "Polygon":
-                            polys.append(geom)
+                            poly = cast(shapely.geometry.Polygon, geom)
+                            polys.append(poly)
                         elif geom.geom_type == "MultiPolygon":
-                            for geomc in sol_poly.geoms:
-                                polys.append(geomc)
+                            multi_poly = cast(shapely.geometry.MultiPolygon, geom)
+                            for poly in multi_poly.geoms:
+                                polys.append(poly)
 
             else:  # polygon without interiors
                 for poly in exterior_multipoly.geoms:
@@ -206,11 +208,11 @@ class ShapelyMultiPolygonOffsetInteriors:
         resolution: int,
         join_style: BufferJoinStyle | Literal["round", "mitre", "bevel"],
         mitre_limit: float,
-    ) -> shapely.geometry.MultiPolygon | None:
+    ) -> shapely.geometry.MultiPolygon:
         """
         main method
         """
-        polys = []
+        polys : list[shapely.geometry.Polygon] = []
 
         # MatplotLibUtils.display("geometry", self.multipoly)
 
@@ -288,21 +290,27 @@ class ShapelyMultiPolygonOffsetInteriors:
                     raise
 
                 if sol_poly.geom_type == "Polygon":
-                    polys.append(sol_poly)
+                    poly = cast(shapely.geometry.Polygon, sol_poly)
+                    polys.append(poly)
                 elif sol_poly.geom_type == "MultiPolygon":
-                    for geom in sol_poly.geoms:
-                        polys.append(geom)
+                    multi_poly = cast(shapely.geometry.MultiPolygon, sol_poly)
+                    for poly in multi_poly.geoms:
+                        polys.append(poly)
                 elif sol_poly.geom_type == "GeometryCollection":
-                    for geom in sol_poly.geoms:
+                    collection = cast(shapely.geometry.GeometryCollection, sol_poly)
+                    for geom in collection.geoms:
                         if geom.geom_type == "Polygon":
-                            polys.append(geom)
+                            poly = cast(shapely.geometry.Polygon, geom)
+                            polys.append(poly)
                         elif geom.geom_type == "MultiPolygon":
-                            for poly in geom.geoms:
+                            xgeom = cast(shapely.geometry.MultiPolygon, geom)
+                            for poly in xgeom.geoms:
                                 polys.append(poly)
 
             else:  # without exterior
                 for poly in interior_multipoly.geoms:
                     if poly.geom_type == "Polygon":
+                        poly = cast(shapely.geometry.Polygon, poly)
                         polys.append(poly)
 
         o_multipoly = ShapelyUtils.build_multipoly_from_list_of_polygons(polys)

@@ -12,6 +12,7 @@
 
 
 
+
         {
             "name": "SVG RESOLVER",
             "type": "python",
@@ -311,5 +312,15 @@
           "cwd": "/Users/xavier/GITHUB/pycut",
           "args": [ "--svg", "misc_private/unimat_cnc_kit/dc_motor_200w_holder.resolved.svg" ]
       },
+
+      {
+        "name": "PYCUT TUDOR",
+        "type": "python",
+        "request": "launch",
+        "program": "pycut.py",
+        "console": "integratedTerminal",
+        "cwd": "/Users/xavier/GITHUB/pycut",
+        "args": [ "--proj", "projects/cnc_all_letters_tudor.json" ]
+    },
     ]
 }

@@ -28,7 +28,7 @@ start the program from the installation folder
 
 - Python 3.11
 - PySide6 6.8.1
-- shapely 2.1.0
+- shapely 2.1.0 (and types-shapely)
 - PyOpenGL (latest) [3.1.9]
 - svgelements (latest) [1.9.6]
 - lxml (latest) [5.3.1]

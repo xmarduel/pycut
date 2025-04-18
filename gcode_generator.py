@@ -20,16 +20,16 @@ import sys
 from typing import List
 from typing import Dict
 from typing import Any
+from typing import cast
 
 import math
 
-import shapely  # type: ignore [import-untyped]
-import shapely.geometry  # type: ignore [import-untyped]
-import shapely.ops  # type: ignore [import-untyped]
+import shapely
+import shapely.geometry 
+import shapely.ops
 
 from shapely_utils import ShapelyUtils
 from shapely_svgpath_io import SvgPath
-from shapely_matplotlib import MatplotLibUtils
 
 from shapely_cam import cam
 from shapely_cam import CamPath

@@ -5,6 +5,7 @@ import copy
 from typing import List
 from typing import Tuple
 from typing import Dict
+from typing import cast
 
 import io
 
@@ -14,8 +15,7 @@ import numpy.typing as npt
 import svgelements  # type: ignore [import-untyped]
 import xml.etree.ElementTree as etree
 
-import shapely.geometry  # type: ignore [import-untyped]
-import shapely.validation  # type: ignore [import-untyped]
+import shapely.geometry 
 from shapely.validation import make_valid
 from shapely.validation import explain_validity
 
@@ -311,7 +311,7 @@ class SvgPath:
 
         return self.lines
 
-    def import_as_point(self) -> List[shapely.geometry.Point]:
+    def import_as_point(self) -> shapely.geometry.Point:
         """
         only for circle, ellipse and rectangle shapes
         """
@@ -404,7 +404,7 @@ class SvgPath:
                 # a warning if the inital polygon is not valid!
                 valid_poly = self.fix_simple_polygon(poly)
 
-                if valid_poly != None:
+                if not valid_poly.is_empty:
                     poly = valid_poly
 
                 # set the right orientation for this polygon
@@ -429,7 +429,7 @@ class SvgPath:
 
                     valid_poly = self.fix_simple_polygon(polygon)
 
-                    if valid_poly != None:
+                    if not valid_poly.is_empty:
                         polygon = valid_poly
 
                     subpaths_db[subpath.p_id] = {
@@ -606,16 +606,19 @@ class SvgPath:
         print("invalid poly", explain_validity(polygon), polygon)
         MatplotLibUtils.display("invalid poly", polygon)
 
-        valid_poly = make_valid(polygon)
+        valid_geom = make_valid(polygon)
 
-        if valid_poly.geom_type == "Polygon":
-            return valid_poly
+        if valid_geom.geom_type == "Polygon":
+            poly = cast(shapely.geometry.Polygon, valid_geom)
+            return poly
 
-        elif valid_poly.geom_type == "MultiPolygon":
+        elif valid_geom.geom_type == "MultiPolygon":
+            multipoly = cast(shapely.geometry.MultiPolygon, valid_geom)
+
             # take the largest one! CHECKME
-            largest_area = -1
-            largest_poly = None
-            for poly in valid_poly.geoms:
+            largest_area = -1.0
+            largest_poly = multipoly.geoms[0]
+            for poly in multipoly.geoms:
                 area = poly.area
                 if area > largest_area:
                     largest_area = area
@@ -623,25 +626,40 @@ class SvgPath:
 
             return largest_poly
 
-        elif valid_poly.geom_type == "GeometryCollection":
+        elif valid_geom.geom_type == "GeometryCollection":
+            collection = cast(shapely.geometry.GeometryCollection, valid_geom)
+
             # take the largest Polygon
-            largest_area = -1
+            largest_area = -1.0
             largest_poly = None
 
-            for geom in valid_poly.geoms:
+            for geom in collection.geoms:
                 if geom.geom_type == "Polygon":
-                    area = geom.area
+                    poly = cast(shapely.geometry.Polygon, geom)
+
+                    area = poly.area
                     if area > largest_area:
                         largest_area = area
-                        largest_poly = geom
+                        largest_poly = poly
+
                 elif geom.geom_type == "MultiLineString":
-                    pass
+                    multipoly = cast(shapely.geometry.MultiPolygon, geom)
+
+                    # take the largest one! CHECKME
+                    largest_area = -1.0
+                    largest_poly = multipoly.geoms[0]
+                    for poly in multipoly.geoms:
+                        area = poly.area
+                        if area > largest_area:
+                            largest_area = area
+                            largest_poly = poly
+
                 elif geom.geom_type == "LineString":
                     pass
 
             return largest_poly
 
-        return None
+        return shapely.geometry.Polygon()
 
     @classmethod
     def fix_complex_poly(
