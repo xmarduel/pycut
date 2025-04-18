@@ -1304,7 +1304,7 @@ class PocketCalculator:
             )
 
             """
-            BUG: it can be that the offset return "empty" event if the whole material is not fully cut!
+            BUG: it can be that the offset return "empty" even if the whole material is not fully cut!
 
             ex: cutter on rectangle [10 , 3.3] x [20 , 6,7]    (y middle = 5)
 

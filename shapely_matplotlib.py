@@ -66,11 +66,8 @@ class MatplotLibUtils:
         return cls.cnt
 
     @classmethod
-    def rectify_y(cls, y):
-        yy = []
-        for v in y:
-            yy.append(-v)
-        return np.array(yy)
+    def rectify_y(cls, y:npt.NDArray) -> npt.NDArray:
+        return -y
 
     @classmethod
     def _display_linestring(cls, title: str, linestring: shapely.geometry.LineString):
@@ -130,8 +127,10 @@ class MatplotLibUtils:
         style_ext = {0: "bo-"}
         style_int = {0: "r+--", 1: "go-"}
 
-        x = polygon.exterior.coords.xy[0]
-        y = polygon.exterior.coords.xy[1]
+        ring = polygon.exterior
+        
+        x = ring.coords.xy[0]
+        y = ring.coords.xy[1]
 
         y = cls.rectify_y(y)
 
@@ -177,16 +176,16 @@ class MatplotLibUtils:
         xx_int = []
         yy_int = []
 
-        for geom in multipoly.geoms:
-            x = geom.exterior.coords.xy[0]
-            y = geom.exterior.coords.xy[1]
+        for poly in multipoly.geoms:
+            x = poly.exterior.coords.xy[0]
+            y = poly.exterior.coords.xy[1]
 
             y = cls.rectify_y(y)
 
             xx_ext.append(x)
             yy_ext.append(y)
 
-            for interior in geom.interiors:
+            for interior in poly.interiors:
                 ix = interior.coords.xy[0]
                 iy = interior.coords.xy[1]
 
