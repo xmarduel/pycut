@@ -1335,6 +1335,8 @@ class PocketCalculator:
             
             current = ShapelyUtils.orient_multipolygon(current)
 
+            # cnt = MatplotLibUtils.display("multipoly pocket <%d> offset" % cnt, current)
+
         # last: make beautiful interiors, only 1 step
         interiors = self.offset_multipolygon_interiors(
             multipoly, self.cutter_dia / 2, "left", consider_exteriors_offsets=True
@@ -1403,7 +1405,7 @@ class PocketCalculator:
         """
         Try to merge paths. A merged path doesn't cross outside of bounds AND the interior polygons
         """
-        # cnt = MatplotLibUtils.display("mergePath", shapely.geometry.MultiLineString(paths))
+        # cnt = MatplotLibUtils.display("mergePath", shapely.geometry.MultiLineString(thepaths))
 
         if _bounds and len(_bounds.geoms) > 0:
             bounds = _bounds

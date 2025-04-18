@@ -21,6 +21,7 @@ from typing import cast
 from shapely import BufferJoinStyle
 import shapely.geometry
 
+from shapely_matplotlib import MatplotLibUtils
 from shapely_utils import ShapelyUtils
 
 
@@ -51,10 +52,15 @@ class ShapelyMultiPolygonOffset:
 
         for poly in self.multipoly.geoms:
             linearring = shapely.geometry.LinearRing(poly.exterior)
+
+            # cnt = MatplotLibUtils.display(
+            #    "poly/linearring to offset", linearring
+            # )
+
             linestring = ShapelyUtils.linearring_to_linestring(linearring)
 
             # cnt = MatplotLibUtils.display(
-            #    "linestring to offset", linestring
+            #    "poly/linestring to offset", linestring
             # )
 
             offset = linestring.parallel_offset(
@@ -77,7 +83,7 @@ class ShapelyMultiPolygonOffset:
 
                 # cnt = MatplotLibUtils.display(
                 #    f"offset {side} - as LineString|MultiLineString (from linearring)",
-                #    ext_offset,
+                #    offset,
                 # )
                 print(
                     "(1) offset length = ", offset.length, len(list(offset.coords)))
