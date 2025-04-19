@@ -52,8 +52,8 @@ class CamPath:
     }
     """
 
-    def __init__(self, path: shapely.geometry.LineString, safe_to_close: bool = True):
-        # shapely linestring
+    def __init__(self, path: shapely.geometry.base.BaseGeometry, safe_to_close: bool = True):
+        # shapely linestring or point
         self.path = path
         # is it safe to close the path without retracting?
         self.safe_to_close = safe_to_close
@@ -303,9 +303,9 @@ class cam:
             return []
 
         # merge_paths need MultiPolygon
-        bounds = ShapelyUtils.multiline_to_multipoly(bounds)
+        poly_bounds = ShapelyUtils.multiline_to_multipoly(bounds)
 
-        return cls.merge_paths(bounds, all_paths)
+        return cls.merge_paths(poly_bounds, all_paths)
 
     @classmethod
     def outline_opened_paths(
@@ -543,7 +543,7 @@ class cam:
         current_point = current_path[-1]
         paths[0] = []  # empty
 
-        merged_paths: List[shapely.geometry.LineString] = []
+        merged_paths: List[List[Tuple[float,...]]] = []
         num_left = len(paths) - 1
 
         while num_left > 0:
@@ -838,12 +838,16 @@ class cam:
 
         for path_index, path in enumerate(paths):
             orig_path = path.path
-            if len(orig_path.coords) == 0:
+            
+            if orig_path.is_empty:
                 continue
+            
+            orig_line = cast(shapely.geometry.LineString, orig_path)
 
             # split the path to cut into many partials paths to avoid tabs areas
             tab_separator = TabsSeparator(tabs)
-            tab_separator.separate(orig_path)
+
+            tab_separator.separate(orig_line)
 
             separated_paths = tab_separator.separated_paths
             crosses_tabs = tab_separator.crosses_tabs
@@ -899,12 +903,12 @@ class cam:
 
                 if not crosses_tabs:
                     in_tabs_height = False
-                    selected_paths = [orig_path]
+                    selected_paths = [orig_line]
                     gcode.append("G1 Z" + ValWithUnit(currentZ, "-").to_fixed(decimal))
                 else:
                     if nextZ >= tabZ:
                         in_tabs_height = False
-                        selected_paths = [orig_path]
+                        selected_paths = [orig_line]
                         gcode.append(
                             "G1 Z" + ValWithUnit(currentZ, "-").to_fixed(decimal)
                         )
@@ -1023,11 +1027,12 @@ class cam:
                     gcode.append("; cut")
 
                     # on a given height, generate series of G1
-                    for i, pt in enumerate(selected_path.coords):
+                    for i, coord in enumerate(selected_path.coords):
                         if i == 0:
                             continue
 
-                        gcode_line_start = "G1" + convert_point(pt)
+                        gcode_line_start = "G1" + convert_point(coord)
+                        
                         if i == 1:
                             gcode.append(gcode_line_start + " " + cut_feed_gcode)
                         else:
@@ -1153,8 +1158,10 @@ class TabsSeparator:
             """
             if paths_are_compatible(path1, path2):
                 # can merge
-                path1 = shapely.ops.linemerge([path1, path2])
-                return True, path1
+                path = shapely.ops.linemerge([path1, path2])
+                # it will be neccessarely a LineString
+                path = cast(shapely.geometry.LineString, path)
+                return True, path
 
             return False, path1
 
@@ -1442,7 +1449,7 @@ class PocketCalculator:
         current_point = current_path[-1]
         paths[0] = []  # empty
 
-        merged_paths: List[shapely.geometry.LineString] = []
+        merged_paths : List[List[Tuple[float, ...]]]= []
         num_left = len(paths) - 1
 
         while num_left > 0:
@@ -1485,7 +1492,9 @@ class PocketCalculator:
         cam_paths: List[CamPath] = []
         for path in merged_paths:
             safe_to_close = not ShapelyUtils.crosses(bounds, path[0], path[-1])
-            cam_paths.append(CamPath(shapely.geometry.LineString(path), safe_to_close))
+
+            cam_path = CamPath(shapely.geometry.LineString(path), safe_to_close)
+            cam_paths.append(cam_path)
 
         self.cam_paths = cam_paths
 
