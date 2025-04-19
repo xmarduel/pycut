@@ -35,9 +35,9 @@ class ShapelyUtils:
     @classmethod
     def crosses(
         cls,
-        bounds: shapely.geometry.MultiPolygon,
-        p1: Tuple[int, int],
-        p2: Tuple[int, int],
+        bounds: shapely.geometry.MultiLineString | shapely.geometry.MultiPolygon,
+        p1: Tuple[float, ...],
+        p2: Tuple[float, ...],
     ) -> bool:
         """
         Does the line from p1 to p2 cross outside of bounds?
@@ -406,8 +406,9 @@ class ShapelyUtils:
     @classmethod
     def multiline_to_multipoly(
         cls, multiline: shapely.geometry.MultiLineString
-    ) -> shapely.geometry.MultiPolygon | None:
-        """ """
+    ) -> shapely.geometry.MultiPolygon:
+        """ result may be empty
+        """
         polys = []
 
         for line in multiline.geoms:
@@ -434,7 +435,7 @@ class ShapelyUtils:
                     item = cast(shapely.geometry.MultiPolygon, item)
                     return item
 
-        return None
+        return shapely.geometry.MultiPolygon([])  # empty
 
     @classmethod
     def remove_multipoly_holes(
