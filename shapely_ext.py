@@ -51,14 +51,31 @@ class ShapelyMultiPolygonOffset:
         polys = []
 
         for poly in self.multipoly.geoms:
-            linearring = shapely.geometry.LinearRing(poly.exterior)
+            if False:
+                # old method
+                linestring = shapely.geometry.LineString(poly.exterior)
 
-            # cnt = MatplotLibUtils.display(
-            #    "poly/linearring to offset", linearring
-            # )
+                # buggy for non-convex shapes
 
-            linestring = ShapelyUtils.linearring_to_linestring(linearring)
+            else:
+                # new method
+                linearring = shapely.geometry.LinearRing(poly.exterior)
+            
+                # cnt = MatplotLibUtils.display(
+                #    "poly/linearring to offset", linearring
+                # )
 
+                if len(linearring.coords) > 6:
+                    linestring = ShapelyUtils.linearring_to_linestring(linearring)
+                else:
+                    # for very small polygons of only a few points, removing 1 point
+                    # can be catastrophic
+                    # ex: tudor "j" small point which is a poly of only 3/4 points
+                    # its offset as LineString is "bad"
+
+                    linestring = shapely.geometry.LineString(linearring)
+
+                
             # cnt = MatplotLibUtils.display(
             #    "poly/linestring to offset", linestring
             # )
