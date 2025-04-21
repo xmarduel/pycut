@@ -24,9 +24,7 @@ from PySide6 import QtGui
 from PySide6 import QtWidgets
 
 from PySide6 import QtWebEngineWidgets
-
 from PySide6.QtUiTools import QUiLoader
-
 from PySide6.QtCore import QRegularExpression
 
 import shapely_svgpath_io
@@ -1067,8 +1065,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                     break
 
             if not found:
-                tool_diameter_keyword1 = "\(tool -> ([0-9.]+) mm end mill\)"
-                tool_diameter_keyword2 = "\(TOOL DIA.([0-9.]+)\)"
+                tool_diameter_keyword1 = "\\(tool -> ([0-9.]+) mm end mill\\)"
+                tool_diameter_keyword2 = "\\(TOOL DIA.([0-9.]+)\\)"
 
                 res = [
                     QRegularExpression(tool_diameter_keyword1),
