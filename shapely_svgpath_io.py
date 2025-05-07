@@ -15,11 +15,12 @@ import numpy.typing as npt
 import svgelements  # type: ignore [import-untyped]
 import xml.etree.ElementTree as etree
 
-import shapely.geometry 
+import shapely.geometry
 from shapely.validation import make_valid
 from shapely.validation import explain_validity
 
 from shapely_matplotlib import MatplotLibUtils
+from shapely_utils import ShapelyUtils
 
 """
 SVG paths:
@@ -402,7 +403,7 @@ class SvgPath:
                 poly = self.import_subpath_as_polygon()
 
                 # a warning if the inital polygon is not valid!
-                valid_poly = self.fix_simple_polygon(poly)
+                valid_poly = ShapelyUtils.fix_simple_polygon(poly)
 
                 if not valid_poly.is_empty:
                     poly = valid_poly
@@ -427,7 +428,7 @@ class SvgPath:
                 else:
                     polygon = subpath.import_subpath_as_polygon()
 
-                    valid_poly = self.fix_simple_polygon(polygon)
+                    valid_poly = ShapelyUtils.fix_simple_polygon(polygon)
 
                     if not valid_poly.is_empty:
                         polygon = valid_poly
@@ -492,7 +493,7 @@ class SvgPath:
             # D: exterior/interior is wrong
             # P: interior in wrong
             for poly in all_polys:
-                poly = self.fix_complex_poly(poly)
+                poly = ShapelyUtils.fix_generic_polygon(poly)
                 self.polys.append(poly)
 
     @classmethod
@@ -592,117 +593,6 @@ class SvgPath:
         path = paths[0]
 
         return path
-
-    @classmethod
-    def fix_simple_polygon(
-        cls, polygon: shapely.geometry.Polygon
-    ) -> shapely.geometry.Polygon:
-        """
-        A simple polygon is a polygon without holes!
-        """
-        if polygon.is_valid:
-            return polygon
-
-        print("invalid poly", explain_validity(polygon), polygon)
-        MatplotLibUtils.display("invalid poly", polygon)
-
-        valid_geom = make_valid(polygon)
-
-        if valid_geom.geom_type == "Polygon":
-            poly = cast(shapely.geometry.Polygon, valid_geom)
-            return poly
-
-        elif valid_geom.geom_type == "MultiPolygon":
-            multipoly = cast(shapely.geometry.MultiPolygon, valid_geom)
-
-            # take the largest one! CHECKME
-            largest_area = -1.0
-            largest_poly = multipoly.geoms[0]
-            for poly in multipoly.geoms:
-                area = poly.area
-                if area > largest_area:
-                    largest_area = area
-                    largest_poly = poly
-
-            return largest_poly
-
-        elif valid_geom.geom_type == "GeometryCollection":
-            collection = cast(shapely.geometry.GeometryCollection, valid_geom)
-
-            # take the largest Polygon
-            largest_area = -1.0
-            largest_poly = None
-
-            for geom in collection.geoms:
-                if geom.geom_type == "Polygon":
-                    poly = cast(shapely.geometry.Polygon, geom)
-
-                    area = poly.area
-                    if area > largest_area:
-                        largest_area = area
-                        largest_poly = poly
-
-                elif geom.geom_type == "MultiLineString":
-                    multipoly = cast(shapely.geometry.MultiPolygon, geom)
-
-                    # take the largest one! CHECKME
-                    largest_area = -1.0
-                    largest_poly = multipoly.geoms[0]
-                    for poly in multipoly.geoms:
-                        area = poly.area
-                        if area > largest_area:
-                            largest_area = area
-                            largest_poly = poly
-
-                elif geom.geom_type == "LineString":
-                    pass
-
-            return largest_poly
-
-        return shapely.geometry.Polygon()
-
-    @classmethod
-    def fix_complex_poly(
-        cls, polygon: shapely.geometry.Polygon
-    ) -> shapely.geometry.Polygon:
-        """
-        A complex polygon is a polygon with holes!
-        """
-        if polygon.is_valid:
-            return polygon
-
-        exterior = polygon.exterior
-        interiors = polygon.interiors
-
-        ext_poly = shapely.geometry.Polygon(exterior)
-        if not ext_poly.is_valid:
-            ext_poly = cls.fix_simple_polygon(ext_poly)
-
-        if not interiors:
-            ext_linestring = shapely.geometry.LineString(ext_poly.exterior)
-
-            fixed_poly = shapely.geometry.Polygon(ext_linestring)
-        else:
-            fixed_interiors: List[shapely.geometry.Polygon] = []
-            for interior in interiors:
-                int_poly = shapely.geometry.Polygon(interior)
-
-                if not int_poly.is_valid:
-                    int_poly = cls.fix_simple_polygon(int_poly)
-
-                fixed_interiors.append(int_poly)
-
-            ext_linestring = shapely.geometry.LineString(ext_poly.exterior)
-            holes_linestrings = [
-                shapely.geometry.LineString(int_poly.exterior)
-                for int_poly in fixed_interiors
-            ]
-
-            fixed_poly = shapely.geometry.Polygon(
-                ext_linestring, holes=holes_linestrings
-            )
-
-        return fixed_poly
 
 
 class SvgPathDiscretizer:

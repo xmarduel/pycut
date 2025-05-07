@@ -4,14 +4,17 @@ from typing import List
 from typing import Tuple
 from typing import cast
 
-import shapely.geometry 
+import shapely.geometry
 import shapely.ops
 from shapely.validation import make_valid
 from shapely.validation import explain_validity
+
+
 class ShapelyUtils:
     """
     Helper functions on Shapely
     """
+
     @classmethod
     def diff(
         cls,
@@ -23,9 +26,9 @@ class ShapelyUtils:
         """
         diffs = []
 
-        for (path1, path2) in zip(paths1.geoms, paths2.geoms):
+        for path1, path2 in zip(paths1.geoms, paths2.geoms):
             diff = path1.difference(path2)
-            
+
             if diff.geom_type == shapely.geometry.LineString:
                 diff = cast(shapely.geometry.LineString, diff)
                 diffs.append(diff)
@@ -81,14 +84,14 @@ class ShapelyUtils:
         """
         res = line.simplify(tol)
 
-        lines : list[shapely.geometry.LineString] = []
+        lines: list[shapely.geometry.LineString] = []
 
-        if res.geom_type == 'LineString':
-            res = cast(shapely.geometry.LineString, res) 
+        if res.geom_type == "LineString":
+            res = cast(shapely.geometry.LineString, res)
             if not res.is_empty:
                 lines.append(res)
-        if res.geom_type == 'MultiLineString':
-            res = cast(shapely.geometry.MultiLineString, res) 
+        if res.geom_type == "MultiLineString":
+            res = cast(shapely.geometry.MultiLineString, res)
             for xline in res.geoms:
                 if not xline.is_empty:
                     lines.append(xline)
@@ -102,15 +105,15 @@ class ShapelyUtils:
         """
         Ensure the simplification of a MultiLine is a Multiline (possibly empty)
         """
-        lines : list[shapely.geometry.LineString] = []
+        lines: list[shapely.geometry.LineString] = []
         for line in multiline.geoms:
-            xline = line.simplify(tol)
-            if xline and xline.geom_type == "LineString":
-                xline = cast(shapely.geometry.LineString, xline) 
+            sline = line.simplify(tol)
+            if sline and sline.geom_type == "LineString":
+                xline = cast(shapely.geometry.LineString, sline)
                 lines.append(xline)
-            #if xline and xline.geom_type == "MultiLineString":
-            #    xline = cast(shapely.geometry.MultiLineString, xline) 
-            #    for item in xline.geoms:
+            # if sline and sline.geom_type == "MultiLineString":
+            #    xmultiline = cast(shapely.geometry.MultiLineString, sline)
+            #    for item in xmultiline.geoms:
             #        lines.append(item)
 
         return shapely.geometry.MultiLineString(lines)
@@ -122,19 +125,18 @@ class ShapelyUtils:
         """
         Ensure the simplification of a MultiPolygon is a MultiPolygon (possibly empty)
         """
-        polys : list[shapely.geometry.Polygon] = []
+        polys: list[shapely.geometry.Polygon] = []
         for poly in multipoly.geoms:
             geom = poly.simplify(tol)
             if geom and geom.geom_type == "Polygon":
-                xpoly = cast(shapely.geometry.Polygon, geom) 
+                xpoly = cast(shapely.geometry.Polygon, geom)
                 polys.append(xpoly)
             if geom and geom.geom_type == "MultiPolygon":
-                xpolys = cast(shapely.geometry.MultiPolygon, geom) 
+                xpolys = cast(shapely.geometry.MultiPolygon, geom)
                 for xpoly in xpolys.geoms:
                     polys.append(xpoly)
-            #if geom and geom.geom_type == "GeometryCollection":
-            #    geom = cast(shapely.geometry.GeometryCollection, geom) 
-
+            # if geom and geom.geom_type == "GeometryCollection":
+            #    geom = cast(shapely.geometry.GeometryCollection, geom)
 
         return shapely.geometry.MultiPolygon(polys)
 
@@ -174,7 +176,7 @@ class ShapelyUtils:
         ]
 
         # resulting linestring can be empty
-        filtered_lines : list[shapely.geometry.LineString] = []
+        filtered_lines: list[shapely.geometry.LineString] = []
 
         for geom in offseted_lines:
             if geom.geom_type == "LineString":
@@ -282,20 +284,20 @@ class ShapelyUtils:
         Todo: considering interiors offseted 'right', pycut could the MultiLineString
         into a single LineString ?
         """
-        polygons : list[shapely.geometry.Polygon] = []
+        polygons: list[shapely.geometry.Polygon] = []
 
         for offset in multi_offset:
-            lines_ok : list[shapely.geometry.LineString] = []
+            lines_ok: list[shapely.geometry.LineString] = []
 
             if offset.geom_type == "LineString":
                 offset = cast(shapely.geometry.LineString, offset)
-                #if not offset.is_empty:
+                # if not offset.is_empty:
                 if len(list(offset.coords)) > 2:
                     lines_ok.append(offset)
             elif offset.geom_type == "MultiLineString":
                 offset = cast(shapely.geometry.MultiLineString, offset)
                 for line in offset.geoms:
-                    #if not line.is_empty:
+                    # if not line.is_empty:
                     if len(list(line.coords)) > 2:
                         lines_ok.append(line)
 
@@ -354,7 +356,7 @@ class ShapelyUtils:
             multipoly = union
         elif union.geom_type == "GeometryCollection":
             union = cast(shapely.geometry.GeometryCollection, union)
-            polys : list[shapely.geometry.Polygon] = []
+            polys: list[shapely.geometry.Polygon] = []
             for item in union.geoms:
                 if item.geom_type == "Polygon":
                     item = cast(shapely.geometry.Polygon, item)
@@ -407,8 +409,7 @@ class ShapelyUtils:
     def multiline_to_multipoly(
         cls, multiline: shapely.geometry.MultiLineString
     ) -> shapely.geometry.MultiPolygon:
-        """ result may be empty
-        """
+        """result may be empty"""
         polys = []
 
         for line in multiline.geoms:
@@ -416,22 +417,22 @@ class ShapelyUtils:
             polys.append(poly)
 
         multipoly = shapely.geometry.MultiPolygon(polys)
-        
+
         valid = make_valid(multipoly)
 
-        if valid.geom_type == 'Polygon':
+        if valid.geom_type == "Polygon":
             valid = cast(shapely.geometry.Polygon, valid)
             return shapely.geometry.MultiPolygon([valid])
-        if valid.geom_type == 'MultiPolygon':
+        if valid.geom_type == "MultiPolygon":
             valid = cast(shapely.geometry.MultiPolygon, valid)
             return valid
-        if valid.geom_type == 'GeometryCollection':
+        if valid.geom_type == "GeometryCollection":
             valid = cast(shapely.geometry.GeometryCollection, valid)
             for item in valid.geoms:
-                if item.geom_type == 'Polygon':
+                if item.geom_type == "Polygon":
                     item = cast(shapely.geometry.Polygon, item)
                     return shapely.geometry.MultiPolygon([item])
-                if item.geom_type == 'MultiPolygon':
+                if item.geom_type == "MultiPolygon":
                     item = cast(shapely.geometry.MultiPolygon, item)
                     return item
 
@@ -516,43 +517,65 @@ class ShapelyUtils:
         valid = make_valid(polygon)
 
         if valid.geom_type == "Polygon":
-            valid = cast(shapely.geometry.Polygon, valid)
-            return valid
+            poly = cast(shapely.geometry.Polygon, valid)
+            return poly
 
         elif valid.geom_type == "MultiPolygon":
-            valid = cast(shapely.geometry.MultiPolygon, valid)
-            # take the largest one! CHECKME
-            largest_area = -1.0
-            largest_poly = valid.geoms[0]
-            for poly in valid.geoms:
+            multipoly = cast(shapely.geometry.MultiPolygon, valid)
+            return cls.select_largest_poly_from_multipoly(multipoly)
+
+        elif valid.geom_type == "GeometryCollection":
+            collection = cast(shapely.geometry.GeometryCollection, valid)
+            return cls.select_largest_poly_from_collection(collection)
+
+        return shapely.geometry.Polygon([])
+
+    @classmethod
+    def select_largest_poly_from_multipoly(
+        cls, multipoly: shapely.geometry.MultiPolygon
+    ) -> shapely.geometry.Polygon:
+        """ """
+        largest_area = 0.0
+        largest_poly = shapely.geometry.Polygon([])
+
+        for poly in multipoly.geoms:
+            area = poly.area
+            if area > largest_area:
+                largest_area = area
+                largest_poly = poly
+
+        return largest_poly
+
+    @classmethod
+    def select_largest_poly_from_collection(
+        cls, collection: shapely.geometry.GeometryCollection
+    ) -> shapely.geometry.Polygon:
+        """ """
+        largest_area = 0.0
+        largest_poly = shapely.geometry.Polygon([])
+
+        for geom in collection.geoms:
+            if geom.geom_type == "MultiPolygon":
+                multipoly = cast(shapely.geometry.MultiPolygon, geom)
+                l_poly = cls.select_largest_poly_from_multipoly(multipoly)
+
+                if l_poly.area > largest_area:
+                    largest_area = l_poly.area
+                    largest_poly = l_poly
+
+            elif geom.geom_type == "Polygon":
+                poly = cast(shapely.geometry.Polygon, geom)
                 area = poly.area
                 if area > largest_area:
                     largest_area = area
                     largest_poly = poly
 
-            return largest_poly
+            elif geom.geom_type == "MultiLineString":
+                pass
+            elif geom.geom_type == "LineString":
+                pass
 
-        elif valid.geom_type == "GeometryCollection":
-            valid = cast(shapely.geometry.GeometryCollection, valid)
-            # take the largest Polygon
-            largest_area = -1.0
-            largest_poly = None
-
-            for geom in valid.geoms:
-                if geom.geom_type == "Polygon":
-                    geom = cast(shapely.geometry.Polygon, geom)
-                    area = geom.area
-                    if area > largest_area:
-                        largest_area = area
-                        largest_poly = geom
-                elif geom.geom_type == "MultiLineString":
-                    pass
-                elif geom.geom_type == "LineString":
-                    pass
-
-            return largest_poly
-
-        return shapely.geometry.Polygon([])
+        return largest_poly
 
     @classmethod
     def fix_generic_polygon(
