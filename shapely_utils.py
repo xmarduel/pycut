@@ -109,13 +109,13 @@ class ShapelyUtils:
         """
         lines: list[shapely.geometry.LineString] = []
         for line in multiline.geoms:
-            sline = line.simplify(tol)
-            if sline and sline.geom_type == "LineString":
-                xline = cast(shapely.geometry.LineString, sline)
+            xline = line.simplify(tol)
+            if xline and xline.geom_type == "LineString":
+                xline = cast(shapely.geometry.LineString, xline)
                 lines.append(xline)
-            # if sline and sline.geom_type == "MultiLineString":
-            #    xmultiline = cast(shapely.geometry.MultiLineString, sline)
-            #    for item in xmultiline.geoms:
+            # if xline and xline.geom_type == "MultiLineString":
+            #    xline = cast(shapely.geometry.MultiLineString, xline)
+            #    for item in xline.geoms:
             #        lines.append(item)
 
         return shapely.geometry.MultiLineString(lines)

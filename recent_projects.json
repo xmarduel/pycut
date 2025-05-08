@@ -1,6 +1,6 @@
 [
-  "projects/cnc_all_letters_tudor.json",
   "projects/cnc_all_letters_slaine.json",
+  "projects/cnc_all_letters_tudor.json",
   "projects/holes.json",
   "projects/test_multiline.json",
   "projects/helix_tests.json"
