@@ -55,6 +55,7 @@
     </ul>
   </li>
   <li><a href="#P-21">Grbl Errors Codes</a></li>
+  <li><a href="#P-23">Upgrading the CNC 1310</a>
   <li><a href="#P-22">Upgrading the CNC 1419</a>
    <ul>
       <li><a href="#P-22-001">Spindle</a></li>
@@ -280,7 +281,7 @@ certainly own better machines anyway, I do not see their point. The YouTube chan
 is quite small but very well constructed, thus very sturdy. There are also vidoes in Internet
 showing how to assemble it. Unfortunately upgrading it is not straightforward. A better spindle
 mounted on it out of the box would be best. The reality for a machine is: the more expensive, the
-better, or, as americans say: "you get what you've paid for"! </p>
+better!</p>
 
 <p>Nervertheless, to be able to setup and use the machine properly, knowledge of the <strong>Grbl
 Settings</strong> is a must. <strong>Grbl</strong> is the low level software (the "firmware") that
@@ -1162,6 +1163,11 @@ if you have exceeded your machine limits with a motion command.</p>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
+<h2 id="P-23">Upgrading the CNC 1310</h2>
+
+<p>Here is a <a href="https://rumble.com/vnj1tl-cnc-1310.-correct-assembly-of-the-anti-backlash-unit.html">link</a>
+ to a video concerning how to mount "the right way" the backlash nuts.</p>
+
 <h2 id="P-22">Upgrading the CNC 1419</h2>
 
 <p>A YouTube channel called <strong>"Propeller Labs"</strong> demonstrates various upgrades of the
@@ -1367,18 +1373,20 @@ episodes <strong>#6 - #7. CNC 1419</strong></div>
 
 <p>Now the neccessary power to run a board with 3 <strong>Nema17 17HS19-2004S1</strong> motors is 3
 times (24 Volt * 2 Amp) = 3 x 48 W. So a better power supply than the (junk) one given as standard
-for the CNC 1419 which has a max of 100W (or 120W) is needed. I found 4 ("brick" like) suitable
+for the CNC 1419 which has a max of 100W (or 120W) is needed. I found 5 ("brick" like) suitable
 power supply: </p>
 <ul>
   <li>Liteon 120 W at 24 Volt - if you do not upgrade your motors -</li>
   <li>Dell Notebook power supply 130 W at 19.5 Volt</li>
   <li>Dell Notebook power supply 180 W at 19.5 Volt</li>
+  <li>Dell Notebook power supply 240 W at 19.5 Volt</li>
   <li>Samsung power supply 180 W at 24 Volt</li>
 </ul>
 
 <img src="cnc-doc\images\power_supply\liteon-120.png" width="200"></img> 
 <img src="cnc-doc\images\power_supply\dell-130.png" width="200"></img> 
 <img src="cnc-doc\images\power_supply\dell-180.png" width="200"></img> 
+<img src="cnc-doc\images\power_supply\dell-240.png" width="200" height="266.6"></img> 
 <img src="cnc-doc\images\power_supply\samsung-180.png" width="200"></img> 
 
 <p>You just need the right adaptor for the connector output.</p>
@@ -1394,7 +1402,7 @@ There are plenty of those on AliExpress</p>
 the <strong>TB6600</strong> drivers which supports higher current. It is nevertheless not
 straightforward because of its box enclosure so that connections (wires) from the controller board
 to the drivers have to be soldered (at best) or plugged into the board stepper motors receptors
-modules.. This adds quite a lot of electric cables and is place consuming. And the drivers needs an
+modules. This adds quite a lot of electric cables and is place consuming. And the drivers needs an
 extra power supply together with the board own power supply and the 500W spindle power supply
 too.</p>
 
