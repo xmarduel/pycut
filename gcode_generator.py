@@ -25,7 +25,7 @@ from typing import cast
 import math
 
 import shapely
-import shapely.geometry 
+import shapely.geometry
 import shapely.ops
 
 from shapely_utils import ShapelyUtils
@@ -246,6 +246,9 @@ class TabsModel:
         self.height = ValWithUnit(2.0, self.units)  # default
 
         Tab.set_height(self.height, self.units)
+
+        # global for all tabs
+        self.retract_to_safe = True
 
     def set_height(self, height: float, units: str):
         self.units = units
@@ -1159,6 +1162,7 @@ class GcodeGenerator:
                         "helix_pitch": helix_pitch,
                         "helix_plunge_rate": helix_plunge_rate,
                         "tabs": tabs,
+                        "tabs_retract_to_safe": self.tabs_model.retract_to_safe,
                         "tabZ": tabZ,
                         "peckZ": peckZ,
                         "flip_xy": self.flip_xy,

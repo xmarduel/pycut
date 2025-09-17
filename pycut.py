@@ -1,6 +1,6 @@
 # This Python file uses the following encoding: utf-8
 
-VERSION = "0_8_0"
+VERSION = "0_8_1"
 
 import sys
 import os
@@ -74,7 +74,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         "svg": {
             "px_per_inch": 96,
         },
-        "Tabs": {"units": "mm", "height": 1.0, "tabs": []},
+        "Tabs": {"units": "mm", "height": 1.0, "retract_to_safe": True, "tabs": []},
         "Tool": {
             "units": "mm",
             "diameter": 3.0,
@@ -265,6 +265,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.ui.Tabs_hideAllTabs.clicked.connect(self.cb_tabs_hide_all)
         self.ui.Tabs_hideDisabledTabs.clicked.connect(self.cb_tabs_hide_disabled)
+        self.ui.Tabs_RetractToSafe.clicked.connect(self.cb_tabs_retract_to_safe)
 
         self.init_gui()
 
@@ -587,6 +588,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 "units": self.ui.Tabs_Units.currentText(),
                 "height": self.ui.Tabs_Height.value(),
                 "tabs": self.tabs,
+                "retract_to_safe": self.ui.Tabs_RetractToSafe.isChecked(),
             },
             "Tool": {
                 "units": self.ui.Tool_Units.currentText(),
@@ -634,6 +636,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # Tabs
         self.ui.Tabs_Units.setCurrentText(settings["Tabs"]["units"])
         self.ui.Tabs_Height.setValue(settings["Tabs"]["height"])
+        self.ui.Tabs_RetractToSafe.setChecked(settings["Tabs"]["retract_to_safe"])
 
         # Tool
         self.ui.Tool_Units.setCurrentText(settings["Tool"]["units"])
@@ -1483,6 +1486,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_viewer.SVGVIEWER_HIDE_TABS_ALL = val
         self.svg_viewer.reinit()
 
+    def cb_tabs_retract_to_safe(self):
+        val = self.ui.Tabs_RetractToSafe.isChecked()
+
     def display_cnc_ops_geometry(self, operations: List[operations_tableview.OpItem]):
         """ """
         settings = self.get_current_settings()
@@ -1606,6 +1612,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         tabsmodel = TabsModel([tab for tab in self.tabs if tab["enabled"] == True])
         tabsmodel.units = settings["Tabs"]["units"]
         tabsmodel.height = ValWithUnit(settings["Tabs"]["height"], tabsmodel.units)
+        tabsmodel.retract_to_safe = settings["Tabs"]["retract_to_safe"]
 
         gcode_model = GcodeModel()
         gcode_model.units = settings["GCodeConversion"]["units"]

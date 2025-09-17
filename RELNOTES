@@ -1,3 +1,7 @@
+# 0.8.1
+
+Tabs retract to safe (clearance) or to tab height (for all tabs)
+
 # 0.8.0
 
 with shapely 2.1.0

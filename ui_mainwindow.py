@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.1
+## Created by: Qt User Interface Compiler version 6.9.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -63,7 +63,7 @@ class Ui_mainwindow(object):
         self.scrollArea_left.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 388, 974))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 326, 988))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSpacing(22)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -347,7 +347,7 @@ class Ui_mainwindow(object):
         self.label_CurveToLineConversion_MinimumNbSegments.setMinimumSize(QSize(189, 0))
         self.label_CurveToLineConversion_MinimumNbSegments.setFont(font1)
 
-        self.formLayoutCurveToLineConversion.setWidget(0, QFormLayout.LabelRole, self.label_CurveToLineConversion_MinimumNbSegments)
+        self.formLayoutCurveToLineConversion.setWidget(0, QFormLayout.ItemRole.LabelRole, self.label_CurveToLineConversion_MinimumNbSegments)
 
         self.CurveToLineConversion_MinimumNbSegments = QSpinBox(self.scrollAreaWidgetContents)
         self.CurveToLineConversion_MinimumNbSegments.setObjectName(u"CurveToLineConversion_MinimumNbSegments")
@@ -355,13 +355,13 @@ class Ui_mainwindow(object):
         self.CurveToLineConversion_MinimumNbSegments.setMinimum(1)
         self.CurveToLineConversion_MinimumNbSegments.setValue(5)
 
-        self.formLayoutCurveToLineConversion.setWidget(0, QFormLayout.FieldRole, self.CurveToLineConversion_MinimumNbSegments)
+        self.formLayoutCurveToLineConversion.setWidget(0, QFormLayout.ItemRole.FieldRole, self.CurveToLineConversion_MinimumNbSegments)
 
         self.label_CurveToLineConversion_MinimumSegmentsLength = QLabel(self.scrollAreaWidgetContents)
         self.label_CurveToLineConversion_MinimumSegmentsLength.setObjectName(u"label_CurveToLineConversion_MinimumSegmentsLength")
         self.label_CurveToLineConversion_MinimumSegmentsLength.setFont(font1)
 
-        self.formLayoutCurveToLineConversion.setWidget(1, QFormLayout.LabelRole, self.label_CurveToLineConversion_MinimumSegmentsLength)
+        self.formLayoutCurveToLineConversion.setWidget(1, QFormLayout.ItemRole.LabelRole, self.label_CurveToLineConversion_MinimumSegmentsLength)
 
         self.CurveToLineConversion_MinimumSegmentsLength = QDoubleSpinBox(self.scrollAreaWidgetContents)
         self.CurveToLineConversion_MinimumSegmentsLength.setObjectName(u"CurveToLineConversion_MinimumSegmentsLength")
@@ -369,7 +369,7 @@ class Ui_mainwindow(object):
         self.CurveToLineConversion_MinimumSegmentsLength.setSingleStep(0.010000000000000)
         self.CurveToLineConversion_MinimumSegmentsLength.setValue(0.010000000000000)
 
-        self.formLayoutCurveToLineConversion.setWidget(1, QFormLayout.FieldRole, self.CurveToLineConversion_MinimumSegmentsLength)
+        self.formLayoutCurveToLineConversion.setWidget(1, QFormLayout.ItemRole.FieldRole, self.CurveToLineConversion_MinimumSegmentsLength)
 
 
         self.verticalLayoutCurveToLineConversion.addLayout(self.formLayoutCurveToLineConversion)
@@ -403,7 +403,7 @@ class Ui_mainwindow(object):
         self.label_TabsUnits.setObjectName(u"label_TabsUnits")
         self.label_TabsUnits.setFont(font1)
 
-        self.formLayout_Tabs.setWidget(0, QFormLayout.LabelRole, self.label_TabsUnits)
+        self.formLayout_Tabs.setWidget(0, QFormLayout.ItemRole.LabelRole, self.label_TabsUnits)
 
         self.Tabs_Units = QComboBox(self.tabsGlobals)
         self.Tabs_Units.addItem("")
@@ -411,37 +411,50 @@ class Ui_mainwindow(object):
         self.Tabs_Units.setObjectName(u"Tabs_Units")
         self.Tabs_Units.setEnabled(True)
 
-        self.formLayout_Tabs.setWidget(0, QFormLayout.FieldRole, self.Tabs_Units)
+        self.formLayout_Tabs.setWidget(0, QFormLayout.ItemRole.FieldRole, self.Tabs_Units)
 
         self.label_Tabs_Height = QLabel(self.tabsGlobals)
         self.label_Tabs_Height.setObjectName(u"label_Tabs_Height")
         self.label_Tabs_Height.setFont(font1)
 
-        self.formLayout_Tabs.setWidget(1, QFormLayout.LabelRole, self.label_Tabs_Height)
+        self.formLayout_Tabs.setWidget(1, QFormLayout.ItemRole.LabelRole, self.label_Tabs_Height)
 
         self.Tabs_Height = QDoubleSpinBox(self.tabsGlobals)
         self.Tabs_Height.setObjectName(u"Tabs_Height")
         self.Tabs_Height.setEnabled(True)
         self.Tabs_Height.setDecimals(3)
 
-        self.formLayout_Tabs.setWidget(1, QFormLayout.FieldRole, self.Tabs_Height)
+        self.formLayout_Tabs.setWidget(1, QFormLayout.ItemRole.FieldRole, self.Tabs_Height)
 
         self.label = QLabel(self.tabsGlobals)
         self.label.setObjectName(u"label")
 
-        self.formLayout_Tabs.setWidget(2, QFormLayout.LabelRole, self.label)
+        self.formLayout_Tabs.setWidget(2, QFormLayout.ItemRole.LabelRole, self.label)
 
         self.Tabs_hideAllTabs = QCheckBox(self.tabsGlobals)
         self.Tabs_hideAllTabs.setObjectName(u"Tabs_hideAllTabs")
         self.Tabs_hideAllTabs.setFont(font1)
 
-        self.formLayout_Tabs.setWidget(2, QFormLayout.FieldRole, self.Tabs_hideAllTabs)
+        self.formLayout_Tabs.setWidget(2, QFormLayout.ItemRole.FieldRole, self.Tabs_hideAllTabs)
 
         self.Tabs_hideDisabledTabs = QCheckBox(self.tabsGlobals)
         self.Tabs_hideDisabledTabs.setObjectName(u"Tabs_hideDisabledTabs")
         self.Tabs_hideDisabledTabs.setFont(font1)
 
-        self.formLayout_Tabs.setWidget(3, QFormLayout.FieldRole, self.Tabs_hideDisabledTabs)
+        self.formLayout_Tabs.setWidget(3, QFormLayout.ItemRole.FieldRole, self.Tabs_hideDisabledTabs)
+
+        self.label_Retract = QLabel(self.tabsGlobals)
+        self.label_Retract.setObjectName(u"label_Retract")
+        self.label_Retract.setFont(font1)
+
+        self.formLayout_Tabs.setWidget(4, QFormLayout.ItemRole.LabelRole, self.label_Retract)
+
+        self.Tabs_RetractToSafe = QCheckBox(self.tabsGlobals)
+        self.Tabs_RetractToSafe.setObjectName(u"Tabs_RetractToSafe")
+        self.Tabs_RetractToSafe.setFont(font1)
+        self.Tabs_RetractToSafe.setChecked(True)
+
+        self.formLayout_Tabs.setWidget(4, QFormLayout.ItemRole.FieldRole, self.Tabs_RetractToSafe)
 
 
         self.verticalLayout_4.addLayout(self.formLayout_Tabs)
@@ -532,7 +545,7 @@ class Ui_mainwindow(object):
         self.scrollArea_right.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 320, 974))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 314, 988))
         self.verticalLayout_5 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_5.setSpacing(22)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
@@ -575,33 +588,33 @@ class Ui_mainwindow(object):
         self.label_Material_Units.setObjectName(u"label_Material_Units")
         self.label_Material_Units.setFont(font1)
 
-        self.formLayout_Material.setWidget(0, QFormLayout.LabelRole, self.label_Material_Units)
+        self.formLayout_Material.setWidget(0, QFormLayout.ItemRole.LabelRole, self.label_Material_Units)
 
         self.Material_Units = QComboBox(self.scrollAreaWidgetContents_2)
         self.Material_Units.addItem("")
         self.Material_Units.addItem("")
         self.Material_Units.setObjectName(u"Material_Units")
 
-        self.formLayout_Material.setWidget(0, QFormLayout.FieldRole, self.Material_Units)
+        self.formLayout_Material.setWidget(0, QFormLayout.ItemRole.FieldRole, self.Material_Units)
 
         self.label_Material_Thickness = QLabel(self.scrollAreaWidgetContents_2)
         self.label_Material_Thickness.setObjectName(u"label_Material_Thickness")
         self.label_Material_Thickness.setFont(font1)
 
-        self.formLayout_Material.setWidget(1, QFormLayout.LabelRole, self.label_Material_Thickness)
+        self.formLayout_Material.setWidget(1, QFormLayout.ItemRole.LabelRole, self.label_Material_Thickness)
 
         self.Material_Thickness = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
         self.Material_Thickness.setObjectName(u"Material_Thickness")
         self.Material_Thickness.setMaximum(100.000000000000000)
         self.Material_Thickness.setValue(50.000000000000000)
 
-        self.formLayout_Material.setWidget(1, QFormLayout.FieldRole, self.Material_Thickness)
+        self.formLayout_Material.setWidget(1, QFormLayout.ItemRole.FieldRole, self.Material_Thickness)
 
         self.label_Material_ZOrigin = QLabel(self.scrollAreaWidgetContents_2)
         self.label_Material_ZOrigin.setObjectName(u"label_Material_ZOrigin")
         self.label_Material_ZOrigin.setFont(font1)
 
-        self.formLayout_Material.setWidget(2, QFormLayout.LabelRole, self.label_Material_ZOrigin)
+        self.formLayout_Material.setWidget(2, QFormLayout.ItemRole.LabelRole, self.label_Material_ZOrigin)
 
         self.Material_ZOrigin = QComboBox(self.scrollAreaWidgetContents_2)
         self.Material_ZOrigin.addItem("")
@@ -610,21 +623,21 @@ class Ui_mainwindow(object):
         sizePolicy.setHeightForWidth(self.Material_ZOrigin.sizePolicy().hasHeightForWidth())
         self.Material_ZOrigin.setSizePolicy(sizePolicy)
 
-        self.formLayout_Material.setWidget(2, QFormLayout.FieldRole, self.Material_ZOrigin)
+        self.formLayout_Material.setWidget(2, QFormLayout.ItemRole.FieldRole, self.Material_ZOrigin)
 
         self.label_Material_Clearance = QLabel(self.scrollAreaWidgetContents_2)
         self.label_Material_Clearance.setObjectName(u"label_Material_Clearance")
         self.label_Material_Clearance.setFont(font1)
         self.label_Material_Clearance.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
-        self.formLayout_Material.setWidget(3, QFormLayout.LabelRole, self.label_Material_Clearance)
+        self.formLayout_Material.setWidget(3, QFormLayout.ItemRole.LabelRole, self.label_Material_Clearance)
 
         self.Material_Clearance = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
         self.Material_Clearance.setObjectName(u"Material_Clearance")
         self.Material_Clearance.setMaximum(100.000000000000000)
         self.Material_Clearance.setValue(20.000000000000000)
 
-        self.formLayout_Material.setWidget(3, QFormLayout.FieldRole, self.Material_Clearance)
+        self.formLayout_Material.setWidget(3, QFormLayout.ItemRole.FieldRole, self.Material_Clearance)
 
 
         self.verticalLayoutMaterial.addLayout(self.formLayout_Material)
@@ -861,49 +874,49 @@ class Ui_mainwindow(object):
         self.label_GCodeGeneration_ReturnToZeroAtEnd.setFont(font1)
         self.label_GCodeGeneration_ReturnToZeroAtEnd.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
 
-        self.formLayout_GCodeGeneration.setWidget(0, QFormLayout.LabelRole, self.label_GCodeGeneration_ReturnToZeroAtEnd)
+        self.formLayout_GCodeGeneration.setWidget(0, QFormLayout.ItemRole.LabelRole, self.label_GCodeGeneration_ReturnToZeroAtEnd)
 
         self.GCodeGeneration_ReturnToZeroAtEnd = QCheckBox(self.scrollAreaWidgetContents_2)
         self.GCodeGeneration_ReturnToZeroAtEnd.setObjectName(u"GCodeGeneration_ReturnToZeroAtEnd")
 
-        self.formLayout_GCodeGeneration.setWidget(0, QFormLayout.FieldRole, self.GCodeGeneration_ReturnToZeroAtEnd)
+        self.formLayout_GCodeGeneration.setWidget(0, QFormLayout.ItemRole.FieldRole, self.GCodeGeneration_ReturnToZeroAtEnd)
 
         self.label_GCodeGeneration_SpindleControl = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeGeneration_SpindleControl.setObjectName(u"label_GCodeGeneration_SpindleControl")
         self.label_GCodeGeneration_SpindleControl.setFont(font1)
 
-        self.formLayout_GCodeGeneration.setWidget(1, QFormLayout.LabelRole, self.label_GCodeGeneration_SpindleControl)
+        self.formLayout_GCodeGeneration.setWidget(1, QFormLayout.ItemRole.LabelRole, self.label_GCodeGeneration_SpindleControl)
 
         self.GCodeGeneration_SpindleControl = QCheckBox(self.scrollAreaWidgetContents_2)
         self.GCodeGeneration_SpindleControl.setObjectName(u"GCodeGeneration_SpindleControl")
         self.GCodeGeneration_SpindleControl.setFont(font1)
 
-        self.formLayout_GCodeGeneration.setWidget(1, QFormLayout.FieldRole, self.GCodeGeneration_SpindleControl)
+        self.formLayout_GCodeGeneration.setWidget(1, QFormLayout.ItemRole.FieldRole, self.GCodeGeneration_SpindleControl)
 
         self.label_GCodeGeneration_SpindleSpeed = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeGeneration_SpindleSpeed.setObjectName(u"label_GCodeGeneration_SpindleSpeed")
         self.label_GCodeGeneration_SpindleSpeed.setFont(font1)
 
-        self.formLayout_GCodeGeneration.setWidget(2, QFormLayout.LabelRole, self.label_GCodeGeneration_SpindleSpeed)
+        self.formLayout_GCodeGeneration.setWidget(2, QFormLayout.ItemRole.LabelRole, self.label_GCodeGeneration_SpindleSpeed)
 
         self.GCodeGeneration_SpindleSpeed = QSpinBox(self.scrollAreaWidgetContents_2)
         self.GCodeGeneration_SpindleSpeed.setObjectName(u"GCodeGeneration_SpindleSpeed")
         self.GCodeGeneration_SpindleSpeed.setMaximum(25000)
         self.GCodeGeneration_SpindleSpeed.setSingleStep(50)
 
-        self.formLayout_GCodeGeneration.setWidget(2, QFormLayout.FieldRole, self.GCodeGeneration_SpindleSpeed)
+        self.formLayout_GCodeGeneration.setWidget(2, QFormLayout.ItemRole.FieldRole, self.GCodeGeneration_SpindleSpeed)
 
         self.label_GCodeGeneration_ProgramEnd = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeGeneration_ProgramEnd.setObjectName(u"label_GCodeGeneration_ProgramEnd")
         self.label_GCodeGeneration_ProgramEnd.setFont(font1)
 
-        self.formLayout_GCodeGeneration.setWidget(3, QFormLayout.LabelRole, self.label_GCodeGeneration_ProgramEnd)
+        self.formLayout_GCodeGeneration.setWidget(3, QFormLayout.ItemRole.LabelRole, self.label_GCodeGeneration_ProgramEnd)
 
         self.GCodeGeneration_ProgramEnd = QCheckBox(self.scrollAreaWidgetContents_2)
         self.GCodeGeneration_ProgramEnd.setObjectName(u"GCodeGeneration_ProgramEnd")
         self.GCodeGeneration_ProgramEnd.setFont(font1)
 
-        self.formLayout_GCodeGeneration.setWidget(3, QFormLayout.FieldRole, self.GCodeGeneration_ProgramEnd)
+        self.formLayout_GCodeGeneration.setWidget(3, QFormLayout.ItemRole.FieldRole, self.GCodeGeneration_ProgramEnd)
 
 
         self.verticalLayoutGCodeGeneration.addLayout(self.formLayout_GCodeGeneration)
@@ -931,12 +944,12 @@ class Ui_mainwindow(object):
         self.label_GCodeStatistics_RunTime.setFont(font1)
         self.label_GCodeStatistics_RunTime.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
 
-        self.formLayout_GCodeStatistics.setWidget(0, QFormLayout.LabelRole, self.label_GCodeStatistics_RunTime)
+        self.formLayout_GCodeStatistics.setWidget(0, QFormLayout.ItemRole.LabelRole, self.label_GCodeStatistics_RunTime)
 
         self.GCodeStatistics_RunTime = QLabel(self.scrollAreaWidgetContents_2)
         self.GCodeStatistics_RunTime.setObjectName(u"GCodeStatistics_RunTime")
 
-        self.formLayout_GCodeStatistics.setWidget(0, QFormLayout.FieldRole, self.GCodeStatistics_RunTime)
+        self.formLayout_GCodeStatistics.setWidget(0, QFormLayout.ItemRole.FieldRole, self.GCodeStatistics_RunTime)
 
 
         self.verticalLayoutGCodeStatistics.addLayout(self.formLayout_GCodeStatistics)
@@ -960,7 +973,7 @@ class Ui_mainwindow(object):
         mainwindow.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(mainwindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1226, 26))
+        self.menubar.setGeometry(QRect(0, 0, 1226, 21))
         self.menuSvg = QMenu(self.menubar)
         self.menuSvg.setObjectName(u"menuSvg")
         self.menuFile = QMenu(self.menubar)
@@ -1077,6 +1090,8 @@ class Ui_mainwindow(object):
         self.label.setText("")
         self.Tabs_hideAllTabs.setText(QCoreApplication.translate("mainwindow", u"Hide all Tabs", None))
         self.Tabs_hideDisabledTabs.setText(QCoreApplication.translate("mainwindow", u"Hide disabled Tabs", None))
+        self.label_Retract.setText(QCoreApplication.translate("mainwindow", u"Retract", None))
+        self.Tabs_RetractToSafe.setText(QCoreApplication.translate("mainwindow", u"Retract to Clearance", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.svg), QCoreApplication.translate("mainwindow", u"SVG", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.viewer), QCoreApplication.translate("mainwindow", u"GCode Viewer", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.simulator_webgl), QCoreApplication.translate("mainwindow", u"GCode Simulator", None))

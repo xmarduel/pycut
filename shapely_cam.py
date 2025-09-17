@@ -632,6 +632,7 @@ class cam:
           helix_pitch:       Depth of an helix revolution
           helix_plunge_rate: Helix plunge rate
           tabs:              List of tabs
+          tabs_retract_to_safe: True/False
           tabZ:              Level below which tabs are to be processed
           peckZ:             Level to retract when pecking
           flip_xy            Toggle X with Y
@@ -666,13 +667,15 @@ class cam:
 
         gcode = []
 
-        retract_gcode = [
-            "; Retract",
+        tabs_retract_to_safe = args["tabs_retract_to_safe"]
+
+        retract_to_safe = [
+            "; Retract to Clearance",
             "G1 Z" + safeZ.to_fixed(decimal) + f"{rapid_feed_gcode}",
         ]
 
-        retract_for_tab_gcode = [
-            "; Retract for tab",
+        retract_to_tab_height = [
+            "; Retract to Tab Height",
             "G1 Z" + tabZ.to_fixed(decimal) + f"{rapid_feed_gcode}",
         ]
 
@@ -827,7 +830,7 @@ class cam:
                     else:
                         gcode.append("G1" + convert_point_3D(pt))
 
-            gcode.extend(retract_gcode)
+            gcode.extend(retract_to_safe)
 
             gcode.append("; Rapid to op center position")
             gcode.append("G1" + convert_point(center) + rapid_feed_gcode)
@@ -835,6 +838,7 @@ class cam:
             return gcode
 
         # tabs are globals - but maybe this path does not hits any tabs
+        first_tab_level_retract_done = False
         crosses_tabs = False
         # --> crosses_tabs will be fixed later
 
@@ -879,12 +883,15 @@ class cam:
                     if optype == "Peck":
                         gcode.extend(retract_for_peck)
                     else:
-                        gcode.extend(retract_gcode)
+                        # retract to safeZ before processing next path level (only once - not sure for opened paths...)
+                        if not first_tab_level_retract_done:
+                            gcode.extend(retract_to_safe)
+                            first_tab_level_retract_done = True
                 elif currentZ < safeZ and (not path.safe_to_close):
                     if optype == "Peck":
                         gcode.extend(retract_for_peck)
                     else:
-                        gcode.extend(retract_gcode)
+                        gcode.extend(retract_to_safe)
 
                 # check this - what does it mean ???
                 if not crosses_tabs:
@@ -1041,12 +1048,15 @@ class cam:
                             gcode.append(gcode_line_start)
 
                     if in_tabs_height:
-                        # retract to safeZ before processing next separated_paths item
-                        gcode.extend(retract_gcode)
+                        # retract to safeZ/tabZ before processing next separated_paths item
+                        if tabs_retract_to_safe:
+                            gcode.extend(retract_to_safe)
+                        else:
+                            gcode.extend(retract_to_tab_height)
 
                 finishedZ = nextZ
 
-            gcode.extend(retract_gcode)
+            gcode.extend(retract_to_safe)
 
         # last
         gcode.append("; Rapid to initial position")
