@@ -483,7 +483,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             projname = os.path.basename(self.projfilename)
             projname = os.path.splitext(projname)[0]
 
-            opname = self.project.operations[0].name
+            if self.project.operations:
+                opname = self.project.operations[0].name
+            else:
+                opname = "output"
 
             filename = "%s_%s.nc" % (projname, opname)
 
@@ -848,8 +851,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.tabs = []
             self.ui.tabsview_manager.set_tabs(self.tabs)
 
-            self.display_svg(self.svg_file)    
-      
+            self.display_svg(self.svg_file)
+
     def cb_open_svg(self):
         """
         a svg only (not a project) -> no operations

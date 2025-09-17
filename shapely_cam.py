@@ -29,7 +29,7 @@ from typing import cast
 import numpy as np
 
 import shapely
-import shapely.geometry 
+import shapely.geometry
 import shapely.ops
 
 from val_with_unit import ValWithUnit
@@ -52,7 +52,9 @@ class CamPath:
     }
     """
 
-    def __init__(self, path: shapely.geometry.base.BaseGeometry, safe_to_close: bool = True):
+    def __init__(
+        self, path: shapely.geometry.base.BaseGeometry, safe_to_close: bool = True
+    ):
         # shapely linestring or point
         self.path = path
         # is it safe to close the path without retracting?
@@ -543,7 +545,7 @@ class cam:
         current_point = current_path[-1]
         paths[0] = []  # empty
 
-        merged_paths: List[List[Tuple[float,...]]] = []
+        merged_paths: List[List[Tuple[float, ...]]] = []
         num_left = len(paths) - 1
 
         while num_left > 0:
@@ -838,10 +840,10 @@ class cam:
 
         for path_index, path in enumerate(paths):
             orig_path = path.path
-            
+
             if orig_path.is_empty:
                 continue
-            
+
             orig_line = cast(shapely.geometry.LineString, orig_path)
 
             # split the path to cut into many partials paths to avoid tabs areas
@@ -876,17 +878,13 @@ class cam:
                 if currentZ <= tabZ and ((not path.safe_to_close) or crosses_tabs):
                     if optype == "Peck":
                         gcode.extend(retract_for_peck)
-                        currentZ = peckZ
                     else:
                         gcode.extend(retract_gcode)
-                        currentZ = safeZ
                 elif currentZ < safeZ and (not path.safe_to_close):
                     if optype == "Peck":
                         gcode.extend(retract_for_peck)
-                        currentZ = peckZ
                     else:
                         gcode.extend(retract_gcode)
-                        currentZ = safeZ
 
                 # check this - what does it mean ???
                 if not crosses_tabs:
@@ -894,10 +892,14 @@ class cam:
                 else:
                     currentZ = max(finishedZ, tabZ)
 
-                gcode.append("; Rapid to initial position")
-                gcode.append(
-                    "G1" + convert_point(list(orig_path.coords)[0]) + rapid_feed_gcode
-                )
+                if not crosses_tabs:
+                    # FIXME: I do not know anymore what this "; Rapid to initial position" is good for ...
+                    gcode.append("; Rapid to initial position")
+                    gcode.append(
+                        "G1"
+                        + convert_point(list(orig_path.coords)[0])
+                        + rapid_feed_gcode
+                    )
 
                 in_tabs_height = False
 
@@ -1032,7 +1034,7 @@ class cam:
                             continue
 
                         gcode_line_start = "G1" + convert_point(coord)
-                        
+
                         if i == 1:
                             gcode.append(gcode_line_start + " " + cut_feed_gcode)
                         else:
@@ -1045,6 +1047,10 @@ class cam:
                 finishedZ = nextZ
 
             gcode.extend(retract_gcode)
+
+        # last
+        gcode.append("; Rapid to initial position")
+        gcode.append("G1" + convert_point(list(orig_path.coords)[0]) + rapid_feed_gcode)
 
         return gcode
 
@@ -1336,10 +1342,10 @@ class PocketCalculator:
                 break
 
             current = ShapelyUtils.simplify_multipoly(current, 0.001)
-            
+
             if current.is_empty:
                 break
-            
+
             current = ShapelyUtils.orient_multipolygon(current)
 
             # cnt = MatplotLibUtils.display("multipoly pocket <%d> offset" % cnt, current)
@@ -1449,7 +1455,7 @@ class PocketCalculator:
         current_point = current_path[-1]
         paths[0] = []  # empty
 
-        merged_paths : List[List[Tuple[float, ...]]]= []
+        merged_paths: List[List[Tuple[float, ...]]] = []
         num_left = len(paths) - 1
 
         while num_left > 0:
@@ -2020,8 +2026,8 @@ class NibblerPocketCalculator:
 
     def toolpath_to_campaths(self, toolpath: geometry.Pocket):
         """ """
-        xx : list[float] = []
-        yy : list[float] = []
+        xx: list[float] = []
+        yy: list[float] = []
 
         for k, element in enumerate(toolpath.path):
 

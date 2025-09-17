@@ -22,15 +22,19 @@
 <h3 class="title_sidenav">Contents</h3>
 <ul class="tree">
   <li><a href="#P-01">Introduction</a> </li>
-  <li><a href="#P-02">SVG Documents</a> 
+  <li><a href="#P-02">SVG as input format</a> 
    <ul>
+      <li><a href="#P-02-00">SVG Documenst</a></li>
       <li><a href="#P-02-01">SVG ViewBox</a></li>
 	  <li><a href="#P-02-02">SVG Shapes and Paths</a>
 	    <ul>
           <li><a href="#P-02-02-01">Opened and closed paths</a></li>
-	      <li><a href="#P-02-02-02">Text shapes</a></li>
-		  <li><a href="#P-02-02-03">Special tags: defs and use</a></li>
-		  <li><a href="#P-02-02-04">Transformations</a></li>
+        </ul>
+	  </li>
+	  <li><a href="#P-02-03">SVG Text</a></li>
+	  <li><a href="#P-02-04">SVG special tags: defs and use</a></li>
+	    <ul>
+		  <li><a href="#P-02-04-01">Transformations</a></li>
         </ul>
 	  </li>
     </ul></li>
@@ -109,24 +113,28 @@
 
 <h2 id="P-01">Introduction</h2>
 
-<p>Welcome to <strong>PyCut</strong>, a clone of <strong>jsCut</strong>, the excellent (at least for beginners) CAM,
-web-based programm, that takes as input <strong>SVG</strong> files and generates G-Code. So why this rewrite ?</p>
+<p>Welcome to <strong>PyCut</strong>, a clone of <strong>jsCut</strong>, the excellent (at least for beginners) 
+web-based CAM program, that takes as input <strong>SVG</strong> files and generates G-Code. So why this rewrite ?</p>
 
 <p><strong>PyCut</strong> aims to offer all the (minimalistics) features found in jsCut, with some improvements.
 Hopefully you will find <strong>PyCut</strong> usefull when learning CNC and producing your first GCode files.</p>
 
+<h2 id="P-02">SVG as input format</h2>
+
 <p>Starting point of <strong>PyCut</strong> are <strong>SVG</strong> files, your designs. Indeed, with
-<strong>PyCut</strong>, you do not need to do 3D modelling. For simple milling tasks SVG files (2D) are perfectly OK.
-Granted, while it is easy to define circles, rectangles etc. in SVG, SVG paths definitions (for complex shapes) are
-unfortunately not so straightforward as one could think, and free software lacks good SVG paths modelling applications.
-Infact, writing a SVG file with a text editor is sometimes the best way to go. To generate complex svg paths, other
-tools may be used, and the results may be copy/pasted into the hand-written files. <strong>PyCut</strong> recommands
-the online tool <strong>SvgPathEditor</strong> for this purpose, see Appendix.</p>
+<strong>PyCut</strong>, you do not need to do 3D modelling. For simple milling tasks <strong>SVG</strong> 
+files (2D) are perfectly OK. Granted, while it is easy to define circles, rectangles etc. in <strong>SVG</strong>, 
+SVG paths definitions (for complex shapes) are unfortunately not so straightforward as one could think, 
+and free software lacks good <strong>SVG</strong> paths modelling applications. Infact, writing a <strong>SVG</strong> 
+file with a text editor is sometimes the best way to go. To generate complex svg paths, either 
+understand the svg path syntax and write paths "per hand", or other tools may be used, and the results may be copy/pasted 
+into the hand-written files. <strong>PyCut</strong> strongly recommands the online tool <strong>SvgPathEditor</strong> 
+for this purpose, see Appendix.</p>
 
 <p>In the following, we point out what has to be taken into consideration when creating "usable" <strong>SVG</strong>
 files for <strong>PyCut</strong>. </p>
 
-<h2 id="P-02">SVG Documents</h2>
+<h3 id="P-02-00">SVG Documents</h3>
 
 <p><strong>PyCut</strong> can only process svg documents <strong>without transformations</strong>. Should you have
 a document with transformation, try the utility <strong>svgresolver.py</strong> (see later).</p>
@@ -203,26 +211,16 @@ before the smaller ones, so that the smaller ones are on top of the larger ones.
 
 <p><strong>PyCut</strong> processes "paths" in order to calculate geometries and cnc tool paths, but thankfully it can
 read out of the box all kind of shapes, so there is <strong>no need</strong> to convert your svg files into "paths
-only" svgs.</p>
+only" svgs. There is only one exception: for text data.</p>
 
-<p>Finally, the user will maybe also want to process the strings written in the svg file:</p>
-<ul>
-  <li><code class="svg_tag">&lt;text&gt;</code></li>
-</ul>
-
-<div class="warning">
-<p><strong>Warning:</strong> Strings are not (yet) imported directly. They have first to be converted to paths. </p>
-</div>
-
-<p>In the following, we will employ the term "shapes" for svg shapes as well as for svg paths.</p>
-
-<p>In order to reference the shapes, the shapes must have their own <strong>"id"</strong>, hopefully unique inside the
-svg document. The user, having edited the svg file "per hand" or not, should not forget to check and give the shapes he
-wishes to process unique ids.</p>
 
 <div class="info">
 <p><strong>Note:</strong> PyCut will only display shapes in its viewer which have an id.</p>
 </div>
+
+<p>In order to reference the shapes in <strong>PyCut</strong>, the shapes must have their own <strong>"id"</strong>, 
+hopefully unique inside the svg document. The user, having edited the svg file "per hand" or not, should not forget 
+to check for the ids and give the shapes he wishes to process unique ids.</p>
 
 <div class="info">
 <p><strong>Note:</strong> These ids play the role of the shapes name, so a good practice is to give them meaningfull
@@ -242,14 +240,14 @@ closed or not. When not closed, "Pocket" operations will not be allowed for this
 </div>
 
 <div class="info">
-<p><strong>Note:</strong> It may looks at first sight a little pedandic, but then there is a clear flag whether the 
+<p><strong>Note:</strong> It may looks at first sight somehow pedandic, but then there is a clear flag whether the 
 path is closed or not, without further checks.</p>
 </div>
 
 <p><strong>PyCut</strong> imports closed paths as shapely "MultiPolygon", while opened paths are imported as
 "MultiLineString", but here the sake of simplicity, we will only refer them as "Polygon" or "LineString".</p>
 
-<p><strong>PyCut</strong> will import the other shapes either as "<span style="color:#0000ff">Polygon</span>" (i.e.
+<p><strong>PyCut</strong> will import the other svg shapes either as "<span style="color:#0000ff">Polygon</span>" (i.e.
 <strong>closed items</strong>) or as "<span style="color:#0000ff">LineString</span>" (i.e. <strong>opened
 items</strong>). Of course, svg <code class="svg_tag">&lt;rect&gt;</code>, <code class="svg_tag">&lt;circle&gt;</code>,
 <code class="svg_tag">&lt;ellipse&gt;</code> and <code class="svg_tag">&lt;polygon&gt;</code> are closed items, while
@@ -258,18 +256,30 @@ importing a <span style="color:#0000ff">&lt;path&gt;</span>, things are more com
 many subpaths (starting with [<strong>Mm</strong>]) and every subpath can be closed or not (ending with
 [<strong>Zz</strong>]). <strong>PyCut</strong> will try to import these paths definitions right, and in case of closed
 paths will also try to import them as shapely polygons "<strong>with holes</strong>" even if this concept does not
-exist in SVG. Moreover <strong>PyCut</strong> will try to import a svg path as a valid (shapely) <span
-style="color:#0000ff">MultiPolygon </span> in the shapely sense, or as a list of valid MultiPolygons if one single
+exist in SVG. <strong>PyCut</strong> will try to do its best for this task. Moreover <strong>PyCut</strong> will try 
+to import a svg path as a valid (shapely) <span style="color:#0000ff">MultiPolygon </span> in the shapely sense, 
+or as a list of valid MultiPolygons if one single
 valid MultiPolygon is not possible. For example, the letters "i" or "j" are defined with a single svg path, defining
 two separates polygons, and it makes sense to consider these paths as a single shapely MultiPolygon entity. The letter
 "a" is a polygon with one hole, the letter "g" is a polygon with two holes (for some fonts). In the freetype
 vocabulary, "a" is formed by 2 "contours", "g" by three "contours".</p>
 
-<h4 id="P-02-02-02">Text shapes</h4>
 
-<p><strong>PyCut</strong> cannot process yet <code class="svg_tag">&lt;text&gt;</code> items directly. Fortunately,
-<code class="svg_tag">&lt;text&gt;</code> items can be converted into<code class="svg_tag">&lt;path&gt;</code> items,
-sonce they will be ignored by <strong>PyCut</strong>. <strong>PyCut</strong> also comes with the utiilty
+<h3 id="P-02-03">SVG Text</h3>
+
+<p>The user may also want to process the strings written in the svg file. The texts inside a svg file are defined with the tag: </p>
+<ul>
+  <li><code class="svg_tag">&lt;text&gt;</code></li>
+</ul>
+
+<div class="warning">
+<p><strong>Warning:</strong> Strings are not (yet) imported into <string>PyCut</strong> directly. 
+They have first to be converted to paths. </p>
+</div>
+
+<p>As already stated, <strong>PyCut</strong> cannot process yet <code class="svg_tag">&lt;text&gt;</code> items directly. 
+Fortunately, <code class="svg_tag">&lt;text&gt;</code> items can be converted into<code class="svg_tag">&lt;path&gt;</code>
+items, sonce they will be ignored by <strong>PyCut</strong>. <strong>PyCut</strong> also comes with the utiilty
 <strong>svgtext2svgpath.py</strong> which will also convert your <code class="svg_tag">&lt;text&gt;</code> items. How
 to use it? just call the <strong>svgtext2svgpath.py</strong> program which outputs in a new svg the <code
 class="svg_tag">&lt;text&gt;</code> items as <code class="svg_tag">&lt;path&gt;</code> items. Copy/paste the result of
@@ -279,13 +289,14 @@ several <code class="svg_tag">&lt;tspan&gt;</code> items with different fonts. N
 class="svg_tag">&lt;tspan&gt;</code> tag at all is also possible (and simpler). <strong><span style="color:#8000ff">IN
 PROGRESS</span></strong>.</p>
 
-<p>This utility is found in the source code inside the folder "<strong>utilities/svgtext2svgpath.</strong>" </p>
+<p>This utility is found in the source code inside the folder "<strong>utilities/svgtext2svgpath</strong>", and there 
+is a small tutorial included.</p>
 
 <p>All in all, if <strong>PyCut</strong> were to display text strings at the wrong positions (after having transformed
 them into paths), the user can always export the svg from <strong>Inkscape</strong> (and write <strong>PyCut</strong> a
 ticket).</p>
 
-<h4 id="P-02-02-03">Special tags: defs and use</h4>
+<h3 id="P-02-04">SVG special tags: defs and use</h3>
 
 <p><strong>PyCut</strong> cannot import directly the very handy SVG <strong>&lt;defs&gt;</strong> and
 <strong>&lt;use&gt;</strong> feature. The utility <strong>svgresolver.py</strong> delivered with <strong>PyCut</strong>
@@ -293,13 +304,14 @@ will have to be used. The utility <strong>svgresolver.py</strong> takes as input
 <code>&lt;defs&gt;</code> and <code>&lt;use&gt;</code> tags and outputs a new SVG where all
 <code>&lt;defs&gt;/&lt;use&gt;</code> have been resolved, i.e. turned into real objects.</p>
 
-<p>This utility is found in the source code inside the folder "<strong>utilities/svgresolver.</strong>" </p>
+<p>This utility is found in the source code inside the folder "<strong>utilities/svgresolver</strong>", 
+and there is a small tutorial included. </p>
 
-<p>One drawback is that the user has then to manage 2 SVG files: the first one with <strong>&lt;defs&gt;</strong> and
+<p>One drawback is that the user has then to manage 2 svg files: the first one with <strong>&lt;defs&gt;</strong> and
 <strong>&lt;use&gt;</strong>, and a second one, the "resolved" one which is the input file for <strong>PyCut</strong>.
 </p>
 
-<h4 id="P-02-02-04">Transformations</h4>
+<h4 id="P-02-02-01">Transformations</h4>
 
 <div class="info">
 <p><strong>Info:</strong>Transformations can be defined on every shapes or groups, and are often used in combinaison
@@ -320,7 +332,7 @@ element with a rotate transformation does not result in a <code><span style="col
 handle this.</p>
 
 <p><strong><span style="color:#8000ff">IN PROGRESS</span></strong>: this utility should be integrated into
-<strong>PyCut</strong> so that the user can spare this step.</p>
+<strong>PyCut</strong> so that the user can spare this extra step.</p>
 
 <div style="height:30px">
 </div>
@@ -801,7 +813,7 @@ when encountering "angles". </p>
 
 <div class="warning">
 <p><strong>Warning:</strong> A drawback of this approach is that the user has 0 influence on the dogbones generation.
-On the other, he does not have to specify them at all </p>
+On the other side, he does not have to specify them at all </p>
 </div>
 
 <h3>A first try</h3>
@@ -1408,7 +1420,7 @@ part to the difficulty of use of the app.</p>
 <p>What are my requirements ? 
   <ul>
     <li>The output svg is human readable for easy modification with a simple text editor</li>
-    <li>Closed shapes and particularly paths can be easily created</li>
+    <li>Shapes and particularly paths (cloed or not) can be easily created</li>
     <li>The shapes coordinates as given in the app are the ones that are outputed in the svg files 
       (at best no transformations)</li>
   </ul>
@@ -1430,25 +1442,9 @@ accessible from the "d" string, which is not really human readable. Here is an e
 <p>BTW, note how absolute and relative keywords are given in the path. Question: what are the coordinates of the fifth
 point?</p>
 
-<p>What about the other shapes? I "hate" the fact that the circles are given from their "bounding box", not from the
-center with radius (ok it is possible, but always have to figure out how). To obtain a "clean" SVG file (free from
-sodipodi namespace stuff), do not forget to export your project as "SVG". </p>
-
-<p>But back to paths. Concatening segments to form a single path doesn't even work as expected. The simple task
-consisting of concatenating a polyline and a bezier curve -in this order- (which are joined) seems not to work! There
-is the "<strong>combine</strong>" command, but the result is a single path (ok... ) containing 2 subpaths (with "M"),
-which is not Ok, the first one beeing the bezier curve and the second one beeing the polyline, this means in reversed
-order. Sure, with "M"s everywhere, the segments ordering is not that important, is it! </p>
-
-<p><strong>A very desapointing implementation from Inkscape I would say</strong>. Conclusion: <strong>unusable if you
+<p><strong>Without going into the details how frustating working with paths with Inkscape is (my opinion), I consider it is
+a very desapointing implementation from Inkscape I would say</strong>. Conclusion: <strong>unusable if you
 want to generate complex paths.</strong></p>
-
-<p>PS: There is the "Draw Bezier and straight line tool" with mode "Create regular Bezier path" but after many many
-hours of trial (despite YouTube tutorials) I did not succeed to use it properly. Is it just me ? With it you cannot
-anyway mix your path with an arc curve.</p>
-
-<p>PPS: Infact I believe that Inkscape is not suitable for path editing. Like most of SVG applications, it is meant for
-painting.</p>
 
 <h4>LibreCAD <span style="color:#008000">****NEARLY GOOD****</span></h4>
 
@@ -1483,6 +1479,8 @@ created with this feature in mind.</p>
 
 <p>Conclusion: <strong><span style="color:#008000">A nearly good SVG "path" generator/exporter that is unfortunately
 uncomplete.</span></strong></p>
+
+<p>BTW, LibreCAD seems to be a "dead" project, so no improvments are to be expected.</p>
 
 <h4>FreeCAD <span style="color:#008000">****VERY GOOD****</span></h4>
 
