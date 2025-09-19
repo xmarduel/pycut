@@ -31,10 +31,10 @@ start the program from the installation folder
 - shapely 2.1.0 (and types-shapely)
 - PyOpenGL (latest) [3.1.9]
 - svgelements (latest) [1.9.6]
-- lxml (latest) [5.3.1]
+- lxml (latest) [6.0.1]
 - freetype-py (latest) - used in svgtext2svgpath.py utility [2.5.1]
 - matplotlib (latest) - to debug/view shapely offsets ops [3.10.0]
-- numba (latest) - for python simulator optimization [0.61.0]
+- numba (latest) - for python simulator optimization [0.62.0]
 - pyvoronoi (latest) - for HSM nibbler toolpaths [1.1.6]
 
 ## Features
