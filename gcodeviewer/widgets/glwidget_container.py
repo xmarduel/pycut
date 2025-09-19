@@ -202,7 +202,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.m_programModel.m_data = []
 
         progress = QProgressDialog("Parsing GCode...", "Abort", 0, len(data), self)
-        progress.setWindowModality(Qt.WindowModal)
+        progress.setWindowModality(Qt.WindowModality.WindowModal)
         progress.setFixedSize(progress.sizeHint())
         if len(data) > PROGRESSMINLINES:
             progress.show()
