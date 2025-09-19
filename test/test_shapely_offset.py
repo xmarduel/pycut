@@ -2,6 +2,7 @@ import os
 import sys
 import io
 
+from shapely import BufferJoinStyle
 import shapely.geometry
 import shapely
 
@@ -177,7 +178,11 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
         -> result is OK
         """
         offset = self.linestring.parallel_offset(
-            OFFSET, "left", resolution=16, join_style=1, mitre_limit=5
+            OFFSET,
+            "left",
+            resolution=16,
+            join_style=BufferJoinStyle.round,
+            mitre_limit=5,
         )
 
         pltutils.plot_geom("offset LINESTRING LEFT", offset)
@@ -194,7 +199,11 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
         linestring = shapely.geometry.LineString(reversed(self.linestring.coords))
 
         offset = linestring.parallel_offset(
-            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5.0
+            OFFSET,
+            "right",
+            resolution=16,
+            join_style=BufferJoinStyle.round,
+            mitre_limit=5.0,
         )
 
         pltutils.plot_geom(
@@ -229,14 +238,18 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
         self.assertEqual(len(linearring.coords), 2654)
 
         offset = linearring.parallel_offset(
-            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
+            OFFSET,
+            "right",
+            resolution=16,
+            join_style=BufferJoinStyle.round,
+            mitre_limit=5,
         )
 
         self.assertEqual(offset.geom_type, "MultiLineString")  # !! GEOS bug !!
 
         pltutils.plot_geom("offset polygon exterior (as linearring) RIGHT", offset)
 
-    def test_offset_poly_exterior_outside(self):
+    def test_offset_poly_exterior_outside2(self):
         """
         GEOS BUG when offseting Polygon exteriors
 
@@ -265,7 +278,11 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
         self.assertEqual(len(linearring.coords), 2654)
 
         offset = linearring.parallel_offset(
-            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
+            OFFSET,
+            "right",
+            resolution=16,
+            join_style=BufferJoinStyle.round,
+            mitre_limit=5,
         )
 
         self.assertEqual(offset.geom_type, "MultiLineString")  # !! GEOS bug !!
@@ -302,7 +319,11 @@ class CubicCurveOffsetTests_10_5(unittest.TestCase):
         )
 
         offset = linestring.parallel_offset(
-            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
+            OFFSET,
+            "right",
+            resolution=16,
+            join_style=BufferJoinStyle.round,
+            mitre_limit=5,
         )
 
         self.assertEqual(offset.geom_type, "LineString")  # !! as it should always be !!
@@ -337,7 +358,7 @@ class CubicCurveOffsetTests2(unittest.TestCase):
         # now the offset
         coordinates = [(complex_pt.real, complex_pt.imag) for complex_pt in pts]
 
-        self.linestring = linestring = LineString(coordinates)
+        self.linestring = linestring = shapely.geometry.LineString(coordinates)
 
         with open("linestring.txt", "w") as f:
             f.write(linestring.wkt)
@@ -353,7 +374,11 @@ class CubicCurveOffsetTests2(unittest.TestCase):
         -> result is OK
         """
         offset = self.linestring.parallel_offset(
-            OFFSET, "left", resolution=16, join_style=1, mitre_limit=5
+            OFFSET,
+            "left",
+            resolution=16,
+            join_style=BufferJoinStyle.round,
+            mitre_limit=5,
         )
 
         pltutils.plot_geom("offset LINESTRING LEFT", offset)
@@ -367,15 +392,19 @@ class CubicCurveOffsetTests2(unittest.TestCase):
 
         -> result is OK
         """
-        linestring = LineString(reversed(self.linestring.coords))
+        linestring = shapely.geometry.LineString(reversed(self.linestring.coords))
 
         offset = linestring.parallel_offset(
-            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5.0
+            OFFSET,
+            "right",
+            resolution=16,
+            join_style=BufferJoinStyle.round,
+            mitre_limit=5.0,
         )
 
         pltutils.plot_geom(
             "offset LINESTRING REV RIGHT",
-            MultiLineString([linestring, offset]),
+            shapely.geometry.MultiLineString([linestring, offset]),
         )
 
         self.assertEqual(offset.geom_type, "LineString")
@@ -405,7 +434,11 @@ class CubicCurveOffsetTests2(unittest.TestCase):
         self.assertEqual(len(linearring.coords), 2646)
 
         offset = linearring.parallel_offset(
-            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
+            OFFSET,
+            "right",
+            resolution=16,
+            join_style=BufferJoinStyle.round,
+            mitre_limit=5,
         )
 
         self.assertEqual(offset.geom_type, "MultiLineString")  # !! GEOS bug !!
@@ -442,7 +475,11 @@ class CubicCurveOffsetTests2(unittest.TestCase):
         self.assertEqual(len(linearring.coords), 2646)
 
         offset = linearring.parallel_offset(
-            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
+            OFFSET,
+            "right",
+            resolution=16,
+            join_style=BufferJoinStyle.round,
+            mitre_limit=5,
         )
 
         self.assertEqual(offset.geom_type, "MultiLineString")  # !! GEOS bug !!
@@ -453,7 +490,7 @@ class CubicCurveOffsetTests2(unittest.TestCase):
     def test_offset_poly_exterior_to_linestring_outside(self):
         """ """
         # TRANSFORM INTO POLYGON
-        poly = Polygon(self.linestring)
+        poly = shapely.geometry.Polygon(self.linestring)
         poly = shapely.geometry.polygon.orient(poly)
 
         linearring = poly.exterior
@@ -479,7 +516,11 @@ class CubicCurveOffsetTests2(unittest.TestCase):
         )
 
         offset = linestring.parallel_offset(
-            OFFSET, "right", resolution=16, join_style=1, mitre_limit=5
+            OFFSET,
+            "right",
+            resolution=16,
+            join_style=BufferJoinStyle.round,
+            mitre_limit=5,
         )
 
         self.assertEqual(offset.geom_type, "LineString")  # !! as it should always be !!

@@ -1839,6 +1839,8 @@ class SimulationControls(QtWidgets.QWidget):
 
     simtime_changed = QtCore.Signal(float)
 
+    TICK_SCALE = 1000.0
+
     # -----------------------------------------------------------------------------
     class SimulatorRunner(QtCore.QObject):
         """ """
@@ -1948,7 +1950,7 @@ class SimulationControls(QtWidgets.QWidget):
         self.control.pushButton_Pause.clicked.connect(self.OnSimPause)
 
         self.slider_start = 0
-        self.slider_end = int(self.gl_widget.drawable.scene.totalTime * 1000)
+        self.slider_end = int(self.gl_widget.drawable.scene.totalTime * self.TICK_SCALE)
         self.slider_tick = 1
 
         self.control.horizontalSlider_Position.setMinimum(self.slider_start)
@@ -1982,16 +1984,16 @@ class SimulationControls(QtWidgets.QWidget):
 
     def OnSimAtTick(self, tick: int):
         # inform openGL simulation
-        self.gl_widget.setStopAtTime(tick / 1000.0)
+        self.gl_widget.setStopAtTime(tick / self.TICK_SCALE)
 
         # set value directly in simulation runner-> no callback
         self.simulation_runner.current_tick = tick
 
-        self.simtime_changed.emit(tick / 1000.0)
+        self.simtime_changed.emit(tick / self.TICK_SCALE)
 
     def OnSimAtTickFromSimulatorRunner(self, tick: int):
         # inform openGL simulation
-        self.gl_widget.setStopAtTime(tick / 1000.0)
+        self.gl_widget.setStopAtTime(tick / self.TICK_SCALE)
         # inform the scrollbar
         self.control.horizontalSlider_Position.setValue(tick)
 
@@ -1999,7 +2001,7 @@ class SimulationControls(QtWidgets.QWidget):
         self.simtime_changed.disconnect(self.gcode_textviewer.on_simtime_from_js)
 
         # inform openGL simulation
-        self.gl_widget.setStopAtTime(tick / 1000.0)
+        self.gl_widget.setStopAtTime(tick / self.TICK_SCALE)
         # inform the scrollbar
         self.control.horizontalSlider_Position.setValue(tick)
 
@@ -2028,6 +2030,8 @@ class SimulationControls(QtWidgets.QWidget):
 
 class GCodeSimulator(QtWidgets.QWidget):
     """ """
+
+    TICK_SCALE = 1000.0
 
     def __init__(self, parent: QtWidgets.QWidget, options: Dict[str, Any]):
         QtWidgets.QWidget.__init__(self)
@@ -2066,7 +2070,7 @@ class GCodeSimulator(QtWidgets.QWidget):
 
     def set_simtime_from_textbrowser(self, simtime: float):
         """slot on signal from gcode text browser "select line" """
-        tick = math.floor(simtime * 1000)
+        tick = math.floor(simtime * self.TICK_SCALE)
         self.controls.OnSimAtTickFromTextBrowser(tick)
 
 
