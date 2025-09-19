@@ -42,7 +42,7 @@ class ShapelyMultiPolygonOffset:
         side: str,
         consider_interiors_offsets: bool,
         resolution: int,
-        join_style: BufferJoinStyle | Literal["round", "mitre", "bevel"],
+        join_style: BufferJoinStyle,
         mitre_limit: float,
     ) -> shapely.geometry.MultiPolygon:
         """
@@ -60,7 +60,7 @@ class ShapelyMultiPolygonOffset:
             else:
                 # new method
                 linearring = shapely.geometry.LinearRing(poly.exterior)
-            
+
                 # cnt = MatplotLibUtils.display(
                 #    "poly/linearring to offset", linearring
                 # )
@@ -75,7 +75,6 @@ class ShapelyMultiPolygonOffset:
 
                     linestring = shapely.geometry.LineString(linearring)
 
-                
             # cnt = MatplotLibUtils.display(
             #    "poly/linestring to offset", linestring
             # )
@@ -96,20 +95,21 @@ class ShapelyMultiPolygonOffset:
             # simplfy resulting offset  !WICHTIG!
             # print("offset: ", ext_offset)
             if offset.geom_type == "LineString":
-                offset = cast(shapely.geometry.LineString, offset) 
+                offset = cast(shapely.geometry.LineString, offset)
 
                 # cnt = MatplotLibUtils.display(
                 #    f"offset {side} - as LineString|MultiLineString (from linearring)",
                 #    offset,
                 # )
-                print(
-                    "(1) offset length = ", offset.length, len(list(offset.coords)))
-                
+                print("(1) offset length = ", offset.length, len(list(offset.coords)))
+
                 offset = ShapelyUtils.simplify_line(offset, 0.005)
-                
-                if offset.geom_type == 'LineString':
-                    print("(2) offset length = ", offset.length, len(list(offset.coords)))
-                if offset.geom_type == 'MultiLineString':
+
+                if offset.geom_type == "LineString":
+                    print(
+                        "(2) offset length = ", offset.length, len(list(offset.coords))
+                    )
+                if offset.geom_type == "MultiLineString":
                     pass
 
                 # cnt = MatplotLibUtils.display(
@@ -117,7 +117,7 @@ class ShapelyMultiPolygonOffset:
                 #    ext_offset,
                 # )
             elif offset.geom_type == "MultiLineString":
-                offset = cast(shapely.geometry.MultiLineString, offset) 
+                offset = cast(shapely.geometry.MultiLineString, offset)
                 offset = ShapelyUtils.simplify_multiline(offset, 0.005)
 
             # from the offseted lines, build a multipolygon that we diff with the interiors
@@ -138,8 +138,8 @@ class ShapelyMultiPolygonOffset:
                     # where of offset is a MultiLineString instead of a Linestring
                     simp_poly = ipoly.simplify(0.001)
 
-                    if simp_poly.geom_type == 'Polygon':
-                        simp_poly = cast(shapely.geometry.Polygon, simp_poly) 
+                    if simp_poly.geom_type == "Polygon":
+                        simp_poly = cast(shapely.geometry.Polygon, simp_poly)
                         ipoly = shapely.geometry.polygon.orient(simp_poly)
 
                         interior_polys.append(ipoly)
@@ -229,13 +229,13 @@ class ShapelyMultiPolygonOffsetInteriors:
         side: str,
         consider_exteriors_offsets: bool,
         resolution: int,
-        join_style: BufferJoinStyle | Literal["round", "mitre", "bevel"],
+        join_style: BufferJoinStyle,
         mitre_limit: float,
     ) -> shapely.geometry.MultiPolygon:
         """
         main method
         """
-        polys : list[shapely.geometry.Polygon] = []
+        polys: list[shapely.geometry.Polygon] = []
 
         # MatplotLibUtils.display("geometry", self.multipoly)
 

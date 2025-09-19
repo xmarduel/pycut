@@ -4,6 +4,8 @@ from typing import List
 from typing import Tuple
 from typing import cast
 
+
+from shapely import BufferJoinStyle
 import shapely.geometry
 import shapely.ops
 from shapely.validation import make_valid
@@ -147,7 +149,7 @@ class ShapelyUtils:
         amount: float,
         side: str,
         resolution=16,
-        join_style=1,
+        join_style=BufferJoinStyle.round,
         mitre_limit=5.0,
     ) -> shapely.geometry.LineString | shapely.geometry.MultiLineString:
         """ """
@@ -166,7 +168,7 @@ class ShapelyUtils:
         amount: float,
         side: str,
         resolution=16,
-        join_style=1,
+        join_style=BufferJoinStyle.round,
         mitre_limit=5.0,
     ) -> shapely.geometry.MultiLineString:
         """ """
@@ -216,7 +218,7 @@ class ShapelyUtils:
         side,
         consider_interiors_offsets=False,
         resolution=16,
-        join_style=1,
+        join_style=BufferJoinStyle.round,
         mitre_limit=5.0,
     ) -> shapely.geometry.MultiPolygon:
         """
@@ -242,7 +244,7 @@ class ShapelyUtils:
         side,
         consider_exteriors_offsets=False,
         resolution=16,
-        join_style=1,
+        join_style=BufferJoinStyle.round,
         mitre_limit=5.0,
     ) -> shapely.geometry.MultiPolygon | None:
         """

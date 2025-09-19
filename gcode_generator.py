@@ -24,6 +24,7 @@ from typing import cast
 
 import math
 
+from shapely import BufferJoinStyle
 import shapely
 import shapely.geometry
 import shapely.ops
@@ -692,7 +693,7 @@ class CncOp:
                 margin_plus_width,
                 "right",
                 resolution=16,
-                join_style=1,
+                join_style=BufferJoinStyle.round,
                 mitre_limit=5,
             )
             geometry_inner = ShapelyUtils.offset_multipolygon(
@@ -700,7 +701,7 @@ class CncOp:
                 margin,
                 "right",
                 resolution=16,
-                join_style=1,
+                join_style=BufferJoinStyle.round,
                 mitre_limit=5,
             )
 

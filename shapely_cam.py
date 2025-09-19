@@ -28,6 +28,7 @@ from typing import cast
 
 import numpy as np
 
+from shapely import BufferJoinStyle
 import shapely
 import shapely.geometry
 import shapely.ops
@@ -1249,7 +1250,7 @@ class PocketCalculator:
         self.climb = climb
 
         self.resolution = 16
-        self.join_style = 1
+        self.join_style = BufferJoinStyle.round
         self.mitre_limit = 5.0
 
         # result of a the calculation
@@ -1540,7 +1541,7 @@ class SpiralePocketCalculator:
         self.climb = climb
 
         self.resolution = 16
-        self.join_style = 1
+        self.join_style = BufferJoinStyle.round
         self.mitre_limit = 5.0
 
         # result of a the calculation
@@ -1984,7 +1985,7 @@ class NibblerPocketCalculator:
         self.climb = climb
 
         self.resolution = 16
-        self.join_style = 1
+        self.join_style = BufferJoinStyle.round
         self.mitre_limit = 5.0
 
         # result of a the calculation
