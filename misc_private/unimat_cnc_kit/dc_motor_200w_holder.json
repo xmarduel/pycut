@@ -109,7 +109,8 @@
           "radius": 4.0,
           "enabled": true
         }
-      ]
+      ],
+      "retract_to_safe": true
     },
     "Tool": {
       "units": "mm",

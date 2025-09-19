@@ -979,8 +979,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             self.display_svg(svg_file)
 
             # and fill the whole gui
-            self.apply_settings(project["settings"])
-            self.apply_viewers_settings(project["viewers_settings"])
+            if "settings" in project:
+                self.apply_settings(project["settings"])
+            if "viewers_settings" in project:
+                self.apply_viewers_settings(project["viewers_settings"])
 
             # fill operations table
             self.ui.operationsview_manager.set_operations(self.operations)

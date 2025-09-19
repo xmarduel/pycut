@@ -737,7 +737,8 @@
     "Tabs": {
       "units": "mm",
       "height": 2.0,
-      "tabs": []
+      "tabs": [],
+      "retract_to_safe": true
     },
     "Tool": {
       "units": "mm",
