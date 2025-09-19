@@ -1,6 +1,7 @@
 import math
 import time
 from collections import namedtuple
+from enum import IntEnum
 
 import numpy as np
 import numpy.typing as npt
@@ -949,8 +950,8 @@ class Drawable:
         gl.glViewport(
             0,
             0,
-            self.resolution * GCodeSimulatorSettings.OPENGL_FB,
-            self.resolution * GCodeSimulatorSettings.OPENGL_FB,
+            self.resolution * GCodeSimulatorSettings.OPENGL_FB_RESOLUTION,
+            self.resolution * GCodeSimulatorSettings.OPENGL_FB_RESOLUTION,
         )
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
@@ -959,7 +960,7 @@ class Drawable:
 
         self.program_path.setUniformValue1f(
             self.resolutionLocation,
-            float(self.resolution * GCodeSimulatorSettings.OPENGL_FB),
+            float(self.resolution * GCodeSimulatorSettings.OPENGL_FB_RESOLUTION),
         )
         self.program_path.setUniformValue1f(
             self.cutterDiaLocation, float(self.cutterDia)
@@ -1166,8 +1167,8 @@ class Drawable:
     def create_heightmap_texture(self):
         self.pathFramebuffer = QOpenGLFramebufferObject(
             QSize(
-                self.resolution * GCodeSimulatorSettings.OPENGL_FB,
-                self.resolution * GCodeSimulatorSettings.OPENGL_FB,
+                self.resolution * GCodeSimulatorSettings.OPENGL_FB_RESOLUTION,
+                self.resolution * GCodeSimulatorSettings.OPENGL_FB_RESOLUTION,
             ),
             QOpenGLFramebufferObject.CombinedDepthStencil,
         )
@@ -1187,8 +1188,8 @@ class Drawable:
         gl.glViewport(
             0,
             0,
-            self.SIZE_X * GCodeSimulatorSettings.OPENGL_FB,
-            self.SIZE_Y * GCodeSimulatorSettings.OPENGL_FB,
+            self.SIZE_X * GCodeSimulatorSettings.OPENGL_FB_RESOLUTION,
+            self.SIZE_Y * GCodeSimulatorSettings.OPENGL_FB_RESOLUTION,
         )
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
@@ -1792,8 +1793,8 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
         self.glViewport(
             0,
             0,
-            800 * GCodeSimulatorSettings.OPENGL_FB,
-            800 * GCodeSimulatorSettings.OPENGL_FB,
+            800 * GCodeSimulatorSettings.OPENGL_FB_RESOLUTION,
+            800 * GCodeSimulatorSettings.OPENGL_FB_RESOLUTION,
         )
 
         self.drawable.initialize()
@@ -1818,8 +1819,8 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
         self.glViewport(
             xoffset,
             yoffset,
-            quadra_size * GCodeSimulatorSettings.OPENGL_FB,
-            quadra_size * GCodeSimulatorSettings.OPENGL_FB,
+            quadra_size * GCodeSimulatorSettings.OPENGL_FB_RESOLUTION,
+            quadra_size * GCodeSimulatorSettings.OPENGL_FB_RESOLUTION,
         )
 
         ratio = width / float(height)
@@ -2072,19 +2073,20 @@ class GCodeSimulator(QtWidgets.QWidget):
 class GCodeSimulatorSettings:
     """ """
 
-    FB_STANDARD = 1
-    FB_DOUBLE = 2
+    class OpenGlFbType(IntEnum):
+        # do not change these values!
+        FB_STANDARD = 1
+        FB_DOUBLE = 2
 
-    DEFAULT_OPENGL_FB = FB_DOUBLE
-    OPENGL_FB = FB_DOUBLE
+    OPENGL_FB_RESOLUTION = OpenGlFbType.FB_DOUBLE
 
     @classmethod
     def get_settings(cls):
         return {
-            "fb": cls.OPENGL_FB,
+            "fb": cls.OPENGL_FB_RESOLUTION,
         }
 
     @classmethod
-    def set_opengl_fb_type(cls, fb_type: int):
+    def set_opengl_fb_type(cls, fb_type: OpenGlFbType):
         print("OpenGL FB type: ", fb_type)
-        cls.OPENGL_FB = fb_type
+        cls.OPENGL_FB_RESOLUTION = fb_type

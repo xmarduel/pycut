@@ -756,7 +756,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 float(svgviewer.SvgViewer.GEOMETRY_PREVIEW_OPENED_PATHS["stroke-width"])
             )
 
-            if gcodesimulator_glviewer.GCodeSimulatorSettings.OPENGL_FB == 1:
+            if (
+                gcodesimulator_glviewer.GCodeSimulatorSettings.OPENGL_FB_RESOLUTION
+                == gcodesimulator_glviewer.GCodeSimulatorSettings.OpenGlFbType.FB_STANDARD
+            ):
                 viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_STANDARD.setChecked(
                     True
                 )
