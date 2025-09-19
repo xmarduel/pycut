@@ -709,9 +709,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         """ """
         self.svg_viewer.set_settings(viewers_settings["svg_viewer"])
 
-        gcodesimulator_glviewer.GCodeSimulatorSettings.OPENGL_FB = viewers_settings[
-            "gcode_simulator"
-        ]["fb"]
+        gcodesimulator_glviewer.GCodeSimulatorSettings.set_opengl_fb_type(
+            viewers_settings["gcode_simulator"]["fb"]
+        )
 
     def cb_open_viewers_settings_dialog(self):
         """ """
@@ -757,23 +757,22 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             )
 
             if gcodesimulator_glviewer.GCodeSimulatorSettings.OPENGL_FB == 1:
-                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.setChecked(
+                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_STANDARD.setChecked(
                     True
                 )
-                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_2.setChecked(
+                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_DOUBLE.setChecked(
                     False
                 )
             else:
-                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.setChecked(
+                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_STANDARD.setChecked(
                     False
                 )
-                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_2.setChecked(
+                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_DOUBLE.setChecked(
                     True
                 )
 
         def set_defaults():
             self.svg_viewer.set_default_settings()
-            # gcodesimulator_glviewer.GCodeSimulatorSettings.OPENGL_FB =  GCodeSimulatorSettings.DEFAULT_OPENGL_FB
 
             fill_dialog()
 
@@ -819,10 +818,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             }
             self.svg_viewer.set_settings(settings)
 
-            if viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_1.isChecked():
-                gcodesimulator_glviewer.GCodeSimulatorSettings.OPENGL_FB = 1
+            if (
+                viewers_settings_dialog.radioButton_GCODE_SIMULATOR_FB_STANDARD.isChecked()
+            ):
+                gcodesimulator_glviewer.GCodeSimulatorSettings.set_opengl_fb_type(1)
             else:
-                gcodesimulator_glviewer.GCodeSimulatorSettings.OPENGL_FB = 2
+                gcodesimulator_glviewer.GCodeSimulatorSettings.set_opengl_fb_type(2)
 
             viewers_settings_dialog.close()
 
@@ -979,8 +980,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             # and fill the whole gui
             self.apply_settings(project["settings"])
-            if "viewers_settings" in project:
-                self.apply_viewers_settings(project["viewers_settings"])
+            self.apply_viewers_settings(project["viewers_settings"])
 
             # fill operations table
             self.ui.operationsview_manager.set_operations(self.operations)

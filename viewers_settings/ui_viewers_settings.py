@@ -280,16 +280,16 @@ class Ui_ViewersSettingsDialog(object):
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.radioButton_GCODE_SIMULATOR_FB_1 = QRadioButton(self.TabGCodeSimulator)
-        self.radioButton_GCODE_SIMULATOR_FB_1.setObjectName(u"radioButton_GCODE_SIMULATOR_FB_1")
+        self.radioButton_GCODE_SIMULATOR_FB_STANDARD = QRadioButton(self.TabGCodeSimulator)
+        self.radioButton_GCODE_SIMULATOR_FB_STANDARD.setObjectName(u"radioButton_GCODE_SIMULATOR_FB_STANDARD")
 
-        self.horizontalLayout.addWidget(self.radioButton_GCODE_SIMULATOR_FB_1)
+        self.horizontalLayout.addWidget(self.radioButton_GCODE_SIMULATOR_FB_STANDARD)
 
-        self.radioButton_GCODE_SIMULATOR_FB_2 = QRadioButton(self.TabGCodeSimulator)
-        self.radioButton_GCODE_SIMULATOR_FB_2.setObjectName(u"radioButton_GCODE_SIMULATOR_FB_2")
-        self.radioButton_GCODE_SIMULATOR_FB_2.setChecked(True)
+        self.radioButton_GCODE_SIMULATOR_FB_DOUBLE = QRadioButton(self.TabGCodeSimulator)
+        self.radioButton_GCODE_SIMULATOR_FB_DOUBLE.setObjectName(u"radioButton_GCODE_SIMULATOR_FB_DOUBLE")
+        self.radioButton_GCODE_SIMULATOR_FB_DOUBLE.setChecked(True)
 
-        self.horizontalLayout.addWidget(self.radioButton_GCODE_SIMULATOR_FB_2)
+        self.horizontalLayout.addWidget(self.radioButton_GCODE_SIMULATOR_FB_DOUBLE)
 
 
         self.horizontalLayout_2.addLayout(self.horizontalLayout)
@@ -362,8 +362,8 @@ class Ui_ViewersSettingsDialog(object):
         self.label_GCODEVIEWER_linewidth.setText(QCoreApplication.translate("ViewersSettingsDialog", u"Line Width", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.TabGCodeViewer), QCoreApplication.translate("ViewersSettingsDialog", u"GCode Viewer", None))
         self.label_3.setText(QCoreApplication.translate("ViewersSettingsDialog", u"OpenGL FrameBuffer Size", None))
-        self.radioButton_GCODE_SIMULATOR_FB_1.setText(QCoreApplication.translate("ViewersSettingsDialog", u"Standard", None))
-        self.radioButton_GCODE_SIMULATOR_FB_2.setText(QCoreApplication.translate("ViewersSettingsDialog", u"Double", None))
+        self.radioButton_GCODE_SIMULATOR_FB_STANDARD.setText(QCoreApplication.translate("ViewersSettingsDialog", u"Standard", None))
+        self.radioButton_GCODE_SIMULATOR_FB_DOUBLE.setText(QCoreApplication.translate("ViewersSettingsDialog", u"Double", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.TabGCodeSimulator), QCoreApplication.translate("ViewersSettingsDialog", u"GCode Simulator", None))
         self.cmdDefaults.setText(QCoreApplication.translate("ViewersSettingsDialog", u"Set to defaults", None))
         self.cmdOK.setText(QCoreApplication.translate("ViewersSettingsDialog", u"OK", None))

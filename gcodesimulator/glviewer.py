@@ -2072,11 +2072,19 @@ class GCodeSimulator(QtWidgets.QWidget):
 class GCodeSimulatorSettings:
     """ """
 
-    DEFAULT_OPENGL_FB = 2
-    OPENGL_FB = 2
+    FB_STANDARD = 1
+    FB_DOUBLE = 2
+
+    DEFAULT_OPENGL_FB = FB_DOUBLE
+    OPENGL_FB = FB_DOUBLE
 
     @classmethod
     def get_settings(cls):
         return {
             "fb": cls.OPENGL_FB,
         }
+
+    @classmethod
+    def set_opengl_fb_type(cls, fb_type: int):
+        print("OpenGL FB type: ", fb_type)
+        cls.OPENGL_FB = fb_type

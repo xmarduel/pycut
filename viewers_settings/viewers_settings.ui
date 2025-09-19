@@ -37,6 +37,7 @@ QGroupBox {
     <widget class="QTabWidget" name="tabWidget">
      <property name="font">
       <font>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -54,6 +55,7 @@ QGroupBox {
           <widget class="QLabel" name="Tabs">
            <property name="font">
             <font>
+             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -127,6 +129,7 @@ QGroupBox {
           <widget class="QLabel" name="Toolpaths">
            <property name="font">
             <font>
+             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -176,6 +179,7 @@ QGroupBox {
           <widget class="QLabel" name="GeometryPreview">
            <property name="font">
             <font>
+             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -224,6 +228,7 @@ QGroupBox {
           <widget class="QLabel" name="label">
            <property name="font">
             <font>
+             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -256,6 +261,7 @@ QGroupBox {
           <widget class="QLabel" name="label_2">
            <property name="font">
             <font>
+             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -394,14 +400,14 @@ QGroupBox {
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <widget class="QRadioButton" name="radioButton_GCODE_SIMULATOR_FB_1">
+            <widget class="QRadioButton" name="radioButton_GCODE_SIMULATOR_FB_STANDARD">
              <property name="text">
               <string>Standard</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QRadioButton" name="radioButton_GCODE_SIMULATOR_FB_2">
+            <widget class="QRadioButton" name="radioButton_GCODE_SIMULATOR_FB_DOUBLE">
              <property name="text">
               <string>Double</string>
              </property>
