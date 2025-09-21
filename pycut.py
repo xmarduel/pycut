@@ -481,12 +481,16 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
     def cb_save_gcode(self):
         """ """
         if self.job:
-            projname = os.path.basename(self.projfilename)
-            projname = os.path.splitext(projname)[0]
+            if self.projfilename:
+                projname = os.path.basename(self.projfilename)
+                projname = os.path.splitext(projname)[0]
+            else:  # not yet saved new project
+                projname = "current_pycut_project"
 
             if self.project.operations:
                 opname = self.project.operations[0].name
             else:
+                # not op yet? how can it be ...
                 opname = "output"
 
             filename = "%s_%s.nc" % (projname, opname)
@@ -1830,18 +1834,27 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             item.triggered.connect(self.cb_open_recent_project_file)
             self.ui.menuOpen_Recent_Jobs.addAction(item)
 
-    def minify_path(self, apath):
-        """ """
-        cwd = os.getcwd()
-        cwd = pathlib.PurePath(cwd).as_posix()
+    def minify_path(self, apath: str):
+        """
+        Convert absolute paths to relative paths if under current working directory.
 
-        if apath.startswith(cwd):
-            apath = apath.split(cwd)[1]
-            apath = apath[1:]  # remove the leading slash
+        Args:
+            apath: Path string to process
 
-        return apath
+        Returns:
+            str: Relative path if under cwd, otherwise original path
+        """
+        cwd = pathlib.Path.cwd()
+        apath_obj = pathlib.Path(apath)
 
-    def get_relpath_relativ_to_the_other(self, p1, p2):
+        try:
+            # Convert to relative path if possible
+            return apath_obj.relative_to(cwd).as_posix()
+        except ValueError:
+            # Return original path if not under cwd
+            return apath_obj.as_posix()
+
+    def get_relpath_relativ_to_the_other(self, p1: str, p2: str):
         """
         Both paths are relativ to cwd
 
