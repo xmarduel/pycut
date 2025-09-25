@@ -122,7 +122,7 @@ class ShaderDrawable(QOpenGLFunctions):
 
         # Update vertex buffer
         if self.updateData():
-            print("ShaderDrawable::updateGeometry: self.updateData() is True")
+            #print("ShaderDrawable::updateGeometry: self.updateData() is True")
 
             # Fill vertices buffer
             vertexData = []
@@ -137,7 +137,7 @@ class ShaderDrawable(QOpenGLFunctions):
             self.m_vbo.allocate(len(np_bytes))
             self.m_vbo.write(0, np_bytes, len(np_bytes))
         else:
-            print("ShaderDrawable::updateGeometry: self.updateData() is False")
+            #print("ShaderDrawable::updateGeometry: self.updateData() is False")
 
             self.m_vbo.release()
             if self.m_vao.isCreated():

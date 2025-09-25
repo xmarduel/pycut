@@ -326,14 +326,10 @@ class GcodeDrawer(ShaderDrawable):
         return True
 
     def updateVectors(self) -> bool:
+        UPDATE_WITH_VERTEX_DATA = True
+
         # Update vertices
         lines = self.m_viewParser.getLines()
-
-        # Map buffer : C++ => cast to VertexData* pointer ; Python => Shiboken VoidPtr
-        voidptr = self.m_vbo.map(QOpenGLBuffer.Access.WriteOnly)
-        # array_bytes = voidptr.toBytes()
-
-        print("updateVectors: self.m_vbo voidptr =", voidptr, voidptr is not None)
 
         # Update vertices for each line segment
         for i in self.m_indexes:
@@ -343,43 +339,33 @@ class GcodeDrawer(ShaderDrawable):
 
             line = lines[i]
 
-            vertexIndex = line.vertexIndex()
-            if vertexIndex >= 0:
+            vertexIdx = line.vertexIndex()
+            if vertexIdx >= 0:
+                color = self.getSegmentColorVector(line)
+
                 # Update vertex array
-                # FIXME: if voidptr is not None:  # work at the buffer level
-                if voidptr or False:
-                    print("GcodeDrawer::updateVectors: voidptr is True")
-
-                    color = self.getSegmentColorVector(line)
-
+                if UPDATE_WITH_VERTEX_DATA:
+                    self.m_lines[vertexIdx + 0].color = color
+                    self.m_lines[vertexIdx + 1].color = color
+                else:
                     color_data = np.zeros(3, dtype=np.float32)
                     color_data[0] = color.x()
                     color_data[1] = color.y()
                     color_data[2] = color.z()
 
+                    itemsize = np.float32().itemsize
                     # PROTO write(offset, data, size) all in bytes
-                    bufferIndexA = (vertexIndex + 0) * 9 + 3
-                    bufferIndexB = (vertexIndex + 1) * 9 + 3
-                    self.m_vbo.write(bufferIndexA, color_data.tobytes(), 3)
-                    self.m_vbo.write(bufferIndexB, color_data.tobytes(), 3)
-                else:
-                    print("GcodeDrawer::updateVectors: voidptr is False")
+                    bufferIndexA = ((vertexIdx + 0) * 9 + 3) * itemsize
+                    bufferIndexB = ((vertexIdx + 1) * 9 + 3) * itemsize
 
-                    self.m_lines[vertexIndex].color = self.getSegmentColorVector(line)
-                    self.m_lines[vertexIndex + 1].color = self.m_lines[
-                        vertexIndex
-                    ].color
+                    color_bytes = color_data.tobytes()
 
-                    # print(
-                    #    "updateVectors: self.m_lines[vertexIndex] color =",
-                    #    self.m_lines[vertexIndex].color,
-                    # )
+                    self.m_vbo.write(bufferIndexA, color_bytes, 3 * itemsize)
+                    self.m_vbo.write(bufferIndexB, color_bytes, 3 * itemsize)
 
         self.m_indexes = []
-        if voidptr:  # FIXME: if voidptr is not None:
-            self.m_vbo.unmap()
 
-        return not voidptr
+        return True if UPDATE_WITH_VERTEX_DATA else False
 
     def prepareRaster(self) -> bool:
         maxImageSize = 8192

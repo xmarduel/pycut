@@ -1177,15 +1177,11 @@ class Drawable:
         )
         # --------------------------------- the texture ------------------------------------------
         self.textureLocationID = self.program_heightmap.uniformLocation("heightMap")
-        self.program_heightmap.setUniformValue(
-            self.textureLocationID, self.TEXTURE_INDEX_0
-        )  # the index of the texture
+        self.program_heightmap.setUniformValue(self.textureLocationID, self.TEXTURE_INDEX_0)
         # --------------------------------- the texture ------------------------------------------
 
     def draw_heightmap(self, gl: "GLView"):
-        gl.glDisable(
-            GL.GL_DEPTH_TEST
-        )  # the "standard" framebuffer draw.... (learnopengl.com)
+        gl.glDisable(GL.GL_DEPTH_TEST)  # the "standard" framebuffer draw.
         gl.glEnable(GL.GL_DEPTH_TEST)  # as in jsCut! strange but so it is!
         gl.glClearColor(0.7, 0.2, 0.2, 0.0)
         gl.glViewport(
