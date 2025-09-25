@@ -855,8 +855,8 @@ class Drawable:
 
         vbo_float_array = np.zeros(self.gpuMem, dtype=np.float32)
 
-        self.vbo_path.create()  # QOpenGLBuffer.VertexBuffer
-        self.vbo_path.setUsagePattern(QOpenGLBuffer.DynamicDraw)
+        self.vbo_path.create()  # QOpenGLBuffer.Type.VertexBuffer
+        self.vbo_path.setUsagePattern(QOpenGLBuffer.UsagePattern.DynamicDraw)
         self.vbo_path.bind()
 
         self.vbo_path.allocate(
@@ -1063,7 +1063,7 @@ class Drawable:
         self.program_heightmap.bind()
 
         self.vbo_heightmap.create()
-        self.vbo_heightmap.setUsagePattern(QOpenGLBuffer.StaticDraw)
+        self.vbo_heightmap.setUsagePattern(QOpenGLBuffer.UsagePattern.StaticDraw)
         self.vbo_heightmap.bind()
 
         self.vbo_heightmap.allocate(
@@ -1268,7 +1268,7 @@ class Drawable:
         self.program_cutter.bind()
 
         self.vbo_cutter.create()
-        self.vbo_cutter.setUsagePattern(QOpenGLBuffer.StaticDraw)
+        self.vbo_cutter.setUsagePattern(QOpenGLBuffer.UsagePattern.StaticDraw)
         self.vbo_cutter.bind()
 
         self.vbo_cutter.allocate(

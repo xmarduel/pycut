@@ -325,7 +325,7 @@ class GcodeDrawer(ShaderDrawable):
         lines = self.m_viewParser.getLines()
 
         # Map buffer : C++ => cast to VertexData* pointer ; Python => Shiboken VoidPtr
-        data = self.m_vbo.map(QOpenGLBuffer.WriteOnly)
+        data = self.m_vbo.map(QOpenGLBuffer.Access.WriteOnly)
 
         # Update vertices for each line segment
         for i in self.m_indexes:
@@ -480,12 +480,14 @@ class GcodeDrawer(ShaderDrawable):
                     self.m_image,
                     (line.getEnd().x() - origin.x()) / pixelSize,
                     (line.getEnd().y() - origin.y()) / pixelSize,
-                    self.getSegmentColor(line.rgb()),
+                    self.getSegmentColor(line).rgb(),
                 )
 
             if self.m_texture:
                 self.m_texture.setData(
-                    QOpenGLTexture.RGB, QOpenGLTexture.UInt8, self.m_image.bits()
+                    QOpenGLTexture.PixelFormat.RGB,
+                    QOpenGLTexture.PixelType.UInt8,
+                    self.m_image.bits(),
                 )
 
         self.m_indexes = []
@@ -536,7 +538,7 @@ class GcodeDrawer(ShaderDrawable):
 
         return self.m_colorNormal  # QVector3D(0.0, 0.0, 0.0)
 
-    def setImagePixelColor(image: QImage, x: float, y: float, color: int):
+    def setImagePixelColor(self, image: QImage, x: float, y: float, color: int):
         """
         QRgb = int
         """

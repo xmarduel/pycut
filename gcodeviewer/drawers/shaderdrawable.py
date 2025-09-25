@@ -86,12 +86,12 @@ class ShaderDrawable(QOpenGLFunctions):
         self.m_visible = True
         self.m_lineWidth = 1.0
         self.m_pointSize = 1.0
-        self.m_texture: QOpenGLTexture = None
+        self.m_texture: QOpenGLTexture | None = None
         self.m_lines: List[VertexData] = []
         self.m_points: List[VertexData] = []
         self.m_triangles: List[VertexData] = []
 
-        self.m_vbo = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
+        self.m_vbo = QOpenGLBuffer(QOpenGLBuffer.Type.VertexBuffer)
         self.m_vao = QOpenGLVertexArrayObject()
 
     def init(self):
@@ -108,7 +108,7 @@ class ShaderDrawable(QOpenGLFunctions):
     def needsUpdateGeometry(self) -> bool:
         return self.m_needsUpdateGeometry
 
-    def updateGeometry(self, shaderProgram: QOpenGLShaderProgram = None):
+    def updateGeometry(self, shaderProgram: QOpenGLShaderProgram):
         # Init in context
         if not self.m_vbo.isCreated():
             self.init()
@@ -230,7 +230,9 @@ class ShaderDrawable(QOpenGLFunctions):
         if len(self.m_triangles) != 0:
             if self.m_texture:
                 self.m_texture.bind()
-                shaderProgram.setUniformValue("texture", 0)
+                # shaderProgram.setUniformValue("texture", 0)  # OLD
+                textureLocationID = shaderProgram.uniformLocation("texture")
+                shaderProgram.setUniformValue(textureLocationID, 0)
 
             self.glDrawArrays(GL.GL_TRIANGLES, 0, len(self.m_triangles))
 

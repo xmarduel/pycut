@@ -119,7 +119,7 @@ class ToolDrawer(ShaderDrawable):
             )
             self.m_lines.append(VertexData.clone(vertex))
 
-            # Top lines
+            # Top of Cutter lines
             vertex.position = QVector3D(
                 self.m_toolPosition.x(),
                 self.m_toolPosition.y(),
@@ -131,12 +131,16 @@ class ToolDrawer(ShaderDrawable):
             )
             self.m_lines.append(VertexData.clone(vertex))
 
-            # Zero Z lines
+            # Base of Cutter lines
             vertex.position = QVector3D(
-                self.m_toolPosition.x(), self.m_toolPosition.y(), 0
+                self.m_toolPosition.x(),
+                self.m_toolPosition.y(),
+                self.m_toolPosition.z() + self.m_endLength,
             )
             self.m_lines.append(VertexData.clone(vertex))
-            vertex.position = QVector3D(x, y, 0)
+            vertex.position = QVector3D(
+                x, y, self.m_toolPosition.z() + self.m_endLength
+            )
             self.m_lines.append(VertexData.clone(vertex))
 
         # Draw circles
