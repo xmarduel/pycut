@@ -840,10 +840,11 @@ class Drawable:
     def initialize_path(self):
         """ """
         self.program_path.addShaderFromSourceFile(
-            QOpenGLShader.Vertex, self.PYCUT_PREFIX + self.path_shader_vs
+            QOpenGLShader.ShaderTypeBit.Vertex, self.PYCUT_PREFIX + self.path_shader_vs
         )
         self.program_path.addShaderFromSourceFile(
-            QOpenGLShader.Fragment, self.PYCUT_PREFIX + self.path_shader_fs
+            QOpenGLShader.ShaderTypeBit.Fragment,
+            self.PYCUT_PREFIX + self.path_shader_fs,
         )
         self.program_path.link()
 
@@ -1053,10 +1054,12 @@ class Drawable:
     def initialize_heightmap(self):
         """ """
         self.program_heightmap.addShaderFromSourceFile(
-            QOpenGLShader.Vertex, self.PYCUT_PREFIX + self.height_shader_vs
+            QOpenGLShader.ShaderTypeBit.Vertex,
+            self.PYCUT_PREFIX + self.height_shader_vs,
         )
         self.program_heightmap.addShaderFromSourceFile(
-            QOpenGLShader.Fragment, self.PYCUT_PREFIX + self.height_shader_fs
+            QOpenGLShader.ShaderTypeBit.Fragment,
+            self.PYCUT_PREFIX + self.height_shader_fs,
         )
         self.program_heightmap.link()
 
@@ -1170,7 +1173,7 @@ class Drawable:
                 self.resolution * GCodeSimulatorSettings.OPENGL_FB_RESOLUTION,
                 self.resolution * GCodeSimulatorSettings.OPENGL_FB_RESOLUTION,
             ),
-            QOpenGLFramebufferObject.CombinedDepthStencil,
+            QOpenGLFramebufferObject.Attachment.CombinedDepthStencil,
         )
         # --------------------------------- the texture ------------------------------------------
         self.textureLocationID = self.program_heightmap.uniformLocation("heightMap")
@@ -1258,10 +1261,11 @@ class Drawable:
     def initialize_cutter(self):
         """ """
         self.program_cutter.addShaderFromSourceFile(
-            QOpenGLShader.Vertex, self.PYCUT_PREFIX + self.basic_shader_vs
+            QOpenGLShader.ShaderTypeBit.Vertex, self.PYCUT_PREFIX + self.basic_shader_vs
         )
         self.program_cutter.addShaderFromSourceFile(
-            QOpenGLShader.Fragment, self.PYCUT_PREFIX + self.basic_shader_fs
+            QOpenGLShader.ShaderTypeBit.Fragment,
+            self.PYCUT_PREFIX + self.basic_shader_fs,
         )
         self.program_cutter.link()
 

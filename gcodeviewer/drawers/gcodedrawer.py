@@ -22,6 +22,9 @@ from gcodeviewer.drawers.shaderdrawable import VertexData
 from gcodeviewer.util.util import Util
 from gcodeviewer.util.util import qBound
 
+import numpy as np
+import numpy.typing as npt
+
 sNaN = float("NaN")
 
 
@@ -90,10 +93,12 @@ class GcodeDrawer(ShaderDrawable):
                 return self.updateRaster()
 
     def getSizes(self) -> QVector3D:
-        min = self.m_viewParser.getMinimumExtremes()
-        max = self.m_viewParser.getMaximumExtremes()
+        ex_min = self.m_viewParser.getMinimumExtremes()
+        ex_max = self.m_viewParser.getMaximumExtremes()
 
-        return QVector3D(max.x() - min.x(), max.y() - min.y(), max.z() - min.z())
+        return QVector3D(
+            ex_max.x() - ex_min.x(), ex_max.y() - ex_min.y(), ex_max.z() - ex_min.z()
+        )
 
     def getMinimumExtremes(self) -> QVector3D:
         v = self.m_viewParser.getMinimumExtremes()
@@ -325,7 +330,10 @@ class GcodeDrawer(ShaderDrawable):
         lines = self.m_viewParser.getLines()
 
         # Map buffer : C++ => cast to VertexData* pointer ; Python => Shiboken VoidPtr
-        data = self.m_vbo.map(QOpenGLBuffer.Access.WriteOnly)
+        voidptr = self.m_vbo.map(QOpenGLBuffer.Access.WriteOnly)
+        # array_bytes = voidptr.toBytes()
+
+        print("updateVectors: self.m_vbo voidptr =", voidptr, voidptr is not None)
 
         # Update vertices for each line segment
         for i in self.m_indexes:
@@ -338,32 +346,40 @@ class GcodeDrawer(ShaderDrawable):
             vertexIndex = line.vertexIndex()
             if vertexIndex >= 0:
                 # Update vertex array
-                if data:  # FIXME: if data is not None:
-                    data[vertexIndex].color = self.getSegmentColorVector(line)
-                    data[vertexIndex + 1].color = data[vertexIndex].color
-                    # FIXME : work at the buffer level
-                    # buffer_index <- vertexIndex
-                    # np_array <-> data
-                    # color = self.getSegmentColorVector(line)
-                    # np_array[bufferIndex + colorOffset + 0] as np array = color.x()
-                    # np_array[bufferIndex + colorOffset + 1] as np array = color.y()
-                    # np_array[bufferIndex + colorOffset + 2] as np array = color.z()
-                    #
-                    # np_array[bufferIndex + stride + colorOffset + 0] as np array = color.x()
-                    # np_array[bufferIndex + stride + colorOffset + 1] as np array = color.y()
-                    # np_array[bufferIndex + stride + colorOffset + 2] as np array = color.z()
-                    #
+                # FIXME: if voidptr is not None:  # work at the buffer level
+                if voidptr or False:
+                    print("GcodeDrawer::updateVectors: voidptr is True")
+
+                    color = self.getSegmentColorVector(line)
+
+                    color_data = np.zeros(3, dtype=np.float32)
+                    color_data[0] = color.x()
+                    color_data[1] = color.y()
+                    color_data[2] = color.z()
+
+                    # PROTO write(offset, data, size) all in bytes
+                    bufferIndexA = (vertexIndex + 0) * 9 + 3
+                    bufferIndexB = (vertexIndex + 1) * 9 + 3
+                    self.m_vbo.write(bufferIndexA, color_data.tobytes(), 3)
+                    self.m_vbo.write(bufferIndexB, color_data.tobytes(), 3)
                 else:
+                    print("GcodeDrawer::updateVectors: voidptr is False")
+
                     self.m_lines[vertexIndex].color = self.getSegmentColorVector(line)
                     self.m_lines[vertexIndex + 1].color = self.m_lines[
                         vertexIndex
                     ].color
 
+                    # print(
+                    #    "updateVectors: self.m_lines[vertexIndex] color =",
+                    #    self.m_lines[vertexIndex].color,
+                    # )
+
         self.m_indexes = []
-        if data:  # FIXME: if data is not None:
+        if voidptr:  # FIXME: if voidptr is not None:
             self.m_vbo.unmap()
 
-        return not data
+        return not voidptr
 
     def prepareRaster(self) -> bool:
         maxImageSize = 8192
@@ -382,7 +398,9 @@ class GcodeDrawer(ShaderDrawable):
             self.m_viewParser.getResolution().width() <= maxImageSize
             and self.m_viewParser.getResolution().height() <= maxImageSize
         ):
-            image = QImage(self.m_viewParser.getResolution(), QImage.Format_RGB888)
+            image = QImage(
+                self.m_viewParser.getResolution(), QImage.Format.Format_RGB888
+            )
             image.fill(QColor("white"))
 
             lines = self.m_viewParser.getLines()
