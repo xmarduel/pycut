@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SimControlWidget</class>
+ <class>SimulationControls</class>
  <widget class="QWidget" name="SimulationControls">
   <property name="modal" stdset="0">
    <bool>false</bool>
@@ -10,8 +10,14 @@
     <x>0</x>
     <y>0</y>
     <width>674</width>
-    <height>69</height>
+    <height>51</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Settings</string>
@@ -36,7 +42,13 @@ QGroupBox {
    <property name="leftMargin">
     <number>0</number>
    </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
    <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>

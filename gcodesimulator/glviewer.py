@@ -45,7 +45,7 @@ from gcodesimulator.gcodeminiparser import GcodeMiniParser
 
 from gcodesimulator.gcodefileviewer import GCodeFileViewer
 
-from gcodesimulator.ui_simcontrols import Ui_SimControlWidget
+from gcodesimulator.ui_simcontrols import Ui_SimulationControls
 
 sNaN = float("NaN")
 
@@ -1137,19 +1137,19 @@ void main(void) {
             QOpenGLShader.ShaderTypeBit.Vertex,
             self.PYCUT_PREFIX + self.height_shader_vs,
         )
-        #self.program_heightmap.addShaderFromSourceCode(
+        # self.program_heightmap.addShaderFromSourceCode(
         #    QOpenGLShader.ShaderTypeBit.Vertex,
         #    self.heightmap_vertex_shader_source()
-        #)
-        
+        # )
+
         self.program_heightmap.addShaderFromSourceFile(
             QOpenGLShader.ShaderTypeBit.Fragment,
             self.PYCUT_PREFIX + self.height_shader_fs,
         )
-        #self.program_heightmap.addShaderFromSourceCode(
+        # self.program_heightmap.addShaderFromSourceCode(
         #    QOpenGLShader.ShaderTypeBit.Fragment,
         #    self.heightmap_fragment_shader_source(),
-        #)
+        # )
         self.program_heightmap.link()
 
         self.program_heightmap.bind()
@@ -1266,7 +1266,9 @@ void main(void) {
         )
         # --------------------------------- the texture ------------------------------------------
         self.textureLocationID = self.program_heightmap.uniformLocation("heightMap")
-        self.program_heightmap.setUniformValue(self.textureLocationID, self.TEXTURE_INDEX_0)
+        self.program_heightmap.setUniformValue(
+            self.textureLocationID, self.TEXTURE_INDEX_0
+        )
         # --------------------------------- the texture ------------------------------------------
 
     def draw_heightmap(self, gl: "GLView"):
@@ -2025,6 +2027,7 @@ class SimulationControls(QtWidgets.QWidget):
         # self.control = cast(QWidget, Ui_SimControlWidget())
 
         self.setLayout(QtWidgets.QHBoxLayout())
+        self.layout().setContentsMargins(0, 6, 0, 0)
         self.layout().addWidget(self.control)
 
         self.gl_widget = gl_widget
@@ -2037,6 +2040,29 @@ class SimulationControls(QtWidgets.QWidget):
         self.control.pushButton_StepForward.clicked.connect(self.OnSimStepForward)
         self.control.pushButton_StepBackward.clicked.connect(self.OnSimStepBackward)
         self.control.pushButton_Pause.clicked.connect(self.OnSimPause)
+
+        self.control.pushButton_Rewind.setIcon(
+            QtGui.QIcon(":/images/tango/22x22/actions/media-skip-backward.png")
+        )
+        self.control.pushButton_ToEnd.setIcon(
+            QtGui.QIcon(":/images/tango/22x22/actions/media-skip-forward.png")
+        )
+        self.control.pushButton_RunForward.setIcon(
+            QtGui.QIcon(":/images/tango/22x22/actions/media-playback-start.png")
+        )
+        self.control.pushButton_RunBackward.setIcon(
+            QtGui.QIcon(":/images/media-playback-back.png")
+        )
+        self.control.pushButton_StepBackward.setIcon(
+            QtGui.QIcon(":/images/tango/22x22/actions/media-seek-backward.png")
+        )
+        self.control.pushButton_StepForward.setIcon(
+            QtGui.QIcon(":/images/tango/22x22/actions/media-seek-forward.png")
+        )
+        self.control.pushButton_Pause.setIcon(
+            QtGui.QIcon(":/images/tango/22x22/actions/media-playback-pause.png")
+        )
+
 
         self.slider_start = 0
         self.slider_end = int(self.gl_widget.drawable.scene.totalTime * self.TICK_SCALE)
@@ -2139,6 +2165,7 @@ class GCodeSimulator(QtWidgets.QWidget):
         self.gcode_textviewer.load_data(gcode, use_candle_parser)
 
         self.gl_with_controls_layout = QtWidgets.QVBoxLayout()
+        self.gl_with_controls_layout.setContentsMargins(0, 6, 0, 0)
 
         self.gl_widget = GLView(
             gcode, cutter_diameter, cutter_height, cutter_angle, use_candle_parser

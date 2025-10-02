@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'simcontrols.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.9.1
+## Created by: Qt User Interface Compiler version 6.9.3
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -19,12 +19,17 @@ from PySide6.QtWidgets import (QApplication, QHBoxLayout, QPushButton, QSizePoli
     QSlider, QSpacerItem, QSpinBox, QVBoxLayout,
     QWidget)
 
-class Ui_SimControlWidget(object):
+class Ui_SimulationControls(object):
     def setupUi(self, SimulationControls):
         if not SimulationControls.objectName():
             SimulationControls.setObjectName(u"SimulationControls")
         SimulationControls.setProperty(u"modal", False)
-        SimulationControls.resize(674, 69)
+        SimulationControls.resize(674, 51)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(SimulationControls.sizePolicy().hasHeightForWidth())
+        SimulationControls.setSizePolicy(sizePolicy)
         SimulationControls.setStyleSheet(u"/*QWidget {\n"
 "	font-size: 9pt;\n"
 "}*/\n"
@@ -41,7 +46,7 @@ class Ui_SimControlWidget(object):
 "}")
         self.verticalLayout = QVBoxLayout(SimulationControls)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(0, -1, 0, -1)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalSlider_Position = QSlider(SimulationControls)
@@ -134,16 +139,16 @@ class Ui_SimControlWidget(object):
     # setupUi
 
     def retranslateUi(self, SimulationControls):
-        SimulationControls.setWindowTitle(QCoreApplication.translate("SimControlWidget", u"Settings", None))
-        self.pushButton_Rewind.setText(QCoreApplication.translate("SimControlWidget", u"Rewind", None))
-        self.pushButton_StepBackward.setText(QCoreApplication.translate("SimControlWidget", u"Step", None))
-        self.pushButton_RunBackward.setText(QCoreApplication.translate("SimControlWidget", u"Back", None))
-        self.pushButton_Pause.setText(QCoreApplication.translate("SimControlWidget", u"Pause", None))
-        self.pushButton_RunForward.setText(QCoreApplication.translate("SimControlWidget", u"Run", None))
-        self.pushButton_StepForward.setText(QCoreApplication.translate("SimControlWidget", u"Step", None))
-        self.pushButton_ToEnd.setText(QCoreApplication.translate("SimControlWidget", u"To End", None))
+        SimulationControls.setWindowTitle(QCoreApplication.translate("SimulationControls", u"Settings", None))
+        self.pushButton_Rewind.setText(QCoreApplication.translate("SimulationControls", u"Rewind", None))
+        self.pushButton_StepBackward.setText(QCoreApplication.translate("SimulationControls", u"Step", None))
+        self.pushButton_RunBackward.setText(QCoreApplication.translate("SimulationControls", u"Back", None))
+        self.pushButton_Pause.setText(QCoreApplication.translate("SimulationControls", u"Pause", None))
+        self.pushButton_RunForward.setText(QCoreApplication.translate("SimulationControls", u"Run", None))
+        self.pushButton_StepForward.setText(QCoreApplication.translate("SimulationControls", u"Step", None))
+        self.pushButton_ToEnd.setText(QCoreApplication.translate("SimulationControls", u"To End", None))
 #if QT_CONFIG(tooltip)
-        self.spinBox_SpeedFactor.setToolTip(QCoreApplication.translate("SimControlWidget", u"Speed factor", None))
+        self.spinBox_SpeedFactor.setToolTip(QCoreApplication.translate("SimulationControls", u"Speed factor", None))
 #endif // QT_CONFIG(tooltip)
     # retranslateUi
 
