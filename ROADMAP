@@ -1,9 +1,11 @@
-# 1.0.0
+# 2.0.0
 
 dogbones
+
+# 1.0.0
+
 clean clean clean
 
-# 0.8.0
+# 0.8.2
 
-with shapely 2.1.0 (geos 3.13 lib with offsets fixes)
-
+gcode simulator Ok on macosx 

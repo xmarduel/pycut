@@ -1051,16 +1051,105 @@ class Drawable:
 
     # -----------------------------------------------------------------
 
+    def heightmap_vertex_shader_source(self):
+        return """
+uniform float resolution;
+uniform float pathScale;
+uniform float pathMinZ;
+uniform float pathTopZ;
+uniform mat4 rotate;
+uniform sampler2D heightMap;
+
+attribute vec2 pos0;
+attribute vec2 pos1;
+attribute vec2 pos2;
+attribute vec2 thisPos;
+attribute float vertex;
+
+varying vec4 color;
+
+vec3 getPos(in vec2 p) {
+    return vec3(
+        p * 2.0 / resolution - vec2(1.0, 1.0),
+        texture2D(heightMap, p/resolution).r);
+}
+
+void main(void) {
+    vec3 p0 = getPos(pos0);
+    vec3 p1 = getPos(pos1);
+    vec3 p2 = getPos(pos2);
+    vec3 tp = getPos(thisPos);
+
+    vec4 topColor = vec4(1.0, 1.0, 1.0, 1.0);
+    vec4 botColor = vec4(0.0, 0.0, 1.0, 1.0);
+    vec4 transitionColor = vec4(0.0, 0.0, 0.0, 1.0);
+
+    float transition = min(.4, 100.0*max(abs(p0.z-p1.z), abs(p0.z-p2.z)));
+    color = mix(topColor, botColor, tp.z);
+    color = mix(color, transitionColor, transition);
+
+    // try to make it look like it does to people with red-green color blindness
+    // for usability testing.
+    //color.rg = vec2((color.r+color.g)/2.0, (color.r+color.g)/2.0);
+
+    vec4 p = vec4(tp.xy, -tp.z*(pathTopZ-pathMinZ)*pathScale, 1.0);
+
+    mat4 offset = mat4(
+        1.0,    0.0,    0.0,    0.0,
+        0.0,    1.0,    0.0,    0.0,
+        0.0,    0.0,    1.0,    0.0,
+        0.0,    0.0,    -3.5,   1.0
+    );
+
+    float left = -.6;
+    float right = .6;
+    float top = .6;
+    float bot = -.6;
+    float near = 2.0;
+    float far = 5.0;
+    mat4 camera = mat4(
+        2.0*near/(right-left),      0.0,                    0.0,                        0.0,
+        0.0,                        2.0*near/(top-bot),     0.0,                        0.0,
+        (right+left)/(right-left),  (top+bot)/(top-bot),    (far+near)/(near-far),      -1,
+        0.0,                        0.0,                    2.0*far*near/(near-far),    0.0
+    );
+
+    gl_Position = camera * offset * rotate * p;
+}
+"""
+
+    def heightmap_fragment_shader_source(self):
+        return """
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+varying vec4 color;
+
+void main(void) {
+    gl_FragColor = color;
+}
+"""
+
     def initialize_heightmap(self):
         """ """
         self.program_heightmap.addShaderFromSourceFile(
             QOpenGLShader.ShaderTypeBit.Vertex,
             self.PYCUT_PREFIX + self.height_shader_vs,
         )
+        #self.program_heightmap.addShaderFromSourceCode(
+        #    QOpenGLShader.ShaderTypeBit.Vertex,
+        #    self.heightmap_vertex_shader_source()
+        #)
+        
         self.program_heightmap.addShaderFromSourceFile(
             QOpenGLShader.ShaderTypeBit.Fragment,
             self.PYCUT_PREFIX + self.height_shader_fs,
         )
+        #self.program_heightmap.addShaderFromSourceCode(
+        #    QOpenGLShader.ShaderTypeBit.Fragment,
+        #    self.heightmap_fragment_shader_source(),
+        #)
         self.program_heightmap.link()
 
         self.program_heightmap.bind()

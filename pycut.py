@@ -124,6 +124,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.recent_projects = self.read_recent_projects()
 
+        QtCore.QCoreApplication.setOrganizationName("xavsoft")
+        QtCore.QCoreApplication.setOrganizationDomain("xavsoft.com")
+        QtCore.QCoreApplication.setApplicationName("PyCut")
+
+        self.ui_settings = QtCore.QSettings("xavsoft", "PyCut")
+
         self.ui = Ui_mainwindow()
         self.ui.setupUi(self)
 
@@ -172,6 +178,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.actionSaveProjectAs.triggered.connect(self.cb_save_project_as)
         self.ui.actionSaveProject.triggered.connect(self.cb_save_project)
 
+        self.ui.actionQuit.triggered.connect(self.save_ui_settings)
+
         self.ui.actionSettings.triggered.connect(self.cb_open_viewers_settings_dialog)
 
         self.ui.actionOpenGCode.triggered.connect(self.cb_open_gcode)
@@ -180,6 +188,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.actionCnCTutorial.triggered.connect(self.cb_show_cnc_tutorial_qt)
         self.ui.actionAboutQt.triggered.connect(self.cb_show_about_qt)
         self.ui.actionAboutPyCut.triggered.connect(self.cb_show_about_pycut)
+
+        self.ui.splitterCentralArea.splitterMoved.connect(self.cb_central_splitter_moved)
 
         self.aboutQtAct = QtGui.QAction(
             "About &Qt",
@@ -400,6 +410,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         else:
             self.ui.scrollArea_right.show()
 
+    def cb_central_splitter_moved(self):
+        """ """
+        pass
+
     def cb_show_tutorial_qt(self):
         """ """
         dlg = QtWidgets.QDialog(self)
@@ -567,6 +581,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         """
         self.apply_settings(self.default_settings)
 
+        self.apply_ui_settings()
+
         # self.cb_update_tabs_display()
         # self.cb_update_tool_display()
         # self.cb_update_material_display()
@@ -634,6 +650,24 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         }
 
         return settings
+
+    def apply_ui_settings(self):
+        """ """
+        if self.ui_settings:
+            self.ui_settings.beginGroup("MainWindow")
+            splitter_settings = self.ui_settings.value("splitterCentralAreaSizes")
+            if splitter_settings:
+                self.ui.splitterCentralArea.restoreState(splitter_settings)
+            self.ui_settings.endGroup()
+
+    def save_ui_settings(self):
+        """ """
+        if self.ui_settings:
+            self.ui_settings.beginGroup("MainWindow")
+            self.ui_settings.setValue("splitterCentralAreaSizes", self.ui.splitterCentralArea.saveState())
+            self.ui_settings.endGroup()
+
+        QtWidgets.QApplication.quit()
 
     def apply_settings(self, settings):
         """ """
