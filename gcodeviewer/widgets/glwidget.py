@@ -9,7 +9,7 @@ from PySide6 import QtGui
 from PySide6 import QtOpenGLWidgets
 from PySide6 import QtOpenGL
 
-from OpenGL import GL
+from OpenGL import GL  # type: ignore [import-untyped]
 
 from PySide6.QtCore import Signal, Slot
 from PySide6.QtCore import qIsNaN

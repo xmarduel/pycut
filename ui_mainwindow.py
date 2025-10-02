@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.9.1
+## Created by: Qt User Interface Compiler version 6.9.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -18,10 +18,10 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QButtonGroup, QCheckBox, QComboBox,
     QDoubleSpinBox, QFormLayout, QGridLayout, QHBoxLayout,
-    QLabel, QMainWindow, QMenu, QMenuBar,
-    QPushButton, QScrollArea, QSizePolicy, QSpacerItem,
-    QSpinBox, QSplitter, QStatusBar, QTabWidget,
-    QVBoxLayout, QWidget)
+    QLabel, QLayout, QMainWindow, QMenu,
+    QMenuBar, QPushButton, QScrollArea, QSizePolicy,
+    QSpacerItem, QSpinBox, QSplitter, QStatusBar,
+    QTabWidget, QVBoxLayout, QWidget)
 
 from operations_tableview import PyCutOperationsTableViewManager
 from tabs_tableview import PyCutTabsTableViewManager
@@ -53,6 +53,8 @@ class Ui_mainwindow(object):
         self.actionOpenGCode.setObjectName(u"actionOpenGCode")
         self.actionCnCTutorial = QAction(mainwindow)
         self.actionCnCTutorial.setObjectName(u"actionCnCTutorial")
+        self.actionQuit = QAction(mainwindow)
+        self.actionQuit.setObjectName(u"actionQuit")
         self.centralwidget = QWidget(mainwindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout_2 = QHBoxLayout(self.centralwidget)
@@ -63,7 +65,7 @@ class Ui_mainwindow(object):
         self.scrollArea_left.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 326, 988))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 303, 975))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSpacing(22)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -338,8 +340,8 @@ class Ui_mainwindow(object):
 
         self.formLayoutCurveToLineConversion = QFormLayout()
         self.formLayoutCurveToLineConversion.setObjectName(u"formLayoutCurveToLineConversion")
-        self.formLayoutCurveToLineConversion.setLabelAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
-        self.formLayoutCurveToLineConversion.setFormAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
+        self.formLayoutCurveToLineConversion.setLabelAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.formLayoutCurveToLineConversion.setFormAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
         self.formLayoutCurveToLineConversion.setVerticalSpacing(6)
         self.formLayoutCurveToLineConversion.setContentsMargins(2, 0, 1, -1)
         self.label_CurveToLineConversion_MinimumNbSegments = QLabel(self.scrollAreaWidgetContents)
@@ -397,8 +399,8 @@ class Ui_mainwindow(object):
         self.verticalLayout_4.setContentsMargins(2, 0, 1, 9)
         self.formLayout_Tabs = QFormLayout()
         self.formLayout_Tabs.setObjectName(u"formLayout_Tabs")
-        self.formLayout_Tabs.setLabelAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
-        self.formLayout_Tabs.setFormAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
+        self.formLayout_Tabs.setLabelAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.formLayout_Tabs.setFormAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
         self.label_TabsUnits = QLabel(self.tabsGlobals)
         self.label_TabsUnits.setObjectName(u"label_TabsUnits")
         self.label_TabsUnits.setFont(font1)
@@ -494,11 +496,11 @@ class Ui_mainwindow(object):
         self.verticalLayout.setSpacing(6)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(4, 0, 4, 0)
-        self.splitter = QSplitter(self.centralArea)
-        self.splitter.setObjectName(u"splitter")
-        self.splitter.setOrientation(Qt.Vertical)
-        self.splitter.setHandleWidth(6)
-        self.tabWidget = QTabWidget(self.splitter)
+        self.splitterCentralArea = QSplitter(self.centralArea)
+        self.splitterCentralArea.setObjectName(u"splitterCentralArea")
+        self.splitterCentralArea.setOrientation(Qt.Orientation.Vertical)
+        self.splitterCentralArea.setHandleWidth(6)
+        self.tabWidget = QTabWidget(self.splitterCentralArea)
         self.tabWidget.setObjectName(u"tabWidget")
         self.svg = QWidget()
         self.svg.setObjectName(u"svg")
@@ -520,16 +522,18 @@ class Ui_mainwindow(object):
         self.simulator_python = QWidget()
         self.simulator_python.setObjectName(u"simulator_python")
         self.horizontalLayout_5b = QHBoxLayout(self.simulator_python)
+        self.horizontalLayout_5b.setSpacing(4)
         self.horizontalLayout_5b.setObjectName(u"horizontalLayout_5b")
+        self.horizontalLayout_5b.setContentsMargins(0, 0, 0, 0)
         self.tabWidget.addTab(self.simulator_python, "")
-        self.splitter.addWidget(self.tabWidget)
-        self.operationsview_manager = PyCutOperationsTableViewManager(self.splitter)
+        self.splitterCentralArea.addWidget(self.tabWidget)
+        self.operationsview_manager = PyCutOperationsTableViewManager(self.splitterCentralArea)
         self.operationsview_manager.setObjectName(u"operationsview_manager")
         self.operationsview_manager.setMinimumSize(QSize(0, 200))
         self.operationsview_manager.setMaximumSize(QSize(16777215, 400))
-        self.splitter.addWidget(self.operationsview_manager)
+        self.splitterCentralArea.addWidget(self.operationsview_manager)
 
-        self.verticalLayout.addWidget(self.splitter)
+        self.verticalLayout.addWidget(self.splitterCentralArea)
 
         self.SaveGcode = QPushButton(self.centralArea)
         self.SaveGcode.setObjectName(u"SaveGcode")
@@ -545,7 +549,7 @@ class Ui_mainwindow(object):
         self.scrollArea_right.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 314, 988))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 316, 988))
         self.verticalLayout_5 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_5.setSpacing(22)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
@@ -581,8 +585,9 @@ class Ui_mainwindow(object):
 
         self.formLayout_Material = QFormLayout()
         self.formLayout_Material.setObjectName(u"formLayout_Material")
-        self.formLayout_Material.setLabelAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
-        self.formLayout_Material.setFormAlignment(Qt.AlignRight|Qt.AlignTop|Qt.AlignTrailing)
+        self.formLayout_Material.setSizeConstraint(QLayout.SizeConstraint.SetNoConstraint)
+        self.formLayout_Material.setLabelAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.formLayout_Material.setFormAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTop|Qt.AlignmentFlag.AlignTrailing)
         self.formLayout_Material.setContentsMargins(2, -1, 1, -1)
         self.label_Material_Units = QLabel(self.scrollAreaWidgetContents_2)
         self.label_Material_Units.setObjectName(u"label_Material_Units")
@@ -594,6 +599,11 @@ class Ui_mainwindow(object):
         self.Material_Units.addItem("")
         self.Material_Units.addItem("")
         self.Material_Units.setObjectName(u"Material_Units")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sizePolicy1.setHorizontalStretch(1)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.Material_Units.sizePolicy().hasHeightForWidth())
+        self.Material_Units.setSizePolicy(sizePolicy1)
 
         self.formLayout_Material.setWidget(0, QFormLayout.ItemRole.FieldRole, self.Material_Units)
 
@@ -605,6 +615,8 @@ class Ui_mainwindow(object):
 
         self.Material_Thickness = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
         self.Material_Thickness.setObjectName(u"Material_Thickness")
+        sizePolicy1.setHeightForWidth(self.Material_Thickness.sizePolicy().hasHeightForWidth())
+        self.Material_Thickness.setSizePolicy(sizePolicy1)
         self.Material_Thickness.setMaximum(100.000000000000000)
         self.Material_Thickness.setValue(50.000000000000000)
 
@@ -620,20 +632,22 @@ class Ui_mainwindow(object):
         self.Material_ZOrigin.addItem("")
         self.Material_ZOrigin.addItem("")
         self.Material_ZOrigin.setObjectName(u"Material_ZOrigin")
-        sizePolicy.setHeightForWidth(self.Material_ZOrigin.sizePolicy().hasHeightForWidth())
-        self.Material_ZOrigin.setSizePolicy(sizePolicy)
+        sizePolicy1.setHeightForWidth(self.Material_ZOrigin.sizePolicy().hasHeightForWidth())
+        self.Material_ZOrigin.setSizePolicy(sizePolicy1)
 
         self.formLayout_Material.setWidget(2, QFormLayout.ItemRole.FieldRole, self.Material_ZOrigin)
 
         self.label_Material_Clearance = QLabel(self.scrollAreaWidgetContents_2)
         self.label_Material_Clearance.setObjectName(u"label_Material_Clearance")
         self.label_Material_Clearance.setFont(font1)
-        self.label_Material_Clearance.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.label_Material_Clearance.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
         self.formLayout_Material.setWidget(3, QFormLayout.ItemRole.LabelRole, self.label_Material_Clearance)
 
         self.Material_Clearance = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
         self.Material_Clearance.setObjectName(u"Material_Clearance")
+        sizePolicy1.setHeightForWidth(self.Material_Clearance.sizePolicy().hasHeightForWidth())
+        self.Material_Clearance.setSizePolicy(sizePolicy1)
         self.Material_Clearance.setMaximum(100.000000000000000)
         self.Material_Clearance.setValue(20.000000000000000)
 
@@ -803,13 +817,7 @@ class Ui_mainwindow(object):
         self.buttonGroup_GCodeConversion.addButton(self.GCodeConversion_ZeroTopLeftOfMaterial)
         self.GCodeConversion_ZeroTopLeftOfMaterial.setObjectName(u"GCodeConversion_ZeroTopLeftOfMaterial")
         self.GCodeConversion_ZeroTopLeftOfMaterial.setFont(font1)
-        icon = QIcon()
-        iconThemeName = u":/images/tango/22x22/actions/view-refresh.png"
-        if QIcon.hasThemeIcon(iconThemeName):
-            icon = QIcon.fromTheme(iconThemeName)
-        else:
-            icon.addFile(u".", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-
+        icon = QIcon(QIcon.fromTheme(u":/images/tango/22x22/actions/view-refresh.png"))
         self.GCodeConversion_ZeroTopLeftOfMaterial.setIcon(icon)
         self.GCodeConversion_ZeroTopLeftOfMaterial.setCheckable(True)
         self.GCodeConversion_ZeroTopLeftOfMaterial.setChecked(True)
@@ -867,12 +875,13 @@ class Ui_mainwindow(object):
 
         self.formLayout_GCodeGeneration = QFormLayout()
         self.formLayout_GCodeGeneration.setObjectName(u"formLayout_GCodeGeneration")
-        self.formLayout_GCodeGeneration.setFormAlignment(Qt.AlignCenter)
+        self.formLayout_GCodeGeneration.setLabelAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.formLayout_GCodeGeneration.setFormAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.formLayout_GCodeGeneration.setContentsMargins(2, -1, 2, -1)
         self.label_GCodeGeneration_ReturnToZeroAtEnd = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeGeneration_ReturnToZeroAtEnd.setObjectName(u"label_GCodeGeneration_ReturnToZeroAtEnd")
         self.label_GCodeGeneration_ReturnToZeroAtEnd.setFont(font1)
-        self.label_GCodeGeneration_ReturnToZeroAtEnd.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.label_GCodeGeneration_ReturnToZeroAtEnd.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
         self.formLayout_GCodeGeneration.setWidget(0, QFormLayout.ItemRole.LabelRole, self.label_GCodeGeneration_ReturnToZeroAtEnd)
 
@@ -936,13 +945,14 @@ class Ui_mainwindow(object):
 
         self.formLayout_GCodeStatistics = QFormLayout()
         self.formLayout_GCodeStatistics.setObjectName(u"formLayout_GCodeStatistics")
-        self.formLayout_GCodeStatistics.setFormAlignment(Qt.AlignCenter)
+        self.formLayout_GCodeStatistics.setLabelAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.formLayout_GCodeStatistics.setFormAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.formLayout_GCodeStatistics.setContentsMargins(2, -1, 1, -1)
         self.label_GCodeStatistics_RunTime = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeStatistics_RunTime.setObjectName(u"label_GCodeStatistics_RunTime")
         self.label_GCodeStatistics_RunTime.setMinimumSize(QSize(120, 0))
         self.label_GCodeStatistics_RunTime.setFont(font1)
-        self.label_GCodeStatistics_RunTime.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.label_GCodeStatistics_RunTime.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
         self.formLayout_GCodeStatistics.setWidget(0, QFormLayout.ItemRole.LabelRole, self.label_GCodeStatistics_RunTime)
 
@@ -973,7 +983,7 @@ class Ui_mainwindow(object):
         mainwindow.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(mainwindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1226, 21))
+        self.menubar.setGeometry(QRect(0, 0, 1226, 43))
         self.menuSvg = QMenu(self.menubar)
         self.menuSvg.setObjectName(u"menuSvg")
         self.menuFile = QMenu(self.menubar)
@@ -1000,6 +1010,8 @@ class Ui_mainwindow(object):
         self.menuFile.addAction(self.actionOpenProject)
         self.menuFile.addAction(self.actionSaveProjectAs)
         self.menuFile.addAction(self.actionSaveProject)
+        self.menuFile.addSeparator()
+        self.menuFile.addAction(self.actionQuit)
         self.menuHelp.addAction(self.actionTutorial)
         self.menuHelp.addAction(self.actionCnCTutorial)
         self.menuHelp.addAction(self.actionAboutQt)
@@ -1040,6 +1052,7 @@ class Ui_mainwindow(object):
         self.actionSettings.setText(QCoreApplication.translate("mainwindow", u"Viewers Settings...", None))
         self.actionOpenGCode.setText(QCoreApplication.translate("mainwindow", u"Load GCode", None))
         self.actionCnCTutorial.setText(QCoreApplication.translate("mainwindow", u"CnC Tutorial", None))
+        self.actionQuit.setText(QCoreApplication.translate("mainwindow", u"Quit", None))
         self.label_SvgSettings.setText(QCoreApplication.translate("mainwindow", u" Svg Settings", None))
         self.SvgModelWidth.setSuffix(QCoreApplication.translate("mainwindow", u"mm", None))
         self.label_title.setText(QCoreApplication.translate("mainwindow", u"Title", None))

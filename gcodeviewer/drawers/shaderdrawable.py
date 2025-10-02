@@ -12,7 +12,7 @@ from PySide6.QtOpenGL import QOpenGLBuffer
 from PySide6.QtOpenGL import QOpenGLVertexArrayObject
 from PySide6.QtOpenGL import QOpenGLTexture
 
-from OpenGL import GL
+from OpenGL import GL  # type: ignore [import-untyped]
 
 from gcodeviewer.util.util import Util
 

@@ -31,8 +31,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>326</width>
-         <height>988</height>
+         <width>303</width>
+         <height>975</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,1">
@@ -55,7 +55,6 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -105,7 +104,6 @@
              <widget class="QLabel" name="label_title">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -118,7 +116,6 @@
              <widget class="QLabel" name="label_SvgModelHeight">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -131,7 +128,6 @@
              <widget class="QLabel" name="label_SvgModelWidth">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -144,7 +140,6 @@
              <widget class="QLabel" name="label_PxPerInch">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -190,7 +185,6 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -254,7 +248,6 @@
              <widget class="QLabel" name="label_Tool_Cut">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -274,7 +267,6 @@
              <widget class="QLabel" name="label_Tool_PassDepth">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -287,7 +279,6 @@
              <widget class="QLabel" name="label_Tool_Angle">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -300,7 +291,6 @@
              <widget class="QLabel" name="label_Tool_Diameter">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -313,7 +303,6 @@
              <widget class="QLabel" name="label_Tool_Plunge">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -399,7 +388,6 @@
              <widget class="QLabel" name="label_Tool_Units">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -426,7 +414,6 @@
              <widget class="QLabel" name="label_Tool_Rapid">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -449,7 +436,6 @@
              <widget class="QLabel" name="label_Tool_Overlap">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -478,7 +464,6 @@
              <widget class="QLabel" name="label_Tool_HelixPitch">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -518,7 +503,6 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -533,10 +517,10 @@
           <item>
            <layout class="QFormLayout" name="formLayoutCurveToLineConversion">
             <property name="labelAlignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
             </property>
             <property name="formAlignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
             </property>
             <property name="verticalSpacing">
              <number>6</number>
@@ -560,7 +544,6 @@
               </property>
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -586,7 +569,6 @@
              <widget class="QLabel" name="label_CurveToLineConversion_MinimumSegmentsLength">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -628,7 +610,6 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -664,16 +645,15 @@
              <item>
               <layout class="QFormLayout" name="formLayout_Tabs">
                <property name="labelAlignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
                </property>
                <property name="formAlignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
                </property>
                <item row="0" column="0">
                 <widget class="QLabel" name="label_TabsUnits">
                  <property name="font">
                   <font>
-                   <weight>75</weight>
                    <bold>true</bold>
                   </font>
                  </property>
@@ -703,7 +683,6 @@
                 <widget class="QLabel" name="label_Tabs_Height">
                  <property name="font">
                   <font>
-                   <weight>75</weight>
                    <bold>true</bold>
                   </font>
                  </property>
@@ -733,7 +712,6 @@
                 <widget class="QCheckBox" name="Tabs_hideAllTabs">
                  <property name="font">
                   <font>
-                   <weight>75</weight>
                    <bold>true</bold>
                   </font>
                  </property>
@@ -746,7 +724,6 @@
                 <widget class="QCheckBox" name="Tabs_hideDisabledTabs">
                  <property name="font">
                   <font>
-                   <weight>75</weight>
                    <bold>true</bold>
                   </font>
                  </property>
@@ -759,7 +736,6 @@
                 <widget class="QLabel" name="label_Retract">
                  <property name="font">
                   <font>
-                   <weight>75</weight>
                    <bold>true</bold>
                   </font>
                  </property>
@@ -772,7 +748,6 @@
                 <widget class="QCheckBox" name="Tabs_RetractToSafe">
                  <property name="font">
                   <font>
-                   <weight>75</weight>
                    <bold>true</bold>
                   </font>
                  </property>
@@ -810,10 +785,10 @@
         <item>
          <spacer name="verticalSpacer">
           <property name="orientation">
-           <enum>Qt::Vertical</enum>
+           <enum>Qt::Orientation::Vertical</enum>
           </property>
           <property name="sizeType">
-           <enum>QSizePolicy::Expanding</enum>
+           <enum>QSizePolicy::Policy::Expanding</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -858,9 +833,9 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QSplitter" name="splitter">
+        <widget class="QSplitter" name="splitterCentralArea">
          <property name="orientation">
-          <enum>Qt::Vertical</enum>
+          <enum>Qt::Orientation::Vertical</enum>
          </property>
          <property name="handleWidth">
           <number>6</number>
@@ -907,7 +882,23 @@
            <attribute name="title">
             <string>GCode Simulator</string>
            </attribute>
-           <layout class="QHBoxLayout" name="horizontalLayout_5b"/>
+           <layout class="QHBoxLayout" name="horizontalLayout_5b">
+            <property name="spacing">
+             <number>4</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+           </layout>
           </widget>
          </widget>
          <widget class="PyCutOperationsTableViewManager" name="operationsview_manager" native="true">
@@ -952,7 +943,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>314</width>
+         <width>316</width>
          <height>988</height>
         </rect>
        </property>
@@ -970,7 +961,6 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -987,7 +977,7 @@
             <item>
              <spacer name="horizontalSpacer_3">
               <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+               <enum>Qt::Orientation::Horizontal</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -1016,7 +1006,7 @@
             <item>
              <spacer name="horizontalSpacer_4">
               <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+               <enum>Qt::Orientation::Horizontal</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -1030,11 +1020,14 @@
           </item>
           <item>
            <layout class="QFormLayout" name="formLayout_Material">
+            <property name="sizeConstraint">
+             <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
+            </property>
             <property name="labelAlignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
             </property>
             <property name="formAlignment">
-             <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTop|Qt::AlignmentFlag::AlignTrailing</set>
             </property>
             <property name="leftMargin">
              <number>2</number>
@@ -1046,7 +1039,6 @@
              <widget class="QLabel" name="label_Material_Units">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1057,6 +1049,12 @@
             </item>
             <item row="0" column="1">
              <widget class="QComboBox" name="Material_Units">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>1</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <item>
                <property name="text">
                 <string>inch</string>
@@ -1073,7 +1071,6 @@
              <widget class="QLabel" name="label_Material_Thickness">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1084,6 +1081,12 @@
             </item>
             <item row="1" column="1">
              <widget class="QDoubleSpinBox" name="Material_Thickness">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>1</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="maximum">
                <double>100.000000000000000</double>
               </property>
@@ -1096,7 +1099,6 @@
              <widget class="QLabel" name="label_Material_ZOrigin">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1108,8 +1110,8 @@
             <item row="2" column="1">
              <widget class="QComboBox" name="Material_ZOrigin">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>0</horstretch>
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>1</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
@@ -1129,7 +1131,6 @@
              <widget class="QLabel" name="label_Material_Clearance">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1137,12 +1138,18 @@
                <string>Cleareance                                     </string>
               </property>
               <property name="alignment">
-               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
               </property>
              </widget>
             </item>
             <item row="3" column="1">
              <widget class="QDoubleSpinBox" name="Material_Clearance">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>1</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="maximum">
                <double>100.000000000000000</double>
               </property>
@@ -1165,7 +1172,6 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -1196,7 +1202,6 @@
              <widget class="QLabel" name="label_GCodeConversion_YOffset">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1222,7 +1227,6 @@
              <widget class="QLabel" name="label_GCodeConversion_GCodeUnits">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1248,7 +1252,6 @@
              <widget class="QLabel" name="label_GCodeConversion_MaxY">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1271,7 +1274,6 @@
               </property>
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                 <kerning>false</kerning>
                </font>
@@ -1314,7 +1316,6 @@
              <widget class="QLabel" name="label_GCodeConversion_MinX">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1327,7 +1328,6 @@
              <widget class="QLabel" name="label_GCodeConversion_MaxX">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1397,7 +1397,6 @@
              <widget class="QLabel" name="label_GCodeConversion_MinY">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1410,7 +1409,6 @@
              <widget class="QLabel" name="label_GCodeConversion_XOffset">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1437,7 +1435,6 @@
              <widget class="QPushButton" name="GCodeConversion_ZeroTopLeftOfMaterial">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1445,8 +1442,7 @@
                <string>Zero top left Material       </string>
               </property>
               <property name="icon">
-               <iconset theme=":/images/tango/22x22/actions/view-refresh.png">
-                <normaloff>.</normaloff>.</iconset>
+               <iconset theme=":/images/tango/22x22/actions/view-refresh.png"/>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -1463,7 +1459,6 @@
              <widget class="QPushButton" name="GCodeConversion_ZeroLowerLeftOfMaterial">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1471,8 +1466,7 @@
                <string>Zero lower left (Material)</string>
               </property>
               <property name="icon">
-               <iconset theme=":/images/tango/22x22/actions/view-refresh.png">
-                <normaloff>.</normaloff>.</iconset>
+               <iconset theme=":/images/tango/22x22/actions/view-refresh.png"/>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -1486,7 +1480,6 @@
              <widget class="QPushButton" name="GCodeConversion_ZeroLowerLeftOfOp">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1494,8 +1487,7 @@
                <string>Zero lower left (Op)         </string>
               </property>
               <property name="icon">
-               <iconset theme=":/images/tango/22x22/actions/view-refresh.png">
-                <normaloff>.</normaloff>.</iconset>
+               <iconset theme=":/images/tango/22x22/actions/view-refresh.png"/>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -1509,7 +1501,6 @@
              <widget class="QPushButton" name="GCodeConversion_ZeroCenterOfOp">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1517,8 +1508,7 @@
                <string>Zero center (Op)               </string>
               </property>
               <property name="icon">
-               <iconset theme=":/images/tango/22x22/actions/view-refresh.png">
-                <normaloff>.</normaloff>.</iconset>
+               <iconset theme=":/images/tango/22x22/actions/view-refresh.png"/>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -1532,7 +1522,6 @@
              <widget class="QCheckBox" name="GCodeConversion_UseOffset">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1555,7 +1544,6 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -1569,8 +1557,11 @@
           </item>
           <item>
            <layout class="QFormLayout" name="formLayout_GCodeGeneration">
+            <property name="labelAlignment">
+             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+            </property>
             <property name="formAlignment">
-             <set>Qt::AlignCenter</set>
+             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
             </property>
             <property name="leftMargin">
              <number>2</number>
@@ -1582,7 +1573,6 @@
              <widget class="QLabel" name="label_GCodeGeneration_ReturnToZeroAtEnd">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1590,7 +1580,7 @@
                <string>Return to 0,0 at end</string>
               </property>
               <property name="alignment">
-               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
               </property>
              </widget>
             </item>
@@ -1605,7 +1595,6 @@
              <widget class="QLabel" name="label_GCodeGeneration_SpindleControl">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1618,7 +1607,6 @@
              <widget class="QCheckBox" name="GCodeGeneration_SpindleControl">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1631,7 +1619,6 @@
              <widget class="QLabel" name="label_GCodeGeneration_SpindleSpeed">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1654,7 +1641,6 @@
              <widget class="QLabel" name="label_GCodeGeneration_ProgramEnd">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1667,7 +1653,6 @@
              <widget class="QCheckBox" name="GCodeGeneration_ProgramEnd">
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1690,7 +1675,6 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -1704,8 +1688,11 @@
           </item>
           <item>
            <layout class="QFormLayout" name="formLayout_GCodeStatistics">
+            <property name="labelAlignment">
+             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+            </property>
             <property name="formAlignment">
-             <set>Qt::AlignCenter</set>
+             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
             </property>
             <property name="leftMargin">
              <number>2</number>
@@ -1723,7 +1710,6 @@
               </property>
               <property name="font">
                <font>
-                <weight>75</weight>
                 <bold>true</bold>
                </font>
               </property>
@@ -1731,7 +1717,7 @@
                <string>Run Time</string>
               </property>
               <property name="alignment">
-               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
               </property>
              </widget>
             </item>
@@ -1749,7 +1735,7 @@
         <item>
          <spacer name="verticalSpacer_2">
           <property name="orientation">
-           <enum>Qt::Vertical</enum>
+           <enum>Qt::Orientation::Vertical</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -1772,7 +1758,7 @@
      <x>0</x>
      <y>0</y>
      <width>1226</width>
-     <height>21</height>
+     <height>43</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSvg">
@@ -1796,6 +1782,8 @@
     <addaction name="actionOpenProject"/>
     <addaction name="actionSaveProjectAs"/>
     <addaction name="actionSaveProject"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -1889,6 +1877,11 @@
   <action name="actionCnCTutorial">
    <property name="text">
     <string>CnC Tutorial</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
    </property>
   </action>
  </widget>
