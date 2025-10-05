@@ -420,14 +420,13 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
         # main section of the window
         vbox = self.vbox = QtWidgets.QVBoxLayout()
         vbox.setContentsMargins(0, 0, 0, 0)
+        vbox.setSpacing(10)
 
         # let's add two views of the same data source we just created:
         self.table = PyCutSimpleTableView(self)
 
         # bottom section of the window:
-        # let's have a text input and a pushbutton that add an item to our model.
-        hbox_add = QtWidgets.QHBoxLayout()
-
+  
         # create the button, and hook it up to the slot below.
         self._button_add = QtWidgets.QPushButton("Create Operation")
         self._button_add.clicked.connect(self.add_item)
@@ -435,19 +434,13 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
             QtGui.QIcon(":/images/tango/22x22/categories/applications-system.png")
         )
 
-        hbox_add.addWidget(self._button_add)
-
-        hbox_gen = QtWidgets.QHBoxLayout()
-
         self._button_gen = QtWidgets.QPushButton("Generate GCode")
         self._button_gen.clicked.connect(self.gen_gcode)
         self._button_gen.setIcon(QtGui.QIcon(":/images/milling-machine-op.png"))
 
-        hbox_gen.addWidget(self._button_gen)
-
         # add bottom to main window layout
-        vbox.addLayout(hbox_add)
-        vbox.addLayout(hbox_gen)
+        vbox.addWidget(self._button_gen)
+        vbox.addWidget(self._button_add)
         vbox.addWidget(self.table)
 
         vbox.setStretch(2, 1)

@@ -21,7 +21,7 @@ start the program from the installation folder
 > python pycut.py
 > python pycut.py -p <path_to_project>
 > python pycut.py -g <path_to_gcode>   # view an external gcode data
-> python pycut.py -s <path_to_svge>    # load an svg file into the viewer
+> python pycut.py -s <path_to_svg>    # load an svg file into the viewer
 ```
 
 ## Dependencies
@@ -31,11 +31,11 @@ start the program from the installation folder
 - shapely 2.1.2 (and types-shapely)
 - PyOpenGL (latest) [3.1.10]
 - svgelements (latest) [1.9.6]
-- lxml (latest) [6.0.1]
+- lxml (latest) [6.0.2]
 - freetype-py (latest) - used in svgtext2svgpath.py utility [2.5.1]
 - matplotlib (latest) - to debug/view shapely offsets ops [3.10.0]
 - numba (latest) - for python simulator optimization [0.62.0]
-- pyvoronoi (latest) - for HSM nibbler toolpaths [1.1.6]
+- pyvoronoi (latest) - for HSM nibbler toolpaths [1.2.4]
 
 ## Features
 
@@ -56,7 +56,7 @@ start the program from the installation folder
 - gcode simulator (as in jsCut, but with candle parser)
 - gcode produced (GRBL)
 
-## Main Improvments over JsCut
+## Main Improvements over JsCut
 
 - tabs "on the fly" (no need to define them in the svg file)
 - flip X/Y in GCode (good for my machine - the "1419" one -)

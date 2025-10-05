@@ -93,7 +93,7 @@ class Display:
             multi = polygons[key]
             colour = self.colours[index % len(self.colours)]
             print(f"  {key}: {colour}")
-            if multi.type != "MultiPolygon":
+            if multi.geom_type != "MultiPolygon":
                 multi = MultiPolygon([multi])
             for polygon in multi.geoms:
                 for ring in [polygon.exterior] + list(polygon.interiors):

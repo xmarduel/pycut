@@ -549,13 +549,14 @@ class Ui_mainwindow(object):
         self.scrollArea_right.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 316, 988))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 323, 989))
         self.verticalLayout_5 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_5.setSpacing(22)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.verticalLayoutMaterial = QVBoxLayout()
         self.verticalLayoutMaterial.setSpacing(6)
         self.verticalLayoutMaterial.setObjectName(u"verticalLayoutMaterial")
+        self.verticalLayoutMaterial.setContentsMargins(-1, -1, 6, -1)
         self.labelMaterial = QLabel(self.scrollAreaWidgetContents_2)
         self.labelMaterial.setObjectName(u"labelMaterial")
         self.labelMaterial.setFont(font)
@@ -583,78 +584,72 @@ class Ui_mainwindow(object):
 
         self.verticalLayoutMaterial.addLayout(self.horizontalLayout_6)
 
-        self.formLayout_Material = QFormLayout()
-        self.formLayout_Material.setObjectName(u"formLayout_Material")
-        self.formLayout_Material.setSizeConstraint(QLayout.SizeConstraint.SetNoConstraint)
-        self.formLayout_Material.setLabelAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.formLayout_Material.setFormAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTop|Qt.AlignmentFlag.AlignTrailing)
-        self.formLayout_Material.setContentsMargins(2, -1, 1, -1)
+        self.gridLayout_2 = QGridLayout()
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.gridLayout_2.setSizeConstraint(QLayout.SizeConstraint.SetNoConstraint)
+        self.gridLayout_2.setContentsMargins(2, -1, 1, -1)
         self.label_Material_Units = QLabel(self.scrollAreaWidgetContents_2)
         self.label_Material_Units.setObjectName(u"label_Material_Units")
         self.label_Material_Units.setFont(font1)
 
-        self.formLayout_Material.setWidget(0, QFormLayout.ItemRole.LabelRole, self.label_Material_Units)
+        self.gridLayout_2.addWidget(self.label_Material_Units, 0, 0, 1, 1)
 
         self.Material_Units = QComboBox(self.scrollAreaWidgetContents_2)
         self.Material_Units.addItem("")
         self.Material_Units.addItem("")
         self.Material_Units.setObjectName(u"Material_Units")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
-        sizePolicy1.setHorizontalStretch(1)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.Material_Units.sizePolicy().hasHeightForWidth())
-        self.Material_Units.setSizePolicy(sizePolicy1)
 
-        self.formLayout_Material.setWidget(0, QFormLayout.ItemRole.FieldRole, self.Material_Units)
+        self.gridLayout_2.addWidget(self.Material_Units, 0, 1, 1, 1)
 
         self.label_Material_Thickness = QLabel(self.scrollAreaWidgetContents_2)
         self.label_Material_Thickness.setObjectName(u"label_Material_Thickness")
         self.label_Material_Thickness.setFont(font1)
 
-        self.formLayout_Material.setWidget(1, QFormLayout.ItemRole.LabelRole, self.label_Material_Thickness)
+        self.gridLayout_2.addWidget(self.label_Material_Thickness, 1, 0, 1, 1)
 
         self.Material_Thickness = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
         self.Material_Thickness.setObjectName(u"Material_Thickness")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sizePolicy1.setHorizontalStretch(1)
+        sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.Material_Thickness.sizePolicy().hasHeightForWidth())
         self.Material_Thickness.setSizePolicy(sizePolicy1)
         self.Material_Thickness.setMaximum(100.000000000000000)
         self.Material_Thickness.setValue(50.000000000000000)
 
-        self.formLayout_Material.setWidget(1, QFormLayout.ItemRole.FieldRole, self.Material_Thickness)
+        self.gridLayout_2.addWidget(self.Material_Thickness, 1, 1, 1, 1)
 
         self.label_Material_ZOrigin = QLabel(self.scrollAreaWidgetContents_2)
         self.label_Material_ZOrigin.setObjectName(u"label_Material_ZOrigin")
         self.label_Material_ZOrigin.setFont(font1)
 
-        self.formLayout_Material.setWidget(2, QFormLayout.ItemRole.LabelRole, self.label_Material_ZOrigin)
+        self.gridLayout_2.addWidget(self.label_Material_ZOrigin, 2, 0, 1, 1)
 
         self.Material_ZOrigin = QComboBox(self.scrollAreaWidgetContents_2)
         self.Material_ZOrigin.addItem("")
         self.Material_ZOrigin.addItem("")
         self.Material_ZOrigin.setObjectName(u"Material_ZOrigin")
-        sizePolicy1.setHeightForWidth(self.Material_ZOrigin.sizePolicy().hasHeightForWidth())
-        self.Material_ZOrigin.setSizePolicy(sizePolicy1)
+        self.Material_ZOrigin.setFrame(True)
 
-        self.formLayout_Material.setWidget(2, QFormLayout.ItemRole.FieldRole, self.Material_ZOrigin)
+        self.gridLayout_2.addWidget(self.Material_ZOrigin, 2, 1, 1, 1)
 
         self.label_Material_Clearance = QLabel(self.scrollAreaWidgetContents_2)
         self.label_Material_Clearance.setObjectName(u"label_Material_Clearance")
+        self.label_Material_Clearance.setMinimumSize(QSize(190, 0))
         self.label_Material_Clearance.setFont(font1)
-        self.label_Material_Clearance.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.label_Material_Clearance.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
-        self.formLayout_Material.setWidget(3, QFormLayout.ItemRole.LabelRole, self.label_Material_Clearance)
+        self.gridLayout_2.addWidget(self.label_Material_Clearance, 3, 0, 1, 1)
 
         self.Material_Clearance = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
         self.Material_Clearance.setObjectName(u"Material_Clearance")
-        sizePolicy1.setHeightForWidth(self.Material_Clearance.sizePolicy().hasHeightForWidth())
-        self.Material_Clearance.setSizePolicy(sizePolicy1)
         self.Material_Clearance.setMaximum(100.000000000000000)
         self.Material_Clearance.setValue(20.000000000000000)
 
-        self.formLayout_Material.setWidget(3, QFormLayout.ItemRole.FieldRole, self.Material_Clearance)
+        self.gridLayout_2.addWidget(self.Material_Clearance, 3, 1, 1, 1)
 
 
-        self.verticalLayoutMaterial.addLayout(self.formLayout_Material)
+        self.verticalLayoutMaterial.addLayout(self.gridLayout_2)
 
 
         self.verticalLayout_5.addLayout(self.verticalLayoutMaterial)
@@ -804,13 +799,6 @@ class Ui_mainwindow(object):
 
         self.gridLayout_GCodeConversion.addWidget(self.label_GCodeConversion_XOffset, 6, 0, 1, 1)
 
-        self.GCodeConversion_Units = QComboBox(self.scrollAreaWidgetContents_2)
-        self.GCodeConversion_Units.addItem("")
-        self.GCodeConversion_Units.addItem("")
-        self.GCodeConversion_Units.setObjectName(u"GCodeConversion_Units")
-
-        self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_Units, 0, 1, 1, 1)
-
         self.GCodeConversion_ZeroTopLeftOfMaterial = QPushButton(self.scrollAreaWidgetContents_2)
         self.buttonGroup_GCodeConversion = QButtonGroup(mainwindow)
         self.buttonGroup_GCodeConversion.setObjectName(u"buttonGroup_GCodeConversion")
@@ -857,6 +845,13 @@ class Ui_mainwindow(object):
 
         self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_UseOffset, 5, 2, 1, 1)
 
+        self.GCodeConversion_Units = QComboBox(self.scrollAreaWidgetContents_2)
+        self.GCodeConversion_Units.addItem("")
+        self.GCodeConversion_Units.addItem("")
+        self.GCodeConversion_Units.setObjectName(u"GCodeConversion_Units")
+
+        self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_Units, 0, 2, 1, 1)
+
 
         self.verticalLayoutGCodeConversion.addLayout(self.gridLayout_GCodeConversion)
 
@@ -880,6 +875,7 @@ class Ui_mainwindow(object):
         self.formLayout_GCodeGeneration.setContentsMargins(2, -1, 2, -1)
         self.label_GCodeGeneration_ReturnToZeroAtEnd = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeGeneration_ReturnToZeroAtEnd.setObjectName(u"label_GCodeGeneration_ReturnToZeroAtEnd")
+        self.label_GCodeGeneration_ReturnToZeroAtEnd.setMinimumSize(QSize(150, 0))
         self.label_GCodeGeneration_ReturnToZeroAtEnd.setFont(font1)
         self.label_GCodeGeneration_ReturnToZeroAtEnd.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
@@ -950,7 +946,7 @@ class Ui_mainwindow(object):
         self.formLayout_GCodeStatistics.setContentsMargins(2, -1, 1, -1)
         self.label_GCodeStatistics_RunTime = QLabel(self.scrollAreaWidgetContents_2)
         self.label_GCodeStatistics_RunTime.setObjectName(u"label_GCodeStatistics_RunTime")
-        self.label_GCodeStatistics_RunTime.setMinimumSize(QSize(120, 0))
+        self.label_GCodeStatistics_RunTime.setMinimumSize(QSize(150, 0))
         self.label_GCodeStatistics_RunTime.setFont(font1)
         self.label_GCodeStatistics_RunTime.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
@@ -1120,7 +1116,7 @@ class Ui_mainwindow(object):
         self.Material_ZOrigin.setItemText(0, QCoreApplication.translate("mainwindow", u"Top", None))
         self.Material_ZOrigin.setItemText(1, QCoreApplication.translate("mainwindow", u"Bottom", None))
 
-        self.label_Material_Clearance.setText(QCoreApplication.translate("mainwindow", u"Cleareance                                     ", None))
+        self.label_Material_Clearance.setText(QCoreApplication.translate("mainwindow", u"Cleareance    ", None))
         self.label_GCcodeConversion.setText(QCoreApplication.translate("mainwindow", u" GCode Conversion", None))
         self.label_GCodeConversion_YOffset_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_GCodeConversion_YOffset.setText(QCoreApplication.translate("mainwindow", u"Y Offset", None))
@@ -1136,14 +1132,14 @@ class Ui_mainwindow(object):
         self.label_GCodeConversion_MinY_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_GCodeConversion_MinY.setText(QCoreApplication.translate("mainwindow", u"Min Y", None))
         self.label_GCodeConversion_XOffset.setText(QCoreApplication.translate("mainwindow", u"X Offset", None))
-        self.GCodeConversion_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
-        self.GCodeConversion_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
-
         self.GCodeConversion_ZeroTopLeftOfMaterial.setText(QCoreApplication.translate("mainwindow", u"Zero top left Material       ", None))
         self.GCodeConversion_ZeroLowerLeftOfMaterial.setText(QCoreApplication.translate("mainwindow", u"Zero lower left (Material)", None))
         self.GCodeConversion_ZeroLowerLeftOfOp.setText(QCoreApplication.translate("mainwindow", u"Zero lower left (Op)         ", None))
         self.GCodeConversion_ZeroCenterOfOp.setText(QCoreApplication.translate("mainwindow", u"Zero center (Op)               ", None))
         self.GCodeConversion_UseOffset.setText(QCoreApplication.translate("mainwindow", u"Use Offset", None))
+        self.GCodeConversion_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
+        self.GCodeConversion_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
+
         self.labelGCodeGeneration.setText(QCoreApplication.translate("mainwindow", u" GCode Generation", None))
         self.label_GCodeGeneration_ReturnToZeroAtEnd.setText(QCoreApplication.translate("mainwindow", u"Return to 0,0 at end", None))
         self.GCodeGeneration_ReturnToZeroAtEnd.setText("")

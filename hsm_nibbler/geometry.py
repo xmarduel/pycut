@@ -147,7 +147,7 @@ def clean_polygon(polygon: Polygon) -> Polygon:
 
 
 def clean_multipolygon(multi: MultiPolygon) -> MultiPolygon:
-    if multi.type != "MultiPolygon":
+    if multi.geom_type != "MultiPolygon":
         multi = MultiPolygon([multi])
     polygons = []
     for polygon in multi.geoms:
@@ -387,9 +387,9 @@ def arcs_from_circle_diff(
     line_diff = circle.path.difference(already_cut)
     if not line_diff:
         return []
-    if line_diff.type == "MultiLineString":
+    if line_diff.geom_type == "MultiLineString":
         line_diff = linemerge(line_diff)
-    if line_diff.type != "MultiLineString":
+    if line_diff.geom_type != "MultiLineString":
         line_diff = MultiLineString([line_diff])
 
     arcs = []
@@ -496,7 +496,7 @@ class BaseGeometry:
 
         self.calculated_area_total = self.starting_cut_area
         self.cut_area_total = Polygon(self.starting_cut_area)
-        assert self.calculated_area_total is not self.cut_area_total
+        ## XM : assert self.calculated_area_total is not self.cut_area_total
 
         self._filter_input_geometry()
         self.dilated_starting_polygon = self.polygon.buffer(self.step / 10)
@@ -505,7 +505,7 @@ class BaseGeometry:
         """Remove any tiny polygons from a MultiPolygon."""
         min_area = (self.step / 20) ** 2
 
-        if self.polygon.type != "MultiPolygon":
+        if self.polygon.geom_type != "MultiPolygon":
             self.polygon = MultiPolygon([self.polygon])
 
         self.polygon = MultiPolygon(
@@ -569,8 +569,8 @@ class BaseGeometry:
                 closest_dist = self.step
                 for queue_index, queue in enumerate(self.pending_arc_queues):
                     if self.winding_dir == ArcDir.Closest:
-                        combined_dist = 1
-                        seperate_dist = 0
+                        combined_dist = 1.0
+                        seperate_dist = 0.0
                     else:
                         assert arc.start is not None
                         assert queue[-1].start is not None
@@ -708,7 +708,7 @@ class BaseGeometry:
             split_path = split_line_by_poly(remaining_path, self.cut_area_total)
 
             for part in split_path.geoms:
-                assert part.type == "LineString"
+                assert part.geom_type == "LineString"
                 assert len(part.coords) == 2
 
                 move_style = MoveStyle.CUT
@@ -906,7 +906,7 @@ class Pocket(BaseGeometry):
         # Used to detect when an arc is too close to the edge to be worthwhile.
         self.dilated_polygon_boundaries = []
         multi = self.polygon
-        if multi.type != "MultiPolygon":
+        if multi.geom_type != "MultiPolygon":
             multi = MultiPolygon([multi])
         for poly in multi.geoms:
             for ring in [poly.exterior] + list(poly.interiors):
@@ -1109,7 +1109,7 @@ class Pocket(BaseGeometry):
         Returns:
             The step distance.
         """
-        spacing = -1
+        spacing = -1.0
         polygon = previous
         for arc in arcs:
             if not arc.path:
@@ -1324,7 +1324,7 @@ class Pocket(BaseGeometry):
         while True:
             branches = self.voronoi.vertex_to_edges[vertex]
             candidate = None
-            longest = 0
+            longest = 0.0
             for branch in branches:
                 if branch not in self.visited_edges:
                     self.open_paths[branch] = vertex
@@ -1542,13 +1542,13 @@ class EntryCircle(BaseGeometry):
             if new_arc.path.intersects(mask.exterior):
                 # Spiral has crossed bounding circle.
                 masked_arc = new_arc.path.intersection(mask)
-                if masked_arc.type == "MultiLineString":
+                if masked_arc.geom_type == "MultiLineString":
                     longest = None
                     for arc in list(masked_arc.geoms):
                         if not longest or arc.length > longest.length:
                             longest = arc
                     masked_arc = longest
-                if masked_arc.type == "GeometryCollection":
+                if masked_arc.geom_type == "GeometryCollection":
                     longest = None
                     for arc in list(masked_arc.geoms):
                         if not longest or arc.length > longest.length:

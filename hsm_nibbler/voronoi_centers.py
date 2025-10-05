@@ -20,11 +20,12 @@ mrdunk@gmail.com
 """
 
 from typing import Dict, List, Optional, Set, Tuple, Union
+from typing import cast
 
 import math
 
 from shapely.geometry.base import BaseGeometry  # type: ignore
-from shapely.geometry import box, LineString, Point, Polygon  # type: ignore
+from shapely.geometry import box, LineString, Point, Polygon, MultiPolygon  # type: ignore
 from shapely.ops import linemerge, nearest_points  # type: ignore
 from shapely.validation import make_valid  # type: ignore
 
@@ -114,7 +115,8 @@ class VoronoiCenters:
         # Generate voronoi diagram.
         pv = pyvoronoi.Pyvoronoi(VORONOI_RES)
         for segment in geom_primatives:
-            pv.AddSegment(segment)
+            #pv.AddSegment(segment)
+            pv.AddSegment(list(segment)) # PyVoronoi-1.2.4
         pv.Construct()
 
         edges = pv.GetEdges()
@@ -162,9 +164,9 @@ class VoronoiCenters:
                         if cell_twin.contains_point:
                             geom_points.append(pv.RetrieveScaledPoint(cell_twin))
                         if cell.contains_segment:
-                            geom_edges.append(pv.RetriveScaledSegment(cell))
+                            geom_edges.append(pv.RetrieveScaledSegment(cell))
                         if cell_twin.contains_segment:
-                            geom_edges.append(pv.RetriveScaledSegment(cell_twin))
+                            geom_edges.append(pv.RetrieveScaledSegment(cell_twin))
                         assert len(geom_edges) > 0
                         assert len(geom_points) + len(geom_edges) == 2
 
@@ -264,10 +266,10 @@ class VoronoiCenters:
         Do some quick fixes on common issues.
         """
         fixed = make_valid(self.polygon)
-        while fixed.type == "MultiPolygon":
+        while fixed.geom_type == "MultiPolygon":
             bigest = None
-            size = 0
-            for geom in fixed.geoms:
+            size = 0.0
+            for geom in cast(MultiPolygon, fixed).geoms:
                 poly_area = Polygon(geom).area
                 if poly_area > size:
                     size = poly_area
@@ -279,8 +281,8 @@ class VoronoiCenters:
             # Knowing which piece to work on is a crap shoot.
             # It should be up to the client code to make the decision and correctly
             # format the input polygon.
-        if fixed.type == "Polygon":
-            self.polygon = fixed
+        if fixed.geom_type == "Polygon":
+            self.polygon = cast(Polygon, fixed)
 
         # Any jitter in input geometry may make points appear out of sequence
         # leading to invalid geometry.

@@ -943,8 +943,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>316</width>
-         <height>988</height>
+         <width>323</width>
+         <height>989</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,0,0,0,1">
@@ -954,6 +954,9 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayoutMaterial">
           <property name="spacing">
+           <number>6</number>
+          </property>
+          <property name="rightMargin">
            <number>6</number>
           </property>
           <item>
@@ -1019,15 +1022,9 @@
            </layout>
           </item>
           <item>
-           <layout class="QFormLayout" name="formLayout_Material">
+           <layout class="QGridLayout" name="gridLayout_2">
             <property name="sizeConstraint">
              <enum>QLayout::SizeConstraint::SetNoConstraint</enum>
-            </property>
-            <property name="labelAlignment">
-             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-            </property>
-            <property name="formAlignment">
-             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTop|Qt::AlignmentFlag::AlignTrailing</set>
             </property>
             <property name="leftMargin">
              <number>2</number>
@@ -1049,12 +1046,6 @@
             </item>
             <item row="0" column="1">
              <widget class="QComboBox" name="Material_Units">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>1</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <item>
                <property name="text">
                 <string>inch</string>
@@ -1109,11 +1100,8 @@
             </item>
             <item row="2" column="1">
              <widget class="QComboBox" name="Material_ZOrigin">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>1</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
+              <property name="frame">
+               <bool>true</bool>
               </property>
               <item>
                <property name="text">
@@ -1129,27 +1117,27 @@
             </item>
             <item row="3" column="0">
              <widget class="QLabel" name="label_Material_Clearance">
+              <property name="minimumSize">
+               <size>
+                <width>190</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <bold>true</bold>
                </font>
               </property>
               <property name="text">
-               <string>Cleareance                                     </string>
+               <string>Cleareance    </string>
               </property>
               <property name="alignment">
-               <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
               </property>
              </widget>
             </item>
             <item row="3" column="1">
              <widget class="QDoubleSpinBox" name="Material_Clearance">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>1</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <property name="maximum">
                <double>100.000000000000000</double>
               </property>
@@ -1417,20 +1405,6 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QComboBox" name="GCodeConversion_Units">
-              <item>
-               <property name="text">
-                <string>inch</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>mm</string>
-               </property>
-              </item>
-             </widget>
-            </item>
             <item row="1" column="0" colspan="3">
              <widget class="QPushButton" name="GCodeConversion_ZeroTopLeftOfMaterial">
               <property name="font">
@@ -1530,6 +1504,20 @@
               </property>
              </widget>
             </item>
+            <item row="0" column="2">
+             <widget class="QComboBox" name="GCodeConversion_Units">
+              <item>
+               <property name="text">
+                <string>inch</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>mm</string>
+               </property>
+              </item>
+             </widget>
+            </item>
            </layout>
           </item>
          </layout>
@@ -1571,6 +1559,12 @@
             </property>
             <item row="0" column="0">
              <widget class="QLabel" name="label_GCodeGeneration_ReturnToZeroAtEnd">
+              <property name="minimumSize">
+               <size>
+                <width>150</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <bold>true</bold>
@@ -1704,7 +1698,7 @@
              <widget class="QLabel" name="label_GCodeStatistics_RunTime">
               <property name="minimumSize">
                <size>
-                <width>120</width>
+                <width>150</width>
                 <height>0</height>
                </size>
               </property>
