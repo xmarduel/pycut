@@ -55,12 +55,12 @@
     </ul>
   </li>
   <li><a href="#P-21">Grbl Errors Codes</a></li>
-  <li><a href="#P-23">Upgrading the CNC 1310</a>
-  <li><a href="#P-22">Upgrading the CNC 1419</a>
+  <li><a href="#P-22">Upgrading the CNC 1310</a>
+  <li><a href="#P-23">Upgrading the CNC 1419</a>
    <ul>
-      <li><a href="#P-22-001">Spindle</a></li>
-      <li><a href="#P-22-002">Stepper Motors</a></li>
-      <li><a href="#P-22-003">Controller Board</a></li>
+      <li><a href="#P-23-01">Spindle</a></li>
+      <li><a href="#P-23-02">Stepper Motors</a></li>
+      <li><a href="#P-23-03">Controller Board</a></li>
     </ul>
   </li>
   <li><a href="#P-03">First Steps - How to (not) crash the machine</a></li>
@@ -1163,17 +1163,31 @@ if you have exceeded your machine limits with a motion command.</p>
 <!-- ----------------------------------------------------------------------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------->
 
-<h2 id="P-23">Upgrading the CNC 1310</h2>
+<h2 id="P-22">Upgrading the CNC 1310</h2>
+
+<h3>Mechanics</h3>
 
 <p>Here is a <a href="https://rumble.com/vnj1tl-cnc-1310.-correct-assembly-of-the-anti-backlash-unit.html">link</a>
  to a video concerning how to mount "the right way" the backlash nuts.</p>
 
-<h2 id="P-22">Upgrading the CNC 1419</h2>
+<h3>Spindle</h3>
+
+<p>There is on Aliexpress a small brushless spindle of diametre 42 cm, so it can be installed on 1310's existing plates. 
+Unfortunately, its screws are disposed differently than the standart spindle. This means, you have to drill some holes
+on the bottom plate at the right place. </p>
+
+<p>An other possibilty is to "make" new plates for other types of spindles. I give in PyCut source code some freeCAD examples.</p>
+
+<p>Lastly, as seen on YouTube, you can buy an high-end 42 cm diameter rather expensive spindle and a custom bracket that fits inside 
+the existing 2 plates.</p>
+
+
+<h2 id="P-23">Upgrading the CNC 1419</h2>
 
 <p>A YouTube channel called <strong>"Propeller Labs"</strong> demonstrates various upgrades of the
 CNC 1419. </p>
 
-<h3>Spindle</h3>
+<h3 id="P-23-01">Spindle</h3>
 
 <p>AliExpress sells a whole family of brushless spindles, with power of 300, 400, 500 or 600 W. It
 seems the 600W spindle has only 9000 rpms, compared to 12000 rpms for the 500 W one for example.</p>
@@ -1210,7 +1224,7 @@ the brushless motor driver.</p>
 
 <p></p>
 
-<h3>Stepper Motors and Stepper Motor Drivers</h3>
+<h3 id="P-23-02">Stepper Motors and Stepper Motor Drivers</h3>
 
 <p>Reference: <a
 href="https://www.pololu.com/category/120/stepper-motor-drivers">https://www.pololu.com/category/120/stepper-motor-drivers</a>
@@ -1391,7 +1405,7 @@ power supply: </p>
 
 <p>You just need the right adaptor for the connector output.</p>
 
-<h3>Controller Boards</h3>
+<h3 id="P-23-03">Controller Boards</h3>
 
 <h4>Grbl Boards</h4>
 
