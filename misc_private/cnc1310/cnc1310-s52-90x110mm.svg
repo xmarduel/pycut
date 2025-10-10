@@ -108,14 +108,14 @@
       <circle id="spindle-small-base" style="fill:#ffff00;fill-opacity:1"  r="13.0" />
         
       <!-- mounting holes -->
-      <use href="#spindle_screw_M4" transform="rotate(45) translate(12.5 12.5)" id="spindle_screw_M4_NW" />
-      <use href="#spindle_screw_M4" transform="rotate(45) translate(12.5 -12.5)" id="spindle_screw_M4_NE" />
-      <use href="#spindle_screw_M4" transform="rotate(45) translate(-12.5 12.5)" id="spindle_screw_M4_SW" />
-      <use href="#spindle_screw_M4" transform="rotate(45) translate(-12.5 -12.5)" id="spindle_screw_M4_SE" />
-      <use href="#spindle_screw_M4_thread_hole" transform="rotate(45) translate(12.5 12.5)" id="spindle_screw_M4_thread_hole_NW" />
-      <use href="#spindle_screw_M4_thread_hole" transform="rotate(45) translate(12.5 -12.5)" id="spindle_screw_M4_thread_hole_NE" />
-      <use href="#spindle_screw_M4_thread_hole" transform="rotate(45) translate(-12.5 12.5)" id="spindle_screw_M4_thread_hole_SW" />
-      <use href="#spindle_screw_M4_thread_hole" transform="rotate(45) translate(-12.5 -12.5)" id="spindle_screw_M4_thread_hole_SE" />
+      <use href="#spindle_screw_M4" transform="rotate(0) translate(17.5 0)" id="spindle_screw_M4_NW" />
+      <use href="#spindle_screw_M4" transform="rotate(90) translate(17.5 0)" id="spindle_screw_M4_NE" />
+      <use href="#spindle_screw_M4" transform="rotate(180) translate(17.5 0)" id="spindle_screw_M4_SW" />
+      <use href="#spindle_screw_M4" transform="rotate(270) translate(17.5 0)" id="spindle_screw_M4_SE" />
+      <use href="#spindle_screw_M4_thread_hole" transform="rotate(0) translate(17.5 0)" id="spindle_screw_M4_thread_hole_NW" />
+      <use href="#spindle_screw_M4_thread_hole" transform="rotate(90) translate(17.5 0)" id="spindle_screw_M4_thread_hole_NE" />
+      <use href="#spindle_screw_M4_thread_hole" transform="rotate(180) translate(-17.5 0)" id="spindle_screw_M4_thread_hole_SW" />
+      <use href="#spindle_screw_M4_thread_hole" transform="rotate(270) translate(17.5 0)" id="spindle_screw_M4_thread_hole_SE" />
     </g>
     
     <g id="spacers"  transform="translate(45,65)">

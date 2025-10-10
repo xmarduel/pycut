@@ -63,14 +63,14 @@
       <!-- "small base": diam = 26mm , height = 6mm -->
       <circle id="spindle-small-base" cx="45.000" cy="65.000" r="13.000" style="fill:#ffff00;fill-opacity:1"/>
       <!-- mounting holes -->
-      <circle id="spindle_screw_M4_NW" cx="45.000" cy="82.678" r="2.000" style="fill:#000080;fill-opacity:1"/>
-      <circle id="spindle_screw_M4_NE" cx="62.678" cy="65.000" r="2.000" style="fill:#000080;fill-opacity:1"/>
-      <circle id="spindle_screw_M4_SW" cx="27.322" cy="65.000" r="2.000" style="fill:#000080;fill-opacity:1"/>
-      <circle id="spindle_screw_M4_SE" cx="45.000" cy="47.322" r="2.000" style="fill:#000080;fill-opacity:1"/>
-      <circle id="spindle_screw_M4_thread_hole_NW" cx="45.000" cy="82.678" r="1.600" style="fill:#008080;fill-opacity:1"/>
-      <circle id="spindle_screw_M4_thread_hole_NE" cx="62.678" cy="65.000" r="1.600" style="fill:#008080;fill-opacity:1"/>
-      <circle id="spindle_screw_M4_thread_hole_SW" cx="27.322" cy="65.000" r="1.600" style="fill:#008080;fill-opacity:1"/>
-      <circle id="spindle_screw_M4_thread_hole_SE" cx="45.000" cy="47.322" r="1.600" style="fill:#008080;fill-opacity:1"/>
+      <circle id="spindle_screw_M4_NW" cx="45.0" cy="82.5" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="spindle_screw_M4_NE" cx="62.5" cy="65.0" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="spindle_screw_M4_SW" cx="27.5" cy="65.0" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="spindle_screw_M4_SE" cx="45.0" cy="47.5" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="spindle_screw_M4_thread_hole_NW" cx="45.0" cy="82.5" r="1.600" style="fill:#008080;fill-opacity:1"/>
+      <circle id="spindle_screw_M4_thread_hole_NE" cx="62.5" cy="65.0" r="1.600" style="fill:#008080;fill-opacity:1"/>
+      <circle id="spindle_screw_M4_thread_hole_SW" cx="27.5" cy="65.0" r="1.600" style="fill:#008080;fill-opacity:1"/>
+      <circle id="spindle_screw_M4_thread_hole_SE" cx="45.0" cy="47.5" r="1.600" style="fill:#008080;fill-opacity:1"/>
     </g>
     <g id="spacers">
       <circle id="spacer_pocket_SW" cx="74.016" cy="84.572" r="6.000" style="fill:#ff0000;fill-opacity:1"/>

@@ -13,7 +13,7 @@
     <circle id="bearing_cylinder"    style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="10.5" />
     <circle id="bearing_screw_4.0mm" style="fill:#000080;fill-opacity:1" cx="0" cy="0" r="2.0" />
     <circle id="spacer_screw_5.0mm"  style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="2.5" />
-	<circle id="spindle_screw_hole_3.0mm"  style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="1.50" />
+   	<circle id="spindle_screw_hole_3.0mm"  style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="1.50" />
   </defs>
    
   <g id="layer1" transform="translate(0,0)">
