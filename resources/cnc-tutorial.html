@@ -278,7 +278,7 @@ how "versatile" the 3018 is. But these as often experienced users which already 
 experience and know how to take the best from it, all things that a beginner cannot. As they
 certainly own better machines anyway, I do not see their point. The YouTube channel "Cosmo Channel"
 (italian) describes carefully how to assemble the <strong>1419</strong>. The <strong>1310</strong>
-is quite small but very well constructed, thus very sturdy. There are also vidoes in Internet
+is quite small but very well constructed, thus very sturdy. There are also videos in Internet
 showing how to assemble it. Unfortunately upgrading it is not straightforward. A better spindle
 mounted on it out of the box would be best. The reality for a machine is: the more expensive, the
 better!</p>
@@ -1172,7 +1172,7 @@ if you have exceeded your machine limits with a motion command.</p>
 
 <h3>Spindle</h3>
 
-<p>There is on Aliexpress a small brushless spindle of diametre 42 cm, so it can be installed on 1310's existing plates. 
+<p>There is on Aliexpress a small brushless spindle of diameter 42 cm, so it can be installed on 1310's existing plates. 
 Unfortunately, its screws are disposed differently than the standart spindle. This means, you have to drill some holes
 on the bottom plate at the right place. </p>
 
@@ -1636,8 +1636,8 @@ story)</p>
 
 <p>The machine dimensions are known, so the <strong>Max Travelling</strong> parameters can be set:
 as test, set</p>
-<pre><code class="language-gcode">$130=20
-$131=20
+<pre><code class="language-gcode">$130=45
+$131=45
 $132=10</code></pre>
 
 <p>Then try to jog of a distance of 30mm</p>
@@ -1645,14 +1645,19 @@ $132=10</code></pre>
 <h3 id="P-04-01-03">Testing the Soft Limits</h3>
 
 <p>Softs limits are meant to be used with homing. But the <strong>1419</strong> has no homing.
-However I would like to test Grbl on theses settings.</p>
+However soft limits can be tested and used.</p>
 
-<p>First I positionate the spindle in the middle of the machine. Then I set the Grbl settings $20 =
-1 (soft limits "on"), and the max X travel to 20 mm ($130 = 20). Now I try to move the spindle in
-the X direction of 10mm, then again of 20mm to see what happends.</p>
+<p>First positionate the spindle in the middle of the machine. You know there is for example only
+60 mm travel in the X direction. Set the Grbl settings $20 = 1 (soft limits "on"), 
+and the max X travel to 45 mm ($130 = 45). First try to move the spindle in the negative range: it won't move.
+Then try to move the spindle in the positive X direction of a  step of 10mm: the spindle moves. 
+Repeat the process : after having reach a total of 40mm, and at this pooint for the next step, the spindle won't move. 
+So it works best when you start a job where the spindle is indeed at the middle of the machine, or a the top left. 
+Set then the machine coordinates to zero, and your G-Code contains only positive coordinates. 
+Then set the max travel to your machine size.
+</p>
 
-<p>After this test, don't forget to reset $20 = 0. Try to move in the X direction 30mm. See what
-happens.</p>
+<p>After this test, don't forget to reset $20 = 0 if you don't want to uise soft limits.</p>
 <br>
 
 
@@ -7730,8 +7735,7 @@ href="https://sunspire.site/software-products/cnc-milling-simulator">SunSpire</a
 
 <h4>Advantages</h4>
 <ul>
-  <li>pro: ok for CNC-1310 (correction: not exactly. shaft hole in the lower holding plate must be
-    enlarged (1mm) and needs new holes for the screws)</li>
+  <li>pro: ok for CNC-1310 (correction: needs new holes in the bottom plate for the spindle mounting screws)</li>
   <li>contra: heats a lot (needs for a fan)</li>
 </ul>
 

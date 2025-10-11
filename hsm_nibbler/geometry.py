@@ -146,7 +146,7 @@ def clean_polygon(polygon: Polygon) -> Polygon:
     return Polygon(exterior, holes=holes)
 
 
-def clean_multipolygon(multi: MultiPolygon) -> MultiPolygon:
+def clean_multipolygon(multi: MultiPolygon|Polygon) -> MultiPolygon:
     if multi.geom_type != "MultiPolygon":
         multi = MultiPolygon([multi])
     polygons = []
@@ -376,7 +376,7 @@ def complete_arc(arc_data: ArcData, winding_dir_: ArcDir = None) -> Optional[Arc
 
 
 def arcs_from_circle_diff(
-    circle: ArcData, already_cut: Polygon, debug: str = None
+    circle: ArcData, already_cut: Polygon, debug: str|None = None
 ) -> List[ArcData]:
     """Return any sections of circle that do not overlap already_cut."""
     if not already_cut:

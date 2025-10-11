@@ -269,7 +269,7 @@ class cam:
                 # >>> XAM fix
                 last_delta = width - current_width
                 # <<< XAM fix
-                current = ShapelyUtils.offset_multiline(current, last_delta, "left")
+                current = ShapelyUtils.offset_multiline(current, last_delta,  "left" if is_inside else "right")
                 if current:
                     current = ShapelyUtils.simplify_multiline(current, 0.01)
 
@@ -293,7 +293,7 @@ class cam:
                 break
 
             current = ShapelyUtils.offset_multiline(
-                current, each_offset, "left", resolution=16
+                current, each_offset, "left" if is_inside else "right", resolution=16
             )
             if current:
                 current = ShapelyUtils.simplify_multiline(current, 0.01)

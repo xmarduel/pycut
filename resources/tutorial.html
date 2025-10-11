@@ -1491,8 +1491,9 @@ works quite nicely. I found nevertheless the following caveats: </p>
     Width and height are also calculated from theses items</li>
   <li>The svg root layer has a transformation with a translate (to view all items nicely in a browser) and a scale (1,-1)
     so that the Y coordinates of all items are "inversed" (and thus follow the natural direction, the opposite of the
-    SVG standard. X coordinates are the real ones. <strong>This means that the output will have to pass through the "svgresolver" utility to remove all
-    transformations in order to be used by PyCut</strong>.</li>
+    SVG standard. X coordinates are the real ones. <strong>This means that the output will have to pass through the "svgresolver" 
+    utility to remove all transformations in order to be used by PyCut. Or simply remove the transformation and adapt per hand
+    the viewbox and width/height of the document!</strong>.</li>
   <li>Circles are exported as <code>circle</code> (Ok). Lines, Rectangles, Polygons and Ellipses are exported as
     <code>path</code> (not Ok). The exporter should recognize when a "shape" is formed only with straight lines,
 	so that it is exported as polygon, polyline, line or even rectangle when it is the case.</li>

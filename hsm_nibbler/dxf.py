@@ -83,7 +83,7 @@ def dxf_to_polygon(modelspace) -> MultiPolygon:
         else:
             print(f"Unsupported dxf entity: {entity.dxftype()}")
 
-    parents = []
+    parents : List[LineString] = []
     for ring in rings:
         coveres = []
         covered_by = False
