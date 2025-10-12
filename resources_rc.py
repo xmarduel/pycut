@@ -6,19 +6,7 @@
 from PySide6 import QtCore
 
 qt_resource_data = b"\
-<<<<<<< HEAD
-<<<<<<< HEAD
-\x00\x01\x81\xa9\
-=======
-<<<<<<< HEAD
-\x00\x01\x80\xe7\
-=======
-\x00\x01z=\
->>>>>>> af07b3ef0cd86b188546f3212c6210a0106181fb
->>>>>>> 3cdfc6f... c
-=======
-\x00\x01\x89N\
->>>>>>> d8076dc... c
+\x00\x01\x8a\x10\
 <\
 html>\x0d\x0a<head>\x0d\x0a \
  <meta http-equi\
@@ -5246,276 +5234,6 @@ entation from In\
 kscape I would s\
 ay</strong>. Con\
 clusion: <strong\
-<<<<<<< HEAD
-><span style=\x22co\
-lor:#008000\x22>A n\
-early good SVG \x22\
-path\x22 generator/\
-exporter that is\
- unfortunately\x0d\x0a\
-uncomplete.</spa\
-n></strong></p>\x0d\
-\x0a\x0d\x0a<p>BTW, Libre\
-CAD seems to be \
-a \x22dead\x22 project\
-, so no improvme\
-nts are to be ex\
-pected.</p>\x0d\x0a\x0d\x0a<\
-h4>FreeCAD <span\
- style=\x22color:#0\
-08000\x22>****VERY \
-GOOD****</span><\
-/h4>\x0d\x0a\x0d\x0a<p>As of\
- version 1.0 (20\
-25), the sketche\
-r has dramatical\
-ly improved comp\
-ared to previous\
- versions and ha\
-s an SVG export \
-which \x0d\x0aworks qu\
-ite nicely. I fo\
-und nevertheless\
- the following c\
-aveats: </p>\x0d\x0a<u\
-l>\x0d\x0a  <li>The vi\
-ewbox is calcula\
-ted on the base \
-of the items in \
-the sketcher, an\
-d thus typically\
- will not be fro\
-m 0,0.\x0d\x0a    Widt\
-h and height are\
- also calculated\
- from theses ite\
-ms</li>\x0d\x0a  <li>T\
-he svg root laye\
-r has a transfor\
-mation with a tr\
-anslate (to view\
- all items nicel\
-y in a browser) \
-and a scale (1,-\
-1)\x0d\x0a    so that \
-the Y coordinate\
-s of all items a\
-re \x22inversed\x22 (a\
-nd thus follow t\
-he natural direc\
-tion, the opposi\
-te of the\x0d\x0a    S\
-VG standard. X c\
-oordinates are t\
-he real ones. <s\
-trong>This means\
- that the output\
- will have to pa\
-ss through the \x22\
-svgresolver\x22 \x0d\x0a \
-   utility to re\
-move all transfo\
-rmations in orde\
-r to be used by \
-<<<<<<< HEAD
-PyCut. Or simply\
- remove the tran\
-sformation and a\
-dapt per hand\x0d\x0a \
-   the viewbox a\
-nd width/height \
-of the document!\
-</strong>.</li>\x0d\
-\x0a    utility to \
-remove all trans\
-formations in or\
-der to be used b\
-y PyCut, or simp\
-ly erase the tra\
-nsform stuff!</s\
-trong>.</li>\x0d\x0a  \
-<li>Circles are \
-exported as <cod\
-e>circle</code> \
-(Ok). Lines, Rec\
-tangles, Polygon\
-s and Ellipses a\
-re exported as\x0d\x0a\
-    <code>path</\
-code> (not Ok). \
-The exporter sho\
-uld recognize wh\
-en a \x22shape\x22 is \
-formed only with\
- straight lines,\
-\x0d\x0a\x09so that it is\
- exported as pol\
-ygon, polyline, \
-line or even rec\
-tangle when it i\
-s the case.</li>\
-\x0d\x0a  <li>Quadrati\
-c bezier and cub\
-ic bezier are su\
-pported</li>\x0d\x0a  \
-<li>No <strong>Z\
-</strong> at the\
- end of a closed\
- path</li>\x0d\x0a</ul\
->\x0d\x0a\x0d\x0a<p>But it i\
-s good enough to\
- become my poten\
-tial default SVG\
- editor.</p>\x0d\x0a\x0d\x0a\
-<p>Conclusion: <\
-strong style=\x22co\
-lor:#008000\x22>A v\
-ery promising SV\
-G generator/expo\
-rter </strong>th\
-at could be bett\
-er if\x0d\x0aLines wer\
-e to be exported\
- as <code>line</\
-code>, Polylines\
- as <code>polyli\
-ne</code>, Recta\
-ngles as <code>r\
-ect</code>, \x0d\x0aPo\
-lygons as <code>\
-polygon</code>. \
-I also would rat\
-her like an outp\
-ut without trans\
-formation, but i\
-t can be removed\
-\x0d\x0ausing a text e\
-ditor.</p>\x0d\x0a\x0d\x0a<h\
-4>SolveSpace <sp\
-an style=\x22color:\
-#ff00ff\x22>****BES\
-T****</span></h4\
->\x0d\x0a\x0d\x0a<p>Ever hea\
-rd of it? A para\
-metric system as\
- known from the \
-3D modellers. <s\
-trong>Incredible\
-!</strong> The G\
-UI looks\x0d\x0alike f\
-rom the beginnin\
-g of the '80s, b\
-ut <strong>usabi\
-lity/features mo\
-re than top</str\
-ong>.</p>\x0d\x0a\x0d\x0a<p>\
-<strong>SVG expo\
-rt perfect (well\
-, nearly perfect\
-)</strong>. I fo\
-und nevertheless\
- the following c\
-aveats:</p>\x0d\x0a\x0d\x0a<\
-ul>\x0d\x0a<li>The pat\
-=======
-PyCut, or simply\
- erase the trans\
-form stuff!</str\
-ong>.</li>\x0d\x0a  <l\
-i>Circles are ex\
-ported as <code>\
-circle</code> (O\
-k). Lines, Recta\
-ngles, Polygons \
-and Ellipses are\
- exported as\x0d\x0a  \
-  <code>path</co\
-de> (not Ok). Th\
-e exporter shoul\
-d recognize when\
- a \x22shape\x22 is fo\
-rmed only with s\
-traight lines,\x0d\x0a\
-\x09so that it is e\
-xported as polyg\
-on, polyline, li\
-ne or even recta\
-ngle when it is \
-the case.</li>\x0d\x0a\
-  <li>Quadratic \
-bezier and cubic\
- bezier are supp\
-orted</li>\x0d\x0a  <l\
-i>No <strong>Z</\
-strong> at the e\
-nd of a closed p\
-ath</li>\x0d\x0a</ul>\x0d\
-\x0a\x0d\x0a<p>But it is \
-good enough to b\
-ecome my potenti\
-al default SVG e\
-ditor.</p>\x0d\x0a\x0d\x0a<p\
->Conclusion: <st\
-rong style=\x22colo\
-r:#008000\x22>A ver\
-y promising SVG \
-generator/export\
-er </strong>that\
- could be better\
- if\x0d\x0aLines were \
-to be exported a\
-s <code>line</co\
-de>, Polylines a\
-s <code>polyline\
-</code>, Rectang\
-les as <code>rec\
-t</code>, \x0d\x0aPoly\
-=======
-g>).</p>\x0a\x0a<p><st\
-rong>Splines</st\
-rong> <strong>th\
-rough</strong> <\
-strong>3 points \
-correspond to be\
-zier quadratic c\
-urves</strong>,\x0a\
-while <strong>sp\
-lines through 4 \
-or more points a\
-re not cubic bez\
-ier curves but o\
-nly sequence of \
-quadratic\x0acurves\
-</strong> (it se\
-ems possible! is\
- it ? they reall\
-y look to be smo\
-oth of order 3!)\
-.</p>\x0a\x0a<p><stron\
-g>There is anoth\
-er splines butto\
-n (strange!) whe\
-re it is possibl\
-e to indicate wh\
-ich degree (1, 2\
- or 3) the\x0asplin\
-e has to be. And\
- for 2 and 3 the\
-se are bezier qu\
-adratic or cubic\
- curves with con\
-trol points ente\
-red from the\x0aUI.\
-</strong> Settin\
-g for the degree\
- is in the main \
-menu bar (this i\
-s LibreCAD conce\
-pt, but not so s\
-traight to be se\
-en\x0aif one not kn\
-ows).</p>\x0a\x0a<p>Ed\
-=======
 >unusable if you\
 \x0d\x0awant to genera\
 te complex paths\
@@ -5620,7 +5338,6 @@ ibreCAD concept,\
 ight to be seen\x0d\
 \x0aif one not know\
 s).</p>\x0d\x0a\x0d\x0a<p>Ed\
->>>>>>> d8076dc... c
 iting polylines/\
 arcs/quad bezier\
  and concatenate\
@@ -5640,438 +5357,6 @@ missing feature:\
  one cannot conc\
 atenate polyline\
 s/arcs with bezi\
-<<<<<<< HEAD
-ers/splines\x0ainto\
- a single SVG pa\
-th, it is fixabl\
-e per hand in th\
-e output, but wh\
-y the hell is Li\
-breCAD not able \
-to perform\x0aconca\
-tenation of line\
-s/arcs with spli\
-nes in a single \
-path?</strong> W\
-ell, because the\
-ir data structur\
-e was not \x0acreat\
-ed with this fea\
-ture in mind.</p\
->\x0a\x0a<p>Conclusion\
-: <strong><span \
-style=\x22color:#00\
-8000\x22>A nearly g\
-ood SVG \x22path\x22 g\
-enerator/exporte\
-r that is unfort\
-unately\x0auncomple\
-te.</span></stro\
-ng></p>\x0a\x0a<p>BTW,\
- LibreCAD seems \
-to be a \x22dead\x22 p\
-roject, so no im\
-provments are to\
- be expected.</p\
->\x0a\x0a<h4>FreeCAD <\
-span style=\x22colo\
-r:#008000\x22>****V\
-ERY GOOD****</sp\
-an></h4>\x0a\x0a<p>As \
-of version 1.0 (\
-2025), the sketc\
-her has dramatic\
-ally improved co\
-mpared to previo\
-us versions and \
-has an SVG expor\
-t which \x0aworks q\
-uite nicely. I f\
-ound nevertheles\
-s the following \
-caveats: </p>\x0a<u\
-l>\x0a  <li>The vie\
-wbox is calculat\
-ed on the base o\
-f the items in t\
-he sketcher, and\
- thus typically \
-will not be from\
- 0,0.\x0a    Width \
-and height are a\
-lso calculated f\
-rom theses items\
-</li>\x0a  <li>The \
-svg root layer h\
-as a transformat\
-ion with a trans\
-late (to view al\
-l items nicely i\
-n a browser) and\
- a scale (1,-1)\x0a\
-    so that the \
-Y coordinates of\
- all items are \x22\
-inversed\x22 (and t\
-hus follow the n\
-atural direction\
-, the opposite o\
-f the\x0a    SVG st\
-andard. X coordi\
-nates are the re\
-al ones. <strong\
->This means that\
- the output will\
- have to pass th\
-rough the \x22svgre\
-solver\x22 \x0a    uti\
-lity to remove a\
-ll transformatio\
-ns in order to b\
-e used by PyCut.\
- Or simply remov\
-e the transforma\
-tion and adapt p\
-er hand\x0a    the \
-viewbox and widt\
-h/height of the \
-document!</stron\
-g>.</li>\x0a  <li>C\
-ircles are expor\
-ted as <code>cir\
-cle</code> (Ok).\
- Lines, Rectangl\
-es, Polygons and\
- Ellipses are ex\
-ported as\x0a    <c\
-ode>path</code> \
-(not Ok). The ex\
-porter should re\
-cognize when a \x22\
-shape\x22 is formed\
- only with strai\
-ght lines,\x0a\x09so t\
-hat it is export\
-ed as polygon, p\
-olyline, line or\
- even rectangle \
-when it is the c\
-ase.</li>\x0a  <li>\
-Quadratic bezier\
- and cubic bezie\
-r are supported<\
-/li>\x0a  <li>No <s\
-trong>Z</strong>\
- at the end of a\
- closed path</li\
->\x0a</ul>\x0a\x0a<p>But \
-it is good enoug\
-h to become my p\
-otential default\
- SVG editor.</p>\
-\x0a\x0a<p>Conclusion:\
- <strong style=\x22\
-color:#008000\x22>A\
- very promising \
-SVG generator/ex\
-porter </strong>\
-that could be be\
-tter if\x0aLine wer\
-e to be exported\
- as <code>line</\
-code>, Polyline \
-as <code>polylin\
-e</code>, Rectan\
-gles as <code>re\
-ct</code>, \x0aPoly\
->>>>>>> af07b3ef0cd86b188546f3212c6210a0106181fb
-gons as <code>po\
-lygon</code>. I \
-also would rathe\
-r like an output\
- without transfo\
-<<<<<<< HEAD
-rmation, but it \
-can be removed\x0d\x0a\
-using a text edi\
-tor.</p>\x0d\x0a\x0d\x0a<h4>\
-SolveSpace <span\
- style=\x22color:#f\
-f00ff\x22>****BEST*\
-***</span></h4>\x0d\
-\x0a\x0d\x0a<p>Ever heard\
- of it? A parame\
-tric system as k\
-nown from the 3D\
- modellers. <str\
-ong>Incredible!<\
-/strong> The GUI\
- looks\x0d\x0alike fro\
-=======
-rmation.</p>\x0a\x0a\x0a<\
-h4>SolveSpace <s\
-pan style=\x22color\
-:#ff00ff\x22>****BE\
-ST****</span></h\
-4>\x0a\x0a<p>Ever hear\
-d of it? A param\
-etric system as \
-known from the 3\
-D modellers. <st\
-rong>Incredible!\
-</strong> The GU\
-I looks\x0alike fro\
->>>>>>> af07b3ef0cd86b188546f3212c6210a0106181fb
-m the beginning \
-of the '80s, but\
- <strong>usabili\
-ty/features more\
- than top</stron\
-<<<<<<< HEAD
-g>.</p>\x0d\x0a\x0d\x0a<p><s\
-trong>SVG export\
- perfect (well, \
-nearly perfect)<\
-/strong>. I foun\
-d nevertheless t\
-he following cav\
-eats:</p>\x0d\x0a\x0d\x0a<ul\
->\x0d\x0a<li>The paths\
- have no id, but\
- ids are mandato\
-ry for <strong>P\
-yCut</strong>.</\
-li>\x0d\x0a<li>The pat\
->>>>>>> 3cdfc6f... c
-hs have no id, b\
-ut ids are manda\
-tory for <strong\
->PyCut</strong>.\
-<<<<<<< HEAD
-</li>\x0d\x0a<li>The p\
-aths have no id,\
- but ids are man\
-datory for <stro\
-ng>PyCut</strong\
->.</li>\x0d\x0a<li>Alw\
-ays be sure to h\
-ide the constrai\
-nts so that they\
- are not exporte\
-d in the svg.</l\
-i>\x0d\x0a<li>There ar\
-e only cubic bez\
-ier curves, quad\
-ratic bezier cur\
-ves are missing.\
-</li>\x0d\x0a<li>Entit\
-ies coordinates \
-are not the true\
- ones, but are s\
-hifted (translat\
-ed) in X and Y d\
-irections. <stro\
-ng>Very ennoying\
-</strong>.</li>\x0d\
-\x0a<li>The SVG clo\
-sed path \x22Z\x22 is \
-also missing.</l\
-i>\x0d\x0a</ul>\x0d\x0a</p>\x0d\
-\x0a\x0d\x0a<div class=\x22i\
-nfo\x22>\x0d\x0a<p><stron\
-g>Note</strong>:\
- To achieve a qu\
-adratic bezier f\
-rom a cubic one,\
- the vector C1C2\
- from the 2 cont\
-rol points must \
-only be\x0d\x0aa third\
- of the vector A\
-B the start and \
-end points! The \
-quadratic curve \
-control point Q0\
- is then the int\
-ersection of AC1\
- and BC2.\x0d\x0aAnd A\
-C1 = 2/3 AQo, BC\
-2 = 2/3 BQ0.  Th\
-is constraint on\
- the control poi\
-nts could be add\
-ed in SolveSpace\
-! Or a real\x0d\x0aqua\
-dratic entity co\
-uld be built in \
-(but it won't ha\
-ppen). Note that\
- making the two \
-control points c\
-oincident is not\
- a solution, thi\
-s does not lead \
-to \x0d\x0aa quadratic\
- bezier although\
- it looks simila\
-r</p>\x0d\x0a</div>\x0d\x0a\x0d\
-\x0a<p>Conclusion: \
-<strong style=\x22c\
-olor:#008000\x22>Th\
-e best SVG \x22path\
-\x22 generator/expo\
-rter </strong>I \
-have found so fa\
-r. </p>\x0d\x0a\x0d\x0a<div \
-class=\x22info\x22>\x0d\x0a<\
-p><strong>Note</\
-strong>: in 2023\
-, a <strong>Blen\
-der</strong> add\
--on called <stro\
-ng>CAD Sketcher<\
-/strong> is in\x0d\x0a\
-development, whi\
-ch utilizes the \
-SolveSpace libra\
-ry for sketching\
-. Maybe the user\
- interface will \
-be there even be\
-tter\x0d\x0a(and offer\
-s the SVG export\
- functionality, \
-which is still m\
-issing in 2025. \
-Bezier curves ar\
-e also still mis\
-sing).</p>\x0d\x0a</di\
-v>\x0d\x0a\x0d\x0a<h4>Fusion\
- 360</h4>\x0d\x0a\x0d\x0a<p>\
-The free version\
- is also incredi\
-ble. The paramet\
-ric \x22sketcher\x22 i\
-s beautiful. The\
-re is no SVG exp\
-ort per default,\
- but\x0d\x0ait seems t\
-here is an add-o\
-n that costs abo\
-ut 15$, but I di\
-d not buy/try it\
- because I gave \
-up in the meanwh\
-ile looking\x0d\x0afor\
- SVG editor... T\
-his add-on is ce\
-rtainly awesome.\
-</p>\x0d\x0a\x0d\x0a<h4>XFig\
-</h4>\x0d\x0a\x0d\x0a<p>My b\
-eloved drawing e\
-ditor during my \
-youth! Completel\
-y outdated, but \
-still the best! \
-Unfortunately th\
-e SVG export is\x0d\
-\x0adeficient. Ther\
-e are Bezier cur\
-ves (really?) i.\
-e. splines with \
-control points (\
-it looks like Be\
-zier) but the SV\
-G export\x0d\x0aoutput\
-s them as polyli\
-nes (with many p\
-oints). <strong>\
-Conclusion: unus\
-able</strong></p\
->\x0d\x0a\x0d\x0a<p></p>\x0d\x0a\x0d\x0a\
-<h3><strong>Onli\
-ne editors:</str\
-ong></h3>\x0d\x0a\x0d\x0a<p>\
-There are plenty\
- of them, but th\
-ey all seem to b\
-e meant for pain\
-ting (like Inksc\
-ape), not for CA\
-D. Finally found\
-\x0d\x0athis one:</p>\x0d\
-\x0a\x0d\x0a<h4>SvgPathEd\
-itor <span style\
-=\x22color:#ff00ff\x22\
-><span style=\x22co\
-lor:#ff00ff\x22></s\
-pan></span><span\
-=======
-</li>\x0d\x0a<li>Alway\
-s be sure to hid\
-e the constraint\
-s so that they a\
-re not exported \
-in the svg.</li>\
-\x0d\x0a<li>There are \
-only cubic bezie\
-r curves, quadra\
-tic bezier curve\
-s are missing.</\
-li>\x0d\x0a<li>Entitie\
-s coordinates ar\
-e not the true o\
-nes, but are shi\
-fted (translated\
-) in X and Y dir\
-ections. <strong\
->Very ennoying</\
-strong>.</li>\x0d\x0a<\
-li>The SVG close\
-d path \x22Z\x22 is al\
-so missing.</li>\
-\x0d\x0a</ul>\x0d\x0a</p>\x0d\x0a\x0d\
-\x0a<div class=\x22inf\
-o\x22>\x0d\x0a<p><strong>\
-Note</strong>: T\
-o achieve a quad\
-ratic bezier fro\
-m a cubic one, t\
-he vector C1C2 f\
-rom the 2 contro\
-l points must on\
-ly be\x0d\x0aa third o\
-=======
-g>.</p>\x0a\x0a<p><str\
-ong>SVG export p\
-erfect (well, ne\
-arly perfect)</s\
-trong>. I found \
-nevertheless the\
- following cavea\
-ts:</p>\x0a\x0a<ul>\x0a<l\
-i>The paths have\
- no id, but ids \
-are mandatory fo\
-r <strong>PyCut<\
-/strong>.</li>\x0a<\
-li>The paths hav\
-e no id, but ids\
- are mandatory f\
-or <strong>PyCut\
-</strong>.</li>\x0a\
-<li>Always be su\
-re to hide the c\
-onstraints so th\
-at they are not \
-exported in the \
-svg.</li>\x0a<li>Th\
-ere are only cub\
-ic bezier curves\
-, quadratic bezi\
-er curves are mi\
-ssing.</li>\x0a<li>\
-=======
 ers/splines. </p\
 >\x0d\x0a\x0d\x0a<p>Snap stu\
 ff is perfect, w\
@@ -6177,1105 +5462,294 @@ the \x22svgresolver\
 to remove all tr\
 ansformations in\
  order to be use\
-d by PyCut, or s\
-imply erase the \
-transform stuff!\
-</strong>.</li>\x0d\
-\x0a    utility to \
-remove all trans\
-formations in or\
-der to be used b\
-y PyCut. Or simp\
-ly remove the tr\
-ansformation and\
- adapt per hand\x0d\
-\x0a    the viewbox\
- and width/heigh\
-t of the documen\
-t!</strong>.</li\
->\x0d\x0a  <li>Circles\
- are exported as\
- <code>circle</c\
-ode> (Ok). Lines\
-, Rectangles, Po\
-lygons and Ellip\
-ses are exported\
- as\x0d\x0a    <code>p\
-ath</code> (not \
-Ok). The exporte\
-r should recogni\
-ze when a \x22shape\
-\x22 is formed only\
- with straight l\
-ines,\x0d\x0a\x09so that \
-it is exported a\
-s polygon, polyl\
-ine, line or eve\
-n rectangle when\
- it is the case.\
-</li>\x0d\x0a  <li>Qua\
-dratic bezier an\
-d cubic bezier a\
-re supported</li\
->\x0d\x0a  <li>No <str\
-ong>Z</strong> a\
-t the end of a c\
-losed path</li>\x0d\
-\x0a</ul>\x0d\x0a\x0d\x0a<p>But\
- it is good enou\
-gh to become my \
-potential defaul\
-t SVG editor.</p\
->\x0d\x0a\x0d\x0a<p>Conclusi\
-on: <strong styl\
-e=\x22color:#008000\
-\x22>A very promisi\
-ng SVG generator\
-/exporter </stro\
-ng>that could be\
- better if\x0d\x0aLine\
-s were to be exp\
-orted as <code>l\
-ine</code>, Poly\
-lines as <code>p\
-olyline</code>, \
-Rectangles as <c\
-ode>rect</code>,\
- \x0d\x0aPolygons as <\
-code>polygon</co\
-de>. I also woul\
-d rather like an\
- output without \
-transformation, \
-but it can be re\
-moved\x0d\x0ausing a t\
-ext editor.</p>\x0d\
-\x0a\x0d\x0a<h4>SolveSpac\
-e <span style=\x22c\
-olor:#ff00ff\x22>**\
-**BEST****</span\
-></h4>\x0d\x0a\x0d\x0a<p>Eve\
-r heard of it? A\
- parametric syst\
-em as known from\
- the 3D modeller\
-s. <strong>Incre\
-dible!</strong> \
-The GUI looks\x0d\x0al\
-ike from the beg\
-inning of the '8\
-0s, but <strong>\
-usability/featur\
-es more than top\
-</strong>.</p>\x0d\x0a\
-\x0d\x0a<p><strong>SVG\
- export perfect \
-(well, nearly pe\
-rfect)</strong>.\
- I found neverth\
-eless the follow\
-ing caveats:</p>\
-\x0d\x0a\x0d\x0a<ul>\x0d\x0a<li>Th\
-e paths have no \
-id, but ids are \
-mandatory for <s\
-trong>PyCut</str\
-ong>.</li>\x0d\x0a<li>\
+d by PyCut. Or s\
+imply remove the\
+ transformation \
+and adapt per ha\
+nd\x0d\x0a    the view\
+box and width/he\
+ight of the docu\
+ment!</strong>.<\
+/li>\x0d\x0a    utilit\
+y to remove all \
+transformations \
+in order to be u\
+sed by PyCut, or\
+ simply erase th\
+e transform stuf\
+f!</strong>.</li\
+>\x0d\x0a    utility t\
+o remove all tra\
+nsformations in \
+order to be used\
+ by PyCut. Or si\
+mply remove the \
+transformation a\
+nd adapt per han\
+d\x0d\x0a    the viewb\
+ox and width/hei\
+ght of the docum\
+ent!</strong>.</\
+li>\x0d\x0a  <li>Circl\
+es are exported \
+as <code>circle<\
+/code> (Ok). Lin\
+es, Rectangles, \
+Polygons and Ell\
+ipses are export\
+ed as\x0d\x0a    <code\
+>path</code> (no\
+t Ok). The expor\
+ter should recog\
+nize when a \x22sha\
+pe\x22 is formed on\
+ly with straight\
+ lines,\x0d\x0a\x09so tha\
+t it is exported\
+ as polygon, pol\
+yline, line or e\
+ven rectangle wh\
+en it is the cas\
+e.</li>\x0d\x0a  <li>Q\
+uadratic bezier \
+and cubic bezier\
+ are supported</\
+li>\x0d\x0a  <li>No <s\
+trong>Z</strong>\
+ at the end of a\
+ closed path</li\
+>\x0d\x0a</ul>\x0d\x0a\x0d\x0a<p>B\
+ut it is good en\
+ough to become m\
+y potential defa\
+ult SVG editor.<\
+/p>\x0d\x0a\x0d\x0a<p>Conclu\
+sion: <strong st\
+yle=\x22color:#0080\
+00\x22>A very promi\
+sing SVG generat\
+or/exporter </st\
+rong>that could \
+be better if\x0d\x0aLi\
+nes were to be e\
+xported as <code\
+>line</code>, Po\
+lylines as <code\
+>polyline</code>\
+, Rectangles as \
+<code>rect</code\
+>, \x0d\x0aPolygons as\
+ <code>polygon</\
+code>. I also wo\
+uld rather like \
+an output withou\
+t transformation\
+, but it can be \
+removed\x0d\x0ausing a\
+ text editor.</p\
+>\x0d\x0a\x0d\x0a<h4>SolveSp\
+ace <span style=\
+\x22color:#ff00ff\x22>\
+****BEST****</sp\
+an></h4>\x0d\x0a\x0d\x0a<p>E\
+ver heard of it?\
+ A parametric sy\
+stem as known fr\
+om the 3D modell\
+ers. <strong>Inc\
+redible!</strong\
+> The GUI looks\x0d\
+\x0alike from the b\
+eginning of the \
+'80s, but <stron\
+g>usability/feat\
+ures more than t\
+op</strong>.</p>\
+\x0d\x0a\x0d\x0a<p><strong>S\
+VG export perfec\
+t (well, nearly \
+perfect)</strong\
+>. I found never\
+theless the foll\
+owing caveats:</\
+p>\x0d\x0a\x0d\x0a<ul>\x0d\x0a<li>\
 The paths have n\
 o id, but ids ar\
 e mandatory for \
 <strong>PyCut</s\
 trong>.</li>\x0d\x0a<l\
-i>Always be sure\
- to hide the con\
-straints so that\
- they are not ex\
-ported in the sv\
-g.</li>\x0d\x0a<li>The\
-re are only cubi\
-c bezier curves,\
- quadratic bezie\
-r curves are mis\
-sing.</li>\x0d\x0a<li>\
->>>>>>> d8076dc... c
-Entities coordin\
-ates are not the\
- true ones, but \
-are shifted (tra\
-nslated) in X an\
-d Y directions. \
-<strong>Very enn\
-oying</strong>.<\
-/li>\x0d\x0a<li>The SV\
-G closed path \x22Z\
-\x22 is also missin\
-g.</li>\x0d\x0a</ul>\x0d\x0a\
-</p>\x0d\x0a\x0d\x0a<div cla\
-ss=\x22info\x22>\x0d\x0a<p><\
-strong>Note</str\
-ong>: To achieve\
- a quadratic bez\
-ier from a cubic\
- one, the vector\
- C1C2 from the 2\
- control points \
-must only be\x0d\x0aa \
-third of the vec\
-tor AB the start\
- and end points!\
- The quadratic c\
-urve control poi\
-nt Q0 is then th\
-e intersection o\
-f AC1 and BC2.\x0d\x0a\
-And AC1 = 2/3 AQ\
-o, BC2 = 2/3 BQ0\
-.  This constrai\
-nt on the contro\
-l points could b\
-e added in Solve\
-Space! Or a real\
-\x0d\x0aquadratic enti\
-ty could be buil\
-t in (but it won\
-'t happen). Note\
- that making the\
- two control poi\
-nts coincident i\
-s not a solution\
-, this does not \
-lead to \x0d\x0aa quad\
-ratic bezier alt\
-hough it looks s\
-imilar</p>\x0d\x0a</di\
-v>\x0d\x0a\x0d\x0a<p>Conclus\
-ion: <strong sty\
-le=\x22color:#00800\
-0\x22>The best SVG \
-\x22path\x22 generator\
-/exporter </stro\
-ng>I have found \
-so far. </p>\x0d\x0a\x0d\x0a\
-<div class=\x22info\
-\x22>\x0d\x0a<p><strong>N\
-ote</strong>: in\
- 2023, a <strong\
->Blender</strong\
-> add-on called \
-<strong>CAD Sket\
-cher</strong> is\
- in\x0d\x0adevelopment\
-, which utilizes\
- the SolveSpace \
-library for sket\
-ching. Maybe the\
- user interface \
-will be there ev\
-en better\x0d\x0a(and \
-offers the SVG e\
-xport functional\
-ity, which is st\
-ill missing in 2\
-025. Bezier curv\
-es are also stil\
-l missing).</p>\x0d\
-\x0a</div>\x0d\x0a\x0d\x0a<h4>F\
-usion 360</h4>\x0d\x0a\
-\x0d\x0a<p>The free ve\
-rsion is also in\
-credible. The pa\
-rametric \x22sketch\
-er\x22 is beautiful\
-. There is no SV\
-G export per def\
-ault, but\x0d\x0ait se\
-ems there is an \
-add-on that cost\
-s about 15$, but\
- I did not buy/t\
-ry it because I \
-gave up in the m\
-eanwhile looking\
-\x0d\x0afor SVG editor\
-... This add-on \
-is certainly awe\
-some.</p>\x0d\x0a\x0d\x0a<h4\
->XFig</h4>\x0d\x0a\x0d\x0a<p\
->My beloved draw\
-ing editor durin\
-g my youth! Comp\
-letely outdated,\
- but still the b\
-est! Unfortunate\
-ly the SVG expor\
-t is\x0d\x0adeficient.\
- There are Bezie\
-r curves (really\
-?) i.e. splines \
-with control poi\
-nts (it looks li\
-ke Bezier) but t\
-he SVG export\x0d\x0ao\
-utputs them as p\
-olylines (with m\
-any points). <st\
-rong>Conclusion:\
- unusable</stron\
-g></p>\x0d\x0a\x0d\x0a<p></p\
->\x0d\x0a\x0d\x0a<h3><strong\
->Online editors:\
-</strong></h3>\x0d\x0a\
-\x0d\x0a<p>There are p\
-lenty of them, b\
-ut they all seem\
- to be meant for\
- painting (like \
-Inkscape), not f\
-or CAD. Finally \
-found\x0d\x0athis one:\
-</p>\x0d\x0a\x0d\x0a<h4>SvgP\
-athEditor <span \
-style=\x22color:#ff\
-00ff\x22><span styl\
-e=\x22color:#ff00ff\
-\x22></span></span>\
-<span\x0d\x0astyle=\x22co\
-lor:#ff00ff\x22>***\
-*EXCELLENT****</\
-span></h4>\x0d\x0a\x0d\x0a<p\
->It is solely fo\
-cused on editing\
- svg paths. You \
-can try it at <a\
-\x0d\x0ahref=\x22https://\
-yqnn.github.io/s\
-vg-path-editor/\x22\
->https://yqnn.gi\
-thub.io/svg-path\
-<<<<<<< HEAD
--editor/\x22>https:\
-//yqnn.github.io\
-/svg-path-editor\
-/</a>.</p>\x0d\x0a\x0d\x0a<p\
->Of course it ca\
-nnot compare to \
-<strong>FreeCAD<\
-/strong> or <str\
-ong>SolveSpace</\
-strong>, but its\
- concept is exce\
-llent, \x0d\x0awhich m\
-akes it so easy \
-to generate a pa\
-th, segment afte\
-r segment. The r\
-esult can then b\
-e copy/pasted in\
-to your SVGs,\x0d\x0ae\
-ditted per hand.\
-</p>\x0d\x0a\x0d\x0a<h4>Othe\
-rs:</h4>\x0d\x0a\x0d\x0a<p>I\
- do not mention \
-them because the\
- list would be t\
-oo long... but I\
- did not find so\
-mething I was pl\
-eased of.</p>\x0d\x0a\x0d\
-\x0a<p></p>\x0d\x0a\x0d\x0a<h3>\
-Non-free softwar\
-e</h3>\x0d\x0a\x0d\x0a<h4>De\
-signCAD</h4>\x0d\x0a\x0d\x0a\
-<p>The free vers\
-ion has the same\
- capabilities as\
- the full versio\
-n, excepted the \
-exports to other\
- formats. Bad!</\
-p>\x0d\x0a\x0d\x0a<h4>Solid \
-Edge 2D Drafting\
- (Siemens)</h4>\x0d\
-\x0a\x0d\x0a<p>The 3.8 GB\
- big app from Si\
-emens is <strong\
->free of charge<\
-/strong>. It is \
-incredible softw\
-are. But It seem\
-s there is\x0d\x0ano S\
-VG export at all\
-. \x22Schade\x22.</p>\x0d\
-\x0a\x0d\x0a<h4>Draftsigh\
-t 2D (Dassault)<\
-/h4>\x0d\x0a\x0d\x0a<p>Only \
-a 30 days trial \
-version. It has \
-a \x22Power Tool\x22 n\
-amed \x222D G-Code \
-generator\x22! Shou\
-ld I forget\x0d\x0aPyC\
-ut? (No). SVG ex\
-port seems to be\
- more meant as a\
- picture for dis\
-play only purpos\
-e.</p>\x0d\x0a\x0d\x0a<h4>Wh\
-at else?</h4>\x0d\x0a\x0d\
-\x0a<p>...</p>\x0d\x0a\x0d\x0a<\
-h3>Conclusion</h\
-3>\x0d\x0a\x0d\x0a<p>The fac\
-t that it is so \
-difficult to fin\
-d an acceptable \
-SVG path \x22writer\
-\x22 program let me\
- wonder why it i\
-s the case.\x0d\x0aAnd\
- why does only <\
-strong>FreeCAD</\
-strong> and <str\
-ong>SolveSpace</\
-strong> perform \
-the task correct\
-ly?</p>\x0d\x0a\x0d\x0a<p>Th\
-e primary usage \
-of SVG is displa\
-ying images, not\
- being a format \
-for CAM input. S\
-o why bother exp\
-orting it clean.\
-\x0d\x0aThe svg standa\
-rd is huge, the \
-svg path definit\
-ion is quite com\
-plicated, parsin\
-g it is a diffic\
-ult task, and th\
-us in \x0d\x0areturn e\
-xporting a custo\
-m data format as\
- svg data in a r\
-ight and clean m\
-anner is also no\
-t straightforwar\
-d (when the\x0d\x0adat\
-a format is not \
-well suited for \
-such an export).\
- \x0d\x0aBut who else \
-would want to im\
-port svg files a\
-s a kind of CAM \
-format? Response\
-: the applicatio\
-ns that do not w\
-ant to use \x0d\x0aan \
-other (maybe mor\
-e complicated) f\
-ormat, because y\
-es, SVG can be i\
-ndeed simple whe\
-n utilizing only\
- its basic featu\
-res.</p>\x0d\x0a\x0d\x0a<p>T\
-he SVG format, s\
-ure, can be view\
-ed in a browser \
-and can be edite\
-d with a text ed\
-itor. Unfortunat\
-ely it completel\
-y\x0d\x0aignores the c\
-oncept of multil\
-ine/multipolygon\
- etc. Polygons h\
-ave no \x22interior\
-s\x22 so they must \
-be defined as su\
-ch in a path \x0d\x0ac\
-omposed of 2 or \
-more subpaths fo\
-r this purpose. \
-Not very practic\
-able.</p>\x0d\x0a\x0d\x0a<p>\
-<strong>All in a\
-ll very desapoin\
-ting, excepted <\
-span style=\x22colo\
-r:#008000\x22>FreeC\
-AD</span>, <span\
->>>>>>> 3cdfc6f... c
-\x0d\x0astyle=\x22color:#\
-ff00ff\x22>****EXCE\
-LLENT****</span>\
-</h4>\x0d\x0a\x0d\x0a<p>It i\
-s solely focused\
- on editing svg \
-paths. You can t\
-ry it at <a\x0d\x0ahre\
-f=\x22https://yqnn.\
-github.io/svg-pa\
-th-editor/\x22>http\
-s://yqnn.github.\
-io/svg-path-edit\
-or/</a>.</p>\x0d\x0a\x0d\x0a\
-<p>Of course it \
-cannot compare t\
-o <strong>FreeCA\
-D</strong> or <s\
-trong>SolveSpace\
-</strong>, but i\
-ts concept is ex\
-cellent, \x0d\x0awhich\
- makes it so eas\
-y to generate a \
-path, segment af\
-ter segment. The\
- result can then\
- be copy/pasted \
-into your SVGs,\x0d\
-\x0aeditted per han\
-d.</p>\x0d\x0a\x0d\x0a<h4>Ot\
-hers:</h4>\x0d\x0a\x0d\x0a<p\
->I do not mentio\
-n them because t\
-he list would be\
- too long... but\
- I did not find \
-something I was \
-pleased of.</p>\x0d\
-\x0a\x0d\x0a<p></p>\x0d\x0a\x0d\x0a<h\
-3>Non-free softw\
-are</h3>\x0d\x0a\x0d\x0a<h4>\
-DesignCAD</h4>\x0d\x0a\
-\x0d\x0a<p>The free ve\
-rsion has the sa\
-me capabilities \
-as the full vers\
-ion, excepted th\
-e exports to oth\
-er formats. Bad!\
-</p>\x0d\x0a\x0d\x0a<h4>Soli\
-d Edge 2D Drafti\
-ng (Siemens)</h4\
->\x0d\x0a\x0d\x0a<p>The 3.8 \
-GB big app from \
-Siemens is <stro\
-ng>free of charg\
-e</strong>. It i\
-s incredible sof\
-tware. But It se\
-ems there is\x0d\x0ano\
- SVG export at a\
-ll. \x22Schade\x22.</p\
->\x0d\x0a\x0d\x0a<h4>Draftsi\
-ght 2D (Dassault\
-)</h4>\x0d\x0a\x0d\x0a<p>Onl\
-y a 30 days tria\
-l version. It ha\
-s a \x22Power Tool\x22\
- named \x222D G-Cod\
-e generator\x22! Sh\
-ould I forget\x0d\x0aP\
-yCut? (No). SVG \
-export seems to \
-be more meant as\
- a picture for d\
-isplay only purp\
-ose.</p>\x0d\x0a\x0d\x0a<h4>\
-What else?</h4>\x0d\
-\x0a\x0d\x0a<p>...</p>\x0d\x0a\x0d\
-\x0a<h3>Conclusion<\
-/h3>\x0d\x0a\x0d\x0a<p>The f\
-act that it is s\
-o difficult to f\
-ind an acceptabl\
-e SVG path \x22writ\
-er\x22 program let \
-me wonder why it\
- is the case.\x0d\x0aA\
-nd why does only\
- <strong>FreeCAD\
-</strong> and <s\
-trong>SolveSpace\
-</strong> perfor\
-m the task corre\
-ctly?</p>\x0d\x0a\x0d\x0a<p>\
-The primary usag\
-e of SVG is disp\
-laying images, n\
-ot being a forma\
-t for CAM input.\
- So why bother e\
-xporting it clea\
-n.\x0d\x0aThe svg stan\
-dard is huge, th\
-e svg path defin\
-ition is quite c\
-omplicated, pars\
-ing it is a diff\
-icult task, and \
-thus in \x0d\x0areturn\
- exporting a cus\
-tom data format \
-as svg data in a\
- right and clean\
- manner is also \
-not straightforw\
-ard (when the\x0d\x0ad\
-ata format is no\
-t well suited fo\
-r such an export\
-). \x0d\x0aBut who els\
-e would want to \
-import svg files\
- as a kind of CA\
-M format? Respon\
-se: the applicat\
-ions that do not\
- want to use \x0d\x0aa\
-n other (maybe m\
-ore complicated)\
- format, because\
- yes, SVG can be\
- indeed simple w\
-hen utilizing on\
-ly its basic fea\
-tures.</p>\x0d\x0a\x0d\x0a<p\
->The SVG format,\
- sure, can be vi\
-ewed in a browse\
-r and can be edi\
-ted with a text \
-editor. Unfortun\
-ately it complet\
-ely\x0d\x0aignores the\
- concept of mult\
-iline/multipolyg\
-on etc. Polygons\
- have no \x22interi\
-ors\x22 so they mus\
-t be defined as \
-such in a path \x0d\
-\x0acomposed of 2 o\
-r more subpaths \
-for this purpose\
-. Not very pract\
-icable.</p>\x0d\x0a\x0d\x0a<\
-p><strong>All in\
- all very desapo\
-inting, excepted\
- <span style=\x22co\
-lor:#008000\x22>Fre\
-eCAD</span>, <sp\
-an\x0d\x0astyle=\x22color\
-:#008000\x22>SolveS\
-pace</span> and \
-<span style=\x22col\
-or:#008000\x22>SvgP\
-athEditor</span>\
-!</strong></p>\x0d\x0a\
-\x0d\x0a<h4><strong><s\
-pan style=\x22color\
-:#0000ff\x22>Per ha\
-nd</span></stron\
-g></h4>\x0d\x0a\x0d\x0a<p>Fi\
-nally my prefere\
-d method! Per ha\
-nd you can also \
-write items in t\
-he <code>&lt;def\
-s&gt;</code> sec\
-tion, and use\x0d\x0at\
-hese items repea\
-tidly with trans\
-formations with \
-the <code>&lt;us\
-e&gt;</code> tag\
-. My utility\x0d\x0a<s\
-trong>svgresolve\
-r.py</strong> th\
-en transforms th\
-is svg file into\
- another one, us\
-able for <strong\
->PyCut. Not the\x0d\
-\x0aperfect toolcha\
-in I admit, but \
-well my svgs are\
- not that compli\
-cated</strong>. \
-One has to under\
-stand how to wri\
-te an\x0d\x0aarc/bezie\
-r curve per hand\
-, it is not that\
- difficult and c\
-an always use th\
-e <strong>SvgPat\
-hEditor</strong>\
- tool. And\x0d\x0ayour\
- hand written sv\
-gs are then \x22<st\
-rong>clean</stro\
-ng>\x22 and easily \
-modificable. </p\
->\x0d\x0a\x0d\x0a<p></p>\x0d\x0a\x0d\x0a\
-<h3 id=\x22APPENDIX\
--02\x22>Appendix-2:\
- SVG Units and S\
-cale Factor</h3>\
-\x0d\x0a\x0d\x0a<div class=\x22\
-info\x22>\x0d\x0a<p><stro\
-ng>Info</strong>\
-: When creating \
-a svg \x22per hand\x22\
- (with a text ed\
-itor), the user \
-does not even ha\
-ve to care\x0d\x0aabou\
-t this units sca\
-le factor.</p>\x0d\x0a\
-</div>\x0d\x0a\x0d\x0a<p>Wha\
-t is this? Let's\
- take an example\
-: in <strong>Ink\
-scape</strong>, \
-the user would s\
-et the document'\
-s size to\x0d\x0a<stro\
-ng>100x40 mm</st\
-rong>, supposedl\
-y the size of th\
-e material to wo\
-rk on. Inkscape \
-automatically se\
-ts the\x0d\x0a<strong>\
-user units scale\
- </strong><stron\
-g>to 1</strong>.\
- Note that the u\
-ser units are no\
-t \x22px\x22 or whatev\
-er. This means,\x0d\
-\x0a<strong>1 \x22user\
- unit\x22 is equal \
-to 1 mm (and the\
- viewbox is \x220 0\
- 100 40\x22 while w\
-idth=\x22100mm\x22 and\
-\x0d\x0aheight=\x2240mm\x22)\
-</strong></p>\x0d\x0a\x0d\
-\x0a<div>\x0d\x0a<img src\
-=\x22doc/Inkscape_s\
-ettings_mm.png\x22 \
-width=\x22563\x22> </d\
-iv>\x0d\x0a\x0d\x0a<p>Of cou\
-rse when editing\
- the svg (in Ink\
-scape or in a te\
-xt editor), <str\
-ong>the user is \
-only concerned w\
-ith the user\x0d\x0aun\
-its</strong> : h\
-e draws a rectan\
-gle of size 20x3\
-0 at the locatio\
-n 10x10. The use\
-rs may simply ev\
-en not be aware \
-of\x0d\x0athis fact. W\
-hen choosing mm,\
- conversion from\
- <strong>user un\
-its</strong> to \
-<strong>mm</stro\
-ng> is absolutel\
-y\x0d\x0astraightforwa\
-rd as, as said, \
-the user units s\
-cale is 1 per de\
-fault .</p>\x0d\x0a\x0d\x0a<\
-p>Let's consider\
- now the case wh\
-ere the user swi\
-tches to <strong\
->inches</strong>\
- for the documen\
-t size. The size\
- of\x0d\x0athe documen\
-t becomes then <\
-strong>3,93701x1\
-,57480 inches</s\
-trong> (yes, 100\
- / 25.4 is 3.937\
-01). Note that\x0d\x0a\
-<strong>Inkscape\
-</strong> automa\
-tically change t\
-he <strong>user \
-units scale to 2\
-5.4</strong>. Be\
-cause of this, t\
-he\x0d\x0a<strong>view\
- box remains at \
-\x220 0 100 40\x22</st\
-rong>. That way,\
- a rectangle fil\
-ling the full do\
-cument size is s\
-till\x0d\x0a100x40.</p\
->\x0d\x0a\x0d\x0a<div>\x0d\x0a<img\
- src=\x22doc/Inksca\
-pe_settings_in.p\
-ng\x22 width=\x22563\x22>\
- </div>\x0d\x0a\x0d\x0a<p>Fi\
-lling a box half\
- the size of the\
- document is 50x\
-20, right, but w\
-hat are real phy\
-sical dimensions\
- of that box ? T\
-he\x0d\x0auser would h\
-ave to steadily \
-calculate from f\
-ancy user units \
-(ex: 50x20) in i\
-nches</p>\x0d\x0a\x0d\x0a<p>\
-But why would a \
-user use inches \
-and work with us\
-er units scale f\
-actor 25.4 (lead\
-ing infact to wo\
-rk in mm) ? The \
-user\x0d\x0acan set th\
-e user units sca\
-le factor to 1. \
-The effect of th\
-is is that now, \
-in order to fill\
- the whole docum\
-ent with a\x0d\x0arect\
-angle, the recta\
-ngle has to be o\
-f the size user \
-unit size of 3.9\
-3701x1.57480. </\
-p>\x0d\x0a\x0d\x0a<p>Of cour\
-se the size of t\
-he material is c\
-ertainly not 3.9\
-3701x1.57480 inc\
-hes, but somethi\
-ng like 5x3 inch\
-es: an human\x0d\x0are\
-adable size. The\
- user knows that\
- he has to draw \
-a rectangle insi\
-de the material \
-of size let say \
-1.5x1.2 inches. \
-And\x0d\x0athese dimen\
-sions are the on\
-es that are effe\
-ctively saved in\
- the svg documen\
-t. So the user u\
-nits are exactly\
- the same as\x0d\x0ath\
-e \x22physical unit\
-s\x22 when choosing\
- a scale of 1.</\
-p>\x0d\x0a\x0d\x0a<p>Now how\
- can <strong>PyC\
-ut</strong> hand\
-les these settin\
-gs? <strong>PyCu\
-t</strong> only \
-works with the <\
-strong>user\x0d\x0auni\
-ts</strong>. <st\
-rong>PyCut</stro\
-ng> will calcula\
-te toolpaths in \
-the same order o\
-f magnitude of t\
-he user units va\
-lues\x0d\x0aof the svg\
-. If you choose \
-\x22<strong>mm</str\
-ong>\x22 for the gc\
-ode output, you \
-would have set y\
-our svg document\
- size in\x0d\x0a\x22<stro\
-ng>mm</strong>\x22,\
- and the <strong\
->user unit scale\
- to 1</strong>. \
-Because of this,\
- the gcode X,Y a\
-nd Z values are\x0d\
-\x0athe same as the\
- one of the path\
-s values.</p>\x0d\x0a\x0d\
-\x0a<p>If you choos\
-e \x22<strong>in</s\
-trong>\x22 for the \
-gcode output, th\
-en certainly you\
- have set your s\
-vg document size\
- in\x0d\x0a\x22<strong>in\
-</strong>\x22, and \
-the <strong>with\
- user unit scale\
- equals to 1</st\
-rong>,no convers\
-ion is either ne\
-eded. </p>\x0d\x0a\x0d\x0a<p\
->Note that this \
-scale factor is \
-not explicitely \
-given in the svg\
- file. It is cal\
-culated from the\
- ratio viewbox /\
-\x0d\x0awidth. It is e\
-ventually the ta\
-sk of the user t\
-o know what is t\
-he user units sc\
-ale value, and, \
-theorically, to \
-set it in\x0d\x0a<stro\
-ng>PyCut</strong\
->. But my opinio\
-n is, working wi\
-th a user unit s\
-cal of 1 is pref\
-erably. </p>\x0d\x0a\x0d\x0a\
-<p><strong><span\
- style=\x22color:#0\
-000ff\x22>I personn\
-aly stick to svg\
- document units \
-in \x22mm\x22 with use\
-r units scale fa\
-ctor of\x0d\x0a1, and \
-output my gcode \
-in mm. No confus\
-ion! </span></st\
-rong></p>\x0d\x0a\x0d\x0a<di\
-v class=\x22warning\
-\x22>\x0d\x0a<p><strong>W\
-arning</strong>:\
- The user could \
-use \x22mm\x22, and se\
-t a scale factor\
- of 10 or whatev\
-er, but it certa\
-inly makes\x0d\x0ano s\
-ense.</p>\x0d\x0a</div\
->\x0d\x0a\x0d\x0a<p>The furt\
-her <strong>PyCu\
-t Gcode Units</s\
-trong> setting i\
-s not only a fla\
-g to set the cod\
-e <strong>G20</s\
-trong>\x0d\x0a(inches)\
- or <strong>G21<\
-/strong> (mm) in\
-side the gcode f\
-ile: it also all\
-ows the proper c\
-onversion of the\
- tool diameter\x0d\x0a\
-physical size (i\
-nch or mm) in us\
-er units.</p>\x0d\x0a\x0d\
-\x0a<p>The rule is:\
-</p>\x0d\x0a<ul>\x0d\x0a  <l\
-i><strong>Gcode \
-Units</strong> i\
-n \x22mm\x22: tool dia\
-meter is transfo\
-<<<<<<< HEAD
-rmed to mm - the\
- same as the use\
-r units</li>\x0d\x0a  \
-<li><strong>Gcod\
-e Units</strong>\
- in \x22in\x22: tool d\
-iameter is trans\
-formed to inch -\
- the same as the\
- user units</li>\
-\x0d\x0a</ul>\x0d\x0a\x0d\x0a<div \
-class=\x22warning\x22>\
-\x0d\x0a<p><strong>War\
-ning</strong>: <\
-strong>PyCut</st\
-rong> assumes th\
-at for \x22<strong>\
-mm</strong>\x22 or \
-\x22<strong>in</str\
-ong>\x22,\x0d\x0athe <str\
-ong>user unit sc\
-ale factor is al\
-ways 1</strong> \
-.</p>\x0d\x0a</div>\x0d\x0a\x0d\
-\x0a<p></p>\x0d\x0a\x0d\x0a<h3 \
-id=\x22APPENDIX-03\x22\
->Appendix-3: GCO\
-DE Viewers</h3>\x0d\
-\x0a\x0d\x0a<p>Of course,\
- CANDLE offers a\
- GCODE viewer. T\
-here nevertheles\
-s a few ones (to\
- my knowledge) w\
-orth a mention:<\
-/p>\x0d\x0a<ul>\x0d\x0a  <li\
->NCnetic <span s\
-tyle=\x22color:#ff0\
-0ff\x22><strong>***\
-*EXCELLENT****</\
-strong></span></\
-li>\x0d\x0a  <li>Plane\
-tCNC (which is a\
- GCode sender -w\
-ith dedicated ha\
-rdware- as well)\
-</li>\x0d\x0a  <li>wha\
-t else ?</li>\x0d\x0a<\
-/ul>\x0d\x0a\x0d\x0a<p>Just \
-search in the In\
-ternet for them.\
-</p>\x0d\x0a\x0d\x0a<p>Real \
-=======
-rmed to inch - t\
-he same as the u\
-ser units</li>\x0d\x0a\
-</ul>\x0d\x0a\x0d\x0a<div cl\
-ass=\x22warning\x22>\x0d\x0a\
-<p><strong>Warni\
-ng</strong>: <st\
-rong>PyCut</stro\
-ng> assumes that\
- for \x22<strong>mm\
-</strong>\x22 or \x22<\
-strong>in</stron\
-g>\x22,\x0d\x0athe <stron\
-g>user unit scal\
-e factor is alwa\
-ys 1</strong> .<\
-/p>\x0d\x0a</div>\x0d\x0a\x0d\x0a<\
-p></p>\x0d\x0a\x0d\x0a<h3 id\
-=\x22APPENDIX-03\x22>A\
-ppendix-3: GCODE\
- Viewers</h3>\x0d\x0a\x0d\
-\x0a<p>Of course, C\
-ANDLE offers a G\
-CODE viewer. The\
-re nevertheless \
-a few ones (to m\
-y knowledge) wor\
-th a mention:</p\
->\x0d\x0a<ul>\x0d\x0a  <li>N\
-Cnetic <span sty\
-le=\x22color:#ff00f\
-f\x22><strong>****E\
-XCELLENT****</st\
-rong></span></li\
->\x0d\x0a  <li>PlanetC\
-NC (which is a G\
-Code sender -wit\
-h dedicated hard\
-ware- as well)</\
-li>\x0d\x0a  <li>what \
-else ?</li>\x0d\x0a</u\
-l>\x0d\x0a\x0d\x0a<p>Just se\
-arch in the Inte\
-rnet for them.</\
-p>\x0d\x0a\x0d\x0a<p>Real GC\
-ODE simulators (\
-with material re\
-moval) are on th\
-e other way seld\
-om.</p>\x0d\x0a<ul>\x0d\x0a \
-=======
-ut\x0ait seems ther\
-e is an add-on t\
-hat costs about \
-15$, but I did n\
-ot buy/try it be\
-cause I gave up \
-in the meanwhile\
- looking\x0afor SVG\
- editor... This \
-add-on is certai\
-nly awesome.</p>\
-\x0a\x0a<h4>XFig</h4>\x0a\
-\x0a<p>My beloved d\
-rawing editor du\
-ring my youth! C\
-ompletely outdat\
-ed, but still th\
-e best! Unfortun\
-ately the SVG ex\
-port is\x0adeficien\
+i>The paths have\
+ no id, but ids \
+are mandatory fo\
+r <strong>PyCut<\
+/strong>.</li>\x0d\x0a\
+<li>Always be su\
+re to hide the c\
+onstraints so th\
+at they are not \
+exported in the \
+svg.</li>\x0d\x0a<li>T\
+here are only cu\
+bic bezier curve\
+s, quadratic bez\
+ier curves are m\
+issing.</li>\x0d\x0a<l\
+i>Entities coord\
+inates are not t\
+he true ones, bu\
+t are shifted (t\
+ranslated) in X \
+and Y directions\
+. <strong>Very e\
+nnoying</strong>\
+.</li>\x0d\x0a<li>The \
+SVG closed path \
+\x22Z\x22 is also miss\
+ing.</li>\x0d\x0a</ul>\
+\x0d\x0a</p>\x0d\x0a\x0d\x0a<div c\
+lass=\x22info\x22>\x0d\x0a<p\
+><strong>Note</s\
+trong>: To achie\
+ve a quadratic b\
+ezier from a cub\
+ic one, the vect\
+or C1C2 from the\
+ 2 control point\
+s must only be\x0d\x0a\
+a third of the v\
+ector AB the sta\
+rt and end point\
+s! The quadratic\
+ curve control p\
+oint Q0 is then \
+the intersection\
+ of AC1 and BC2.\
+\x0d\x0aAnd AC1 = 2/3 \
+AQo, BC2 = 2/3 B\
+Q0.  This constr\
+aint on the cont\
+rol points could\
+ be added in Sol\
+veSpace! Or a re\
+al\x0d\x0aquadratic en\
+tity could be bu\
+ilt in (but it w\
+on't happen). No\
+te that making t\
+he two control p\
+oints coincident\
+ is not a soluti\
+on, this does no\
+t lead to \x0d\x0aa qu\
+adratic bezier a\
+lthough it looks\
+ similar</p>\x0d\x0a</\
+div>\x0d\x0a\x0d\x0a<p>Concl\
+usion: <strong s\
+tyle=\x22color:#008\
+000\x22>The best SV\
+G \x22path\x22 generat\
+or/exporter </st\
+rong>I have foun\
+d so far. </p>\x0d\x0a\
+\x0d\x0a<div class=\x22in\
+fo\x22>\x0d\x0a<p><strong\
+>Note</strong>: \
+in 2023, a <stro\
+ng>Blender</stro\
+ng> add-on calle\
+d <strong>CAD Sk\
+etcher</strong> \
+is in\x0d\x0adevelopme\
+nt, which utiliz\
+es the SolveSpac\
+e library for sk\
+etching. Maybe t\
+he user interfac\
+e will be there \
+even better\x0d\x0a(an\
+d offers the SVG\
+ export function\
+ality, which is \
+still missing in\
+ 2025. Bezier cu\
+rves are also st\
+ill missing).</p\
+>\x0d\x0a</div>\x0d\x0a\x0d\x0a<h4\
+>Fusion 360</h4>\
+\x0d\x0a\x0d\x0a<p>The free \
+version is also \
+incredible. The \
+parametric \x22sket\
+cher\x22 is beautif\
+ul. There is no \
+SVG export per d\
+efault, but\x0d\x0ait \
+seems there is a\
+n add-on that co\
+sts about 15$, b\
+ut I did not buy\
+/try it because \
+I gave up in the\
+ meanwhile looki\
+ng\x0d\x0afor SVG edit\
+or... This add-o\
+n is certainly a\
+wesome.</p>\x0d\x0a\x0d\x0a<\
+h4>XFig</h4>\x0d\x0a\x0d\x0a\
+<p>My beloved dr\
+awing editor dur\
+ing my youth! Co\
+mpletely outdate\
+d, but still the\
+ best! Unfortuna\
+tely the SVG exp\
+ort is\x0d\x0adeficien\
 t. There are Bez\
 ier curves (real\
 ly?) i.e. spline\
 s with control p\
 oints (it looks \
 like Bezier) but\
- the SVG export\x0a\
-outputs them as \
-polylines (with \
-many points). <s\
-trong>Conclusion\
-: unusable</stro\
-ng></p>\x0a\x0a<p></p>\
-\x0a\x0a<h3><strong>On\
-line editors:</s\
-trong></h3>\x0a\x0a<p>\
-There are plenty\
- of them, but th\
-ey all seem to b\
-e meant for pain\
-ting (like Inksc\
-ape), not for CA\
-D. Finally found\
-\x0athis one:</p>\x0a\x0a\
-<h4>SvgPathEdito\
-r <span style=\x22c\
-olor:#ff00ff\x22><s\
-pan style=\x22color\
-:#ff00ff\x22></span\
-></span><span\x0ast\
+ the SVG export\x0d\
+\x0aoutputs them as\
+ polylines (with\
+ many points). <\
+strong>Conclusio\
+n: unusable</str\
+ong></p>\x0d\x0a\x0d\x0a<p><\
+/p>\x0d\x0a\x0d\x0a<h3><stro\
+ng>Online editor\
+s:</strong></h3>\
+\x0d\x0a\x0d\x0a<p>There are\
+ plenty of them,\
+ but they all se\
+em to be meant f\
+or painting (lik\
+e Inkscape), not\
+ for CAD. Finall\
+y found\x0d\x0athis on\
+e:</p>\x0d\x0a\x0d\x0a<h4>Sv\
+gPathEditor <spa\
+n style=\x22color:#\
+ff00ff\x22><span st\
 yle=\x22color:#ff00\
-ff\x22>****EXCELLEN\
-T****</span></h4\
->\x0a\x0a<p>It is sole\
-ly focused on ed\
-iting svg paths.\
- You can try it \
-at <a\x0ahref=\x22http\
-s://yqnn.github.\
-io/svg-path-edit\
-or/\x22>https://yqn\
-n.github.io/svg-\
-path-editor/</a>\
-.</p>\x0a\x0a<p>Of cou\
+ff\x22></span></spa\
+n><span\x0d\x0astyle=\x22\
+color:#ff00ff\x22>*\
+***EXCELLENT****\
+</span></h4>\x0d\x0a\x0d\x0a\
+<p>It is solely \
+focused on editi\
+ng svg paths. Yo\
+u can try it at \
+<a\x0d\x0ahref=\x22https:\
+//yqnn.github.io\
+/svg-path-editor\
+/\x22>https://yqnn.\
+github.io/svg-pa\
+th-editor/</a>.<\
+/p>\x0d\x0a\x0d\x0a<p>Of cou\
 rse it cannot co\
 mpare to <strong\
 >FreeCAD</strong\
@@ -7283,665 +5757,562 @@ mpare to <strong\
 veSpace</strong>\
 , but its concep\
 t is excellent, \
-\x0awhich makes it \
-so easy to gener\
-ate a path, segm\
-ent after segmen\
-t. The result ca\
-n then be copy/p\
-asted into your \
-SVGs,\x0aeditted pe\
-r hand.</p>\x0a\x0a<h4\
->Others:</h4>\x0a\x0a<\
-p>I do not menti\
-on them because \
-the list would b\
-e too long... bu\
-t I did not find\
- something I was\
- pleased of.</p>\
-\x0a\x0a<p></p>\x0a\x0a<h3>N\
-on-free software\
-</h3>\x0a\x0a<h4>Desig\
-nCAD</h4>\x0a\x0a<p>Th\
-e free version h\
-as the same capa\
-bilities as the \
-full version, ex\
-cepted the expor\
-ts to other form\
-ats. Bad!</p>\x0a\x0a<\
+\x0d\x0awhich makes it\
+ so easy to gene\
+rate a path, seg\
+ment after segme\
+nt. The result c\
+an then be copy/\
+pasted into your\
+ SVGs,\x0d\x0aeditted \
+per hand.</p>\x0d\x0a\x0d\
+\x0a<h4>Others:</h4\
+>\x0d\x0a\x0d\x0a<p>I do not\
+ mention them be\
+cause the list w\
+ould be too long\
+... but I did no\
+t find something\
+ I was pleased o\
+f.</p>\x0d\x0a\x0d\x0a<p></p\
+>\x0d\x0a\x0d\x0a<h3>Non-fre\
+e software</h3>\x0d\
+\x0a\x0d\x0a<h4>DesignCAD\
+</h4>\x0d\x0a\x0d\x0a<p>The \
+free version has\
+ the same capabi\
+lities as the fu\
+ll version, exce\
+pted the exports\
+ to other format\
+s. Bad!</p>\x0d\x0a\x0d\x0a<\
 h4>Solid Edge 2D\
  Drafting (Sieme\
-ns)</h4>\x0a\x0a<p>The\
-=======
--editor/</a>.</p\
->\x0d\x0a\x0d\x0a<p>Of cours\
-e it cannot comp\
-are to <strong>F\
-reeCAD</strong> \
-or <strong>Solve\
-Space</strong>, \
-but its concept \
-is excellent, \x0d\x0a\
-which makes it s\
-o easy to genera\
-te a path, segme\
-nt after segment\
-. The result can\
- then be copy/pa\
-sted into your S\
-VGs,\x0d\x0aeditted pe\
-r hand.</p>\x0d\x0a\x0d\x0a<\
-h4>Others:</h4>\x0d\
-\x0a\x0d\x0a<p>I do not m\
-ention them beca\
-use the list wou\
-ld be too long..\
-. but I did not \
-find something I\
- was pleased of.\
-</p>\x0d\x0a\x0d\x0a<p></p>\x0d\
-\x0a\x0d\x0a<h3>Non-free \
-software</h3>\x0d\x0a\x0d\
-\x0a<h4>DesignCAD</\
-h4>\x0d\x0a\x0d\x0a<p>The fr\
-ee version has t\
-he same capabili\
-ties as the full\
- version, except\
-ed the exports t\
-o other formats.\
- Bad!</p>\x0d\x0a\x0d\x0a<h4\
->Solid Edge 2D D\
-rafting (Siemens\
-)</h4>\x0d\x0a\x0d\x0a<p>The\
->>>>>>> d8076dc... c
- 3.8 GB big app \
-from Siemens is \
-<strong>free of \
-charge</strong>.\
- It is incredibl\
-e software. But \
-It seems there i\
-s\x0d\x0ano SVG export\
- at all. \x22Schade\
-\x22.</p>\x0d\x0a\x0d\x0a<h4>Dr\
-aftsight 2D (Das\
-sault)</h4>\x0d\x0a\x0d\x0a<\
-p>Only a 30 days\
- trial version. \
-It has a \x22Power \
-Tool\x22 named \x222D \
-G-Code generator\
-\x22! Should I forg\
-et\x0d\x0aPyCut? (No).\
- SVG export seem\
-s to be more mea\
-nt as a picture \
-for display only\
- purpose.</p>\x0d\x0a\x0d\
-\x0a<h4>What else?<\
-/h4>\x0d\x0a\x0d\x0a<p>...</\
-p>\x0d\x0a\x0d\x0a<h3>Conclu\
-sion</h3>\x0d\x0a\x0d\x0a<p>\
-The fact that it\
- is so difficult\
- to find an acce\
-ptable SVG path \
-\x22writer\x22 program\
- let me wonder w\
-hy it is the cas\
-e.\x0d\x0aAnd why does\
- only <strong>Fr\
-eeCAD</strong> a\
-nd <strong>Solve\
-Space</strong> p\
-erform the task \
-correctly?</p>\x0d\x0a\
-\x0d\x0a<p>The primary\
- usage of SVG is\
- displaying imag\
-es, not being a \
-format for CAM i\
-nput. So why bot\
-her exporting it\
- clean.\x0d\x0aThe svg\
- standard is hug\
-e, the svg path \
-definition is qu\
-ite complicated,\
- parsing it is a\
- difficult task,\
- and thus in \x0d\x0ar\
-eturn exporting \
-a custom data fo\
-rmat as svg data\
- in a right and \
-clean manner is \
-also not straigh\
-tforward (when t\
-he\x0d\x0adata format \
-is not well suit\
-ed for such an e\
-xport). \x0d\x0aBut wh\
-o else would wan\
-t to import svg \
-files as a kind \
-of CAM format? R\
-esponse: the app\
-lications that d\
-o not want to us\
-e \x0d\x0aan other (ma\
-ybe more complic\
-ated) format, be\
-cause yes, SVG c\
-an be indeed sim\
-ple when utilizi\
-ng only its basi\
-c features.</p>\x0d\
-\x0a\x0d\x0a<p>The SVG fo\
-rmat, sure, can \
-be viewed in a b\
-rowser and can b\
-e edited with a \
-text editor. Unf\
-ortunately it co\
-mpletely\x0d\x0aignore\
-s the concept of\
- multiline/multi\
-polygon etc. Pol\
-ygons have no \x22i\
-nteriors\x22 so the\
-y must be define\
-d as such in a p\
-ath \x0d\x0acomposed o\
-f 2 or more subp\
-aths for this pu\
-rpose. Not very \
-practicable.</p>\
-\x0d\x0a\x0d\x0a<p><strong>A\
-ll in all very d\
-esapointing, exc\
-epted <span styl\
-e=\x22color:#008000\
-\x22>FreeCAD</span>\
-, <span\x0d\x0astyle=\x22\
-color:#008000\x22>S\
-olveSpace</span>\
- and <span style\
+ns)</h4>\x0d\x0a\x0d\x0a<p>T\
+he 3.8 GB big ap\
+p from Siemens i\
+s <strong>free o\
+f charge</strong\
+>. It is incredi\
+ble software. Bu\
+t It seems there\
+ is\x0d\x0ano SVG expo\
+rt at all. \x22Scha\
+de\x22.</p>\x0d\x0a\x0d\x0a<h4>\
+Draftsight 2D (D\
+assault)</h4>\x0d\x0a\x0d\
+\x0a<p>Only a 30 da\
+ys trial version\
+. It has a \x22Powe\
+r Tool\x22 named \x222\
+D G-Code generat\
+or\x22! Should I fo\
+rget\x0d\x0aPyCut? (No\
+). SVG export se\
+ems to be more m\
+eant as a pictur\
+e for display on\
+ly purpose.</p>\x0d\
+\x0a\x0d\x0a<h4>What else\
+?</h4>\x0d\x0a\x0d\x0a<p>...\
+</p>\x0d\x0a\x0d\x0a<h3>Conc\
+lusion</h3>\x0d\x0a\x0d\x0a<\
+p>The fact that \
+it is so difficu\
+lt to find an ac\
+ceptable SVG pat\
+h \x22writer\x22 progr\
+am let me wonder\
+ why it is the c\
+ase.\x0d\x0aAnd why do\
+es only <strong>\
+FreeCAD</strong>\
+ and <strong>Sol\
+veSpace</strong>\
+ perform the tas\
+k correctly?</p>\
+\x0d\x0a\x0d\x0a<p>The prima\
+ry usage of SVG \
+is displaying im\
+ages, not being \
+a format for CAM\
+ input. So why b\
+other exporting \
+it clean.\x0d\x0aThe s\
+vg standard is h\
+uge, the svg pat\
+h definition is \
+quite complicate\
+d, parsing it is\
+ a difficult tas\
+k, and thus in \x0d\
+\x0areturn exportin\
+g a custom data \
+format as svg da\
+ta in a right an\
+d clean manner i\
+s also not strai\
+ghtforward (when\
+ the\x0d\x0adata forma\
+t is not well su\
+ited for such an\
+ export). \x0d\x0aBut \
+who else would w\
+ant to import sv\
+g files as a kin\
+d of CAM format?\
+ Response: the a\
+pplications that\
+ do not want to \
+use \x0d\x0aan other (\
+maybe more compl\
+icated) format, \
+because yes, SVG\
+ can be indeed s\
+imple when utili\
+zing only its ba\
+sic features.</p\
+>\x0d\x0a\x0d\x0a<p>The SVG \
+format, sure, ca\
+n be viewed in a\
+ browser and can\
+ be edited with \
+a text editor. U\
+nfortunately it \
+completely\x0d\x0aigno\
+res the concept \
+of multiline/mul\
+tipolygon etc. P\
+olygons have no \
+\x22interiors\x22 so t\
+hey must be defi\
+ned as such in a\
+ path \x0d\x0acomposed\
+ of 2 or more su\
+bpaths for this \
+purpose. Not ver\
+y practicable.</\
+p>\x0d\x0a\x0d\x0a<p><strong\
+>All in all very\
+ desapointing, e\
+xcepted <span st\
+yle=\x22color:#0080\
+00\x22>FreeCAD</spa\
+n>, <span\x0d\x0astyle\
 =\x22color:#008000\x22\
+>SolveSpace</spa\
+n> and <span sty\
+le=\x22color:#00800\
+0\x22>SvgPathEditor\
+</span>!</strong\
+></p>\x0d\x0a\x0d\x0a<h4><st\
+rong><span style\
+=\x22color:#0000ff\x22\
+>Per hand</span>\
+</strong></h4>\x0d\x0a\
+\x0d\x0a<p>Finally my \
+prefered method!\
+ Per hand you ca\
+n also write ite\
+ms in the <code>\
+&lt;defs&gt;</co\
+de> section, and\
+ use\x0d\x0athese item\
+s repeatidly wit\
+h transformation\
+s with the <code\
+>&lt;use&gt;</co\
+de> tag. My util\
+ity\x0d\x0a<strong>svg\
+resolver.py</str\
+ong> then transf\
+orms this svg fi\
+le into another \
+one, usable for \
+<strong>PyCut. N\
+ot the\x0d\x0aperfect \
+toolchain I admi\
+t, but well my s\
+vgs are not that\
+ complicated</st\
+rong>. One has t\
+o understand how\
+ to write an\x0d\x0aar\
+c/bezier curve p\
+er hand, it is n\
+ot that difficul\
+t and can always\
+ use the <strong\
 >SvgPathEditor</\
-span>!</strong><\
-/p>\x0d\x0a\x0d\x0a<h4><stro\
-ng><span style=\x22\
-color:#0000ff\x22>P\
-er hand</span></\
-strong></h4>\x0d\x0a\x0d\x0a\
-<p>Finally my pr\
-efered method! P\
-er hand you can \
-also write items\
- in the <code>&l\
-t;defs&gt;</code\
-> section, and u\
-se\x0d\x0athese items \
-repeatidly with \
-transformations \
-with the <code>&\
-lt;use&gt;</code\
-> tag. My utilit\
-y\x0d\x0a<strong>svgre\
-solver.py</stron\
-g> then transfor\
-ms this svg file\
- into another on\
-e, usable for <s\
-trong>PyCut. Not\
- the\x0d\x0aperfect to\
-olchain I admit,\
- but well my svg\
-s are not that c\
-omplicated</stro\
-ng>. One has to \
-understand how t\
-o write an\x0d\x0aarc/\
-bezier curve per\
- hand, it is not\
- that difficult \
-and can always u\
-se the <strong>S\
-vgPathEditor</st\
-rong> tool. And\x0d\
-\x0ayour hand writt\
-en svgs are then\
- \x22<strong>clean<\
-/strong>\x22 and ea\
-sily modificable\
-. </p>\x0d\x0a\x0d\x0a<p></p\
->\x0d\x0a\x0d\x0a<h3 id=\x22APP\
-ENDIX-02\x22>Append\
-ix-2: SVG Units \
-and Scale Factor\
-</h3>\x0d\x0a\x0d\x0a<div cl\
-ass=\x22info\x22>\x0d\x0a<p>\
-<strong>Info</st\
-rong>: When crea\
-ting a svg \x22per \
-hand\x22 (with a te\
-xt editor), the \
-user does not ev\
-en have to care\x0d\
-\x0aabout this unit\
-s scale factor.<\
-/p>\x0d\x0a</div>\x0d\x0a\x0d\x0a<\
-p>What is this? \
-Let's take an ex\
-ample: in <stron\
-g>Inkscape</stro\
-ng>, the user wo\
-uld set the docu\
-ment's size to\x0d\x0a\
-<strong>100x40 m\
-m</strong>, supp\
-osedly the size \
-of the material \
-to work on. Inks\
-cape automatical\
-ly sets the\x0d\x0a<st\
-rong>user units \
-scale </strong><\
-strong>to 1</str\
-ong>. Note that \
-the user units a\
-re not \x22px\x22 or w\
-hatever. This me\
-ans,\x0d\x0a<strong>1 \
-\x22user unit\x22 is e\
-qual to 1 mm (an\
-d the viewbox is\
- \x220 0 100 40\x22 wh\
-ile width=\x22100mm\
-\x22 and\x0d\x0aheight=\x224\
-0mm\x22)</strong></\
-p>\x0d\x0a\x0d\x0a<div>\x0d\x0a<im\
-g src=\x22doc/Inksc\
-ape_settings_mm.\
-png\x22 width=\x22563\x22\
-> </div>\x0d\x0a\x0d\x0a<p>O\
-f course when ed\
-iting the svg (i\
-n Inkscape or in\
- a text editor),\
- <strong>the use\
-r is only concer\
-ned with the use\
-r\x0d\x0aunits</strong\
-> : he draws a r\
-ectangle of size\
- 20x30 at the lo\
-cation 10x10. Th\
-e users may simp\
-ly even not be a\
-ware of\x0d\x0athis fa\
-ct. When choosin\
-g mm, conversion\
- from <strong>us\
-er units</strong\
-> to <strong>mm<\
-/strong> is abso\
-lutely\x0d\x0astraight\
-forward as, as s\
-aid, the user un\
-its scale is 1 p\
-er default .</p>\
-\x0d\x0a\x0d\x0a<p>Let's con\
-sider now the ca\
-se where the use\
-r switches to <s\
-trong>inches</st\
-rong> for the do\
-cument size. The\
- size of\x0d\x0athe do\
-cument becomes t\
-hen <strong>3,93\
-701x1,57480 inch\
-es</strong> (yes\
-, 100 / 25.4 is \
-3.93701). Note t\
-hat\x0d\x0a<strong>Ink\
-scape</strong> a\
-utomatically cha\
-nge the <strong>\
-user units scale\
- to 25.4</strong\
->. Because of th\
-is, the\x0d\x0a<strong\
->view box remain\
-s at \x220 0 100 40\
-\x22</strong>. That\
- way, a rectangl\
-e filling the fu\
-ll document size\
- is still\x0d\x0a100x4\
-0.</p>\x0d\x0a\x0d\x0a<div>\x0d\
-\x0a<img src=\x22doc/I\
-nkscape_settings\
-_in.png\x22 width=\x22\
-563\x22> </div>\x0d\x0a\x0d\x0a\
-<p>Filling a box\
- half the size o\
-f the document i\
-s 50x20, right, \
-but what are rea\
-l physical dimen\
-sions of that bo\
-x ? The\x0d\x0auser wo\
-uld have to stea\
-dily calculate f\
-rom fancy user u\
-nits (ex: 50x20)\
- in inches</p>\x0d\x0a\
-\x0d\x0a<p>But why wou\
-ld a user use in\
-ches and work wi\
-th user units sc\
-ale factor 25.4 \
-(leading infact \
-to work in mm) ?\
- The user\x0d\x0acan s\
-et the user unit\
-s scale factor t\
-o 1. The effect \
-of this is that \
-now, in order to\
- fill the whole \
-document with a\x0d\
-\x0arectangle, the \
-rectangle has to\
- be of the size \
-user unit size o\
-f 3.93701x1.5748\
-0. </p>\x0d\x0a\x0d\x0a<p>Of\
- course the size\
- of the material\
- is certainly no\
-t 3.93701x1.5748\
-0 inches, but so\
-mething like 5x3\
- inches: an huma\
-n\x0d\x0areadable size\
-. The user knows\
- that he has to \
-draw a rectangle\
- inside the mate\
-rial of size let\
- say 1.5x1.2 inc\
-hes. And\x0d\x0athese \
-dimensions are t\
-he ones that are\
- effectively sav\
-ed in the svg do\
-cument. So the u\
-ser units are ex\
-actly the same a\
-s\x0d\x0athe \x22physical\
- units\x22 when cho\
-osing a scale of\
- 1.</p>\x0d\x0a\x0d\x0a<p>No\
-w how can <stron\
-g>PyCut</strong>\
- handles these s\
-ettings? <strong\
->PyCut</strong> \
-only works with \
-the <strong>user\
-\x0d\x0aunits</strong>\
-. <strong>PyCut<\
-/strong> will ca\
-lculate toolpath\
-s in the same or\
-der of magnitude\
- of the user uni\
-ts values\x0d\x0aof th\
-e svg. If you ch\
-oose \x22<strong>mm\
-</strong>\x22 for t\
-he gcode output,\
- you would have \
-set your svg doc\
-ument size in\x0d\x0a\x22\
-<strong>mm</stro\
-ng>\x22, and the <s\
-trong>user unit \
-scale to 1</stro\
+strong> tool. An\
+d\x0d\x0ayour hand wri\
+tten svgs are th\
+en \x22<strong>clea\
+n</strong>\x22 and \
+easily modificab\
+le. </p>\x0d\x0a\x0d\x0a<p><\
+/p>\x0d\x0a\x0d\x0a<h3 id=\x22A\
+PPENDIX-02\x22>Appe\
+ndix-2: SVG Unit\
+s and Scale Fact\
+or</h3>\x0d\x0a\x0d\x0a<div \
+class=\x22info\x22>\x0d\x0a<\
+p><strong>Info</\
+strong>: When cr\
+eating a svg \x22pe\
+r hand\x22 (with a \
+text editor), th\
+e user does not \
+even have to car\
+e\x0d\x0aabout this un\
+its scale factor\
+.</p>\x0d\x0a</div>\x0d\x0a\x0d\
+\x0a<p>What is this\
+? Let's take an \
+example: in <str\
+ong>Inkscape</st\
+rong>, the user \
+would set the do\
+cument's size to\
+\x0d\x0a<strong>100x40\
+ mm</strong>, su\
+pposedly the siz\
+e of the materia\
+l to work on. In\
+kscape automatic\
+ally sets the\x0d\x0a<\
+strong>user unit\
+s scale </strong\
+><strong>to 1</s\
+trong>. Note tha\
+t the user units\
+ are not \x22px\x22 or\
+ whatever. This \
+means,\x0d\x0a<strong>\
+1 \x22user unit\x22 is\
+ equal to 1 mm (\
+and the viewbox \
+is \x220 0 100 40\x22 \
+while width=\x22100\
+mm\x22 and\x0d\x0aheight=\
+\x2240mm\x22)</strong>\
+</p>\x0d\x0a\x0d\x0a<div>\x0d\x0a<\
+img src=\x22doc/Ink\
+scape_settings_m\
+m.png\x22 width=\x2256\
+3\x22> </div>\x0d\x0a\x0d\x0a<p\
+>Of course when \
+editing the svg \
+(in Inkscape or \
+in a text editor\
+), <strong>the u\
+ser is only conc\
+erned with the u\
+ser\x0d\x0aunits</stro\
+ng> : he draws a\
+ rectangle of si\
+ze 20x30 at the \
+location 10x10. \
+The users may si\
+mply even not be\
+ aware of\x0d\x0athis \
+fact. When choos\
+ing mm, conversi\
+on from <strong>\
+user units</stro\
+ng> to <strong>m\
+m</strong> is ab\
+solutely\x0d\x0astraig\
+htforward as, as\
+ said, the user \
+units scale is 1\
+ per default .</\
+p>\x0d\x0a\x0d\x0a<p>Let's c\
+onsider now the \
+case where the u\
+ser switches to \
+<strong>inches</\
+strong> for the \
+document size. T\
+he size of\x0d\x0athe \
+document becomes\
+ then <strong>3,\
+93701x1,57480 in\
+ches</strong> (y\
+es, 100 / 25.4 i\
+s 3.93701). Note\
+ that\x0d\x0a<strong>I\
+nkscape</strong>\
+ automatically c\
+hange the <stron\
+g>user units sca\
+le to 25.4</stro\
 ng>. Because of \
-this, the gcode \
-X,Y and Z values\
- are\x0d\x0athe same a\
-s the one of the\
- paths values.</\
-p>\x0d\x0a\x0d\x0a<p>If you \
+this, the\x0d\x0a<stro\
+ng>view box rema\
+ins at \x220 0 100 \
+40\x22</strong>. Th\
+at way, a rectan\
+gle filling the \
+full document si\
+ze is still\x0d\x0a100\
+x40.</p>\x0d\x0a\x0d\x0a<div\
+>\x0d\x0a<img src=\x22doc\
+/Inkscape_settin\
+gs_in.png\x22 width\
+=\x22563\x22> </div>\x0d\x0a\
+\x0d\x0a<p>Filling a b\
+ox half the size\
+ of the document\
+ is 50x20, right\
+, but what are r\
+eal physical dim\
+ensions of that \
+box ? The\x0d\x0auser \
+would have to st\
+eadily calculate\
+ from fancy user\
+ units (ex: 50x2\
+0) in inches</p>\
+\x0d\x0a\x0d\x0a<p>But why w\
+ould a user use \
+inches and work \
+with user units \
+scale factor 25.\
+4 (leading infac\
+t to work in mm)\
+ ? The user\x0d\x0acan\
+ set the user un\
+its scale factor\
+ to 1. The effec\
+t of this is tha\
+t now, in order \
+to fill the whol\
+e document with \
+a\x0d\x0arectangle, th\
+e rectangle has \
+to be of the siz\
+e user unit size\
+ of 3.93701x1.57\
+480. </p>\x0d\x0a\x0d\x0a<p>\
+Of course the si\
+ze of the materi\
+al is certainly \
+not 3.93701x1.57\
+480 inches, but \
+something like 5\
+x3 inches: an hu\
+man\x0d\x0areadable si\
+ze. The user kno\
+ws that he has t\
+o draw a rectang\
+le inside the ma\
+terial of size l\
+et say 1.5x1.2 i\
+nches. And\x0d\x0athes\
+e dimensions are\
+ the ones that a\
+re effectively s\
+aved in the svg \
+document. So the\
+ user units are \
+exactly the same\
+ as\x0d\x0athe \x22physic\
+al units\x22 when c\
+hoosing a scale \
+of 1.</p>\x0d\x0a\x0d\x0a<p>\
+Now how can <str\
+ong>PyCut</stron\
+g> handles these\
+ settings? <stro\
+ng>PyCut</strong\
+> only works wit\
+h the <strong>us\
+er\x0d\x0aunits</stron\
+g>. <strong>PyCu\
+t</strong> will \
+calculate toolpa\
+ths in the same \
+order of magnitu\
+de of the user u\
+nits values\x0d\x0aof \
+the svg. If you \
 choose \x22<strong>\
-in</strong>\x22 for\
+mm</strong>\x22 for\
  the gcode outpu\
-t, then certainl\
-y you have set y\
-our svg document\
- size in\x0d\x0a\x22<stro\
-ng>in</strong>\x22,\
- and the <strong\
->with user unit \
-scale equals to \
-1</strong>,no co\
-nversion is eith\
-er needed. </p>\x0d\
-\x0a\x0d\x0a<p>Note that \
-this scale facto\
-r is not explici\
-tely given in th\
-e svg file. It i\
-s calculated fro\
-m the ratio view\
-box /\x0d\x0awidth. It\
- is eventually t\
-he task of the u\
-ser to know what\
- is the user uni\
-ts scale value, \
-and, theorically\
-, to set it in\x0d\x0a\
-<strong>PyCut</s\
-trong>. But my o\
-pinion is, worki\
-ng with a user u\
-nit scal of 1 is\
- preferably. </p\
->\x0d\x0a\x0d\x0a<p><strong>\
-<span style=\x22col\
-or:#0000ff\x22>I pe\
-rsonnaly stick t\
-o svg document u\
-nits in \x22mm\x22 wit\
-h user units sca\
-le factor of\x0d\x0a1,\
- and output my g\
-code in mm. No c\
-onfusion! </span\
-></strong></p>\x0d\x0a\
+t, you would hav\
+e set your svg d\
+ocument size in\x0d\
+\x0a\x22<strong>mm</st\
+rong>\x22, and the \
+<strong>user uni\
+t scale to 1</st\
+rong>. Because o\
+f this, the gcod\
+e X,Y and Z valu\
+es are\x0d\x0athe same\
+ as the one of t\
+he paths values.\
+</p>\x0d\x0a\x0d\x0a<p>If yo\
+u choose \x22<stron\
+g>in</strong>\x22 f\
+or the gcode out\
+put, then certai\
+nly you have set\
+ your svg docume\
+nt size in\x0d\x0a\x22<st\
+rong>in</strong>\
+\x22, and the <stro\
+ng>with user uni\
+t scale equals t\
+o 1</strong>,no \
+conversion is ei\
+ther needed. </p\
+>\x0d\x0a\x0d\x0a<p>Note tha\
+t this scale fac\
+tor is not expli\
+citely given in \
+the svg file. It\
+ is calculated f\
+rom the ratio vi\
+ewbox /\x0d\x0awidth. \
+It is eventually\
+ the task of the\
+ user to know wh\
+at is the user u\
+nits scale value\
+, and, theorical\
+ly, to set it in\
+\x0d\x0a<strong>PyCut<\
+/strong>. But my\
+ opinion is, wor\
+king with a user\
+ unit scal of 1 \
+is preferably. <\
+/p>\x0d\x0a\x0d\x0a<p><stron\
+g><span style=\x22c\
+olor:#0000ff\x22>I \
+personnaly stick\
+ to svg document\
+ units in \x22mm\x22 w\
+ith user units s\
+cale factor of\x0d\x0a\
+1, and output my\
+ gcode in mm. No\
+ confusion! </sp\
+an></strong></p>\
+\x0d\x0a\x0d\x0a<div class=\x22\
+warning\x22>\x0d\x0a<p><s\
+trong>Warning</s\
+trong>: The user\
+ could use \x22mm\x22,\
+ and set a scale\
+ factor of 10 or\
+ whatever, but i\
+t certainly make\
+s\x0d\x0ano sense.</p>\
+\x0d\x0a</div>\x0d\x0a\x0d\x0a<p>T\
+he further <stro\
+ng>PyCut Gcode U\
+nits</strong> se\
+tting is not onl\
+y a flag to set \
+the code <strong\
+>G20</strong>\x0d\x0a(\
+inches) or <stro\
+ng>G21</strong> \
+(mm) inside the \
+gcode file: it a\
+lso allows the p\
+roper conversion\
+ of the tool dia\
+meter\x0d\x0aphysical \
+size (inch or mm\
+) in user units.\
+</p>\x0d\x0a\x0d\x0a<p>The r\
+ule is:</p>\x0d\x0a<ul\
+>\x0d\x0a  <li><strong\
+>Gcode Units</st\
+rong> in \x22mm\x22: t\
+ool diameter is \
+transformed to m\
+m - the same as \
+the user units</\
+li>\x0d\x0a  <li><stro\
+ng>Gcode Units</\
+strong> in \x22in\x22:\
+ tool diameter i\
+s transformed to\
+ inch - the same\
+ as the user uni\
+ts</li>\x0d\x0a</ul>\x0d\x0a\
 \x0d\x0a<div class=\x22wa\
 rning\x22>\x0d\x0a<p><str\
 ong>Warning</str\
-ong>: The user c\
-ould use \x22mm\x22, a\
-nd set a scale f\
-actor of 10 or w\
-hatever, but it \
-certainly makes\x0d\
-\x0ano sense.</p>\x0d\x0a\
-</div>\x0d\x0a\x0d\x0a<p>The\
- further <strong\
->PyCut Gcode Uni\
-ts</strong> sett\
-ing is not only \
-a flag to set th\
-e code <strong>G\
-20</strong>\x0d\x0a(in\
-ches) or <strong\
->G21</strong> (m\
-m) inside the gc\
-ode file: it als\
-o allows the pro\
-per conversion o\
-f the tool diame\
-ter\x0d\x0aphysical si\
-ze (inch or mm) \
-in user units.</\
-p>\x0d\x0a\x0d\x0a<p>The rul\
-e is:</p>\x0d\x0a<ul>\x0d\
-\x0a  <li><strong>G\
-code Units</stro\
-ng> in \x22mm\x22: too\
-l diameter is tr\
-ansformed to mm \
-- the same as th\
-e user units</li\
->\x0d\x0a  <li><strong\
->Gcode Units</st\
-rong> in \x22in\x22: t\
-ool diameter is \
-transformed to i\
-nch - the same a\
-s the user units\
-</li>\x0d\x0a</ul>\x0d\x0a\x0d\x0a\
-<div class=\x22warn\
-ing\x22>\x0d\x0a<p><stron\
-g>Warning</stron\
-g>: <strong>PyCu\
-t</strong> assum\
-es that for \x22<st\
-rong>mm</strong>\
-\x22 or \x22<strong>in\
-</strong>\x22,\x0d\x0athe\
- <strong>user un\
-it scale factor \
-is always 1</str\
-ong> .</p>\x0d\x0a</di\
-v>\x0d\x0a\x0d\x0a<p></p>\x0d\x0a\x0d\
-\x0a<h3 id=\x22APPENDI\
-X-03\x22>Appendix-3\
-: GCODE Viewers<\
-/h3>\x0d\x0a\x0d\x0a<p>Of co\
-urse, CANDLE off\
-ers a GCODE view\
-er. There nevert\
-heless a few one\
-s (to my knowled\
-ge) worth a ment\
-ion:</p>\x0d\x0a<ul>\x0d\x0a\
-  <li>NCnetic <s\
-pan style=\x22color\
-:#ff00ff\x22><stron\
-g>****EXCELLENT*\
-***</strong></sp\
-an></li>\x0d\x0a  <li>\
-PlanetCNC (which\
- is a GCode send\
-er -with dedicat\
-ed hardware- as \
-well)</li>\x0d\x0a  <l\
-i>what else ?</l\
-<<<<<<< HEAD
-i>\x0a</ul>\x0a\x0a<p>Jus\
-t search in the \
-Internet for the\
-m.</p>\x0a\x0a<p>Real \
->>>>>>> 3cdfc6f... c
-GCODE simulators\
- (with material \
-removal) are on \
-the other way se\
-<<<<<<< HEAD
-ldom.</p>\x0d\x0a<ul>\x0d\
-\x0a  <li>Camotics:\
- unfortunately v\
-ery resources in\
-tensive and not \
-so accurate in t\
-he details</li>\x0d\
-\x0a  <li>CNCSimula\
-tor PRO (not fre\
-e)</li>\x0d\x0a  <li>F\
-reeCAD ? how to \
-import gcode int\
-o it ?</li>\x0d\x0a  <\
-li>Blender ? see\
- BlenderCAM add-\
-on - not sure if\
- there is a simu\
-lation</li>\x0d\x0a  <\
-li>what else ?</\
-li>\x0d\x0a</ul>\x0d\x0a\x0d\x0a</\
-div>\x0d\x0a</body>\x0d\x0a<\
-/html>\x0d\x0a\
-=======
-ldom.</p>\x0a<ul>\x0a \
->>>>>>> af07b3ef0cd86b188546f3212c6210a0106181fb
- <li>Camotics: u\
-nfortunately ver\
-y resources inte\
-nsive and not so\
- accurate in the\
-<<<<<<< HEAD
- details</li>\x0d\x0a \
- <li>CNCSimulato\
-r PRO (not free)\
-</li>\x0d\x0a  <li>Fre\
-eCAD ? how to im\
-port gcode into \
-it ?</li>\x0d\x0a  <li\
->Blender ? see B\
-lenderCAM add-on\
- - not sure if t\
-here is a simula\
-tion</li>\x0d\x0a  <li\
->what else ?</li\
->\x0d\x0a</ul>\x0d\x0a\x0d\x0a</di\
-v>\x0d\x0a</body>\x0d\x0a</h\
-tml>\x0d\x0a\
->>>>>>> 3cdfc6f... c
-=======
-i>\x0d\x0a</ul>\x0d\x0a\x0d\x0a<p>\
-Just search in t\
-he Internet for \
-them.</p>\x0d\x0a\x0d\x0a<p>\
-Real GCODE simul\
-ators (with mate\
-rial removal) ar\
-e on the other w\
-ay seldom.</p>\x0d\x0a\
-<ul>\x0d\x0a  <li>Camo\
-tics: unfortunat\
-ely very resourc\
-es intensive and\
- not so accurate\
- in the details<\
-/li>\x0d\x0a  <li>CNCS\
-imulator PRO (no\
-t free)</li>\x0d\x0a  \
-<li>FreeCAD ? ho\
-w to import gcod\
-e into it ?</li>\
-\x0d\x0a  <li>Blender \
-? see BlenderCAM\
- add-on - not su\
-re if there is a\
- simulation</li>\
-\x0d\x0a  <li>what els\
-e ?</li>\x0d\x0a</ul>\x0d\
-\x0a\x0d\x0a</div>\x0d\x0a</bod\
-y>\x0d\x0a</html>\x0d\x0a\
->>>>>>> d8076dc... c
+ong>: <strong>Py\
+Cut</strong> ass\
+umes that for \x22<\
+strong>mm</stron\
+g>\x22 or \x22<strong>\
+in</strong>\x22,\x0d\x0at\
+he <strong>user \
+unit scale facto\
+r is always 1</s\
+trong> .</p>\x0d\x0a</\
+div>\x0d\x0a\x0d\x0a<p></p>\x0d\
+\x0a\x0d\x0a<h3 id=\x22APPEN\
+DIX-03\x22>Appendix\
+-3: GCODE Viewer\
+s</h3>\x0d\x0a\x0d\x0a<p>Of \
+course, CANDLE o\
+ffers a GCODE vi\
+ewer. There neve\
+rtheless a few o\
+nes (to my knowl\
+edge) worth a me\
+ntion:</p>\x0d\x0a<ul>\
+\x0d\x0a  <li>NCnetic \
+<span style=\x22col\
+or:#ff00ff\x22><str\
+ong>****EXCELLEN\
+T****</strong></\
+span></li>\x0d\x0a  <l\
+i>PlanetCNC (whi\
+ch is a GCode se\
+nder -with dedic\
+ated hardware- a\
+s well)</li>\x0d\x0a  \
+<li>what else ?<\
+/li>\x0d\x0a</ul>\x0d\x0a\x0d\x0a<\
+p>Just search in\
+ the Internet fo\
+r them.</p>\x0d\x0a\x0d\x0a<\
+p>Real GCODE sim\
+ulators (with ma\
+terial removal) \
+are on the other\
+ way seldom.</p>\
+\x0d\x0a<ul>\x0d\x0a  <li>Ca\
+motics: unfortun\
+ately very resou\
+rces intensive a\
+nd not so accura\
+te in the detail\
+s</li>\x0d\x0a  <li>CN\
+CSimulator PRO (\
+not free)</li>\x0d\x0a\
+  <li>FreeCAD ? \
+how to import gc\
+ode into it ?</l\
+i>\x0d\x0a  <li>Blende\
+r ? see BlenderC\
+AM add-on - not \
+sure if there is\
+ a simulation</l\
+i>\x0d\x0a  <li>what e\
+lse ?</li>\x0d\x0a</ul\
+>\x0d\x0a\x0d\x0a</div>\x0d\x0a</b\
+ody>\x0d\x0a</html>\x0d\x0a\
 \x00\x00\x05\xae\
 <\
 h3>PyCut version\
@@ -63213,35 +61584,14 @@ qt_resource_struct = b"\
 \x00\x00\x00\x1e\x00\x02\x00\x00\x00\x0f\x00\x00\x00?\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00*\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
-<<<<<<< HEAD
-<<<<<<< HEAD
-\x00\x00\x01\x99\xd8\xb6\xb5\x5c\
-=======
-<<<<<<< HEAD
-\x00\x00\x01\x99\xa6?U\xf7\
-=======
-\x00\x00\x01\x99\xcf|\xf2\xee\
->>>>>>> af07b3ef0cd86b188546f3212c6210a0106181fb
->>>>>>> 3cdfc6f... c
-=======
-\x00\x00\x01\x99\xd8\xb1\xf2\x82\
->>>>>>> d8076dc... c
+\x00\x00\x01\x99\xd8\xb7Q\xff\
 \x00\x00\x00\x00\x00\x02\x00\x00\x00\x01\x00\x00\x00>\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00~\x00\x02\x00\x00\x00\x10\x00\x00\x00\x17\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00d\x00\x02\x00\x00\x00\x03\x00\x00\x00\x07\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-<<<<<<< HEAD
-<<<<<<< HEAD
-\x00\x00\x00J\x00\x00\x00\x00\x00\x01\x00\x01\x81\xad\
-=======
-<<<<<<< HEAD
-\x00\x00\x00J\x00\x00\x00\x00\x00\x01\x00\x01\x80\xeb\
->>>>>>> 3cdfc6f... c
-=======
-\x00\x00\x00J\x00\x00\x00\x00\x00\x01\x00\x01\x89R\
->>>>>>> d8076dc... c
+\x00\x00\x00J\x00\x00\x00\x00\x00\x01\x00\x01\x8a\x14\
 \x00\x00\x01\x99\xa6\x1c\x08\xdb\
 \x00\x00\x06H\x00\x02\x00\x00\x00\x02\x00\x00\x00\x0f\
 \x00\x00\x00\x00\x00\x00\x00\x00\
@@ -63249,148 +61599,73 @@ qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x06R\x00\x02\x00\x00\x00\x03\x00\x00\x00\x0a\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-<<<<<<< HEAD
-<<<<<<< HEAD
-\x00\x00\x06^\x00\x00\x00\x00\x00\x01\x00\x02\x043\
-=======
-<<<<<<< HEAD
-\x00\x00\x06^\x00\x00\x00\x00\x00\x01\x00\x02\x03q\
->>>>>>> 3cdfc6f... c
+\x00\x00\x06^\x00\x00\x00\x00\x00\x01\x00\x02\x0c\x9a\
 \x00\x00\x01\x82\x83\xb2\xd3\x88\
-\x00\x00\x06\x8a\x00\x00\x00\x00\x00\x01\x00\x03MP\
+\x00\x00\x06\x8a\x00\x00\x00\x00\x00\x01\x00\x03U\xb7\
 \x00\x00\x01\x82\x83\xb2\xd3\x8c\
-\x00\x00\x06\xac\x00\x01\x00\x00\x00\x01\x00\x03d\x1d\
+\x00\x00\x06\xac\x00\x01\x00\x00\x00\x01\x00\x03l\x84\
 \x00\x00\x01\x82\x83\xb2\xd3\x87\
 \x00\x00\x06H\x00\x02\x00\x00\x00\x01\x00\x00\x00\x0e\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x08\x86\x00\x00\x00\x00\x00\x01\x00\x03\xc6\xf6\
+\x00\x00\x08\x86\x00\x00\x00\x00\x00\x01\x00\x03\xcf]\
 \x00\x00\x01}Bq\x994\
-\x00\x00\x06\xde\x00\x01\x00\x00\x00\x01\x00\x03\x81\xf4\
+\x00\x00\x06\xde\x00\x01\x00\x00\x00\x01\x00\x03\x8a[\
 \x00\x00\x01\x8a=\x0du$\
 \x00\x00\x06\xfe\x00\x02\x00\x00\x00\x06\x00\x00\x00\x11\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x08B\x00\x00\x00\x00\x00\x01\x00\x03\xc39\
+\x00\x00\x08B\x00\x00\x00\x00\x00\x01\x00\x03\xcb\xa0\
 \x00\x00\x01K3`o\x88\
-\x00\x00\x07\x12\x00\x00\x00\x00\x00\x01\x00\x03\x9b\x16\
+\x00\x00\x07\x12\x00\x00\x00\x00\x00\x01\x00\x03\xa3}\
 \x00\x00\x01K3`o\x88\
-\x00\x00\x07\xce\x00\x00\x00\x00\x00\x01\x00\x03\xb2\x12\
+\x00\x00\x07\xce\x00\x00\x00\x00\x00\x01\x00\x03\xbay\
 \x00\x00\x01K3`o\x88\
-\x00\x00\x07\xfe\x00\x00\x00\x00\x00\x01\x00\x03\xb9$\
+\x00\x00\x07\xfe\x00\x00\x00\x00\x00\x01\x00\x03\xc1\x8b\
 \x00\x00\x01\x8a\x12\xaf\x08\xd7\
-\x00\x00\x07\x86\x00\x00\x00\x00\x00\x01\x00\x03\xae\xfb\
+\x00\x00\x07\x86\x00\x00\x00\x00\x00\x01\x00\x03\xb7b\
 \x00\x00\x01K3`o\x88\
-\x00\x00\x07F\x00\x00\x00\x00\x00\x01\x00\x03\x9e-\
+\x00\x00\x07F\x00\x00\x00\x00\x00\x01\x00\x03\xa6\x94\
 \x00\x00\x01\x8a\x12\xcbLn\
 \x00\x00\x00\xb0\x00\x02\x00\x00\x00\x02\x00\x00\x00,\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x02@\x00\x00\x00\x00\x00\x01\x00\x01\xa1\xff\
+\x00\x00\x02@\x00\x00\x00\x00\x00\x01\x00\x01\xaaf\
 \x00\x00\x01}\x1b=\x82[\
-\x00\x00\x03\x1e\x00\x00\x00\x00\x00\x01\x00\x01\xb3K\
+\x00\x00\x03\x1e\x00\x00\x00\x00\x00\x01\x00\x01\xbb\xb2\
 \x00\x00\x01\x80,\xd1\x0e\xeb\
-\x00\x00\x010\x00\x00\x00\x00\x00\x01\x00\x01\x8f\xc1\
+\x00\x00\x010\x00\x00\x00\x00\x00\x01\x00\x01\x98(\
 \x00\x00\x01\x80,tbf\
 \x00\x00\x01d\x00\x02\x00\x00\x00\x05\x00\x00\x00'\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x00\xe4\x00\x00\x00\x00\x00\x01\x00\x01\x8by\
+\x00\x00\x00\xe4\x00\x00\x00\x00\x00\x01\x00\x01\x93\xe0\
 \x00\x00\x01\x80He#\x16\
-\x00\x00\x02\xa8\x00\x00\x00\x00\x00\x01\x00\x01\xab\xab\
+\x00\x00\x02\xa8\x00\x00\x00\x00\x00\x01\x00\x01\xb4\x12\
 \x00\x00\x01\x87\xf0\xa5|\x1c\
-\x00\x00\x02\x10\x00\x00\x00\x00\x00\x01\x00\x01\x9fe\
+\x00\x00\x02\x10\x00\x00\x00\x00\x00\x01\x00\x01\xa7\xcc\
 \x00\x00\x01\x8d\xda\xad\xd0\xe7\
-\x00\x00\x02\xe4\x00\x00\x00\x00\x00\x01\x00\x01\xaf{\
+\x00\x00\x02\xe4\x00\x00\x00\x00\x00\x01\x00\x01\xb7\xe2\
 \x00\x00\x01\x87\xf0\xa5|\x1f\
-\x00\x00\x02n\x00\x00\x00\x00\x00\x01\x00\x01\xa65\
+\x00\x00\x02n\x00\x00\x00\x00\x00\x01\x00\x01\xae\x9c\
 \x00\x00\x01\x80,\xb9\x22e\
-\x00\x00\x01\xa6\x00\x00\x00\x00\x00\x01\x00\x01\x97\x91\
+\x00\x00\x01\xa6\x00\x00\x00\x00\x00\x01\x00\x01\x9f\xf8\
 \x00\x00\x01\x87\xf0\xa5|\x19\
-\x00\x00\x01v\x00\x00\x00\x00\x00\x01\x00\x01\x93\x91\
+\x00\x00\x01v\x00\x00\x00\x00\x00\x01\x00\x01\x9b\xf8\
 \x00\x00\x01\x87\xf0\xa5|\x1e\
-\x00\x00\x00\x90\x00\x00\x00\x00\x00\x01\x00\x01\x87_\
+\x00\x00\x00\x90\x00\x00\x00\x00\x00\x01\x00\x01\x8f\xc6\
 \x00\x00\x01\x80HdFB\
-\x00\x00\x01\x06\x00\x00\x00\x00\x00\x01\x00\x01\x8d\x8b\
+\x00\x00\x01\x06\x00\x00\x00\x00\x00\x01\x00\x01\x95\xf2\
 \x00\x00\x01\x806\xafs\xbd\
-\x00\x00\x01\xd8\x00\x00\x00\x00\x00\x01\x00\x01\x9b\x96\
+\x00\x00\x01\xd8\x00\x00\x00\x00\x00\x01\x00\x01\xa3\xfd\
 \x00\x00\x01\x87\xf0\xa5|\x17\
-\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x01\x00\x01\x89s\
+\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x01\x00\x01\x91\xda\
 \x00\x00\x01\x80Hd\xdbc\
-\x00\x00\x03\x84\x00\x00\x00\x00\x00\x01\x00\x01\xbbo\
+\x00\x00\x03\x84\x00\x00\x00\x00\x00\x01\x00\x01\xc3\xd6\
 \x00\x00\x01}\xf6k\xf2U\
-\x00\x00\x03f\x00\x00\x00\x00\x00\x01\x00\x01\xb8\xf7\
+\x00\x00\x03f\x00\x00\x00\x00\x00\x01\x00\x01\xc1^\
 \x00\x00\x01}\xf6k\xf2\x80\
-\x00\x00\x03\xc0\x00\x00\x00\x00\x00\x01\x00\x01\xc0G\
+\x00\x00\x03\xc0\x00\x00\x00\x00\x00\x01\x00\x01\xc8\xae\
 \x00\x00\x01}\xf6k\xf2\xcc\
-\x00\x00\x03P\x00\x00\x00\x00\x00\x01\x00\x01\xb6\xf5\
+\x00\x00\x03P\x00\x00\x00\x00\x00\x01\x00\x01\xbf\x5c\
 \x00\x00\x01}\xf6k\xf2(\
-\x00\x00\x03\xa4\x00\x00\x00\x00\x00\x01\x00\x01\xbd\xd9\
-=======
-\x00\x00\x06^\x00\x00\x00\x00\x00\x01\x00\x02\x0b\xd8\
-\x00\x00\x01\x82\x83\xb2\xd3\x88\
-\x00\x00\x06\x8a\x00\x00\x00\x00\x00\x01\x00\x03T\xf5\
-\x00\x00\x01\x82\x83\xb2\xd3\x8c\
-\x00\x00\x06\xac\x00\x01\x00\x00\x00\x01\x00\x03k\xc2\
-\x00\x00\x01\x82\x83\xb2\xd3\x87\
-\x00\x00\x06H\x00\x02\x00\x00\x00\x01\x00\x00\x00\x0e\
-\x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x08\x86\x00\x00\x00\x00\x00\x01\x00\x03\xce\x9b\
-\x00\x00\x01}Bq\x994\
-\x00\x00\x06\xde\x00\x01\x00\x00\x00\x01\x00\x03\x89\x99\
-\x00\x00\x01\x8a=\x0du$\
-\x00\x00\x06\xfe\x00\x02\x00\x00\x00\x06\x00\x00\x00\x11\
-\x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x08B\x00\x00\x00\x00\x00\x01\x00\x03\xca\xde\
-\x00\x00\x01K3`o\x88\
-\x00\x00\x07\x12\x00\x00\x00\x00\x00\x01\x00\x03\xa2\xbb\
-\x00\x00\x01K3`o\x88\
-\x00\x00\x07\xce\x00\x00\x00\x00\x00\x01\x00\x03\xb9\xb7\
-\x00\x00\x01K3`o\x88\
-\x00\x00\x07\xfe\x00\x00\x00\x00\x00\x01\x00\x03\xc0\xc9\
-\x00\x00\x01\x8a\x12\xaf\x08\xd7\
-\x00\x00\x07\x86\x00\x00\x00\x00\x00\x01\x00\x03\xb6\xa0\
-\x00\x00\x01K3`o\x88\
-\x00\x00\x07F\x00\x00\x00\x00\x00\x01\x00\x03\xa5\xd2\
-\x00\x00\x01\x8a\x12\xcbLn\
-\x00\x00\x00\xb0\x00\x02\x00\x00\x00\x02\x00\x00\x00,\
-\x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x02@\x00\x00\x00\x00\x00\x01\x00\x01\xa9\xa4\
-\x00\x00\x01}\x1b=\x82[\
-\x00\x00\x03\x1e\x00\x00\x00\x00\x00\x01\x00\x01\xba\xf0\
-\x00\x00\x01\x80,\xd1\x0e\xeb\
-\x00\x00\x010\x00\x00\x00\x00\x00\x01\x00\x01\x97f\
-\x00\x00\x01\x80,tbf\
-\x00\x00\x01d\x00\x02\x00\x00\x00\x05\x00\x00\x00'\
-\x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x00\xe4\x00\x00\x00\x00\x00\x01\x00\x01\x93\x1e\
-\x00\x00\x01\x80He#\x16\
-\x00\x00\x02\xa8\x00\x00\x00\x00\x00\x01\x00\x01\xb3P\
-\x00\x00\x01\x87\xf0\xa5|\x1c\
-\x00\x00\x02\x10\x00\x00\x00\x00\x00\x01\x00\x01\xa7\x0a\
-\x00\x00\x01\x8d\xda\xad\xd0\xe7\
-\x00\x00\x02\xe4\x00\x00\x00\x00\x00\x01\x00\x01\xb7 \
-\x00\x00\x01\x87\xf0\xa5|\x1f\
-\x00\x00\x02n\x00\x00\x00\x00\x00\x01\x00\x01\xad\xda\
-\x00\x00\x01\x80,\xb9\x22e\
-\x00\x00\x01\xa6\x00\x00\x00\x00\x00\x01\x00\x01\x9f6\
-\x00\x00\x01\x87\xf0\xa5|\x19\
-\x00\x00\x01v\x00\x00\x00\x00\x00\x01\x00\x01\x9b6\
-\x00\x00\x01\x87\xf0\xa5|\x1e\
-\x00\x00\x00\x90\x00\x00\x00\x00\x00\x01\x00\x01\x8f\x04\
-\x00\x00\x01\x80HdFB\
-\x00\x00\x01\x06\x00\x00\x00\x00\x00\x01\x00\x01\x950\
-\x00\x00\x01\x806\xafs\xbd\
-\x00\x00\x01\xd8\x00\x00\x00\x00\x00\x01\x00\x01\xa3;\
-\x00\x00\x01\x87\xf0\xa5|\x17\
-\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x01\x00\x01\x91\x18\
-\x00\x00\x01\x80Hd\xdbc\
-\x00\x00\x03\x84\x00\x00\x00\x00\x00\x01\x00\x01\xc3\x14\
-\x00\x00\x01}\xf6k\xf2U\
-\x00\x00\x03f\x00\x00\x00\x00\x00\x01\x00\x01\xc0\x9c\
-\x00\x00\x01}\xf6k\xf2\x80\
-\x00\x00\x03\xc0\x00\x00\x00\x00\x00\x01\x00\x01\xc7\xec\
-\x00\x00\x01}\xf6k\xf2\xcc\
-\x00\x00\x03P\x00\x00\x00\x00\x00\x01\x00\x01\xbe\x9a\
-\x00\x00\x01}\xf6k\xf2(\
-\x00\x00\x03\xa4\x00\x00\x00\x00\x00\x01\x00\x01\xc5~\
->>>>>>> d8076dc... c
+\x00\x00\x03\xa4\x00\x00\x00\x00\x00\x01\x00\x01\xc6@\
 \x00\x00\x01}\xf6k\xf2\xab\
 \x00\x00\x03\xe8\x00\x02\x00\x00\x00\x02\x00\x00\x000\
 \x00\x00\x00\x00\x00\x00\x00\x00\
@@ -63398,170 +61673,81 @@ qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x03\xf8\x00\x02\x00\x00\x00\x01\x00\x00\x00/\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-<<<<<<< HEAD
-<<<<<<< HEAD
-\x00\x00\x06\x08\x00\x00\x00\x00\x00\x01\x00\x01\xfa?\
-=======
-<<<<<<< HEAD
-\x00\x00\x06\x08\x00\x00\x00\x00\x00\x01\x00\x01\xf9}\
->>>>>>> 3cdfc6f... c
-=======
-\x00\x00\x06\x08\x00\x00\x00\x00\x00\x01\x00\x02\x01\xe4\
->>>>>>> d8076dc... c
+\x00\x00\x06\x08\x00\x00\x00\x00\x00\x01\x00\x02\x02\xa6\
 \x00\x00\x01}\x1b=\x82\xad\
 \x00\x00\x04\x12\x00\x02\x00\x00\x00\x0b\x00\x00\x003\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x03\xf8\x00\x02\x00\x00\x00\x01\x00\x00\x002\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-<<<<<<< HEAD
-<<<<<<< HEAD
-\x00\x00\x06\x08\x00\x00\x00\x00\x00\x01\x00\x01\xf4k\
-=======
-<<<<<<< HEAD
-\x00\x00\x06\x08\x00\x00\x00\x00\x00\x01\x00\x01\xf3\xa9\
->>>>>>> 3cdfc6f... c
+\x00\x00\x06\x08\x00\x00\x00\x00\x00\x01\x00\x01\xfc\xd2\
 \x00\x00\x01}\x1b=\x82j\
-\x00\x00\x05\xa0\x00\x00\x00\x00\x00\x01\x00\x01\xec\xa1\
+\x00\x00\x05\xa0\x00\x00\x00\x00\x00\x01\x00\x01\xf5\x08\
 \x00\x00\x01}\x1b=\x82[\
-\x00\x00\x04&\x00\x00\x00\x00\x00\x01\x00\x01\xc8>\
+\x00\x00\x04&\x00\x00\x00\x00\x00\x01\x00\x01\xd0\xa5\
 \x00\x00\x01}\x1b=\x82[\
-\x00\x00\x04\x86\x00\x00\x00\x00\x00\x01\x00\x01\xd0\xf3\
+\x00\x00\x04\x86\x00\x00\x00\x00\x00\x01\x00\x01\xd9Z\
 \x00\x00\x01}\x1b=\x82[\
-\x00\x00\x05.\x00\x00\x00\x00\x00\x01\x00\x01\xe0>\
+\x00\x00\x05.\x00\x00\x00\x00\x00\x01\x00\x01\xe8\xa5\
 \x00\x00\x01}\x1b=\x82K\
-\x00\x00\x04\x9e\x00\x00\x00\x00\x00\x01\x00\x01\xd4d\
+\x00\x00\x04\x9e\x00\x00\x00\x00\x00\x01\x00\x01\xdc\xcb\
 \x00\x00\x01}\x1b=\x82[\
-\x00\x00\x04\xc4\x00\x00\x00\x00\x00\x01\x00\x01\xd9\xbc\
+\x00\x00\x04\xc4\x00\x00\x00\x00\x00\x01\x00\x01\xe2#\
 \x00\x00\x01}\x1b=\x82[\
-\x00\x00\x04X\x00\x00\x00\x00\x00\x01\x00\x01\xcc\xa6\
+\x00\x00\x04X\x00\x00\x00\x00\x00\x01\x00\x01\xd5\x0d\
 \x00\x00\x01}\x1b=\x82K\
-\x00\x00\x04\xfa\x00\x00\x00\x00\x00\x01\x00\x01\xdcO\
+\x00\x00\x04\xfa\x00\x00\x00\x00\x00\x01\x00\x01\xe4\xb6\
 \x00\x00\x01}\x1b=\x82[\
-\x00\x00\x05l\x00\x00\x00\x00\x00\x01\x00\x01\xe8\x85\
+\x00\x00\x05l\x00\x00\x00\x00\x00\x01\x00\x01\xf0\xec\
 \x00\x00\x01}\x1b=\x82[\
-\x00\x00\x05J\x00\x00\x00\x00\x00\x01\x00\x01\xe3\xac\
+\x00\x00\x05J\x00\x00\x00\x00\x00\x01\x00\x01\xec\x13\
 \x00\x00\x01}\x1b=\x82K\
-\x00\x00\x05\xd2\x00\x00\x00\x00\x00\x01\x00\x01\xf0\xa6\
+\x00\x00\x05\xd2\x00\x00\x00\x00\x00\x01\x00\x01\xf9\x0d\
 \x00\x00\x01}\x1b=\x82[\
-\x00\x00\x0b\xd2\x00\x01\x00\x00\x00\x01\x00\x0e\xcfj\
-=======
-\x00\x00\x06\x08\x00\x00\x00\x00\x00\x01\x00\x01\xfc\x10\
-\x00\x00\x01}\x1b=\x82j\
-\x00\x00\x05\xa0\x00\x00\x00\x00\x00\x01\x00\x01\xf4F\
-\x00\x00\x01}\x1b=\x82[\
-\x00\x00\x04&\x00\x00\x00\x00\x00\x01\x00\x01\xcf\xe3\
-\x00\x00\x01}\x1b=\x82[\
-\x00\x00\x04\x86\x00\x00\x00\x00\x00\x01\x00\x01\xd8\x98\
-\x00\x00\x01}\x1b=\x82[\
-\x00\x00\x05.\x00\x00\x00\x00\x00\x01\x00\x01\xe7\xe3\
-\x00\x00\x01}\x1b=\x82K\
-\x00\x00\x04\x9e\x00\x00\x00\x00\x00\x01\x00\x01\xdc\x09\
-\x00\x00\x01}\x1b=\x82[\
-\x00\x00\x04\xc4\x00\x00\x00\x00\x00\x01\x00\x01\xe1a\
-\x00\x00\x01}\x1b=\x82[\
-\x00\x00\x04X\x00\x00\x00\x00\x00\x01\x00\x01\xd4K\
-\x00\x00\x01}\x1b=\x82K\
-\x00\x00\x04\xfa\x00\x00\x00\x00\x00\x01\x00\x01\xe3\xf4\
-\x00\x00\x01}\x1b=\x82[\
-\x00\x00\x05l\x00\x00\x00\x00\x00\x01\x00\x01\xf0*\
-\x00\x00\x01}\x1b=\x82[\
-\x00\x00\x05J\x00\x00\x00\x00\x00\x01\x00\x01\xebQ\
-\x00\x00\x01}\x1b=\x82K\
-\x00\x00\x05\xd2\x00\x00\x00\x00\x00\x01\x00\x01\xf8K\
-\x00\x00\x01}\x1b=\x82[\
-\x00\x00\x0b\xd2\x00\x01\x00\x00\x00\x01\x00\x0e\xd7\x0f\
->>>>>>> d8076dc... c
+\x00\x00\x0b\xd2\x00\x01\x00\x00\x00\x01\x00\x0e\xd7\xd1\
 \x00\x00\x01n\xe0\x1e\xf6\xe0\
 \x00\x00\x06H\x00\x02\x00\x00\x00\x01\x00\x00\x00T\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x0a\xee\x00\x02\x00\x00\x00\x06\x00\x00\x00N\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-<<<<<<< HEAD
-<<<<<<< HEAD
-\x00\x00\x09l\x00\x00\x00\x00\x00\x01\x00\x04n\xae\
-=======
-<<<<<<< HEAD
-\x00\x00\x09l\x00\x00\x00\x00\x00\x01\x00\x04j\xd5\
->>>>>>> 3cdfc6f... c
+\x00\x00\x09l\x00\x00\x00\x00\x00\x01\x00\x04w\x15\
 \x00\x00\x01\x8eSi\x84\x0e\
-\x00\x00\x08\xe0\x00\x00\x00\x00\x00\x01\x00\x03\xf9;\
+\x00\x00\x08\xe0\x00\x00\x00\x00\x00\x01\x00\x04\x01\xa2\
 \x00\x00\x01\x87\x8f\xc0\xf5\xd9\
-\x00\x00\x0a\xbe\x00\x00\x00\x00\x00\x01\x00\x07C\x1b\
+\x00\x00\x0a\xbe\x00\x00\x00\x00\x00\x01\x00\x07K\x82\
 \x00\x00\x01\x7f\x18\xb9\x9eN\
-\x00\x00\x09\xa6\x00\x00\x00\x00\x00\x01\x00\x04\xec4\
+\x00\x00\x09\xa6\x00\x00\x00\x00\x00\x01\x00\x04\xf4\x9b\
 \x00\x00\x01\x8eSq\xd1\x97\
-\x00\x00\x09*\x00\x00\x00\x00\x00\x01\x00\x04\x19\xdb\
+\x00\x00\x09*\x00\x00\x00\x00\x00\x01\x00\x04\x22B\
 \x00\x00\x01\x7f\x0el\xd4r\
-\x00\x00\x0a\x12\x00\x00\x00\x00\x00\x01\x00\x05d\x93\
+\x00\x00\x0a\x12\x00\x00\x00\x00\x00\x01\x00\x05l\xfa\
 \x00\x00\x01\x87\x0b\x01q\x8f\
-\x00\x00\x09L\x00\x01\x00\x00\x00\x01\x00\x04l\x96\
+\x00\x00\x09L\x00\x01\x00\x00\x00\x01\x00\x04t\xfd\
 \x00\x00\x01\x95\x99\x5c.}\
-\x00\x00\x09\xf2\x00\x01\x00\x00\x00\x01\x00\x05aJ\
+\x00\x00\x09\xf2\x00\x01\x00\x00\x00\x01\x00\x05i\xb1\
 \x00\x00\x01\x95\x98\xfa\xa7\xeb\
-\x00\x00\x0a\x9e\x00\x01\x00\x00\x00\x01\x00\x07@\xa7\
+\x00\x00\x0a\x9e\x00\x01\x00\x00\x00\x01\x00\x07I\x0e\
 \x00\x00\x01\x95\x99\xf78\x97\
-\x00\x00\x0a2\x00\x00\x00\x00\x00\x01\x00\x06\xb85\
+\x00\x00\x0a2\x00\x00\x00\x00\x00\x01\x00\x06\xc0\x9c\
 \x00\x00\x01\x7f\x0el\xd4m\
-\x00\x00\x0ah\x00\x00\x00\x00\x00\x01\x00\x06\xfc\x8e\
+\x00\x00\x0ah\x00\x00\x00\x00\x00\x01\x00\x07\x04\xf5\
 \x00\x00\x01\x7f\x0el\xd4n\
-\x00\x00\x08\xa6\x00\x00\x00\x00\x00\x01\x00\x03\xd3\xd9\
+\x00\x00\x08\xa6\x00\x00\x00\x00\x00\x01\x00\x03\xdc@\
 \x00\x00\x01\x7f\x0el\xd4r\
-\x00\x00\x09\xd0\x00\x00\x00\x00\x00\x01\x00\x05\x1e\xb9\
+\x00\x00\x09\xd0\x00\x00\x00\x00\x00\x01\x00\x05' \
 \x00\x00\x01\x7f\x0el\xd4s\
-\x00\x00\x0b\x82\x00\x00\x00\x00\x00\x01\x00\x07l\xf3\
+\x00\x00\x0b\x82\x00\x00\x00\x00\x00\x01\x00\x07uZ\
 \x00\x00\x01x\x92\x0f\xed\x09\
-\x00\x00\x0b\x5c\x00\x00\x00\x00\x00\x01\x00\x07jA\
+\x00\x00\x0b\x5c\x00\x00\x00\x00\x00\x01\x00\x07r\xa8\
 \x00\x00\x01{\xd9\xc1Q(\
-\x00\x00\x0b4\x00\x00\x00\x00\x00\x01\x00\x07g\x9d\
+\x00\x00\x0b4\x00\x00\x00\x00\x00\x01\x00\x07p\x04\
 \x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x0b\x12\x00\x00\x00\x00\x00\x01\x00\x07e0\
+\x00\x00\x0b\x12\x00\x00\x00\x00\x00\x01\x00\x07m\x97\
 \x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x0b\x9a\x00\x00\x00\x00\x00\x01\x00\x07}n\
+\x00\x00\x0b\x9a\x00\x00\x00\x00\x00\x01\x00\x07\x85\xd5\
 \x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x0a\xfa\x00\x00\x00\x00\x00\x01\x00\x07^V\
+\x00\x00\x0a\xfa\x00\x00\x00\x00\x00\x01\x00\x07f\xbd\
 \x00\x00\x01\x94\xb8\x7fmp\
-\x00\x00\x0b\xbc\x00\x00\x00\x00\x00\x01\x00\x07\x7f\xed\
-=======
-\x00\x00\x09l\x00\x00\x00\x00\x00\x01\x00\x04vS\
-\x00\x00\x01\x8eSi\x84\x0e\
-\x00\x00\x08\xe0\x00\x00\x00\x00\x00\x01\x00\x04\x00\xe0\
-\x00\x00\x01\x87\x8f\xc0\xf5\xd9\
-\x00\x00\x0a\xbe\x00\x00\x00\x00\x00\x01\x00\x07J\xc0\
-\x00\x00\x01\x7f\x18\xb9\x9eN\
-\x00\x00\x09\xa6\x00\x00\x00\x00\x00\x01\x00\x04\xf3\xd9\
-\x00\x00\x01\x8eSq\xd1\x97\
-\x00\x00\x09*\x00\x00\x00\x00\x00\x01\x00\x04!\x80\
-\x00\x00\x01\x7f\x0el\xd4r\
-\x00\x00\x0a\x12\x00\x00\x00\x00\x00\x01\x00\x05l8\
-\x00\x00\x01\x87\x0b\x01q\x8f\
-\x00\x00\x09L\x00\x01\x00\x00\x00\x01\x00\x04t;\
-\x00\x00\x01\x95\x99\x5c.}\
-\x00\x00\x09\xf2\x00\x01\x00\x00\x00\x01\x00\x05h\xef\
-\x00\x00\x01\x95\x98\xfa\xa7\xeb\
-\x00\x00\x0a\x9e\x00\x01\x00\x00\x00\x01\x00\x07HL\
-\x00\x00\x01\x95\x99\xf78\x97\
-\x00\x00\x0a2\x00\x00\x00\x00\x00\x01\x00\x06\xbf\xda\
-\x00\x00\x01\x7f\x0el\xd4m\
-\x00\x00\x0ah\x00\x00\x00\x00\x00\x01\x00\x07\x043\
-\x00\x00\x01\x7f\x0el\xd4n\
-\x00\x00\x08\xa6\x00\x00\x00\x00\x00\x01\x00\x03\xdb~\
-\x00\x00\x01\x7f\x0el\xd4r\
-\x00\x00\x09\xd0\x00\x00\x00\x00\x00\x01\x00\x05&^\
-\x00\x00\x01\x7f\x0el\xd4s\
-\x00\x00\x0b\x82\x00\x00\x00\x00\x00\x01\x00\x07t\x98\
-\x00\x00\x01x\x92\x0f\xed\x09\
-\x00\x00\x0b\x5c\x00\x00\x00\x00\x00\x01\x00\x07q\xe6\
-\x00\x00\x01{\xd9\xc1Q(\
-\x00\x00\x0b4\x00\x00\x00\x00\x00\x01\x00\x07oB\
-\x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x0b\x12\x00\x00\x00\x00\x00\x01\x00\x07l\xd5\
-\x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x0b\x9a\x00\x00\x00\x00\x00\x01\x00\x07\x85\x13\
-\x00\x00\x01{\xd9\xc1Q7\
-\x00\x00\x0a\xfa\x00\x00\x00\x00\x00\x01\x00\x07e\xfb\
-\x00\x00\x01\x94\xb8\x7fmp\
-\x00\x00\x0b\xbc\x00\x00\x00\x00\x00\x01\x00\x07\x87\x92\
->>>>>>> d8076dc... c
+\x00\x00\x0b\xbc\x00\x00\x00\x00\x00\x01\x00\x07\x88T\
 \x00\x00\x01x\x92\x0f\xed\x12\
 "
 
