@@ -74,6 +74,13 @@
       <li><a href="#P-07-02">SvgText2Svgpath</a></li>
     </ul>
   </li>
+  <li><a href="#P-08">Known Bugs</a>
+    <ul>
+      <li><a href="#P-08-01">Offsets at corners</a></li>
+      <li><a href="#P-08-02">Curvature sign change</a></li>
+    </ul>
+  </li>
+  
   <li><a href="#APPENDIX-01">Appendix-1: SVG Editors</a></li>
   <li><a href="#APPENDIX-02">Appendix-2: SVG Units and Scale Factor</a></li>
   <li><a href="#APPENDIX-03">Appendix-3: GCODE Viewers</a></li> 
@@ -1407,6 +1414,32 @@ opacity properties were changed per hand to view the perfect overlapping.</p>
 <div style="height:30px">
 </div>
   
+  
+ <h3 id="P-08">Known Bugs</h3>
+
+<p>Among the various bugs of <strong>PyCut</strong>, some are related to <strong>shapely</strong> shortcoming
+(the library on which PyCut relies on) for calculating offsets. Let's describe in details:</p>
+
+<h4  id="P-08-01">Offsets at corners</h4>
+
+<p>Offsets with closed shapes having sharp corners (well they generally have somes) 
+may be not well calculated at the first corner of the shape definition. A simple work-around 
+is to divide the first segment of your shape (if it is a straight line) into two segments A and B, and start 
+the definition of your shape with the "new" second segment B, and end the definition of the shape
+with segment A. 
+This way, the last segment (B) of your shape definition will "joins" nicely the first one (A), 
+and at the start of the shape definition there is no corner at all. Shapely will ensure then a perfect 
+offset, as well as further offsets in case of many offsets are needed by the cam operation. 
+<strong>PyCut</strong> tries of perform this step internally, but sometimes missed it. When you 
+experience a strange tool path or preview geometry at the first corner of your shape, remember 
+this work-around and change your svg path definition accordingly.</p>
+
+<h4 id="P-08-02">Curvature sign change</h4>
+<p>In case your shape has a cubic spline (or many) where the curve has a "C-2" (second derivative) change, shapely may not calculate 
+correctly its offset. For the same shape, the offset may be wrong or not depending of the offset width! As a result, 
+shapely will (maybe) split the offset in many LineStrings, and it is nearly impossible for <strong>PyCut</strong>
+to re-join them the right way. I did not find any work-around for this bug yet.</p>
+
 <h3 id="APPENDIX-01">Appendix-1: SVG Editors</h3>
 
 <p>It seems there are plenty of free SVG editors around there. Well, let me share my opinion about a few of them... </p>
