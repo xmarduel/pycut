@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" width="110mm" height="110mm" viewBox="0 0 110 110" id="cnc1310-spindle-plate">
+  <title>CNC-1310-SPINDLE-42-HOLDER</title>
+  <g>
+    <rect id="stock" width="102.000" height="105.000" x="5.000" y="5.000" rx="0.000" ry="0.000" style="fill:none;stroke-width:0.3;stroke:black"/>
+    <g id="layer1">
+      <path id="contour" d="M 12.00000648,10.0000054 l 88.00004752,0 a 2,2 0 0,1 2.00000108,2.00000108 l 0,66.00003564 l -15.600008424,0 a 32,32 0 0,1 -60.800032832,0 l -15.600008424,0 l 0,-66.00003564 a 2,2 0 0,1 2.00000108,-2.00000108 z" style="fill:none;stroke:#0000ff;stroke-width:0.10;opacity:1"/>
+      <path id="contour2" d="M 12.00000648,10.0000054 l 88.00004752,0 a 2,2 0 0,1 2.00000108,2.00000108 l 0,66.00003564 a 46,28.75 0 0,1 -92.00004968,0 l 0,-66.00003564 a 2,2 0 0,1 2.00000108,-2.00000108 z" style="fill:none;stroke:#0000ff;stroke-width:0.10;opacity:1"/>
+      <!--
+    <path id="contour3" 
+      style="fill:none;stroke:#0000ff;stroke-width:0.10;opacity:1"
+      d="M 12.0,0.0 h 78 a 2 2 0 0 1 2 2 v 66 a 32.0 20.0 0 0 1  -92 0  v -66 a 2 2 0 0 1 2 -2 h 10 z" />
+    -->
+      <circle id="lead_screw_central_hole" cx="56.000" cy="26.000" r="9.000" style="fill:#ff0000;fill-opacity:1"/>
+      <rect id="bearing_base_left" width="32.000" height="32.000" x="11.000" y="10.000" rx="2.000" ry="2.000" style="fill:#000080;fill-opacity:0.2"/>
+      <circle id="bearing_cylinder_left" cx="27.000" cy="26.000" r="10.500" style="fill:#ff0000;fill-opacity:1"/>
+      <rect id="bearing_base_right" width="32.000" height="32.000" x="69.000" y="10.000" rx="2.000" ry="2.000" style="fill:#000080;fill-opacity:0.2"/>
+      <circle id="bearing_cylinder_right" cx="85.000" cy="26.000" r="10.500" style="fill:#ff0000;fill-opacity:1"/>
+      <circle id="bearing_screw_4.0mm_use28" cx="15.680" cy="14.680" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="bearing_screw_4.0mm_use30" cx="38.320" cy="14.680" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="bearing_screw_4.0mm_use36" cx="15.680" cy="37.320" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="bearing_screw_4.0mm_use38" cx="38.320" cy="37.320" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="bearing_screw_4.0mm_use32" cx="73.680" cy="14.680" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="bearing_screw_4.0mm_use34" cx="96.320" cy="14.680" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="bearing_screw_4.0mm_use40" cx="73.680" cy="37.320" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="bearing_screw_4.0mm_use42" cx="96.320" cy="37.320" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="spindle-hole" cx="56.000" cy="68.000" r="21.000" style="fill:#ff0000;fill-opacity:1"/>
+      <circle id="large_circle_indicator" cx="56.000" cy="68.000" r="32.000" style="fill:#ff00ff;fill-opacity:0.1"/>
+      <circle id="spacer_screw_NW" cx="19.000" cy="54.000" r="2.500" style="fill:#ff0000;fill-opacity:1"/>
+      <circle id="spacer_screw_NE" cx="93.000" cy="54.000" r="2.500" style="fill:#ff0000;fill-opacity:1"/>
+      <circle id="spacer_screw_SW" cx="19.000" cy="82.000" r="2.500" style="fill:#ff0000;fill-opacity:1"/>
+      <circle id="spacer_screw_SE" cx="93.000" cy="82.000" r="2.500" style="fill:#ff0000;fill-opacity:1"/>
+      <circle id="spindle_shaft" cx="56.000" cy="68.000" r="10.100" style="fill:#0000ff;fill-opacity:0.5"/>
+      <g id="spindle_screw_holes">
+        <circle id="spindle_screw_hole_3.0mm_NN" cx="56.000" cy="83.000" r="1.500" style="fill:#008080;fill-opacity:1"/>
+        <circle id="spindle_screw_hole_3.0mm_1" cx="43.010" cy="75.500" r="1.500" style="fill:#008080;fill-opacity:1"/>
+        <circle id="spindle_screw_hole_3.0mm_2" cx="43.010" cy="60.500" r="1.500" style="fill:#008080;fill-opacity:1"/>
+        <circle id="spindle_screw_hole_3.0mm_SS" cx="56.000" cy="53.000" r="1.500" style="fill:#008080;fill-opacity:1"/>
+        <circle id="spindle_screw_hole_3.0mm_3" cx="68.990" cy="60.500" r="1.500" style="fill:#008080;fill-opacity:1"/>
+        <circle id="spindle_screw_hole_3.0mm_4" cx="68.990" cy="75.500" r="1.500" style="fill:#008080;fill-opacity:1"/>
+      </g>
+      <text id="legend" x="10.000" y="55.000" style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583">
+      Diameter Spindle: 42 mm
+    </text>
+      <path id="horizontal_line" d="M 10.0000054,68.00003672 L 102.00005508,68.00003672" style="fill:none;stroke:#000000;stroke-width:0.1"/>
+      <path id="vertical_line" d="M 56.00003024,10.0000054 L 56.00003024,100.000054" style="fill:none;stroke:#000000;stroke-width:0.1"/>
+    </g>
+  </g>
+</svg>

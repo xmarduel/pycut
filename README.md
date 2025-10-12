@@ -26,7 +26,7 @@ start the program from the installation folder
 
 ## Dependencies
 
-- Python 3.11
+- Python 3.12.9
 - PySide6 6.9.3
 - shapely 2.1.2 (and types-shapely)
 - PyOpenGL (latest) [3.1.10]

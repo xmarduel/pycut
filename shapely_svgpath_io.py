@@ -624,6 +624,61 @@ class SvgPathDiscretizer:
         else:
             return self.discretize_open_path()
 
+    def split_path_first_line_segment(self):
+        """
+        split first Line segment into 2 segments!
+        -> ensuring a perfect "joint" between the two discretized segments (the first and last one),
+        without corner
+        """
+        SEGMENT_IGNORE_THRESHOLD = 1.0e-5
+
+        # -----------------------------------------------------------------
+        def ignore_segment(k, segment) -> bool:
+            """
+            for letters, very small segments can lead to unvalid geometries.
+            We can fix them with the "make_valid" function but I would like
+            to avoid this. It seems to be caused by very little segments which
+            are somehow wrong (or rounding values stuff makes them wrong).
+            """
+            if segment.length() < SEGMENT_IGNORE_THRESHOLD:
+                print("segment[%i]: %lf  -> ignoring" % (k, segment.length()))
+                return True
+
+            return False
+
+        # ------------------------------------------------------------------
+        do_split = False
+        startPt = None
+        endPt = None
+        index = None
+        middlePt = None
+
+        for k, segment in enumerate(self.svgelt_path):
+            if segment.__class__.__name__ == "Move":
+                continue
+            if segment.__class__.__name__ == "Close":
+                continue
+
+            ## ---------------------------------------
+            if ignore_segment(k, segment) == True:
+                continue
+            ## ---------------------------------------
+
+            if segment.__class__.__name__ == "Line": 
+                startPt = segment.point(0.0)
+                endPt = segment.point(1.0) 
+                middlePt = svgelements.Point((startPt.x+endPt.x)/2.0, (startPt.y+endPt.y)/2.0)  
+                index = k
+                do_split = True
+                break
+            else:
+                break
+
+        if do_split:
+            del self.svgelt_path[index]
+            self.svgelt_path.insert(index, svgelements.Line(middlePt, endPt))
+            self.svgelt_path.append(svgelements.Line(startPt, middlePt))
+
     def discretize_closed_path(self) -> npt.NDArray[np.complex128]:
         """
         Transform the svgelt_path (a list of svgelement Segments) into a list of 'complex' points
@@ -671,6 +726,9 @@ class SvgPathDiscretizer:
         points = np.array([], dtype=np.complex128)
 
         first_seg = True
+
+        # shapely fix
+        self.split_path_first_line_segment()
 
         for k, segment in enumerate(self.svgelt_path):
             if segment.__class__.__name__ == "Move":
@@ -744,10 +802,11 @@ class SvgPathDiscretizer:
         if dist(points[0], points[-1]) < 1.0e-5:
             points = points[0:-1]
 
-        # shapely fix:
+        # >>>> shapely fix (keep this at this time yet...)
         extra_middle_point = (points[0] + points[1]) / 2.0
 
         points = np.concatenate(([extra_middle_point], points[1:], [points[0]]))
+        # <<<<<
 
         return points
 
