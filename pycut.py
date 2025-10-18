@@ -501,8 +501,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             else:  # not yet saved new project
                 projname = "current_pycut_project"
 
-            if self.project.operations:
-                opname = self.project.operations[0].name
+            if self.job.operations:
+                opname = self.job.operations[0].name
             else:
                 # not op yet? how can it be ...
                 opname = "output"

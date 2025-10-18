@@ -19,7 +19,7 @@ start the program from the installation folder
 ```
 > python pycut.py -h
 > python pycut.py
-> python pycut.py -p <path_to_project>
+> python pycut.py -p <path_pto_project>
 > python pycut.py -g <path_to_gcode>   # view an external gcode data
 > python pycut.py -s <path_to_svg>    # load an svg file into the viewer
 ```
