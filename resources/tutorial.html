@@ -120,11 +120,13 @@
 
 <h2 id="P-01">Introduction</h2>
 
-<p>Welcome to <strong>PyCut</strong>, a clone of <strong>jsCut</strong>, the excellent (at least for beginners) 
-web-based CAM program, that takes as input <strong>SVG</strong> files and generates G-Code. So why this rewrite ?</p>
+<p>Welcome to <strong>PyCut</strong>, a clone of <strong>jsCut</strong>.
 
-<p><strong>PyCut</strong> aims to offer all the (minimalistics) features found in jsCut, with some improvements.
+<strong>PyCut</strong> aims to offer all the (minimalistics) functionalities found in <strong>jsCut</strong>, with some improvements.
 Hopefully you will find <strong>PyCut</strong> usefull when learning CNC and producing your first GCode files.</p>
+
+<p>As its name indicates, <strong>PyCut</strong> is written in python and is a desktop application (<strong>jsCut</strong> 
+is written in javascript and is a Web-based application).</p>
 
 <h2 id="P-02">SVG as input format</h2>
 
@@ -1439,6 +1441,9 @@ this work-around and change your svg path definition accordingly.</p>
 correctly its offset. For the same shape, the offset may be wrong or not depending of the offset width! As a result, 
 shapely will (maybe) split the offset in many LineStrings, and it is nearly impossible for <strong>PyCut</strong>
 to re-join them the right way. I did not find any work-around for this bug yet.</p>
+
+<h4 id="P-08-03">GCode Simulator on MacOS</h4>
+<p>It still does not work.</p>
 
 <h3 id="APPENDIX-01">Appendix-1: SVG Editors</h3>
 
