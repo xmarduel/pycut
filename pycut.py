@@ -498,8 +498,10 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             if self.projfilename:
                 projname = os.path.basename(self.projfilename)
                 projname = os.path.splitext(projname)[0]
+                dirname = os.path.dirname(self.projfilename)
             else:  # not yet saved new project
                 projname = "current_pycut_project"
+                dirname = "."
 
             if self.job.operations:
                 opname = self.job.operations[0].name
@@ -507,23 +509,28 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 # not op yet? how can it be ...
                 opname = "output"
 
-            filename = "%s_%s.nc" % (projname, opname)
+            nc_name = "%s_%s.nc" % (projname, opname)
+            nc_filename = os.path.join(dirname, nc_name)
 
             gcode = self.job.gcode
 
-            if os.path.exists(filename):
+            if os.path.exists(nc_filename):
                 k = 1
-                filename = "%s_%s_%d.nc" % (projname, opname, k)
-                while os.path.exists(filename):
+                nc_filename = "%s_%s_%d.nc" % (projname, opname, k)
+                while os.path.exists(nc_filename):
                     k += 1
-                    filename = "%s_%s_%d.nc" % (projname, opname, k)
 
-            fp = open(filename, "w")
+                    nc_name = "%s_%s_%d.nc" % (projname, opname, k)
+                    nc_filename = os.path.join(dirname, nc_name)
+
+            fp = open(nc_filename, "w")
             fp.write(gcode)
             fp.close()
 
+            print("producing %s ..." % nc_filename)
+
             # status bar -> msg
-            self.statusBar().showMessage('Saved GCode to "%s"' % filename, 3000)
+            self.statusBar().showMessage('Saved GCode to "%s"' % nc_filename, 6000)
 
     def display_gcode(self, gcode: str):
         """
