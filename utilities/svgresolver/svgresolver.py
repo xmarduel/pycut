@@ -620,6 +620,11 @@ class SvgResolver:
         l.attrib["x2"] = self.lf_format % shape.x2
         l.attrib["y2"] = self.lf_format % shape.y2
 
+        if "marker-start" in shape.values:
+            l.attrib["marker-start"] = shape.values["marker-start"]
+        if "marker-end" in shape.values:
+            l.attrib["marker-end"] = shape.values["marker-end"]
+
         # merge style of ref item with used item
         style = self.merge_styles(shape.values.get("style", {}), the_style)
         if style:

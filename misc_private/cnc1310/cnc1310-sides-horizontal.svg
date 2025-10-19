@@ -22,8 +22,9 @@
     <circle id="motor_screw_3.0mm_pocket_5.0mm"   style="fill:#00ffff;fill-opacity:0.5"  cx="0" cy="0" r="2.5" />
     <circle id="motor_screw_3.0mm"                style="fill:#00ffff;fill-opacity:1.0"  cx="0" cy="0" r="1.50" />
 
-    <path id="arrow_up" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 0 0 l 1 2  m -1 -2 l -1 2"  />
-    <path id="arrow_dw" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 0 0 l 1 -2 m -1 2  l -1 -2" />
+    <marker id="arrow_m" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 l 10 5 l -10 5" fill="none" stroke="black" stroke-width="black"/>
+    </marker>
 
   </defs>
   
@@ -83,25 +84,29 @@
     <!-- vertical lines -->
     <path id="line_v_37"      style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"        d="M 37,0  37,85.5" />
 
-    <path id="arrow_v_dist36" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 84,0  L 84,37.5" />
+    <line id="arrow_v_dist36" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" 
+      x1="84" y1="0" x2="84" y2="37.5" 
+      marker-start="url(#arrow_m)" marker-end="url(#arrow_m)"
+    />
     
-    <use href="#arrow_up" transform="translate(84 0)" />
-    <use href="#arrow_dw" transform="translate(84 37.5)" />
     <text x="85" y="20" xml:space="preserve" style="font-size:5px">37.5</text>
 
-    <path id="arrowe_v_dist36" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 84,37  L 84,64.5" />
-    <use href="#arrow_up" transform="translate(84 37.5)" />
-    <use href="#arrow_dw" transform="translate(84 64.5)" />
+    <line id="arrowe_v_dist36" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" 
+      x1="84" y1="37"  x2="84" y2="64.5"
+      marker-start="url(#arrow_m)" marker-end="url(#arrow_m)"
+    />
     <text x="85" y="52" xml:space="preserve" style="font-size:5px">27</text>
 
-    <path id="arrowe_v_dist21" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 84,64.5  L 84,85.5" />
-    <use href="#arrow_up" transform="translate(84 64.5)" />
-    <use href="#arrow_dw" transform="translate(84 85.5)" />
+    <line id="arrowe_v_dist21" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" 
+      x1="84" y1="64.5" x2="84" y2="85.5" 
+      marker-start="url(#arrow_m)" marker-end="url(#arrow_m)"
+    />
     <text x="85" y="75" xml:space="preserve" style="font-size:5px">21</text>
 
-    <path id="arrowe_v_dist84" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" d="M 94,0  L 94,85.5" />
-    <use href="#arrow_up" transform="translate(94 0)" />
-    <use href="#arrow_dw" transform="translate(94 85.5)" />
+    <line id="arrowe_v_dist84" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1" 
+      x1="94" y1="0" x2="94" y2="85.5" 
+      marker-start="url(#arrow_m)" marker-end="url(#arrow_m)"
+    />
     <text x="95" y="46" xml:space="preserve" style="font-size:5px">85.5</text>
   </g>
 </svg>

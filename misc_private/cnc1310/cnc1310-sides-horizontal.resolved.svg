@@ -1,4 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" title="cnc1310 horizontal plate" width="110mm" height="110mm" viewBox="0 0 110 110" version="1.1" id="cnc1310-spindle-holder-horizontal-sides">
+  <defs id="defs">
+    <circle id="motor_base_hole_22mm_ref" style="fill:#ff00ff;fill-opacity:1;;stroke-opacity:1" cx="0" cy="0" r="11"/>
+    <circle id="spacer_pocket_12mm" style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="6"/>
+    <circle id="spacer_screw_5.0mm" style="fill:#0000ff;fill-opacity:1" cx="0" cy="0" r="2.5"/>
+    <!-- on the other side od the plate : how to do this ? -->
+    <circle id="spacer_screw_5.0mm_pocket_11.0mm" style="fill:#ff00ff;fill-opacity:1" cx="0" cy="0" r="5.5"/>
+    <!-- on the other side od the plate : how to do this ? -->
+    <circle id="motor_screw_3.0mm_pocket_5.0mm" style="fill:#00ffff;fill-opacity:0.5" cx="0" cy="0" r="2.5"/>
+    <circle id="motor_screw_3.0mm" style="fill:#00ffff;fill-opacity:1.0" cx="0" cy="0" r="1.50"/>
+    <marker id="arrow_m" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 l 10 5 l -10 5" fill="none" stroke="black" stroke-width="black"/>
+    </marker>
+  </defs>
   <g id="main">
     <path id="contour" d="M 11.00000594,15.50000837 l 52.00002808,0 a 4,4 0 0,1 4.00000216,4.00000216 l 0,27.50001485 C 67.00003618,51.00002754 74.00003996,51.00002754 74.00003996,55.0000297 l 0,42.00002268 a 4,4 0 0,1 -4.00000216,4.00000216 l -66.00003564,0 a 4,4 0 0,1 -4.00000216,-4.00000216 l 0,-42.00002268 C 0,51.00002754 7.00000378,51.00002754 7.00000378,47.00002538 l 0,-27.50001485 a 4,4 0 0,1 4.00000216,-4.00000216 z" style="fill:rgb(0,125,125);stroke:#0000ff;stroke-width:0.261315px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"/>
     <g id="g_motor_base">
@@ -34,21 +47,13 @@
     <path id="line_h_84" d="M 0,101.00005454 L 84.00004536,101.00005454" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
     <!-- vertical lines -->
     <path id="line_v_37" d="M 37.00001998,15.50000837 L 37.00001998,101.00005454" style="stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
-    <path id="arrow_v_dist36" d="M 84.00004536,15.50000837 L 84.00004536,53.00002862" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
-    <path d="M 84.00004536,15.50000837 l 1.00000054,2.00000108 m -1.00000054,-2.00000108 l -1.00000054,2.00000108" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
-    <path d="M 84.00004536,53.00002862 l 1.00000054,-2.00000108 m -1.00000054,2.00000108 l -1.00000054,-2.00000108" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
+    <line id="arrow_v_dist36" x1="84.000" y1="15.500" x2="84.000" y2="53.000" marker-start="url(#arrow_m)" marker-end="url(#arrow_m)" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
     <text x="85" y="20" xml:space="preserve" style="font-size:5px">37.5</text>
-    <path id="arrowe_v_dist36" d="M 84.00004536,52.50002835 L 84.00004536,80.0000432" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
-    <path d="M 84.00004536,53.00002862 l 1.00000054,2.00000108 m -1.00000054,-2.00000108 l -1.00000054,2.00000108" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
-    <path d="M 84.00004536,80.0000432 l 1.00000054,-2.00000108 m -1.00000054,2.00000108 l -1.00000054,-2.00000108" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
+    <line id="arrowe_v_dist36" x1="84.000" y1="52.500" x2="84.000" y2="80.000" marker-start="url(#arrow_m)" marker-end="url(#arrow_m)" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
     <text x="85" y="52" xml:space="preserve" style="font-size:5px">27</text>
-    <path id="arrowe_v_dist21" d="M 84.00004536,80.0000432 L 84.00004536,101.00005454" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
-    <path d="M 84.00004536,80.0000432 l 1.00000054,2.00000108 m -1.00000054,-2.00000108 l -1.00000054,2.00000108" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
-    <path d="M 84.00004536,101.00005454 l 1.00000054,-2.00000108 m -1.00000054,2.00000108 l -1.00000054,-2.00000108" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
+    <line id="arrowe_v_dist21" x1="84.000" y1="80.000" x2="84.000" y2="101.000" marker-start="url(#arrow_m)" marker-end="url(#arrow_m)" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
     <text x="85" y="75" xml:space="preserve" style="font-size:5px">21</text>
-    <path id="arrowe_v_dist84" d="M 94.00005076,15.50000837 L 94.00005076,101.00005454" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
-    <path d="M 94.00005076,15.50000837 l 1.00000054,2.00000108 m -1.00000054,-2.00000108 l -1.00000054,2.00000108" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
-    <path d="M 94.00005076,101.00005454 l 1.00000054,-2.00000108 m -1.00000054,2.00000108 l -1.00000054,-2.00000108" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
+    <line id="arrowe_v_dist84" x1="94.000" y1="15.500" x2="94.000" y2="101.000" marker-start="url(#arrow_m)" marker-end="url(#arrow_m)" style="fill:none; stroke:#000000;stroke-width:0.144059px;stroke-opacity:1"/>
     <text x="95" y="46" xml:space="preserve" style="font-size:5px">85.5</text>
   </g>
 </svg>
