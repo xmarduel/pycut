@@ -1,19 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" width="92mm" height="90mm" viewBox="0 0 92 90" id="cnc1310-spindle-plate">
   <g id="layer1">
-    <path id="contour" d="M 0,0 l 92.00004968,0 l 0,68.00003672 l -15.600008424,0 a 32,32 0 0,1 -60.800032832,0 l -15.600008424,0 z" style="fill:none;stroke:#0000ff;stroke-width:0.25"/>
+    <path id="contour" d="M 0,0 l 92.00004968,0 l 0,68.00003672 l -15.600008424,0 a 32,32 0 0,1 -60.800032832,0 l -15.600008424,0 l 0,-68.00003672 z" style="fill:none;stroke:#0000ff;stroke-width:0.25"/>
     <circle id="lead_screw_central_hole" cx="46.000" cy="16.000" r="9.000" style="fill:#ff0000;fill-opacity:1"/>
     <rect id="bearing_base_left" width="32.000" height="32.000" x="1.000" y="0.000" rx="2.000" ry="2.000" style="fill:#000080;fill-opacity:0.2"/>
     <circle id="bearing_cylinder_left" cx="17.000" cy="16.000" r="10.500" style="fill:#ff0000;fill-opacity:1"/>
     <rect id="bearing_base_right" width="32.000" height="32.000" x="59.000" y="0.000" rx="2.000" ry="2.000" style="fill:#000080;fill-opacity:0.2"/>
     <circle id="bearing_cylinder_right" cx="75.000" cy="16.000" r="10.500" style="fill:#ff0000;fill-opacity:1"/>
-    <circle id="bearing_screw_4.0mm_use28" cx="5.680" cy="4.680" r="2.000" style="fill:#000080;fill-opacity:1"/>
-    <circle id="bearing_screw_4.0mm_use30" cx="28.320" cy="4.680" r="2.000" style="fill:#000080;fill-opacity:1"/>
-    <circle id="bearing_screw_4.0mm_use36" cx="5.680" cy="27.320" r="2.000" style="fill:#000080;fill-opacity:1"/>
-    <circle id="bearing_screw_4.0mm_use38" cx="28.320" cy="27.320" r="2.000" style="fill:#000080;fill-opacity:1"/>
-    <circle id="bearing_screw_4.0mm_use32" cx="63.680" cy="4.680" r="2.000" style="fill:#000080;fill-opacity:1"/>
-    <circle id="bearing_screw_4.0mm_use34" cx="86.320" cy="4.680" r="2.000" style="fill:#000080;fill-opacity:1"/>
-    <circle id="bearing_screw_4.0mm_use40" cx="63.680" cy="27.320" r="2.000" style="fill:#000080;fill-opacity:1"/>
-    <circle id="bearing_screw_4.0mm_use42" cx="86.320" cy="27.320" r="2.000" style="fill:#000080;fill-opacity:1"/>
+    <g>
+      <circle id="bearing_screw_4.0mm_use28" cx="28.314" cy="27.314" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="bearing_screw_4.0mm_use30" cx="28.314" cy="4.686" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="bearing_screw_4.0mm_use36" cx="5.686" cy="4.686" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="bearing_screw_4.0mm_use38" cx="5.686" cy="27.314" r="2.000" style="fill:#000080;fill-opacity:1"/>
+    </g>
+    <g>
+      <circle id="bearing_screw_4.0mm_use32" cx="86.314" cy="27.314" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="bearing_screw_4.0mm_use34" cx="86.314" cy="4.686" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="bearing_screw_4.0mm_use40" cx="63.686" cy="4.686" r="2.000" style="fill:#000080;fill-opacity:1"/>
+      <circle id="bearing_screw_4.0mm_use42" cx="63.686" cy="27.314" r="2.000" style="fill:#000080;fill-opacity:1"/>
+    </g>
     <circle id="spindle-hole" cx="46.000" cy="58.000" r="21.000" style="fill:#ff0000;fill-opacity:1"/>
     <circle id="large_circle_indicator" cx="46.000" cy="58.000" r="32.000" style="fill:#ff00ff;fill-opacity:0.1"/>
     <circle id="spacer_screw_NW" cx="9.000" cy="38.000" r="2.500" style="fill:#ff0000;fill-opacity:1"/>

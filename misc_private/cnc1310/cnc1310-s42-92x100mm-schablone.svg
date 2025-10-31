@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg version="1.1"
+  width="80mm"
+  height="80mm"
+  viewBox="0 0 80 80"
+  id="cnc1310-spindle-plate"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg">
+  <title>CNC-1310-SPINDLE-42-HOLDER</title>
+  <defs id="defs">
+     <circle id="spindle_screw_hole_3.0mm"  style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="1.25" />
+     <circle id="spindle_screw_hole_4.0mm"  style="fill:#003030;fill-opacity:1" cx="0" cy="0" r="2.00" />
+  </defs>
+   
+  <g id="layer1" transform="translate(40,40)">
+
+
+     <rect transform="translate(-40,-40)" id="stock" style="fill:#ff0000;fill-opacity:0.1"
+      x="0"
+      y="0"
+      width="80.0" height="80.0"/>
+	  
+    <circle  id="spindle-hole" style="fill:#ff0000;fill-opacity:1"
+      cx="0"
+      cy="0"
+      r="21.0" />
+
+
+	<circle  id="spindle_shaft" style="fill:#0000ff;fill-opacity:0.5"
+      cx="0"
+      cy="0"
+      r="10.1" />
+	  
+	<g id="spindle_screw_holes_4" >
+	  <use href="#spindle_screw_hole_4.0mm" transform="rotate(0)   translate(0.0 14.5)" id="spindle_screw_hole_4.0mm_NN" />
+	  <use href="#spindle_screw_hole_4.0mm" transform="rotate(90)  translate(0.0 14.5)" id="spindle_screw_hole_4.0mm_1" />
+	  <use href="#spindle_screw_hole_4.0mm" transform="rotate(180) translate(0.0 14.5)" id="spindle_screw_hole_4.0mm_2" />
+	  <use href="#spindle_screw_hole_4.0mm" transform="rotate(270) translate(0.0 14.5)" id="spindle_screw_hole_4.0mm_SS" />
+	</g>
+	<g id="spindle_screw_holes_3" >
+	 <!-- <use href="#spindle_screw_hole_3.0mm" transform="rotate(0)   translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_NN" /> -->
+	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(60)  translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_1" />
+	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(120) translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_2" />
+	 <!-- <use href="#spindle_screw_hole_3.0mm" transform="rotate(180) translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_SS" /> -->
+	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(240) translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_3" />
+	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(300) translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_4" />
+	</g>
+    	
+</g>
+</svg>

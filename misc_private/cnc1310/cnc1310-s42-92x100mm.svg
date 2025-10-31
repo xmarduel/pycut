@@ -32,14 +32,20 @@
     <use href="#bearing_base"        x="59" y="0"  id="bearing_base_right" />
     <use href="#bearing_cylinder"    x="75" y="16" id="bearing_cylinder_right" />
 
-    <use href="#bearing_screw_4.0mm" x="5.680"  y="4.680" id="bearing_screw_4.0mm_use28" />
-    <use href="#bearing_screw_4.0mm" x="28.32"  y="4.680" id="bearing_screw_4.0mm_use30" />
-    <use href="#bearing_screw_4.0mm" x="5.680"  y="27.32" id="bearing_screw_4.0mm_use36" />
-    <use href="#bearing_screw_4.0mm" x="28.32"  y="27.32" id="bearing_screw_4.0mm_use38" />
-    <use href="#bearing_screw_4.0mm" x="63.68"  y="4.680" id="bearing_screw_4.0mm_use32" />
-    <use href="#bearing_screw_4.0mm" x="86.32"  y="4.680" id="bearing_screw_4.0mm_use34" />
-    <use href="#bearing_screw_4.0mm" x="63.68"  y="27.32" id="bearing_screw_4.0mm_use40" />
-    <use href="#bearing_screw_4.0mm" x="86.32"  y="27.32" id="bearing_screw_4.0mm_use42" />
+    <g transform="translate(17,16)">
+      <use href="#bearing_screw_4.0mm" transform="rotate(-45)   translate(0.0 16)" id="bearing_screw_4.0mm_use28" />
+      <use href="#bearing_screw_4.0mm" transform="rotate(-135)  translate(0.0 16)" id="bearing_screw_4.0mm_use30" />
+      <use href="#bearing_screw_4.0mm" transform="rotate(-225)  translate(0.0 16)" id="bearing_screw_4.0mm_use36" />
+      <use href="#bearing_screw_4.0mm" transform="rotate(-315)  translate(0.0 16)" id="bearing_screw_4.0mm_use38" />
+    </g>
+	
+	  <g transform="translate(75,16)">
+      <use href="#bearing_screw_4.0mm" transform="rotate(-45)   translate(0.0 16)" id="bearing_screw_4.0mm_use32" />
+      <use href="#bearing_screw_4.0mm" transform="rotate(-135)  translate(0.0 16)" id="bearing_screw_4.0mm_use34" />
+      <use href="#bearing_screw_4.0mm" transform="rotate(-225)  translate(0.0 16)" id="bearing_screw_4.0mm_use40" />
+      <use href="#bearing_screw_4.0mm" transform="rotate(-315)  translate(0.0 16)" id="bearing_screw_4.0mm_use42" />
+    </g>
+
 
     <circle  id="spindle-hole" style="fill:#ff0000;fill-opacity:1"
       cx="46"
@@ -61,12 +67,12 @@
       r="10.1" />
 	  
 	<g id="spindle_screw_holes" transform="translate(46,58)">
-	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(0)   translate(0.0 15.0)" id="spindle_screw_hole_3.0mm_NN" />
-	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(60)  translate(0.0 15.0)" id="spindle_screw_hole_3.0mm_1" />
-	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(120) translate(0.0 15.0)" id="spindle_screw_hole_3.0mm_2" />
-	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(180) translate(0.0 15.0)" id="spindle_screw_hole_3.0mm_SS" />
-	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(240) translate(0.0 15.0)" id="spindle_screw_hole_3.0mm_3" />
-	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(300) translate(0.0 15.0)" id="spindle_screw_hole_3.0mm_4" />
+	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(0)   translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_NN" />
+	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(60)  translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_1" />
+	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(120) translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_2" />
+	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(180) translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_SS" />
+	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(240) translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_3" />
+	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(300) translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_4" />
 	</g>
 			
 
