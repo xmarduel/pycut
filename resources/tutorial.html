@@ -137,8 +137,7 @@ SVG paths definitions (for complex shapes) are unfortunately not so straightforw
 and free software lacks good <strong>SVG</strong> paths modelling applications. Infact, writing a <strong>SVG</strong> 
 file with a text editor is sometimes the best way to go. To generate complex svg paths, either 
 understand the svg path syntax and write paths "per hand", or other tools may be used, and the results may be copy/pasted 
-into the hand-written files. <strong>PyCut</strong> strongly recommands the online tool <strong>SvgPathEditor</strong> 
-for this purpose, see Appendix.</p>
+into the hand-written files. The excellent online tool <strong>SvgPathEditor</strong> can be used for this purpose, see Appendix.</p>
 
 <p>In the following, we point out what has to be taken into consideration when creating "usable" <strong>SVG</strong>
 files for <strong>PyCut</strong>. </p>
@@ -1447,7 +1446,8 @@ to re-join them the right way. I did not find any work-around for this bug yet.<
 
 <h3 id="APPENDIX-01">Appendix-1: SVG Editors</h3>
 
-<p>It seems there are plenty of free SVG editors around there. Well, let me share my opinion about a few of them... </p>
+<p>It seems there are plenty of free SVG editors around there. I have spent a lot, lot of time trying them
+in order to catch the ones(s) best suited for my purpose. </p>
 
 <p>I will simply try <strong>to edit and save a closed path</strong> composed of lines, arcs and bezier curves similar
 to what I've edited per hand: about 20 segments representing my workpiece, with mixed straight lines, arcs and bezier
@@ -1458,69 +1458,18 @@ part to the difficulty of use of the app.</p>
 <p>What are my requirements ? 
   <ul>
     <li>The output svg is human readable for easy modification with a simple text editor</li>
-    <li>Shapes and particularly paths (cloed or not) can be easily created</li>
+    <li>Shapes and particularly paths (closed or not) can be easily created</li>
     <li>The shapes coordinates as given in the app are the ones that are outputed in the svg files 
       (at best no transformations)</li>
   </ul>
 </p>
 
-<p>Finally, <strong>after having tried quite a lot of them</strong>, I give here only the ones worth a mention.</p>
+<p>Finally, <strong>after having tried quite a lot of them</strong>, I give here only the ones worth a mention, and ingore
+the ones that where not suitable at all (example: Inkspace, LibreCad, etc).</p>
 
 <h3>Free software</h3>
 
-<h4>Inkscape</h4>
-
-<p><strong>Editing paths is far too complicated</strong> (to me) and completely impracticable for paths looking like
-CAD work. </p>
-
-<p>To go further in details, editing points coordinates "per hand" is nearly impossible as the coordinates are only
-accessible from the "d" string, which is not really human readable. Here is an example of a polyline with 8 points:</p>
-<pre><code>M 5.9999998,35.999999 10,33 l 5,2.999999 -1,-4 h 7 V 41 H 12 L 8.9999999,38.999998</code></pre>
-
-<p>BTW, note how absolute and relative keywords are given in the path. Question: what are the coordinates of the fifth
-point?</p>
-
-<p><strong>Without going into the details how frustating working with paths with Inkscape is (my opinion), I consider it is
-a very desapointing implementation from Inkscape I would say</strong>. Conclusion: <strong>unusable if you
-want to generate complex paths.</strong></p>
-
-<h4>LibreCAD <span style="color:#008000">****NEARLY GOOD****</span></h4>
-
-<p>It is (was) a fork of QCAD (2011). It looks a lot like QCAD, but the (my) first feeling is that the user interface
-seems better. <strong>The SVG export is exactly what one would expect (well, nearly)</strong>. There is minimal extra
-LibreCAD namespace stuff in the output. Do not know yet how to assign ids to the entities (not good). You only have to
-take care that in the SVG format y = 0 is the top of the drawing, so coordinates in the SVG file are inverted from
-coordinates in the app (which is normal). The y = 0 correspond to the highest coordinate of your items in the canvas
-(Note: in <strong>QCAD</strong> the coordinates are the same and there is a global svg transform="scale(1,-1)". The
-viewBox is calculated accordingly. It would be nice to have this option in <strong>LibreCAD</strong>).</p>
-
-<p><strong>Splines</strong> <strong>through</strong> <strong>3 points correspond to bezier quadratic curves</strong>,
-while <strong>splines through 4 or more points are not cubic bezier curves but only sequence of quadratic
-curves</strong> (it seems possible! is it ? they really look to be smooth of order 3!).</p>
-
-<p><strong>There is another splines button (strange!) where it is possible to indicate which degree (1, 2 or 3) the
-spline has to be. And for 2 and 3 these are bezier quadratic or cubic curves with control points entered from the
-UI.</strong> Setting for the degree is in the main menu bar (this is LibreCAD concept, but not so straight to be seen
-if one not knows).</p>
-
-<p>Editing polylines/arcs/quad bezier and concatenate them together ("<strong>create polyline from existing
-segments</strong>") works "half", (<strong>SVG output is a single &lt;path&gt; entity</strong>) but here there is a bug
-or let's say a missing feature: one cannot concatenate polylines/arcs with beziers/splines. </p>
-
-<p>Snap stuff is perfect, with many clear and practical snap options (correction: nearly perfect: cannot snap on bezier
-curves)</p>
-
-<p><strong>So this is a real pity that LibreCAD does not perform the concatenation of lines/arcs with beziers/splines
-into a single SVG path, it is fixable per hand in the output, but why the hell is LibreCAD not able to perform
-concatenation of lines/arcs with splines in a single path?</strong> Well, because their data structure was not 
-created with this feature in mind.</p>
-
-<p>Conclusion: <strong><span style="color:#008000">A nearly good SVG "path" generator/exporter that is unfortunately
-uncomplete.</span></strong></p>
-
-<p>BTW, LibreCAD seems to be a "dead" project, so no improvments are to be expected.</p>
-
-<h4>FreeCAD <span style="color:#008000">****VERY GOOD****</span></h4>
+<h4>FreeCAD <span style="color:#008000">****BEST****</span></h4>
 
 <p>As of version 1.0 (2025), the sketcher has dramatically improved compared to previous versions and has an SVG export which 
 works quite nicely. I found nevertheless the following caveats: </p>
@@ -1542,16 +1491,14 @@ works quite nicely. I found nevertheless the following caveats: </p>
   <li>No <strong>Z</strong> at the end of a closed path</li>
 </ul>
 
-<p>But it is good enough to become my potential default SVG editor.</p>
-
 <p>Conclusion: <strong style="color:#008000">A very promising SVG generator/exporter </strong>that could be better if
 Lines were to be exported as <code>line</code>, Polylines as <code>polyline</code>, Rectangles as <code>rect</code>, 
 Polygons as <code>polygon</code>. I also would rather like an output without transformation, but it can be removed
 using a text editor.</p>
 
-<h4>SolveSpace <span style="color:#ff00ff">****BEST****</span></h4>
+<h4>SolveSpace <span style="color:#ff00ff">****VERY GOOD****</span></h4>
 
-<p>Ever heard of it? A parametric system as known from the 3D modellers. <strong>Incredible!</strong> The GUI looks
+<p> parametric system as known from the 3D modellers. The GUI looks
 like from the beginning of the '80s, but <strong>usability/features more than top</strong>.</p>
 
 <p><strong>SVG export perfect (well, nearly perfect)</strong>. I found nevertheless the following caveats:</p>
@@ -1562,7 +1509,6 @@ like from the beginning of the '80s, but <strong>usability/features more than to
 <li>Always be sure to hide the constraints so that they are not exported in the svg.</li>
 <li>There are only cubic bezier curves, quadratic bezier curves are missing.</li>
 <li>Entities coordinates are not the true ones, but are shifted (translated) in X and Y directions. <strong>Very ennoying</strong>.</li>
-<li>The SVG closed path "Z" is also missing.</li>
 </ul>
 </p>
 
@@ -1574,19 +1520,16 @@ quadratic entity could be built in (but it won't happen). Note that making the t
 a quadratic bezier although it looks similar</p>
 </div>
 
-<p>Conclusion: <strong style="color:#008000">The best SVG "path" generator/exporter </strong>I have found so far. </p>
-
 <div class="info">
-<p><strong>Note</strong>: in 2023, a <strong>Blender</strong> add-on called <strong>CAD Sketcher</strong> is in
+<p><strong>Note</strong>: in 2026, a <strong>Blender</strong> add-on called <strong>CAD Sketcher</strong> is in
 development, which utilizes the SolveSpace library for sketching. Maybe the user interface will be there even better
-(and offers the SVG export functionality, which is still missing in 2025. Bezier curves are also still missing).</p>
+(and offers the SVG export functionality, which is still missing in 2026. Bezier curves are also still missing).</p>
 </div>
 
 <h4>Fusion 360</h4>
 
-<p>The free version is also incredible. The parametric "sketcher" is beautiful. There is no SVG export per default, but
-it seems there is an add-on that costs about 15$, but I did not buy/try it because I gave up in the meanwhile looking
-for SVG editor... This add-on is certainly awesome.</p>
+<p>There is no SVG export per default, but it seems there is an add-on that costs about 15$, 
+but I did not buy/try.</p>
 
 <h4>XFig</h4>
 
@@ -1639,7 +1582,7 @@ PyCut? (No). SVG export seems to be more meant as a picture for display only pur
 
 <h3>Conclusion</h3>
 
-<p>The fact that it is so difficult to find an acceptable SVG path "writer" program let me wonder why it is the case.
+<p>The fact that it is so difficult to find an acceptable SVG path "writer" free program let me wonder why it is the case.
 And why does only <strong>FreeCAD</strong> and <strong>SolveSpace</strong> perform the task correctly?</p>
 
 <p>The primary usage of SVG is displaying images, not being a format for CAM input. So why bother exporting it clean.
