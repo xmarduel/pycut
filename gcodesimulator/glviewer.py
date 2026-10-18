@@ -1,4 +1,5 @@
 import os
+import platform
 import math
 import time
 import logging
@@ -72,99 +73,9 @@ def make_logger(name: str, level:int):
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
-
-@jit(nopython=True)
-def make_scene_numba(resolution) -> npt.NDArray[np.float32]:
-    meshNumVertexes = resolution * (resolution - 1)
-    meshStride = 9
-
-    arraySize = meshNumVertexes * 3 * meshStride
-    array = np.zeros(arraySize, dtype=np.float32)
-
-    pos = 0
-    for y in range(resolution - 1):
-        for x in range(resolution):
-            left = x - 1
-            if left < 0:
-                left = 0
-            right = x + 1
-            if right >= resolution:
-                right = resolution - 1
-            if not (x & 1) ^ (y & 1):
-                for i in range(3):
-                    array[pos] = left
-                    pos += 1
-                    array[pos] = y + 1
-                    pos += 1
-                    array[pos] = x
-                    pos += 1
-                    array[pos] = y
-                    pos += 1
-                    array[pos] = right
-                    pos += 1
-                    array[pos] = y + 1
-                    pos += 1
-                    if i == 0:
-                        array[pos] = left
-                        pos += 1
-                        array[pos] = y + 1
-                        pos += 1
-                    elif i == 1:
-                        array[pos] = x
-                        pos += 1
-                        array[pos] = y
-                        pos += 1
-                    else:
-                        array[pos] = right
-                        pos += 1
-                        array[pos] = y + 1
-                        pos += 1
-
-                    array[pos] = i
-                    pos += 1
-            else:
-                for i in range(3):
-                    array[pos] = left
-                    pos += 1
-                    array[pos] = y
-                    pos += 1
-                    array[pos] = right
-                    pos += 1
-                    array[pos] = y
-                    pos += 1
-                    array[pos] = x
-                    pos += 1
-                    array[pos] = y + 1
-                    pos += 1
-                    if i == 0:
-                        array[pos] = left
-                        pos += 1
-                        array[pos] = y
-                        pos += 1
-                    elif i == 1:
-                        array[pos] = right
-                        pos += 1
-                        array[pos] = y
-                        pos += 1
-                    else:
-                        array[pos] = x
-                        pos += 1
-                        array[pos] = y + 1
-                        pos += 1
-
-                    array[pos] = i
-                    pos += 1
-
-    return array
-
-# ------------------------------------------------------------------------
-# ------------------------------------------------------------------------
-
-
 class Scene:
 
     LOG_SCENE = make_logger("SCENE", logging.INFO)
-
     class VertexData:
         NB_FLOATS_PER_VERTEX_V_BIT = 12
         NB_FLOATS_PER_VERTEX = 9
@@ -569,8 +480,93 @@ class SceneHeightMap:
         """
 
         # -> numba helps! fill the numpy array from the scene and gets its buffer
-        self.np_array = make_scene_numba(self.resolution)
+        self.np_array = SceneHeightMap.make_scene_numba(self.resolution)
         self.buffer = self.np_array.tobytes()
+
+    @staticmethod
+    @jit(nopython=True)
+    def make_scene_numba(resolution: int) -> npt.NDArray[np.float32]:
+        meshNumVertexes = resolution * (resolution - 1)
+        meshStride = 9
+
+        arraySize = meshNumVertexes * 3 * meshStride
+        array = np.zeros(arraySize, dtype=np.float32)
+
+        pos = 0
+        for y in range(resolution - 1):
+            for x in range(resolution):
+                left = x - 1
+                if left < 0:
+                    left = 0
+                right = x + 1
+                if right >= resolution:
+                    right = resolution - 1
+                if not (x & 1) ^ (y & 1):
+                    for i in range(3):
+                        array[pos] = left
+                        pos += 1
+                        array[pos] = y + 1
+                        pos += 1
+                        array[pos] = x
+                        pos += 1
+                        array[pos] = y
+                        pos += 1
+                        array[pos] = right
+                        pos += 1
+                        array[pos] = y + 1
+                        pos += 1
+                        if i == 0:
+                            array[pos] = left
+                            pos += 1
+                            array[pos] = y + 1
+                            pos += 1
+                        elif i == 1:
+                            array[pos] = x
+                            pos += 1
+                            array[pos] = y
+                            pos += 1
+                        else:
+                            array[pos] = right
+                            pos += 1
+                            array[pos] = y + 1
+                            pos += 1
+
+                        array[pos] = i
+                        pos += 1
+                else:
+                    for i in range(3):
+                        array[pos] = left
+                        pos += 1
+                        array[pos] = y
+                        pos += 1
+                        array[pos] = right
+                        pos += 1
+                        array[pos] = y
+                        pos += 1
+                        array[pos] = x
+                        pos += 1
+                        array[pos] = y + 1
+                        pos += 1
+                        if i == 0:
+                            array[pos] = left
+                            pos += 1
+                            array[pos] = y
+                            pos += 1
+                        elif i == 1:
+                            array[pos] = right
+                            pos += 1
+                            array[pos] = y
+                            pos += 1
+                        else:
+                            array[pos] = x
+                            pos += 1
+                            array[pos] = y + 1
+                            pos += 1
+
+                        array[pos] = i
+                        pos += 1
+
+        return array
 
     """
     def make_scene(self) -> List[VertexData]:
@@ -760,6 +756,9 @@ class Drawable:
 
         self.gpuMem = 2 * RESOL * RESOL
         self.resolution = RESOL
+
+        if platform.system() =='Darwin':
+            self.resolution *= 2
 
         self.SIZE_X = 800
         self.SIZE_Y = 800
