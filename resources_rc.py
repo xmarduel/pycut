@@ -6,7 +6,7 @@
 from PySide6 import QtCore
 
 qt_resource_data = b"\
-\x00\x01p\xae\
+\x00\x01pr\
 <\
 html>\x0a<head>\x0a  <\
 meta http-equiv=\
@@ -203,92 +203,74 @@ l>\x0a  </li>\x0a  <li\
 li><a href=\x22#P-0\
 8-01\x22>Offsets at\
  corners</a></li\
->\x0a      <li><a h\
-ref=\x22#P-08-02\x22>C\
-urvature sign ch\
-ange</a></li>\x0a  \
-  </ul>\x0a  </li>\x0a\
-  \x0a  <li><a href\
-=\x22#APPENDIX-01\x22>\
-Appendix-1: SVG \
-Editors</a></li>\
-\x0a  <li><a href=\x22\
-#APPENDIX-02\x22>Ap\
-pendix-2: SVG Un\
-its and Scale Fa\
-ctor</a></li>\x0a  \
-<li><a href=\x22#AP\
-PENDIX-03\x22>Appen\
-dix-3: GCODE Vie\
-wers</a></li> \x0a<\
-/ul>\x0a<script typ\
-e=\x22text/javascri\
-pt\x22>\x0a      var t\
-ree = document.q\
-uerySelectorAll(\
-'ul.tree a:not(:\
-last-child)');\x0a \
-     for (var i \
-= 0; i < tree.le\
-ngth; i++) {\x0a   \
-     tree[i].add\
-EventListener('c\
-lick', function \
-(e) {\x0a          \
-var parent = e.t\
-arget.parentElem\
-ent;\x0a          v\
-ar classList = p\
-arent.classList;\
-\x0a          if (c\
-lassList.contain\
-s(\x22open\x22)) {\x0a   \
-         classLi\
-st.remove('open'\
-);\x0a            v\
-ar opensubs = pa\
-rent.querySelect\
-orAll(':scope .o\
+>\x0a    </ul>\x0a  </\
+li>\x0a  \x0a  <li><a \
+href=\x22#APPENDIX-\
+01\x22>Appendix-1: \
+SVG Editors</a><\
+/li>\x0a  <li><a hr\
+ef=\x22#APPENDIX-02\
+\x22>Appendix-2: SV\
+G Units and Scal\
+e Factor</a></li\
+>\x0a  <li><a href=\
+\x22#APPENDIX-03\x22>A\
+ppendix-3: GCODE\
+ Viewers</a></li\
+> \x0a</ul>\x0a<script\
+ type=\x22text/java\
+script\x22>\x0a      v\
+ar tree = docume\
+nt.querySelector\
+All('ul.tree a:n\
+ot(:last-child)'\
+);\x0a      for (va\
+r i = 0; i < tre\
+e.length; i++) {\
+\x0a        tree[i]\
+.addEventListene\
+r('click', funct\
+ion (e) {\x0a      \
+    var parent =\
+ e.target.parent\
+Element;\x0a       \
+   var classList\
+ = parent.classL\
+ist;\x0a          i\
+f (classList.con\
+tains(\x22open\x22)) {\
+\x0a            cla\
+ssList.remove('o\
 pen');\x0a         \
-   for (var i = \
-0; i < opensubs.\
-length; i++) {\x0a \
-             ope\
-nsubs[i].classLi\
-st.remove('open'\
-);\x0a            }\
-\x0a          } els\
-e {\x0a            \
-classList.add('o\
+   var opensubs \
+= parent.querySe\
+lectorAll(':scop\
+e .open');\x0a     \
+       for (var \
+i = 0; i < opens\
+ubs.length; i++)\
+ {\x0a             \
+ opensubs[i].cla\
+ssList.remove('o\
 pen');\x0a         \
- }\x0a          if \
-(classList.conta\
-ins(\x22open\x22)) {\x0a \
-           //e.p\
-reventDefault();\
- // on open -> j\
-ump (default)\x0a\x0a \
-         } else \
-{\x0a            e.\
-preventDefault()\
-; // on close\x0a  \
-        }\x0a      \
-  });\x0a      }</s\
-cript>\x0a</div>\x0a<!\
--- -------------\
-----------------\
-----------------\
-----------------\
-----------------\
-----------------\
--------------->\x0a\
-<!-- -----------\
-----------------\
-----------------\
-----------------\
-----------------\
-----------------\
-----------------\
+   }\x0a          }\
+ else {\x0a        \
+    classList.ad\
+d('open');\x0a     \
+     }\x0a         \
+ if (classList.c\
+ontains(\x22open\x22))\
+ {\x0a            /\
+/e.preventDefaul\
+t(); // on open \
+-> jump (default\
+)\x0a\x0a          } e\
+lse {\x0a          \
+  e.preventDefau\
+lt(); // on clos\
+e\x0a          }\x0a  \
+      });\x0a      \
+}</script>\x0a</div\
 >\x0a<!-- ---------\
 ----------------\
 ----------------\
@@ -303,856 +285,7 @@ cript>\x0a</div>\x0a<!\
 ----------------\
 ----------------\
 ----------------\
----->\x0a\x0a<div clas\
-s=\x22main\x22>\x0a\x0a<h1 c\
-lass=\x22etitle\x22>Py\
-Cut Tutorial</h1\
->\x0a\x0a<h2 id=\x22P-01\x22\
->Introduction</h\
-2>\x0a\x0a<p>Welcome t\
-o <strong>PyCut<\
-/strong>, a clon\
-e of <strong>jsC\
-ut</strong>.\x0a\x0a<s\
-trong>PyCut</str\
-ong> aims to off\
-er all the (mini\
-malistics) funct\
-ionalities found\
- in <strong>jsCu\
-t</strong>, with\
- some improvemen\
-ts.\x0aHopefully yo\
-u will find <str\
-ong>PyCut</stron\
-g> usefull when \
-learning CNC and\
- producing your \
-first GCode file\
-s.</p>\x0a\x0a<p>As it\
-s name indicates\
-, <strong>PyCut<\
-/strong> is writ\
-ten in python an\
-d is a desktop a\
-pplication (<str\
-ong>jsCut</stron\
-g> \x0ais written i\
-n javascript and\
- is a Web-based \
-application).</p\
->\x0a\x0a<h2 id=\x22P-02\x22\
->SVG as input fo\
-rmat</h2>\x0a\x0a<p>St\
-arting point of \
-<strong>PyCut</s\
-trong> are <stro\
-ng>SVG</strong> \
-files, your desi\
-gns. Indeed, wit\
-h\x0a<strong>PyCut<\
-/strong>, you do\
- not need to do \
-3D modelling. Fo\
-r simple milling\
- tasks <strong>S\
-VG</strong> \x0afil\
-es (2D) are perf\
-ectly OK. Grante\
-d, while it is e\
-asy to define ci\
-rcles, rectangle\
-s etc. in <stron\
-g>SVG</strong>, \
-\x0aSVG paths defin\
-itions (for comp\
-lex shapes) are \
-unfortunately no\
-t so straightfor\
-ward as one coul\
-d think, \x0aand fr\
-ee software lack\
-s good <strong>S\
-VG</strong> path\
-s modelling appl\
-ications. Infact\
-, writing a <str\
-ong>SVG</strong>\
- \x0afile with a te\
-xt editor is som\
-etimes the best \
-way to go. To ge\
-nerate complex s\
-vg paths, either\
- \x0aunderstand the\
- svg path syntax\
- and write paths\
- \x22per hand\x22, or \
-other tools may \
-be used, and the\
- results may be \
-copy/pasted \x0aint\
-o the hand-writt\
-en files. The ex\
-cellent online t\
-ool <strong>SvgP\
-athEditor</stron\
-g> can be used f\
-or this purpose,\
- see Appendix.</\
-p>\x0a\x0a<p>In the fo\
-llowing, we poin\
-t out what has t\
-o be taken into \
-consideration wh\
-en creating \x22usa\
-ble\x22 <strong>SVG\
-</strong>\x0afiles \
-for <strong>PyCu\
-t</strong>. </p>\
-\x0a\x0a<h3 id=\x22P-02-0\
-0\x22>SVG Documents\
-</h3>\x0a\x0a<p><stron\
-g>PyCut</strong>\
- can only proces\
-s svg documents \
-<strong>without \
-transformations<\
-/strong>. Should\
- you have\x0aa docu\
-ment with transf\
-ormation, try th\
-e utility <stron\
-g>svgresolver.py\
-</strong> (see l\
-ater).</p>\x0a\x0a<h3 \
-id=\x22P-02-01\x22>SVG\
- ViewBox</h3>\x0a\x0a<\
-p><strong>PyCut<\
-/strong>, in ord\
-er to work accur\
-ately, needs the\
- SVG document to\
- define its stan\
-dard\x0a<strong>wid\
-th</strong> and \
-<strong>height</\
-strong> attribut\
-es with the unit\
-s \x22<strong>mm</s\
-trong>\x22 or\x0a\x22<str\
-ong>in</strong>\x22\
-. </p>\x0a\x0a<div cla\
-ss=\x22info\x22>\x0a<p><s\
-trong>Note:</str\
-ong> The specifi\
-ed units are not\
- necessarely the\
- ones specified \
-in the generated\
- GCode(s). There\
-\x0ais is another s\
-etting to set th\
-e GCode units el\
-sewhere in <stro\
-ng>PyCut</strong\
->. Admittingly t\
-hey should corre\
-spond\x0afor the sa\
-ke of good docum\
-entation.</p>\x0a</\
-div>\x0a\x0a<pre><code\
- class=\x22language\
--html\x22>&lt;svg v\
-ersion=\x221.1\x22 wid\
-th=\x22&lt;width&gt\
-;mm\x22 height=\x22&lt\
-;height&gt;mm\x22 .\
-.. \x0a ...\x0a&lt;/sv\
-g&gt;</code></pr\
-e>\x0a\x0a<p>and the <\
-strong>viewbox</\
-strong> definiti\
-on shall be of t\
-he form </p>\x0a<pr\
-e><code class=\x22l\
-anguage-html\x22>vi\
-ewBox=\x220 0 &lt;w\
-idth&gt; &lt;hei\
-ght&gt;\x22</code><\
-/pre>\x0a\x0a<p><stron\
-g>with the viewb\
-ox width and hei\
-ght correspondin\
-g to the SVG att\
-ributes width</s\
-trong> and <stro\
-ng>height</stron\
-g>.\x0aNotice that \
-<strong>PyCut</s\
-trong> strongly \
-recommends a vie\
-wbox origin to b\
-e (0, 0), althou\
-gh this is not m\
-andatory.</p>\x0a\x0a<\
-div class=\x22info\x22\
->\x0a<p><strong>Not\
-e:</strong> view\
-box x and y attr\
-ibutes (origin) \
-are allowed to b\
-e non zero! (but\
- then take extra\
- care of the pro\
-duced\x0aGCode coor\
-dinates and your\
- own machine coo\
-rdinates). When \
-stucking to the \
-(0,0) origin, al\
-l (visible) desi\
-gns have positiv\
-e X and Y \x0acoord\
-inates (in the s\
-vg coordinates s\
-ystem), and thus\
- all produced GC\
-ode -when refere\
-nce is top left \
-of material- hav\
-e positive X \x0aco\
-ordinates and ne\
-gative Y coordin\
-ates (standard o\
-rientation). Eas\
-y to remember!</\
-p>\x0a</div>\x0a\x0a\x0a<p>A\
-s an example:</p\
->\x0a<pre><code cla\
-ss=\x22language-htm\
-l\x22>&lt;?xml vers\
-ion=\x221.0\x22 encodi\
-ng=\x22UTF-8\x22 stand\
-alone=\x22no\x22?&gt;\x0a\
-&lt;svg version=\
-\x221.1\x22 width=\x22200\
-mm\x22 height=\x22100m\
-m\x22 viewBox=\x220 0 \
-200 100\x22 id=\x22tes\
-t\x22 \x0a   xmlns=\x22ht\
-tp://www.w3.org/\
-2000/svg\x22 \x0a   xm\
-lns:svg=\x22http://\
-www.w3.org/2000/\
-svg\x22&gt;\x0a  &lt;g\
- id=\x22root\x22&gt;\x0a \
-   &lt;circle id\
-=\x22circle\x22 cx=\x2230\
-\x22 cy=\x2260\x22 r=\x2220\x22\
- stroke=\x22black\x22 \
-stroke-width=\x221\x22\
- fill=\x22red\x22 /&gt\
-;\x0a    &lt;rect i\
-d=\x22rect\x22 x=\x2260\x22 \
-y=\x2240\x22 width=\x2230\
-\x22 height=\x2240\x22 st\
-roke=\x22black\x22 str\
-oke-width=\x221\x22 fi\
-ll=\x22green\x22 /&gt;\
-\x0a  &lt;/g&gt;\x0a&l\
-t;/svg&gt;</code\
-></pre>\x0a\x0a<h3 id=\
-\x22P-02-02\x22>SVG Sh\
-apes and Paths</\
-h3>\x0a\x0a<p>The SVG \
-standard is very\
- large, and <str\
-ong>PyCut</stron\
-g> cannot simply\
- read a svg file\
-, display it, an\
-d allow the\x0auser\
- to define cnc o\
-perations on the\
- \x22shapes\x22 define\
-d inside the svg\
- file. Of course\
-, the goal of\x0a<s\
-trong>PyCut</str\
-ong> is to proce\
-ss as many svg d\
-ata as possible.\
-</p>\x0a\x0a<p>The sha\
-pes inside a svg\
- file are the fo\
-llowing:</p>\x0a<ul\
->\x0a  <li><code cl\
-ass=\x22svg_tag\x22>&l\
-t;rect&gt;</code\
-></li>\x0a  <li><co\
-de class=\x22svg_ta\
-g\x22>&lt;circle&gt\
-;</code></li>\x0a  \
-<li><code class=\
-\x22svg_tag\x22>&lt;el\
-lipse&gt;</code>\
-</li>\x0a  <li><cod\
-e class=\x22svg_tag\
-\x22>&lt;polygon&gt\
-;</code></li>\x0a  \
-<li><code class=\
-\x22svg_tag\x22>&lt;li\
-ne&gt;</code></l\
-i>\x0a  <li><code c\
-lass=\x22svg_tag\x22>&\
-lt;polyline&gt;<\
-/code></li>\x0a</ul\
->\x0a\x0a<p>The powerf\
-ull</p>\x0a<ul>\x0a  <\
-li><code class=\x22\
-svg_tag\x22>&lt;pat\
-h&gt;</code></li\
->\x0a</ul>\x0a\x0a<p>can \
-define in a sing\
-le path definiti\
-on many closed o\
-r opened (sub)pa\
-ths.</p>\x0a\x0a<div c\
-lass=\x22warning\x22>\x0a\
-<p><strong>Warni\
-ng:</strong> Som\
-e shapes can com\
-pletely overlap \
-smaller shapes, \
-depending on the\
- order they are \
-defined\x0ain the S\
-VG, and thus mak\
-ing the smaller \
-shapes invisible\
- in the viewer. \
-In this case, la\
-rger shapes shou\
-ld be defined\x0abe\
-fore the smaller\
- ones, so that t\
-he smaller ones \
-are on top of th\
-e larger ones.</\
-p>\x0a</div>\x0a\x0a<p><s\
-trong>PyCut</str\
-ong> processes \x22\
-paths\x22 in order \
-to calculate geo\
-metries and cnc \
-tool paths, but \
-thankfully it ca\
-n\x0aread out of th\
-e box all kind o\
-f shapes, so the\
-re is <strong>no\
- need</strong> t\
-o convert your s\
-vg files into \x22p\
-aths\x0aonly\x22 svgs.\
- There is only o\
-ne exception: fo\
-r text data.</p>\
-\x0a\x0a\x0a<div class=\x22i\
-nfo\x22>\x0a<p><strong\
->Note:</strong> \
-PyCut will only \
-display shapes i\
-n its viewer whi\
-ch have an id.</\
-p>\x0a</div>\x0a\x0a<p>In\
- order to refere\
-nce the shapes i\
-n <strong>PyCut<\
-/strong>, the sh\
-apes must have t\
-heir own <strong\
->\x22id\x22</strong>, \
-\x0ahopefully uniqu\
-e inside the svg\
- document. The u\
-ser, having edit\
-ed the svg file \
-\x22per hand\x22 or no\
-t, should not fo\
-rget \x0ato check f\
-or the ids and g\
-ive the shapes h\
-e wishes to proc\
-ess unique ids.<\
-/p>\x0a\x0a<div class=\
-\x22info\x22>\x0a<p><stro\
-ng>Note:</strong\
-> These ids play\
- the role of the\
- shapes name, so\
- a good practice\
- is to give them\
- meaningfull\x0aval\
-ues (names).</p>\
-\x0a</div>\x0a\x0a<h4 id=\
-\x22P-02-02-01\x22>Ope\
-ned and closed p\
-aths</h4>\x0a\x0a<p>A \
-path can be clos\
-ed or not. This \
-is not a matter \
-if the path's fi\
-rst point is equ\
-al to its last p\
-oint. A closed\x0ap\
-ath or subpath c\
-ontains the anno\
-tation <strong>\x22\
-Z\x22</strong> or <\
-strong>\x22z\x22</stro\
-ng> at its end. \
-Even if the firs\
-t\x0apoint of the p\
-ath is equal to \
-its last point, \
-the path is only\
- considered as c\
-losed with the e\
-nding\x0a<strong>\x22Z\
-\x22</strong> or <s\
-trong>\x22z\x22</stron\
-g>.</p>\x0a\x0a<div cl\
-ass=\x22warning\x22>\x0a<\
-p><strong>Warnin\
-g:</strong> PyCu\
-t strongly relie\
-s on the <strong\
->[Zz]</strong> a\
-nnotation to dec\
-ide if the path \
-is\x0aclosed or not\
-. When not close\
-d, \x22Pocket\x22 oper\
-ations will not \
-be allowed for t\
-his opened path.\
-</p>\x0a</div>\x0a\x0a<di\
-v class=\x22info\x22>\x0a\
-<p><strong>Note:\
-</strong> It may\
- looks at first \
-sight somehow pe\
-dandic, but then\
- there is a clea\
-r flag whether t\
-he \x0apath is clos\
-ed or not, witho\
-ut further check\
-s.</p>\x0a</div>\x0a\x0a<\
-p><strong>PyCut<\
-/strong> imports\
- closed paths as\
- shapely \x22MultiP\
-olygon\x22, while o\
-pened paths are \
-imported as\x0a\x22Mul\
-tiLineString\x22, b\
-ut here the sake\
- of simplicity, \
-we will only ref\
-er them as \x22Poly\
-gon\x22 or \x22LineStr\
-ing\x22.</p>\x0a\x0a<p><s\
-trong>PyCut</str\
-ong> will import\
- the other svg s\
-hapes either as \
-\x22<span style=\x22co\
-lor:#0000ff\x22>Pol\
-ygon</span>\x22 (i.\
-e.\x0a<strong>close\
-d items</strong>\
-) or as \x22<span s\
-tyle=\x22color:#000\
-0ff\x22>LineString<\
-/span>\x22 (i.e. <s\
-trong>opened\x0aite\
-ms</strong>). Of\
- course, svg <co\
-de class=\x22svg_ta\
-g\x22>&lt;rect&gt;<\
-/code>, <code cl\
-ass=\x22svg_tag\x22>&l\
-t;circle&gt;</co\
-de>,\x0a<code class\
-=\x22svg_tag\x22>&lt;e\
-llipse&gt;</code\
-> and <code clas\
-s=\x22svg_tag\x22>&lt;\
-polygon&gt;</cod\
-e> are closed it\
-ems, while\x0a<code\
- class=\x22svg_tag\x22\
->&lt;line&gt;</c\
-ode> and <code c\
-lass=\x22svg_tag\x22>&\
-lt;polyline&gt;<\
-/code> are opene\
-d items. When\x0aim\
-porting a <span \
-style=\x22color:#00\
-00ff\x22>&lt;path&g\
-t;</span>, thing\
-s are more compl\
-icated, as a pat\
-h can be compose\
-d of\x0amany subpat\
-hs (starting wit\
-h [<strong>Mm</s\
-trong>]) and eve\
-ry subpath can b\
-e closed or not \
-(ending with\x0a[<s\
-trong>Zz</strong\
->]). <strong>PyC\
-ut</strong> will\
- try to import t\
-hese paths defin\
-itions right, an\
-d in case of clo\
-sed\x0apaths will a\
-lso try to impor\
-t them as shapel\
-y polygons \x22<str\
-ong>with holes</\
-strong>\x22 even if\
- this concept do\
-es not\x0aexist in \
-SVG. <strong>PyC\
-ut</strong> will\
- try to do its b\
-est for this tas\
-k. Moreover <str\
-ong>PyCut</stron\
-g> will try \x0ato \
-import a svg pat\
-h as a valid (sh\
-apely) <span sty\
-le=\x22color:#0000f\
-f\x22>MultiPolygon \
-</span> in the s\
-hapely sense, \x0ao\
-r as a list of v\
-alid MultiPolygo\
-ns if one single\
-\x0avalid MultiPoly\
-gon is not possi\
-ble. For example\
-, the letters \x22i\
-\x22 or \x22j\x22 are def\
-ined with a sing\
-le svg path, def\
-ining\x0atwo separa\
-tes polygons, an\
-d it makes sense\
- to consider the\
-se paths as a si\
-ngle shapely Mul\
-tiPolygon entity\
-. The letter\x0a\x22a\x22\
- is a polygon wi\
-th one hole, the\
- letter \x22g\x22 is a\
- polygon with tw\
-o holes (for som\
-e fonts). In the\
- freetype\x0avocabu\
-lary, \x22a\x22 is for\
-med by 2 \x22contou\
-rs\x22, \x22g\x22 by thre\
-e \x22contours\x22.</p\
->\x0a\x0a\x0a<h3 id=\x22P-02\
--03\x22>SVG Text</h\
-3>\x0a\x0a<p>The user \
-may also want to\
- process the str\
-ings written in \
-the svg file. Th\
-e texts inside a\
- svg file are de\
-fined with the t\
-ag: </p>\x0a<ul>\x0a  \
-<li><code class=\
-\x22svg_tag\x22>&lt;te\
-xt&gt;</code></l\
-i>\x0a</ul>\x0a\x0a<div c\
-lass=\x22warning\x22>\x0a\
-<p><strong>Warni\
-ng:</strong> Str\
-ings are not (ye\
-t) imported into\
- <string>PyCut</\
-strong> directly\
-. \x0aThey have fir\
-st to be convert\
-ed to paths. </p\
->\x0a</div>\x0a\x0a<p>As \
-already stated, \
-<strong>PyCut</s\
-trong> cannot pr\
-ocess yet <code \
-class=\x22svg_tag\x22>\
-&lt;text&gt;</co\
-de> items direct\
-ly. \x0aFortunately\
-, <code class=\x22s\
-vg_tag\x22>&lt;text\
-&gt;</code> item\
-s can be convert\
-ed into<code cla\
-ss=\x22svg_tag\x22>&lt\
-;path&gt;</code>\
-\x0aitems, sonce th\
-ey will be ignor\
-ed by <strong>Py\
-Cut</strong>. <s\
-trong>PyCut</str\
-ong> also comes \
-with the utiilty\
-\x0a<strong>svgtext\
-2svgpath.py</str\
-ong> which will \
-also convert you\
-r <code class=\x22s\
-vg_tag\x22>&lt;text\
-&gt;</code> item\
-s. How\x0ato use it\
-? just call the \
-<strong>svgtext2\
-svgpath.py</stro\
-ng> program whic\
-h outputs in a n\
-ew svg the <code\
-\x0aclass=\x22svg_tag\x22\
->&lt;text&gt;</c\
-ode> items as <c\
-ode class=\x22svg_t\
-ag\x22>&lt;path&gt;\
-</code> items. C\
-opy/paste the re\
-sult of\x0aa <code \
-class=\x22svg_tag\x22>\
-&lt;text&gt;</co\
-de> conversion i\
-nto your own svg\
-. A successfull \
-conversion will \
-only occurs if\x0at\
-he <code class=\x22\
-svg_tag\x22>&lt;tex\
-t&gt;</code> ite\
-m is simple enou\
-gh: the text \x22va\
-lue\x22 should not \
-be splitted into\
-\x0aseveral <code c\
-lass=\x22svg_tag\x22>&\
-lt;tspan&gt;</co\
-de> items with d\
-ifferent fonts. \
-No <code\x0aclass=\x22\
-svg_tag\x22>&lt;tsp\
-an&gt;</code> ta\
-g at all is also\
- possible (and s\
-impler). <strong\
-><span style=\x22co\
-lor:#8000ff\x22>IN\x0a\
-PROGRESS</span><\
-/strong>.</p>\x0a\x0a<\
-p>This utility i\
-s found in the s\
-ource code insid\
-e the folder \x22<s\
-trong>utilities/\
-svgtext2svgpath<\
-/strong>\x22, and t\
-here \x0ais a small\
- tutorial includ\
-ed.</p>\x0a\x0a<p>All \
-in all, if <stro\
-ng>PyCut</strong\
-> were to displa\
-y text strings a\
-t the wrong posi\
-tions (after hav\
-ing transformed\x0a\
-them into paths)\
-, the user can a\
-lways export the\
- svg from <stron\
-g>Inkscape</stro\
-ng> (and write <\
-strong>PyCut</st\
-rong> a\x0aticket).\
-</p>\x0a\x0a<h3 id=\x22P-\
-02-04\x22>SVG speci\
-al tags: defs an\
-d use</h3>\x0a\x0a<p><\
-strong>PyCut</st\
-rong> cannot imp\
-ort directly the\
- very handy SVG \
-<strong>&lt;defs\
-&gt;</strong> an\
-d\x0a<strong>&lt;us\
-e&gt;</strong> f\
-eature. The util\
-ity <strong>svgr\
-esolver.py</stro\
-ng> delivered wi\
-th <strong>PyCut\
-</strong>\x0awill h\
-ave to be used. \
-The utility <str\
-ong>svgresolver.\
-py</strong> take\
-s as input the S\
-VG file containi\
-ng\x0a<code>&lt;def\
-s&gt;</code> and\
- <code>&lt;use&g\
-t;</code> tags a\
-nd outputs a new\
- SVG where all\x0a<\
-code>&lt;defs&gt\
-;/&lt;use&gt;</c\
-ode> have been r\
-esolved, i.e. tu\
-rned into real o\
-bjects.</p>\x0a\x0a<p>\
-This utility is \
-found in the sou\
-rce code inside \
-the folder \x22<str\
-ong>utilities/sv\
-gresolver</stron\
-g>\x22, \x0aand there \
-is a small tutor\
-ial included. </\
-p>\x0a\x0a<p>One drawb\
-ack is that the \
-user has then to\
- manage 2 svg fi\
-les: the first o\
-ne with <strong>\
-&lt;defs&gt;</st\
-rong> and\x0a<stron\
-g>&lt;use&gt;</s\
-trong>, and a se\
-cond one, the \x22r\
-esolved\x22 one whi\
-ch is the input \
-file for <strong\
->PyCut</strong>.\
-\x0a</p>\x0a\x0a<h4 id=\x22P\
--02-02-01\x22>Trans\
-formations</h4>\x0a\
-\x0a<div class=\x22inf\
-o\x22>\x0a<p><strong>I\
-nfo:</strong>Tra\
-nsformations can\
- be defined on e\
-very shapes or g\
-roups, and are o\
-ften used in com\
-binaison\x0awith th\
-e <strong>&lt;de\
-fs&gt;</strong> \
-and <strong>&lt;\
-use&gt;</strong>\
- tags.</p>\x0a</div\
->\x0a\x0a<p><strong>Py\
-Cut</strong> can\
-not handle \x22out \
-of the box\x22 svg \
-datas where shap\
-es are defined w\
-ith \x22transform\x22 \
-operations\x0a(tran\
-slate, rotate et\
-c.).</p>\x0a\x0a<p>Nev\
-ertheless, it is\
- also possible t\
-o \x22resolve\x22 the \
-shapes transform\
-ations with the \
-previously menti\
-oned utility\x0a<st\
-rong>svgresolver\
-.py</strong>. Th\
-is utility also \
-processes all tr\
-ansformations fo\
-und in the svg f\
-ile, while keepi\
-ng\x0athe<strong>\x22i\
-d\x22</strong>s rig\
-ht. It works bes\
-t in combinaison\
- of the <code><s\
-pan\x0astyle=\x22color\
-:#0000ff\x22>&lt;us\
-e&gt;</span></co\
-de> tag, as a si\
-ngle item define\
-d in the <code><\
-span\x0astyle=\x22colo\
-r:#0000ff\x22>&lt;d\
-efs&gt;</span></\
-code> section ca\
-n then be re-use\
-d at many locati\
-ons. Obviously, \
-not\x0aeverything i\
-s possible: for \
-example, transfo\
-rming a <code><s\
-pan style=\x22color\
-:#0000ff\x22>&lt;re\
-ct&gt;</span></c\
-ode>\x0aelement wit\
-h a rotate trans\
-formation does n\
-ot result in a <\
-code><span style\
-=\x22color:#0000ff\x22\
->&lt;rect&gt;</s\
-pan></code>\x0a(but\
- a <code><span s\
-tyle=\x22color:#000\
-0ff\x22>&lt;polygon\
-&gt;</span></cod\
-e>) and <strong>\
-svgresolver.py</\
-strong> cannot\x0ah\
-andle this.</p>\x0a\
-\x0a<p><strong><spa\
-n style=\x22color:#\
-8000ff\x22>IN PROGR\
-ESS</span></stro\
-ng>: this utilit\
-y should be inte\
-grated into\x0a<str\
-ong>PyCut</stron\
-g> so that the u\
-ser can spare th\
-is extra step.</\
-p>\x0a\x0a<div style=\x22\
-height:30px\x22>\x0a</\
-div>\x0a\x0a<!-- -----\
+---->\x0a<!-- -----\
 ----------------\
 ----------------\
 ----------------\
@@ -1166,764 +299,856 @@ div>\x0a\x0a<!-- -----\
 ----------------\
 ----------------\
 ----------------\
--------->\x0a\x0a<h2 i\
-d=\x22P-03\x22>Basic e\
-xample</h2>\x0a\x0a<h3\
->Opening the PyC\
-ut application</\
-h3>\x0a\x0a<p>type in \
-the console:</p>\
-\x0a\x0a<p><code>&gt; \
-python pycut.py \
--h</code></p>\x0a\x0a<\
-p><code>&gt; pyt\
-hon pycut.py --p\
-roj=&lt;projectf\
-ile&gt;</code></\
-p>\x0a\x0a<p><code>&gt\
-; python pycut.p\
-y --gcode=&lt;gc\
-odefile&gt;</cod\
-e></p>\x0a\x0a<p>Witho\
-ut argument, pyc\
-ut opens without\
- loading any SVG\
- file. With the \
-<code>--proj</co\
-de> argument, a \
-previously\x0asaved\
- project is open\
-ed.</p>\x0a\x0a<h3 id=\
-\x22P-03-00\x22>PyCut \
-as GCode simulat\
-or</h3>\x0a\x0a<p><str\
-ong>PyCut</stron\
-g> can also be u\
-sed as a GCode v\
-iewer or simulat\
-or. GCode files \
-can be loaded wi\
-th the\x0aargument<\
-/p>\x0a\x0a<p><code>&g\
-t; python pycut.\
-py --gcode=&lt;g\
-codefile&gt;</co\
-de></p>\x0a\x0a<p>Hope\
-fully PyCut can \
-parse it (roughl\
-y: what <strong>\
-Candle</strong> \
-can parse - <str\
-ong>PyCut</stron\
-g> uses a\x0asimila\
-r parser). The t\
-oolpaths can the\
-n be viewed in t\
-he GCode viewer \
-(toolpaths simul\
-ation) and GCode\
- simulator\x0a(mate\
-rial removing si\
-mulation). For t\
-he GCode simulat\
-or, the tool dia\
-meter is needed \
-for an accurate \
-simulation. PyCu\
-t\x0asaves its gene\
-rated gcode file\
-s with a comment\
- line of the for\
-m</p>\x0a<pre><code\
+-------->\x0a\x0a<div \
+class=\x22main\x22>\x0a\x0a<\
+h1 class=\x22etitle\
+\x22>PyCut Tutorial\
+</h1>\x0a\x0a<h2 id=\x22P\
+-01\x22>Introductio\
+n</h2>\x0a\x0a<p>Welco\
+me to <strong>Py\
+Cut</strong>, a \
+clone of <strong\
+>jsCut</strong>.\
+\x0a\x0a<strong>PyCut<\
+/strong> aims to\
+ offer all the (\
+minimalistics) f\
+unctionalities f\
+ound in <strong>\
+jsCut</strong>, \
+with some improv\
+ements.\x0aHopefull\
+y you will find \
+<strong>PyCut</s\
+trong> usefull w\
+hen learning CNC\
+ and producing y\
+our first GCode \
+files.</p>\x0a\x0a<p>A\
+s its name indic\
+ates, <strong>Py\
+Cut</strong> is \
+written in pytho\
+n and is a deskt\
+op application (\
+<strong>jsCut</s\
+trong> \x0ais writt\
+en in javascript\
+ and is a Web-ba\
+sed application)\
+.</p>\x0a\x0a<h2 id=\x22P\
+-02\x22>SVG as inpu\
+t format</h2>\x0a\x0a<\
+p>Starting point\
+ of <strong>PyCu\
+t</strong> are <\
+strong>SVG</stro\
+ng> files, your \
+designs. Indeed,\
+ with\x0a<strong>Py\
+Cut</strong>, yo\
+u do not need to\
+ do 3D modelling\
+. For simple mil\
+ling tasks <stro\
+ng>SVG</strong> \
+\x0afiles (2D) are \
+perfectly OK. Gr\
+anted, while it \
+is easy to defin\
+e circles, recta\
+ngles etc. in <s\
+trong>SVG</stron\
+g>, \x0aSVG paths d\
+efinitions (for \
+complex shapes) \
+are unfortunatel\
+y not so straigh\
+tforward as one \
+could think, \x0aan\
+d free software \
+lacks good <stro\
+ng>SVG</strong> \
+paths modelling \
+applications. In\
+fact, writing a \
+<strong>SVG</str\
+ong> \x0afile with \
+a text editor is\
+ sometimes the b\
+est way to go. T\
+o generate compl\
+ex svg paths, ei\
+ther \x0aunderstand\
+ the svg path sy\
+ntax and write p\
+aths \x22per hand\x22,\
+ or other tools \
+may be used, and\
+ the results may\
+ be copy/pasted \
+\x0ainto the hand-w\
+ritten files. Th\
+e excellent onli\
+ne tool <strong>\
+SvgPathEditor</s\
+trong> can be us\
+ed for this purp\
+ose, see Appendi\
+x.</p>\x0a\x0a<p>In th\
+e following, we \
+point out what h\
+as to be taken i\
+nto consideratio\
+n when creating \
+\x22usable\x22 <strong\
+>SVG</strong>\x0afi\
+les for <strong>\
+PyCut</strong>. \
+</p>\x0a\x0a<h3 id=\x22P-\
+02-00\x22>SVG Docum\
+ents</h3>\x0a\x0a<p><s\
+trong>PyCut</str\
+ong> can only pr\
+ocess svg docume\
+nts <strong>with\
+out transformati\
+ons</strong>. Sh\
+ould you have\x0aa \
+document with tr\
+ansformation, tr\
+y the utility <s\
+trong>svgresolve\
+r.py</strong> (s\
+ee later).</p>\x0a\x0a\
+<h3 id=\x22P-02-01\x22\
+>SVG ViewBox</h3\
+>\x0a\x0a<p><strong>Py\
+Cut</strong>, in\
+ order to work a\
+ccurately, needs\
+ the SVG documen\
+t to define its \
+standard\x0a<strong\
+>width</strong> \
+and <strong>heig\
+ht</strong> attr\
+ibutes with the \
+units \x22<strong>m\
+m</strong>\x22 or\x0a\x22\
+<strong>in</stro\
+ng>\x22. </p>\x0a\x0a<div\
+ class=\x22info\x22>\x0a<\
+p><strong>Note:<\
+/strong> The spe\
+cified units are\
+ not necessarely\
+ the ones specif\
+ied in the gener\
+ated GCode(s). T\
+here\x0ais is anoth\
+er setting to se\
+t the GCode unit\
+s elsewhere in <\
+strong>PyCut</st\
+rong>. Admitting\
+ly they should c\
+orrespond\x0afor th\
+e sake of good d\
+ocumentation.</p\
+>\x0a</div>\x0a\x0a<pre><\
+code class=\x22lang\
+uage-html\x22>&lt;s\
+vg version=\x221.1\x22\
+ width=\x22&lt;widt\
+h&gt;mm\x22 height=\
+\x22&lt;height&gt;m\
+m\x22 ... \x0a ...\x0a&lt\
+;/svg&gt;</code>\
+</pre>\x0a\x0a<p>and t\
+he <strong>viewb\
+ox</strong> defi\
+nition shall be \
+of the form </p>\
+\x0a<pre><code clas\
+s=\x22language-html\
+\x22>viewBox=\x220 0 &\
+lt;width&gt; &lt\
+;height&gt;\x22</co\
+de></pre>\x0a\x0a<p><s\
+trong>with the v\
+iewbox width and\
+ height correspo\
+nding to the SVG\
+ attributes widt\
+h</strong> and <\
+strong>height</s\
+trong>.\x0aNotice t\
+hat <strong>PyCu\
+t</strong> stron\
+gly recommends a\
+ viewbox origin \
+to be (0, 0), al\
+though this is n\
+ot mandatory.</p\
+>\x0a\x0a<div class=\x22i\
+nfo\x22>\x0a<p><strong\
+>Note:</strong> \
+viewbox x and y \
+attributes (orig\
+in) are allowed \
+to be non zero! \
+(but then take e\
+xtra care of the\
+ produced\x0aGCode \
+coordinates and \
+your own machine\
+ coordinates). W\
+hen stucking to \
+the (0,0) origin\
+, all (visible) \
+designs have pos\
+itive X and Y \x0ac\
+oordinates (in t\
+he svg coordinat\
+es system), and \
+thus all produce\
+d GCode -when re\
+ference is top l\
+eft of material-\
+ have positive X\
+ \x0acoordinates an\
+d negative Y coo\
+rdinates (standa\
+rd orientation).\
+ Easy to remembe\
+r!</p>\x0a</div>\x0a\x0a\x0a\
+<p>As an example\
+:</p>\x0a<pre><code\
  class=\x22language\
--gcode\x22>; Diamet\
-er   &lt;value&g\
-t;</code></pre>\x0a\
-\x0a<p>that is pars\
-ed to retrieve t\
-he right tool di\
-ameter. Insertin\
-g such a line in\
- the external GC\
-ode allows\x0a<stro\
-ng>PyCut</strong\
-> to properly si\
-mulate the GCode\
-.</p>\x0a\x0a<h3 id=\x22P\
--03-01\x22>Loading \
-a SVG file</h3>\x0a\
-\x0a<p>So for the v\
-ery first time, \
-start <strong>Py\
-Cut</strong> wit\
-hout specifying \
-any project.</p>\
-\x0a\x0a<p>Import your\
- svg into <stron\
+-html\x22>&lt;?xml \
+version=\x221.0\x22 en\
+coding=\x22UTF-8\x22 s\
+tandalone=\x22no\x22?&\
+gt;\x0a&lt;svg vers\
+ion=\x221.1\x22 width=\
+\x22200mm\x22 height=\x22\
+100mm\x22 viewBox=\x22\
+0 0 200 100\x22 id=\
+\x22test\x22 \x0a   xmlns\
+=\x22http://www.w3.\
+org/2000/svg\x22 \x0a \
+  xmlns:svg=\x22htt\
+p://www.w3.org/2\
+000/svg\x22&gt;\x0a  &\
+lt;g id=\x22root\x22&g\
+t;\x0a    &lt;circl\
+e id=\x22circle\x22 cx\
+=\x2230\x22 cy=\x2260\x22 r=\
+\x2220\x22 stroke=\x22bla\
+ck\x22 stroke-width\
+=\x221\x22 fill=\x22red\x22 \
+/&gt;\x0a    &lt;re\
+ct id=\x22rect\x22 x=\x22\
+60\x22 y=\x2240\x22 width\
+=\x2230\x22 height=\x2240\
+\x22 stroke=\x22black\x22\
+ stroke-width=\x221\
+\x22 fill=\x22green\x22 /\
+&gt;\x0a  &lt;/g&gt\
+;\x0a&lt;/svg&gt;</\
+code></pre>\x0a\x0a<h3\
+ id=\x22P-02-02\x22>SV\
+G Shapes and Pat\
+hs</h3>\x0a\x0a<p>The \
+SVG standard is \
+very large, and \
+<strong>PyCut</s\
+trong> cannot si\
+mply read a svg \
+file, display it\
+, and allow the\x0a\
+user to define c\
+nc operations on\
+ the \x22shapes\x22 de\
+fined inside the\
+ svg file. Of co\
+urse, the goal o\
+f\x0a<strong>PyCut<\
+/strong> is to p\
+rocess as many s\
+vg data as possi\
+ble.</p>\x0a\x0a<p>The\
+ shapes inside a\
+ svg file are th\
+e following:</p>\
+\x0a<ul>\x0a  <li><cod\
+e class=\x22svg_tag\
+\x22>&lt;rect&gt;</\
+code></li>\x0a  <li\
+><code class=\x22sv\
+g_tag\x22>&lt;circl\
+e&gt;</code></li\
+>\x0a  <li><code cl\
+ass=\x22svg_tag\x22>&l\
+t;ellipse&gt;</c\
+ode></li>\x0a  <li>\
+<code class=\x22svg\
+_tag\x22>&lt;polygo\
+n&gt;</code></li\
+>\x0a  <li><code cl\
+ass=\x22svg_tag\x22>&l\
+t;line&gt;</code\
+></li>\x0a  <li><co\
+de class=\x22svg_ta\
+g\x22>&lt;polyline&\
+gt;</code></li>\x0a\
+</ul>\x0a\x0a<p>The po\
+werfull</p>\x0a<ul>\
+\x0a  <li><code cla\
+ss=\x22svg_tag\x22>&lt\
+;path&gt;</code>\
+</li>\x0a</ul>\x0a\x0a<p>\
+can define in a \
+single path defi\
+nition many clos\
+ed or opened (su\
+b)paths.</p>\x0a\x0a<d\
+iv class=\x22warnin\
+g\x22>\x0a<p><strong>W\
+arning:</strong>\
+ Some shapes can\
+ completely over\
+lap smaller shap\
+es, depending on\
+ the order they \
+are defined\x0ain t\
+he SVG, and thus\
+ making the smal\
+ler shapes invis\
+ible in the view\
+er. In this case\
+, larger shapes \
+should be define\
+d\x0abefore the sma\
+ller ones, so th\
+at the smaller o\
+nes are on top o\
+f the larger one\
+s.</p>\x0a</div>\x0a\x0a<\
+p><strong>PyCut<\
+/strong> process\
+es \x22paths\x22 in or\
+der to calculate\
+ geometries and \
+cnc tool paths, \
+but thankfully i\
+t can\x0aread out o\
+f the box all ki\
+nd of shapes, so\
+ there is <stron\
+g>no need</stron\
+g> to convert yo\
+ur svg files int\
+o \x22paths\x0aonly\x22 s\
+vgs. There is on\
+ly one exception\
+: for text data.\
+</p>\x0a\x0a\x0a<div clas\
+s=\x22info\x22>\x0a<p><st\
+rong>Note:</stro\
+ng> PyCut will o\
+nly display shap\
+es in its viewer\
+ which have an i\
+d.</p>\x0a</div>\x0a\x0a<\
+p>In order to re\
+ference the shap\
+es in <strong>Py\
+Cut</strong>, th\
+e shapes must ha\
+ve their own <st\
+rong>\x22id\x22</stron\
+g>, \x0ahopefully u\
+nique inside the\
+ svg document. T\
+he user, having \
+edited the svg f\
+ile \x22per hand\x22 o\
+r not, should no\
+t forget \x0ato che\
+ck for the ids a\
+nd give the shap\
+es he wishes to \
+process unique i\
+ds.</p>\x0a\x0a<div cl\
+ass=\x22info\x22>\x0a<p><\
+strong>Note:</st\
+rong> These ids \
+play the role of\
+ the shapes name\
+, so a good prac\
+tice is to give \
+them meaningfull\
+\x0avalues (names).\
+</p>\x0a</div>\x0a\x0a<h4\
+ id=\x22P-02-02-01\x22\
+>Opened and clos\
+ed paths</h4>\x0a\x0a<\
+p>A path can be \
+closed or not. T\
+his is not a mat\
+ter if the path'\
+s first point is\
+ equal to its la\
+st point. A clos\
+ed\x0apath or subpa\
+th contains the \
+annotation <stro\
+ng>\x22Z\x22</strong> \
+or <strong>\x22z\x22</\
+strong> at its e\
+nd. Even if the \
+first\x0apoint of t\
+he path is equal\
+ to its last poi\
+nt, the path is \
+only considered \
+as closed with t\
+he ending\x0a<stron\
+g>\x22Z\x22</strong> o\
+r <strong>\x22z\x22</s\
+trong>.</p>\x0a\x0a<di\
+v class=\x22warning\
+\x22>\x0a<p><strong>Wa\
+rning:</strong> \
+PyCut strongly r\
+elies on the <st\
+rong>[Zz]</stron\
+g> annotation to\
+ decide if the p\
+ath is\x0aclosed or\
+ not. When not c\
+losed, \x22Pocket\x22 \
+operations will \
+not be allowed f\
+or this opened p\
+ath.</p>\x0a</div>\x0a\
+\x0a<div class=\x22inf\
+o\x22>\x0a<p><strong>N\
+ote:</strong> It\
+ may looks at fi\
+rst sight someho\
+w pedandic, but \
+then there is a \
+clear flag wheth\
+er the \x0apath is \
+closed or not, w\
+ithout further c\
+hecks.</p>\x0a</div\
+>\x0a\x0a<p><strong>Py\
+Cut</strong> imp\
+orts closed path\
+s as shapely \x22Mu\
+ltiPolygon\x22, whi\
+le opened paths \
+are imported as\x0a\
+\x22MultiLineString\
+\x22, but here the \
+sake of simplici\
+ty, we will only\
+ refer them as \x22\
+Polygon\x22 or \x22Lin\
+eString\x22.</p>\x0a\x0a<\
+p><strong>PyCut<\
+/strong> will im\
+port the other s\
+vg shapes either\
+ as \x22<span style\
+=\x22color:#0000ff\x22\
+>Polygon</span>\x22\
+ (i.e.\x0a<strong>c\
+losed items</str\
+ong>) or as \x22<sp\
+an style=\x22color:\
+#0000ff\x22>LineStr\
+ing</span>\x22 (i.e\
+. <strong>opened\
+\x0aitems</strong>)\
+. Of course, svg\
+ <code class=\x22sv\
+g_tag\x22>&lt;rect&\
+gt;</code>, <cod\
+e class=\x22svg_tag\
+\x22>&lt;circle&gt;\
+</code>,\x0a<code c\
+lass=\x22svg_tag\x22>&\
+lt;ellipse&gt;</\
+code> and <code \
+class=\x22svg_tag\x22>\
+&lt;polygon&gt;<\
+/code> are close\
+d items, while\x0a<\
+code class=\x22svg_\
+tag\x22>&lt;line&gt\
+;</code> and <co\
+de class=\x22svg_ta\
+g\x22>&lt;polyline&\
+gt;</code> are o\
+pened items. Whe\
+n\x0aimporting a <s\
+pan style=\x22color\
+:#0000ff\x22>&lt;pa\
+th&gt;</span>, t\
+hings are more c\
+omplicated, as a\
+ path can be com\
+posed of\x0amany su\
+bpaths (starting\
+ with [<strong>M\
+m</strong>]) and\
+ every subpath c\
+an be closed or \
+not (ending with\
+\x0a[<strong>Zz</st\
+rong>]). <strong\
+>PyCut</strong> \
+will try to impo\
+rt these paths d\
+efinitions right\
+, and in case of\
+ closed\x0apaths wi\
+ll also try to i\
+mport them as sh\
+apely polygons \x22\
+<strong>with hol\
+es</strong>\x22 eve\
+n if this concep\
+t does not\x0aexist\
+ in SVG. <strong\
+>PyCut</strong> \
+will try to do i\
+ts best for this\
+ task. Moreover \
+<strong>PyCut</s\
+trong> will try \
+\x0ato import a svg\
+ path as a valid\
+ (shapely) <span\
+ style=\x22color:#0\
+000ff\x22>MultiPoly\
+gon </span> in t\
+he shapely sense\
+, \x0aor as a list \
+of valid MultiPo\
+lygons if one si\
+ngle\x0avalid Multi\
+Polygon is not p\
+ossible. For exa\
+mple, the letter\
+s \x22i\x22 or \x22j\x22 are\
+ defined with a \
+single svg path,\
+ defining\x0atwo se\
+parates polygons\
+, and it makes s\
+ense to consider\
+ these paths as \
+a single shapely\
+ MultiPolygon en\
+tity. The letter\
+\x0a\x22a\x22 is a polygo\
+n with one hole,\
+ the letter \x22g\x22 \
+is a polygon wit\
+h two holes (for\
+ some fonts). In\
+ the freetype\x0avo\
+cabulary, \x22a\x22 is\
+ formed by 2 \x22co\
+ntours\x22, \x22g\x22 by \
+three \x22contours\x22\
+.</p>\x0a\x0a\x0a<h3 id=\x22\
+P-02-03\x22>SVG Tex\
+t</h3>\x0a\x0a<p>The u\
+ser may also wan\
+t to process the\
+ strings written\
+ in the svg file\
+. The texts insi\
+de a svg file ar\
+e defined with t\
+he tag: </p>\x0a<ul\
+>\x0a  <li><code cl\
+ass=\x22svg_tag\x22>&l\
+t;text&gt;</code\
+></li>\x0a</ul>\x0a\x0a<d\
+iv class=\x22warnin\
+g\x22>\x0a<p><strong>W\
+arning:</strong>\
+ Strings are not\
+ (yet) imported \
+into <string>PyC\
+ut</strong> dire\
+ctly. \x0aThey have\
+ first to be con\
+verted to paths.\
+ </p>\x0a</div>\x0a\x0a<p\
+>As already stat\
+ed, <strong>PyCu\
+t</strong> canno\
+t process yet <c\
+ode class=\x22svg_t\
+ag\x22>&lt;text&gt;\
+</code> items di\
+rectly. \x0aFortuna\
+tely, <code clas\
+s=\x22svg_tag\x22>&lt;\
+text&gt;</code> \
+items can be con\
+verted into<code\
+ class=\x22svg_tag\x22\
+>&lt;path&gt;</c\
+ode>\x0aitems, sonc\
+e they will be i\
+gnored by <stron\
 g>PyCut</strong>\
-. It is achieved\
- through the men\
-ubar command <st\
-rong>SVG | Load\x0a\
-SVG</strong>. Th\
-e SVG content sh\
-ould be displaye\
-d in the central\
- area. </p>\x0a\x0a<h3\
- id=\x22P-03-02\x22>Cr\
-eating a PyCut P\
-roject</h3>\x0a\x0a<p>\
-Then create a ne\
-w \x22project\x22 : th\
-is is a file tha\
-t stores uponsid\
-e the svg file a\
-ll the CAM opera\
-tions that the u\
-ser\x0ahas created \
-or will create, \
-together with al\
-l others setting\
-s relevant when \
-generating GCode\
-. It can be crea\
-ted, saved\x0aand l\
-oaded again and \
-modified - quite\
- practical.</p>\x0a\
-\x0a<h3 id=\x22P-03-03\
-\x22>Creating CAM o\
-perations</h3>\x0a\x0a\
-<p>Once an empty\
- project is crea\
-ted and a svg fi\
-le loaded, it is\
- time to create \
-some CAM operati\
-ons: select 1 or\
- more\x0aitems in S\
-VG window (they \
-should turn beig\
-e) and click the\
- button \x22Create \
-Operation\x22: a ne\
-w operation in t\
-he operation\x0atab\
-le should appear\
-.</p>\x0a\x0a<p>Define\
- the properties \
-of the operation\
-: the main one i\
-s the CAM operat\
-ion type: </p>\x0a<\
-ul>\x0a  <li><stron\
-g>Pocket</strong\
-></li>\x0a  <li><st\
-rong>Engrave</st\
-rong></li>\x0a  <li\
-><strong>Inside<\
-/strong></li>\x0a  \
-<li><strong>Outs\
-ide</strong></li\
->\x0a</ul>\x0a\x0a<p>Ther\
-e are also the</\
-p>\x0a<ul>\x0a  <li><s\
-trong>Drill</str\
-ong></li>\x0a  <li>\
-<strong>Peck</st\
-rong></li>\x0a</ul>\
-\x0a\x0a<p>operations,\
- for the <span s\
+. <strong>PyCut<\
+/strong> also co\
+mes with the uti\
+ilty\x0a<strong>svg\
+text2svgpath.py<\
+/strong> which w\
+ill also convert\
+ your <code clas\
+s=\x22svg_tag\x22>&lt;\
+text&gt;</code> \
+items. How\x0ato us\
+e it? just call \
+the <strong>svgt\
+ext2svgpath.py</\
+strong> program \
+which outputs in\
+ a new svg the <\
+code\x0aclass=\x22svg_\
+tag\x22>&lt;text&gt\
+;</code> items a\
+s <code class=\x22s\
+vg_tag\x22>&lt;path\
+&gt;</code> item\
+s. Copy/paste th\
+e result of\x0aa <c\
+ode class=\x22svg_t\
+ag\x22>&lt;text&gt;\
+</code> conversi\
+on into your own\
+ svg. A successf\
+ull conversion w\
+ill only occurs \
+if\x0athe <code cla\
+ss=\x22svg_tag\x22>&lt\
+;text&gt;</code>\
+ item is simple \
+enough: the text\
+ \x22value\x22 should \
+not be splitted \
+into\x0aseveral <co\
+de class=\x22svg_ta\
+g\x22>&lt;tspan&gt;\
+</code> items wi\
+th different fon\
+ts. No <code\x0acla\
+ss=\x22svg_tag\x22>&lt\
+;tspan&gt;</code\
+> tag at all is \
+also possible (a\
+nd simpler). <st\
+rong><span style\
+=\x22color:#8000ff\x22\
+>IN\x0aPROGRESS</sp\
+an></strong>.</p\
+>\x0a\x0a<p>This utili\
+ty is found in t\
+he source code i\
+nside the folder\
+ \x22<strong>utilit\
+ies/svgtext2svgp\
+ath</strong>\x22, a\
+nd there \x0ais a s\
+mall tutorial in\
+cluded.</p>\x0a\x0a<p>\
+All in all, if <\
+strong>PyCut</st\
+rong> were to di\
+splay text strin\
+gs at the wrong \
+positions (after\
+ having transfor\
+med\x0athem into pa\
+ths), the user c\
+an always export\
+ the svg from <s\
+trong>Inkscape</\
+strong> (and wri\
+te <strong>PyCut\
+</strong> a\x0atick\
+et).</p>\x0a\x0a<h3 id\
+=\x22P-02-04\x22>SVG s\
+pecial tags: def\
+s and use</h3>\x0a\x0a\
+<p><strong>PyCut\
+</strong> cannot\
+ import directly\
+ the very handy \
+SVG <strong>&lt;\
+defs&gt;</strong\
+> and\x0a<strong>&l\
+t;use&gt;</stron\
+g> feature. The \
+utility <strong>\
+svgresolver.py</\
+strong> delivere\
+d with <strong>P\
+yCut</strong>\x0awi\
+ll have to be us\
+ed. The utility \
+<strong>svgresol\
+ver.py</strong> \
+takes as input t\
+he SVG file cont\
+aining\x0a<code>&lt\
+;defs&gt;</code>\
+ and <code>&lt;u\
+se&gt;</code> ta\
+gs and outputs a\
+ new SVG where a\
+ll\x0a<code>&lt;def\
+s&gt;/&lt;use&gt\
+;</code> have be\
+en resolved, i.e\
+. turned into re\
+al objects.</p>\x0a\
+\x0a<p>This utility\
+ is found in the\
+ source code ins\
+ide the folder \x22\
+<strong>utilitie\
+s/svgresolver</s\
+trong>\x22, \x0aand th\
+ere is a small t\
+utorial included\
+. </p>\x0a\x0a<p>One d\
+rawback is that \
+the user has the\
+n to manage 2 sv\
+g files: the fir\
+st one with <str\
+ong>&lt;defs&gt;\
+</strong> and\x0a<s\
+trong>&lt;use&gt\
+;</strong>, and \
+a second one, th\
+e \x22resolved\x22 one\
+ which is the in\
+put file for <st\
+rong>PyCut</stro\
+ng>.\x0a</p>\x0a\x0a<h4 i\
+d=\x22P-02-02-01\x22>T\
+ransformations</\
+h4>\x0a\x0a<div class=\
+\x22info\x22>\x0a<p><stro\
+ng>Info:</strong\
+>Transformations\
+ can be defined \
+on every shapes \
+or groups, and a\
+re often used in\
+ combinaison\x0awit\
+h the <strong>&l\
+t;defs&gt;</stro\
+ng> and <strong>\
+&lt;use&gt;</str\
+ong> tags.</p>\x0a<\
+/div>\x0a\x0a<p><stron\
+g>PyCut</strong>\
+ cannot handle \x22\
+out of the box\x22 \
+svg datas where \
+shapes are defin\
+ed with \x22transfo\
+rm\x22 operations\x0a(\
+translate, rotat\
+e etc.).</p>\x0a\x0a<p\
+>Nevertheless, i\
+t is also possib\
+le to \x22resolve\x22 \
+the shapes trans\
+formations with \
+the previously m\
+entioned utility\
+\x0a<strong>svgreso\
+lver.py</strong>\
+. This utility a\
+lso processes al\
+l transformation\
+s found in the s\
+vg file, while k\
+eeping\x0athe<stron\
+g>\x22id\x22</strong>s\
+ right. It works\
+ best in combina\
+ison of the <cod\
+e><span\x0astyle=\x22c\
+olor:#0000ff\x22>&l\
+t;use&gt;</span>\
+</code> tag, as \
+a single item de\
+fined in the <co\
+de><span\x0astyle=\x22\
+color:#0000ff\x22>&\
+lt;defs&gt;</spa\
+n></code> sectio\
+n can then be re\
+-used at many lo\
+cations. Obvious\
+ly, not\x0aeverythi\
+ng is possible: \
+for example, tra\
+nsforming a <cod\
+e><span style=\x22c\
+olor:#0000ff\x22>&l\
+t;rect&gt;</span\
+></code>\x0aelement\
+ with a rotate t\
+ransformation do\
+es not result in\
+ a <code><span s\
 tyle=\x22color:#000\
-0ff\x22>&lt;circle&\
-gt;</span> shape\
-s whose diameter\
- is smaller or e\
-qual to\x0athe tool\
- diameter, and t\
-he </p>\x0a<ul>\x0a  <\
-li><strong>Helix\
-</strong></li>\x0a<\
-/ul>\x0a\x0a<p>operati\
-on for <span sty\
-le=\x22color:#0000f\
-f\x22>&lt;circle&gt\
-;</span> of any \
-size. </p>\x0a\x0a<p>T\
-he others option\
-s will be discus\
-sed later. Defau\
-lt values at thi\
-s point should b\
-e Ok.</p>\x0a\x0a<h3 i\
-d=\x22P-03-04\x22>Gene\
-rate the GCode</\
-h3>\x0a\x0a<p>Select (\
-enable) one or m\
-ore CAM operatio\
-ns in the operat\
-ions table: the \
-\x22geometry\x22 of th\
-e operation(s) s\
-hould turn\x0ablack\
- in the SVG view\
-er: this is (are\
-) the region(s) \
-of the material \
-that wil be affe\
-cted when cuttin\
-g the material.<\
-/p>\x0a\x0a<p>Then fin\
-ish creating the\
- G-Code by press\
-ing the button \x22\
-Generate GCode\x22 \
-above the operat\
-ion table: the t\
-ool path(s)\x0ashou\
-ld appear(s) in \
-green in the bla\
-ck regions.</p>\x0a\
-\x0a<p>The produced\
- G-Code can be i\
-nspected in the \
-\x22G Code viewer\x22 \
-and the \x22G Code \
-Simulator\x22 displ\
-ay areas.</p>\x0a\x0a<\
-p>You just have \
-to save the G-Co\
-de and you're do\
-ne. The G-Code f\
-ile should be na\
-med as the CAM o\
-peration name, o\
-r, in\x0acase of mu\
-ltiple operation\
-s enabled, as th\
-e project name, \
-with ending suff\
-ix \x22nc\x22.</p>\x0a\x0a<d\
-iv style=\x22height\
-:30px\x22>\x0a</div>\x0a\x0a\
-<!-- -----------\
-----------------\
-----------------\
-----------------\
-----------------\
-----------------\
-----------------\
->\x0a<!-- ---------\
-----------------\
-----------------\
-----------------\
-----------------\
-----------------\
-----------------\
--->\x0a\x0a<h2 id=\x22P-0\
-4\x22>GUI Component\
-s</h2>\x0a\x0a<h3 id=\x22\
-P-04-01\x22>Svg Set\
-tings</h3>\x0a\x0a<div\
->\x0a<img src=\x22doc/\
-pycut_svgsetting\
-s.png\x22 width=\x2231\
-0px\x22> </div>\x0a\x0a<h\
-4>Title</h4>\x0a\x0a<p\
->This will displ\
-ay the SVG title\
- if set</p>\x0a\x0a<h4\
->Width</h4>\x0a\x0a<h4\
->Height</h4>\x0a\x0a<p\
-></p>\x0a\x0a<h3 id=\x22P\
--04-02\x22>Tool</h3\
->\x0a\x0a<div>\x0a<img sr\
-c=\x22doc/pycut_too\
-l.png\x22 width=\x2231\
-0\x22> </div>\x0a\x0a<h3 \
-id=\x22P-04-03\x22>Tab\
-s</h3>\x0a\x0a<p>It's \
-easy to define t\
-abs with <strong\
->PyCut</strong>:\
- just click the \
-button \x22Create T\
-ab\x22 and a red ci\
-rcle is created\x0a\
-in the svg viewe\
-r, of radius 5 a\
-nd position (10,\
-10). The user ca\
-n drag 'n drop i\
-t from the svg v\
-iewer, or set it\
-s\x0asize/postion i\
-n the tab table.\
- Yes tabs, for s\
-implicity, are c\
-ircle. To be eff\
-ective, the tabs\
- have to be enab\
-led and\x0aof cours\
-e placed somewhe\
-re on the genera\
-ted toolpaths. T\
-he height of the\
- tabs is shared \
-by all tabs. <st\
-rong>They are\x0aig\
-nored for Pocket\
- operations</str\
-ong>.</p>\x0a\x0a<div>\
-\x0a<img src=\x22doc/p\
-ycut_tabs.png\x22 w\
-idth=\x22310\x22> </di\
-v>\x0a\x0a<p></p>\x0a\x0a<p>\
-You can check th\
-e Gcode generati\
-on in the viewer\
-/simulator if ev\
-erythings is Ok.\
- </p>\x0a\x0a<h3 id=\x22P\
--04-04\x22>Material\
-</h3>\x0a\x0a<p>The Op\
-erations \x22Cut De\
-pth\x22 should not \
-be larger than t\
-he material thic\
-kness. </p>\x0a\x0a<di\
-v>\x0a<img src=\x22doc\
-/pycut_material.\
-png\x22 width=\x22310\x22\
-> </div>\x0a\x0a<p></p\
->\x0a\x0a<div class=\x22w\
-arning\x22>\x0a<p><str\
-ong>Warning</str\
-ong>: The cleara\
-nce is written i\
-n the produced g\
--code. Thus the \
-user should be s\
-ure it does not\x0a\
-exceed the physi\
-cal possibilitie\
-s of the machine\
- when travelling\
- in the z-axis, \
-especially for s\
-mall machines li\
-ke the\x0a1419 or 1\
-310.</p>\x0a</div>\x0a\
-\x0a<div class=\x22war\
-ning\x22>\x0a<p><stron\
-g>Warning</stron\
-g>: The thicknes\
-s as none impact\
- on the produced\
- GCode. It is on\
-ly there to rema\
-ind that every\x0aC\
-AM operation sho\
-uld not exceed t\
-his value (no ch\
-eck performed). \
-The depth cut of\
- any operation s\
-hould not exceed\
- the\x0amaterial re\
-al thickness, or\
- only exceeding \
-it with a minima\
-l value, only to\
- be sure to cut \
-through, and kno\
-wing there\x0ais a \
-spoilboard that \
-has an acceptabl\
-e thickness.</p>\
-\x0a</div>\x0a\x0a<h3 id=\
-\x22P-04-05\x22>Curve \
-to Line Conversi\
-on</h3>\x0a\x0a<p>If y\
-our design conta\
-in curves (svg \x22\
-arcs\x22 or \x22bezier\
-\x22 curves), they \
-have to be discr\
-etized in small \
-segments.</p>\x0a\x0a<\
-div>\x0a<img src=\x22d\
-oc/pycut_curve_t\
-o_line_conversio\
-n.png\x22 width=\x2230\
-0\x22></div>\x0a\x0a<p>Th\
-e 2 following pa\
-rameters allow t\
-o specified how \
-fine the curve d\
-iscretization wi\
-ll be:</p>\x0a<ul>\x0a\
-  <li>Minimun nu\
-mber of segments\
-</li>\x0a  <li>Mini\
-mum Segments len\
-gth</li>\x0a</ul>\x0a\x0a\
-<h3 id=\x22P-04-06\x22\
->GCode Conversio\
-n</h3>\x0a\x0a<p>The s\
-tarting location\
- of a milling op\
-eration is given\
- by the initial \
-location in the \
-GCode. Per defau\
-lt, PyCut gives\x0a\
-as starting poin\
-t the (0,0) coor\
-dinates of the S\
-VG file, which i\
-s located at the\
- top-left of the\
- material. The S\
-VG\x0aconventions a\
-re opposite to G\
-Code convention \
-considering the \
-Y direction.</p>\
-\x0a\x0a<p>So the GCod\
-e generation wil\
-l have to invert\
- the direction o\
-f the Y axis coo\
-rdinates. But st\
-ill the referenc\
-e is the\x0atop-lef\
-t postion.</p>\x0a\x0a\
-<p>It is possibl\
-e to change the \
-reference locati\
-on of the genera\
-ted GCode</p>\x0a<u\
-l>\x0a  <li>Zero to\
-p left of the ma\
-terial</li>\x0a  <l\
-i>Zero lower lef\
-t (bottom) of th\
-e material</li>\x0a\
-  <li>Zero lower\
- left (Op) i.e b\
-ottom left of th\
-e area defined b\
-y the Gcode</li>\
-\x0a  <li>Zero Cent\
-er (Op) i.e cent\
-er of the area d\
-efined by the Gc\
-ode</li>\x0a</ul>\x0a\x0a\
-<div>\x0a<img src=\x22\
-doc/pycut_gcode_\
-conversion.png\x22 \
-width=\x22310\x22> </d\
-iv>\x0a\x0a<p>Note tha\
-t these 4 button\
-s act as radio b\
-uttons.</p>\x0a\x0a<di\
-v class=\x22info\x22>\x0a\
-<p><strong>Note<\
-/strong>: In cas\
-e of lower left \
-(bottom) of the \
-material, the Y \
-size of the mate\
-rial is extracte\
-d form\x0athe svg f\
-ile: the svg \x22he\
-ight\x22 attribute.\
-</p>\x0a</div>\x0a\x0a<p>\
-These four basic\
- options set the\
- X-Offset and Y-\
-Offset of the GC\
-ode calculation.\
- After a GCode g\
-eneration, it is\
-\x0astill possible \
-to modify the X-\
-Offset and Y-Off\
-set to fit at be\
-st how to user w\
-ants to have the\
- origin be locat\
-ed with\x0athe help\
- of the 2 spin b\
-oxes. Infact, mo\
-difying \x22per han\
-d\x22 the X or Y of\
-fsets recalculat\
-e the GCode, so \
-this is a\x0acostly\
- operation.</p>\x0a\
-\x0a<p>The checkbox\
- \x22Use Offset\x22 is\
- used, as exampl\
-e, as the follow\
-ing: first, the \
-checkbox is unse\
-t. The user sele\
-cts only\x0aone CAM\
- operation, with\
- for example the\
- option <strong>\
-Zero Center (Op)\
-</strong>. The X\
- and Y offsets a\
-re thus\x0aautomati\
-cally evaluated.\
- Then the user c\
-hecks \x22on\x22 the <\
-b>\x22Use Offset\x22</\
-b> checkbox, so \
-that these offse\
-ts are frozen\x0aan\
-d become the ref\
-erences for the \
-further CAM oper\
-ations and their\
- produced gcodes\
-. </p>\x0a\x0a<div cla\
-ss=\x22warning\x22>\x0a<p\
-><strong>Info</s\
-trong>: The two \
-SpinBox entries \
-are \x22debounced\x22 \
-when entering th\
-e values from th\
-e keyboard, as e\
-ach\x0achange of va\
-lue calls the GC\
-ode generator, w\
-hich is a costly\
- operation. So o\
-nly by typing \x22E\
-nter\x22, the GCode\
- generator\x0ais th\
-en called. Utili\
-zing the spin bo\
-xes arrows is no\
-t debounced, so \
-at every step th\
-e GCode is recal\
-culated.</p>\x0a</d\
-iv>\x0a\x0a<p>Lets giv\
-e an example: in\
- a SVG file, two\
- circles are def\
-ined, one has to\
- be pocketed wit\
-h a depth of 10m\
-m, the other\x0awit\
-h 5 mm. So two o\
-perations are ne\
-eded. Imagine th\
-e center of the \
-first circle is \
-at (10,15) and t\
-he center of the\
-\x0asecond circle i\
-s at (20,25). If\
- boths operation\
-s are relative f\
-rom the \x22Zero to\
-p-Left material\x22\
- reference, no p\
-roblem.\x0aYou have\
- to position you\
-r bit exactly at\
- the \x22top-left\x22 \
-of your material\
- in order to mil\
-l the first hole\
- at exactly\x0a(10,\
-15) from this in\
-itial position. \
-</p>\x0a\x0a<p>But ima\
-gine you want th\
-e reference to b\
-e the center of \
-the first circle\
-. After having g\
-enerated the GCo\
-de for the\x0afirst\
- circle, click o\
-n \x22Zero Center (\
-Op)\x22 and observe\
- and carefully n\
-ote what are the\
- resulting X an \
-Y offsets (it wi\
-ll\x0abe (-10, 15))\
-. Now select the\
- second operatio\
-n and generate t\
-he GCode. The of\
-fsets will certa\
-inly chande, but\
- then type\x0ain th\
-e offsets the me\
-morized X and Y \
-offsets. The GCo\
-de will be reeva\
-luated with the \
-offsets (-10,15)\
- and thus the\x0aGC\
-ode 0,0 position\
- will be the cen\
-ter of the first\
- circle.</p>\x0a\x0a<p\
->But why would y\
-ou want to have \
-as reference of \
-the GCode the ce\
-nter of the firs\
-t circle ? Well \
-when milling the\
- two\x0aholes in yo\
-ur workpiece may\
-be you may want \
-to position the \
-bit at a given p\
-osition on the w\
-orkpiece and fro\
-m this\x0alocation \
-mill the second \
-holes, the first\
- hole beeing mil\
-led exactly when\
- you have positi\
-oned your bit. B\
-ecause what\x0awas \
-important was th\
-e relative posit\
-ion of the two h\
-oles, while the \
-absolute positio\
-n of the first h\
-ole was to be\x0ade\
-terminated by yo\
-urself on the wo\
-rkpiece.</p>\x0a\x0a<p\
->An other use ca\
-se is when 2 opa\
-rations have to \
-be performed wit\
-h a different to\
-ol diameter.</p>\
-\x0a\x0a<div class=\x22wa\
-rning\x22>\x0a<p><stro\
-ng>Info</strong>\
-: The option <st\
-rong>\x22Zero Cente\
-r (Op)\x22</strong>\
- is particularel\
-y usefull when t\
-he user wants\x0ato\
- run 2 different\
-s G-Code files p\
-roduced from 2 d\
-ifferent CAM ope\
-rations. A use c\
-ase is when thes\
-e 2 CAM operatio\
-ns\x0ahave 2 differ\
-ent tool diamete\
-rs. By ensuring \
-that the center \
-of the operation\
-s are the same, \
-at the end of th\
-e first\x0aoperatio\
-n (first GCode f\
-ile), the user c\
-an change the to\
-ol in the machin\
-e and load/start\
- the second G-Co\
-de file. This\x0aoc\
-curs when some h\
-oles have to be \
-drilled in the f\
-irst operation a\
-nd a contour or \
-pocket operation\
- has to be perfo\
-rmed\x0ain the seco\
-nd operation wit\
-h a much larger \
-tool. Of course \
-the two operatio\
-ns must have the\
- same center. If\
- not the\x0acase, t\
-he XOffset and Y\
-Offset can be se\
-t to ensure that\
- the centers are\
- coincidents.</p\
->\x0a</div>\x0a\x0a<p></p\
->\x0a\x0a<p>And furthe\
-r:</p>\x0a<ul>\x0a  <l\
-i>Flip X/Y </li>\
-\x0a</ul>\x0a\x0a<p>In th\
-e generated G Co\
-de, X and Y are \
-switched.This ca\
-n be helpfull, f\
-or example in th\
-e case your\x0a<str\
-ong>CNC</strong>\
- is the \x22<strong\
->1419</strong>\x22 \
-model (mine!) wh\
-ich is not as la\
-rge as deep. So \
-this option allo\
-ws\x0ato carve some\
-thing like 16x10\
- cm without rota\
-ting all items i\
-n the source svg\
-. </p>\x0a\x0a<p></p>\x0a\
-\x0a<h3 id=\x22P-04-07\
-\x22>GCode Generati\
-on</h3>\x0a\x0a<p>Some\
- useful options \
-can be set up:</\
-p>\x0a<ul>\x0a  <li>Re\
-turn at initial \
-location at end \
-of the Job</li>\x0a\
-  <li>Spindle St\
-art/Stop (<stron\
-g>M3</strong>/<s\
-trong>M5</strong\
-> codes)</li>\x0a  \
-<li><strong>M2</\
-strong> code</li\
->\x0a</ul>\x0a\x0a<p>Note\
- that the genera\
-ted GCode is mea\
-nt to be used fo\
-r a GRBL control\
- board, so only \
-\x22lines\x22 are gene\
-rated, no \x22arcs\x22\
-\x0aor other fancy \
-GCode directives\
-.</p>\x0a\x0a<div>\x0a<im\
-g src=\x22doc/pycut\
-_gcode_generatio\
-n.png\x22 width=\x2231\
-0\x22></div>\x0a<!-- -\
+0ff\x22>&lt;rect&gt\
+;</span></code>\x0a\
+(but a <code><sp\
+an style=\x22color:\
+#0000ff\x22>&lt;pol\
+ygon&gt;</span><\
+/code>) and <str\
+ong>svgresolver.\
+py</strong> cann\
+ot\x0ahandle this.<\
+/p>\x0a\x0a<p><strong>\
+<span style=\x22col\
+or:#8000ff\x22>IN P\
+ROGRESS</span></\
+strong>: this ut\
+ility should be \
+integrated into\x0a\
+<strong>PyCut</s\
+trong> so that t\
+he user can spar\
+e this extra ste\
+p.</p>\x0a\x0a<div sty\
+le=\x22height:30px\x22\
+>\x0a</div>\x0a\x0a<!-- -\
 ----------------\
 ----------------\
 ----------------\
@@ -1938,195 +1163,243 @@ n.png\x22 width=\x2231\
 ----------------\
 ----------------\
 ------------>\x0a\x0a<\
-p></p>\x0a\x0a<h3>Crea\
-te Operations</h\
-3>\x0a\x0a<p>This is w\
-here the user de\
-fined its cam op\
-erations, thus t\
-his is where the\
- action takes pl\
-ace.</p>\x0a\x0a<div>\x0a\
-<img src=\x22doc/py\
-cut_ops.png\x22 wid\
-th=\x221170\x22> </div\
->\x0a\x0a<p>First one \
-or more item(s) \
-have to be selec\
-ted in the svgvi\
-ewer, click on \x22\
-Create Operation\
-\x22 and a default \
-operation\x0ais cre\
-ated. When more \
-than one item ha\
-s been selected,\
- the user can pe\
-rform logical op\
-erations on this\
- set of item </p\
->\x0a<ul>\x0a  <li>dif\
-f</li>\x0a  <li>int\
-ersect</li>\x0a  <l\
-i>union</li>\x0a  <\
-li>xor</li>\x0a</ul\
->\x0a\x0a<p>When \x22enab\
-ling\x22 this op, t\
-he resulting geo\
-metry will be di\
-splayed ion the \
-svgviewer</p>\x0a\x0a<\
-div class=\x22info\x22\
->\x0a<p><strong>Not\
-e:</strong> The \
-geometry is high\
-lighted in red. \
-The highlight co\
-lor can be setup\
- in the settings\
- dialog,\x0aor from\
- the menu bar (t\
-hese 3 strange c\
-olored buttons).\
- It is useful to\
- choose a color \
-different from t\
-he color of your\
-\x0ashapes.</p>\x0a</d\
-iv>\x0a\x0a<p>Then the\
- cam operation c\
-an be chosen</p>\
-\x0a<ul>\x0a  <li>pock\
-et - only for cl\
-osed shapes</li>\
-\x0a  <li>inside</l\
-i>\x0a  <li>outside\
-</li>\x0a  <li>engr\
-ave</li>\x0a  <li>d\
-rill <strong><sp\
-an style=\x22color:\
-#0000ff\x22>- ONLY<\
-/span> <span sty\
-le=\x22color:#0000f\
-f\x22>for circle\x0a  \
-  shapes</span><\
-/strong></li>\x0a  \
-<li>peck <strong\
-><span style=\x22co\
-lor:#0000ff\x22>- O\
-NLY for circle s\
-hapes</span></st\
+h2 id=\x22P-03\x22>Bas\
+ic example</h2>\x0a\
+\x0a<h3>Opening the\
+ PyCut applicati\
+on</h3>\x0a\x0a<p>type\
+ in the console:\
+</p>\x0a\x0a<p><code>&\
+gt; python pycut\
+.py -h</code></p\
+>\x0a\x0a<p><code>&gt;\
+ python pycut.py\
+ --proj=&lt;proj\
+ectfile&gt;</cod\
+e></p>\x0a\x0a<p><code\
+>&gt; python pyc\
+ut.py --gcode=&l\
+t;gcodefile&gt;<\
+/code></p>\x0a\x0a<p>W\
+ithout argument,\
+ pycut opens wit\
+hout loading any\
+ SVG file. With \
+the <code>--proj\
+</code> argument\
+, a previously\x0as\
+aved project is \
+opened.</p>\x0a\x0a<h3\
+ id=\x22P-03-00\x22>Py\
+Cut as GCode sim\
+ulator</h3>\x0a\x0a<p>\
+<strong>PyCut</s\
+trong> can also \
+be used as a GCo\
+de viewer or sim\
+ulator. GCode fi\
+les can be loade\
+d with the\x0aargum\
+ent</p>\x0a\x0a<p><cod\
+e>&gt; python py\
+cut.py --gcode=&\
+lt;gcodefile&gt;\
+</code></p>\x0a\x0a<p>\
+Hopefully PyCut \
+can parse it (ro\
+ughly: what <str\
+ong>Candle</stro\
+ng> can parse - \
+<strong>PyCut</s\
+trong> uses a\x0asi\
+milar parser). T\
+he toolpaths can\
+ then be viewed \
+in the GCode vie\
+wer (toolpaths s\
+imulation) and G\
+Code simulator\x0a(\
+material removin\
+g simulation). F\
+or the GCode sim\
+ulator, the tool\
+ diameter is nee\
+ded for an accur\
+ate simulation. \
+PyCut\x0asaves its \
+generated gcode \
+files with a com\
+ment line of the\
+ form</p>\x0a<pre><\
+code class=\x22lang\
+uage-gcode\x22>; Di\
+ameter   &lt;val\
+ue&gt;</code></p\
+re>\x0a\x0a<p>that is \
+parsed to retrie\
+ve the right too\
+l diameter. Inse\
+rting such a lin\
+e in the externa\
+l GCode allows\x0a<\
+strong>PyCut</st\
+rong> to properl\
+y simulate the G\
+Code.</p>\x0a\x0a<h3 i\
+d=\x22P-03-01\x22>Load\
+ing a SVG file</\
+h3>\x0a\x0a<p>So for t\
+he very first ti\
+me, start <stron\
+g>PyCut</strong>\
+ without specify\
+ing any project.\
+</p>\x0a\x0a<p>Import \
+your svg into <s\
+trong>PyCut</str\
+ong>. It is achi\
+eved through the\
+ menubar command\
+ <strong>SVG | L\
+oad\x0aSVG</strong>\
+. The SVG conten\
+t should be disp\
+layed in the cen\
+tral area. </p>\x0a\
+\x0a<h3 id=\x22P-03-02\
+\x22>Creating a PyC\
+ut Project</h3>\x0a\
+\x0a<p>Then create \
+a new \x22project\x22 \
+: this is a file\
+ that stores upo\
+nside the svg fi\
+le all the CAM o\
+perations that t\
+he user\x0ahas crea\
+ted or will crea\
+te, together wit\
+h all others set\
+tings relevant w\
+hen generating G\
+Code. It can be \
+created, saved\x0aa\
+nd loaded again \
+and modified - q\
+uite practical.<\
+/p>\x0a\x0a<h3 id=\x22P-0\
+3-03\x22>Creating C\
+AM operations</h\
+3>\x0a\x0a<p>Once an e\
+mpty project is \
+created and a sv\
+g file loaded, i\
+t is time to cre\
+ate some CAM ope\
+rations: select \
+1 or more\x0aitems \
+in SVG window (t\
+hey should turn \
+beige) and click\
+ the button \x22Cre\
+ate Operation\x22: \
+a new operation \
+in the operation\
+\x0atable should ap\
+pear.</p>\x0a\x0a<p>De\
+fine the propert\
+ies of the opera\
+tion: the main o\
+ne is the CAM op\
+eration type: </\
+p>\x0a<ul>\x0a  <li><s\
+trong>Pocket</st\
 rong></li>\x0a  <li\
->helix <strong s\
-tyle=\x22color:#000\
-0ff\x22>- <span sty\
-le=\x22color:#8000f\
-f\x22><span style=\x22\
-color:#000000\x22><\
-/span></span>ONL\
-Y\x0a    for circle\
-/ellipse/rectang\
-le/polygon/close\
-d path shapes</s\
-trong></li>\x0a</ul\
->\x0a\x0a<p>For opened\
- paths, the pock\
-et/drill/peck op\
-erations are not\
- available.</p>\x0a\
-\x0a<p><strong><spa\
-n style=\x22color:#\
-8000ff\x22>NEW</spa\
-n></strong>: for\
- <strong>circles\
-</strong>, \x22<spa\
-n\x0astyle=\x22color:#\
-8000ff\x22><strong>\
-drill</strong></\
-span>\x22 and \x22<str\
-ong><span style=\
-\x22color:#8000ff\x22>\
-peck</span></str\
-ong>\x22\x0aoperations\
- are available. \
-Infact, for a po\
-cket operation w\
-ith a circle of \
-diameter smaller\
- than the cutter\
- diameter, no\x0ato\
-ol path would be\
- generated.<stro\
-ng>In case of th\
-e</strong> <stro\
-ng>circle diamet\
-er is smaller or\
- equal than the\x0a\
-cutter diameter<\
-/strong>, in ord\
-er to have toolp\
-ath, \x22<strong><s\
-pan style=\x22color\
-:#8000ff\x22>drill<\
-/span></strong>\x22\
- or\x0a\x22<strong><sp\
+><strong>Engrave\
+</strong></li>\x0a \
+ <li><strong>Ins\
+ide</strong></li\
+>\x0a  <li><strong>\
+Outside</strong>\
+</li>\x0a</ul>\x0a\x0a<p>\
+There are also t\
+he</p>\x0a<ul>\x0a  <l\
+i><strong>Drill<\
+/strong></li>\x0a  \
+<li><strong>Peck\
+</strong></li>\x0a<\
+/ul>\x0a\x0a<p>operati\
+ons, for the <sp\
 an style=\x22color:\
-#8000ff\x22>peck</s\
-pan></strong>\x22 i\
-s the way to go.\
- </p>\x0a\x0a<p><stron\
-g style=\x22color:#\
-8000ff\x22>NEW</str\
-ong>: for\x0a<stron\
-g>circles</stron\
-g>/<strong>ellip\
-ses</strong>/<st\
-rong>rectangles<\
-/strong>/<strong\
->polygons and mo\
-re generatly\x0aclo\
-sed paths</stron\
-g>, the \x22<strong\
- style=\x22color:#8\
-000ff\x22>helix</st\
-rong>\x22 operation\
- is available. T\
-his cut \x22smoothl\
-y\x22\x0ain the center\
- of the shape an\
- hole or a donut\
-, depending on t\
-he radius of the\
- helix and the c\
-utter diameter. \
-The helix\x0ahas al\
-ways the ticknes\
-s of the cutter \
-diameter.</p>\x0a\x0a<\
-p>In order to ge\
-nerate G code, e\
-nable one or man\
-y operations and\
- click on \x22Gener\
-ate G code\x22. <st\
-rong>PyCut</stro\
-ng>\x0awill try to \
-do its best... T\
-he resulting G c\
-ode is displayed\
- in the G code v\
-iewer and G code\
- simulator.</p>\x0a\
-\x0a<p>Finally, cli\
-cking on \x22Save G\
- code\x22 will prod\
-uce a valid G co\
-de file. <strong\
->Candle</strong>\
- can be used to \
-send the\x0aG code \
-to your machine.\
- Have fun...</p>\
+#0000ff\x22>&lt;cir\
+cle&gt;</span> s\
+hapes whose diam\
+eter is smaller \
+or equal to\x0athe \
+tool diameter, a\
+nd the </p>\x0a<ul>\
+\x0a  <li><strong>H\
+elix</strong></l\
+i>\x0a</ul>\x0a\x0a<p>ope\
+ration for <span\
+ style=\x22color:#0\
+000ff\x22>&lt;circl\
+e&gt;</span> of \
+any size. </p>\x0a\x0a\
+<p>The others op\
+tions will be di\
+scussed later. D\
+efault values at\
+ this point shou\
+ld be Ok.</p>\x0a\x0a<\
+h3 id=\x22P-03-04\x22>\
+Generate the GCo\
+de</h3>\x0a\x0a<p>Sele\
+ct (enable) one \
+or more CAM oper\
+ations in the op\
+erations table: \
+the \x22geometry\x22 o\
+f the operation(\
+s) should turn\x0ab\
+lack in the SVG \
+viewer: this is \
+(are) the region\
+(s) of the mater\
+ial that wil be \
+affected when cu\
+tting the materi\
+al.</p>\x0a\x0a<p>Then\
+ finish creating\
+ the G-Code by p\
+ressing the butt\
+on \x22Generate GCo\
+de\x22 above the op\
+eration table: t\
+he tool path(s)\x0a\
+should appear(s)\
+ in green in the\
+ black regions.<\
+/p>\x0a\x0a<p>The prod\
+uced G-Code can \
+be inspected in \
+the \x22G Code view\
+er\x22 and the \x22G C\
+ode Simulator\x22 d\
+isplay areas.</p\
+>\x0a\x0a<p>You just h\
+ave to save the \
+G-Code and you'r\
+e done. The G-Co\
+de file should b\
+e named as the C\
+AM operation nam\
+e, or, in\x0acase o\
+f multiple opera\
+tions enabled, a\
+s the project na\
+me, with ending \
+suffix \x22nc\x22.</p>\
 \x0a\x0a<div style=\x22he\
 ight:30px\x22>\x0a</di\
 v>\x0a\x0a<!-- -------\
@@ -2144,2269 +1417,2608 @@ v>\x0a\x0a<!-- -------\
 ----------------\
 ----------------\
 ------>\x0a\x0a<h2 id=\
-\x22P-05\x22>CAM Opera\
-tions</h2>\x0a\x0a<h3 \
-id=\x22P-05-01\x22>Ins\
-ide</h3>\x0a\x0a<h3 id\
-=\x22P-05-02\x22>Outsi\
-de</h3>\x0a\x0a<p>Whil\
-e the name speak\
-s for itself, be\
- aware that it i\
-s possible to ma\
-ke a cut from a \
-virtual \x22stock\x22 \
-by setting the\x0a\x22\
-width\x22 of the op\
-eration. This do\
-es not however a\
-llow to cut any \
-kind of stock as\
- the \x22width\x22 is \
-constant all ove\
-r the\x0acoutour we\
- wish to cut fro\
-m the ouside. Ne\
-vertheless, know\
-ing the exact di\
-mensions of the \
-material you are\
- cutting, it\x0ais \
-possible to defi\
-ne fake shapes i\
-n order to cut t\
-hem as a virtual\
- stocks.</p>\x0a\x0a<h\
-3 id=\x22P-05-03\x22>E\
-ngrave</h3>\x0a\x0a<p>\
-This cuts exactl\
-y on the shapes \
-borders. Be awar\
-e that the cutte\
-r has a diameter\
-!.</p>\x0a\x0a<h3 id=\x22\
-P-05-04\x22>Helix</\
-h3>\x0a\x0a<p>The heli\
-x's center will \
-be the <strong>c\
-enter of the (cl\
-osed) shape</str\
-ong>. For a circ\
-le, this is obvi\
-ously the\x0acenter\
- of the circle s\
-hape. Considerin\
-g the case where\
- the center of t\
-he helix is [0,0\
-], <strong>on wh\
-ich \x22orbit\x22 will\
-\x0amove the cutter\
-</strong>? Well \
-in case of an He\
-lix operation, t\
-he \x22<strong>widt\
-h</strong>\x22 oper\
-ation correspond\
-s to the\x0ahelix o\
-uter radius. Thi\
-s means that the\
- <strong>radius<\
-/strong> of the \
-orbit, the circl\
-e on which the c\
-utter center\x0atra\
-vels, is <code>w\
-idth - cutter_ra\
-dius</code>. So \
-the width has to\
- be larger than \
-the cutter radiu\
-s, sonce the hel\
-ix\x0awill be infac\
-t a drill operat\
-ion. A value lar\
-ger than the cut\
-ter diameter gen\
-erates a ring (w\
-ith an inner hol\
-e), and\x0athe heli\
-x is then simula\
-r to an \x22Inside\x22\
- or \x22Outside\x22ope\
-ration for an im\
-aginary circle s\
-hape, however wi\
-th a \x22smoother\x22\x0a\
-cut. </p>\x0a\x0a<p>Th\
-e helix pitch (r\
-evolution depth)\
- is the most imp\
-ortant parameter\
-. Theoretically,\
- the Helix opera\
-tion could perfo\
-rm\x0athreads cutti\
-ng by generating\
- first an hole, \
-then an helix \x22i\
-nside the hole\x22 \
-where the outer \
-radius of the he\
-lix would\x0abe sma\
-ller than the ho\
-le radius, and u\
-tilizing a dedic\
-ated cutter.</p>\
-\x0a\x0a<h3 id=\x22P-05-0\
-5\x22>Pockets</h3>\x0a\
-\x0a<p>The standard\
- pocket algorith\
-m is the so-call\
-ed \x22<strong>cont\
-our</strong>\x22 al\
-gorithm. Startin\
-g from the outsi\
-de\x0aborder, offse\
-t curves are gen\
-erated one after\
- the other until\
- the whole pocke\
-t \x22space\x22 is pro\
-cessed. At the e\
-nd,\x0aordering of \
-the offsets is r\
-eversed, thus st\
-arting from the \
-middle of the po\
-cket.</p>\x0a\x0a<p>Th\
-ere are others a\
-lgorithms, for e\
-xample the \x22<str\
-ong>spirale</str\
-ong>\x22 algorithm.\
- Here we start f\
-om the center of\
-\x0athe pocket and \
-go towards the o\
-utside in spiral\
-es, hence the na\
-me. It is easy t\
-o calculate the \
-toolpaths for\x0a<s\
-trong>circles</s\
-trong> and <stro\
-ng>ellipses</str\
-ong>. For the ot\
-her shapes, <str\
-ong>PyCut</stron\
-g> utilizes the\x0a\
-external (free) \
-library <strong \
-style=\x22color:#80\
-00ff\x22>HSM_nibble\
-rs</strong> whic\
-h produces very \
-nice\x0atoolpaths<s\
-trong>.</strong>\
-</p>\x0a\x0a<p><strong\
->PyCut</strong> \
-will try to impl\
-ement this <stro\
-ng>pocket</stron\
-g> algorithm in \
-two steps: first\
- an\x0a\x22<strong>Hel\
-ix</strong>\x22 ope\
-ration, then a \x22\
-<strong>Pocket</\
-strong>\x22 operati\
-on.</p>\x0a\x0a<p></p>\
-\x0a\x0a<p><strong sty\
-le=\x22color:#8000f\
-f\x22>Trick</strong\
->: to \x22activate\x22\
- the spirale alg\
-orithm, just nam\
-e the pocket ope\
-ration\x0awith a \x22<\
-strong>sp_</stro\
-ng>\x22 prefix! </p\
->\x0a\x0a<p><strong st\
-yle=\x22color:#8000\
-ff\x22>Trick</stron\
-g>: to \x22activate\
-\x22 the HSM_nibble\
-r algorithm, jus\
-t name the pocke\
-t\x0aoperation with\
- a \x22<strong>hsm_\
-</strong>\x22 prefi\
-x! </p>\x0a\x0a<div cl\
-ass=\x22info\x22>\x0a<p><\
-strong>Note:</st\
-rong> To enable \
-the Spirale pock\
-et toolpaths, pr\
-efix the pocket \
-operation with \x22\
-sp_\x22</p>\x0a</div>\x0a\
+\x22P-04\x22>GUI Compo\
+nents</h2>\x0a\x0a<h3 \
+id=\x22P-04-01\x22>Svg\
+ Settings</h3>\x0a\x0a\
+<div>\x0a<img src=\x22\
+doc/pycut_svgset\
+tings.png\x22 width\
+=\x22310px\x22> </div>\
+\x0a\x0a<h4>Title</h4>\
+\x0a\x0a<p>This will d\
+isplay the SVG t\
+itle if set</p>\x0a\
+\x0a<h4>Width</h4>\x0a\
+\x0a<h4>Height</h4>\
+\x0a\x0a<p></p>\x0a\x0a<h3 i\
+d=\x22P-04-02\x22>Tool\
+</h3>\x0a\x0a<div>\x0a<im\
+g src=\x22doc/pycut\
+_tool.png\x22 width\
+=\x22310\x22> </div>\x0a\x0a\
+<h3 id=\x22P-04-03\x22\
+>Tabs</h3>\x0a\x0a<p>I\
+t's easy to defi\
+ne tabs with <st\
+rong>PyCut</stro\
+ng>: just click \
+the button \x22Crea\
+te Tab\x22 and a re\
+d circle is crea\
+ted\x0ain the svg v\
+iewer, of radius\
+ 5 and position \
+(10,10). The use\
+r can drag 'n dr\
+op it from the s\
+vg viewer, or se\
+t its\x0asize/posti\
+on in the tab ta\
+ble. Yes tabs, f\
+or simplicity, a\
+re circle. To be\
+ effective, the \
+tabs have to be \
+enabled and\x0aof c\
+ourse placed som\
+ewhere on the ge\
+nerated toolpath\
+s. The height of\
+ the tabs is sha\
+red by all tabs.\
+ <strong>They ar\
+e\x0aignored for Po\
+cket operations<\
+/strong>.</p>\x0a\x0a<\
+div>\x0a<img src=\x22d\
+oc/pycut_tabs.pn\
+g\x22 width=\x22310\x22> \
+</div>\x0a\x0a<p></p>\x0a\
+\x0a<p>You can chec\
+k the Gcode gene\
+ration in the vi\
+ewer/simulator i\
+f everythings is\
+ Ok. </p>\x0a\x0a<h3 i\
+d=\x22P-04-04\x22>Mate\
+rial</h3>\x0a\x0a<p>Th\
+e Operations \x22Cu\
+t Depth\x22 should \
+not be larger th\
+an the material \
+thickness. </p>\x0a\
+\x0a<div>\x0a<img src=\
+\x22doc/pycut_mater\
+ial.png\x22 width=\x22\
+310\x22> </div>\x0a\x0a<p\
+></p>\x0a\x0a<div clas\
+s=\x22warning\x22>\x0a<p>\
+<strong>Warning<\
+/strong>: The cl\
+earance is writt\
+en in the produc\
+ed g-code. Thus \
+the user should \
+be sure it does \
+not\x0aexceed the p\
+hysical possibil\
+ities of the mac\
+hine when travel\
+ling in the z-ax\
+is, especially f\
+or small machine\
+s like the\x0a1419 \
+or 1310.</p>\x0a</d\
+iv>\x0a\x0a<div class=\
+\x22warning\x22>\x0a<p><s\
+trong>Warning</s\
+trong>: The thic\
+kness as none im\
+pact on the prod\
+uced GCode. It i\
+s only there to \
+remaind that eve\
+ry\x0aCAM operation\
+ should not exce\
+ed this value (n\
+o check performe\
+d). The depth cu\
+t of any operati\
+on should not ex\
+ceed the\x0amateria\
+l real thickness\
+, or only exceed\
+ing it with a mi\
+nimal value, onl\
+y to be sure to \
+cut through, and\
+ knowing there\x0ai\
+s a spoilboard t\
+hat has an accep\
+table thickness.\
+</p>\x0a</div>\x0a\x0a<h3\
+ id=\x22P-04-05\x22>Cu\
+rve to Line Conv\
+ersion</h3>\x0a\x0a<p>\
+If your design c\
+ontain curves (s\
+vg \x22arcs\x22 or \x22be\
+zier\x22 curves), t\
+hey have to be d\
+iscretized in sm\
+all segments.</p\
+>\x0a\x0a<div>\x0a<img sr\
+c=\x22doc/pycut_cur\
+ve_to_line_conve\
+rsion.png\x22 width\
+=\x22300\x22></div>\x0a\x0a<\
+p>The 2 followin\
+g parameters all\
+ow to specified \
+how fine the cur\
+ve discretizatio\
+n will be:</p>\x0a<\
+ul>\x0a  <li>Minimu\
+n number of segm\
+ents</li>\x0a  <li>\
+Minimum Segments\
+ length</li>\x0a</u\
+l>\x0a\x0a<h3 id=\x22P-04\
+-06\x22>GCode Conve\
+rsion</h3>\x0a\x0a<p>T\
+he starting loca\
+tion of a millin\
+g operation is g\
+iven by the init\
+ial location in \
+the GCode. Per d\
+efault, PyCut gi\
+ves\x0aas starting \
+point the (0,0) \
+coordinates of t\
+he SVG file, whi\
+ch is located at\
+ the top-left of\
+ the material. T\
+he SVG\x0aconventio\
+ns are opposite \
+to GCode convent\
+ion considering \
+the Y direction.\
+</p>\x0a\x0a<p>So the \
+GCode generation\
+ will have to in\
+vert the directi\
+on of the Y axis\
+ coordinates. Bu\
+t still the refe\
+rence is the\x0atop\
+-left postion.</\
+p>\x0a\x0a<p>It is pos\
+sible to change \
+the reference lo\
+cation of the ge\
+nerated GCode</p\
+>\x0a<ul>\x0a  <li>Zer\
+o top left of th\
+e material</li>\x0a\
+  <li>Zero lower\
+ left (bottom) o\
+f the material</\
+li>\x0a  <li>Zero l\
+ower left (Op) i\
+.e bottom left o\
+f the area defin\
+ed by the Gcode<\
+/li>\x0a  <li>Zero \
+Center (Op) i.e \
+center of the ar\
+ea defined by th\
+e Gcode</li>\x0a</u\
+l>\x0a\x0a<div>\x0a<img s\
+rc=\x22doc/pycut_gc\
+ode_conversion.p\
+ng\x22 width=\x22310\x22>\
+ </div>\x0a\x0a<p>Note\
+ that these 4 bu\
+ttons act as rad\
+io buttons.</p>\x0a\
 \x0a<div class=\x22inf\
 o\x22>\x0a<p><strong>N\
-ote:</strong> To\
- enable the HSM \
+ote</strong>: In\
+ case of lower l\
+eft (bottom) of \
+the material, th\
+e Y size of the \
+material is extr\
+acted form\x0athe s\
+vg file: the svg\
+ \x22height\x22 attrib\
+ute.</p>\x0a</div>\x0a\
+\x0a<p>These four b\
+asic options set\
+ the X-Offset an\
+d Y-Offset of th\
+e GCode calculat\
+ion. After a GCo\
+de generation, i\
+t is\x0astill possi\
+ble to modify th\
+e X-Offset and Y\
+-Offset to fit a\
+t best how to us\
+er wants to have\
+ the origin be l\
+ocated with\x0athe \
+help of the 2 sp\
+in boxes. Infact\
+, modifying \x22per\
+ hand\x22 the X or \
+Y offsets recalc\
+ulate the GCode,\
+ so this is a\x0aco\
+stly operation.<\
+/p>\x0a\x0a<p>The chec\
+kbox \x22Use Offset\
+\x22 is used, as ex\
+ample, as the fo\
+llowing: first, \
+the checkbox is \
+unset. The user \
+selects only\x0aone\
+ CAM operation, \
+with for example\
+ the option <str\
+ong>Zero Center \
+(Op)</strong>. T\
+he X and Y offse\
+ts are thus\x0aauto\
+matically evalua\
+ted. Then the us\
+er checks \x22on\x22 t\
+he <b>\x22Use Offse\
+t\x22</b> checkbox,\
+ so that these o\
+ffsets are froze\
+n\x0aand become the\
+ references for \
+the further CAM \
+operations and t\
+heir produced gc\
+odes. </p>\x0a\x0a<div\
+ class=\x22warning\x22\
+>\x0a<p><strong>Inf\
+o</strong>: The \
+two SpinBox entr\
+ies are \x22debounc\
+ed\x22 when enterin\
+g the values fro\
+m the keyboard, \
+as each\x0achange o\
+f value calls th\
+e GCode generato\
+r, which is a co\
+stly operation. \
+So only by typin\
+g \x22Enter\x22, the G\
+Code generator\x0ai\
+s then called. U\
+tilizing the spi\
+n boxes arrows i\
+s not debounced,\
+ so at every ste\
+p the GCode is r\
+ecalculated.</p>\
+\x0a</div>\x0a\x0a<p>Lets\
+ give an example\
+: in a SVG file,\
+ two circles are\
+ defined, one ha\
+s to be pocketed\
+ with a depth of\
+ 10mm, the other\
+\x0awith 5 mm. So t\
+wo operations ar\
+e needed. Imagin\
+e the center of \
+the first circle\
+ is at (10,15) a\
+nd the center of\
+ the\x0asecond circ\
+le is at (20,25)\
+. If boths opera\
+tions are relati\
+ve from the \x22Zer\
+o top-Left mater\
+ial\x22 reference, \
+no problem.\x0aYou \
+have to position\
+ your bit exactl\
+y at the \x22top-le\
+ft\x22 of your mate\
+rial in order to\
+ mill the first \
+hole at exactly\x0a\
+(10,15) from thi\
+s initial positi\
+on. </p>\x0a\x0a<p>But\
+ imagine you wan\
+t the reference \
+to be the center\
+ of the first ci\
+rcle. After havi\
+ng generated the\
+ GCode for the\x0af\
+irst circle, cli\
+ck on \x22Zero Cent\
+er (Op)\x22 and obs\
+erve and careful\
+ly note what are\
+ the resulting X\
+ an Y offsets (i\
+t will\x0abe (-10, \
+15)). Now select\
+ the second oper\
+ation and genera\
+te the GCode. Th\
+e offsets will c\
+ertainly chande,\
+ but then type\x0ai\
+n the offsets th\
+e memorized X an\
+d Y offsets. The\
+ GCode will be r\
+eevaluated with \
+the offsets (-10\
+,15) and thus th\
+e\x0aGCode 0,0 posi\
+tion will be the\
+ center of the f\
+irst circle.</p>\
+\x0a\x0a<p>But why wou\
+ld you want to h\
+ave as reference\
+ of the GCode th\
+e center of the \
+first circle ? W\
+ell when milling\
+ the two\x0aholes i\
+n your workpiece\
+ maybe you may w\
+ant to position \
+the bit at a giv\
+en position on t\
+he workpiece and\
+ from this\x0alocat\
+ion mill the sec\
+ond holes, the f\
+irst hole beeing\
+ milled exactly \
+when you have po\
+sitioned your bi\
+t. Because what\x0a\
+was important wa\
+s the relative p\
+osition of the t\
+wo holes, while \
+the absolute pos\
+ition of the fir\
+st hole was to b\
+e\x0adeterminated b\
+y yourself on th\
+e workpiece.</p>\
+\x0a\x0a<p>An other us\
+e case is when 2\
+ oparations have\
+ to be performed\
+ with a differen\
+t tool diameter.\
+</p>\x0a\x0a<div class\
+=\x22warning\x22>\x0a<p><\
+strong>Info</str\
+ong>: The option\
+ <strong>\x22Zero C\
+enter (Op)\x22</str\
+ong> is particul\
+arely usefull wh\
+en the user want\
+s\x0ato run 2 diffe\
+rents G-Code fil\
+es produced from\
+ 2 different CAM\
+ operations. A u\
+se case is when \
+these 2 CAM oper\
+ations\x0ahave 2 di\
+fferent tool dia\
+meters. By ensur\
+ing that the cen\
+ter of the opera\
+tions are the sa\
+me, at the end o\
+f the first\x0aoper\
+ation (first GCo\
+de file), the us\
+er can change th\
+e tool in the ma\
+chine and load/s\
+tart the second \
+G-Code file. Thi\
+s\x0aoccurs when so\
+me holes have to\
+ be drilled in t\
+he first operati\
+on and a contour\
+ or pocket opera\
+tion has to be p\
+erformed\x0ain the \
+second operation\
+ with a much lar\
+ger tool. Of cou\
+rse the two oper\
+ations must have\
+ the same center\
+. If not the\x0acas\
+e, the XOffset a\
+nd YOffset can b\
+e set to ensure \
+that the centers\
+ are coincidents\
+.</p>\x0a</div>\x0a\x0a<p\
+></p>\x0a\x0a<p>And fu\
+rther:</p>\x0a<ul>\x0a\
+  <li>Flip X/Y <\
+/li>\x0a</ul>\x0a\x0a<p>I\
+n the generated \
+G Code, X and Y \
+are switched.Thi\
+s can be helpful\
+l, for example i\
+n the case your\x0a\
+<strong>CNC</str\
+ong> is the \x22<st\
+rong>1419</stron\
+g>\x22 model (mine!\
+) which is not a\
+s large as deep.\
+ So this option \
+allows\x0ato carve \
+something like 1\
+6x10 cm without \
+rotating all ite\
+ms in the source\
+ svg. </p>\x0a\x0a<p><\
+/p>\x0a\x0a<h3 id=\x22P-0\
+4-07\x22>GCode Gene\
+ration</h3>\x0a\x0a<p>\
+Some useful opti\
+ons can be set u\
+p:</p>\x0a<ul>\x0a  <l\
+i>Return at init\
+ial location at \
+end of the Job</\
+li>\x0a  <li>Spindl\
+e Start/Stop (<s\
+trong>M3</strong\
+>/<strong>M5</st\
+rong> codes)</li\
+>\x0a  <li><strong>\
+M2</strong> code\
+</li>\x0a</ul>\x0a\x0a<p>\
+Note that the ge\
+nerated GCode is\
+ meant to be use\
+d for a GRBL con\
+trol board, so o\
+nly \x22lines\x22 are \
+generated, no \x22a\
+rcs\x22\x0aor other fa\
+ncy GCode direct\
+ives.</p>\x0a\x0a<div>\
+\x0a<img src=\x22doc/p\
+ycut_gcode_gener\
+ation.png\x22 width\
+=\x22310\x22></div>\x0a<!\
+-- -------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+-------------->\x0a\
+<!-- -----------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+>\x0a\x0a<p></p>\x0a\x0a<h3>\
+Create Operation\
+s</h3>\x0a\x0a<p>This \
+is where the use\
+r defined its ca\
+m operations, th\
+us this is where\
+ the action take\
+s place.</p>\x0a\x0a<d\
+iv>\x0a<img src=\x22do\
+c/pycut_ops.png\x22\
+ width=\x221170\x22> <\
+/div>\x0a\x0a<p>First \
+one or more item\
+(s) have to be s\
+elected in the s\
+vgviewer, click \
+on \x22Create Opera\
+tion\x22 and a defa\
+ult operation\x0ais\
+ created. When m\
+ore than one ite\
+m has been selec\
+ted, the user ca\
+n perform logica\
+l operations on \
+this set of item\
+ </p>\x0a<ul>\x0a  <li\
+>diff</li>\x0a  <li\
+>intersect</li>\x0a\
+  <li>union</li>\
+\x0a  <li>xor</li>\x0a\
+</ul>\x0a\x0a<p>When \x22\
+enabling\x22 this o\
+p, the resulting\
+ geometry will b\
+e displayed ion \
+the svgviewer</p\
+>\x0a\x0a<div class=\x22i\
+nfo\x22>\x0a<p><strong\
+>Note:</strong> \
+The geometry is \
+highlighted in r\
+ed. The highligh\
+t color can be s\
+etup in the sett\
+ings dialog,\x0aor \
+from the menu ba\
+r (these 3 stran\
+ge colored butto\
+ns). It is usefu\
+l to choose a co\
+lor different fr\
+om the color of \
+your\x0ashapes.</p>\
+\x0a</div>\x0a\x0a<p>Then\
+ the cam operati\
+on can be chosen\
+</p>\x0a<ul>\x0a  <li>\
+pocket - only fo\
+r closed shapes<\
+/li>\x0a  <li>insid\
+e</li>\x0a  <li>out\
+side</li>\x0a  <li>\
+engrave</li>\x0a  <\
+li>drill <strong\
+><span style=\x22co\
+lor:#0000ff\x22>- O\
+NLY</span> <span\
+ style=\x22color:#0\
+000ff\x22>for circl\
+e\x0a    shapes</sp\
+an></strong></li\
+>\x0a  <li>peck <st\
+rong><span style\
+=\x22color:#0000ff\x22\
+>- ONLY for circ\
+le shapes</span>\
+</strong></li>\x0a \
+ <li>helix <stro\
+ng style=\x22color:\
+#0000ff\x22>- <span\
+ style=\x22color:#8\
+000ff\x22><span sty\
+le=\x22color:#00000\
+0\x22></span></span\
+>ONLY\x0a    for ci\
+rcle/ellipse/rec\
+tangle/polygon/c\
+losed path shape\
+s</strong></li>\x0a\
+</ul>\x0a\x0a<p>For op\
+ened paths, the \
+pocket/drill/pec\
+k operations are\
+ not available.<\
+/p>\x0a\x0a<p><strong>\
+<span style=\x22col\
+or:#8000ff\x22>NEW<\
+/span></strong>:\
+ for <strong>cir\
+cles</strong>, \x22\
+<span\x0astyle=\x22col\
+or:#8000ff\x22><str\
+ong>drill</stron\
+g></span>\x22 and \x22\
+<strong><span st\
+yle=\x22color:#8000\
+ff\x22>peck</span><\
+/strong>\x22\x0aoperat\
+ions are availab\
+le. Infact, for \
+a pocket operati\
+on with a circle\
+ of diameter sma\
+ller than the cu\
+tter diameter, n\
+o\x0atool path woul\
+d be generated.<\
+strong>In case o\
+f the</strong> <\
+strong>circle di\
+ameter is smalle\
+r or equal than \
+the\x0acutter diame\
+ter</strong>, in\
+ order to have t\
+oolpath, \x22<stron\
+g><span style=\x22c\
+olor:#8000ff\x22>dr\
+ill</span></stro\
+ng>\x22 or\x0a\x22<strong\
+><span style=\x22co\
+lor:#8000ff\x22>pec\
+k</span></strong\
+>\x22 is the way to\
+ go. </p>\x0a\x0a<p><s\
+trong style=\x22col\
+or:#8000ff\x22>NEW<\
+/strong>: for\x0a<s\
+trong>circles</s\
+trong>/<strong>e\
+llipses</strong>\
+/<strong>rectang\
+les</strong>/<st\
+rong>polygons an\
+d more generatly\
+\x0aclosed paths</s\
+trong>, the \x22<st\
+rong style=\x22colo\
+r:#8000ff\x22>helix\
+</strong>\x22 opera\
+tion is availabl\
+e. This cut \x22smo\
+othly\x22\x0ain the ce\
+nter of the shap\
+e an hole or a d\
+onut, depending \
+on the radius of\
+ the helix and t\
+he cutter diamet\
+er. The helix\x0aha\
+s always the tic\
+kness of the cut\
+ter diameter.</p\
+>\x0a\x0a<p>In order t\
+o generate G cod\
+e, enable one or\
+ many operations\
+ and click on \x22G\
+enerate G code\x22.\
+ <strong>PyCut</\
+strong>\x0awill try\
+ to do its best.\
+.. The resulting\
+ G code is displ\
+ayed in the G co\
+de viewer and G \
+code simulator.<\
+/p>\x0a\x0a<p>Finally,\
+ clicking on \x22Sa\
+ve G code\x22 will \
+produce a valid \
+G code file. <st\
+rong>Candle</str\
+ong> can be used\
+ to send the\x0aG c\
+ode to your mach\
+ine. Have fun...\
+</p>\x0a\x0a<div style\
+=\x22height:30px\x22>\x0a\
+</div>\x0a\x0a<!-- ---\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+-------->\x0a<!-- -\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+----------------\
+---------->\x0a\x0a<h2\
+ id=\x22P-05\x22>CAM O\
+perations</h2>\x0a\x0a\
+<h3 id=\x22P-05-01\x22\
+>Inside</h3>\x0a\x0a<h\
+3 id=\x22P-05-02\x22>O\
+utside</h3>\x0a\x0a<p>\
+While the name s\
+peaks for itself\
+, be aware that \
+it is possible t\
+o make a cut fro\
+m a virtual \x22sto\
+ck\x22 by setting t\
+he\x0a\x22width\x22 of th\
+e operation. Thi\
+s does not howev\
+er allow to cut \
+any kind of stoc\
+k as the \x22width\x22\
+ is constant all\
+ over the\x0acoutou\
+r we wish to cut\
+ from the ouside\
+. Nevertheless, \
+knowing the exac\
+t dimensions of \
+the material you\
+ are cutting, it\
+\x0ais possible to \
+define fake shap\
+es in order to c\
+ut them as a vir\
+tual stocks.</p>\
+\x0a\x0a<h3 id=\x22P-05-0\
+3\x22>Engrave</h3>\x0a\
+\x0a<p>This cuts ex\
+actly on the sha\
+pes borders. Be \
+aware that the c\
+utter has a diam\
+eter!.</p>\x0a\x0a<h3 \
+id=\x22P-05-04\x22>Hel\
+ix</h3>\x0a\x0a<p>The \
+helix's center w\
+ill be the <stro\
+ng>center of the\
+ (closed) shape<\
+/strong>. For a \
+circle, this is \
+obviously the\x0ace\
+nter of the circ\
+le shape. Consid\
+ering the case w\
+here the center \
+of the helix is \
+[0,0], <strong>o\
+n which \x22orbit\x22 \
+will\x0amove the cu\
+tter</strong>? W\
+ell in case of a\
+n Helix operatio\
+n, the \x22<strong>\
+width</strong>\x22 \
+operation corres\
+ponds to the\x0ahel\
+ix outer radius.\
+ This means that\
+ the <strong>rad\
+ius</strong> of \
+the orbit, the c\
+ircle on which t\
+he cutter center\
+\x0atravels, is <co\
+de>width - cutte\
+r_radius</code>.\
+ So the width ha\
+s to be larger t\
+han the cutter r\
+adius, sonce the\
+ helix\x0awill be i\
+nfact a drill op\
+eration. A value\
+ larger than the\
+ cutter diameter\
+ generates a rin\
+g (with an inner\
+ hole), and\x0athe \
+helix is then si\
+mular to an \x22Ins\
+ide\x22 or \x22Outside\
+\x22operation for a\
+n imaginary circ\
+le shape, howeve\
+r with a \x22smooth\
+er\x22\x0acut. </p>\x0a\x0a<\
+p>The helix pitc\
+h (revolution de\
+pth) is the most\
+ important param\
+eter. Theoretica\
+lly, the Helix o\
+peration could p\
+erform\x0athreads c\
+utting by genera\
+ting first an ho\
+le, then an heli\
+x \x22inside the ho\
+le\x22 where the ou\
+ter radius of th\
+e helix would\x0abe\
+ smaller than th\
+e hole radius, a\
+nd utilizing a d\
+edicated cutter.\
+</p>\x0a\x0a<h3 id=\x22P-\
+05-05\x22>Pockets</\
+h3>\x0a\x0a<p>The stan\
+dard pocket algo\
+rithm is the so-\
+called \x22<strong>\
+contour</strong>\
+\x22 algorithm. Sta\
+rting from the o\
+utside\x0aborder, o\
+ffset curves are\
+ generated one a\
+fter the other u\
+ntil the whole p\
+ocket \x22space\x22 is\
+ processed. At t\
+he end,\x0aordering\
+ of the offsets \
+is reversed, thu\
+s starting from \
+the middle of th\
+e pocket.</p>\x0a\x0a<\
+p>There are othe\
+rs algorithms, f\
+or example the \x22\
+<strong>spirale<\
+/strong>\x22 algori\
+thm. Here we sta\
+rt fom the cente\
+r of\x0athe pocket \
+and go towards t\
+he outside in sp\
+irales, hence th\
+e name. It is ea\
+sy to calculate \
+the toolpaths fo\
+r\x0a<strong>circle\
+s</strong> and <\
+strong>ellipses<\
+/strong>. For th\
+e other shapes, \
+<strong>PyCut</s\
+trong> utilizes \
+the\x0aexternal (fr\
+ee) library <str\
+ong style=\x22color\
+:#8000ff\x22>HSM_ni\
+bblers</strong> \
+which produces v\
+ery nice\x0atoolpat\
+hs<strong>.</str\
+ong></p>\x0a\x0a<p><st\
+rong>PyCut</stro\
+ng> will try to \
+implement this <\
+strong>pocket</s\
+trong> algorithm\
+ in two steps: f\
+irst an\x0a\x22<strong\
+>Helix</strong>\x22\
+ operation, then\
+ a \x22<strong>Pock\
+et</strong>\x22 ope\
+ration.</p>\x0a\x0a<p>\
+</p>\x0a\x0a<p><strong\
+ style=\x22color:#8\
+000ff\x22>Trick</st\
+rong>: to \x22activ\
+ate\x22 the spirale\
+ algorithm, just\
+ name the pocket\
+ operation\x0awith \
+a \x22<strong>sp_</\
+strong>\x22 prefix!\
+ </p>\x0a\x0a<p><stron\
+g style=\x22color:#\
+8000ff\x22>Trick</s\
+trong>: to \x22acti\
+vate\x22 the HSM_ni\
+bbler algorithm,\
+ just name the p\
+ocket\x0aoperation \
+with a \x22<strong>\
+hsm_</strong>\x22 p\
+refix! </p>\x0a\x0a<di\
+v class=\x22info\x22>\x0a\
+<p><strong>Note:\
+</strong> To ena\
+ble the Spirale \
 pocket toolpaths\
 , prefix the poc\
 ket operation wi\
-th \x22hsm_\x22</p>\x0a</\
-div>\x0a\x0a<p>The hel\
-ix will be cut i\
-n the \x22center\x22 o\
-f the shape (the\
- shapely polygon\
- \x22centroid)\x22, an\
-d we pass this l\
-ocation to\x0athe H\
-SM nibbler, thus\
- ensuring a good\
- start of the po\
-cket \x22hsm_nibble\
-r\x22 operation.</p\
->\x0a\x0a<p>The spiral\
-es will be for <\
-strong>circles, \
-ellipses</strong\
-> shapes only -s\
-omething admitti\
-ngly rather rest\
-rictive-\x0abecause\
- these cases are\
- more or less tr\
-ivial. There is \
-then no \x22isles\x22 \
-that neccessarel\
-y occur in the c\
-orners of the\x0apo\
-cket for non-tri\
-vial geometries.\
- But the HSM_nib\
-blers toopaths a\
-re there for the\
- others shapes.<\
-/p>\x0a\x0a<div class=\
+th \x22sp_\x22</p>\x0a</d\
+iv>\x0a\x0a<div class=\
 \x22info\x22>\x0a<p><stro\
 ng>Note:</strong\
-> Having succesf\
-ully created an \
-helix (hole) int\
-o the center of \
-a basic shape\x0a(<\
-strong>circle</s\
-trong>, <strong>\
-ellipse</strong>\
-, <strong>rectan\
-gle</strong>, <s\
-trong>polygon</s\
-trong> or\x0a<stron\
-g>closed path</s\
-trong>), then th\
-e \x22standard\x22 poc\
-ket algorithm ca\
-n be used with a\
- <strong>very la\
-rge\x0aoverlap</str\
-ong> (value clos\
-e to 1) and <str\
-ong>a larger pas\
-s depth</strong>\
- (rather than a \
-standard overlap\
- and a tiny\x0apass\
- depth that is u\
-sed for standard\
- pockets)</p>\x0a</\
-div>\x0a\x0a<h4>Pocket\
-/Spirale</h4>\x0a\x0a<\
-p>With a Pocket/\
-Spirale operatio\
-n, the cutter wi\
-ll plunge automa\
-tically with a <\
-strong>depth</st\
-rong> equal to t\
-he\x0aspecified sta\
-ndard <strong>pa\
-ss depth</strong\
->. Hopefully a h\
-ole has previous\
-ly been cut at t\
-his place... At \
-best, an\x0aHelix o\
-peration precede\
-s a Spirale oper\
-ation. The spira\
-le will mainly c\
-ut into the mate\
-rial \x22sideways\x22.\
- It seems it is\x0a\
-a better way to \
-mill pockets, as\
- the bit is then\
- used mainly fro\
-m the side, pres\
-erving its drill\
-ing bottom side \
-if the\x0a<strong>p\
-ass depth</stron\
-g> is equal to t\
-he <strong>full \
-cut depth</stron\
-g>.</p>\x0a\x0a<p>For \
-a Pocket/Spirale\
- operation to wo\
-rk best, as the \
-pass depth is la\
-rge, a very big \
-overlap is requi\
-red (example:\x0a0.\
-975). This way, \
-the spirale only\
- \x22attacks\x22 the m\
-aterial on a rat\
-her limited side\
- surface, thus p\
-reserving the bi\
-t and\x0aallowing g\
-reather depth pa\
-sses. If you wis\
-h for example th\
-at at each spira\
-le arm 1mm is mi\
-lled, then the o\
-verlap has to\x0abe\
- chosen accordin\
-gly. Denoting A \
-the size of the \
-material beeing \
-cut at each spir\
-ale arm : A = cu\
-tter_radius *\x0a(1\
--overlap) =&gt; \
-overlap = 1 - A \
-/ cutter_radius.\
-</p>\x0a\x0a<p>So a co\
-mbined \x22Helix+Po\
-cket/Spirale\x22 op\
-eration is someh\
-ow similar to th\
-e normal \x22pocket\
-\x22 operation when\
- a very large\x0apa\
-ss depth and an \
-overlap near to \
-1.0 are chosen. \
-Nevertheless, wi\
-th the \x22contour\x22\
- algorithm , the\
- cutter would pl\
-unge\x0ainto the ma\
-terial without h\
-elix (even if a \
-ramp is still po\
-ssible) for a la\
-rge pass depth a\
-t the given plun\
-ge rate,\x0awhich w\
-ould be quite da\
-ngerous even if \
-the plunge rate \
-would be small. \
-</p>\x0a\x0a<p>Note th\
-at for an Helix \
-or Pocket/Spiral\
-e operation, cam\
- paths are calcu\
-lated \x22per hand\x22\
- without the hel\
-p of the\x0ashapely\
- library and its\
- \x22offset curve\x22 \
-functionality. B\
-ut the <strong>S\
-pirale</strong> \
-can only be used\
- when\x0aconsiderin\
-g <strong>circle\
-/ellipse</strong\
-> or <strong>rec\
-tangle</strong> \
-shapes.</p>\x0a\x0a<p>\
-The <strong>elli\
-pse and rectangl\
-e</strong> cases\
- are derived fro\
-m the circle cas\
-e by mapping the\
- coordinated of \
-the\x0apath points \
-from a circle to\
- an ellipse/rect\
-angle. The middl\
-e of these shape\
-d has to be eval\
-uated first, and\
- the\x0amapping bet\
-ween circle and \
-ellipses/rectang\
-les as well.</p>\
-\x0a\x0a<div style=\x22he\
-ight:30px\x22>\x0a</di\
-v>\x0a\x0a<h2 id=\x22P-06\
-\x22>GCode DressUp \
-(TODO)</h2>\x0a\x0a<h3\
->DogBones</h3>\x0a\x0a\
-<div class=\x22warn\
-ing\x22>\x0a<p><strong\
->Warning:</stron\
-g> I am a CAM be\
-ginner, so for s\
-ure my solution \
-is for sure sub-\
-optimal.</p>\x0a</d\
-iv>\x0a\x0a<p>When mil\
-ling a pocket or\
- a contour, the \
-cutter is not ab\
-le to mill into \
-convex angles pe\
-rfectly (yes the\
- cutter is\x0around\
-). </p>\x0a\x0a<img sr\
-c=\x22doc/dogbones1\
-.svg\x22 />\x0a\x0a<p>Not\
-e that the amoun\
-t of material no\
-t removed by the\
- cutter depends \
-on the angle of \
-the corner and t\
-he radius of the\
-\x0acutter.</p>\x0a\x0a<d\
-iv class=\x22info\x22>\
-\x0a<p><strong>Note\
-:</strong> For c\
-oncave angles, t\
-he generated too\
-lpaths around su\
-ch corners are s\
-mooth and do not\
- need\x0aany fixups\
-.</p>\x0a</div>\x0a\x0a<p\
->Fixing the GCod\
-e \x22per hand\x22 is \
-absolutely no so\
-lution, so an au\
-tomatic handling\
- has to be perfo\
-med.</p>\x0a\x0a<div c\
-lass=\x22warning\x22>\x0a\
-<p><strong>Warni\
-ng:</strong> Hav\
-ing had a look a\
-t (the doc of) s\
-ome other tools \
-(<strong>Blender\
-Cam</strong>,\x0a<s\
-trong>Fusion360<\
-/strong>), I hav\
-e noticed that t\
-hese tools, in o\
-rder to perform \
-dogbones correct\
-ion, \x22actualize\x22\
- the\x0ageometry, o\
-r rather said th\
-e geometry conto\
-ur so that this \
-contour get bone\
-s. After that, t\
-he \x22inside\x22 or \x22\
-pocket\x22\x0aoperatio\
-ns are performed\
- \x22as usual\x22. I w\
-ill try to take \
-a different appr\
-oach : only the \
-generated GCode \
-will be \x22fixed\x22\x0a\
-when encounterin\
-g \x22angles\x22. </p>\
-\x0a</div>\x0a\x0a<div cl\
-ass=\x22warning\x22>\x0a<\
-p><strong>Warnin\
-g:</strong> A dr\
-awback of this a\
-pproach is that \
-the user has 0 i\
-nfluence on the \
-dogbones generat\
-ion.\x0aOn the othe\
-r side, he does \
-not have to spec\
-ify them at all \
-</p>\x0a</div>\x0a\x0a<h3\
->A first try</h3\
->\x0a\x0a<p>Let's get \
-a taste how dogb\
-one handling loo\
-k like. Here we \
-suppose the cutt\
-er radius is <st\
-rong>3mm</strong\
->. We wish\x0ato mi\
-ll an inner squa\
-re hole, so the \
-\x22convex angle\x22 c\
-orner problem oc\
-curs. We have 2 \
-(or more!) strat\
-egies to allow a\
-\x0asquare to fit i\
-n the milled hol\
-e. Strategy \x221\x22 \
-is shown on the \
-left, strategy \x22\
-2\x22 on the right:\
- the extra tool \
-path is\x0adisplaye\
-d with the cutte\
-r at the end of \
-the extra tool p\
-ath (as well as \
-the standard cut\
-ter position at \
-the toolpath\x0acor\
-ner).</p>\x0a\x0a<img \
-src=\x22doc/dogbone\
-s2.svg\x22/>\x0a\x0a<p>We\
- see that the st\
-rategy \x221\x22 remov\
-es far less extr\
-a material than \
-the strategy \x222\x22\
-, so we will con\
-centrate only on\
-\x0athe strategy \x221\
-\x22. </p>\x0a\x0a<p>At e\
-very G01 instruc\
-tion, there is c\
-ertainly a direc\
-tion change, whi\
-ch can be tiny (\
-consider milling\
- an inner\x0acircle\
-, not as G02 or \
-G03 but with a l\
-ist of GO1 instr\
-uctions) or big,\
- here in our cas\
-e a 90 degrees d\
-irection\x0achange.\
-</p>\x0a<pre><code \
-class=\x22language-\
-gcode\x22>G1 X10.00\
- Y5.00\x0aG1 X10.00\
- Y20.00  (go up \
-to A)\x0aG1 X31.00 \
-Y20.00  (change \
-of direction to \
-the right)</code\
-></pre>\x0a\x0a<p>We s\
-hall insert a GC\
-ode block before\
- changing the di\
-rection</p>\x0a<pre\
-><code class=\x22la\
-nguage-gcode\x22>G1\
- X10.00 Y5.00\x0aG1\
- X10.00 Y20.00 (\
-go up)\x0a; fix up \
-begin ----------\
---------------\x0aG\
-1 X09.00 Y21.00 \
-(goes 1mm top le\
-ft)\x0aG1 X10.00 Y2\
-0.00 (and back)\x0a\
-; fix up end ---\
-----------------\
--------\x0aG1 X15.0\
-0 Y20.00 (change\
- of direction to\
- the right)</cod\
-e></pre>\x0a\x0a<p>or,\
- using increment\
-al distance mode\
- for the fix-up:\
-</p>\x0a<pre><code \
-class=\x22language-\
-gcode\x22>G1 X10.00\
- Y5.00\x0aG1 X10.00\
- Y20.00 (go up)\x0a\
-; fix up begin -\
-----------------\
--------\x0aG91     \
-      (increment\
-al distance mode\
-) \x0aX-1.00 Y1.00 \
- (goes 1mm top l\
-eft)\x0aX1.00 Y-1.0\
-0  (and back)\x0aG9\
-0           (abs\
-olute distance m\
-ode) \x0a; fix up e\
-nd -------------\
--------------\x0aG1\
- X15.00 Y20.00 (\
-change of direct\
-ion to the right\
-)</code></pre>\x0a\x0a\
-<p>In the follow\
-ing, I will pref\
-er switching to \
-incremental dist\
-ance mode (G91) \
-and back (G90) f\
-or the fixups.</\
-p>\x0a\x0a<p>In this f\
-irst try, we \x22na\
-ively\x22 gave at t\
-he left corner a\
-n extra travel o\
-f 1 mm in the NE\
- direction. We c\
-an\x0acertainly do \
-better.</p>\x0a\x0a<p>\
-<strong>Example-\
-1</strong>: exac\
-t fixup, same ge\
-ometry with a cu\
-tter of radius 3\
-.0 mm</p>\x0aWe wis\
-h to calculate t\
-he cutter extra \
-travel exactly i\
-n order to minim\
-ize the extra st\
-ock removal whil\
-e achieving the\x0a\
-corner beeing mi\
-lled completely \
-as shown on the \
-picture. \x0a\x0a<p>Th\
-e right corner o\
-n the left is at\
- coordinate [7.0\
-, 23.0] and the \
-cutter reaches t\
-he coordinate [1\
-0.0, 20.0]\x0aposit\
-ion for it (see \
-GCode). Thus the\
-re is a gap of <\
-/p>\x0a\x0a<p><code>ga\
-p = sqrt(3.0*3.0\
- + 3.0*3.0) - 3.\
-0 = 1.2426</code\
-></p>\x0a\x0a<p>betwee\
-n the corner C a\
-nd the border of\
- the cutter at p\
-oint A.</p>\x0a\x0a<p>\
-So we know which\
- extra travel <c\
-ode>dx</code> an\
-d <code>dy</code\
-> the cutter mus\
-t travel in orde\
-r to its border\x0a\
-reaches C: </p>\x0a\
-<pre><code>dx = \
-gap * cos(3 *pi \
-/ 4) = -0.8786\x0ad\
-y = gap * sin(3 \
-*pi / 4) = +0.87\
-86</code></pre>\x0a\
-\x0a<p>The angle <c\
-ode>3*pi/4</code\
-> here is the di\
-rection of the o\
-uter corner (con\
-cave) angle bise\
-ction line, let'\
-s call\x0ait the \x22o\
-rientation\x22 of t\
-he corner. It is\
- of course ident\
-ical to the dire\
-ction of AC, but\
- in practice C i\
-s not known,\x0aonl\
-y the position o\
-f the cutter. no\
-t that the cutte\
-r \x22trajectory\x22 m\
-akes exactly the\
- same angle as t\
-he real geometry\
-\x0awhen encounteri\
-ng a convex angl\
-e. So lets try t\
-o generalize for\
- any corner \x22ori\
-entation\x22. We de\
-note this orient\
-ation\x0a\x22bisect\x22.<\
-/p>\x0a<pre><code>d\
-x = gap * cos(bi\
-sect) = -0.8786\x0a\
-dy = gap * sin(b\
-isect) = +0.8786\
-</code></pre>\x0a\x0a<\
-p>So the fixup i\
-s</p>\x0a<pre><code\
- class=\x22language\
--gcode\x22>; fix up\
- begin ---------\
----------------\x0a\
-G91 \x0aG1 X-0.8786\
- Y0.8786 ( goes \
-0.8786 mm top le\
-ft )\x0aG1 X0.8786 \
-Y-0.8786 ( back \
-)\x0aG90\x0a; fix up e\
-nd -------------\
--------------</c\
-ode></pre>\x0a\x0a<p><\
-strong>Example-2\
-</strong>: exact\
- fixup, same geo\
-metry but at the\
- corner D on the\
- right</p>\x0a\x0a<p>T\
-he corner coordi\
-nate is [34.0, 2\
-3.0] and the cut\
-ter reaches the \
-coordinate [31.0\
-, 23.0] from the\
- left. Remember,\
-\x0athe cutter radi\
-us is 3mm. The g\
-ap between the c\
-orner and the cu\
-tter border rema\
-ins the same, as\
- the angle is st\
-ill a\x0aright angl\
-e.</p>\x0a\x0a<p>But t\
-he orientation o\
-f the corner is \
-this time <code>\
-pi/4</code>. </p\
->\x0a<pre><code>dx \
-= offset * cos(b\
-isect) = 0.8786\x0a\
-dy = offset * si\
-n(bisect) = 0.87\
-86</code></pre>\x0a\
-\x0a<p>So the fixup\
- for this corner\
- is </p>\x0a<pre><c\
+> To enable the \
+HSM pocket toolp\
+aths, prefix the\
+ pocket operatio\
+n with \x22hsm_\x22</p\
+>\x0a</div>\x0a\x0a<p>The\
+ helix will be c\
+ut in the \x22cente\
+r\x22 of the shape \
+(the shapely pol\
+ygon \x22centroid)\x22\
+, and we pass th\
+is location to\x0at\
+he HSM nibbler, \
+thus ensuring a \
+good start of th\
+e pocket \x22hsm_ni\
+bbler\x22 operation\
+.</p>\x0a\x0a<p>The sp\
+irales will be f\
+or <strong>circl\
+es, ellipses</st\
+rong> shapes onl\
+y -something adm\
+ittingly rather \
+restrictive-\x0abec\
+ause these cases\
+ are more or les\
+s trivial. There\
+ is then no \x22isl\
+es\x22 that neccess\
+arely occur in t\
+he corners of th\
+e\x0apocket for non\
+-trivial geometr\
+ies. But the HSM\
+_nibblers toopat\
+hs are there for\
+ the others shap\
+es.</p>\x0a\x0a<div cl\
+ass=\x22info\x22>\x0a<p><\
+strong>Note:</st\
+rong> Having suc\
+cesfully created\
+ an helix (hole)\
+ into the center\
+ of a basic shap\
+e\x0a(<strong>circl\
+e</strong>, <str\
+ong>ellipse</str\
+ong>, <strong>re\
+ctangle</strong>\
+, <strong>polygo\
+n</strong> or\x0a<s\
+trong>closed pat\
+h</strong>), the\
+n the \x22standard\x22\
+ pocket algorith\
+m can be used wi\
+th a <strong>ver\
+y large\x0aoverlap<\
+/strong> (value \
+close to 1) and \
+<strong>a larger\
+ pass depth</str\
+ong> (rather tha\
+n a standard ove\
+rlap and a tiny\x0a\
+pass depth that \
+is used for stan\
+dard pockets)</p\
+>\x0a</div>\x0a\x0a<h4>Po\
+cket/Spirale</h4\
+>\x0a\x0a<p>With a Poc\
+ket/Spirale oper\
+ation, the cutte\
+r will plunge au\
+tomatically with\
+ a <strong>depth\
+</strong> equal \
+to the\x0aspecified\
+ standard <stron\
+g>pass depth</st\
+rong>. Hopefully\
+ a hole has prev\
+iously been cut \
+at this place...\
+ At best, an\x0aHel\
+ix operation pre\
+cedes a Spirale \
+operation. The s\
+pirale will main\
+ly cut into the \
+material \x22sidewa\
+ys\x22. It seems it\
+ is\x0aa better way\
+ to mill pockets\
+, as the bit is \
+then used mainly\
+ from the side, \
+preserving its d\
+rilling bottom s\
+ide if the\x0a<stro\
+ng>pass depth</s\
+trong> is equal \
+to the <strong>f\
+ull cut depth</s\
+trong>.</p>\x0a\x0a<p>\
+For a Pocket/Spi\
+rale operation t\
+o work best, as \
+the pass depth i\
+s large, a very \
+big overlap is r\
+equired (example\
+:\x0a0.975). This w\
+ay, the spirale \
+only \x22attacks\x22 t\
+he material on a\
+ rather limited \
+side surface, th\
+us preserving th\
+e bit and\x0aallowi\
+ng greather dept\
+h passes. If you\
+ wish for exampl\
+e that at each s\
+pirale arm 1mm i\
+s milled, then t\
+he overlap has t\
+o\x0abe chosen acco\
+rdingly. Denotin\
+g A the size of \
+the material bee\
+ing cut at each \
+spirale arm : A \
+= cutter_radius \
+*\x0a(1-overlap) =&\
+gt; overlap = 1 \
+- A / cutter_rad\
+ius.</p>\x0a\x0a<p>So \
+a combined \x22Heli\
+x+Pocket/Spirale\
+\x22 operation is s\
+omehow similar t\
+o the normal \x22po\
+cket\x22 operation \
+when a very larg\
+e\x0apass depth and\
+ an overlap near\
+ to 1.0 are chos\
+en. Nevertheless\
+, with the \x22cont\
+our\x22 algorithm ,\
+ the cutter woul\
+d plunge\x0ainto th\
+e material witho\
+ut helix (even i\
+f a ramp is stil\
+l possible) for \
+a large pass dep\
+th at the given \
+plunge rate,\x0awhi\
+ch would be quit\
+e dangerous even\
+ if the plunge r\
+ate would be sma\
+ll. </p>\x0a\x0a<p>Not\
+e that for an He\
+lix or Pocket/Sp\
+irale operation,\
+ cam paths are c\
+alculated \x22per h\
+and\x22 without the\
+ help of the\x0asha\
+pely library and\
+ its \x22offset cur\
+ve\x22 functionalit\
+y. But the <stro\
+ng>Spirale</stro\
+ng> can only be \
+used when\x0aconsid\
+ering <strong>ci\
+rcle/ellipse</st\
+rong> or <strong\
+>rectangle</stro\
+ng> shapes.</p>\x0a\
+\x0a<p>The <strong>\
+ellipse and rect\
+angle</strong> c\
+ases are derived\
+ from the circle\
+ case by mapping\
+ the coordinated\
+ of the\x0apath poi\
+nts from a circl\
+e to an ellipse/\
+rectangle. The m\
+iddle of these s\
+haped has to be \
+evaluated first,\
+ and the\x0amapping\
+ between circle \
+and ellipses/rec\
+tangles as well.\
+</p>\x0a\x0a<div style\
+=\x22height:30px\x22>\x0a\
+</div>\x0a\x0a<h2 id=\x22\
+P-06\x22>GCode Dres\
+sUp (TODO)</h2>\x0a\
+\x0a<h3>DogBones</h\
+3>\x0a\x0a<div class=\x22\
+warning\x22>\x0a<p><st\
+rong>Warning:</s\
+trong> I am a CA\
+M beginner, so f\
+or sure my solut\
+ion is for sure \
+sub-optimal.</p>\
+\x0a</div>\x0a\x0a<p>When\
+ milling a pocke\
+t or a contour, \
+the cutter is no\
+t able to mill i\
+nto convex angle\
+s perfectly (yes\
+ the cutter is\x0ar\
+ound). </p>\x0a\x0a<im\
+g src=\x22doc/dogbo\
+nes1.svg\x22 />\x0a\x0a<p\
+>Note that the a\
+mount of materia\
+l not removed by\
+ the cutter depe\
+nds on the angle\
+ of the corner a\
+nd the radius of\
+ the\x0acutter.</p>\
+\x0a\x0a<div class=\x22in\
+fo\x22>\x0a<p><strong>\
+Note:</strong> F\
+or concave angle\
+s, the generated\
+ toolpaths aroun\
+d such corners a\
+re smooth and do\
+ not need\x0aany fi\
+xups.</p>\x0a</div>\
+\x0a\x0a<p>Fixing the \
+GCode \x22per hand\x22\
+ is absolutely n\
+o solution, so a\
+n automatic hand\
+ling has to be p\
+erfomed.</p>\x0a\x0a<d\
+iv class=\x22warnin\
+g\x22>\x0a<p><strong>W\
+arning:</strong>\
+ Having had a lo\
+ok at (the doc o\
+f) some other to\
+ols (<strong>Ble\
+nderCam</strong>\
+,\x0a<strong>Fusion\
+360</strong>), I\
+ have noticed th\
+at these tools, \
+in order to perf\
+orm dogbones cor\
+rection, \x22actual\
+ize\x22 the\x0ageometr\
+y, or rather sai\
+d the geometry c\
+ontour so that t\
+his contour get \
+bones. After tha\
+t, the \x22inside\x22 \
+or \x22pocket\x22\x0aoper\
+ations are perfo\
+rmed \x22as usual\x22.\
+ I will try to t\
+ake a different \
+approach : only \
+the generated GC\
+ode will be \x22fix\
+ed\x22\x0awhen encount\
+ering \x22angles\x22. \
+</p>\x0a</div>\x0a\x0a<di\
+v class=\x22warning\
+\x22>\x0a<p><strong>Wa\
+rning:</strong> \
+A drawback of th\
+is approach is t\
+hat the user has\
+ 0 influence on \
+the dogbones gen\
+eration.\x0aOn the \
+other side, he d\
+oes not have to \
+specify them at \
+all </p>\x0a</div>\x0a\
+\x0a<h3>A first try\
+</h3>\x0a\x0a<p>Let's \
+get a taste how \
+dogbone handling\
+ look like. Here\
+ we suppose the \
+cutter radius is\
+ <strong>3mm</st\
+rong>. We wish\x0at\
+o mill an inner \
+square hole, so \
+the \x22convex angl\
+e\x22 corner proble\
+m occurs. We hav\
+e 2 (or more!) s\
+trategies to all\
+ow a\x0asquare to f\
+it in the milled\
+ hole. Strategy \
+\x221\x22 is shown on \
+the left, strate\
+gy \x222\x22 on the ri\
+ght: the extra t\
+ool path is\x0adisp\
+layed with the c\
+utter at the end\
+ of the extra to\
+ol path (as well\
+ as the standard\
+ cutter position\
+ at the toolpath\
+\x0acorner).</p>\x0a\x0a<\
+img src=\x22doc/dog\
+bones2.svg\x22/>\x0a\x0a<\
+p>We see that th\
+e strategy \x221\x22 r\
+emoves far less \
+extra material t\
+han the strategy\
+ \x222\x22, so we will\
+ concentrate onl\
+y on\x0athe strateg\
+y \x221\x22. </p>\x0a\x0a<p>\
+At every G01 ins\
+truction, there \
+is certainly a d\
+irection change,\
+ which can be ti\
+ny (consider mil\
+ling an inner\x0aci\
+rcle, not as G02\
+ or G03 but with\
+ a list of GO1 i\
+nstructions) or \
+big, here in our\
+ case a 90 degre\
+es direction\x0acha\
+nge.</p>\x0a<pre><c\
 ode class=\x22langu\
-age-gcode\x22>; fix\
+age-gcode\x22>G1 X1\
+0.00 Y5.00\x0aG1 X1\
+0.00 Y20.00  (go\
+ up to A)\x0aG1 X31\
+.00 Y20.00  (cha\
+nge of direction\
+ to the right)</\
+code></pre>\x0a\x0a<p>\
+We shall insert \
+a GCode block be\
+fore changing th\
+e direction</p>\x0a\
+<pre><code class\
+=\x22language-gcode\
+\x22>G1 X10.00 Y5.0\
+0\x0aG1 X10.00 Y20.\
+00 (go up)\x0a; fix\
  up begin ------\
 ----------------\
---\x0aG91\x0aG1 X0.878\
-6  Y0.8786   ( g\
-oes 0.8786 mm to\
-p right )\x0aG1 X-0\
-.8786 Y-0.8786  \
-( and back )\x0aG90\
-\x0a; fix up end --\
+--\x0aG1 X09.00 Y21\
+.00 (goes 1mm to\
+p left)\x0aG1 X10.0\
+0 Y20.00 (and ba\
+ck)\x0a; fix up end\
+ ---------------\
+-----------\x0aG1 X\
+15.00 Y20.00 (ch\
+ange of directio\
+n to the right)<\
+/code></pre>\x0a\x0a<p\
+>or, using incre\
+mental distance \
+mode for the fix\
+-up:</p>\x0a<pre><c\
+ode class=\x22langu\
+age-gcode\x22>G1 X1\
+0.00 Y5.00\x0aG1 X1\
+0.00 Y20.00 (go \
+up)\x0a; fix up beg\
+in -------------\
+-----------\x0aG91 \
+          (incre\
+mental distance \
+mode) \x0aX-1.00 Y1\
+.00  (goes 1mm t\
+op left)\x0aX1.00 Y\
+-1.00  (and back\
+)\x0aG90           \
+(absolute distan\
+ce mode) \x0a; fix \
+up end ---------\
 ----------------\
---------</code><\
-/pre>\x0a\x0a<p>Easy!<\
-/p>\x0a\x0a<div class=\
-\x22info\x22>\x0a<p><stro\
-ng>Info:</strong\
-> For this parti\
-cular case (cutt\
-er radius 3mm, a\
-ngle 90 deg.), t\
-he gap is <code>\
-1.2426 mm</code>\
- \x0aand the fixups\
- (angles orienta\
-tions <code>pi/4\
-</code> or <code\
->3pi/4</code>) <\
-code>dx = 0.8786\
-</code>, <code>d\
-y = 0.8786 mm</c\
-ode>.\x0aFor differ\
-ent cutter radiu\
-ses, the ratio g\
-ap / cutter radi\
-us (1.2426 / 3.0\
- = 0.41) shall r\
-emain the same.<\
-/p>\x0a</div>\x0a\x0a<h4>\
-General case / a\
-utomatic fixups<\
-/h4>\x0a\x0a<p>Knowing\
- only the GCode,\
- the theoretical\
- corner on the s\
-tock could be ca\
-lculated in orde\
-r to evaluate th\
-e gap between\x0ath\
+-\x0aG1 X15.00 Y20.\
+00 (change of di\
+rection to the r\
+ight)</code></pr\
+e>\x0a\x0a<p>In the fo\
+llowing, I will \
+prefer switching\
+ to incremental \
+distance mode (G\
+91) and back (G9\
+0) for the fixup\
+s.</p>\x0a\x0a<p>In th\
+is first try, we\
+ \x22naively\x22 gave \
+at the left corn\
+er an extra trav\
+el of 1 mm in th\
+e NE direction. \
+We can\x0acertainly\
+ do better.</p>\x0a\
+\x0a<p><strong>Exam\
+ple-1</strong>: \
+exact fixup, sam\
+e geometry with \
+a cutter of radi\
+us 3.0 mm</p>\x0aWe\
+ wish to calcula\
+te the cutter ex\
+tra travel exact\
+ly in order to m\
+inimize the extr\
+a stock removal \
+while achieving \
+the\x0acorner beein\
+g milled complet\
+ely as shown on \
+the picture. \x0a\x0a<\
+p>The right corn\
+er on the left i\
+s at coordinate \
+[7.0, 23.0] and \
+the cutter reach\
+es the coordinat\
+e [10.0, 20.0]\x0ap\
+osition for it (\
+see GCode). Thus\
+ there is a gap \
+of </p>\x0a\x0a<p><cod\
+e>gap = sqrt(3.0\
+*3.0 + 3.0*3.0) \
+- 3.0 = 1.2426</\
+code></p>\x0a\x0a<p>be\
+tween the corner\
+ C and the borde\
+r of the cutter \
+at point A.</p>\x0a\
+\x0a<p>So we know w\
+hich extra trave\
+l <code>dx</code\
+> and <code>dy</\
+code> the cutter\
+ must travel in \
+order to its bor\
+der\x0areaches C: <\
+/p>\x0a<pre><code>d\
+x = gap * cos(3 \
+*pi / 4) = -0.87\
+86\x0ady = gap * si\
+n(3 *pi / 4) = +\
+0.8786</code></p\
+re>\x0a\x0a<p>The angl\
+e <code>3*pi/4</\
+code> here is th\
+e direction of t\
+he outer corner \
+(concave) angle \
+bisection line, \
+let's call\x0ait th\
+e \x22orientation\x22 \
+of the corner. I\
+t is of course i\
+dentical to the \
+direction of AC,\
+ but in practice\
+ C is not known,\
+\x0aonly the positi\
+on of the cutter\
+. not that the c\
+utter \x22trajector\
+y\x22 makes exactly\
+ the same angle \
+as the real geom\
+etry\x0awhen encoun\
+tering a convex \
+angle. So lets t\
+ry to generalize\
+ for any corner \
+\x22orientation\x22. W\
+e denote this or\
+ientation\x0a\x22bisec\
+t\x22.</p>\x0a<pre><co\
+de>dx = gap * co\
+s(bisect) = -0.8\
+786\x0ady = gap * s\
+in(bisect) = +0.\
+8786</code></pre\
+>\x0a\x0a<p>So the fix\
+up is</p>\x0a<pre><\
+code class=\x22lang\
+uage-gcode\x22>; fi\
+x up begin -----\
+----------------\
+---\x0aG91 \x0aG1 X-0.\
+8786 Y0.8786 ( g\
+oes 0.8786 mm to\
+p left )\x0aG1 X0.8\
+786 Y-0.8786 ( b\
+ack )\x0aG90\x0a; fix \
+up end ---------\
+----------------\
+-</code></pre>\x0a\x0a\
+<p><strong>Examp\
+le-2</strong>: e\
+xact fixup, same\
+ geometry but at\
+ the corner D on\
+ the right</p>\x0a\x0a\
+<p>The corner co\
+ordinate is [34.\
+0, 23.0] and the\
+ cutter reaches \
+the coordinate [\
+31.0, 23.0] from\
+ the left. Remem\
+ber,\x0athe cutter \
+radius is 3mm. T\
+he gap between t\
+he corner and th\
 e cutter border \
-and the stock co\
-rner. Infact the\
- stock corner do\
-es not have to b\
-e calculated at \
-all, as the gap \
-is\x0ainfact only f\
-unction of the c\
-utter diameter a\
-nd the angle of \
-the corner of th\
-e toolpath. The \
-orientation of t\
-he corner\x0aindeed\
- does not play a\
- role (for the g\
-ap size). </p>\x0a\x0a\
-<img src=\x22doc/do\
-gbones3.svg\x22 />\x0a\
-\x0a<p>The \x5c(gap\x5c) \
-(distance betwee\
-n corner and cut\
-ter border) is <\
-/p>\x0a\x0a<p>\x5c(gap = \
-\x5cdisplaystyle \x5cf\
-rac{cutter_R}{si\
-n(a)} - cutter_R\
- = \x5cfrac{1 - sin\
-(a)}{sin(a)} . c\
-utter_R\x5c)</p>\x0a\x0a<\
-p>where \x5c(a\x5c) is\
- the <strong>hal\
-f the size of th\
-e corner's angle\
-</strong>. So fo\
-r a cutter radiu\
-s of 1:</p>\x0a<ul>\
-\x0a  <li>\x5c(a = 60^\
-{\x5ccirc} \x5cimplies\
- gap = 0.15 \x5c)</\
-li>\x0a  <li>\x5c(a = \
-45^{\x5ccirc} \x5cimpl\
-ies gap = 0.41 \x5c\
-)</li>\x0a  <li>\x5c(a\
- = 30^{\x5ccirc} \x5ci\
-mplies gap = 1.0\
-0 \x5c)</li>\x0a</ul>\x0a\
-\x0a<p>Considering \
-the GCode patter\
-n (constitued of\
- 3 G1 lines) </p\
+remains the same\
+, as the angle i\
+s still a\x0aright \
+angle.</p>\x0a\x0a<p>B\
+ut the orientati\
+on of the corner\
+ is this time <c\
+ode>pi/4</code>.\
+ </p>\x0a<pre><code\
+>dx = offset * c\
+os(bisect) = 0.8\
+786\x0ady = offset \
+* sin(bisect) = \
+0.8786</code></p\
+re>\x0a\x0a<p>So the f\
+ixup for this co\
+rner is </p>\x0a<pr\
+e><code class=\x22l\
+anguage-gcode\x22>;\
+ fix up begin --\
+----------------\
+------\x0aG91\x0aG1 X0\
+.8786  Y0.8786  \
+ ( goes 0.8786 m\
+m top right )\x0aG1\
+ X-0.8786 Y-0.87\
+86  ( and back )\
+\x0aG90\x0a; fix up en\
+d --------------\
+------------</co\
+de></pre>\x0a\x0a<p>Ea\
+sy!</p>\x0a\x0a<div cl\
+ass=\x22info\x22>\x0a<p><\
+strong>Info:</st\
+rong> For this p\
+articular case (\
+cutter radius 3m\
+m, angle 90 deg.\
+), the gap is <c\
+ode>1.2426 mm</c\
+ode> \x0aand the fi\
+xups (angles ori\
+entations <code>\
+pi/4</code> or <\
+code>3pi/4</code\
+>) <code>dx = 0.\
+8786</code>, <co\
+de>dy = 0.8786 m\
+m</code>.\x0aFor di\
+fferent cutter r\
+adiuses, the rat\
+io gap / cutter \
+radius (1.2426 /\
+ 3.0 = 0.41) sha\
+ll remain the sa\
+me.</p>\x0a</div>\x0a\x0a\
+<h4>General case\
+ / automatic fix\
+ups</h4>\x0a\x0a<p>Kno\
+wing only the GC\
+ode, the theoret\
+ical corner on t\
+he stock could b\
+e calculated in \
+order to evaluat\
+e the gap betwee\
+n\x0athe cutter bor\
+der and the stoc\
+k corner. Infact\
+ the stock corne\
+r does not have \
+to be calculated\
+ at all, as the \
+gap is\x0ainfact on\
+ly function of t\
+he cutter diamet\
+er and the angle\
+ of the corner o\
+f the toolpath. \
+The orientation \
+of the corner\x0ain\
+deed does not pl\
+ay a role (for t\
+he gap size). </\
+p>\x0a\x0a<img src=\x22do\
+c/dogbones3.svg\x22\
+ />\x0a\x0a<p>The \x5c(ga\
+p\x5c) (distance be\
+tween corner and\
+ cutter border) \
+is </p>\x0a\x0a<p>\x5c(ga\
+p = \x5cdisplaystyl\
+e \x5cfrac{cutter_R\
+}{sin(a)} - cutt\
+er_R = \x5cfrac{1 -\
+ sin(a)}{sin(a)}\
+ . cutter_R\x5c)</p\
+>\x0a\x0a<p>where \x5c(a\x5c\
+) is the <strong\
+>half the size o\
+f the corner's a\
+ngle</strong>. S\
+o for a cutter r\
+adius of 1:</p>\x0a\
+<ul>\x0a  <li>\x5c(a =\
+ 60^{\x5ccirc} \x5cimp\
+lies gap = 0.15 \
+\x5c)</li>\x0a  <li>\x5c(\
+a = 45^{\x5ccirc} \x5c\
+implies gap = 0.\
+41 \x5c)</li>\x0a  <li\
+>\x5c(a = 30^{\x5ccirc\
+} \x5cimplies gap =\
+ 1.00 \x5c)</li>\x0a</\
+ul>\x0a\x0a<p>Consider\
+ing the GCode pa\
+ttern (constitue\
+d of 3 G1 lines)\
+ </p>\x0a<pre><code\
+ class=\x22language\
+-gcode\x22>G1 X&lt;\
+x1&gt;  Y&lt;y1&\
+gt;\x0aG1 X&lt;xm&g\
+t;  Y&lt;ym&gt;\x0a\
+G1 X&lt;x2&gt;  \
+Y&lt;y2&gt;</cod\
+e></pre>\x0a\x0a<p>we \
+wish to generate\
+ a fixup for thi\
+s GCode pattern,\
+ this means at t\
+he points \x5c([x_m\
+:y_m]\x5c). As it t\
+urns out, we do\x0a\
+not need to know\
+ if we are milli\
+ng for an \x22Insid\
+e\x22 or \x22Outside\x22 \
+operation, we do\
+ not need to che\
+ck either if the\
+ angle\x0ais concav\
+e or convex! Con\
+sider the follow\
+ing example: a s\
+pade. We would l\
+ike to mill \x22Ins\
+ide\x22 or \x22Outside\
+\x22</p>\x0a\x0a<p>For an\
+ \x22<strong>Inside\
+</strong>\x22 opera\
+tion, around the\
+ sharp corner \x22A\
+\x22, the angle in \
+is concave and t\
+he size of the\x0aa\
+ngle \x22inside\x22 is\
+ larger than 180\
+\xc2\xb0. The Gcode pa\
+th of the \x22Insid\
+e\x22 operation wil\
+l be smooth arou\
+nd A, a fixup is\
+ thus\x0anot needed\
+; the GCode near\
+ A will be a suc\
+cession of small\
+ G1 increments w\
+ithout sharp tra\
+nsitions. At cor\
+ner \x22B\x22, the\x0aang\
+le is convex and\
+ the size of the\
+ angle \x22inside\x22 \
+is smaller than \
+180\xc2\xb0 . A fixup \
+will be needed a\
+s the GCode path\
+\x0awill also prese\
+nt a sharp corne\
+r of the same ma\
+gnitide as the s\
+tock corner itse\
+lf. </p>\x0a\x0a<p>For\
+ an \x22<strong>Out\
+side</strong>\x22 o\
+peration, at cor\
+ner A, the angle\
+ is convex and t\
+he size of the a\
+ngle \x22outside\x22 i\
+s\x0asmaller than 1\
+80\xc2\xb0 and thus th\
+e GCode at \x22A\x22 w\
+ill need to have\
+ a fix-up, while\
+ the GCode at co\
+rner \x22B\x22 (where \
+the size\x0aof the \
+angle \x22outside\x22 \
+is larger than 1\
+80\xc2\xb0) will be sm\
+ooth, consisting\
+ again of a succ\
+ession of small \
+G1 increments\x0awi\
+thout sharp angl\
+es.</p>\x0a\x0a<p>At t\
+he locations whe\
+re the GCode pat\
+h is not smooth \
+the fixups have \
+to be performed.\
+ We set as\x0a<stro\
+ng>threshold</st\
+rong> an angle o\
+f <strong>120 de\
+grees</strong>, \
+slightly larger \
+than a right ang\
+le. Above this\x0at\
+hreshold (from 1\
+20\xc2\xb0 to 180\xc2\xb0), \
+no fixup is need\
+ed at all as the\
+ gap if about on\
+ly one tenth of \
+the cutter radiu\
+s or\x0aless, or it\
+ is simply an \x22e\
+xterior travel\x22.\
+ Between 0\xc2\xb0 and\
+ 120\xc2\xb0, we have \
+to calculate the\
+ right direction\
+ of the\x0aangle bi\
+ssection, the \x22o\
+rientation\x22 of t\
+he corner. The \x22\
+orientation\x22 mus\
+t be \x22outside th\
+e corner\x22 in ord\
+er to mill\x0a\x22insi\
+de\x22 the corner.<\
+/p>\x0a\x0a<p><svg wid\
+th=\x221000\x22 height\
+=\x22500\x22 viewBox=\x22\
+0 0 1000 500\x22 ve\
+rsion=\x221.1\x22 id=\x22\
+svg_spade\x22>\x0a  <p\
+ath\x0a        d=\x22m\
+213.23 502.9c-19\
+5.31 199.54-5.35\
+25 344.87 149.07\
+ 249.6.84137 49.\
+146-37.692 95.02\
+8-61.394 138.9h1\
+66.73c-24.41-42.\
+64-65.17-89.61-6\
+6.66-138.9 157.6\
+6 90.57 325.33-6\
+7.37 150.39-249.\
+6-91.22-100.08-1\
+48.24-177.95-169\
+.73-204.42-19.60\
+2 25.809-71.82 1\
+01.7-168.41 204.\
+42z\x22\x0a        str\
+oke=\x22#000000\x22 tr\
+ansform=\x22transla\
+te(0 -200) scale\
+(0.7)\x22/>\x0a  <text\
+ x=\x22235\x22 y=\x22350\x22\
+>A</text>\x0a  <tex\
+t x=\x22330\x22 y=\x22420\
+\x22>B</text>\x0a</svg\
+>\x0a </p>\x0a\x0a<p></p>\
+\x0a\x0a<p>Let's do so\
+me maths! the sl\
+ope of the GCode\
+ incoming segmen\
+t is \x5c( m_1 = (y\
+_m - y_1) \x5c (x_m\
+ - x_1) \x5c) and t\
+he slope\x0aof the \
+GCode outcoming \
+segment is \x5c( m_\
+2 = (y_2 - y_m) \
+\x5c (x_2 - x_m) \x5c)\
+ </p>\x0a\x0a<p>incomi\
+ng segment equat\
+ion: \x5c( y = m_1 \
+x + k_1 \x5c) or, i\
+n another form \x5c\
+( a_1 x + b_1 y \
++ c_1 = 0\x5c) </p>\
+\x0a\x0a<p>outcoming s\
+egment equation:\
+ \x5c( y = m_2 x + \
+k_2 \x5c) or, in an\
+other form \x5c( a_\
+2 x + b_2 y + c_\
+2 = 0\x5c) </p>\x0a\x0a<p\
+>The angle at th\
+e toolpath mid p\
+oint is calculat\
+ed with</p>\x0a\x0a<p>\
+\x5c(cos(\x5cbeta) = \x5c\
+displaystyle \x5cfr\
+ac{ u \x5ccdot v}{ \
+\x5c| u \x5c| \x5ccdot \x5c|\
+v\x5c| } \x5c) </p>\x0a\x0a<\
+p>and the intern\
+al and external \
+bisections line \
+equations of the\
+ corner are give\
+n by the two equ\
+ations</p>\x0a\x0a<p>\x5c\
+( \x5cdisplaystyle \
+\x5cfrac{ a_1x + b_\
+1y + c_1}{ \x5csqrt\
+{a_1^2 + b_1^2} \
+} = +/- \x5cfrac{ a\
+_2x + b_2y + c_2\
+}{ \x5csqrt{a_2^2 +\
+\x0ab_2^2} } \x5cimpli\
+es A_i x + B_i y\
+ + C_i = 0 \x5c)</p\
+>\x0a\x0a<p>so the ang\
+les of these two\
+ bisections line\
+s is given with \
+\x5c( tan(\x5calpha_i)\
+ = - A_i / B_i\x5c)\
+ with \x5c( \x5calpha_\
+i \x5c) in\x0a\x5c([-\x5cpi/\
+2:\x5cpi/2]\x5c)</p>\x0a\x0a\
+<p>The correct b\
+isection is the \
+one such that it\
+s slope is conta\
+ined in the slop\
+es of the two co\
+rner's segments,\
+ and\x0athe orienta\
+tion must look \x22\
+outside\x22 the cor\
+ner.</p>\x0a\x0a<p></p\
+>\x0a\x0a<p>Let's try \
+our formulas for\
+ a sharp angle. \
+Let's say the cu\
+tter radius is 1\
+mm. The GCode en\
+countered is</p>\
+\x0a<svg width=\x2270\x22\
+ height=\x2255\x22 vie\
+wBox=\x220 0 70 55\x22\
+ version=\x221.1\x22>\x0a\
+  <polyline poin\
+ts=\x2210,30  60,0 \
+ 30,50\x22 stroke-w\
+idth=\x220.75\x22 fill\
+=\x22none\x22 stroke=\x22\
+black\x22/>\x0a</svg>\x0a\
+<pre><code class\
+=\x22language-gcode\
+\x22>G1 X-2  Y2\x0aG1 \
+X4   Y4\x0aG1 X2   \
+Y-2</code></pre>\
+\x0a\x0a<p>So obviousl\
+y there is a sha\
+rp corner at \x5c([\
+4, 4] \x5c). The co\
+rner angle is \x5c(\
+ \x5cbeta = 53.13\x5c)\
+\xc2\xb0.</p>\x0a\x0a<p>The \
+slopes of the in\
+coming and outco\
+ming segments ar\
+e : \x5c(m_1 = 1/3 \
+\x5c) and \x5c( m_2 = \
+3 \x5c) and the two\
+ bisections\x0aslop\
+es are \x5c( -1\x5c) a\
+nd \x5c(1;\x5c) so the\
+ correct bisecti\
+on is the second\
+ one, and its co\
+rrect orientatio\
+n is +45\xc2\xb0</p>\x0a\x0a\
+<h5>Gap</h5>\x0a\x0a<p\
+>\x5c( gap = 0.414 \
+\x5c)</p>\x0a\x0a<h5>Extr\
+a Travel</h5>\x0a\x0a<\
+p>\x5c( dx = 0.874 \
+\x5c)</p>\x0a\x0a<p>\x5c( dy\
+ = 0.874 \x5c)</p>\x0a\
+\x0a<h4>Example 2</\
+h4>\x0a<svg width=\x22\
+50\x22 height=\x2245\x22 \
+viewBox=\x220 0 50 \
+45\x22 version=\x221.1\
+\x22>\x0a  <polyline p\
+oints=\x2210,40  10\
+,2  50,2\x22 stroke\
+-width=\x220.75\x22 fi\
+ll=\x22none\x22 stroke\
+=\x22black\x22/>\x0a</svg\
 >\x0a<pre><code cla\
 ss=\x22language-gco\
-de\x22>G1 X&lt;x1&g\
-t;  Y&lt;y1&gt;\x0a\
-G1 X&lt;xm&gt;  \
-Y&lt;ym&gt;\x0aG1 X\
-&lt;x2&gt;  Y&lt\
-;y2&gt;</code></\
-pre>\x0a\x0a<p>we wish\
- to generate a f\
-ixup for this GC\
-ode pattern, thi\
-s means at the p\
-oints \x5c([x_m:y_m\
-]\x5c). As it turns\
- out, we do\x0anot \
-need to know if \
-we are milling f\
-or an \x22Inside\x22 o\
-r \x22Outside\x22 oper\
-ation, we do not\
- need to check e\
-ither if the ang\
-le\x0ais concave or\
- convex! Conside\
-r the following \
-example: a spade\
-. We would like \
-to mill \x22Inside\x22\
- or \x22Outside\x22</p\
->\x0a\x0a<p>For an \x22<s\
-trong>Inside</st\
-rong>\x22 operation\
-, around the sha\
-rp corner \x22A\x22, t\
-he angle in is c\
-oncave and the s\
-ize of the\x0aangle\
- \x22inside\x22 is lar\
-ger than 180\xc2\xb0. \
-The Gcode path o\
-f the \x22Inside\x22 o\
-peration will be\
- smooth around A\
-, a fixup is thu\
-s\x0anot needed; th\
-e GCode near A w\
-ill be a success\
-ion of small G1 \
-increments witho\
-ut sharp transit\
-ions. At corner \
-\x22B\x22, the\x0aangle i\
-s convex and the\
- size of the ang\
-le \x22inside\x22 is s\
-maller than 180\xc2\
-\xb0 . A fixup will\
- be needed as th\
-e GCode path\x0awil\
-l also present a\
- sharp corner of\
- the same magnit\
-ide as the stock\
- corner itself. \
-</p>\x0a\x0a<p>For an \
-\x22<strong>Outside\
-</strong>\x22 opera\
-tion, at corner \
-A, the angle is \
-convex and the s\
-ize of the angle\
- \x22outside\x22 is\x0asm\
-aller than 180\xc2\xb0\
- and thus the GC\
-ode at \x22A\x22 will \
-need to have a f\
-ix-up, while the\
- GCode at corner\
- \x22B\x22 (where the \
-size\x0aof the angl\
-e \x22outside\x22 is l\
-arger than 180\xc2\xb0\
-) will be smooth\
-, consisting aga\
-in of a successi\
-on of small G1 i\
-ncrements\x0awithou\
-t sharp angles.<\
-/p>\x0a\x0a<p>At the l\
-ocations where t\
-he GCode path is\
- not smooth the \
-fixups have to b\
-e performed. We \
-set as\x0a<strong>t\
-hreshold</strong\
-> an angle of <s\
-trong>120 degree\
-s</strong>, slig\
-htly larger than\
- a right angle. \
-Above this\x0athres\
-hold (from 120\xc2\xb0\
- to 180\xc2\xb0), no f\
-ixup is needed a\
-t all as the gap\
- if about only o\
-ne tenth of the \
-cutter radius or\
-\x0aless, or it is \
-simply an \x22exter\
-ior travel\x22. Bet\
-ween 0\xc2\xb0 and 120\
-\xc2\xb0, we have to c\
-alculate the rig\
-ht direction of \
-the\x0aangle bissec\
-tion, the \x22orien\
-tation\x22 of the c\
-orner. The \x22orie\
-ntation\x22 must be\
- \x22outside the co\
-rner\x22 in order t\
-o mill\x0a\x22inside\x22 \
-the corner.</p>\x0a\
-\x0a<p><svg width=\x22\
-1000\x22 height=\x2250\
-0\x22 viewBox=\x220 0 \
-1000 500\x22 versio\
-n=\x221.1\x22 id=\x22svg_\
-spade\x22>\x0a  <path\x0a\
-        d=\x22m213.\
-23 502.9c-195.31\
- 199.54-5.3525 3\
-44.87 149.07 249\
-.6.84137 49.146-\
-37.692 95.028-61\
-.394 138.9h166.7\
-3c-24.41-42.64-6\
-5.17-89.61-66.66\
--138.9 157.66 90\
-.57 325.33-67.37\
- 150.39-249.6-91\
-.22-100.08-148.2\
-4-177.95-169.73-\
-204.42-19.602 25\
-.809-71.82 101.7\
--168.41 204.42z\x22\
-\x0a        stroke=\
-\x22#000000\x22 transf\
-orm=\x22translate(0\
- -200) scale(0.7\
-)\x22/>\x0a  <text x=\x22\
-235\x22 y=\x22350\x22>A</\
-text>\x0a  <text x=\
-\x22330\x22 y=\x22420\x22>B<\
-/text>\x0a</svg>\x0a <\
-/p>\x0a\x0a<p></p>\x0a\x0a<p\
->Let's do some m\
-aths! the slope \
-of the GCode inc\
-oming segment is\
- \x5c( m_1 = (y_m -\
- y_1) \x5c (x_m - x\
-_1) \x5c) and the s\
-lope\x0aof the GCod\
-e outcoming segm\
-ent is \x5c( m_2 = \
-(y_2 - y_m) \x5c (x\
-_2 - x_m) \x5c) </p\
->\x0a\x0a<p>incoming s\
-egment equation:\
- \x5c( y = m_1 x + \
-k_1 \x5c) or, in an\
-other form \x5c( a_\
-1 x + b_1 y + c_\
-1 = 0\x5c) </p>\x0a\x0a<p\
->outcoming segme\
-nt equation: \x5c( \
-y = m_2 x + k_2 \
-\x5c) or, in anothe\
-r form \x5c( a_2 x \
-+ b_2 y + c_2 = \
-0\x5c) </p>\x0a\x0a<p>The\
- angle at the to\
-olpath mid point\
- is calculated w\
-ith</p>\x0a\x0a<p>\x5c(co\
-s(\x5cbeta) = \x5cdisp\
-laystyle \x5cfrac{ \
-u \x5ccdot v}{ \x5c| u\
- \x5c| \x5ccdot \x5c|v\x5c| \
-} \x5c) </p>\x0a\x0a<p>an\
-d the internal a\
-nd external bise\
-ctions line equa\
-tions of the cor\
-ner are given by\
- the two equatio\
-ns</p>\x0a\x0a<p>\x5c( \x5cd\
-isplaystyle \x5cfra\
-c{ a_1x + b_1y +\
- c_1}{ \x5csqrt{a_1\
-^2 + b_1^2} } = \
-+/- \x5cfrac{ a_2x \
-+ b_2y + c_2}{ \x5c\
-sqrt{a_2^2 +\x0ab_2\
-^2} } \x5cimplies A\
-_i x + B_i y + C\
-_i = 0 \x5c)</p>\x0a\x0a<\
-p>so the angles \
-of these two bis\
-ections lines is\
- given with \x5c( t\
-an(\x5calpha_i) = -\
- A_i / B_i\x5c) wit\
-h \x5c( \x5calpha_i \x5c)\
- in\x0a\x5c([-\x5cpi/2:\x5cp\
-i/2]\x5c)</p>\x0a\x0a<p>T\
-he correct bisec\
-tion is the one \
-such that its sl\
-ope is contained\
- in the slopes o\
-f the two corner\
-'s segments, and\
-\x0athe orientation\
- must look \x22outs\
-ide\x22 the corner.\
-</p>\x0a\x0a<p></p>\x0a\x0a<\
-p>Let's try our \
-formulas for a s\
-harp angle. Let'\
-s say the cutter\
- radius is 1mm. \
-The GCode encoun\
-tered is</p>\x0a<sv\
-g width=\x2270\x22 hei\
-ght=\x2255\x22 viewBox\
-=\x220 0 70 55\x22 ver\
-sion=\x221.1\x22>\x0a  <p\
-olyline points=\x22\
-10,30  60,0  30,\
-50\x22 stroke-width\
-=\x220.75\x22 fill=\x22no\
-ne\x22 stroke=\x22blac\
-k\x22/>\x0a</svg>\x0a<pre\
-><code class=\x22la\
-nguage-gcode\x22>G1\
- X-2  Y2\x0aG1 X4  \
- Y4\x0aG1 X2   Y-2<\
+de\x22>G1 X0.0  Y0.\
+0\x0aG1 X0.0  Y4.0\x0a\
+G1 X4.0  Y4.0</c\
+ode></pre>\x0a\x0a<p>S\
+o obviously ther\
+e is a sharp (ri\
+ght) corner at \x5c\
+([0, 4] \x5c). The \
+corner angle is \
+\x5c( \x5cbeta = 90\x5c)\xc2\
+\xb0.</p>\x0a\x0a<p>The s\
+lopes of the inc\
+oming and outcom\
+ing segments are\
+ \x5c(m_1 = -\x5cinf \x5c\
+) and \x5c( m_2 = 0\
+ \x5c) and the slop\
+es of the\x0abisect\
+ions are \x5c( -1\x5c)\
+ and \x5c(1\x5c). The \
+correct bisectio\
+n is the first o\
+ne (slope -1), a\
+nd its correct o\
+rientation is\x0a+1\
+35\xc2\xb0 (not -45\xc2\xb0)\
+ pointing \x22outsi\
+de\x22 the corner.<\
+/p>\x0a\x0a<h5>Gap</h5\
+>\x0a\x0a<p>\x5c( gap = 0\
+.414 \x5c)</p>\x0a\x0a<h5\
+>Extra Travel</h\
+5>\x0a\x0a<p>\x5c( dx = -\
+0.88 \x5c)</p>\x0a\x0a<p>\
+\x5c( dy = 0.88 \x5c)<\
+/p>\x0a\x0a<p><strong>\
+PyCut GCode Dres\
+sup GUI</strong>\
+</p>\x0a\x0a<p>How to \
+integrate this h\
+andling into <st\
+rong>PyCut</stro\
+ng> ? There is a\
+ setting option \
+\x22<strong>GCode D\
+ogBones\x0athreshol\
+d</strong>\x22 whic\
+h is per default\
+ 120\xc2\xb0. A comple\
+tely separate ut\
+ility \x22gcode_dre\
+ssup.py\x22 will be\
+ called upon\x0aGCo\
+de generation co\
+mpletion to tran\
+sform the GCode \
+for the operatio\
+ns requiring it.\
+</p>\x0a\x0a<p>In the \
+operations table\
+, we add a colum\
+n \x22fixups\x22 as a \
+checkbox, which,\
+ for every opera\
+tion, can be set\
+ on or off.\x0aMore\
+over, in the GCo\
+de Viewer/GCode \
+simulator GCode \
+browsers, lines \
+corresponding to\
+ added fixups (c\
+omprised between\
+\x0athe comment lin\
+es </p>\x0a<pre><co\
+de class=\x22langua\
+ge-gcode\x22>; star\
+t fixup</code></\
+pre>\x0a\x0a<p>and </p\
+>\x0a<pre><code cla\
+ss=\x22language-gco\
+de\x22>; end fixup<\
 /code></pre>\x0a\x0a<p\
->So obviously th\
-ere is a sharp c\
-orner at \x5c([4, 4\
-] \x5c). The corner\
- angle is \x5c( \x5cbe\
-ta = 53.13\x5c)\xc2\xb0.<\
-/p>\x0a\x0a<p>The slop\
-es of the incomi\
-ng and outcoming\
- segments are : \
-\x5c(m_1 = 1/3 \x5c) a\
-nd \x5c( m_2 = 3 \x5c)\
- and the two bis\
-ections\x0aslopes a\
-re \x5c( -1\x5c) and \x5c\
-(1;\x5c) so the cor\
-rect bisection i\
-s the second one\
-, and its correc\
-t orientation is\
- +45\xc2\xb0</p>\x0a\x0a<h5>\
-Gap</h5>\x0a\x0a<p>\x5c( \
-gap = 0.414 \x5c)</\
-p>\x0a\x0a<h5>Extra Tr\
-avel</h5>\x0a\x0a<p>\x5c(\
- dx = 0.874 \x5c)</\
-p>\x0a\x0a<p>\x5c( dy = 0\
-.874 \x5c)</p>\x0a\x0a<h4\
->Example 2</h4>\x0a\
-<svg width=\x2250\x22 \
-height=\x2245\x22 view\
-Box=\x220 0 50 45\x22 \
-version=\x221.1\x22>\x0a \
- <polyline point\
-s=\x2210,40  10,2  \
-50,2\x22 stroke-wid\
-th=\x220.75\x22 fill=\x22\
-none\x22 stroke=\x22bl\
-ack\x22/>\x0a</svg>\x0a<p\
-re><code class=\x22\
-language-gcode\x22>\
-G1 X0.0  Y0.0\x0aG1\
- X0.0  Y4.0\x0aG1 X\
-4.0  Y4.0</code>\
-</pre>\x0a\x0a<p>So ob\
-viously there is\
- a sharp (right)\
- corner at \x5c([0,\
- 4] \x5c). The corn\
-er angle is \x5c( \x5c\
-beta = 90\x5c)\xc2\xb0.</\
-p>\x0a\x0a<p>The slope\
-s of the incomin\
-g and outcoming \
-segments are \x5c(m\
-_1 = -\x5cinf \x5c) an\
-d \x5c( m_2 = 0 \x5c) \
-and the slopes o\
-f the\x0abisections\
- are \x5c( -1\x5c) and\
- \x5c(1\x5c). The corr\
-ect bisection is\
- the first one (\
-slope -1), and i\
-ts correct orien\
-tation is\x0a+135\xc2\xb0\
- (not -45\xc2\xb0) poi\
-nting \x22outside\x22 \
-the corner.</p>\x0a\
-\x0a<h5>Gap</h5>\x0a\x0a<\
-p>\x5c( gap = 0.414\
- \x5c)</p>\x0a\x0a<h5>Ext\
-ra Travel</h5>\x0a\x0a\
-<p>\x5c( dx = -0.88\
- \x5c)</p>\x0a\x0a<p>\x5c( d\
-y = 0.88 \x5c)</p>\x0a\
-\x0a<p><strong>PyCu\
-t GCode Dressup \
-GUI</strong></p>\
-\x0a\x0a<p>How to inte\
-grate this handl\
-ing into <strong\
->PyCut</strong> \
-? There is a set\
-ting option \x22<st\
-rong>GCode DogBo\
-nes\x0athreshold</s\
-trong>\x22 which is\
- per default 120\
-\xc2\xb0. A completely\
- separate utilit\
-y \x22gcode_dressup\
-.py\x22 will be cal\
-led upon\x0aGCode g\
-eneration comple\
-tion to transfor\
-m the GCode for \
-the operations r\
-equiring it.</p>\
-\x0a\x0a<p>In the oper\
-ations table, we\
- add a column \x22f\
-ixups\x22 as a chec\
-kbox, which, for\
- every operation\
-, can be set on \
-or off.\x0aMoreover\
-, in the GCode V\
-iewer/GCode simu\
-lator GCode brow\
-sers, lines corr\
-esponding to add\
-ed fixups (compr\
-ised between\x0athe\
- comment lines <\
-/p>\x0a<pre><code c\
-lass=\x22language-g\
-code\x22>; start fi\
-xup</code></pre>\
-\x0a\x0a<p>and </p>\x0a<p\
-re><code class=\x22\
-language-gcode\x22>\
-; end fixup</cod\
-e></pre>\x0a\x0a<p>wil\
-l have a blue ba\
-ckground in orde\
-r to clearly ide\
-ntify them.</p>\x0a\
-\x0a<div style=\x22hei\
-ght:30px\x22>\x0a</div\
->\x0a\x0a<h2 id=\x22P-07\x22\
->PyCut Utilities\
-</h2>\x0a   \x0a<h3 id\
-=\x22P-07-01\x22>SvgRe\
-volver</h3>\x0a\x0a<p>\
-The SVG standard\
- is huge and the\
-re are many ways\
- to write a svg \
-data. One\x0avery u\
-seful feature is\
- to define basic\
- shapes info the\
- <code>defs</cod\
-e>\x0apart, and re-\
-use these items \
-many times, appl\
-ying different t\
-ransformation\x0afo\
-r a given elemen\
-t. This is perfo\
-rmed with the <c\
-ode>use</code> t\
-ag.</p>\x0a\x0a<pre><c\
-ode class=\x22langu\
-age-xml\x22>&lt;?xm\
-l version='1.0' \
-encoding='UTF-8'\
-?&gt;\x0a&lt;svg ve\
-rsion=\x221.1\x22 id=\x22\
-svg\x22 width=\x22100m\
-m\x22 height=\x22200mm\
-\x22 viewBox=\x220 0 1\
-00 200\x22\x0a  xmlns:\
-xlink=\x22http://ww\
-w.w3.org/1999/xl\
-ink\x22\x0a  xmlns=\x22ht\
-tp://www.w3.org/\
-2000/svg\x22\x0a  xmln\
-s:svg=\x22http://ww\
-w.w3.org/2000/sv\
-g\x22&gt;\x0a  &lt;def\
-s id=\x22defs\x22&gt;\x0a\
-    &lt;circle i\
-d=\x22my_circle\x22 cx\
-=\x220\x22 cy=\x220\x22 r=\x222\
-.25\x22            \
- style=\x22opacity:\
-1;fill:#880088;s\
-troke:#00ffff;st\
-roke-width:0.2;\x22\
- /&gt;\x0a    &lt;r\
-ect   id=\x22my_rec\
-t\x22   x=\x220\x22 y=\x220\x22\
- width=\x2210\x22 heig\
-ht=\x2220\x22 style=\x22o\
-pacity:1;fill:#8\
-80088;stroke:#00\
-ffff;stroke-widt\
-h:0.6;\x22 /&gt;\x0a  \
-&lt;/defs&gt;\x0a  \
-&lt;g id=\x22layer1\
-\x22&gt;\x0a    &lt;g \
-id=\x22layer_circle\
-\x22&gt;\x0a      &lt;\
-use href=\x22#my_ci\
-rcle\x22 transform=\
-\x22translate(10,10\
-)\x22  id=\x22circle_l\
-eft\x22  style=\x22opa\
-city:0.5;\x22 /&gt;\
-\x0a      &lt;use h\
-ref=\x22#my_circle\x22\
- x=\x2210\x22 y=\x2215\x22  \
-               i\
-d=\x22circle_right\x22\
- style=\x22opacity:\
-0.9;\x22/&gt;\x0a    &\
-lt;/g&gt;\x0a    &l\
-t;g id=\x22layer_re\
-ct\x22&gt;\x0a      &l\
-t;use href=\x22#my_\
-rect\x22   x=\x2230\x22 y\
-=\x2210\x22           \
-      id=\x22rect_1\
-\x22 /&gt;\x0a      &l\
-t;use href=\x22#my_\
-rect\x22   transfor\
-m=\x22translate(50,\
-10)\x22  id=\x22rect_2\
-\x22 /&gt;\x0a    &lt;\
-/g&gt;\x0a  &lt;/g&\
-gt;\x0a&lt;/svg&gt;\
-</code></pre>\x0a\x0a<\
-p>But at the end\
- of the day, an \
-application (lik\
-e <strong>PyCut<\
-/strong>)\x0aprefer\
-s to (or can onl\
-y) work with a s\
-vg data where al\
-l elements (shap\
-es)\x0aare defined \
-without transfor\
-mations, because\
- evaluatings suc\
-h\x0atransformation\
-s is not an easy\
- task (indeed...\
-).</p>\x0a\x0a<p>Fortu\
-nately, the pack\
-age <code><stron\
-g>svgelements</s\
-trong></code> do\
-es the job...</p\
->\x0a\x0a<p>This utili\
-ty uses <code><s\
+>will have a blu\
+e background in \
+order to clearly\
+ identify them.<\
+/p>\x0a\x0a<div style=\
+\x22height:30px\x22>\x0a<\
+/div>\x0a\x0a<h2 id=\x22P\
+-07\x22>PyCut Utili\
+ties</h2>\x0a   \x0a<h\
+3 id=\x22P-07-01\x22>S\
+vgRevolver</h3>\x0a\
+\x0a<p>The SVG stan\
+dard is huge and\
+ there are many \
+ways to write a \
+svg data. One\x0ave\
+ry useful featur\
+e is to define b\
+asic shapes info\
+ the <code>defs<\
+/code>\x0apart, and\
+ re-use these it\
+ems many times, \
+applying differe\
+nt transformatio\
+n\x0afor a given el\
+ement. This is p\
+erformed with th\
+e <code>use</cod\
+e> tag.</p>\x0a\x0a<pr\
+e><code class=\x22l\
+anguage-xml\x22>&lt\
+;?xml version='1\
+.0' encoding='UT\
+F-8'?&gt;\x0a&lt;sv\
+g version=\x221.1\x22 \
+id=\x22svg\x22 width=\x22\
+100mm\x22 height=\x222\
+00mm\x22 viewBox=\x220\
+ 0 100 200\x22\x0a  xm\
+lns:xlink=\x22http:\
+//www.w3.org/199\
+9/xlink\x22\x0a  xmlns\
+=\x22http://www.w3.\
+org/2000/svg\x22\x0a  \
+xmlns:svg=\x22http:\
+//www.w3.org/200\
+0/svg\x22&gt;\x0a  &lt\
+;defs id=\x22defs\x22&\
+gt;\x0a    &lt;circ\
+le id=\x22my_circle\
+\x22 cx=\x220\x22 cy=\x220\x22 \
+r=\x222.25\x22        \
+     style=\x22opac\
+ity:1;fill:#8800\
+88;stroke:#00fff\
+f;stroke-width:0\
+.2;\x22 /&gt;\x0a    &\
+lt;rect   id=\x22my\
+_rect\x22   x=\x220\x22 y\
+=\x220\x22 width=\x2210\x22 \
+height=\x2220\x22 styl\
+e=\x22opacity:1;fil\
+l:#880088;stroke\
+:#00ffff;stroke-\
+width:0.6;\x22 /&gt\
+;\x0a  &lt;/defs&gt\
+;\x0a  &lt;g id=\x22la\
+yer1\x22&gt;\x0a    &l\
+t;g id=\x22layer_ci\
+rcle\x22&gt;\x0a      \
+&lt;use href=\x22#m\
+y_circle\x22 transf\
+orm=\x22translate(1\
+0,10)\x22  id=\x22circ\
+le_left\x22  style=\
+\x22opacity:0.5;\x22 /\
+&gt;\x0a      &lt;u\
+se href=\x22#my_cir\
+cle\x22 x=\x2210\x22 y=\x221\
+5\x22              \
+   id=\x22circle_ri\
+ght\x22 style=\x22opac\
+ity:0.9;\x22/&gt;\x0a \
+   &lt;/g&gt;\x0a  \
+  &lt;g id=\x22laye\
+r_rect\x22&gt;\x0a    \
+  &lt;use href=\x22\
+#my_rect\x22   x=\x223\
+0\x22 y=\x2210\x22       \
+          id=\x22re\
+ct_1\x22 /&gt;\x0a    \
+  &lt;use href=\x22\
+#my_rect\x22   tran\
+sform=\x22translate\
+(50,10)\x22  id=\x22re\
+ct_2\x22 /&gt;\x0a    \
+&lt;/g&gt;\x0a  &lt\
+;/g&gt;\x0a&lt;/svg\
+&gt;</code></pre\
+>\x0a\x0a<p>But at the\
+ end of the day,\
+ an application \
+(like <strong>Py\
+Cut</strong>)\x0apr\
+efers to (or can\
+ only) work with\
+ a svg data wher\
+e all elements (\
+shapes)\x0aare defi\
+ned without tran\
+sformations, bec\
+ause evaluatings\
+ such\x0atransforma\
+tions is not an \
+easy task (indee\
+d...).</p>\x0a\x0a<p>F\
+ortunately, the \
+package <code><s\
 trong>svgelement\
 s</strong></code\
->, \x22resolves\x22 al\
-l transformation\
-s\x0aand writes the\
- result to a svg\
- file as output \
-(what <code><str\
-ong>svgelements<\
-/strong></code>\x0a\
-does not). It al\
-so manages to pr\
-eserve the <code\
->id</code>s of t\
-he\x0aresolved item\
-s as well as mer\
-ging the styles \
-of the reference\
-d items with\x0athe\
- used items.</p>\
-\x0a\x0a<p><em>Note: S\
-tyles attributes\
- defined in the \
-use do not overw\
-rite those defin\
-ed in the defs (\
-fill, stroke). B\
-ut\x0a<ul>\x0a<li>opac\
-ity</li>\x0a</ul>\x0ad\
-oes.\x0a</em></p>\x0a\x0a\
-    \x0a<h4>Usage</\
-h4>\x0a\x0a<p>From the\
- command line</p\
->\x0a\x0a<pre><code cl\
-ass=\x22language-sh\
-ell\x22>&gt; python\
- svgresolver.py \
--h\x0a&gt; python s\
-vgresolver.py --\
-drop-defs test_b\
-asic.svg</code><\
-/pre>\x0a\x0a<p>A file\
- named <code>tes\
-t_basic.resolved\
-.svg</code> is c\
-reated</p>\x0a\x0a<pre\
-><code class=\x22la\
-nguage-xml\x22>&lt;\
-?xml version='1.\
-0' encoding='UTF\
--8'?&gt;\x0a&lt;svg\
- version=\x221.1\x22 i\
-d=\x22svg\x22 width=\x221\
-00mm\x22 height=\x2220\
-0mm\x22 viewBox=\x220 \
-0 100 200\x22\x0a  xml\
-ns=\x22http://www.w\
-3.org/2000/svg\x22 \
-\x0a  xmlns:xlink=\x22\
+> does the job..\
+.</p>\x0a\x0a<p>This u\
+tility uses <cod\
+e><strong>svgele\
+ments</strong></\
+code>, \x22resolves\
+\x22 all transforma\
+tions\x0aand writes\
+ the result to a\
+ svg file as out\
+put (what <code>\
+<strong>svgeleme\
+nts</strong></co\
+de>\x0adoes not). I\
+t also manages t\
+o preserve the <\
+code>id</code>s \
+of the\x0aresolved \
+items as well as\
+ merging the sty\
+les of the refer\
+enced items with\
+\x0athe used items.\
+</p>\x0a\x0a<p><em>Not\
+e: Styles attrib\
+utes defined in \
+the use do not o\
+verwrite those d\
+efined in the de\
+fs (fill, stroke\
+). But\x0a<ul>\x0a<li>\
+opacity</li>\x0a</u\
+l>\x0adoes.\x0a</em></\
+p>\x0a\x0a    \x0a<h4>Usa\
+ge</h4>\x0a\x0a<p>From\
+ the command lin\
+e</p>\x0a\x0a<pre><cod\
+e class=\x22languag\
+e-shell\x22>&gt; py\
+thon svgresolver\
+.py -h\x0a&gt; pyth\
+on svgresolver.p\
+y --drop-defs te\
+st_basic.svg</co\
+de></pre>\x0a\x0a<p>A \
+file named <code\
+>test_basic.reso\
+lved.svg</code> \
+is created</p>\x0a\x0a\
+<pre><code class\
+=\x22language-xml\x22>\
+&lt;?xml version\
+='1.0' encoding=\
+'UTF-8'?&gt;\x0a&lt\
+;svg version=\x221.\
+1\x22 id=\x22svg\x22 widt\
+h=\x22100mm\x22 height\
+=\x22200mm\x22 viewBox\
+=\x220 0 100 200\x22\x0a \
+ xmlns=\x22http://w\
+ww.w3.org/2000/s\
+vg\x22 \x0a  xmlns:xli\
+nk=\x22http://www.w\
+3.org/1999/xlink\
+\x22 \x0a  xmlns:svg=\x22\
 http://www.w3.or\
-g/1999/xlink\x22 \x0a \
- xmlns:svg=\x22http\
-://www.w3.org/20\
-00/svg\x22 &gt;\x0a  &\
-lt;g id=\x22layer1\x22\
-&gt;\x0a    &lt;g i\
-d=\x22layer_circle\x22\
+g/2000/svg\x22 &gt;\
+\x0a  &lt;g id=\x22lay\
+er1\x22&gt;\x0a    &lt\
+;g id=\x22layer_cir\
+cle\x22&gt;\x0a      &\
+lt;circle id=\x22ci\
+rcle_left\x22  cx=\x22\
+10.000\x22 cy=\x2210.0\
+00\x22 r=\x222.250\x22 st\
+yle=\x22opacity:0.5\
+;fill:#880088;st\
+roke:#00ffff;str\
+oke-width:0.2;\x22/\
 &gt;\x0a      &lt;c\
 ircle id=\x22circle\
-_left\x22  cx=\x2210.0\
-00\x22 cy=\x2210.000\x22 \
+_right\x22 cx=\x2210.0\
+00\x22 cy=\x2215.000\x22 \
 r=\x222.250\x22 style=\
-\x22opacity:0.5;fil\
+\x22opacity:0.9;fil\
 l:#880088;stroke\
 :#00ffff;stroke-\
 width:0.2;\x22/&gt;\
-\x0a      &lt;circl\
-e id=\x22circle_rig\
-ht\x22 cx=\x2210.000\x22 \
-cy=\x2215.000\x22 r=\x222\
-.250\x22 style=\x22opa\
-city:0.9;fill:#8\
-80088;stroke:#00\
-ffff;stroke-widt\
-h:0.2;\x22/&gt;\x0a   \
- &lt;/g&gt;\x0a    \
-&lt;g id=\x22layer_\
-rect\x22&gt;\x0a      \
-&lt;rect id=\x22rec\
-t_1\x22 width=\x2210.0\
-00\x22 height=\x2220.0\
-00\x22 x=\x2230.000\x22 y\
-=\x2210.000\x22 rx=\x220.\
-000\x22 ry=\x220.000\x22 \
-style=\x22opacity:1\
-;fill:#880088;st\
-roke:#00ffff;str\
-oke-width:0.6;\x22/\
-&gt;\x0a      &lt;r\
-ect id=\x22rect_2\x22 \
-width=\x2210.000\x22 h\
-eight=\x2220.000\x22 x\
-=\x2250.000\x22 y=\x2210.\
-000\x22 rx=\x220.000\x22 \
-ry=\x220.000\x22 style\
-=\x22opacity:1;fill\
-:#880088;stroke:\
-#00ffff;stroke-w\
-idth:0.6;\x22/&gt;\x0a\
-    &lt;/g&gt;\x0a \
- &lt;/g&gt;\x0a&lt;\
-/svg&gt;</pre></\
-code>\x0a\x0a<p>and <s\
-trong>PyCut</str\
-ong> can use thi\
-s \x22resolved\x22 svg\
- data as valid i\
-nput. Note how t\
-he <code>id</cod\
-e>s of the \x0a<cod\
-e>use</code> ele\
-ments are passed\
- to the \x22resolve\
-d\x22 items. \x0aAlso \
-note how the opa\
-city values in t\
-he styles are me\
-rged in the reso\
-lved items's sty\
-les.</p>\x0a\x0a<h4>To\
-Do</h4>\x0a\x0a<ul>\x0a  \
-<li><p>integrate\
- the converter i\
-n <strong>PyCut<\
-/strong>.</p></l\
-i>\x0a</ul>\x0a\x0a<h4>Bu\
-gs</h4>\x0a\x0a<ul>\x0a  \
-<li><p>rotate</p\
->\x0a    <ul>\x0a     \
- <li>circles : o\
-k </li>\x0a\x09    <li\
->rectangle : NO \
-ROTATION (transf\
-orm into a polyg\
-on ?)</li>\x0a\x09    \
-<li>polygon : ok\
-</li>\x0a\x09    <li>l\
-ine : ok</li>\x0a\x09 \
-   <li>polyline \
+\x0a    &lt;/g&gt;\x0a\
+    &lt;g id=\x22la\
+yer_rect\x22&gt;\x0a  \
+    &lt;rect id=\
+\x22rect_1\x22 width=\x22\
+10.000\x22 height=\x22\
+20.000\x22 x=\x2230.00\
+0\x22 y=\x2210.000\x22 rx\
+=\x220.000\x22 ry=\x220.0\
+00\x22 style=\x22opaci\
+ty:1;fill:#88008\
+8;stroke:#00ffff\
+;stroke-width:0.\
+6;\x22/&gt;\x0a      &\
+lt;rect id=\x22rect\
+_2\x22 width=\x2210.00\
+0\x22 height=\x2220.00\
+0\x22 x=\x2250.000\x22 y=\
+\x2210.000\x22 rx=\x220.0\
+00\x22 ry=\x220.000\x22 s\
+tyle=\x22opacity:1;\
+fill:#880088;str\
+oke:#00ffff;stro\
+ke-width:0.6;\x22/&\
+gt;\x0a    &lt;/g&g\
+t;\x0a  &lt;/g&gt;\x0a\
+&lt;/svg&gt;</pr\
+e></code>\x0a\x0a<p>an\
+d <strong>PyCut<\
+/strong> can use\
+ this \x22resolved\x22\
+ svg data as val\
+id input. Note h\
+ow the <code>id<\
+/code>s of the \x0a\
+<code>use</code>\
+ elements are pa\
+ssed to the \x22res\
+olved\x22 items. \x0aA\
+lso note how the\
+ opacity values \
+in the styles ar\
+e merged in the \
+resolved items's\
+ styles.</p>\x0a\x0a<h\
+4>ToDo</h4>\x0a\x0a<ul\
+>\x0a  <li><p>integ\
+rate the convert\
+er in <strong>Py\
+Cut</strong>.</p\
+></li>\x0a</ul>\x0a\x0a<h\
+4>Bugs</h4>\x0a\x0a<ul\
+>\x0a  <li><p>rotat\
+e</p>\x0a    <ul>\x0a \
+     <li>circles\
+ : ok </li>\x0a\x09   \
+ <li>rectangle :\
+ NO ROTATION (tr\
+ansform into a p\
+olygon ?)</li>\x0a\x09\
+    <li>polygon \
 : ok</li>\x0a\x09    <\
-li>ellipse : NO \
-ROTATION (transf\
-orm into a polyg\
-on ?)</li>\x0a     \
- <li>path : ok</\
-li>\x0a\x09  </ul>\x0a  <\
-/li>\x0a  <li><p>sc\
-ale</p>\x0a    <ul>\
-\x0a      <li>recta\
-ngle: no transfo\
-rmation when the\
- scale transform\
-ation is given w\
-ith y coefficien\
-t negative (-1 f\
-or example) ther\
-e the \x0a      rec\
-tangle is flippe\
-d. <strong>FIXED\
-</strong>\x0a      \
-</li>\x0a    </ul>\x0a\
-  </li>\x0a</ul>\x0a\x0a<\
-div style=\x22heigh\
-t:15px\x22>\x0a</div>\x0a\
-\x0a<h3 id=\x22P-07-02\
-\x22>SvgText2Svgpat\
-h</h3>\x0a   \x0a<p>Th\
-e conversion of \
-text (<code>&lt;\
-text&gt;</code> \
-elements) given \
-in svg files to \
-paths (<code>&lt\
-;path&gt;</code>\
-\x0aelements) is a \
-often a concern \
-for applications\
- manipulating te\
-xt in svg files.\
- There are in In\
-ternet plenty of\
-\x0aprojects/discus\
-sions on the top\
-ic.</p>\x0a\x0a<p>For \
-every language i\
-t seems that man\
-y solutions are \
-given. Unfortuna\
-tely, as far as \
-I could observe,\
- there is plenty\
-\x0aof crap (unfini\
-shed packages, o\
-r deprecated etc\
-.). This is espe\
-cially the case \
-when searching f\
-or solutions for\
- the\x0apython lang\
-uage (which is q\
-uite a shame)!</\
-p>\x0a\x0a<p>I finally\
- found only <str\
-ong>1 (!)</stron\
-g> python packag\
-e that seems to \
-make the convers\
-ion in a reasona\
-ble way:</p>\x0a<ul\
+li>line : ok</li\
+>\x0a\x09    <li>polyl\
+ine : ok</li>\x0a\x09 \
+   <li>ellipse :\
+ NO ROTATION (tr\
+ansform into a p\
+olygon ?)</li>\x0a \
+     <li>path : \
+ok</li>\x0a\x09  </ul>\
+\x0a  </li>\x0a  <li><\
+p>scale</p>\x0a    \
+<ul>\x0a      <li>r\
+ectangle: no tra\
+nsformation when\
+ the scale trans\
+formation is giv\
+en with y coeffi\
+cient negative (\
+-1 for example) \
+there the \x0a     \
+ rectangle is fl\
+ipped. <strong>F\
+IXED</strong>\x0a  \
+    </li>\x0a    </\
+ul>\x0a  </li>\x0a</ul\
+>\x0a\x0a<div style=\x22h\
+eight:15px\x22>\x0a</d\
+iv>\x0a\x0a<h3 id=\x22P-0\
+7-02\x22>SvgText2Sv\
+gpath</h3>\x0a   \x0a<\
+p>The conversion\
+ of text (<code>\
+&lt;text&gt;</co\
+de> elements) gi\
+ven in svg files\
+ to paths (<code\
+>&lt;path&gt;</c\
+ode>\x0aelements) i\
+s a often a conc\
+ern for applicat\
+ions manipulatin\
+g text in svg fi\
+les. There are i\
+n Internet plent\
+y of\x0aprojects/di\
+scussions on the\
+ topic.</p>\x0a\x0a<p>\
+For every langua\
+ge it seems that\
+ many solutions \
+are given. Unfor\
+tunately, as far\
+ as I could obse\
+rve, there is pl\
+enty\x0aof crap (un\
+finished package\
+s, or deprecated\
+ etc.). This is \
+especially the c\
+ase when searchi\
+ng for solutions\
+ for the\x0apython \
+language (which \
+is quite a shame\
+)!</p>\x0a\x0a<p>I fin\
+ally found only \
+<strong>1 (!)</s\
+trong> python pa\
+ckage that seems\
+ to make the con\
+version in a rea\
+sonable way:</p>\
+\x0a<ul>\x0a  <li><str\
+ong>ziafont (ver\
+sion 0.2)</stron\
+g> (as 15.01.202\
+2)</li>\x0a</ul>\x0a\x0a<\
+p>This package r\
+eads the true ty\
+pe font binary f\
+iles (which is a\
+ whole task in i\
+ts own) and thus\
+ has access to e\
+very\x0abit of the \
+files. Paths can\
+ then be calcula\
+ted and exported\
+. A quick try sh\
+own me how good \
+this package is.\
+ Diving into\x0athe\
+ code shows how \
+deep the author \
+of the package k\
+nows true type s\
+tuff. I only fou\
+nd one drawback:\
+ the output is f\
+ull\x0aof \x22viewbox\x22\
+ fitting exactly\
+ the size of the\
+ output paths, a\
+nd these viewbox\
+es are often wit\
+h negative value\
+s. This is\x0abecau\
+se this package \
+is not meant to \
+transform <code>\
+text</code> elem\
+ents into <code>\
+path</code> elem\
+ents, but to\x0adir\
+ectly generate <\
+code>path</code>\
+ data from a giv\
+en string. And b\
+ecause of this, \
+it is not so str\
+aightforward to \
+use\x0athe <code>pa\
+th</code> data o\
+utput and to plu\
+g it into the us\
+er own svg file \
+as one would wis\
+h.</p>\x0a\x0a<p>An ot\
+her method would\
+ be to use the p\
+ython package \x22<\
+strong>freetype-\
+py</strong>\x22. Th\
+is package perfo\
+rms the task of\x0a\
+reading the bina\
+ry files, and it\
+ is possible to \
+generate the pat\
+hs from the stru\
+ctures/objects t\
+hat freetype-py \
+offers.\x0aThese ar\
+e infact ctypes \
+wrappers, and as\
+ a good (excelle\
+nt) wrapper, man\
+y functions of t\
+he freetype c li\
+brary are\x0aaccess\
+ible as methods \
+of these objects\
+. Hopefully all \
+informations of \
+the fonts are ac\
+cessible! No! fr\
+eetype-py\x0aperfor\
+ms only 'kern' k\
+erning, not 'GPO\
+S' kerning (as f\
+ar as I understa\
+nd). The GPOS ta\
+ble seems not to\
+ be accessible\x0af\
+rom freetype-py,\
+ so I use <stron\
+g>ziafont</stron\
+g> code to load \
+this table. <str\
+ong>Thank you zi\
+afont!</strong> \
+So\x0aeventually I \
+pick from ziafon\
+t the following \
+files for my tas\
+k: gpos.py and f\
+ontread.py.</p>\x0a\
+\x0a<p>This is the \
+approach that I \
+follow in my pac\
+kage, and becaus\
+e of this, my co\
+de is much small\
+er than the\x0a<str\
+ong>ziafont</str\
+ong> one. But I \
+am quite sure th\
+at <strong>ziafo\
+nt</strong> is m\
+uch more robust/\
+bug free as my\x0a<\
+strong>svgtext2s\
+vgpaths</strong>\
+ package.</p>\x0a\x0a<\
+h4>The svgtext2s\
+vgpaths package<\
+/h4>\x0a\x0a<p>The fea\
+tures of my pack\
+age are directly\
+ dictated from t\
+he need to conve\
+rt svg <code>&lt\
+;text&gt;</code>\
+ to svg\x0a<code>&l\
+t;path&gt;</code\
+> elements insid\
+e a svg file. Ho\
+w does the resul\
+t of the convers\
+ion has to look \
+like?</p>\x0a<ul>\x0a \
+ <li>It must be \
+<strong>without<\
+/strong> any \x22<s\
+trong>transforms\
+</strong>\x22 attri\
+butes. (so use m\
+y utility\x0a    <s\
+trong>svgresolve\
+r</strong>)</li>\
+\x0a  <li>the <stro\
+ng>location</str\
+ong> of the text\
+ described by th\
+e path(s) must m\
+atch exactly the\
+ same input\x0a    \
+<code>&lt;text&g\
+t;</code> which \
+is given in svg \
+by the \x22<strong>\
+x</strong>\x22 and \
+\x22<strong>y</stro\
+ng>\x22\x0a  attribute\
+s.</li>\x0a  <li>th\
+e <strong>size</\
+strong> of the l\
+etters described\
+ by the paths mu\
+st be exactly th\
+e same as the on\
+e given in the\x0a \
+   <code>&lt;tex\
+t&gt;</code> dat\
+a: the \x22<strong>\
+font-size</stron\
+g>\x22 expressed in\
+ units \x22<strong>\
+px</strong>\x22.</l\
+i>\x0a  <li>and of \
+course, font <st\
+rong>family</str\
+ong> and others \
+(<strong>font-st\
+yle</strong>, <s\
+trong>font-weigh\
+t</strong>\x0a    a\
+nd <strong>font-\
+stretch</strong>\
+) must be respec\
+ted, as far as p\
+ossible.</li>\x0a</\
+ul>\x0a\x0a<p>It canno\
+t handle the fol\
+lowing strings:<\
+/p>\x0a<ul>\x0a  <li><\
+strong>strings s\
+plitted on many \
+lines (ziafont c\
+an)</strong></li\
 >\x0a  <li><strong>\
-ziafont (version\
- 0.2)</strong> (\
-as 15.01.2022)</\
-li>\x0a</ul>\x0a\x0a<p>Th\
-is package reads\
- the true type f\
-ont binary files\
- (which is a who\
-le task in its o\
-wn) and thus has\
- access to every\
-\x0abit of the file\
-s. Paths can the\
-n be calculated \
-and exported. A \
-quick try shown \
-me how good this\
- package is. Div\
-ing into\x0athe cod\
-e shows how deep\
- the author of t\
-he package knows\
- true type stuff\
-. I only found o\
-ne drawback: the\
- output is full\x0a\
-of \x22viewbox\x22 fit\
-ting exactly the\
- size of the out\
-put paths, and t\
-hese viewboxes a\
-re often with ne\
-gative values. T\
-his is\x0abecause t\
-his package is n\
-ot meant to tran\
-sform <code>text\
-</code> elements\
- into <code>path\
-</code> elements\
-, but to\x0adirectl\
-y generate <code\
->path</code> dat\
-a from a given s\
-tring. And becau\
-se of this, it i\
-s not so straigh\
-tforward to use\x0a\
-the <code>path</\
-code> data outpu\
-t and to plug it\
- into the user o\
-wn svg file as o\
-ne would wish.</\
-p>\x0a\x0a<p>An other \
-method would be \
-to use the pytho\
-n package \x22<stro\
-ng>freetype-py</\
-strong>\x22. This p\
-ackage performs \
-the task of\x0aread\
-ing the binary f\
-iles, and it is \
-possible to gene\
-rate the paths f\
-rom the structur\
-es/objects that \
-freetype-py offe\
-rs.\x0aThese are in\
-fact ctypes wrap\
-pers, and as a g\
-ood (excellent) \
-wrapper, many fu\
-nctions of the f\
-reetype c librar\
-y are\x0aaccessible\
- as methods of t\
-hese objects. Ho\
-pefully all info\
-rmations of the \
-fonts are access\
-ible! No! freety\
-pe-py\x0aperforms o\
-nly 'kern' kerni\
-ng, not 'GPOS' k\
-erning (as far a\
-s I understand).\
- The GPOS table \
-seems not to be \
-accessible\x0afrom \
-freetype-py, so \
-I use <strong>zi\
-afont</strong> c\
-ode to load this\
- table. <strong>\
-Thank you ziafon\
-t!</strong> So\x0ae\
-ventually I pick\
- from ziafont th\
-e following file\
-s for my task: g\
-pos.py and fontr\
-ead.py.</p>\x0a\x0a<p>\
-This is the appr\
-oach that I foll\
-ow in my package\
-, and because of\
- this, my code i\
-s much smaller t\
-han the\x0a<strong>\
-ziafont</strong>\
- one. But I am q\
-uite sure that <\
-strong>ziafont</\
-strong> is much \
-more robust/bug \
-free as my\x0a<stro\
-ng>svgtext2svgpa\
-ths</strong> pac\
-kage.</p>\x0a\x0a<h4>T\
-he svgtext2svgpa\
-ths package</h4>\
-\x0a\x0a<p>The feature\
-s of my package \
-are directly dic\
-tated from the n\
-eed to convert s\
-vg <code>&lt;tex\
-t&gt;</code> to \
-svg\x0a<code>&lt;pa\
-th&gt;</code> el\
-ements inside a \
-svg file. How do\
-es the result of\
- the conversion \
-has to look like\
-?</p>\x0a<ul>\x0a  <li\
->It must be <str\
-ong>without</str\
-ong> any \x22<stron\
-g>transforms</st\
-rong>\x22 attribute\
-s. (so use my ut\
-ility\x0a    <stron\
-g>svgresolver</s\
-trong>)</li>\x0a  <\
-li>the <strong>l\
-ocation</strong>\
- of the text des\
-cribed by the pa\
-th(s) must match\
- exactly the sam\
-e input\x0a    <cod\
-e>&lt;text&gt;</\
-code> which is g\
-iven in svg by t\
-he \x22<strong>x</s\
-trong>\x22 and \x22<st\
-rong>y</strong>\x22\
-\x0a  attributes.</\
-li>\x0a  <li>the <s\
-trong>size</stro\
-ng> of the lette\
-rs described by \
-the paths must b\
-e exactly the sa\
-me as the one gi\
-ven in the\x0a    <\
-code>&lt;text&gt\
-;</code> data: t\
-he \x22<strong>font\
--size</strong>\x22 \
-expressed in uni\
-ts \x22<strong>px</\
-strong>\x22.</li>\x0a \
- <li>and of cour\
-se, font <strong\
->family</strong>\
- and others (<st\
-rong>font-style<\
-/strong>, <stron\
-g>font-weight</s\
-trong>\x0a    and <\
-strong>font-stre\
-tch</strong>) mu\
-st be respected,\
- as far as possi\
-ble.</li>\x0a</ul>\x0a\
-\x0a<p>It cannot ha\
-ndle the followi\
-ng strings:</p>\x0a\
-<ul>\x0a  <li><stro\
-ng>strings split\
-ted on many line\
-s (ziafont can)<\
-/strong></li>\x0a  \
-<li><strong>stri\
-ngs with differe\
-nt styles for se\
-parate chars in \
-the string</stro\
-ng></li>\x0a</ul>\x0a\x0a\
-<h4>Fonts in svg\
-</h4>\x0a\x0a<p>From t\
-he Inkscape App,\
- a text is enter\
-ed, for example \
-<code>BB CC AA B\
-B</code>. The fo\
-nt family / type\
- can be chosen\x0aa\
-s well as the fo\
-nt-size, given i\
-n \x22<strong>pt</s\
-trong>\x22 in the I\
-nkscpae App GUI.\
- Saving this fil\
-e, we can observ\
-e in\x0athe svg fil\
-e that the text \
-size is given in\
- \x22<strong>px</st\
-rong>\x22 units.</p\
->\x0a\x0a<p><a href=\x22h\
-ttps://oreillyme\
-dia.github.io/Us\
-ing_SVG/guide/un\
-its.html\x22>Units \
-conversion </a> \
-is as following:\
-</p>\x0a<ul>\x0a  <li>\
-1 px = 3/4 pt</l\
-i>\x0a  <li>1 inch \
-= 25.4 mm</li>\x0a \
- <li>Inkscape re\
-solution: 96 px \
-per inch</li>\x0a</\
-ul>\x0a\x0a<p>So when \
-giving in Inksca\
-pe a font size o\
-f <strong>30 pt<\
-/strong>: 30 pt \
-are 40 px are (4\
-0/96) * 25.4 mm \
-=\x0a<strong>10.583\
-3</strong>. This\
- is the value fo\
-und in the svg f\
-ile, with units \
-\x22<strong>px</str\
-ong>\x22.</p>\x0a\x0a<p>A\
- <code>&lt;text&\
-gt;</code> defin\
-ition in svg fro\
-m Inkscape looks\
- like: </p>\x0a<pre\
-><code class=\x22la\
-nguage-xml\x22>\x0a  &\
-lt;text\x0a       x\
-ml:space=\x22preser\
-ve\x22\x0a       style\
-=\x22<strong>font-s\
-tyle</strong>:no\
-rmal;font-varian\
-t:normal;<strong\
->font-weight</st\
-rong>:normal;<st\
-rong>font-stretc\
-h</strong>:norma\
-l;<strong>font-s\
-ize</strong>:10.\
-5833px;line-heig\
-ht:1.25;<strong>\
-font-family:Aria\
-l;</strong>-inks\
-cape-font-specif\
-ication:'Arial, \
-Normal';font-var\
-iant-ligatures:n\
-ormal;font-varia\
-nt-caps:normal;f\
-ont-variant-nume\
-ric:normal;font-\
-variant-east-asi\
-an:normal;fill:#\
-000000;fill-opac\
-ity:1;stroke:non\
-e;stroke-width:0\
-.264583\x22\x0a       \
-x=\x229.7133684\x22\x0a  \
-     y=\x2241.71286\
-4\x22\x0a       id=\x22te\
-xt1314\x22&gt;\x0a    \
-&lt;tspan\x0a      \
-   sodipodi:role\
-=\x22line\x22\x0a        \
- id=\x22tspan1312\x22\x0a\
-         style=\x22\
-<strong>font-sty\
-le</strong>:norm\
-al;font-variant:\
-normal;<strong>f\
-ont-weight</stro\
-ng>:normal;<stro\
-ng>font-stretch<\
-/strong>:normal;\
-<strong>font-siz\
-e</strong>:10.58\
-33px;<strong>fon\
-t-family:Arial;<\
-/strong>-inkscap\
-e-font-specifica\
-tion:'Arial, Nor\
-mal';font-varian\
-t-ligatures:norm\
-al;font-variant-\
-caps:normal;font\
--variant-numeric\
-:normal;font-var\
-iant-east-asian:\
-normal;stroke-wi\
-dth:0.264583\x22\x0a  \
-       x=\x229.7133\
-684\x22\x0a         y=\
-\x2241.712864\x22&gt;B\
-B  CC  AA  BB\x0a  \
-  &lt;tspan&gt;\x0a\
-  &lt;/text&gt;<\
-/code></pre>\x0a\x0a<p\
->but one could s\
-implify it per h\
-and:</p>\x0a\x0a<pre><\
-code class=\x22lang\
-uage-xml\x22>\x0a  &lt\
-;text style=\x22<st\
-rong>font-style<\
-/strong>:normal;\
-<strong>font-wei\
-ght</strong>:nor\
-mal;<strong>font\
--stretch</strong\
->:normal;<strong\
->font-size</stro\
-ng>:10.5833px;<s\
-trong>font-famil\
-y:Arial;</strong\
->fill:#000000;fi\
-ll-opacity:1;\x22\x0a \
-      x=\x229.71336\
-84\x22\x0a       y=\x2241\
-.712864\x22\x0a       \
-id=\x22text1314\x22&gt\
-;BB  CC  AA  BB&\
-lt;/text&gt;</co\
-de></pre>\x0a\x0a<p>Th\
-e color (fill) a\
-nd opacity do no\
-t play a role wh\
-en cutting, but \
-it is nice to ha\
-ve these propert\
-ies in the\x0aresul\
-ting paths. Infa\
-ct, the path ele\
-ments resulting \
-from the convers\
-ion will be show\
-n in the svg vie\
-wer, so eventual\
-ly\x0athey should h\
-ave at least the\
- same color as t\
-he original text\
-, as well as all\
- other propertie\
-s.</p>\x0a\x0a<p>The v\
-alue of the text\
- is found as val\
-ue of the XML <c\
-ode>&lt;text&gt;\
-</code> element,\
- or as value(s) \
-of the XML\x0a<code\
->&lt;tspan&gt;</\
-code> element(s)\
- found inside th\
-e <code>&lt;text\
-&gt;</code> elem\
-ent. So a conver\
-ter has to\x0acorre\
-ctly parse the X\
-ML <code>&lt;tex\
-t&gt;</code> ele\
-ment with its em\
-bedded <code>&lt\
-;tspan&gt;</code\
-> elements.</p>\x0a\
-\x0a<h5>Fonts style\
-</h5>\x0a\x0a<p>Whatev\
-er the conversio\
-n is, we have an\
-yway the <strong\
->font-size</stro\
-ng> property in \
-the svg file and\
- we will use\x0ait \
-for the conversi\
-on to familyand \
-other font prope\
-rties (in the sv\
-g text \x22style\x22 a\
-ttribute): the\x0a<\
-strong>font-styl\
-e</strong>, <str\
-ong>font-weight<\
-/strong> and <st\
-rong>font-stretc\
-h</strong> attri\
-butes will also \
-be\x0ataken into ac\
-count when possi\
-ble.</p>\x0a\x0a<h4>Fo\
-nt Files</h4>\x0a\x0a<\
-p>Next, we need \
-something like a\
- \x22lookup\x22 to fin\
-d the <strong>tt\
-f</strong> files\
- with the given \
-font family and \
-style.\x0aIn order \
-to simplify the \
-lookup of the fo\
-nts, a python mo\
-dule named <code\
->svgtext2svgpath\
-s_fonts_specs.py\
-</code> is\x0agiven\
- describing wher\
-e to find the fo\
-nts files.</p>\x0a\x0a\
-<p>This module c\
-an be edited in \
-order to find th\
-e fonts on the u\
-ser computer</p>\
-\x0a\x0a<p>All the fon\
-t files found in\
- the specified f\
-ont directories \
-are read to extr\
-act the font fam\
-ily and others f\
-ont\x0astyles. As e\
-xample of a <cod\
-e>svgtext2svgpat\
-hs_fonts_specs.p\
-y</code>:</p>\x0a<p\
-re><code class=\x22\
-language-python\x22\
-># -*- coding: u\
-tf-8 -*-\x0a \x0afonts\
-_dirs = [\x0a    \x22C\
-:\x5c\x5cWindows\x5c\x5cFont\
-s\x22,\x0a    \x22./fonts\
-/slaine\x22,\x0a    \x22.\
-/fonts/boere-tud\
-or\x22,\x0a    \x22./font\
-s/pacmania_69188\
-91\x22,\x0a]\x0a\x0afonts_fa\
-mily_alias = {\x0a \
-   \x22sans-serif\x22:\
- \x22microsoft sans\
- serif\x22,\x0a\x0a    #'\
-Sl\xc3\xa1ine': 'Sl\xc3\xa1i\
-ne Standard'\x0a   \
- 'sl\xc3\xa1ine': 'sl?\
-ine'\x0a}\x0a</code></\
-pre>\x0a\x0a<p>The <co\
-de>fonts_dirs</c\
-ode> usage is ob\
-ious: where to f\
-ind the font fil\
-es.</p>\x0a\x0a<p>The \
-<code>fonts_fami\
-ly_alias</code> \
-dictionary is us\
-ed to map the fo\
-nt family name f\
-rom the svg text\
- style (in\x0aUTF-8\
-) to the 'real' \
-(?) font family \
-name, when there\
- is not match. I\
-n this case we s\
-ee that the \x22san\
-s-serif\x22 font\x0afa\
-mily does not ex\
-ist in all the f\
-ont files found \
-in the <code>\x22C:\
-\x5c\x5cWindows\x5c\x5cFonts\
-\x22</code> folder,\
- but there is a \
-quite\x0asimilar fo\
-nt named \x22micros\
-oft sans serif\x22.\
- The font \x22Slain\
-e\x22 is also not f\
-ound in the <cod\
-e>slaine.ttf</co\
-de> font\x0afile, b\
-ut in it it desc\
-ribes the font <\
-code>'sl?ine'</c\
-ode> : the ascii\
- repr of the utf\
--8 name (i did n\
-ot succeeded to\x0a\
-read the utf-8 n\
-ame from the fre\
-etype-py lib)</p\
->\x0a\x0a<p>In case of\
- the svg font fa\
-mily and style a\
-re not found in \
-the lookup data,\
- an error is pri\
-nted and no conv\
-ersion\x0aoccurs.</\
-p>\x0a\x0a<h4>Usage</h\
-4>\x0a\x0a<h4>Example<\
-/h4>\x0a\x0a<p>Inside \
-python code:</p>\
-\x0a<pre><code clas\
-s=\x22language-pyth\
-on\x22># -- from a \
-\x22raw\x22 svg file\x0ac\
-onverter = SvgTe\
-xt2SvgPathsConve\
-rter(\x22./examples\
-/slaine.svg\x22)\x0asv\
-g = converter.co\
-nvert_svg()\x0aprin\
-t(svg)</code></p\
-re>\x0a\x0a<p>or from \
-the command line\
-:</p>\x0a<pre><code\
- class=\x22shell\x22>&\
-gt; python svgte\
-xt2svgpaths.py -\
-h\x0a&gt; python sv\
-gtext2svgpaths.p\
-y ./examples/sla\
-ine.svg</code></\
-pre>\x0a\x0a<p>The inp\
-ut svg was</p>\x0a<\
-pre><code class=\
-\x22language-xml\x22>&\
-lt;?xml version=\
-\x221.0\x22 encoding=\x22\
-UTF-8\x22 standalon\
-e=\x22no\x22?&gt;\x0a&lt;\
-svg width=\x22210mm\
-\x22 height=\x2260mm\x22 \
-viewBox=\x220 0 210\
- 60\x22 version=\x221.\
-1\x22 id=\x22slaine_te\
-st\x22\x0a  xmlns=\x22htt\
-p://www.w3.org/2\
-000/svg\x22\x0a  xmlns\
-:svg=\x22http://www\
-.w3.org/2000/svg\
-\x22&gt;\x0a  &lt;g id\
-=\x22layer1\x22&gt;\x0a  \
-  &lt;text id=\x22m\
-ytext\x22\x0a      xml\
-:space=\x22preserve\
-\x22\x0a      style=\x22f\
-ont-style:normal\
-;font-variant:no\
-rmal;font-weight\
-:normal;font-str\
-etch:normal;font\
--size:22.5778px;\
-line-height:1.25\
-;font-family:Sl\xef\
-\xbf\xbdine;font-varia\
-nt-ligatures:nor\
-mal;font-variant\
--caps:normal;fon\
-t-variant-numeri\
-c:normal;font-va\
-riant-east-asian\
-:normal;fill:#00\
-0000;fill-opacit\
-y:1;stroke:none;\
-stroke-width:0.2\
-64583\x22\x0a      x=\x22\
-40.99437\x22\x0a      \
-y=\x2230.954929\x22 &g\
-t;\x0a      &lt;tsp\
-an id=\x22mytspan\x22\x0a\
-        style=\x22f\
-ont-style:normal\
-;font-variant:no\
-rmal;font-weight\
-:normal;font-str\
-etch:normal;font\
--size:22.5778px;\
-font-family:Sl\xef\xbf\
-\xbdine;font-varian\
-t-ligatures:norm\
-al;font-variant-\
-caps:normal;font\
--variant-numeric\
-:normal;font-var\
-iant-east-asian:\
-normal;stroke-wi\
-dth:0.264583\x22\x0a  \
-      x=\x2240.9943\
-7\x22\x0a        y=\x2230\
-.954929\x22&gt;CHAb\
-pk\x0a      &lt;/ts\
-pan&gt;\x0a    &lt;\
-/text&gt;\x0a  &lt;\
-/g&gt;\x0a&lt;/svg&\
-gt;\x0a</code></pre\
->\x0a\x0a<p>... and th\
-e resulting one \
-</p>\x0a<pre><code \
-class=\x22language-\
-xml\x22>&lt;?xml ve\
-rsion=\x221.0\x22 enco\
-ding=\x22UTF-8\x22 sta\
-ndalone=\x22no\x22?&gt\
-;\x0a&lt;svg width=\
-\x22210mm\x22 height=\x22\
-60mm\x22 viewBox=\x220\
- 0 210 60\x22 versi\
-on=\x221.1\x22 id=\x22sla\
-ine_test\x22\x0a  xmln\
-s=\x22http://www.w3\
-.org/2000/svg\x22\x0a \
- xmlns:svg=\x22http\
-://www.w3.org/20\
-00/svg\x22&gt;\x0a  &l\
-t;g id=\x22layer1\x22&\
-gt;\x0a    &lt;text\
- id=\x22mytext\x22\x0a   \
+strings with dif\
+ferent styles fo\
+r separate chars\
+ in the string</\
+strong></li>\x0a</u\
+l>\x0a\x0a<h4>Fonts in\
+ svg</h4>\x0a\x0a<p>Fr\
+om the Inkscape \
+App, a text is e\
+ntered, for exam\
+ple <code>BB CC \
+AA BB</code>. Th\
+e font family / \
+type can be chos\
+en\x0aas well as th\
+e font-size, giv\
+en in \x22<strong>p\
+t</strong>\x22 in t\
+he Inkscpae App \
+GUI. Saving this\
+ file, we can ob\
+serve in\x0athe svg\
+ file that the t\
+ext size is give\
+n in \x22<strong>px\
+</strong>\x22 units\
+.</p>\x0a\x0a<p><a hre\
+f=\x22https://oreil\
+lymedia.github.i\
+o/Using_SVG/guid\
+e/units.html\x22>Un\
+its conversion <\
+/a> is as follow\
+ing:</p>\x0a<ul>\x0a  \
+<li>1 px = 3/4 p\
+t</li>\x0a  <li>1 i\
+nch = 25.4 mm</l\
+i>\x0a  <li>Inkscap\
+e resolution: 96\
+ px per inch</li\
+>\x0a</ul>\x0a\x0a<p>So w\
+hen giving in In\
+kscape a font si\
+ze of <strong>30\
+ pt</strong>: 30\
+ pt are 40 px ar\
+e (40/96) * 25.4\
+ mm =\x0a<strong>10\
+.5833</strong>. \
+This is the valu\
+e found in the s\
+vg file, with un\
+its \x22<strong>px<\
+/strong>\x22.</p>\x0a\x0a\
+<p>A <code>&lt;t\
+ext&gt;</code> d\
+efinition in svg\
+ from Inkscape l\
+ooks like: </p>\x0a\
+<pre><code class\
+=\x22language-xml\x22>\
+\x0a  &lt;text\x0a    \
    xml:space=\x22pr\
-eserve\x22\x0a      st\
-yle=\x22font-style:\
-normal;font-vari\
-ant:normal;font-\
-weight:normal;fo\
-nt-stretch:norma\
-l;font-size:22.5\
-778px;line-heigh\
-t:1.25;font-fami\
-ly:Sl\xef\xbf\xbdine;font\
+eserve\x22\x0a       s\
+tyle=\x22<strong>fo\
+nt-style</strong\
+>:normal;font-va\
+riant:normal;<st\
+rong>font-weight\
+</strong>:normal\
+;<strong>font-st\
+retch</strong>:n\
+ormal;<strong>fo\
+nt-size</strong>\
+:10.5833px;line-\
+height:1.25;<str\
+ong>font-family:\
+Arial;</strong>-\
+inkscape-font-sp\
+ecification:'Ari\
+al, Normal';font\
 -variant-ligatur\
 es:normal;font-v\
 ariant-caps:norm\
@@ -4418,708 +4030,1112 @@ ll:#000000;fill-\
 opacity:1;stroke\
 :none;stroke-wid\
 th:0.264583\x22\x0a   \
-   x=\x2240.99437\x22\x0a\
-      y=\x2230.9549\
-29\x22 &gt;\x0a      &\
-lt;tspan id=\x22myt\
-span\x22\x0a        st\
-yle=\x22font-style:\
+    x=\x229.7133684\
+\x22\x0a       y=\x2241.7\
+12864\x22\x0a       id\
+=\x22text1314\x22&gt;\x0a\
+    &lt;tspan\x0a  \
+       sodipodi:\
+role=\x22line\x22\x0a    \
+     id=\x22tspan13\
+12\x22\x0a         sty\
+le=\x22<strong>font\
+-style</strong>:\
 normal;font-vari\
-ant:normal;font-\
-weight:normal;fo\
-nt-stretch:norma\
-l;font-size:22.5\
-778px;font-famil\
-y:Sl\xef\xbf\xbdine;font-\
-variant-ligature\
-s:normal;font-va\
-riant-caps:norma\
-l;font-variant-n\
-umeric:normal;fo\
-nt-variant-east-\
-asian:normal;str\
-oke-width:0.2645\
-83\x22\x0a        x=\x224\
-0.99437\x22\x0a       \
- y=\x2230.954929\x22&g\
-t;CHAbpk\x0a      &\
-lt;/tspan&gt;\x0a  \
-  &lt;/text&gt;\x0a\
-    &lt;path id=\
-\x22mytext_0\x22 fill=\
-\x22#000000\x22 fill-o\
-pacity=\x220.1\x22 d=\x22\
-M 52.90063171875\
-,26.721591500000\
-002 L 53.9148688\
-28125,28.3090930\
-625 Q 52.1509782\
-03125,30.954929 \
-48.9980237109375\
-,31.021074898437\
-5 Q 45.845069218\
-75,31.0872207968\
-75002 43.6402059\
-375,29.191038375\
- Q 41.4353426562\
-5,27.29485595312\
-5 41.41329402343\
-75,24.3403391562\
-50003 Q 41.39124\
-5390625,21.38582\
-2359375002 43.15\
-5136015625004,19\
-.004570015625 Q \
-44.919026640625,\
-16.623317671875 \
-48.446807890625,\
-16.5792204062500\
-02 Q 51.97458914\
-0625,16.53512314\
-0625 54.17945242\
-1875,20.37158525\
-0000003 L 51.710\
-005546875,21.253\
-5305625 Q 50.651\
-671171875,17.064\
-290328125 48.182\
-224296875,17.130\
-4362265625 Q 45.\
-712777421875,17.\
-196582125 44.588\
-297148437505,20.\
-3936338828125 Q \
-43.463816875,23.\
-590685640625 44.\
-6985403125,27.05\
-23209921875 Q 45\
-.93326375,30.513\
-95634375 48.7995\
-86015625,30.5139\
-5634375 Q 51.665\
-90828125,30.5139\
-5634375 52.90063\
-171875,26.721591\
-500000002 Z\x22/>\x0a \
-   &lt;path id=\x22\
-mytext_1\x22 fill=\x22\
-#000000\x22 fill-op\
-acity=\x220.1\x22 d=\x22M\
- 59.8679996875,2\
-0.151098921875 Q\
- 59.647513359375\
-,24.60492275 59.\
-779805156250006,\
-26.3908620078125\
- Q 59.9120969531\
-25,28.1768012656\
-25002 60.5294586\
-71875005,30.9549\
-29 L 57.00167742\
-1875,30.954929 Q\
- 57.266261015625\
-005,26.148327046\
-875004 57.244212\
-382812506,22.422\
-1081015625 Q 57.\
-22216375,18.6958\
-8915625 56.97962\
-87890625,17.6155\
-061484375 Q 56.7\
-37093828125,16.5\
-35123140625 55.4\
-14175859375,16.5\
-35123140625 Q 57\
-.795428203125,15\
-.212205171875 58\
-.015914531250004\
-,14.065676265625\
-001 Q 59.8679996\
-875,14.374357125\
-000001 59.823902\
-421875005,18.960\
-47275 Q 61.32320\
-9453125,16.57922\
-0406250002 63.88\
-0850859375,16.57\
-9220406250002 Q \
-66.438492265625,\
-16.5792204062500\
-02 68.0921397265\
-625,18.982521382\
-8125 Q 69.745787\
-1875,21.38582235\
-9375002 68.73155\
-0078125,24.97974\
-95078125 Q 67.71\
-731296875001,28.\
-57367665625 65.5\
-1244968750001,30\
-.4257618125 Q 67\
-.452729375,30.24\
-937275 69.393009\
-0625,29.23513564\
-0625003 L 68.731\
-550078125,30.954\
-929 L 63.4839754\
-6875,30.954929 Q\
- 67.849604765625\
-,27.294855953125\
- 67.033805351562\
-5,23.30405341406\
-25 Q 66.21800593\
-750001,19.313250\
-875 63.726510429\
-6875,18.62974325\
-78125 Q 61.23501\
-4921875006,17.94\
-6235640625 59.86\
-79996875,20.1510\
-98921875 Z\x22/&gt;\
-\x0a    &lt;path id\
-=\x22mytext_2\x22 fill\
-=\x22#000000\x22 fill-\
-opacity=\x221\x22 d=\x22M\
+ant:normal;<stro\
+ng>font-weight</\
+strong>:normal;<\
+strong>font-stre\
+tch</strong>:nor\
+mal;<strong>font\
+-size</strong>:1\
+0.5833px;<strong\
+>font-family:Ari\
+al;</strong>-ink\
+scape-font-speci\
+fication:'Arial,\
+ Normal';font-va\
+riant-ligatures:\
+normal;font-vari\
+ant-caps:normal;\
+font-variant-num\
+eric:normal;font\
+-variant-east-as\
+ian:normal;strok\
+e-width:0.264583\
+\x22\x0a         x=\x229.\
+7133684\x22\x0a       \
+  y=\x2241.712864\x22&\
+gt;BB  CC  AA  B\
+B\x0a    &lt;tspan&\
+gt;\x0a  &lt;/text&\
+gt;</code></pre>\
+\x0a\x0a<p>but one cou\
+ld simplify it p\
+er hand:</p>\x0a\x0a<p\
+re><code class=\x22\
+language-xml\x22>\x0a \
+ &lt;text style=\
+\x22<strong>font-st\
+yle</strong>:nor\
+mal;<strong>font\
+-weight</strong>\
+:normal;<strong>\
+font-stretch</st\
+rong>:normal;<st\
+rong>font-size</\
+strong>:10.5833p\
+x;<strong>font-f\
+amily:Arial;</st\
+rong>fill:#00000\
+0;fill-opacity:1\
+;\x22\x0a       x=\x229.7\
+133684\x22\x0a       y\
+=\x2241.712864\x22\x0a   \
+    id=\x22text1314\
+\x22&gt;BB  CC  AA \
+ BB&lt;/text&gt;\
+</code></pre>\x0a\x0a<\
+p>The color (fil\
+l) and opacity d\
+o not play a rol\
+e when cutting, \
+but it is nice t\
+o have these pro\
+perties in the\x0ar\
+esulting paths. \
+Infact, the path\
+ elements result\
+ing from the con\
+version will be \
+shown in the svg\
+ viewer, so even\
+tually\x0athey shou\
+ld have at least\
+ the same color \
+as the original \
+text, as well as\
+ all other prope\
+rties.</p>\x0a\x0a<p>T\
+he value of the \
+text is found as\
+ value of the XM\
+L <code>&lt;text\
+&gt;</code> elem\
+ent, or as value\
+(s) of the XML\x0a<\
+code>&lt;tspan&g\
+t;</code> elemen\
+t(s) found insid\
+e the <code>&lt;\
+text&gt;</code> \
+element. So a co\
+nverter has to\x0ac\
+orrectly parse t\
+he XML <code>&lt\
+;text&gt;</code>\
+ element with it\
+s embedded <code\
+>&lt;tspan&gt;</\
+code> elements.<\
+/p>\x0a\x0a<h5>Fonts s\
+tyle</h5>\x0a\x0a<p>Wh\
+atever the conve\
+rsion is, we hav\
+e anyway the <st\
+rong>font-size</\
+strong> property\
+ in the svg file\
+ and we will use\
+\x0ait for the conv\
+ersion to family\
+and other font p\
+roperties (in th\
+e svg text \x22styl\
+e\x22 attribute): t\
+he\x0a<strong>font-\
+style</strong>, \
+<strong>font-wei\
+ght</strong> and\
+ <strong>font-st\
+retch</strong> a\
+ttributes will a\
+lso be\x0ataken int\
+o account when p\
+ossible.</p>\x0a\x0a<h\
+4>Font Files</h4\
+>\x0a\x0a<p>Next, we n\
+eed something li\
+ke a \x22lookup\x22 to\
+ find the <stron\
+g>ttf</strong> f\
+iles with the gi\
+ven font family \
+and style.\x0aIn or\
+der to simplify \
+the lookup of th\
+e fonts, a pytho\
+n module named <\
+code>svgtext2svg\
+paths_fonts_spec\
+s.py</code> is\x0ag\
+iven describing \
+where to find th\
+e fonts files.</\
+p>\x0a\x0a<p>This modu\
+le can be edited\
+ in order to fin\
+d the fonts on t\
+he user computer\
+</p>\x0a\x0a<p>All the\
+ font files foun\
+d in the specifi\
+ed font director\
+ies are read to \
+extract the font\
+ family and othe\
+rs font\x0astyles. \
+As example of a \
+<code>svgtext2sv\
+gpaths_fonts_spe\
+cs.py</code>:</p\
+>\x0a<pre><code cla\
+ss=\x22language-pyt\
+hon\x22># -*- codin\
+g: utf-8 -*-\x0a \x0af\
+onts_dirs = [\x0a  \
+  \x22C:\x5c\x5cWindows\x5c\x5c\
+Fonts\x22,\x0a    \x22./f\
+onts/slaine\x22,\x0a  \
+  \x22./fonts/boere\
+-tudor\x22,\x0a    \x22./\
+fonts/pacmania_6\
+918891\x22,\x0a]\x0a\x0afont\
+s_family_alias =\
+ {\x0a    \x22sans-ser\
+if\x22: \x22microsoft \
+sans serif\x22,\x0a\x0a  \
+  #'Sl\xc3\xa1ine': 'S\
+l\xc3\xa1ine Standard'\
+\x0a    'sl\xc3\xa1ine': \
+'sl?ine'\x0a}\x0a</cod\
+e></pre>\x0a\x0a<p>The\
+ <code>fonts_dir\
+s</code> usage i\
+s obious: where \
+to find the font\
+ files.</p>\x0a\x0a<p>\
+The <code>fonts_\
+family_alias</co\
+de> dictionary i\
+s used to map th\
+e font family na\
+me from the svg \
+text style (in\x0aU\
+TF-8) to the 're\
+al' (?) font fam\
+ily name, when t\
+here is not matc\
+h. In this case \
+we see that the \
+\x22sans-serif\x22 fon\
+t\x0afamily does no\
+t exist in all t\
+he font files fo\
+und in the <code\
+>\x22C:\x5c\x5cWindows\x5c\x5cF\
+onts\x22</code> fol\
+der, but there i\
+s a quite\x0asimila\
+r font named \x22mi\
+crosoft sans ser\
+if\x22. The font \x22S\
+laine\x22 is also n\
+ot found in the \
+<code>slaine.ttf\
+</code> font\x0afil\
+e, but in it it \
+describes the fo\
+nt <code>'sl?ine\
+'</code> : the a\
+scii repr of the\
+ utf-8 name (i d\
+id not succeeded\
+ to\x0aread the utf\
+-8 name from the\
+ freetype-py lib\
+)</p>\x0a\x0a<p>In cas\
+e of the svg fon\
+t family and sty\
+le are not found\
+ in the lookup d\
+ata, an error is\
+ printed and no \
+conversion\x0aoccur\
+s.</p>\x0a\x0a<h4>Usag\
+e</h4>\x0a\x0a<h4>Exam\
+ple</h4>\x0a\x0a<p>Ins\
+ide python code:\
+</p>\x0a<pre><code \
+class=\x22language-\
+python\x22># -- fro\
+m a \x22raw\x22 svg fi\
+le\x0aconverter = S\
+vgText2SvgPathsC\
+onverter(\x22./exam\
+ples/slaine.svg\x22\
+)\x0asvg = converte\
+r.convert_svg()\x0a\
+print(svg)</code\
+></pre>\x0a\x0a<p>or f\
+rom the command \
+line:</p>\x0a<pre><\
+code class=\x22shel\
+l\x22>&gt; python s\
+vgtext2svgpaths.\
+py -h\x0a&gt; pytho\
+n svgtext2svgpat\
+hs.py ./examples\
+/slaine.svg</cod\
+e></pre>\x0a\x0a<p>The\
+ input svg was</\
+p>\x0a<pre><code cl\
+ass=\x22language-xm\
+l\x22>&lt;?xml vers\
+ion=\x221.0\x22 encodi\
+ng=\x22UTF-8\x22 stand\
+alone=\x22no\x22?&gt;\x0a\
+&lt;svg width=\x222\
+10mm\x22 height=\x2260\
+mm\x22 viewBox=\x220 0\
+ 210 60\x22 version\
+=\x221.1\x22 id=\x22slain\
+e_test\x22\x0a  xmlns=\
+\x22http://www.w3.o\
+rg/2000/svg\x22\x0a  x\
+mlns:svg=\x22http:/\
+/www.w3.org/2000\
+/svg\x22&gt;\x0a  &lt;\
+g id=\x22layer1\x22&gt\
+;\x0a    &lt;text i\
+d=\x22mytext\x22\x0a     \
+ xml:space=\x22pres\
+erve\x22\x0a      styl\
+e=\x22font-style:no\
+rmal;font-varian\
+t:normal;font-we\
+ight:normal;font\
+-stretch:normal;\
+font-size:22.577\
+8px;line-height:\
+1.25;font-family\
+:Sl\xef\xbf\xbdine;font-v\
+ariant-ligatures\
+:normal;font-var\
+iant-caps:normal\
+;font-variant-nu\
+meric:normal;fon\
+t-variant-east-a\
+sian:normal;fill\
+:#000000;fill-op\
+acity:1;stroke:n\
+one;stroke-width\
+:0.264583\x22\x0a     \
+ x=\x2240.99437\x22\x0a  \
+    y=\x2230.954929\
+\x22 &gt;\x0a      &lt\
+;tspan id=\x22mytsp\
+an\x22\x0a        styl\
+e=\x22font-style:no\
+rmal;font-varian\
+t:normal;font-we\
+ight:normal;font\
+-stretch:normal;\
+font-size:22.577\
+8px;font-family:\
+Sl\xef\xbf\xbdine;font-va\
+riant-ligatures:\
+normal;font-vari\
+ant-caps:normal;\
+font-variant-num\
+eric:normal;font\
+-variant-east-as\
+ian:normal;strok\
+e-width:0.264583\
+\x22\x0a        x=\x2240.\
+99437\x22\x0a        y\
+=\x2230.954929\x22&gt;\
+CHAbpk\x0a      &lt\
+;/tspan&gt;\x0a    \
+&lt;/text&gt;\x0a  \
+&lt;/g&gt;\x0a&lt;/\
+svg&gt;\x0a</code><\
+/pre>\x0a\x0a<p>... an\
+d the resulting \
+one </p>\x0a<pre><c\
+ode class=\x22langu\
+age-xml\x22>&lt;?xm\
+l version=\x221.0\x22 \
+encoding=\x22UTF-8\x22\
+ standalone=\x22no\x22\
+?&gt;\x0a&lt;svg wi\
+dth=\x22210mm\x22 heig\
+ht=\x2260mm\x22 viewBo\
+x=\x220 0 210 60\x22 v\
+ersion=\x221.1\x22 id=\
+\x22slaine_test\x22\x0a  \
+xmlns=\x22http://ww\
+w.w3.org/2000/sv\
+g\x22\x0a  xmlns:svg=\x22\
+http://www.w3.or\
+g/2000/svg\x22&gt;\x0a\
+  &lt;g id=\x22laye\
+r1\x22&gt;\x0a    &lt;\
+text id=\x22mytext\x22\
+\x0a      xml:space\
+=\x22preserve\x22\x0a    \
+  style=\x22font-st\
+yle:normal;font-\
+variant:normal;f\
+ont-weight:norma\
+l;font-stretch:n\
+ormal;font-size:\
+22.5778px;line-h\
+eight:1.25;font-\
+family:Sl\xef\xbf\xbdine;\
+font-variant-lig\
+atures:normal;fo\
+nt-variant-caps:\
+normal;font-vari\
+ant-numeric:norm\
+al;font-variant-\
+east-asian:norma\
+l;fill:#000000;f\
+ill-opacity:1;st\
+roke:none;stroke\
+-width:0.264583\x22\
+\x0a      x=\x2240.994\
+37\x22\x0a      y=\x2230.\
+954929\x22 &gt;\x0a   \
+   &lt;tspan id=\
+\x22mytspan\x22\x0a      \
+  style=\x22font-st\
+yle:normal;font-\
+variant:normal;f\
+ont-weight:norma\
+l;font-stretch:n\
+ormal;font-size:\
+22.5778px;font-f\
+amily:Sl\xef\xbf\xbdine;f\
+ont-variant-liga\
+tures:normal;fon\
+t-variant-caps:n\
+ormal;font-varia\
+nt-numeric:norma\
+l;font-variant-e\
+ast-asian:normal\
+;stroke-width:0.\
+264583\x22\x0a        \
+x=\x2240.99437\x22\x0a   \
+     y=\x2230.95492\
+9\x22&gt;CHAbpk\x0a   \
+   &lt;/tspan&gt\
+;\x0a    &lt;/text&\
+gt;\x0a    &lt;path\
+ id=\x22mytext_0\x22 f\
+ill=\x22#000000\x22 fi\
+ll-opacity=\x220.1\x22\
+ d=\x22M 52.9006317\
+1875,26.72159150\
+0000002 L 53.914\
+868828125,28.309\
+0930625 Q 52.150\
+978203125,30.954\
+929 48.998023710\
+9375,31.02107489\
+84375 Q 45.84506\
+921875,31.087220\
+796875002 43.640\
+2059375,29.19103\
+8375 Q 41.435342\
+65625,27.2948559\
+53125 41.4132940\
+234375,24.340339\
+156250003 Q 41.3\
+91245390625,21.3\
+85822359375002 4\
+3.15513601562500\
+4,19.00457001562\
+5 Q 44.919026640\
+625,16.623317671\
+875 48.446807890\
+625,16.579220406\
+250002 Q 51.9745\
+89140625,16.5351\
+23140625 54.1794\
+52421875,20.3715\
+85250000003 L 51\
+.710005546875,21\
+.2535305625 Q 50\
+.651671171875,17\
+.064290328125 48\
+.182224296875,17\
+.1304362265625 Q\
+ 45.712777421875\
+,17.196582125 44\
+.588297148437505\
+,20.393633882812\
+5 Q 43.463816875\
+,23.590685640625\
+ 44.6985403125,2\
+7.0523209921875 \
+Q 45.93326375,30\
+.51395634375 48.\
+799586015625,30.\
+51395634375 Q 51\
+.66590828125,30.\
+51395634375 52.9\
+0063171875,26.72\
+1591500000002 Z\x22\
+/>\x0a    &lt;path \
+id=\x22mytext_1\x22 fi\
+ll=\x22#000000\x22 fil\
+l-opacity=\x220.1\x22 \
+d=\x22M 59.86799968\
+75,20.1510989218\
+75 Q 59.64751335\
+9375,24.60492275\
+ 59.779805156250\
+006,26.390862007\
+8125 Q 59.912096\
+953125,28.176801\
+265625002 60.529\
+458671875005,30.\
+954929 L 57.0016\
+77421875,30.9549\
+29 Q 57.26626101\
+5625005,26.14832\
+7046875004 57.24\
+4212382812506,22\
+.4221081015625 Q\
+ 57.22216375,18.\
+69588915625 56.9\
+796287890625,17.\
+6155061484375 Q \
+56.737093828125,\
+16.535123140625 \
+55.414175859375,\
+16.535123140625 \
+Q 57.79542820312\
+5,15.21220517187\
+5 58.01591453125\
+0004,14.06567626\
+5625001 Q 59.867\
+9996875,14.37435\
+7125000001 59.82\
+3902421875005,18\
+.96047275 Q 61.3\
+23209453125,16.5\
+79220406250002 6\
+3.880850859375,1\
+6.57922040625000\
+2 Q 66.438492265\
+625,16.579220406\
+250002 68.092139\
+7265625,18.98252\
+13828125 Q 69.74\
+57871875,21.3858\
+22359375002 68.7\
+31550078125,24.9\
+797495078125 Q 6\
+7.71731296875001\
+,28.57367665625 \
+65.5124496875000\
+1,30.4257618125 \
+Q 67.452729375,3\
+0.24937275 69.39\
+30090625,29.2351\
+35640625003 L 68\
+.731550078125,30\
+.954929 L 63.483\
+97546875,30.9549\
+29 Q 67.84960476\
+5625,27.29485595\
+3125 67.03380535\
+15625,23.3040534\
+140625 Q 66.2180\
+0593750001,19.31\
+3250875 63.72651\
+04296875,18.6297\
+432578125 Q 61.2\
+35014921875006,1\
+7.946235640625 5\
+9.8679996875,20.\
+151098921875 Z\x22/\
+&gt;\x0a    &lt;pat\
+h id=\x22mytext_2\x22 \
+fill=\x22#000000\x22 f\
+ill-opacity=\x221\x22 \
+d=\x22M 71.59787234\
+375,30.965953316\
+40625 Q 73.62634\
+65625,28.0004122\
+03125002 78.8298\
+2390625,16.53512\
+3140625 L 80.593\
+71453125,16.5351\
+23140625 Q 84.95\
+9343828125,28.08\
+8606734375 87.29\
+649890625001,30.\
+954929 L 83.6364\
+2585937501,30.95\
+4929 Q 83.460036\
+796875,29.896594\
+625 82.974966875\
+,28.92645478125 \
+Q 81.60795164062\
+5,30.69034540625\
+ 79.226699296875\
+,30.800588570312\
+5 Q 76.845446953\
+12499,30.9108317\
+34375 75.1256535\
+9375,28.75006571\
+875 Q 74.4641946\
+09375,29.6761082\
+96875 74.5964864\
+0625,30.954929 L\
  71.59787234375,\
 30.9659533164062\
-5 Q 73.626346562\
-5,28.00041220312\
-5002 78.82982390\
-625,16.535123140\
-625 L 80.5937145\
-3125,16.53512314\
-0625 Q 84.959343\
-828125,28.088606\
-734375 87.296498\
-90625001,30.9549\
-29 L 83.63642585\
-937501,30.954929\
- Q 83.4600367968\
-75,29.896594625 \
-82.974966875,28.\
-92645478125 Q 81\
-.607951640625,30\
-.69034540625 79.\
-226699296875,30.\
-8005885703125 Q \
-76.8454469531249\
-9,30.91083173437\
-5 75.12565359375\
-,28.75006571875 \
-Q 74.46419460937\
-5,29.67610829687\
-5 74.59648640625\
-,30.954929 L 71.\
-59787234375,30.9\
-6595331640625 M \
-76.00759890625,2\
-6.72159150000000\
-2 Q 77.286419609\
-375,30.072983687\
-500003 79.110943\
-97460937,30.0784\
-95845703127 Q 80\
-.93546833984375,\
-30.0840080039062\
-52 82.1371188281\
-25,27.1625641562\
-5 Q 80.681909062\
-5,21.429919625 7\
-9.491282890625,1\
-9.40144540625 Q \
-78.2124621875,21\
-.34172509375 76.\
-00759890625,26.7\
-21591500000002 Z\
-\x22/>\x0a    &lt;path\
- id=\x22mytext_3\x22 f\
-ill=\x22#000000\x22 fi\
-ll-opacity=\x221\x22 d\
-=\x22M 88.884000468\
-75,18.8281809531\
-25 Q 90.51559929\
-6875,18.21081923\
-4375002 91.30935\
-0078125,16.44692\
-8609375 Q 92.676\
-3653125,17.99033\
-290625 92.632268\
-046875,20.988946\
-96875 Q 93.85596\
-716796874,19.809\
-34511328125 96.0\
-0570886718751,19\
-.825881587890628\
- Q 98.1554505664\
-0624,19.84241806\
-2500002 99.64924\
-543945313,21.407\
-8709921875 Q 101\
-.1430403125,22.9\
-73323921875 100.\
-74616492187499,2\
-6.15935136328125\
- Q 100.349289531\
-25,29.3453788046\
-875 98.254669414\
-0625,30.34859159\
-7656252 Q 96.160\
-049296875,31.351\
-804390625002 93.\
-75123616210936,3\
-0.8446858359375 \
-Q 91.34242302734\
-376,30.337567281\
-25 90.5045749804\
-6875,28.32011737\
-890625 Q 89.6667\
-2693359375,26.30\
-26674765625 90.1\
-5730901367186,23\
-.750538228515627\
- Q 90.6478910937\
-4999,21.19840898\
-0468752 90.31716\
-16015625,20.1676\
-3539648438 Q 89.\
-98643210937499,1\
-9.1368618125 88.\
-88400046875,18.8\
-28180953125 M 92\
-.6763653125,22.1\
-79573140625003 Q\
- 92.191295390625\
-,26.192424312500\
-002 92.918900273\
-4375,28.22089853\
-125 Q 93.6465051\
-5625,30.24937275\
- 95.300152617187\
-5,30.33756728125\
- Q 96.9538000781\
-25,30.4257618125\
- 97.70345359375,\
-28.441384859375 \
-Q 98.45310710937\
-5,26.45700790625\
- 98.05623171875,\
-23.9655123984375\
- Q 97.6593563281\
-25,21.4740168906\
-25002 96.0442939\
-7460937,20.85114\
-3013671877 Q 94.\
-42923162109375,2\
-0.22826913671875\
- 92.6763653125,2\
-2.17957314062500\
-3 Z\x22/&gt;\x0a    &l\
-t;path id=\x22mytex\
-t_4\x22 fill=\x22#0000\
-00\x22 fill-opacity\
-=\x221\x22 d=\x22M 106.21\
-4225859375,22.00\
-3184078125003 Q \
-106.037836796875\
-,26.060132515625\
- 106.05988542968\
-75,28.3531903281\
-25002 Q 106.0819\
-340625,30.646248\
-140625 105.99373\
-953125,34.174029\
-390625 Q 104.229\
-84890625,35.0559\
-74703125 103.182\
-53884765625,36.2\
-46600875 Q 103.7\
-227303515625,31.\
-09824511328125 1\
-03.8219491992187\
-5,27.16807631445\
-3124 Q 103.92116\
-804687501,23.237\
-907515625 103.75\
-029114257813,22.\
-5984971640625 Q \
-103.579414238281\
-26,21.9590868125\
- 102.9069309375,\
-21.8157706992187\
-53 Q 104.6487729\
-2968751,20.84563\
-085546875 105.53\
-07182421875,19.8\
-0934511328125 Q \
-105.99373953125,\
-20.3715852500000\
-03 106.126031328\
-12501,21.1212387\
-65625 Q 107.5371\
-43828125,19.7101\
-26265625 110.094\
-78523437501,19.6\
-66029 Q 112.6524\
-2664062501,19.62\
-1931734375 113.5\
-34371953125,23.3\
-922479453125 Q 1\
-14.4163172656250\
-1,27.16256415625\
- 112.67447527343\
-751,29.168989742\
-187502 Q 110.932\
-63328125,31.1754\
-15328125002 109.\
-16874265625,31.0\
-87220796875002 Q\
- 107.40485203125\
-,30.999026265625\
- 106.47880945312\
-501,30.24937275 \
-Q 106.9197821093\
-75,29.5879137656\
-25 107.096171171\
-875,28.441384859\
-375 Q 108.198602\
-8125,30.51395634\
-375 109.63176394\
-53125,30.1391295\
-859375 Q 111.064\
-925078125,29.764\
-302828125 111.52\
-794636718751,28.\
-22089853125 Q 11\
-1.99096765625,26\
-.677494234375 11\
-1.19721687500001\
-,23.965512398437\
-5 Q 110.40346609\
-375,21.253530562\
-5 108.8821104296\
-875,20.834606539\
-0625 Q 107.36075\
-4765625,20.41568\
-2515625 106.2142\
-25859375,22.0031\
-84078125003 Z\x22/&\
-gt;\x0a    &lt;path\
- id=\x22mytext_5\x22 f\
-ill=\x22#000000\x22 fi\
-ll-opacity=\x221\x22 d\
-=\x22M 119.22291921\
-875001,26.412910\
-640625 Q 119.002\
-432890625,29.543\
-8165 119.4434055\
-46875,30.954929 \
-L 116.6432291796\
-875,30.954929 Q \
-116.951910039062\
-5,28.45240917578\
-125 116.99600730\
-46875,25.6963300\
-7421875 Q 117.04\
-010457031251,22.\
-94025097265625 1\
-16.8251304003906\
-2,22.26225551367\
-1874 Q 116.61015\
-623046875,21.584\
-2600546875 115.6\
-51040703125,20.9\
-7792265234375 Q \
-117.448004277343\
-76,20.6471931601\
-5625 118.3850711\
-71875,19.4896399\
-375 Q 119.134724\
-6875,19.88651532\
-8125 119.2449678\
-515625,20.592071\
-578125 Q 119.355\
-211015625,21.297\
-627828125 119.26\
-7016484375,25.13\
-40899375 Q 122.4\
-4201960937501,22\
-.708740328125003\
- 123.19167312500\
-001,21.606308687\
-5 Q 123.94132664\
-062501,20.503877\
-046875 124.29410\
-476562501,19.445\
-542671875 Q 124.\
-735077421875,20.\
-062904390625 125\
-.57292546875,20.\
-547974312500003 \
-Q 123.0152840625\
-,23.458393843750\
-002 120.98680984\
-375,25.089992671\
-875002 Q 122.287\
-6791796875,27.68\
-070702734375 123\
-.19718528320313,\
-29.0146493125 Q \
-124.106691386718\
-75,30.3485915976\
-56252 125.605998\
-41796875,30.9549\
-29 L 121.8687551\
-5625,30.954929 Q\
- 120.66710466796\
-876,28.562652339\
-84375 119.222919\
-21875001,26.4129\
-10640625 Z\x22/&gt;\
-\x0a    &lt;/g&gt;\x0a\
-&lt;/svg&gt;\x0a</c\
-ode></pre>\x0a\x0a<p>A\
-s you can see, c\
-onversion is str\
-aightforward. Es\
-pecially, there \
-are no spurious \
-viewboxes around\
-. All characters\
-,\x0athe ones from \
-the <code>text</\
-code> elements a\
-nd the ones from\
- the <code>path<\
-/code> elements,\
- should overlap!\
- fill and\x0aopacit\
-y properties wer\
-e changed per ha\
-nd to view the p\
-erfect overlappi\
-ng.</p>\x0a\x0a<h4>ToD\
-o</h4>\x0a<ul>\x0a  <l\
-i><p>integrate t\
-he converter in \
-<strong>PyCut</s\
-tring>.</strong>\
-</p>\x0a  </li>\x0a</u\
-l>\x0a  \x0a<div style\
-=\x22height:30px\x22>\x0a\
-</div>\x0a  \x0a  \x0a <h\
-3 id=\x22P-08\x22>Know\
-n Bugs</h3>\x0a\x0a<p>\
-Among the variou\
-s bugs of <stron\
-g>PyCut</strong>\
-, some are relat\
-ed to <strong>sh\
-apely</strong> s\
-hortcoming\x0a(the \
-library on which\
- PyCut relies on\
-) for calculatin\
-g offsets. Let's\
- describe in det\
-ails:</p>\x0a\x0a<h4  \
-id=\x22P-08-01\x22>Off\
-sets at corners<\
-/h4>\x0a\x0a<p>Offsets\
- with closed sha\
-pes having sharp\
- corners (well t\
-hey generally ha\
-ve somes) \x0amay b\
-e not well calcu\
-lated at the fir\
-st corner of the\
- shape definitio\
-n. A simple work\
--around \x0ais to d\
-ivide the first \
-segment of your \
-shape (if it is \
-a straight line)\
- into two segmen\
-ts A and B, and \
-start \x0athe defin\
-ition of your sh\
-ape with the \x22ne\
-w\x22 second segmen\
-t B, and end the\
- definition of t\
-he shape\x0awith se\
-gment A. \x0aThis w\
-ay, the last seg\
-ment (B) of your\
- shape definitio\
-n will \x22joins\x22 n\
-icely the first \
-one (A), \x0aand at\
- the start of th\
-e shape definiti\
-on there is no c\
-orner at all. Sh\
-apely will ensur\
-e then a perfect\
- \x0aoffset, as wel\
-l as further off\
-sets in case of \
-many offsets are\
- needed by the c\
-am operation. \x0a<\
-strong>PyCut</st\
-rong> tries of p\
-erform this step\
- internally, but\
- sometimes misse\
-d it. When you \x0a\
-experience a str\
-ange tool path o\
-r preview geomet\
-ry at the first \
-corner of your s\
-hape, remember \x0a\
-this work-around\
- and change your\
- svg path defini\
-tion accordingly\
-.</p>\x0a\x0a\x0a<h3 id=\x22\
-APPENDIX-01\x22>App\
-endix-1: SVG Edi\
-tors</h3>\x0a\x0a<p>It\
- seems there are\
- plenty of free \
-SVG editors arou\
-nd there. I have\
- spent a lot, lo\
-t of time trying\
- them\x0ain order t\
-o catch the ones\
-(s) best suited \
-for my purpose. \
-</p>\x0a\x0a<p>I will \
-simply try <stro\
-ng>to edit and s\
-ave a closed pat\
-h</strong> compo\
-sed of lines, ar\
-cs and bezier cu\
-rves similar\x0ato \
-what I've edited\
- per hand: about\
- 20 segments rep\
-resenting my wor\
-kpiece, with mix\
-ed straight line\
-s, arcs and bezi\
-er\x0acurves. <stro\
-ng>I know that e\
-very app has its\
- own learning cu\
-rve</strong>, bu\
-t I try use the \
-apps without inv\
-esting to much\x0at\
-ime. This means,\
- I act as a very\
- basic user. If \
-I do not succeed\
-, this is due in\
- part to my inex\
-perience, but al\
-so in\x0apart to th\
-e difficulty of \
-use of the app.<\
-/p>\x0a\x0a<p>What are\
- my requirements\
- ? \x0a  <ul>\x0a    <\
-li>The output sv\
-g is human reada\
-ble for easy mod\
-ification with a\
- simple text edi\
-tor</li>\x0a    <li\
->Shapes and part\
-icularly paths (\
-closed or not) c\
-an be easily cre\
-ated</li>\x0a    <l\
-i>The shapes coo\
-rdinates as give\
-n in the app are\
- the ones that a\
-re outputed in t\
-he svg files \x0a  \
-    (at best no \
-transformations)\
-</li>\x0a  </ul>\x0a</\
-p>\x0a\x0a<p>Finally, \
-<strong>after ha\
-ving tried quite\
- a lot of them</\
-strong>, I give \
-here only the on\
-es worth a menti\
-on, and ingore\x0at\
-he ones that whe\
-re not suitable \
-at all (example:\
- Inkspace, Libre\
-Cad, etc).</p>\x0a\x0a\
-<h3>Free softwar\
-e</h3>\x0a\x0a<h4>Free\
-CAD <span style=\
-\x22color:#008000\x22>\
-****BEST****</sp\
-an></h4>\x0a\x0a<p>As \
-of version 1.0 (\
-2025), the sketc\
-her has dramatic\
-ally improved co\
-mpared to previo\
-us versions and \
-has an SVG expor\
-t which \x0aworks q\
-uite nicely. I f\
-ound nevertheles\
-s the following \
-caveats: </p>\x0a<u\
-l>\x0a  <li>The vie\
-wbox is calculat\
-ed on the base o\
-f the items in t\
-he sketcher, and\
- thus typically \
-will not be from\
- 0,0.\x0a    Width \
-and height are a\
-lso calculated f\
-rom theses items\
-</li>\x0a  <li>The \
-svg root layer h\
-as a transformat\
-ion with a trans\
-late (to view al\
-l items nicely i\
-n a browser) and\
- a scale (1,-1)\x0a\
-    so that the \
-Y coordinates of\
- all items are \x22\
-inversed\x22 (and t\
-hus follow the n\
-atural direction\
-, the opposite o\
-f the\x0a    SVG st\
-andard. X coordi\
-nates are the re\
-al ones. <strong\
->This means that\
- the output will\
- have to pass th\
-rough the \x22svgre\
-solver\x22 \x0a    uti\
+5 M 76.007598906\
+25,26.7215915000\
+00002 Q 77.28641\
+9609375,30.07298\
+3687500003 79.11\
+094397460937,30.\
+078495845703127 \
+Q 80.93546833984\
+375,30.084008003\
+906252 82.137118\
+828125,27.162564\
+15625 Q 80.68190\
+90625,21.4299196\
+25 79.4912828906\
+25,19.4014454062\
+5 Q 78.212462187\
+5,21.34172509375\
+ 76.00759890625,\
+26.7215915000000\
+02 Z\x22/>\x0a    &lt;\
+path id=\x22mytext_\
+3\x22 fill=\x22#000000\
+\x22 fill-opacity=\x22\
+1\x22 d=\x22M 88.88400\
+046875,18.828180\
+953125 Q 90.5155\
+99296875,18.2108\
+19234375002 91.3\
+09350078125,16.4\
+46928609375 Q 92\
+.6763653125,17.9\
+9033290625 92.63\
+2268046875,20.98\
+894696875 Q 93.8\
+5596716796874,19\
+.80934511328125 \
+96.0057088671875\
+1,19.82588158789\
+0628 Q 98.155450\
+56640624,19.8424\
+18062500002 99.6\
+4924543945313,21\
+.4078709921875 Q\
+ 101.1430403125,\
+22.973323921875 \
+100.746164921874\
+99,26.1593513632\
+8125 Q 100.34928\
+953125,29.345378\
+8046875 98.25466\
+94140625,30.3485\
+91597656252 Q 96\
+.160049296875,31\
+.351804390625002\
+ 93.751236162109\
+36,30.8446858359\
+375 Q 91.3424230\
+2734376,30.33756\
+728125 90.504574\
+98046875,28.3201\
+1737890625 Q 89.\
+66672693359375,2\
+6.3026674765625 \
+90.1573090136718\
+6,23.75053822851\
+5627 Q 90.647891\
+09374999,21.1984\
+08980468752 90.3\
+171616015625,20.\
+16763539648438 Q\
+ 89.986432109374\
+99,19.1368618125\
+ 88.88400046875,\
+18.828180953125 \
+M 92.6763653125,\
+22.1795731406250\
+03 Q 92.19129539\
+0625,26.19242431\
+2500002 92.91890\
+02734375,28.2208\
+9853125 Q 93.646\
+50515625,30.2493\
+7275 95.30015261\
+71875,30.3375672\
+8125 Q 96.953800\
+078125,30.425761\
+8125 97.70345359\
+375,28.441384859\
+375 Q 98.4531071\
+09375,26.4570079\
+0625 98.05623171\
+875,23.965512398\
+4375 Q 97.659356\
+328125,21.474016\
+890625002 96.044\
+29397460937,20.8\
+51143013671877 Q\
+ 94.429231621093\
+75,20.2282691367\
+1875 92.67636531\
+25,22.1795731406\
+25003 Z\x22/&gt;\x0a  \
+  &lt;path id=\x22m\
+ytext_4\x22 fill=\x22#\
+000000\x22 fill-opa\
+city=\x221\x22 d=\x22M 10\
+6.214225859375,2\
+2.00318407812500\
+3 Q 106.03783679\
+6875,26.06013251\
+5625 106.0598854\
+296875,28.353190\
+328125002 Q 106.\
+0819340625,30.64\
+6248140625 105.9\
+9373953125,34.17\
+4029390625 Q 104\
+.22984890625,35.\
+055974703125 103\
+.18253884765625,\
+36.246600875 Q 1\
+03.7227303515625\
+,31.098245113281\
+25 103.821949199\
+21875,27.1680763\
+14453124 Q 103.9\
+2116804687501,23\
+.237907515625 10\
+3.75029114257813\
+,22.598497164062\
+5 Q 103.57941423\
+828126,21.959086\
+8125 102.9069309\
+375,21.815770699\
+218753 Q 104.648\
+77292968751,20.8\
+4563085546875 10\
+5.5307182421875,\
+19.8093451132812\
+5 Q 105.99373953\
+125,20.371585250\
+000003 106.12603\
+132812501,21.121\
+238765625 Q 107.\
+537143828125,19.\
+710126265625 110\
+.09478523437501,\
+19.666029 Q 112.\
+65242664062501,1\
+9.621931734375 1\
+13.534371953125,\
+23.3922479453125\
+ Q 114.416317265\
+62501,27.1625641\
+5625 112.6744752\
+7343751,29.16898\
+9742187502 Q 110\
+.93263328125,31.\
+175415328125002 \
+109.16874265625,\
+31.0872207968750\
+02 Q 107.4048520\
+3125,30.99902626\
+5625 106.4788094\
+5312501,30.24937\
+275 Q 106.919782\
+109375,29.587913\
+765625 107.09617\
+1171875,28.44138\
+4859375 Q 108.19\
+86028125,30.5139\
+5634375 109.6317\
+639453125,30.139\
+1295859375 Q 111\
+.064925078125,29\
+.764302828125 11\
+1.52794636718751\
+,28.22089853125 \
+Q 111.9909676562\
+5,26.67749423437\
+5 111.1972168750\
+0001,23.96551239\
+84375 Q 110.4034\
+6609375,21.25353\
+05625 108.882110\
+4296875,20.83460\
+65390625 Q 107.3\
+60754765625,20.4\
+15682515625 106.\
+214225859375,22.\
+003184078125003 \
+Z\x22/&gt;\x0a    &lt;\
+path id=\x22mytext_\
+5\x22 fill=\x22#000000\
+\x22 fill-opacity=\x22\
+1\x22 d=\x22M 119.2229\
+1921875001,26.41\
+2910640625 Q 119\
+.002432890625,29\
+.5438165 119.443\
+405546875,30.954\
+929 L 116.643229\
+1796875,30.95492\
+9 Q 116.95191003\
+90625,28.4524091\
+7578125 116.9960\
+073046875,25.696\
+33007421875 Q 11\
+7.04010457031251\
+,22.940250972656\
+25 116.825130400\
+39062,22.2622555\
+13671874 Q 116.6\
+1015623046875,21\
+.5842600546875 1\
+15.651040703125,\
+20.9779226523437\
+5 Q 117.44800427\
+734376,20.647193\
+16015625 118.385\
+071171875,19.489\
+6399375 Q 119.13\
+47246875,19.8865\
+15328125 119.244\
+9678515625,20.59\
+2071578125 Q 119\
+.355211015625,21\
+.297627828125 11\
+9.267016484375,2\
+5.1340899375 Q 1\
+22.4420196093750\
+1,22.70874032812\
+5003 123.1916731\
+2500001,21.60630\
+86875 Q 123.9413\
+2664062501,20.50\
+3877046875 124.2\
+9410476562501,19\
+.445542671875 Q \
+124.735077421875\
+,20.062904390625\
+ 125.57292546875\
+,20.547974312500\
+003 Q 123.015284\
+0625,23.45839384\
+3750002 120.9868\
+0984375,25.08999\
+2671875002 Q 122\
+.2876791796875,2\
+7.68070702734375\
+ 123.19718528320\
+313,29.014649312\
+5 Q 124.10669138\
+671875,30.348591\
+597656252 125.60\
+599841796875,30.\
+954929 L 121.868\
+75515625,30.9549\
+29 Q 120.6671046\
+6796876,28.56265\
+233984375 119.22\
+291921875001,26.\
+412910640625 Z\x22/\
+&gt;\x0a    &lt;/g&\
+gt;\x0a&lt;/svg&gt;\
+\x0a</code></pre>\x0a\x0a\
+<p>As you can se\
+e, conversion is\
+ straightforward\
+. Especially, th\
+ere are no spuri\
+ous viewboxes ar\
+ound. All charac\
+ters,\x0athe ones f\
+rom the <code>te\
+xt</code> elemen\
+ts and the ones \
+from the <code>p\
+ath</code> eleme\
+nts, should over\
+lap! fill and\x0aop\
+acity properties\
+ were changed pe\
+r hand to view t\
+he perfect overl\
+apping.</p>\x0a\x0a<h4\
+>ToDo</h4>\x0a<ul>\x0a\
+  <li><p>integra\
+te the converter\
+ in <strong>PyCu\
+t</string>.</str\
+ong></p>\x0a  </li>\
+\x0a</ul>\x0a  \x0a<div s\
+tyle=\x22height:30p\
+x\x22>\x0a</div>\x0a  \x0a  \
+\x0a <h3 id=\x22P-08\x22>\
+Known Bugs</h3>\x0a\
+\x0a<p>Among the va\
+rious bugs of <s\
+trong>PyCut</str\
+ong>, some are r\
+elated to <stron\
+g>shapely</stron\
+g> shortcoming\x0a(\
+the library on w\
+hich PyCut relie\
+s on) for calcul\
+ating offsets. L\
+et's describe in\
+ details:</p>\x0a\x0a<\
+h4  id=\x22P-08-01\x22\
+>Offsets at corn\
+ers</h4>\x0a\x0a<p>Off\
+sets with closed\
+ shapes having s\
+harp corners (we\
+ll they generall\
+y have somes) \x0am\
+ay be not well c\
+alculated at the\
+ first corner of\
+ the shape defin\
+ition. A simple \
+work-around \x0ais \
+to divide the fi\
+rst segment of y\
+our shape (if it\
+ is a straight l\
+ine) into two se\
+gments A and B, \
+and start \x0athe d\
+efinition of you\
+r shape with the\
+ \x22new\x22 second se\
+gment B, and end\
+ the definition \
+of the shape\x0awit\
+h segment A. \x0aTh\
+is way, the last\
+ segment (B) of \
+your shape defin\
+ition will \x22join\
+s\x22 nicely the fi\
+rst one (A), \x0aan\
+d at the start o\
+f the shape defi\
+nition there is \
+no corner at all\
+. Shapely will e\
+nsure then a per\
+fect \x0aoffset, as\
+ well as further\
+ offsets in case\
+ of many offsets\
+ are needed by t\
+he cam operation\
+. \x0a<strong>PyCut\
+</strong> tries \
+of perform this \
+step internally,\
+ but sometimes m\
+issed it. When y\
+ou \x0aexperience a\
+ strange tool pa\
+th or preview ge\
+ometry at the fi\
+rst corner of yo\
+ur shape, rememb\
+er \x0athis work-ar\
+ound and change \
+your svg path de\
+finition accordi\
+ngly.</p>\x0a\x0a\x0a<h3 \
+id=\x22APPENDIX-01\x22\
+>Appendix-1: SVG\
+ Editors</h3>\x0a\x0a<\
+p>It seems there\
+ are plenty of f\
+ree SVG editors \
+around there. I \
+have spent a lot\
+, lot of time tr\
+ying them\x0ain ord\
+er to catch the \
+ones(s) best sui\
+ted for my purpo\
+se. </p>\x0a\x0a<p>I w\
+ill simply try <\
+strong>to edit a\
+nd save a closed\
+ path</strong> c\
+omposed of lines\
+, arcs and bezie\
+r curves similar\
+\x0ato what I've ed\
+ited per hand: a\
+bout 20 segments\
+ representing my\
+ workpiece, with\
+ mixed straight \
+lines, arcs and \
+bezier\x0acurves. <\
+strong>I know th\
+at every app has\
+ its own learnin\
+g curve</strong>\
+, but I try use \
+the apps without\
+ investing to mu\
+ch\x0atime. This me\
+ans, I act as a \
+very basic user.\
+ If I do not suc\
+ceed, this is du\
+e in part to my \
+inexperience, bu\
+t also in\x0apart t\
+o the difficulty\
+ of use of the a\
+pp.</p>\x0a\x0a<p>What\
+ are my requirem\
+ents ? \x0a  <ul>\x0a \
+   <li>The outpu\
+t svg is human r\
+eadable for easy\
+ modification wi\
+th a simple text\
+ editor</li>\x0a   \
+ <li>Shapes and \
+particularly pat\
+hs (closed or no\
+t) can be easily\
+ created</li>\x0a  \
+  <li>The shapes\
+ coordinates as \
+given in the app\
+ are the ones th\
+at are outputed \
+in the svg files\
+ \x0a      (at best\
+ no transformati\
+ons)</li>\x0a  </ul\
+>\x0a</p>\x0a\x0a<p>Final\
+ly, <strong>afte\
+r having tried q\
+uite a lot of th\
+em</strong>, I g\
+ive here only th\
+e ones worth a m\
+ention, and ingo\
+re\x0athe ones that\
+ where not suita\
+ble at all (exam\
+ple: Inkspace, L\
+ibreCad, etc).</\
+p>\x0a\x0a<h3>Free sof\
+tware</h3>\x0a\x0a<h4>\
+FreeCAD <span st\
+yle=\x22color:#0080\
+00\x22>****BEST****\
+</span></h4>\x0a\x0a<p\
+>As of version 1\
+.0 (2025), the s\
+ketcher has dram\
+atically improve\
+d compared to pr\
+evious versions \
+and has an SVG e\
+xport which \x0awor\
+ks quite nicely.\
+ I found neverth\
+eless the follow\
+ing caveats: </p\
+>\x0a<ul>\x0a  <li>The\
+ viewbox is calc\
+ulated on the ba\
+se of the items \
+in the sketcher,\
+ and thus typica\
+lly will not be \
+from 0,0.\x0a    Wi\
+dth and height a\
+re also calculat\
+ed from theses i\
+tems</li>\x0a  <li>\
+The svg root lay\
+er has a transfo\
+rmation with a t\
+ranslate (to vie\
+w all items nice\
+ly in a browser)\
+ and a scale (1,\
+-1)\x0a    so that \
+the Y coordinate\
+s of all items a\
+re \x22inversed\x22 (a\
+nd thus follow t\
+he natural direc\
+tion, the opposi\
+te of the\x0a    SV\
+G standard. X co\
+ordinates are th\
+e real ones. <st\
+rong>This means \
+that the output \
+will have to pas\
+s through the \x22s\
+vgresolver\x22 \x0a   \
+ utility to remo\
+ve all transform\
+ations in order \
+to be used by Py\
+Cut. Or simply r\
+emove the transf\
+ormation and ada\
+pt per hand\x0a    \
+the viewbox and \
+width/height of \
+the document!</s\
+trong>.</li>\x0a   \
+ utility to remo\
+ve all transform\
+ations in order \
+to be used by Py\
+Cut, or simply e\
+rase the transfo\
+rm stuff!</stron\
+g>.</li>\x0a    uti\
 lity to remove a\
 ll transformatio\
 ns in order to b\
@@ -5131,782 +5147,763 @@ er hand\x0a    the \
 viewbox and widt\
 h/height of the \
 document!</stron\
-g>.</li>\x0a    uti\
-lity to remove a\
-ll transformatio\
-ns in order to b\
-e used by PyCut,\
- or simply erase\
- the transform s\
-tuff!</strong>.<\
-/li>\x0a    utility\
- to remove all t\
-ransformations i\
-n order to be us\
-ed by PyCut. Or \
-simply remove th\
-e transformation\
- and adapt per h\
-and\x0a    the view\
-box and width/he\
-ight of the docu\
-ment!</strong>.<\
-/li>\x0a  <li>Circl\
-es are exported \
-as <code>circle<\
-/code> (Ok). Lin\
-es, Rectangles, \
-Polygons and Ell\
-ipses are export\
-ed as\x0a    <code>\
-path</code> (not\
- Ok). The export\
-er should recogn\
-ize when a \x22shap\
-e\x22 is formed onl\
-y with straight \
-lines,\x0a\x09so that \
-it is exported a\
-s polygon, polyl\
-ine, line or eve\
-n rectangle when\
- it is the case.\
-</li>\x0a  <li>Quad\
-ratic bezier and\
- cubic bezier ar\
-e supported</li>\
-\x0a  <li>No <stron\
-g>Z</strong> at \
-the end of a clo\
-sed path</li>\x0a</\
-ul>\x0a\x0a<p>Conclusi\
-on: <strong styl\
-e=\x22color:#008000\
-\x22>A very promisi\
-ng SVG generator\
-/exporter </stro\
-ng>that could be\
- better if\x0aLines\
- were to be expo\
-rted as <code>li\
-ne</code>, Polyl\
-ines as <code>po\
-lyline</code>, R\
-ectangles as <co\
-de>rect</code>, \
-\x0aPolygons as <co\
-de>polygon</code\
->. I also would \
-rather like an o\
-utput without tr\
-ansformation, bu\
-t it can be remo\
-ved\x0ausing a text\
- editor.</p>\x0a\x0a<h\
-4>SolveSpace <sp\
-an style=\x22color:\
-#ff00ff\x22>****VER\
-Y GOOD****</span\
-></h4>\x0a\x0a<p><stro\
-ng>SVG export pe\
-rfect (well, nea\
-rly perfect)</st\
-rong>. I found n\
-evertheless the \
-following caveat\
-s:</p>\x0a\x0a<ul>\x0a<li\
->The paths have \
-no id, but ids a\
-re mandatory for\
- <strong>PyCut</\
-strong>.</li>\x0a<l\
-i>Always be sure\
- to hide the con\
-straints so that\
- they are not ex\
-ported in the sv\
-g.</li>\x0a<li>Ther\
-e are only cubic\
- bezier curves, \
-quadratic bezier\
- curves are miss\
-ing.</li>\x0a<li>En\
-tities coordinat\
-es are not the t\
-rue ones, but ar\
-e shifted (trans\
-lated) in X and \
-Y directions. <s\
-trong>Very ennoy\
-ing</strong>.</l\
-i>\x0a</ul>\x0a</p>\x0a\x0a<\
-div class=\x22info\x22\
->\x0a<p><strong>Not\
-e</strong>: To a\
-chieve a quadrat\
-ic bezier from a\
- cubic one, the \
-vector C1C2 from\
- the 2 control p\
-oints must only \
-be\x0aa third of th\
-e vector AB the \
-start and end po\
-ints! The quadra\
-tic curve contro\
-l point Q0 is th\
-en the intersect\
-ion of AC1 and B\
-C2.\x0aAnd AC1 = 2/\
-3 AQo, BC2 = 2/3\
- BQ0.  This cons\
-traint on the co\
-ntrol points cou\
-ld be added in S\
-olveSpace! Or a \
-real\x0aquadratic e\
-ntity could be b\
-uilt in (but it \
-won't happen). N\
-ote that making \
-the two control \
-points coinciden\
-t is not a solut\
-ion, this does n\
-ot lead to \x0aa qu\
-adratic bezier a\
-lthough it looks\
- similar</p>\x0a</d\
-iv>\x0a\x0a<div class=\
-\x22info\x22>\x0a<p><stro\
-ng>Note</strong>\
-: in 2026, a <st\
-rong>Blender</st\
-rong> add-on cal\
-led <strong>CAD \
-Sketcher</strong\
-> is in\x0adevelopm\
-ent, which utili\
-zes the SolveSpa\
-ce library for s\
-ketching. Maybe \
-the user interfa\
-ce will be there\
- even better.</p\
->\x0a</div>\x0a\x0a<h4>Fu\
-sion 360</h4>\x0a\x0a<\
-p>There is no SV\
-G export per def\
-ault, but it see\
-ms there is an a\
-dd-on that costs\
- about 15$, \x0abut\
- I did not buy/t\
-ry.</p>\x0a\x0a<h4>XFi\
-g</h4>\x0a\x0a<p>My be\
-loved drawing ed\
-itor during my y\
-outh! Completely\
- outdated, but s\
-till the best! U\
-nfortunately the\
- SVG export is\x0ad\
-eficient. There \
-are Bezier curve\
-s (really?) i.e.\
- splines with co\
-ntrol points (it\
- looks like Bezi\
-er) but the SVG \
-export\x0aoutputs t\
-hem as polylines\
- (with many poin\
-ts). <strong>Con\
-clusion: unusabl\
-e</strong></p>\x0a\x0a\
-<p></p>\x0a\x0a<h3><st\
-rong>Online edit\
-ors:</strong></h\
-3>\x0a\x0a<p>There are\
- plenty of them,\
- but they all se\
-em to be meant f\
-or painting (lik\
-e Inkscape), not\
- for CAD. Finall\
-y found\x0athis one\
-:</p>\x0a\x0a<h4>SvgPa\
-thEditor <span s\
-tyle=\x22color:#ff0\
-0ff\x22><span style\
-=\x22color:#ff00ff\x22\
-></span></span><\
-span\x0astyle=\x22colo\
-r:#ff00ff\x22>****E\
-XCELLENT****</sp\
-an></h4>\x0a\x0a<p>It \
-is solely focuse\
-d on editing svg\
- paths. You can \
-try it at <a\x0ahre\
-f=\x22https://yqnn.\
-github.io/svg-pa\
-th-editor/\x22>http\
-s://yqnn.github.\
-io/svg-path-edit\
-or/</a>.</p>\x0a\x0a<p\
->Of course it ca\
-nnot compare to \
-<strong>FreeCAD<\
-/strong> or <str\
-ong>SolveSpace</\
-strong>, but its\
- concept is exce\
-llent, \x0awhich ma\
-kes it so easy t\
-o generate a pat\
-h, segment after\
- segment. The re\
-sult can then be\
- copy/pasted int\
-o your SVGs,\x0aedi\
-tted per hand.</\
-p>\x0a\x0a<h4>Others:<\
-/h4>\x0a\x0a<p>I do no\
-t mention them b\
-ecause the list \
-would be too lon\
-g... but I did n\
-ot find somethin\
-g I was pleased \
-of.</p>\x0a\x0a<p></p>\
-\x0a\x0a<h3>Non-free s\
-oftware</h3>\x0a\x0a<h\
-4>DesignCAD</h4>\
-\x0a\x0a<p>The free ve\
-rsion has the sa\
-me capabilities \
-as the full vers\
-ion, excepted th\
-e exports to oth\
-er formats. Bad!\
-</p>\x0a\x0a<h4>Solid \
-Edge 2D Drafting\
- (Siemens)</h4>\x0a\
-\x0a<p>The 3.8 GB b\
-ig app from Siem\
-ens is <strong>f\
-ree of charge</s\
-trong>. But It s\
-eems there is no\
- SVG export at a\
-ll. \x22Schade\x22.</p\
->\x0a\x0a<h4>Draftsigh\
-t 2D (Dassault)<\
-/h4>\x0a\x0a<p>Only a \
-30 days trial ve\
-rsion. It has a \
-\x22Power Tool\x22 nam\
-ed \x222D G-Code ge\
-nerator\x22! Should\
- I forget\x0aPyCut?\
- (No). SVG expor\
-t seems to be mo\
-re meant as a pi\
-cture for displa\
-y only purpose.<\
-/p>\x0a\x0a<h4>What el\
-se?</h4>\x0a\x0a<p>...\
-</p>\x0a\x0a<h3>Conclu\
-sion</h3>\x0a\x0a<p>Th\
-e fact that it i\
-s so difficult t\
-o find an accept\
-able SVG path \x22w\
-riter\x22 free prog\
-ram let me wonde\
-r why it is the \
-case.\x0aAnd why do\
-es only <strong>\
-FreeCAD</strong>\
- and <strong>Sol\
-veSpace</strong>\
- perform the tas\
-k correctly?</p>\
-\x0a\x0a<p>The primary\
- usage of SVG is\
- displaying imag\
-es, not being a \
-format for CAM i\
-nput. So why bot\
-her exporting it\
- clean.\x0aThe svg \
-standard is huge\
-, the svg path d\
-efinition is qui\
-te complicated, \
-parsing it is a \
-difficult task, \
-and thus in \x0aret\
-urn exporting a \
-custom data form\
-at as svg data i\
-n a right and cl\
-ean manner is al\
-so not straightf\
-orward (when the\
-\x0adata format is \
-not well suited \
-for such an expo\
-rt). \x0aBut who el\
-se would want to\
- import svg file\
-s as a kind of C\
-AM format? Respo\
-nse: the applica\
-tions that do no\
-t want to use \x0aa\
-n other (maybe m\
-ore complicated)\
- format, because\
- yes, SVG can be\
- indeed simple w\
-hen utilizing on\
-ly its basic fea\
-tures.</p>\x0a\x0a<p>T\
-he SVG format, s\
-ure, can be view\
-ed in a browser \
-and can be edite\
-d with a text ed\
-itor. Unfortunat\
-ely it completel\
-y\x0aignores the co\
-ncept of multili\
-ne/multipolygon \
-etc. Polygons ha\
-ve no \x22interiors\
-\x22 so they must b\
-e defined as suc\
-h in a path \x0acom\
-posed of 2 or mo\
-re subpaths for \
-this purpose. No\
-t very practicab\
-le.</p>\x0a\x0a<p><str\
-ong>All in all v\
-ery desapointing\
-, excepted <span\
- style=\x22color:#0\
-08000\x22>FreeCAD</\
-span>, <span\x0asty\
-le=\x22color:#00800\
-0\x22>SolveSpace</s\
-pan> and <span s\
-tyle=\x22color:#008\
-000\x22>SvgPathEdit\
-or</span>!</stro\
-ng></p>\x0a\x0a<h4><st\
-rong><span style\
-=\x22color:#0000ff\x22\
->Per hand</span>\
-</strong></h4>\x0a\x0a\
-<p>Finally my pr\
-efered method! P\
-er hand you can \
-also write items\
- in the <code>&l\
-t;defs&gt;</code\
-> section, and u\
-se\x0athese items r\
-epeatidly with t\
-ransformations w\
-ith the <code>&l\
-t;use&gt;</code>\
- tag. My utility\
-\x0a<strong>svgreso\
-lver.py</strong>\
- then transforms\
- this svg file i\
-nto another one,\
- usable for <str\
-ong>PyCut. Not t\
-he\x0aperfect toolc\
-hain I admit, bu\
-t well my svgs a\
-re not that comp\
-licated</strong>\
-. One has to und\
-erstand how to w\
-rite an\x0aarc/bezi\
-er curve per han\
-d, it is not tha\
-t difficult and \
-can always use t\
-he <strong>SvgPa\
-thEditor</strong\
-> tool. And\x0ayour\
- hand written sv\
-gs are then \x22<st\
-rong>clean</stro\
-ng>\x22 and easily \
-modificable. </p\
->\x0a\x0a<p></p>\x0a\x0a<h3 \
-id=\x22APPENDIX-02\x22\
->Appendix-2: SVG\
- Units and Scale\
- Factor</h3>\x0a\x0a<d\
-iv class=\x22info\x22>\
-\x0a<p><strong>Info\
-</strong>: When \
-creating a svg \x22\
-per hand\x22 (with \
-a text editor), \
-the user does no\
-t even have to c\
-are\x0aabout this u\
-nits scale facto\
-r.</p>\x0a</div>\x0a\x0a<\
-p>What is this? \
-Let's take an ex\
-ample: in <stron\
-g>Inkscape</stro\
-ng>, the user wo\
-uld set the docu\
-ment's size to\x0a<\
-strong>100x40 mm\
-</strong>, suppo\
-sedly the size o\
-f the material t\
-o work on. Inksc\
-ape automaticall\
-y sets the\x0a<stro\
-ng>user units sc\
-ale </strong><st\
-rong>to 1</stron\
-g>. Note that th\
-e user units are\
- not \x22px\x22 or wha\
-tever. This mean\
-s,\x0a<strong>1 \x22us\
-er unit\x22 is equa\
-l to 1 mm (and t\
-he viewbox is \x220\
- 0 100 40\x22 while\
- width=\x22100mm\x22 a\
-nd\x0aheight=\x2240mm\x22\
-)</strong></p>\x0a\x0a\
-<div>\x0a<img src=\x22\
-doc/Inkscape_set\
-tings_mm.png\x22 wi\
-dth=\x22563\x22> </div\
->\x0a\x0a<p>Of course \
-when editing the\
- svg (in Inkscap\
-e or in a text e\
-ditor), <strong>\
-the user is only\
- concerned with \
-the user\x0aunits</\
-strong> : he dra\
-ws a rectangle o\
-f size 20x30 at \
-the location 10x\
-10. The users ma\
-y simply even no\
-t be aware of\x0ath\
-is fact. When ch\
-oosing mm, conve\
-rsion from <stro\
-ng>user units</s\
-trong> to <stron\
-g>mm</strong> is\
- absolutely\x0astra\
-ightforward as, \
-as said, the use\
-r units scale is\
- 1 per default .\
-</p>\x0a\x0a<p>Let's c\
-onsider now the \
-case where the u\
-ser switches to \
-<strong>inches</\
-strong> for the \
-document size. T\
-he size of\x0athe d\
-ocument becomes \
-then <strong>3,9\
-3701x1,57480 inc\
-hes</strong> (ye\
-s, 100 / 25.4 is\
- 3.93701). Note \
-that\x0a<strong>Ink\
-scape</strong> a\
-utomatically cha\
-nge the <strong>\
-user units scale\
- to 25.4</strong\
->. Because of th\
-is, the\x0a<strong>\
-view box remains\
- at \x220 0 100 40\x22\
-</strong>. That \
-way, a rectangle\
- filling the ful\
-l document size \
-is still\x0a100x40.\
-</p>\x0a\x0a<div>\x0a<img\
- src=\x22doc/Inksca\
-pe_settings_in.p\
-ng\x22 width=\x22563\x22>\
- </div>\x0a\x0a<p>Fill\
-ing a box half t\
-he size of the d\
-ocument is 50x20\
-, right, but wha\
-t are real physi\
-cal dimensions o\
-f that box ? The\
-\x0auser would have\
- to steadily cal\
-culate from fanc\
-y user units (ex\
-: 50x20) in inch\
-es</p>\x0a\x0a<p>But w\
-hy would a user \
-use inches and w\
-ork with user un\
-its scale factor\
- 25.4 (leading i\
-nfact to work in\
- mm) ? The user\x0a\
-can set the user\
- units scale fac\
-tor to 1. The ef\
-fect of this is \
-that now, in ord\
-er to fill the w\
-hole document wi\
-th a\x0arectangle, \
-the rectangle ha\
-s to be of the s\
-ize user unit si\
-ze of 3.93701x1.\
-57480. </p>\x0a\x0a<p>\
-Of course the si\
-ze of the materi\
-al is certainly \
-not 3.93701x1.57\
-480 inches, but \
-something like 5\
-x3 inches: an hu\
-man\x0areadable siz\
-e. The user know\
-s that he has to\
- draw a rectangl\
-e inside the mat\
-erial of size le\
-t say 1.5x1.2 in\
-ches. And\x0athese \
-dimensions are t\
-he ones that are\
- effectively sav\
-ed in the svg do\
-cument. So the u\
-ser units are ex\
-actly the same a\
-s\x0athe \x22physical \
-units\x22 when choo\
-sing a scale of \
-1.</p>\x0a\x0a<p>Now h\
-ow can <strong>P\
-yCut</strong> ha\
-ndles these sett\
-ings? <strong>Py\
-Cut</strong> onl\
-y works with the\
- <strong>user\x0aun\
-its</strong>. <s\
-trong>PyCut</str\
-ong> will calcul\
-ate toolpaths in\
- the same order \
-of magnitude of \
-the user units v\
-alues\x0aof the svg\
-. If you choose \
-\x22<strong>mm</str\
-ong>\x22 for the gc\
-ode output, you \
-would have set y\
-our svg document\
- size in\x0a\x22<stron\
-g>mm</strong>\x22, \
-and the <strong>\
-user unit scale \
-to 1</strong>. B\
-ecause of this, \
-the gcode X,Y an\
-d Z values are\x0at\
-he same as the o\
-ne of the paths \
-values.</p>\x0a\x0a<p>\
-If you choose \x22<\
-strong>in</stron\
-g>\x22 for the gcod\
-e output, then c\
-ertainly you hav\
-e set your svg d\
-ocument size in\x0a\
-\x22<strong>in</str\
-ong>\x22, and the <\
-strong>with user\
- unit scale equa\
-ls to 1</strong>\
-,no conversion i\
-s either needed.\
- </p>\x0a\x0a<p>Note t\
-hat this scale f\
-actor is not exp\
-licitely given i\
-n the svg file. \
-It is calculated\
- from the ratio \
-viewbox /\x0awidth.\
- It is eventuall\
-y the task of th\
-e user to know w\
-hat is the user \
-units scale valu\
-e, and, theorica\
-lly, to set it i\
-n\x0a<strong>PyCut<\
-/strong>. But my\
- opinion is, wor\
-king with a user\
- unit scal of 1 \
-is preferably. <\
-/p>\x0a\x0a<p><strong>\
-<span style=\x22col\
-or:#0000ff\x22>I pe\
-rsonnaly stick t\
-o svg document u\
-nits in \x22mm\x22 wit\
-h user units sca\
-le factor of\x0a1, \
-and output my gc\
-ode in mm. No co\
-nfusion! </span>\
-</strong></p>\x0a\x0a<\
-div class=\x22warni\
-ng\x22>\x0a<p><strong>\
-Warning</strong>\
-: The user could\
- use \x22mm\x22, and s\
-et a scale facto\
-r of 10 or whate\
-ver, but it cert\
-ainly makes\x0ano s\
-ense.</p>\x0a</div>\
-\x0a\x0a<p>The further\
- <strong>PyCut G\
-code Units</stro\
-ng> setting is n\
-ot only a flag t\
-o set the code <\
-strong>G20</stro\
-ng>\x0a(inches) or \
-<strong>G21</str\
-ong> (mm) inside\
- the gcode file:\
- it also allows \
-the proper conve\
-rsion of the too\
-l diameter\x0aphysi\
-cal size (inch o\
-r mm) in user un\
-its.</p>\x0a\x0a<p>The\
- rule is:</p>\x0a<u\
-l>\x0a  <li><strong\
->Gcode Units</st\
-rong> in \x22mm\x22: t\
-ool diameter is \
-transformed to m\
-m - the same as \
-the user units</\
-li>\x0a  <li><stron\
-g>Gcode Units</s\
-trong> in \x22in\x22: \
-tool diameter is\
- transformed to \
-inch - the same \
-as the user unit\
-s</li>\x0a</ul>\x0a\x0a<d\
-iv class=\x22warnin\
-g\x22>\x0a<p><strong>W\
-arning</strong>:\
- <strong>PyCut</\
-strong> assumes \
-that for \x22<stron\
-g>mm</strong>\x22 o\
-r \x22<strong>in</s\
-trong>\x22,\x0athe <st\
-rong>user unit s\
-cale factor is a\
-lways 1</strong>\
- .</p>\x0a</div>\x0a\x0a<\
-p></p>\x0a\x0a<h3 id=\x22\
-APPENDIX-03\x22>App\
-endix-3: GCODE V\
-iewers</h3>\x0a\x0a<p>\
-Of course, CANDL\
-E offers a GCODE\
- viewer. There n\
-evertheless a fe\
-w ones (to my kn\
-owledge) worth a\
- mention:</p>\x0a<u\
-l>\x0a  <li>NCnetic\
+g>.</li>\x0a  <li>C\
+ircles are expor\
+ted as <code>cir\
+cle</code> (Ok).\
+ Lines, Rectangl\
+es, Polygons and\
+ Ellipses are ex\
+ported as\x0a    <c\
+ode>path</code> \
+(not Ok). The ex\
+porter should re\
+cognize when a \x22\
+shape\x22 is formed\
+ only with strai\
+ght lines,\x0a\x09so t\
+hat it is export\
+ed as polygon, p\
+olyline, line or\
+ even rectangle \
+when it is the c\
+ase.</li>\x0a  <li>\
+Quadratic bezier\
+ and cubic bezie\
+r are supported<\
+/li>\x0a  <li>No <s\
+trong>Z</strong>\
+ at the end of a\
+ closed path</li\
+>\x0a</ul>\x0a\x0a<p>Conc\
+lusion: <strong \
+style=\x22color:#00\
+8000\x22>A very pro\
+mising SVG gener\
+ator/exporter </\
+strong>that coul\
+d be better if\x0aL\
+ines were to be \
+exported as <cod\
+e>line</code>, P\
+olylines as <cod\
+e>polyline</code\
+>, Rectangles as\
+ <code>rect</cod\
+e>, \x0aPolygons as\
+ <code>polygon</\
+code>. I also wo\
+uld rather like \
+an output withou\
+t transformation\
+, but it can be \
+removed\x0ausing a \
+text editor.</p>\
+\x0a\x0a<h4>SolveSpace\
  <span style=\x22co\
-lor:#ff00ff\x22><st\
-rong>****EXCELLE\
-NT****</strong><\
-/span></li>\x0a  <l\
-i>PlanetCNC (whi\
-ch is a GCode se\
-nder -with dedic\
-ated hardware- a\
-s well)</li>\x0a  <\
-li>what else ?</\
-li>\x0a</ul>\x0a\x0a<p>Ju\
-st search in the\
- Internet for th\
-em.</p>\x0a\x0a<p>Real\
- GCODE simulator\
-s (with material\
- removal) are on\
- the other way s\
-eldom.</p>\x0a<ul>\x0a\
-  <li>Camotics: \
-unfortunately ve\
-ry resources int\
-ensive and not s\
-o accurate in th\
-e details</li>\x0a \
- <li>CNCSimulato\
-r PRO (not free)\
-</li>\x0a  <li>Free\
-CAD ? how to imp\
-ort gcode into i\
-t ?</li>\x0a  <li>B\
-lender ? see Ble\
-nderCAM add-on -\
- not sure if the\
-re is a simulati\
-on</li>\x0a  <li>wh\
-at else ?</li>\x0a<\
-/ul>\x0a\x0a</div>\x0a</b\
-ody>\x0a</html>\x0a\
+lor:#ff00ff\x22>***\
+*VERY GOOD****</\
+span></h4>\x0a\x0a<p><\
+strong>SVG expor\
+t perfect (well,\
+ nearly perfect)\
+</strong>. I fou\
+nd nevertheless \
+the following ca\
+veats:</p>\x0a\x0a<ul>\
+\x0a<li>The paths h\
+ave no id, but i\
+ds are mandatory\
+ for <strong>PyC\
+ut</strong>.</li\
+>\x0a<li>Always be \
+sure to hide the\
+ constraints so \
+that they are no\
+t exported in th\
+e svg.</li>\x0a<li>\
+There are only c\
+ubic bezier curv\
+es, quadratic be\
+zier curves are \
+missing.</li>\x0a<l\
+i>Entities coord\
+inates are not t\
+he true ones, bu\
+t are shifted (t\
+ranslated) in X \
+and Y directions\
+. <strong>Very e\
+nnoying</strong>\
+.</li>\x0a</ul>\x0a</p\
+>\x0a\x0a<div class=\x22i\
+nfo\x22>\x0a<p><strong\
+>Note</strong>: \
+To achieve a qua\
+dratic bezier fr\
+om a cubic one, \
+the vector C1C2 \
+from the 2 contr\
+ol points must o\
+nly be\x0aa third o\
+f the vector AB \
+the start and en\
+d points! The qu\
+adratic curve co\
+ntrol point Q0 i\
+s then the inter\
+section of AC1 a\
+nd BC2.\x0aAnd AC1 \
+= 2/3 AQo, BC2 =\
+ 2/3 BQ0.  This \
+constraint on th\
+e control points\
+ could be added \
+in SolveSpace! O\
+r a real\x0aquadrat\
+ic entity could \
+be built in (but\
+ it won't happen\
+). Note that mak\
+ing the two cont\
+rol points coinc\
+ident is not a s\
+olution, this do\
+es not lead to \x0a\
+a quadratic bezi\
+er although it l\
+ooks similar</p>\
+\x0a</div>\x0a\x0a<div cl\
+ass=\x22info\x22>\x0a<p><\
+strong>Note</str\
+ong>: in 2026, a\
+ <strong>Blender\
+</strong> add-on\
+ called <strong>\
+CAD Sketcher</st\
+rong> is in\x0adeve\
+lopment, which u\
+tilizes the Solv\
+eSpace library f\
+or sketching. Ma\
+ybe the user int\
+erface will be t\
+here even better\
+.</p>\x0a</div>\x0a\x0a<h\
+4>Fusion 360</h4\
+>\x0a\x0a<p>There is n\
+o SVG export per\
+ default, but it\
+ seems there is \
+an add-on that c\
+osts about 15$, \
+\x0abut I did not b\
+uy/try.</p>\x0a\x0a<h4\
+>XFig</h4>\x0a\x0a<p>M\
+y beloved drawin\
+g editor during \
+my youth! Comple\
+tely outdated, b\
+ut still the bes\
+t! Unfortunately\
+ the SVG export \
+is\x0adeficient. Th\
+ere are Bezier c\
+urves (really?) \
+i.e. splines wit\
+h control points\
+ (it looks like \
+Bezier) but the \
+SVG export\x0aoutpu\
+ts them as polyl\
+ines (with many \
+points). <strong\
+>Conclusion: unu\
+sable</strong></\
+p>\x0a\x0a<p></p>\x0a\x0a<h3\
+><strong>Online \
+editors:</strong\
+></h3>\x0a\x0a<p>There\
+ are plenty of t\
+hem, but they al\
+l seem to be mea\
+nt for painting \
+(like Inkscape),\
+ not for CAD. Fi\
+nally found\x0athis\
+ one:</p>\x0a\x0a<h4>S\
+vgPathEditor <sp\
+an style=\x22color:\
+#ff00ff\x22><span s\
+tyle=\x22color:#ff0\
+0ff\x22></span></sp\
+an><span\x0astyle=\x22\
+color:#ff00ff\x22>*\
+***EXCELLENT****\
+</span></h4>\x0a\x0a<p\
+>It is solely fo\
+cused on editing\
+ svg paths. You \
+can try it at <a\
+\x0ahref=\x22https://y\
+qnn.github.io/sv\
+g-path-editor/\x22>\
+https://yqnn.git\
+hub.io/svg-path-\
+editor/</a>.</p>\
+\x0a\x0a<p>Of course i\
+t cannot compare\
+ to <strong>Free\
+CAD</strong> or \
+<strong>SolveSpa\
+ce</strong>, but\
+ its concept is \
+excellent, \x0awhic\
+h makes it so ea\
+sy to generate a\
+ path, segment a\
+fter segment. Th\
+e result can the\
+n be copy/pasted\
+ into your SVGs,\
+\x0aeditted per han\
+d.</p>\x0a\x0a<h4>Othe\
+rs:</h4>\x0a\x0a<p>I d\
+o not mention th\
+em because the l\
+ist would be too\
+ long... but I d\
+id not find some\
+thing I was plea\
+sed of.</p>\x0a\x0a<p>\
+</p>\x0a\x0a<h3>Non-fr\
+ee software</h3>\
+\x0a\x0a<h4>DesignCAD<\
+/h4>\x0a\x0a<p>The fre\
+e version has th\
+e same capabilit\
+ies as the full \
+version, excepte\
+d the exports to\
+ other formats. \
+Bad!</p>\x0a\x0a<h4>So\
+lid Edge 2D Draf\
+ting (Siemens)</\
+h4>\x0a\x0a<p>The 3.8 \
+GB big app from \
+Siemens is <stro\
+ng>free of charg\
+e</strong>. But \
+It seems there i\
+s no SVG export \
+at all. \x22Schade\x22\
+.</p>\x0a\x0a<h4>Draft\
+sight 2D (Dassau\
+lt)</h4>\x0a\x0a<p>Onl\
+y a 30 days tria\
+l version. It ha\
+s a \x22Power Tool\x22\
+ named \x222D G-Cod\
+e generator\x22! Sh\
+ould I forget\x0aPy\
+Cut? (No). SVG e\
+xport seems to b\
+e more meant as \
+a picture for di\
+splay only purpo\
+se.</p>\x0a\x0a<h4>Wha\
+t else?</h4>\x0a\x0a<p\
+>...</p>\x0a\x0a<h3>Co\
+nclusion</h3>\x0a\x0a<\
+p>The fact that \
+it is so difficu\
+lt to find an ac\
+ceptable SVG pat\
+h \x22writer\x22 free \
+program let me w\
+onder why it is \
+the case.\x0aAnd wh\
+y does only <str\
+ong>FreeCAD</str\
+ong> and <strong\
+>SolveSpace</str\
+ong> perform the\
+ task correctly?\
+</p>\x0a\x0a<p>The pri\
+mary usage of SV\
+G is displaying \
+images, not bein\
+g a format for C\
+AM input. So why\
+ bother exportin\
+g it clean.\x0aThe \
+svg standard is \
+huge, the svg pa\
+th definition is\
+ quite complicat\
+ed, parsing it i\
+s a difficult ta\
+sk, and thus in \
+\x0areturn exportin\
+g a custom data \
+format as svg da\
+ta in a right an\
+d clean manner i\
+s also not strai\
+ghtforward (when\
+ the\x0adata format\
+ is not well sui\
+ted for such an \
+export). \x0aBut wh\
+o else would wan\
+t to import svg \
+files as a kind \
+of CAM format? R\
+esponse: the app\
+lications that d\
+o not want to us\
+e \x0aan other (may\
+be more complica\
+ted) format, bec\
+ause yes, SVG ca\
+n be indeed simp\
+le when utilizin\
+g only its basic\
+ features.</p>\x0a\x0a\
+<p>The SVG forma\
+t, sure, can be \
+viewed in a brow\
+ser and can be e\
+dited with a tex\
+t editor. Unfort\
+unately it compl\
+etely\x0aignores th\
+e concept of mul\
+tiline/multipoly\
+gon etc. Polygon\
+s have no \x22inter\
+iors\x22 so they mu\
+st be defined as\
+ such in a path \
+\x0acomposed of 2 o\
+r more subpaths \
+for this purpose\
+. Not very pract\
+icable.</p>\x0a\x0a<p>\
+<strong>All in a\
+ll very desapoin\
+ting, excepted <\
+span style=\x22colo\
+r:#008000\x22>FreeC\
+AD</span>, <span\
+\x0astyle=\x22color:#0\
+08000\x22>SolveSpac\
+e</span> and <sp\
+an style=\x22color:\
+#008000\x22>SvgPath\
+Editor</span>!</\
+strong></p>\x0a\x0a<h4\
+><strong><span s\
+tyle=\x22color:#000\
+0ff\x22>Per hand</s\
+pan></strong></h\
+4>\x0a\x0a<p>Finally m\
+y prefered metho\
+d! Per hand you \
+can also write i\
+tems in the <cod\
+e>&lt;defs&gt;</\
+code> section, a\
+nd use\x0athese ite\
+ms repeatidly wi\
+th transformatio\
+ns with the <cod\
+e>&lt;use&gt;</c\
+ode> tag. My uti\
+lity\x0a<strong>svg\
+resolver.py</str\
+ong> then transf\
+orms this svg fi\
+le into another \
+one, usable for \
+<strong>PyCut. N\
+ot the\x0aperfect t\
+oolchain I admit\
+, but well my sv\
+gs are not that \
+complicated</str\
+ong>. One has to\
+ understand how \
+to write an\x0aarc/\
+bezier curve per\
+ hand, it is not\
+ that difficult \
+and can always u\
+se the <strong>S\
+vgPathEditor</st\
+rong> tool. And\x0a\
+your hand writte\
+n svgs are then \
+\x22<strong>clean</\
+strong>\x22 and eas\
+ily modificable.\
+ </p>\x0a\x0a<p></p>\x0a\x0a\
+<h3 id=\x22APPENDIX\
+-02\x22>Appendix-2:\
+ SVG Units and S\
+cale Factor</h3>\
+\x0a\x0a<div class=\x22in\
+fo\x22>\x0a<p><strong>\
+Info</strong>: W\
+hen creating a s\
+vg \x22per hand\x22 (w\
+ith a text edito\
+r), the user doe\
+s not even have \
+to care\x0aabout th\
+is units scale f\
+actor.</p>\x0a</div\
+>\x0a\x0a<p>What is th\
+is? Let's take a\
+n example: in <s\
+trong>Inkscape</\
+strong>, the use\
+r would set the \
+document's size \
+to\x0a<strong>100x4\
+0 mm</strong>, s\
+upposedly the si\
+ze of the materi\
+al to work on. I\
+nkscape automati\
+cally sets the\x0a<\
+strong>user unit\
+s scale </strong\
+><strong>to 1</s\
+trong>. Note tha\
+t the user units\
+ are not \x22px\x22 or\
+ whatever. This \
+means,\x0a<strong>1\
+ \x22user unit\x22 is \
+equal to 1 mm (a\
+nd the viewbox i\
+s \x220 0 100 40\x22 w\
+hile width=\x22100m\
+m\x22 and\x0aheight=\x224\
+0mm\x22)</strong></\
+p>\x0a\x0a<div>\x0a<img s\
+rc=\x22doc/Inkscape\
+_settings_mm.png\
+\x22 width=\x22563\x22> <\
+/div>\x0a\x0a<p>Of cou\
+rse when editing\
+ the svg (in Ink\
+scape or in a te\
+xt editor), <str\
+ong>the user is \
+only concerned w\
+ith the user\x0auni\
+ts</strong> : he\
+ draws a rectang\
+le of size 20x30\
+ at the location\
+ 10x10. The user\
+s may simply eve\
+n not be aware o\
+f\x0athis fact. Whe\
+n choosing mm, c\
+onversion from <\
+strong>user unit\
+s</strong> to <s\
+trong>mm</strong\
+> is absolutely\x0a\
+straightforward \
+as, as said, the\
+ user units scal\
+e is 1 per defau\
+lt .</p>\x0a\x0a<p>Let\
+'s consider now \
+the case where t\
+he user switches\
+ to <strong>inch\
+es</strong> for \
+the document siz\
+e. The size of\x0at\
+he document beco\
+mes then <strong\
+>3,93701x1,57480\
+ inches</strong>\
+ (yes, 100 / 25.\
+4 is 3.93701). N\
+ote that\x0a<strong\
+>Inkscape</stron\
+g> automatically\
+ change the <str\
+ong>user units s\
+cale to 25.4</st\
+rong>. Because o\
+f this, the\x0a<str\
+ong>view box rem\
+ains at \x220 0 100\
+ 40\x22</strong>. T\
+hat way, a recta\
+ngle filling the\
+ full document s\
+ize is still\x0a100\
+x40.</p>\x0a\x0a<div>\x0a\
+<img src=\x22doc/In\
+kscape_settings_\
+in.png\x22 width=\x225\
+63\x22> </div>\x0a\x0a<p>\
+Filling a box ha\
+lf the size of t\
+he document is 5\
+0x20, right, but\
+ what are real p\
+hysical dimensio\
+ns of that box ?\
+ The\x0auser would \
+have to steadily\
+ calculate from \
+fancy user units\
+ (ex: 50x20) in \
+inches</p>\x0a\x0a<p>B\
+ut why would a u\
+ser use inches a\
+nd work with use\
+r units scale fa\
+ctor 25.4 (leadi\
+ng infact to wor\
+k in mm) ? The u\
+ser\x0acan set the \
+user units scale\
+ factor to 1. Th\
+e effect of this\
+ is that now, in\
+ order to fill t\
+he whole documen\
+t with a\x0arectang\
+le, the rectangl\
+e has to be of t\
+he size user uni\
+t size of 3.9370\
+1x1.57480. </p>\x0a\
+\x0a<p>Of course th\
+e size of the ma\
+terial is certai\
+nly not 3.93701x\
+1.57480 inches, \
+but something li\
+ke 5x3 inches: a\
+n human\x0areadable\
+ size. The user \
+knows that he ha\
+s to draw a rect\
+angle inside the\
+ material of siz\
+e let say 1.5x1.\
+2 inches. And\x0ath\
+ese dimensions a\
+re the ones that\
+ are effectively\
+ saved in the sv\
+g document. So t\
+he user units ar\
+e exactly the sa\
+me as\x0athe \x22physi\
+cal units\x22 when \
+choosing a scale\
+ of 1.</p>\x0a\x0a<p>N\
+ow how can <stro\
+ng>PyCut</strong\
+> handles these \
+settings? <stron\
+g>PyCut</strong>\
+ only works with\
+ the <strong>use\
+r\x0aunits</strong>\
+. <strong>PyCut<\
+/strong> will ca\
+lculate toolpath\
+s in the same or\
+der of magnitude\
+ of the user uni\
+ts values\x0aof the\
+ svg. If you cho\
+ose \x22<strong>mm<\
+/strong>\x22 for th\
+e gcode output, \
+you would have s\
+et your svg docu\
+ment size in\x0a\x22<s\
+trong>mm</strong\
+>\x22, and the <str\
+ong>user unit sc\
+ale to 1</strong\
+>. Because of th\
+is, the gcode X,\
+Y and Z values a\
+re\x0athe same as t\
+he one of the pa\
+ths values.</p>\x0a\
+\x0a<p>If you choos\
+e \x22<strong>in</s\
+trong>\x22 for the \
+gcode output, th\
+en certainly you\
+ have set your s\
+vg document size\
+ in\x0a\x22<strong>in<\
+/strong>\x22, and t\
+he <strong>with \
+user unit scale \
+equals to 1</str\
+ong>,no conversi\
+on is either nee\
+ded. </p>\x0a\x0a<p>No\
+te that this sca\
+le factor is not\
+ explicitely giv\
+en in the svg fi\
+le. It is calcul\
+ated from the ra\
+tio viewbox /\x0awi\
+dth. It is event\
+ually the task o\
+f the user to kn\
+ow what is the u\
+ser units scale \
+value, and, theo\
+rically, to set \
+it in\x0a<strong>Py\
+Cut</strong>. Bu\
+t my opinion is,\
+ working with a \
+user unit scal o\
+f 1 is preferabl\
+y. </p>\x0a\x0a<p><str\
+ong><span style=\
+\x22color:#0000ff\x22>\
+I personnaly sti\
+ck to svg docume\
+nt units in \x22mm\x22\
+ with user units\
+ scale factor of\
+\x0a1, and output m\
+y gcode in mm. N\
+o confusion! </s\
+pan></strong></p\
+>\x0a\x0a<div class=\x22w\
+arning\x22>\x0a<p><str\
+ong>Warning</str\
+ong>: The user c\
+ould use \x22mm\x22, a\
+nd set a scale f\
+actor of 10 or w\
+hatever, but it \
+certainly makes\x0a\
+no sense.</p>\x0a</\
+div>\x0a\x0a<p>The fur\
+ther <strong>PyC\
+ut Gcode Units</\
+strong> setting \
+is not only a fl\
+ag to set the co\
+de <strong>G20</\
+strong>\x0a(inches)\
+ or <strong>G21<\
+/strong> (mm) in\
+side the gcode f\
+ile: it also all\
+ows the proper c\
+onversion of the\
+ tool diameter\x0ap\
+hysical size (in\
+ch or mm) in use\
+r units.</p>\x0a\x0a<p\
+>The rule is:</p\
+>\x0a<ul>\x0a  <li><st\
+rong>Gcode Units\
+</strong> in \x22mm\
+\x22: tool diameter\
+ is transformed \
+to mm - the same\
+ as the user uni\
+ts</li>\x0a  <li><s\
+trong>Gcode Unit\
+s</strong> in \x22i\
+n\x22: tool diamete\
+r is transformed\
+ to inch - the s\
+ame as the user \
+units</li>\x0a</ul>\
+\x0a\x0a<div class=\x22wa\
+rning\x22>\x0a<p><stro\
+ng>Warning</stro\
+ng>: <strong>PyC\
+ut</strong> assu\
+mes that for \x22<s\
+trong>mm</strong\
+>\x22 or \x22<strong>i\
+n</strong>\x22,\x0athe\
+ <strong>user un\
+it scale factor \
+is always 1</str\
+ong> .</p>\x0a</div\
+>\x0a\x0a<p></p>\x0a\x0a<h3 \
+id=\x22APPENDIX-03\x22\
+>Appendix-3: GCO\
+DE Viewers</h3>\x0a\
+\x0a<p>Of course, C\
+ANDLE offers a G\
+CODE viewer. The\
+re nevertheless \
+a few ones (to m\
+y knowledge) wor\
+th a mention:</p\
+>\x0a<ul>\x0a  <li>NCn\
+etic <span style\
+=\x22color:#ff00ff\x22\
+><strong>****EXC\
+ELLENT****</stro\
+ng></span></li>\x0a\
+  <li>PlanetCNC \
+(which is a GCod\
+e sender -with d\
+edicated hardwar\
+e- as well)</li>\
+\x0a  <li>what else\
+ ?</li>\x0a</ul>\x0a\x0a<\
+p>Just search in\
+ the Internet fo\
+r them.</p>\x0a\x0a<p>\
+Real GCODE simul\
+ators (with mate\
+rial removal) ar\
+e on the other w\
+ay seldom.</p>\x0a<\
+ul>\x0a  <li>Camoti\
+cs: unfortunatel\
+y very resources\
+ intensive and n\
+ot so accurate i\
+n the details</l\
+i>\x0a  <li>CNCSimu\
+lator PRO (not f\
+ree)</li>\x0a  <li>\
+FreeCAD ? how to\
+ import gcode in\
+to it ?</li>\x0a  <\
+li>Blender ? see\
+ BlenderCAM add-\
+on - not sure if\
+ there is a simu\
+lation</li>\x0a  <l\
+i>what else ?</l\
+i>\x0a</ul>\x0a\x0a</div>\
+\x0a</body>\x0a</html>\
+\x0a\
 \x00\x00\x05w\
 <\
 h3>PyCut version\
@@ -61077,14 +61074,14 @@ qt_resource_struct = b"\
 \x00\x00\x00\x1e\x00\x02\x00\x00\x00\x0f\x00\x00\x00?\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00*\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
-\x00\x00\x01\xa1Pk\xfd\x1e\
+\x00\x00\x01\xa1Pn@~\
 \x00\x00\x00\x00\x00\x02\x00\x00\x00\x01\x00\x00\x00>\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00~\x00\x02\x00\x00\x00\x10\x00\x00\x00\x17\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00d\x00\x02\x00\x00\x00\x03\x00\x00\x00\x07\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x00J\x00\x00\x00\x00\x00\x01\x00\x01p\xb2\
+\x00\x00\x00J\x00\x00\x00\x00\x00\x01\x00\x01pv\
 \x00\x00\x01\xa1Pd\x80\xa9\
 \x00\x00\x06H\x00\x02\x00\x00\x00\x02\x00\x00\x00\x0f\
 \x00\x00\x00\x00\x00\x00\x00\x00\
@@ -61092,73 +61089,73 @@ qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x06R\x00\x02\x00\x00\x00\x03\x00\x00\x00\x0a\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x06^\x00\x00\x00\x00\x00\x01\x00\x01\xf3\x01\
+\x00\x00\x06^\x00\x00\x00\x00\x00\x01\x00\x01\xf2\xc5\
 \x00\x00\x01\x95\xd2\xee}\x5c\
-\x00\x00\x06\x8a\x00\x00\x00\x00\x00\x01\x00\x03<\x1a\
+\x00\x00\x06\x8a\x00\x00\x00\x00\x00\x01\x00\x03;\xde\
 \x00\x00\x01\x95\xd2\xee}]\
-\x00\x00\x06\xac\x00\x01\x00\x00\x00\x01\x00\x03R7\
+\x00\x00\x06\xac\x00\x01\x00\x00\x00\x01\x00\x03Q\xfb\
 \x00\x00\x01\x95\xd2\xee}\x5c\
 \x00\x00\x06H\x00\x02\x00\x00\x00\x01\x00\x00\x00\x0e\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x08\x86\x00\x00\x00\x00\x00\x01\x00\x03\xb1\xd1\
+\x00\x00\x08\x86\x00\x00\x00\x00\x00\x01\x00\x03\xb1\x95\
 \x00\x00\x01\x95\xd2\xee}Y\
-\x00\x00\x06\xde\x00\x01\x00\x00\x00\x01\x00\x03o\xff\
+\x00\x00\x06\xde\x00\x01\x00\x00\x00\x01\x00\x03o\xc3\
 \x00\x00\x01\x95\xd2\xee}Y\
 \x00\x00\x06\xfe\x00\x02\x00\x00\x00\x06\x00\x00\x00\x11\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x08B\x00\x00\x00\x00\x00\x01\x00\x03\xae\x14\
+\x00\x00\x08B\x00\x00\x00\x00\x00\x01\x00\x03\xad\xd8\
 \x00\x00\x01\x95\xd2\xee}Z\
-\x00\x00\x07\x12\x00\x00\x00\x00\x00\x01\x00\x03\x89\x08\
+\x00\x00\x07\x12\x00\x00\x00\x00\x00\x01\x00\x03\x88\xcc\
 \x00\x00\x01\x95\xd2\xee}Z\
-\x00\x00\x07\xce\x00\x00\x00\x00\x00\x01\x00\x03\x9c\xed\
+\x00\x00\x07\xce\x00\x00\x00\x00\x00\x01\x00\x03\x9c\xb1\
 \x00\x00\x01\x95\xd2\xee}Z\
-\x00\x00\x07\xfe\x00\x00\x00\x00\x00\x01\x00\x03\xa3\xff\
+\x00\x00\x07\xfe\x00\x00\x00\x00\x00\x01\x00\x03\xa3\xc3\
 \x00\x00\x01\x95\xd2\xee}Z\
-\x00\x00\x07\x86\x00\x00\x00\x00\x00\x01\x00\x03\x89\x08\
+\x00\x00\x07\x86\x00\x00\x00\x00\x00\x01\x00\x03\x88\xcc\
 \x00\x00\x01\x95\xd2\xee}Z\
-\x00\x00\x07F\x00\x00\x00\x00\x00\x01\x00\x03\x8c\x1f\
+\x00\x00\x07F\x00\x00\x00\x00\x00\x01\x00\x03\x8b\xe3\
 \x00\x00\x01\x95\xd2\xee}Z\
 \x00\x00\x00\xb0\x00\x02\x00\x00\x00\x02\x00\x00\x00,\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x02@\x00\x00\x00\x00\x00\x01\x00\x01\x90\xcd\
+\x00\x00\x02@\x00\x00\x00\x00\x00\x01\x00\x01\x90\x91\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x03\x1e\x00\x00\x00\x00\x00\x01\x00\x01\xa2\x19\
+\x00\x00\x03\x1e\x00\x00\x00\x00\x00\x01\x00\x01\xa1\xdd\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x010\x00\x00\x00\x00\x00\x01\x00\x01~\x8f\
+\x00\x00\x010\x00\x00\x00\x00\x00\x01\x00\x01~S\
 \x00\x00\x01\x95\xd2\xee}=\
 \x00\x00\x01d\x00\x02\x00\x00\x00\x05\x00\x00\x00'\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x00\xe4\x00\x00\x00\x00\x00\x01\x00\x01zG\
+\x00\x00\x00\xe4\x00\x00\x00\x00\x00\x01\x00\x01z\x0b\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x02\xa8\x00\x00\x00\x00\x00\x01\x00\x01\x9ay\
+\x00\x00\x02\xa8\x00\x00\x00\x00\x00\x01\x00\x01\x9a=\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x02\x10\x00\x00\x00\x00\x00\x01\x00\x01\x8e3\
+\x00\x00\x02\x10\x00\x00\x00\x00\x00\x01\x00\x01\x8d\xf7\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x02\xe4\x00\x00\x00\x00\x00\x01\x00\x01\x9eI\
+\x00\x00\x02\xe4\x00\x00\x00\x00\x00\x01\x00\x01\x9e\x0d\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x02n\x00\x00\x00\x00\x00\x01\x00\x01\x95\x03\
+\x00\x00\x02n\x00\x00\x00\x00\x00\x01\x00\x01\x94\xc7\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x01\xa6\x00\x00\x00\x00\x00\x01\x00\x01\x86_\
+\x00\x00\x01\xa6\x00\x00\x00\x00\x00\x01\x00\x01\x86#\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x01v\x00\x00\x00\x00\x00\x01\x00\x01\x82_\
+\x00\x00\x01v\x00\x00\x00\x00\x00\x01\x00\x01\x82#\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x00\x90\x00\x00\x00\x00\x00\x01\x00\x01v-\
+\x00\x00\x00\x90\x00\x00\x00\x00\x00\x01\x00\x01u\xf1\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x01\x06\x00\x00\x00\x00\x00\x01\x00\x01|Y\
+\x00\x00\x01\x06\x00\x00\x00\x00\x00\x01\x00\x01|\x1d\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x01\xd8\x00\x00\x00\x00\x00\x01\x00\x01\x8ad\
+\x00\x00\x01\xd8\x00\x00\x00\x00\x00\x01\x00\x01\x8a(\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x01\x00\x01xA\
+\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x01\x00\x01x\x05\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x03\x84\x00\x00\x00\x00\x00\x01\x00\x01\xaa=\
+\x00\x00\x03\x84\x00\x00\x00\x00\x00\x01\x00\x01\xaa\x01\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x03f\x00\x00\x00\x00\x00\x01\x00\x01\xa7\xc5\
+\x00\x00\x03f\x00\x00\x00\x00\x00\x01\x00\x01\xa7\x89\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x03\xc0\x00\x00\x00\x00\x00\x01\x00\x01\xaf\x15\
+\x00\x00\x03\xc0\x00\x00\x00\x00\x00\x01\x00\x01\xae\xd9\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x03P\x00\x00\x00\x00\x00\x01\x00\x01\xa5\xc3\
+\x00\x00\x03P\x00\x00\x00\x00\x00\x01\x00\x01\xa5\x87\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x03\xa4\x00\x00\x00\x00\x00\x01\x00\x01\xac\xa7\
+\x00\x00\x03\xa4\x00\x00\x00\x00\x00\x01\x00\x01\xack\
 \x00\x00\x01\x95\xd2\xee}<\
 \x00\x00\x03\xe8\x00\x02\x00\x00\x00\x02\x00\x00\x000\
 \x00\x00\x00\x00\x00\x00\x00\x00\
@@ -61166,81 +61163,81 @@ qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x03\xf8\x00\x02\x00\x00\x00\x01\x00\x00\x00/\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x06\x08\x00\x00\x00\x00\x00\x01\x00\x01\xe9\x0d\
+\x00\x00\x06\x08\x00\x00\x00\x00\x00\x01\x00\x01\xe8\xd1\
 \x00\x00\x01\x95\xd2\xee}T\
 \x00\x00\x04\x12\x00\x02\x00\x00\x00\x0b\x00\x00\x003\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x03\xf8\x00\x02\x00\x00\x00\x01\x00\x00\x002\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x06\x08\x00\x00\x00\x00\x00\x01\x00\x01\xe39\
+\x00\x00\x06\x08\x00\x00\x00\x00\x00\x01\x00\x01\xe2\xfd\
 \x00\x00\x01\x95\xd2\xee}K\
-\x00\x00\x05\xa0\x00\x00\x00\x00\x00\x01\x00\x01\xdbo\
+\x00\x00\x05\xa0\x00\x00\x00\x00\x00\x01\x00\x01\xdb3\
 \x00\x00\x01\x95\xd2\xee}I\
-\x00\x00\x04&\x00\x00\x00\x00\x00\x01\x00\x01\xb7\x0c\
+\x00\x00\x04&\x00\x00\x00\x00\x00\x01\x00\x01\xb6\xd0\
 \x00\x00\x01\x95\xd2\xee}I\
-\x00\x00\x04\x86\x00\x00\x00\x00\x00\x01\x00\x01\xbf\xc1\
+\x00\x00\x04\x86\x00\x00\x00\x00\x00\x01\x00\x01\xbf\x85\
 \x00\x00\x01\x95\xd2\xee}H\
-\x00\x00\x05.\x00\x00\x00\x00\x00\x01\x00\x01\xcf\x0c\
+\x00\x00\x05.\x00\x00\x00\x00\x00\x01\x00\x01\xce\xd0\
 \x00\x00\x01\x95\xd2\xee}H\
-\x00\x00\x04\x9e\x00\x00\x00\x00\x00\x01\x00\x01\xc32\
+\x00\x00\x04\x9e\x00\x00\x00\x00\x00\x01\x00\x01\xc2\xf6\
 \x00\x00\x01\x95\xd2\xee}I\
-\x00\x00\x04\xc4\x00\x00\x00\x00\x00\x01\x00\x01\xc8\x8a\
+\x00\x00\x04\xc4\x00\x00\x00\x00\x00\x01\x00\x01\xc8N\
 \x00\x00\x01\x95\xd2\xee}I\
-\x00\x00\x04X\x00\x00\x00\x00\x00\x01\x00\x01\xbbt\
+\x00\x00\x04X\x00\x00\x00\x00\x00\x01\x00\x01\xbb8\
 \x00\x00\x01\x95\xd2\xee}G\
-\x00\x00\x04\xfa\x00\x00\x00\x00\x00\x01\x00\x01\xcb\x1d\
+\x00\x00\x04\xfa\x00\x00\x00\x00\x00\x01\x00\x01\xca\xe1\
 \x00\x00\x01\x95\xd2\xee}I\
-\x00\x00\x05l\x00\x00\x00\x00\x00\x01\x00\x01\xd7S\
+\x00\x00\x05l\x00\x00\x00\x00\x00\x01\x00\x01\xd7\x17\
 \x00\x00\x01\x95\xd2\xee}I\
-\x00\x00\x05J\x00\x00\x00\x00\x00\x01\x00\x01\xd2z\
+\x00\x00\x05J\x00\x00\x00\x00\x00\x01\x00\x01\xd2>\
 \x00\x00\x01\x95\xd2\xee}G\
-\x00\x00\x05\xd2\x00\x00\x00\x00\x00\x01\x00\x01\xdft\
+\x00\x00\x05\xd2\x00\x00\x00\x00\x00\x01\x00\x01\xdf8\
 \x00\x00\x01\x95\xd2\xee}I\
-\x00\x00\x0b\xd2\x00\x01\x00\x00\x00\x01\x00\x0e\xb8$\
+\x00\x00\x0b\xd2\x00\x01\x00\x00\x00\x01\x00\x0e\xb7\xe8\
 \x00\x00\x01\x95\xd2\xee}]\
 \x00\x00\x06H\x00\x02\x00\x00\x00\x01\x00\x00\x00T\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x0a\xee\x00\x02\x00\x00\x00\x06\x00\x00\x00N\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x09l\x00\x00\x00\x00\x00\x01\x00\x04Y\x86\
+\x00\x00\x09l\x00\x00\x00\x00\x00\x01\x00\x04YJ\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x08\xe0\x00\x00\x00\x00\x00\x01\x00\x03\xe4\x16\
+\x00\x00\x08\xe0\x00\x00\x00\x00\x00\x01\x00\x03\xe3\xda\
 \x00\x00\x01\x95\xd2\xee};\
-\x00\x00\x0a\xbe\x00\x00\x00\x00\x00\x01\x00\x07-\xec\
+\x00\x00\x0a\xbe\x00\x00\x00\x00\x00\x01\x00\x07-\xb0\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x09\xa6\x00\x00\x00\x00\x00\x01\x00\x04\xd7\x0c\
+\x00\x00\x09\xa6\x00\x00\x00\x00\x00\x01\x00\x04\xd6\xd0\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x09*\x00\x00\x00\x00\x00\x01\x00\x04\x04\xb6\
+\x00\x00\x09*\x00\x00\x00\x00\x00\x01\x00\x04\x04z\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x0a\x12\x00\x00\x00\x00\x00\x01\x00\x05Oh\
+\x00\x00\x0a\x12\x00\x00\x00\x00\x00\x01\x00\x05O,\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x09L\x00\x01\x00\x00\x00\x01\x00\x04Wq\
+\x00\x00\x09L\x00\x01\x00\x00\x00\x01\x00\x04W5\
 \x00\x00\x01\x95\xd2\xee}:\
-\x00\x00\x09\xf2\x00\x01\x00\x00\x00\x01\x00\x05L\x22\
+\x00\x00\x09\xf2\x00\x01\x00\x00\x00\x01\x00\x05K\xe6\
 \x00\x00\x01\x95\xd2\xee}:\
-\x00\x00\x0a\x9e\x00\x01\x00\x00\x00\x01\x00\x07+|\
+\x00\x00\x0a\x9e\x00\x01\x00\x00\x00\x01\x00\x07+@\
 \x00\x00\x01\x95\xd2\xee}:\
-\x00\x00\x0a2\x00\x00\x00\x00\x00\x01\x00\x06\xa3\x0a\
+\x00\x00\x0a2\x00\x00\x00\x00\x00\x01\x00\x06\xa2\xce\
 \x00\x00\x01\x95\xd2\xee}9\
-\x00\x00\x0ah\x00\x00\x00\x00\x00\x01\x00\x06\xe7c\
+\x00\x00\x0ah\x00\x00\x00\x00\x00\x01\x00\x06\xe7'\
 \x00\x00\x01\x95\xd2\xee}9\
-\x00\x00\x08\xa6\x00\x00\x00\x00\x00\x01\x00\x03\xbe\xb4\
+\x00\x00\x08\xa6\x00\x00\x00\x00\x00\x01\x00\x03\xbex\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x09\xd0\x00\x00\x00\x00\x00\x01\x00\x05\x09\x91\
+\x00\x00\x09\xd0\x00\x00\x00\x00\x00\x01\x00\x05\x09U\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x0b\x82\x00\x00\x00\x00\x00\x01\x00\x07W,\
+\x00\x00\x0b\x82\x00\x00\x00\x00\x00\x01\x00\x07V\xf0\
 \x00\x00\x01\x95\xd2\xee}9\
-\x00\x00\x0b\x5c\x00\x00\x00\x00\x00\x01\x00\x07Tz\
+\x00\x00\x0b\x5c\x00\x00\x00\x00\x00\x01\x00\x07T>\
 \x00\x00\x01\x95\xd2\xee}9\
-\x00\x00\x0b4\x00\x00\x00\x00\x00\x01\x00\x07Q\xd6\
+\x00\x00\x0b4\x00\x00\x00\x00\x00\x01\x00\x07Q\x9a\
 \x00\x00\x01\x95\xd2\xee}9\
-\x00\x00\x0b\x12\x00\x00\x00\x00\x00\x01\x00\x07O\x8e\
+\x00\x00\x0b\x12\x00\x00\x00\x00\x00\x01\x00\x07OR\
 \x00\x00\x01\x95\xd2\xee}:\
-\x00\x00\x0b\x9a\x00\x00\x00\x00\x00\x01\x00\x07g\x18\
+\x00\x00\x0b\x9a\x00\x00\x00\x00\x00\x01\x00\x07f\xdc\
 \x00\x00\x01\x95\xd2\xee}9\
-\x00\x00\x0a\xfa\x00\x00\x00\x00\x00\x01\x00\x07I'\
+\x00\x00\x0a\xfa\x00\x00\x00\x00\x00\x01\x00\x07H\xeb\
 \x00\x00\x01\x95\xd2\xee}:\
-\x00\x00\x0b\xbc\x00\x00\x00\x00\x00\x01\x00\x07i\x97\
+\x00\x00\x0b\xbc\x00\x00\x00\x00\x00\x01\x00\x07i[\
 \x00\x00\x01\x95\xd2\xee};\
 "
 
