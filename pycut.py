@@ -1961,7 +1961,7 @@ def main():
     )
 
     # version info
-    parser.add_argument("--version", action="version", version="f{VERSION}")
+    parser.add_argument("--version", action="version", version=f"{VERSION}")
 
     options = parser.parse_args()
 
