@@ -19,6 +19,7 @@ start the program from the installation folder
 ```
 > python pycut.py -h
 > python pycut.py
+> python pycut.py --version
 > python pycut.py -p <path_to_project>
 > python pycut.py -g <path_to_gcode>   # view an external gcode data
 > python pycut.py -s <path_to_svg>    # load an svg file into the viewer
@@ -28,7 +29,7 @@ start the program from the installation folder
 
 - Python 3.12.9
 - PySide6 6.12.0
-- shapely 2.1.2 (and types-shapely)
+- shapely 2.2.0 (and types-shapely)
 - PyOpenGL (latest) [3.1.10]
 - svgelements (latest) [1.9.6]
 - lxml (latest) [6.1.3]

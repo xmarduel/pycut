@@ -6,7 +6,7 @@
 from PySide6 import QtCore
 
 qt_resource_data = b"\
-\x00\x01r\xb7\
+\x00\x01r\x9c\
 <\
 html>\x0a<head>\x0a  <\
 meta http-equiv=\
@@ -5428,525 +5428,523 @@ p>The 3.8 GB big\
  app from Siemen\
 s is <strong>fre\
 e of charge</str\
-ong>. It is incr\
-edible software.\
- But It seems th\
-ere is\x0ano SVG ex\
-port at all. \x22Sc\
-hade\x22.</p>\x0a\x0a<h4>\
-Draftsight 2D (D\
-assault)</h4>\x0a\x0a<\
-p>Only a 30 days\
- trial version. \
-It has a \x22Power \
-Tool\x22 named \x222D \
-G-Code generator\
-\x22! Should I forg\
-et\x0aPyCut? (No). \
-SVG export seems\
- to be more mean\
-t as a picture f\
-or display only \
-purpose.</p>\x0a\x0a<h\
-4>What else?</h4\
->\x0a\x0a<p>...</p>\x0a\x0a<\
-h3>Conclusion</h\
-3>\x0a\x0a<p>The fact \
-that it is so di\
-fficult to find \
-an acceptable SV\
-G path \x22writer\x22 \
-free program let\
- me wonder why i\
-t is the case.\x0aA\
-nd why does only\
- <strong>FreeCAD\
-</strong> and <s\
-trong>SolveSpace\
-</strong> perfor\
-m the task corre\
-ctly?</p>\x0a\x0a<p>Th\
-e primary usage \
-of SVG is displa\
-ying images, not\
- being a format \
-for CAM input. S\
-o why bother exp\
-orting it clean.\
-\x0aThe svg standar\
-d is huge, the s\
-vg path definiti\
-on is quite comp\
-licated, parsing\
- it is a difficu\
-lt task, and thu\
-s in \x0areturn exp\
-orting a custom \
-data format as s\
-vg data in a rig\
-ht and clean man\
-ner is also not \
-straightforward \
-(when the\x0adata f\
-ormat is not wel\
-l suited for suc\
-h an export). \x0aB\
-ut who else woul\
-d want to import\
- svg files as a \
-kind of CAM form\
-at? Response: th\
-e applications t\
-hat do not want \
-to use \x0aan other\
- (maybe more com\
-plicated) format\
-, because yes, S\
-VG can be indeed\
- simple when uti\
-lizing only its \
-basic features.<\
-/p>\x0a\x0a<p>The SVG \
-format, sure, ca\
-n be viewed in a\
- browser and can\
- be edited with \
-a text editor. U\
-nfortunately it \
-completely\x0aignor\
-es the concept o\
-f multiline/mult\
-ipolygon etc. Po\
-lygons have no \x22\
-interiors\x22 so th\
-ey must be defin\
-ed as such in a \
-path \x0acomposed o\
-f 2 or more subp\
-aths for this pu\
-rpose. Not very \
-practicable.</p>\
-\x0a\x0a<p><strong>All\
- in all very des\
-apointing, excep\
-ted <span style=\
-\x22color:#008000\x22>\
-FreeCAD</span>, \
-<span\x0astyle=\x22col\
-or:#008000\x22>Solv\
-eSpace</span> an\
-d <span style=\x22c\
-olor:#008000\x22>Sv\
-gPathEditor</spa\
-n>!</strong></p>\
-\x0a\x0a<h4><strong><s\
-pan style=\x22color\
-:#0000ff\x22>Per ha\
-nd</span></stron\
-g></h4>\x0a\x0a<p>Fina\
-lly my prefered \
-method! Per hand\
- you can also wr\
-ite items in the\
- <code>&lt;defs&\
-gt;</code> secti\
-on, and use\x0athes\
-e items repeatid\
-ly with transfor\
-mations with the\
- <code>&lt;use&g\
-t;</code> tag. M\
-y utility\x0a<stron\
-g>svgresolver.py\
-</strong> then t\
-ransforms this s\
-vg file into ano\
-ther one, usable\
- for <strong>PyC\
-ut. Not the\x0aperf\
-ect toolchain I \
-admit, but well \
-my svgs are not \
-that complicated\
-</strong>. One h\
-as to understand\
- how to write an\
-\x0aarc/bezier curv\
-e per hand, it i\
-s not that diffi\
-cult and can alw\
-ays use the <str\
-ong>SvgPathEdito\
-r</strong> tool.\
- And\x0ayour hand w\
-ritten svgs are \
-then \x22<strong>cl\
-ean</strong>\x22 an\
-d easily modific\
-able. </p>\x0a\x0a<p><\
-/p>\x0a\x0a<h3 id=\x22APP\
-ENDIX-02\x22>Append\
-ix-2: SVG Units \
-and Scale Factor\
-</h3>\x0a\x0a<div clas\
-s=\x22info\x22>\x0a<p><st\
-rong>Info</stron\
-g>: When creatin\
-g a svg \x22per han\
-d\x22 (with a text \
-editor), the use\
-r does not even \
-have to care\x0aabo\
-ut this units sc\
-ale factor.</p>\x0a\
-</div>\x0a\x0a<p>What \
-is this? Let's t\
-ake an example: \
-in <strong>Inksc\
-ape</strong>, th\
-e user would set\
- the document's \
-size to\x0a<strong>\
-100x40 mm</stron\
-g>, supposedly t\
-he size of the m\
-aterial to work \
-on. Inkscape aut\
-omatically sets \
-the\x0a<strong>user\
- units scale </s\
-trong><strong>to\
- 1</strong>. Not\
-e that the user \
-units are not \x22p\
-x\x22 or whatever. \
-This means,\x0a<str\
-ong>1 \x22user unit\
-\x22 is equal to 1 \
-mm (and the view\
-box is \x220 0 100 \
-40\x22 while width=\
-\x22100mm\x22 and\x0aheig\
-ht=\x2240mm\x22)</stro\
-ng></p>\x0a\x0a<div>\x0a<\
-img src=\x22doc/Ink\
-scape_settings_m\
-m.png\x22 width=\x2256\
-3\x22> </div>\x0a\x0a<p>O\
-f course when ed\
-iting the svg (i\
-n Inkscape or in\
- a text editor),\
- <strong>the use\
-r is only concer\
-ned with the use\
-r\x0aunits</strong>\
- : he draws a re\
-ctangle of size \
-20x30 at the loc\
-ation 10x10. The\
- users may simpl\
-y even not be aw\
-are of\x0athis fact\
-. When choosing \
-mm, conversion f\
-rom <strong>user\
- units</strong> \
-to <strong>mm</s\
-trong> is absolu\
-tely\x0astraightfor\
-ward as, as said\
-, the user units\
- scale is 1 per \
-default .</p>\x0a\x0a<\
-p>Let's consider\
- now the case wh\
-ere the user swi\
-tches to <strong\
->inches</strong>\
- for the documen\
-t size. The size\
- of\x0athe document\
- becomes then <s\
-trong>3,93701x1,\
-57480 inches</st\
-rong> (yes, 100 \
-/ 25.4 is 3.9370\
-1). Note that\x0a<s\
-trong>Inkscape</\
-strong> automati\
-cally change the\
- <strong>user un\
-its scale to 25.\
-4</strong>. Beca\
-use of this, the\
-\x0a<strong>view bo\
-x remains at \x220 \
-0 100 40\x22</stron\
-g>. That way, a \
-rectangle fillin\
-g the full docum\
-ent size is stil\
-l\x0a100x40.</p>\x0a\x0a<\
-div>\x0a<img src=\x22d\
-oc/Inkscape_sett\
-ings_in.png\x22 wid\
-th=\x22563\x22> </div>\
-\x0a\x0a<p>Filling a b\
-ox half the size\
- of the document\
- is 50x20, right\
-, but what are r\
-eal physical dim\
-ensions of that \
-box ? The\x0auser w\
-ould have to ste\
-adily calculate \
-from fancy user \
-units (ex: 50x20\
-) in inches</p>\x0a\
-\x0a<p>But why woul\
-d a user use inc\
-hes and work wit\
-h user units sca\
-le factor 25.4 (\
-leading infact t\
-o work in mm) ? \
-The user\x0acan set\
- the user units \
-scale factor to \
-1. The effect of\
- this is that no\
-w, in order to f\
-ill the whole do\
-cument with a\x0are\
-ctangle, the rec\
-tangle has to be\
- of the size use\
-r unit size of 3\
-.93701x1.57480. \
-</p>\x0a\x0a<p>Of cour\
-se the size of t\
-he material is c\
-ertainly not 3.9\
-3701x1.57480 inc\
-hes, but somethi\
-ng like 5x3 inch\
-es: an human\x0area\
-dable size. The \
-user knows that \
-he has to draw a\
- rectangle insid\
-e the material o\
-f size let say 1\
-.5x1.2 inches. A\
-nd\x0athese dimensi\
-ons are the ones\
- that are effect\
-ively saved in t\
-he svg document.\
- So the user uni\
-ts are exactly t\
-he same as\x0athe \x22\
-physical units\x22 \
-when choosing a \
-scale of 1.</p>\x0a\
-\x0a<p>Now how can \
+ong>. But It see\
+ms there is no S\
+VG export at all\
+. \x22Schade\x22.</p>\x0a\
+\x0a<h4>Draftsight \
+2D (Dassault)</h\
+4>\x0a\x0a<p>Only a 30\
+ days trial vers\
+ion. It has a \x22P\
+ower Tool\x22 named\
+ \x222D G-Code gene\
+rator\x22! Should I\
+ forget\x0aPyCut? (\
+No). SVG export \
+seems to be more\
+ meant as a pict\
+ure for display \
+only purpose.</p\
+>\x0a\x0a<h4>What else\
+?</h4>\x0a\x0a<p>...</\
+p>\x0a\x0a<h3>Conclusi\
+on</h3>\x0a\x0a<p>The \
+fact that it is \
+so difficult to \
+find an acceptab\
+le SVG path \x22wri\
+ter\x22 free progra\
+m let me wonder \
+why it is the ca\
+se.\x0aAnd why does\
+ only <strong>Fr\
+eeCAD</strong> a\
+nd <strong>Solve\
+Space</strong> p\
+erform the task \
+correctly?</p>\x0a\x0a\
+<p>The primary u\
+sage of SVG is d\
+isplaying images\
+, not being a fo\
+rmat for CAM inp\
+ut. So why bothe\
+r exporting it c\
+lean.\x0aThe svg st\
+andard is huge, \
+the svg path def\
+inition is quite\
+ complicated, pa\
+rsing it is a di\
+fficult task, an\
+d thus in \x0aretur\
+n exporting a cu\
+stom data format\
+ as svg data in \
+a right and clea\
+n manner is also\
+ not straightfor\
+ward (when the\x0ad\
+ata format is no\
+t well suited fo\
+r such an export\
+). \x0aBut who else\
+ would want to i\
+mport svg files \
+as a kind of CAM\
+ format? Respons\
+e: the applicati\
+ons that do not \
+want to use \x0aan \
+other (maybe mor\
+e complicated) f\
+ormat, because y\
+es, SVG can be i\
+ndeed simple whe\
+n utilizing only\
+ its basic featu\
+res.</p>\x0a\x0a<p>The\
+ SVG format, sur\
+e, can be viewed\
+ in a browser an\
+d can be edited \
+with a text edit\
+or. Unfortunatel\
+y it completely\x0a\
+ignores the conc\
+ept of multiline\
+/multipolygon et\
+c. Polygons have\
+ no \x22interiors\x22 \
+so they must be \
+defined as such \
+in a path \x0acompo\
+sed of 2 or more\
+ subpaths for th\
+is purpose. Not \
+very practicable\
+.</p>\x0a\x0a<p><stron\
+g>All in all ver\
+y desapointing, \
+excepted <span s\
+tyle=\x22color:#008\
+000\x22>FreeCAD</sp\
+an>, <span\x0astyle\
+=\x22color:#008000\x22\
+>SolveSpace</spa\
+n> and <span sty\
+le=\x22color:#00800\
+0\x22>SvgPathEditor\
+</span>!</strong\
+></p>\x0a\x0a<h4><stro\
+ng><span style=\x22\
+color:#0000ff\x22>P\
+er hand</span></\
+strong></h4>\x0a\x0a<p\
+>Finally my pref\
+ered method! Per\
+ hand you can al\
+so write items i\
+n the <code>&lt;\
+defs&gt;</code> \
+section, and use\
+\x0athese items rep\
+eatidly with tra\
+nsformations wit\
+h the <code>&lt;\
+use&gt;</code> t\
+ag. My utility\x0a<\
+strong>svgresolv\
+er.py</strong> t\
+hen transforms t\
+his svg file int\
+o another one, u\
+sable for <stron\
+g>PyCut. Not the\
+\x0aperfect toolcha\
+in I admit, but \
+well my svgs are\
+ not that compli\
+cated</strong>. \
+One has to under\
+stand how to wri\
+te an\x0aarc/bezier\
+ curve per hand,\
+ it is not that \
+difficult and ca\
+n always use the\
+ <strong>SvgPath\
+Editor</strong> \
+tool. And\x0ayour h\
+and written svgs\
+ are then \x22<stro\
+ng>clean</strong\
+>\x22 and easily mo\
+dificable. </p>\x0a\
+\x0a<p></p>\x0a\x0a<h3 id\
+=\x22APPENDIX-02\x22>A\
+ppendix-2: SVG U\
+nits and Scale F\
+actor</h3>\x0a\x0a<div\
+ class=\x22info\x22>\x0a<\
+p><strong>Info</\
+strong>: When cr\
+eating a svg \x22pe\
+r hand\x22 (with a \
+text editor), th\
+e user does not \
+even have to car\
+e\x0aabout this uni\
+ts scale factor.\
+</p>\x0a</div>\x0a\x0a<p>\
+What is this? Le\
+t's take an exam\
+ple: in <strong>\
+Inkscape</strong\
+>, the user woul\
+d set the docume\
+nt's size to\x0a<st\
+rong>100x40 mm</\
+strong>, suppose\
+dly the size of \
+the material to \
+work on. Inkscap\
+e automatically \
+sets the\x0a<strong\
+>user units scal\
+e </strong><stro\
+ng>to 1</strong>\
+. Note that the \
+user units are n\
+ot \x22px\x22 or whate\
+ver. This means,\
+\x0a<strong>1 \x22user\
+ unit\x22 is equal \
+to 1 mm (and the\
+ viewbox is \x220 0\
+ 100 40\x22 while w\
+idth=\x22100mm\x22 and\
+\x0aheight=\x2240mm\x22)<\
+/strong></p>\x0a\x0a<d\
+iv>\x0a<img src=\x22do\
+c/Inkscape_setti\
+ngs_mm.png\x22 widt\
+h=\x22563\x22> </div>\x0a\
+\x0a<p>Of course wh\
+en editing the s\
+vg (in Inkscape \
+or in a text edi\
+tor), <strong>th\
+e user is only c\
+oncerned with th\
+e user\x0aunits</st\
+rong> : he draws\
+ a rectangle of \
+size 20x30 at th\
+e location 10x10\
+. The users may \
+simply even not \
+be aware of\x0athis\
+ fact. When choo\
+sing mm, convers\
+ion from <strong\
+>user units</str\
+ong> to <strong>\
+mm</strong> is a\
+bsolutely\x0astraig\
+htforward as, as\
+ said, the user \
+units scale is 1\
+ per default .</\
+p>\x0a\x0a<p>Let's con\
+sider now the ca\
+se where the use\
+r switches to <s\
+trong>inches</st\
+rong> for the do\
+cument size. The\
+ size of\x0athe doc\
+ument becomes th\
+en <strong>3,937\
+01x1,57480 inche\
+s</strong> (yes,\
+ 100 / 25.4 is 3\
+.93701). Note th\
+at\x0a<strong>Inksc\
+ape</strong> aut\
+omatically chang\
+e the <strong>us\
+er units scale t\
+o 25.4</strong>.\
+ Because of this\
+, the\x0a<strong>vi\
+ew box remains a\
+t \x220 0 100 40\x22</\
+strong>. That wa\
+y, a rectangle f\
+illing the full \
+document size is\
+ still\x0a100x40.</\
+p>\x0a\x0a<div>\x0a<img s\
+rc=\x22doc/Inkscape\
+_settings_in.png\
+\x22 width=\x22563\x22> <\
+/div>\x0a\x0a<p>Fillin\
+g a box half the\
+ size of the doc\
+ument is 50x20, \
+right, but what \
+are real physica\
+l dimensions of \
+that box ? The\x0au\
+ser would have t\
+o steadily calcu\
+late from fancy \
+user units (ex: \
+50x20) in inches\
+</p>\x0a\x0a<p>But why\
+ would a user us\
+e inches and wor\
+k with user unit\
+s scale factor 2\
+5.4 (leading inf\
+act to work in m\
+m) ? The user\x0aca\
+n set the user u\
+nits scale facto\
+r to 1. The effe\
+ct of this is th\
+at now, in order\
+ to fill the who\
+le document with\
+ a\x0arectangle, th\
+e rectangle has \
+to be of the siz\
+e user unit size\
+ of 3.93701x1.57\
+480. </p>\x0a\x0a<p>Of\
+ course the size\
+ of the material\
+ is certainly no\
+t 3.93701x1.5748\
+0 inches, but so\
+mething like 5x3\
+ inches: an huma\
+n\x0areadable size.\
+ The user knows \
+that he has to d\
+raw a rectangle \
+inside the mater\
+ial of size let \
+say 1.5x1.2 inch\
+es. And\x0athese di\
+mensions are the\
+ ones that are e\
+ffectively saved\
+ in the svg docu\
+ment. So the use\
+r units are exac\
+tly the same as\x0a\
+the \x22physical un\
+its\x22 when choosi\
+ng a scale of 1.\
+</p>\x0a\x0a<p>Now how\
+ can <strong>PyC\
+ut</strong> hand\
+les these settin\
+gs? <strong>PyCu\
+t</strong> only \
+works with the <\
+strong>user\x0aunit\
+s</strong>. <str\
+ong>PyCut</stron\
+g> will calculat\
+e toolpaths in t\
+he same order of\
+ magnitude of th\
+e user units val\
+ues\x0aof the svg. \
+If you choose \x22<\
+strong>mm</stron\
+g>\x22 for the gcod\
+e output, you wo\
+uld have set you\
+r svg document s\
+ize in\x0a\x22<strong>\
+mm</strong>\x22, an\
+d the <strong>us\
+er unit scale to\
+ 1</strong>. Bec\
+ause of this, th\
+e gcode X,Y and \
+Z values are\x0athe\
+ same as the one\
+ of the paths va\
+lues.</p>\x0a\x0a<p>If\
+ you choose \x22<st\
+rong>in</strong>\
+\x22 for the gcode \
+output, then cer\
+tainly you have \
+set your svg doc\
+ument size in\x0a\x22<\
+strong>in</stron\
+g>\x22, and the <st\
+rong>with user u\
+nit scale equals\
+ to 1</strong>,n\
+o conversion is \
+either needed. <\
+/p>\x0a\x0a<p>Note tha\
+t this scale fac\
+tor is not expli\
+citely given in \
+the svg file. It\
+ is calculated f\
+rom the ratio vi\
+ewbox /\x0awidth. I\
+t is eventually \
+the task of the \
+user to know wha\
+t is the user un\
+its scale value,\
+ and, theoricall\
+y, to set it in\x0a\
 <strong>PyCut</s\
-trong> handles t\
-hese settings? <\
+trong>. But my o\
+pinion is, worki\
+ng with a user u\
+nit scal of 1 is\
+ preferably. </p\
+>\x0a\x0a<p><strong><s\
+pan style=\x22color\
+:#0000ff\x22>I pers\
+onnaly stick to \
+svg document uni\
+ts in \x22mm\x22 with \
+user units scale\
+ factor of\x0a1, an\
+d output my gcod\
+e in mm. No conf\
+usion! </span></\
+strong></p>\x0a\x0a<di\
+v class=\x22warning\
+\x22>\x0a<p><strong>Wa\
+rning</strong>: \
+The user could u\
+se \x22mm\x22, and set\
+ a scale factor \
+of 10 or whateve\
+r, but it certai\
+nly makes\x0ano sen\
+se.</p>\x0a</div>\x0a\x0a\
+<p>The further <\
+strong>PyCut Gco\
+de Units</strong\
+> setting is not\
+ only a flag to \
+set the code <st\
+rong>G20</strong\
+>\x0a(inches) or <s\
+trong>G21</stron\
+g> (mm) inside t\
+he gcode file: i\
+t also allows th\
+e proper convers\
+ion of the tool \
+diameter\x0aphysica\
+l size (inch or \
+mm) in user unit\
+s.</p>\x0a\x0a<p>The r\
+ule is:</p>\x0a<ul>\
+\x0a  <li><strong>G\
+code Units</stro\
+ng> in \x22mm\x22: too\
+l diameter is tr\
+ansformed to mm \
+- the same as th\
+e user units</li\
+>\x0a  <li><strong>\
+Gcode Units</str\
+ong> in \x22in\x22: to\
+ol diameter is t\
+ransformed to in\
+ch - the same as\
+ the user units<\
+/li>\x0a</ul>\x0a\x0a<div\
+ class=\x22warning\x22\
+>\x0a<p><strong>War\
+ning</strong>: <\
 strong>PyCut</st\
-rong> only works\
- with the <stron\
-g>user\x0aunits</st\
-rong>. <strong>P\
-yCut</strong> wi\
-ll calculate too\
-lpaths in the sa\
-me order of magn\
-itude of the use\
-r units values\x0ao\
-f the svg. If yo\
-u choose \x22<stron\
-g>mm</strong>\x22 f\
-or the gcode out\
-put, you would h\
-ave set your svg\
- document size i\
-n\x0a\x22<strong>mm</s\
-trong>\x22, and the\
- <strong>user un\
-it scale to 1</s\
-trong>. Because \
-of this, the gco\
-de X,Y and Z val\
-ues are\x0athe same\
- as the one of t\
-he paths values.\
-</p>\x0a\x0a<p>If you \
-choose \x22<strong>\
-in</strong>\x22 for\
- the gcode outpu\
-t, then certainl\
-y you have set y\
-our svg document\
- size in\x0a\x22<stron\
-g>in</strong>\x22, \
-and the <strong>\
-with user unit s\
-cale equals to 1\
-</strong>,no con\
-version is eithe\
-r needed. </p>\x0a\x0a\
-<p>Note that thi\
-s scale factor i\
-s not explicitel\
-y given in the s\
-vg file. It is c\
-alculated from t\
-he ratio viewbox\
- /\x0awidth. It is \
-eventually the t\
-ask of the user \
-to know what is \
-the user units s\
-cale value, and,\
- theorically, to\
- set it in\x0a<stro\
-ng>PyCut</strong\
->. But my opinio\
-n is, working wi\
-th a user unit s\
-cal of 1 is pref\
-erably. </p>\x0a\x0a<p\
-><strong><span s\
-tyle=\x22color:#000\
-0ff\x22>I personnal\
-y stick to svg d\
-ocument units in\
- \x22mm\x22 with user \
-units scale fact\
-or of\x0a1, and out\
-put my gcode in \
-mm. No confusion\
-! </span></stron\
-g></p>\x0a\x0a<div cla\
-ss=\x22warning\x22>\x0a<p\
-><strong>Warning\
-</strong>: The u\
-ser could use \x22m\
-m\x22, and set a sc\
-ale factor of 10\
- or whatever, bu\
-t it certainly m\
-akes\x0ano sense.</\
-p>\x0a</div>\x0a\x0a<p>Th\
-e further <stron\
-g>PyCut Gcode Un\
-its</strong> set\
-ting is not only\
- a flag to set t\
-he code <strong>\
-G20</strong>\x0a(in\
-ches) or <strong\
->G21</strong> (m\
-m) inside the gc\
-ode file: it als\
-o allows the pro\
-per conversion o\
-f the tool diame\
-ter\x0aphysical siz\
-e (inch or mm) i\
-n user units.</p\
->\x0a\x0a<p>The rule i\
-s:</p>\x0a<ul>\x0a  <l\
-i><strong>Gcode \
-Units</strong> i\
-n \x22mm\x22: tool dia\
-meter is transfo\
-rmed to mm - the\
- same as the use\
-r units</li>\x0a  <\
-li><strong>Gcode\
- Units</strong> \
-in \x22in\x22: tool di\
-ameter is transf\
-ormed to inch - \
-the same as the \
-user units</li>\x0a\
-</ul>\x0a\x0a<div clas\
-s=\x22warning\x22>\x0a<p>\
-<strong>Warning<\
-/strong>: <stron\
-g>PyCut</strong>\
- assumes that fo\
-r \x22<strong>mm</s\
-trong>\x22 or \x22<str\
-ong>in</strong>\x22\
-,\x0athe <strong>us\
-er unit scale fa\
-ctor is always 1\
-</strong> .</p>\x0a\
-</div>\x0a\x0a<p></p>\x0a\
-\x0a<h3 id=\x22APPENDI\
-X-03\x22>Appendix-3\
-: GCODE Viewers<\
-/h3>\x0a\x0a<p>Of cour\
-se, CANDLE offer\
-s a GCODE viewer\
-. There neverthe\
-less a few ones \
-(to my knowledge\
-) worth a mentio\
-n:</p>\x0a<ul>\x0a  <l\
-i>NCnetic <span \
-style=\x22color:#ff\
-00ff\x22><strong>**\
-**EXCELLENT****<\
-/strong></span><\
-/li>\x0a  <li>Plane\
-tCNC (which is a\
- GCode sender -w\
-ith dedicated ha\
-rdware- as well)\
+rong> assumes th\
+at for \x22<strong>\
+mm</strong>\x22 or \
+\x22<strong>in</str\
+ong>\x22,\x0athe <stro\
+ng>user unit sca\
+le factor is alw\
+ays 1</strong> .\
+</p>\x0a</div>\x0a\x0a<p>\
+</p>\x0a\x0a<h3 id=\x22AP\
+PENDIX-03\x22>Appen\
+dix-3: GCODE Vie\
+wers</h3>\x0a\x0a<p>Of\
+ course, CANDLE \
+offers a GCODE v\
+iewer. There nev\
+ertheless a few \
+ones (to my know\
+ledge) worth a m\
+ention:</p>\x0a<ul>\
+\x0a  <li>NCnetic <\
+span style=\x22colo\
+r:#ff00ff\x22><stro\
+ng>****EXCELLENT\
+****</strong></s\
+pan></li>\x0a  <li>\
+PlanetCNC (which\
+ is a GCode send\
+er -with dedicat\
+ed hardware- as \
+well)</li>\x0a  <li\
+>what else ?</li\
+>\x0a</ul>\x0a\x0a<p>Just\
+ search in the I\
+nternet for them\
+.</p>\x0a\x0a<p>Real G\
+CODE simulators \
+(with material r\
+emoval) are on t\
+he other way sel\
+dom.</p>\x0a<ul>\x0a  \
+<li>Camotics: un\
+fortunately very\
+ resources inten\
+sive and not so \
+accurate in the \
+details</li>\x0a  <\
+li>CNCSimulator \
+PRO (not free)</\
+li>\x0a  <li>FreeCA\
+D ? how to impor\
+t gcode into it \
+?</li>\x0a  <li>Ble\
+nder ? see Blend\
+erCAM add-on - n\
+ot sure if there\
+ is a simulation\
 </li>\x0a  <li>what\
  else ?</li>\x0a</u\
-l>\x0a\x0a<p>Just sear\
-ch in the Intern\
-et for them.</p>\
-\x0a\x0a<p>Real GCODE \
-simulators (with\
- material remova\
-l) are on the ot\
-her way seldom.<\
-/p>\x0a<ul>\x0a  <li>C\
-amotics: unfortu\
-nately very reso\
-urces intensive \
-and not so accur\
-ate in the detai\
-ls</li>\x0a  <li>CN\
-CSimulator PRO (\
-not free)</li>\x0a \
- <li>FreeCAD ? h\
-ow to import gco\
-de into it ?</li\
->\x0a  <li>Blender \
-? see BlenderCAM\
- add-on - not su\
-re if there is a\
- simulation</li>\
-\x0a  <li>what else\
- ?</li>\x0a</ul>\x0a\x0a<\
-/div>\x0a</body>\x0a</\
-html>\x0a\
-\x00\x00\x05Z\
+l>\x0a\x0a</div>\x0a</bod\
+y>\x0a</html>\x0a\
+\x00\x00\x05w\
 <\
 h3>PyCut version\
 : 0.8.2</h3>\x0a\x0a<u\
 l>\x0a    <li><stro\
 ng>shapely versi\
-on: 2.1.2</stron\
+on: 2.2.0</stron\
 g></li> \x0a    <li\
 ><strong>svgelem\
 ents version: la\
@@ -5969,65 +5967,67 @@ t</strong></li> \
 >pyvoronoi versi\
 on: latest</stro\
 ng></li> \x0a</ul>\x0a\
-\x0a\x0a<pre>\x0a\x0a# 0.8.0\
+\x0a\x0a<pre>\x0a\x0a# 0.8.2\
 \x0a\x0awith shapely 2\
-.1.0\x0a\x0a# 0.7.3\x0a\x0as\
-vg viewbox origi\
-n != (0.0) possi\
-ble\x0a\x0a# 0.7.2\x0a\x0aop\
-ened paths fixes\
-\x0a\x0a# 0.7.1\x0a\x0amisc \
-fixes\x0a\x0a# 0.7.0\x0a\x0a\
-no \x22jobs files\x22 \
-but \x22projects fi\
-les\x22\x0a\x0a# 0.6.5\x0a\x0ah\
-elix operation\x0aH\
-SM nibbler toolp\
-aths\x0a\x0a# 0.6.0\x0a\x0a-\
- gcode simulator\
- in python + qt-\
-opengl, \x0a- load \
-and display exte\
-rnal gcode possi\
-ble with candle \
-gcode parser.\x0a\x0a#\
- 0.5.1\x0a\x0aload gco\
-de file\x0a- produc\
-ed by pycut: Ok\x0a\
-- general: viewe\
-r: Ok, simulator\
-:NOk\x0a\x0a# 0.5.0\x0a\x0ar\
-eplaced svgpatht\
-ools with svgele\
-ments package\x0a  \
-  \x0a# 0.4.0 \x0a    \
-\x0aprocess \x22opened\
-\x22 paths as well \
-as closed paths\x0a\
-    \x0a# 0.3.6\x0a   \
- \x0aFix generation\
- of shapely poly\
-gons from SVG\x0a(s\
-vgpathtools bug \
-workaround)\x0a    \
-\x0a# 0.3.5\x0a    \x0aFi\
-x generation of \
-shapely polygons\
- from SVG\x0a(no du\
-plicated points \
-leading to \x22unva\
-lid\x22 polygons)\x0a\x0a\
-# 0.3.4\x0a    \x0aLin\
-k gcode browser \
-&lt;-&gt; gcode \
-simulator\x0a    \x0a#\
- 0.3.2\x0a    \x0aAnim\
-ated Gcode Simul\
-ator\x0a\x0a# 0.3.1\x0a\x0aS\
-mall Settings Di\
-alog\x0a\x0a# 0.3.0\x0a\x0aM\
-igrated to Shape\
-ly\x0a</pre>\
+.2.0\x0a\x0a# 0.8.0\x0a\x0aw\
+ith shapely 2.1.\
+0\x0a\x0a# 0.7.3\x0a\x0asvg \
+viewbox origin !\
+= (0.0) possible\
+\x0a\x0a# 0.7.2\x0a\x0aopene\
+d paths fixes\x0a\x0a#\
+ 0.7.1\x0a\x0amisc fix\
+es\x0a\x0a# 0.7.0\x0a\x0ano \
+\x22jobs files\x22 but\
+ \x22projects files\
+\x22\x0a\x0a# 0.6.5\x0a\x0aheli\
+x operation\x0aHSM \
+nibbler toolpath\
+s\x0a\x0a# 0.6.0\x0a\x0a- gc\
+ode simulator in\
+ python + qt-ope\
+ngl, \x0a- load and\
+ display externa\
+l gcode possible\
+ with candle gco\
+de parser.\x0a\x0a# 0.\
+5.1\x0a\x0aload gcode \
+file\x0a- produced \
+by pycut: Ok\x0a- g\
+eneral: viewer: \
+Ok, simulator:NO\
+k\x0a\x0a# 0.5.0\x0a\x0arepl\
+aced svgpathtool\
+s with svgelemen\
+ts package\x0a    \x0a\
+# 0.4.0 \x0a    \x0apr\
+ocess \x22opened\x22 p\
+aths as well as \
+closed paths\x0a   \
+ \x0a# 0.3.6\x0a    \x0aF\
+ix generation of\
+ shapely polygon\
+s from SVG\x0a(svgp\
+athtools bug wor\
+karound)\x0a    \x0a# \
+0.3.5\x0a    \x0aFix g\
+eneration of sha\
+pely polygons fr\
+om SVG\x0a(no dupli\
+cated points lea\
+ding to \x22unvalid\
+\x22 polygons)\x0a\x0a# 0\
+.3.4\x0a    \x0aLink g\
+code browser &lt\
+;-&gt; gcode sim\
+ulator\x0a    \x0a# 0.\
+3.2\x0a    \x0aAnimate\
+d Gcode Simulato\
+r\x0a\x0a# 0.3.1\x0a\x0aSmal\
+l Settings Dialo\
+g\x0a\x0a# 0.3.0\x0a\x0aMigr\
+ated to Shapely\x0a\
+</pre>\
 \x00\x00\x02\x10\
 \x89\
 PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x0dIHDR\x00\
@@ -61108,88 +61108,88 @@ qt_resource_struct = b"\
 \x00\x00\x00\x1e\x00\x02\x00\x00\x00\x0f\x00\x00\x00?\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00*\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
-\x00\x00\x01\xa1P\x0f\xc5\x15\
+\x00\x00\x01\xa1PS\x98\x0f\
 \x00\x00\x00\x00\x00\x02\x00\x00\x00\x01\x00\x00\x00>\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00~\x00\x02\x00\x00\x00\x10\x00\x00\x00\x17\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00d\x00\x02\x00\x00\x00\x03\x00\x00\x00\x07\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x00J\x00\x00\x00\x00\x00\x01\x00\x01r\xbb\
-\x00\x00\x01\xa1O\xcd\xbb%\
+\x00\x00\x00J\x00\x00\x00\x00\x00\x01\x00\x01r\xa0\
+\x00\x00\x01\xa1Pd\x80\xa9\
 \x00\x00\x06H\x00\x02\x00\x00\x00\x02\x00\x00\x00\x0f\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x06<\x00\x02\x00\x00\x00\x01\x00\x00\x00\x0d\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x06R\x00\x02\x00\x00\x00\x03\x00\x00\x00\x0a\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x06^\x00\x00\x00\x00\x00\x01\x00\x01\xf4\xed\
+\x00\x00\x06^\x00\x00\x00\x00\x00\x01\x00\x01\xf4\xef\
 \x00\x00\x01\x95\xd2\xee}\x5c\
-\x00\x00\x06\x8a\x00\x00\x00\x00\x00\x01\x00\x03>\x06\
+\x00\x00\x06\x8a\x00\x00\x00\x00\x00\x01\x00\x03>\x08\
 \x00\x00\x01\x95\xd2\xee}]\
-\x00\x00\x06\xac\x00\x01\x00\x00\x00\x01\x00\x03T#\
+\x00\x00\x06\xac\x00\x01\x00\x00\x00\x01\x00\x03T%\
 \x00\x00\x01\x95\xd2\xee}\x5c\
 \x00\x00\x06H\x00\x02\x00\x00\x00\x01\x00\x00\x00\x0e\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x08\x86\x00\x00\x00\x00\x00\x01\x00\x03\xb3\xbd\
+\x00\x00\x08\x86\x00\x00\x00\x00\x00\x01\x00\x03\xb3\xbf\
 \x00\x00\x01\x95\xd2\xee}Y\
-\x00\x00\x06\xde\x00\x01\x00\x00\x00\x01\x00\x03q\xeb\
+\x00\x00\x06\xde\x00\x01\x00\x00\x00\x01\x00\x03q\xed\
 \x00\x00\x01\x95\xd2\xee}Y\
 \x00\x00\x06\xfe\x00\x02\x00\x00\x00\x06\x00\x00\x00\x11\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x08B\x00\x00\x00\x00\x00\x01\x00\x03\xb0\x00\
+\x00\x00\x08B\x00\x00\x00\x00\x00\x01\x00\x03\xb0\x02\
 \x00\x00\x01\x95\xd2\xee}Z\
-\x00\x00\x07\x12\x00\x00\x00\x00\x00\x01\x00\x03\x8a\xf4\
+\x00\x00\x07\x12\x00\x00\x00\x00\x00\x01\x00\x03\x8a\xf6\
 \x00\x00\x01\x95\xd2\xee}Z\
-\x00\x00\x07\xce\x00\x00\x00\x00\x00\x01\x00\x03\x9e\xd9\
+\x00\x00\x07\xce\x00\x00\x00\x00\x00\x01\x00\x03\x9e\xdb\
 \x00\x00\x01\x95\xd2\xee}Z\
-\x00\x00\x07\xfe\x00\x00\x00\x00\x00\x01\x00\x03\xa5\xeb\
+\x00\x00\x07\xfe\x00\x00\x00\x00\x00\x01\x00\x03\xa5\xed\
 \x00\x00\x01\x95\xd2\xee}Z\
-\x00\x00\x07\x86\x00\x00\x00\x00\x00\x01\x00\x03\x8a\xf4\
+\x00\x00\x07\x86\x00\x00\x00\x00\x00\x01\x00\x03\x8a\xf6\
 \x00\x00\x01\x95\xd2\xee}Z\
-\x00\x00\x07F\x00\x00\x00\x00\x00\x01\x00\x03\x8e\x0b\
+\x00\x00\x07F\x00\x00\x00\x00\x00\x01\x00\x03\x8e\x0d\
 \x00\x00\x01\x95\xd2\xee}Z\
 \x00\x00\x00\xb0\x00\x02\x00\x00\x00\x02\x00\x00\x00,\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x02@\x00\x00\x00\x00\x00\x01\x00\x01\x92\xb9\
+\x00\x00\x02@\x00\x00\x00\x00\x00\x01\x00\x01\x92\xbb\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x03\x1e\x00\x00\x00\x00\x00\x01\x00\x01\xa4\x05\
+\x00\x00\x03\x1e\x00\x00\x00\x00\x00\x01\x00\x01\xa4\x07\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x010\x00\x00\x00\x00\x00\x01\x00\x01\x80{\
+\x00\x00\x010\x00\x00\x00\x00\x00\x01\x00\x01\x80}\
 \x00\x00\x01\x95\xd2\xee}=\
 \x00\x00\x01d\x00\x02\x00\x00\x00\x05\x00\x00\x00'\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x00\xe4\x00\x00\x00\x00\x00\x01\x00\x01|3\
+\x00\x00\x00\xe4\x00\x00\x00\x00\x00\x01\x00\x01|5\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x02\xa8\x00\x00\x00\x00\x00\x01\x00\x01\x9ce\
+\x00\x00\x02\xa8\x00\x00\x00\x00\x00\x01\x00\x01\x9cg\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x02\x10\x00\x00\x00\x00\x00\x01\x00\x01\x90\x1f\
+\x00\x00\x02\x10\x00\x00\x00\x00\x00\x01\x00\x01\x90!\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x02\xe4\x00\x00\x00\x00\x00\x01\x00\x01\xa05\
+\x00\x00\x02\xe4\x00\x00\x00\x00\x00\x01\x00\x01\xa07\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x02n\x00\x00\x00\x00\x00\x01\x00\x01\x96\xef\
+\x00\x00\x02n\x00\x00\x00\x00\x00\x01\x00\x01\x96\xf1\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x01\xa6\x00\x00\x00\x00\x00\x01\x00\x01\x88K\
+\x00\x00\x01\xa6\x00\x00\x00\x00\x00\x01\x00\x01\x88M\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x01v\x00\x00\x00\x00\x00\x01\x00\x01\x84K\
+\x00\x00\x01v\x00\x00\x00\x00\x00\x01\x00\x01\x84M\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x00\x90\x00\x00\x00\x00\x00\x01\x00\x01x\x19\
+\x00\x00\x00\x90\x00\x00\x00\x00\x00\x01\x00\x01x\x1b\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x01\x06\x00\x00\x00\x00\x00\x01\x00\x01~E\
+\x00\x00\x01\x06\x00\x00\x00\x00\x00\x01\x00\x01~G\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x01\xd8\x00\x00\x00\x00\x00\x01\x00\x01\x8cP\
+\x00\x00\x01\xd8\x00\x00\x00\x00\x00\x01\x00\x01\x8cR\
 \x00\x00\x01\x95\xd2\xee}=\
-\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x01\x00\x01z-\
+\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x01\x00\x01z/\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x03\x84\x00\x00\x00\x00\x00\x01\x00\x01\xac)\
+\x00\x00\x03\x84\x00\x00\x00\x00\x00\x01\x00\x01\xac+\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x03f\x00\x00\x00\x00\x00\x01\x00\x01\xa9\xb1\
+\x00\x00\x03f\x00\x00\x00\x00\x00\x01\x00\x01\xa9\xb3\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x03\xc0\x00\x00\x00\x00\x00\x01\x00\x01\xb1\x01\
+\x00\x00\x03\xc0\x00\x00\x00\x00\x00\x01\x00\x01\xb1\x03\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x03P\x00\x00\x00\x00\x00\x01\x00\x01\xa7\xaf\
+\x00\x00\x03P\x00\x00\x00\x00\x00\x01\x00\x01\xa7\xb1\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x03\xa4\x00\x00\x00\x00\x00\x01\x00\x01\xae\x93\
+\x00\x00\x03\xa4\x00\x00\x00\x00\x00\x01\x00\x01\xae\x95\
 \x00\x00\x01\x95\xd2\xee}<\
 \x00\x00\x03\xe8\x00\x02\x00\x00\x00\x02\x00\x00\x000\
 \x00\x00\x00\x00\x00\x00\x00\x00\
@@ -61197,81 +61197,81 @@ qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x03\xf8\x00\x02\x00\x00\x00\x01\x00\x00\x00/\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x06\x08\x00\x00\x00\x00\x00\x01\x00\x01\xea\xf9\
+\x00\x00\x06\x08\x00\x00\x00\x00\x00\x01\x00\x01\xea\xfb\
 \x00\x00\x01\x95\xd2\xee}T\
 \x00\x00\x04\x12\x00\x02\x00\x00\x00\x0b\x00\x00\x003\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x03\xf8\x00\x02\x00\x00\x00\x01\x00\x00\x002\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x06\x08\x00\x00\x00\x00\x00\x01\x00\x01\xe5%\
+\x00\x00\x06\x08\x00\x00\x00\x00\x00\x01\x00\x01\xe5'\
 \x00\x00\x01\x95\xd2\xee}K\
-\x00\x00\x05\xa0\x00\x00\x00\x00\x00\x01\x00\x01\xdd[\
+\x00\x00\x05\xa0\x00\x00\x00\x00\x00\x01\x00\x01\xdd]\
 \x00\x00\x01\x95\xd2\xee}I\
-\x00\x00\x04&\x00\x00\x00\x00\x00\x01\x00\x01\xb8\xf8\
+\x00\x00\x04&\x00\x00\x00\x00\x00\x01\x00\x01\xb8\xfa\
 \x00\x00\x01\x95\xd2\xee}I\
-\x00\x00\x04\x86\x00\x00\x00\x00\x00\x01\x00\x01\xc1\xad\
+\x00\x00\x04\x86\x00\x00\x00\x00\x00\x01\x00\x01\xc1\xaf\
 \x00\x00\x01\x95\xd2\xee}H\
-\x00\x00\x05.\x00\x00\x00\x00\x00\x01\x00\x01\xd0\xf8\
+\x00\x00\x05.\x00\x00\x00\x00\x00\x01\x00\x01\xd0\xfa\
 \x00\x00\x01\x95\xd2\xee}H\
-\x00\x00\x04\x9e\x00\x00\x00\x00\x00\x01\x00\x01\xc5\x1e\
+\x00\x00\x04\x9e\x00\x00\x00\x00\x00\x01\x00\x01\xc5 \
 \x00\x00\x01\x95\xd2\xee}I\
-\x00\x00\x04\xc4\x00\x00\x00\x00\x00\x01\x00\x01\xcav\
+\x00\x00\x04\xc4\x00\x00\x00\x00\x00\x01\x00\x01\xcax\
 \x00\x00\x01\x95\xd2\xee}I\
-\x00\x00\x04X\x00\x00\x00\x00\x00\x01\x00\x01\xbd`\
+\x00\x00\x04X\x00\x00\x00\x00\x00\x01\x00\x01\xbdb\
 \x00\x00\x01\x95\xd2\xee}G\
-\x00\x00\x04\xfa\x00\x00\x00\x00\x00\x01\x00\x01\xcd\x09\
+\x00\x00\x04\xfa\x00\x00\x00\x00\x00\x01\x00\x01\xcd\x0b\
 \x00\x00\x01\x95\xd2\xee}I\
-\x00\x00\x05l\x00\x00\x00\x00\x00\x01\x00\x01\xd9?\
+\x00\x00\x05l\x00\x00\x00\x00\x00\x01\x00\x01\xd9A\
 \x00\x00\x01\x95\xd2\xee}I\
-\x00\x00\x05J\x00\x00\x00\x00\x00\x01\x00\x01\xd4f\
+\x00\x00\x05J\x00\x00\x00\x00\x00\x01\x00\x01\xd4h\
 \x00\x00\x01\x95\xd2\xee}G\
-\x00\x00\x05\xd2\x00\x00\x00\x00\x00\x01\x00\x01\xe1`\
+\x00\x00\x05\xd2\x00\x00\x00\x00\x00\x01\x00\x01\xe1b\
 \x00\x00\x01\x95\xd2\xee}I\
-\x00\x00\x0b\xd2\x00\x01\x00\x00\x00\x01\x00\x0e\xba\x10\
+\x00\x00\x0b\xd2\x00\x01\x00\x00\x00\x01\x00\x0e\xba\x12\
 \x00\x00\x01\x95\xd2\xee}]\
 \x00\x00\x06H\x00\x02\x00\x00\x00\x01\x00\x00\x00T\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x0a\xee\x00\x02\x00\x00\x00\x06\x00\x00\x00N\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x09l\x00\x00\x00\x00\x00\x01\x00\x04[r\
+\x00\x00\x09l\x00\x00\x00\x00\x00\x01\x00\x04[t\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x08\xe0\x00\x00\x00\x00\x00\x01\x00\x03\xe6\x02\
+\x00\x00\x08\xe0\x00\x00\x00\x00\x00\x01\x00\x03\xe6\x04\
 \x00\x00\x01\x95\xd2\xee};\
-\x00\x00\x0a\xbe\x00\x00\x00\x00\x00\x01\x00\x07/\xd8\
+\x00\x00\x0a\xbe\x00\x00\x00\x00\x00\x01\x00\x07/\xda\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x09\xa6\x00\x00\x00\x00\x00\x01\x00\x04\xd8\xf8\
+\x00\x00\x09\xa6\x00\x00\x00\x00\x00\x01\x00\x04\xd8\xfa\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x09*\x00\x00\x00\x00\x00\x01\x00\x04\x06\xa2\
+\x00\x00\x09*\x00\x00\x00\x00\x00\x01\x00\x04\x06\xa4\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x0a\x12\x00\x00\x00\x00\x00\x01\x00\x05QT\
+\x00\x00\x0a\x12\x00\x00\x00\x00\x00\x01\x00\x05QV\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x09L\x00\x01\x00\x00\x00\x01\x00\x04Y]\
+\x00\x00\x09L\x00\x01\x00\x00\x00\x01\x00\x04Y_\
 \x00\x00\x01\x95\xd2\xee}:\
-\x00\x00\x09\xf2\x00\x01\x00\x00\x00\x01\x00\x05N\x0e\
+\x00\x00\x09\xf2\x00\x01\x00\x00\x00\x01\x00\x05N\x10\
 \x00\x00\x01\x95\xd2\xee}:\
-\x00\x00\x0a\x9e\x00\x01\x00\x00\x00\x01\x00\x07-h\
+\x00\x00\x0a\x9e\x00\x01\x00\x00\x00\x01\x00\x07-j\
 \x00\x00\x01\x95\xd2\xee}:\
-\x00\x00\x0a2\x00\x00\x00\x00\x00\x01\x00\x06\xa4\xf6\
+\x00\x00\x0a2\x00\x00\x00\x00\x00\x01\x00\x06\xa4\xf8\
 \x00\x00\x01\x95\xd2\xee}9\
-\x00\x00\x0ah\x00\x00\x00\x00\x00\x01\x00\x06\xe9O\
+\x00\x00\x0ah\x00\x00\x00\x00\x00\x01\x00\x06\xe9Q\
 \x00\x00\x01\x95\xd2\xee}9\
-\x00\x00\x08\xa6\x00\x00\x00\x00\x00\x01\x00\x03\xc0\xa0\
+\x00\x00\x08\xa6\x00\x00\x00\x00\x00\x01\x00\x03\xc0\xa2\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x09\xd0\x00\x00\x00\x00\x00\x01\x00\x05\x0b}\
+\x00\x00\x09\xd0\x00\x00\x00\x00\x00\x01\x00\x05\x0b\x7f\
 \x00\x00\x01\x95\xd2\xee}<\
-\x00\x00\x0b\x82\x00\x00\x00\x00\x00\x01\x00\x07Y\x18\
+\x00\x00\x0b\x82\x00\x00\x00\x00\x00\x01\x00\x07Y\x1a\
 \x00\x00\x01\x95\xd2\xee}9\
-\x00\x00\x0b\x5c\x00\x00\x00\x00\x00\x01\x00\x07Vf\
+\x00\x00\x0b\x5c\x00\x00\x00\x00\x00\x01\x00\x07Vh\
 \x00\x00\x01\x95\xd2\xee}9\
-\x00\x00\x0b4\x00\x00\x00\x00\x00\x01\x00\x07S\xc2\
+\x00\x00\x0b4\x00\x00\x00\x00\x00\x01\x00\x07S\xc4\
 \x00\x00\x01\x95\xd2\xee}9\
-\x00\x00\x0b\x12\x00\x00\x00\x00\x00\x01\x00\x07Qz\
+\x00\x00\x0b\x12\x00\x00\x00\x00\x00\x01\x00\x07Q|\
 \x00\x00\x01\x95\xd2\xee}:\
-\x00\x00\x0b\x9a\x00\x00\x00\x00\x00\x01\x00\x07i\x04\
+\x00\x00\x0b\x9a\x00\x00\x00\x00\x00\x01\x00\x07i\x06\
 \x00\x00\x01\x95\xd2\xee}9\
-\x00\x00\x0a\xfa\x00\x00\x00\x00\x00\x01\x00\x07K\x13\
+\x00\x00\x0a\xfa\x00\x00\x00\x00\x00\x01\x00\x07K\x15\
 \x00\x00\x01\x95\xd2\xee}:\
-\x00\x00\x0b\xbc\x00\x00\x00\x00\x00\x01\x00\x07k\x83\
+\x00\x00\x0b\xbc\x00\x00\x00\x00\x00\x01\x00\x07k\x85\
 \x00\x00\x01\x95\xd2\xee};\
 "
 
