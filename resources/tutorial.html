@@ -1435,11 +1435,6 @@ offset, as well as further offsets in case of many offsets are needed by the cam
 experience a strange tool path or preview geometry at the first corner of your shape, remember 
 this work-around and change your svg path definition accordingly.</p>
 
-<h4 id="P-08-02">Curvature sign change</h4>
-<p>In case your shape has a cubic spline (or many) where the curve has a "C-2" (second derivative) change, shapely may not calculate 
-correctly its offset. For the same shape, the offset may be wrong or not depending of the offset width! As a result, 
-shapely will (maybe) split the offset in many LineStrings, and it is nearly impossible for <strong>PyCut</strong>
-to re-join them the right way. I did not find any work-around for this bug yet.</p>
 
 <h3 id="APPENDIX-01">Appendix-1: SVG Editors</h3>
 
