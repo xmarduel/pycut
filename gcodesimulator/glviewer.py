@@ -1,5 +1,7 @@
+import os
 import math
 import time
+import logging
 from collections import namedtuple
 from enum import IntEnum
 
@@ -54,11 +56,25 @@ ZOOMSTEP = 1.1
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
 
+logging.basicConfig(filename="pycut.log")
+
+def make_logger(name: str, level:int):
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    
+    console = logging.StreamHandler()
+    formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
+    console.setFormatter(formatter)
+    
+    logger.addHandler(console)
+
+    return logger
+
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
 
 @jit(nopython=True)
 def make_scene_numba(resolution) -> npt.NDArray[np.float32]:
-    print("START NUMBA!")
-
     meshNumVertexes = resolution * (resolution - 1)
     meshStride = 9
 
@@ -139,15 +155,15 @@ def make_scene_numba(resolution) -> npt.NDArray[np.float32]:
                     array[pos] = i
                     pos += 1
 
-    print("DONE!")
     return array
-
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
 
 
 class Scene:
+
+    LOG_SCENE = make_logger("SCENE", logging.INFO)
     class VertexData:
         # NB_FLOATS_PER_VERTEX = 12
         NB_FLOATS_PER_VERTEX = 9
@@ -514,6 +530,9 @@ class Scene:
 
 
 class SceneHeightMap:
+
+    LOG_SCENE_HEIGHT_MAP = make_logger("SCENE_HEIGHT_MAP", logging.INFO)
+
     class VertexData:
         NB_FLOATS_PER_VERTEX = 9
 
@@ -560,7 +579,7 @@ class SceneHeightMap:
             vertex = SceneHeightMap.VertexData(x0, y0, x1, y1, x2, y2, x3, y3, idx)
             vertices.append(vertex)
         
-        print("make_scene...")
+        SceneHeightMap.LOG_SCENE_HEIGHT_MAP.info("make_scene...")
         for y in range(self.resolution - 1):
             for x in range(self.resolution):
                 left = x - 1
@@ -580,11 +599,11 @@ class SceneHeightMap:
                     addVertex(left, y, right, y, x, y+1, right, y, 1)
                     addVertex(left, y, right, y, x, y+1, x, y+1, 2)
 
-        print("DONE!")
+        SceneHeightMap.LOG_SCENE_HEIGHT_MAP.info("DONE!")
         return vertices
 
     def make_buffer(self):
-        print("make_buffer....")
+        SceneHeightMap.LOG_SCENE_HEIGHT_MAP.info("make_buffer....")
         # fill the numpy array - each vertex is composed of 6 float
         array = np.empty(len(self.vertices) * SceneHeightMap.VertexData.NB_FLOATS_PER_VERTEX, dtype=np.float32)
 
@@ -599,7 +618,7 @@ class SceneHeightMap:
             array[9 * k + 7] = vertex.vThisLoc.y()
             array[9 * k + 8] = vertex.vertex
 
-        print("DONE!")
+        SceneHeightMap.LOG_SCENE_HEIGHT_MAP.info("DONE!")
 
         return array.tobytes()
 
@@ -705,26 +724,28 @@ class SceneCutter:
 
 
 class Drawable:
-    path_shader_vs = "shaders/rasterizePathVertexShader.txt"
-    path_shader_fs = "shaders/rasterizePathFragmentShader.txt"
+    path_shader_vs = os.path.join("gcodesimulator", "shaders", "rasterizePathVertexShader.txt")
+    path_shader_fs = os.path.join("gcodesimulator", "shaders", "rasterizePathFragmentShader.txt")
 
-    height_shader_vs = "shaders/renderHeightMapVertexShader.txt"
-    height_shader_fs = "shaders/renderHeightMapFragmentShader.txt"
+    height_shader_vs = os.path.join("gcodesimulator", "shaders", "renderHeightMapVertexShader.txt")
+    height_shader_fs = os.path.join("gcodesimulator", "shaders", "renderHeightMapFragmentShader.txt")
 
     #  the cutter
-    basic_shader_vs = "shaders/basicVertexShader.txt"
-    basic_shader_fs = "shaders/basicFragmentShader.txt"
+    basic_shader_vs = os.path.join("gcodesimulator", "shaders", "basicVertexShader.txt")
+    basic_shader_fs = os.path.join("gcodesimulator", "shaders", "basicFragmentShader.txt")
 
-    TEXTURE_INDEX_0 = 0
+    TEXTURE_INDEX = 0
 
     GPU_COEFF = 1  # SMALL GPU !
 
     PYCUT_PREFIX = ""  # standalone: empty
 
+    LOG_OPENGL = make_logger("OPENGL", logging.INFO)
+
     @classmethod
     def set_pycut_prefix(cls):
         """inside pycut"""
-        cls.PYCUT_PREFIX = "gcodesimulator/"
+        cls.PYCUT_PREFIX = "."
 
     def __init__(
         self,
@@ -748,13 +769,10 @@ class Drawable:
 
         self.use_candle_parser = use_candle_parser
 
-        print("Scene path...")
         self.scene = Scene(
             gcode, cutter_diameter, cutter_height, cutter_angle, use_candle_parser
         )
-        print("Scene cutter...")
         self.scene_cutter = SceneCutter(cutter_diameter, cutter_height, cutter_angle)
-        print("Scene heightmap...")
         self.scene_heightmap = SceneHeightMap(self.resolution)
 
         self.cutterDia = self.scene.cutterDiameter
@@ -822,15 +840,19 @@ class Drawable:
 
     def draw(self, gl: "GLView"):
         rc1 = self.pathFramebuffer.bind()
+        Drawable.LOG_OPENGL.info(f"draw: self.pathFramebuffer.bind() -> {rc1}")
         gl.glEnable(GL.GL_DEPTH_TEST)
 
         self.create_path_texture(gl)
 
         rc2 = self.pathFramebuffer.bindDefault()
+        Drawable.LOG_OPENGL.info(f"draw: self.pathFramebuffer.bindDefault() -> {rc2}")
 
+        '''
         # SAVE IMAGE: PATH
-        # img = self.pathFramebuffer.toImage()
-        # img.save("framebuffer_tex.jpg")
+        img = self.pathFramebuffer.toImage()
+        img.save("framebuffer_tex.jpg")
+        '''
 
         self.draw_heightmap(gl)
         self.draw_cutter(gl)
@@ -840,16 +862,17 @@ class Drawable:
     def initialize_path(self):
         """ """
         self.program_path.addShaderFromSourceFile(
-            QOpenGLShader.ShaderTypeBit.Vertex, self.PYCUT_PREFIX + self.path_shader_vs
+            QOpenGLShader.ShaderTypeBit.Vertex, 
+            os.path.join(self.PYCUT_PREFIX, self.path_shader_vs)
         )
         self.program_path.addShaderFromSourceFile(
             QOpenGLShader.ShaderTypeBit.Fragment,
-            self.PYCUT_PREFIX + self.path_shader_fs,
+            os.path.join(self.PYCUT_PREFIX, self.path_shader_fs)
         )
         self.program_path.link()
 
         if not self.program_path.isLinked():
-            print("Failed to link program_path")
+            Drawable.LOG_OPENGL.error("initialize_path: Failed to link program_path")
             raise RuntimeError("Linking error")
 
         self.program_path.bind()
@@ -959,6 +982,8 @@ class Drawable:
         self.program_path.bind()
         self.vbo_path.bind()
 
+        vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_path)
+
         self.program_path.setUniformValue1f(
             self.resolutionLocation,
             float(self.resolution * GCodeSimulatorSettings.OPENGL_FB_RESOLUTION),
@@ -974,19 +999,30 @@ class Drawable:
         )
         self.program_path.setUniformValue1f(self.pathMinZLocation, float(self.pathMinZ))
         self.program_path.setUniformValue1f(self.pathTopZLocation, float(self.pathTopZ))
-        self.program_path.setUniformValue1f(
-            self.stopAtTimeLocation, float(self.stopAtTime)
-        )
+        self.program_path.setUniformValue1f(self.stopAtTimeLocation, float(self.stopAtTime))
 
         self.program_path.enableAttributeArray(self.pos1Location)
         self.program_path.enableAttributeArray(self.pos2Location)
         self.program_path.enableAttributeArray(self.startTimeLocation)
         self.program_path.enableAttributeArray(self.endTimeLocation)
         self.program_path.enableAttributeArray(self.commandLocation)
-        if self.isVBit:
-            self.program_path.enableAttributeArray(self.rawPosLocation)
+        #if self.isVBit:
+        #    self.program_path.enableAttributeArray(self.rawPosLocation)
 
-        vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_path)
+        
+        valid = self.pathFramebuffer.isValid()
+        texture = self.pathFramebuffer.texture()
+        Drawable.LOG_OPENGL.info(f"create_path_texture: self.pathFramebuffer.isValid() -> {valid}")
+        Drawable.LOG_OPENGL.info(f"create_path_texture: self.pathFramebuffer.texture() -> {texture}")
+        gl.glActiveTexture(self.TEXTURE_INDEX)
+        gl.glBindTexture(GL.GL_TEXTURE_2D, texture)
+        
+        rc1 = self.program_path.bind()
+        rc2 = self.vbo_path.bind()
+
+        Drawable.LOG_OPENGL.info(f"create_path_texture: self.program_path.bind() -> {rc1}")
+        Drawable.LOG_OPENGL.info(f"create_path_texture: self.vbo_path.bind() -> {rc2}")
+        
 
         numTriangles = self.scene.pathNumVertexes // 3
         lastTriangle = 0
@@ -1015,19 +1051,22 @@ class Drawable:
 
             """
             for k, vertexdata in enumerate(self.scene.vertices):
-                print(f"{k} -> pos 1 = {vertexdata.pos1}")
-                print(f"{k} -> pos 2 = {vertexdata.pos2}")
-                print(f"{k} -> start/end time 2 = {vertexdata.startTime} - {vertexdata.endTime}")
-                print(f"{k} -> command = {vertexdata.command}")
+                Drawable.LOG_OPENGL.debug(f"{k} -> pos 1 = {vertexdata.pos1}")
+                Drawable.LOG_OPENGL.debug(f"{k} -> pos 2 = {vertexdata.pos2}")
+                Drawable.LOG_OPENGL.debug(f"{k} -> start/end time 2 = {vertexdata.startTime} - {vertexdata.endTime}")
+                Drawable.LOG_OPENGL.debug(f"{k} -> command = {vertexdata.command}")
             """
 
             """for k in range(array_window.size):
-                print(f"{k} -> byte = {array_window[k]}")
+                Drawable.LOG_OPENGL.debug(f"{k} -> byte = {array_window[k]}")
             """
 
             # PROTO write(offset, data, size) all in bytes
+            bytes = array_window.tobytes()
+            Drawable.LOG_OPENGL.debug("create_path_texture: array_window.tobytes() %r" % bytes)
+
             self.vbo_path.write(
-                0, array_window.tobytes(), array_window.size * np.float32().itemsize
+                0, bytes, array_window.size * np.float32().itemsize
             )
 
             # draw
@@ -1046,8 +1085,8 @@ class Drawable:
         # self.vbo_path.release()
         vao_binder = None
 
-        self.program_path.release()
         self.vbo_path.release()
+        self.program_path.release()
 
     # -----------------------------------------------------------------
 
@@ -1084,7 +1123,7 @@ void main(void) {
     vec4 botColor = vec4(0.0, 0.0, 1.0, 1.0);
     vec4 transitionColor = vec4(0.0, 0.0, 0.0, 1.0);
 
-    float transition = min(.4, 100.0*max(abs(p0.z-p1.z), abs(p0.z-p2.z)));
+    float transition = min(0.4, 100.0 * max(abs(p0.z-p1.z), abs(p0.z-p2.z)));
     color = mix(topColor, botColor, tp.z);
     color = mix(color, transitionColor, transition);
 
@@ -1134,25 +1173,28 @@ void main(void) {
     def initialize_heightmap(self):
         """ """
         self.program_heightmap.addShaderFromSourceFile(
+            QOpenGLShader.ShaderTypeBit.Fragment,
+            os.path.join(self.PYCUT_PREFIX, self.height_shader_fs)
+        )
+        # self.program_heightmap.addShaderFromSourceCode(
+        #    QOpenGLShader.ShaderTypeBit.Fragment,
+        #    self.heightmap_fragment_shader_source(),
+        # )
+
+        self.program_heightmap.addShaderFromSourceFile(
             QOpenGLShader.ShaderTypeBit.Vertex,
-            self.PYCUT_PREFIX + self.height_shader_vs,
+            os.path.join(self.PYCUT_PREFIX, self.height_shader_vs)
         )
         # self.program_heightmap.addShaderFromSourceCode(
         #    QOpenGLShader.ShaderTypeBit.Vertex,
         #    self.heightmap_vertex_shader_source()
         # )
 
-        self.program_heightmap.addShaderFromSourceFile(
-            QOpenGLShader.ShaderTypeBit.Fragment,
-            self.PYCUT_PREFIX + self.height_shader_fs,
-        )
-        # self.program_heightmap.addShaderFromSourceCode(
-        #    QOpenGLShader.ShaderTypeBit.Fragment,
-        #    self.heightmap_fragment_shader_source(),
-        # )
-        self.program_heightmap.link()
+        rc = self.program_heightmap.link()
+        Drawable.LOG_OPENGL.info(f"initialize_heightmap: self.program_heightmap.link() -> {rc}")
 
-        self.program_heightmap.bind()
+        rc = self.program_heightmap.bind()
+        Drawable.LOG_OPENGL.info(f"initialize_heightmap: self.program_heightmap.bind() -> {rc}")
 
         self.vbo_heightmap.create()
         self.vbo_heightmap.setUsagePattern(QOpenGLBuffer.UsagePattern.StaticDraw)
@@ -1190,6 +1232,13 @@ void main(void) {
             self.program_heightmap.uniformLocation("heightMap")
         )
 
+        Drawable.LOG_OPENGL.info(f"setup_vao_heightmap: self.program_heightmap_resolutionLocation = {self.program_heightmap_resolutionLocation}")
+        Drawable.LOG_OPENGL.info(f"setup_vao_heightmap: self.program_heightmap_pathScaleLocation = {self.program_heightmap_pathScaleLocation}")
+        Drawable.LOG_OPENGL.info(f"setup_vao_heightmap: self.program_heightmap_pathMinZLocation = {self.program_heightmap_pathMinZLocation}")
+        Drawable.LOG_OPENGL.info(f"setup_vao_heightmap: self.program_heightmap_pathTopZLocation = {self.program_heightmap_pathTopZLocation}")
+        Drawable.LOG_OPENGL.info(f"setuo_vao_heightmap: self.program_heightmap_rotateLocation = {self.program_heightmap_rotateLocation}")
+        Drawable.LOG_OPENGL.info(f"setuo_vao_heightmap: self.program_heightmap_heightMapLocation = {self.program_heightmap_heightMapLocation}")
+
         self.program_heightmap_pos0Location = self.program_heightmap.attributeLocation(
             "pos0"
         )
@@ -1202,9 +1251,9 @@ void main(void) {
         self.program_heightmap_thisPos = self.program_heightmap.attributeLocation(
             "thisPos"
         )
-        self.program_heightmap_vertex = self.program_heightmap.attributeLocation(
-            "vertex"
-        )
+        #self.program_heightmap_vertex = self.program_heightmap.attributeLocation(
+        #    "vertex"
+        #)
 
         self.vbo_heightmap.bind()
 
@@ -1242,13 +1291,13 @@ void main(void) {
         )
         self.program_heightmap.enableAttributeArray(self.program_heightmap_thisPos)
 
-        self.program_heightmap.setAttributeBuffer(
-            self.program_heightmap_vertex,
-            GL.GL_FLOAT,
-            8 * np.float32().itemsize,
-            1,
-            stride,
-        )
+        #self.program_heightmap.setAttributeBuffer(
+        #    self.program_heightmap_vertex,
+        #    GL.GL_FLOAT,
+        #    8 * np.float32().itemsize,
+        #    1,
+        #    stride,
+        #)
         # self.program_heightmap.enableAttributeArray(self.program_heightmap_vertex)
 
         # self.vbo_heightmap.release()
@@ -1266,8 +1315,10 @@ void main(void) {
         )
         # --------------------------------- the texture ------------------------------------------
         self.textureLocationID = self.program_heightmap.uniformLocation("heightMap")
+        Drawable.LOG_OPENGL.info(f"create_heightmap_texture: self.textureLocationID -> {self.textureLocationID}")
+
         self.program_heightmap.setUniformValue(
-            self.textureLocationID, self.TEXTURE_INDEX_0
+            self.textureLocationID, self.TEXTURE_INDEX
         )
         # --------------------------------- the texture ------------------------------------------
 
@@ -1283,14 +1334,25 @@ void main(void) {
         )
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
-        self.program_heightmap.bind()
+        rc = self.program_heightmap.bind()
+        Drawable.LOG_OPENGL.info(f"draw_heightmap: self.program_heightmap.bind() -> {rc}")
 
-        gl.glActiveTexture(self.TEXTURE_INDEX_0)
-        gl.glBindTexture(GL.GL_TEXTURE_2D, self.pathFramebuffer.texture())
+       
+        valid = self.pathFramebuffer.isValid()
+        texture = self.pathFramebuffer.texture()
+        Drawable.LOG_OPENGL.info(f"draw_heightmap: self.pathFramebuffer.isValid() -> {valid}")
+        Drawable.LOG_OPENGL.info(f"draw_heightmap: self.pathFramebuffer.texture() -> {texture}")
+
+        gl.glActiveTexture(self.TEXTURE_INDEX)
+        gl.glBindTexture(GL.GL_TEXTURE_2D, texture)
+
+        Drawable.LOG_OPENGL.info(f"draw_heightmap: gl.glActiveTexture(self.TEXTURE_INDEX)")
+        Drawable.LOG_OPENGL.info(f"draw_heightmap: gl.glBindTexture(GL.GL_TEXTURE_2D, {texture})")
 
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_heightmap)
         # self.vao_heightmap.bind()
-        self.vbo_heightmap.bind()
+        rc = self.vbo_heightmap.bind()
+        Drawable.LOG_OPENGL.info(f"draw_heightmap: self.vbo_heightmap.bind() -> {rc}")
 
         self.program_heightmap.setUniformValue1f(
             self.program_heightmap_resolutionLocation, self.resolution
@@ -1307,9 +1369,13 @@ void main(void) {
         self.program_heightmap.setUniformValue(
             self.program_heightmap_rotateLocation, self.rotate
         )
-        self.program_heightmap.setUniformValue(
-            self.program_heightmap_heightMapLocation, self.TEXTURE_INDEX_0
+        self.program_heightmap.setUniformValue1i(
+            self.program_heightmap_heightMapLocation, self.TEXTURE_INDEX
         )
+
+        loc = self.program_heightmap_heightMapLocation
+        idx = self.TEXTURE_INDEX
+        Drawable.LOG_OPENGL.info(f"draw_heightmap: self.program_heightmap.setUniformValue({loc},{idx})")
 
         self.program_heightmap.enableAttributeArray(self.program_heightmap_pos0Location)
         self.program_heightmap.enableAttributeArray(self.program_heightmap_pos1Location)
@@ -1337,7 +1403,10 @@ void main(void) {
         gl.glBindTexture(GL.GL_TEXTURE_2D, 0)
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0)
 
-        # self.vbo_heightmap.release()
+        Drawable.LOG_OPENGL.info("draw_heightmap: gl.glBindTexture(GL.GL_TEXTURE_2D, 0)")
+        Drawable.LOG_OPENGL.info("draw_heightmap: gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0)")
+
+        self.vbo_heightmap.release()
 
         self.program_heightmap.release()
 
@@ -1348,11 +1417,12 @@ void main(void) {
     def initialize_cutter(self):
         """ """
         self.program_cutter.addShaderFromSourceFile(
-            QOpenGLShader.ShaderTypeBit.Vertex, self.PYCUT_PREFIX + self.basic_shader_vs
+            QOpenGLShader.ShaderTypeBit.Vertex, 
+            os.path.join(self.PYCUT_PREFIX, self.basic_shader_vs)
         )
         self.program_cutter.addShaderFromSourceFile(
             QOpenGLShader.ShaderTypeBit.Fragment,
-            self.PYCUT_PREFIX + self.basic_shader_fs,
+            os.path.join(self.PYCUT_PREFIX, self.basic_shader_fs)
         )
         self.program_cutter.link()
 
@@ -2023,7 +2093,7 @@ class SimulationControls(QtWidgets.QWidget):
 
         loader = QUiLoader(parent)
 
-        self.control = loader.load(Drawable.PYCUT_PREFIX + "simcontrols.ui")
+        self.control = loader.load(os.path.join(Drawable.PYCUT_PREFIX, "gcodesimulator", "simcontrols.ui"))
         # self.control = cast(QWidget, Ui_SimControlWidget())
 
         self.setLayout(QtWidgets.QHBoxLayout())
@@ -2193,6 +2263,8 @@ class GCodeSimulator(QtWidgets.QWidget):
 class GCodeSimulatorSettings:
     """ """
 
+    LOG_SIMULATOR_SETTINGS = make_logger("SIMULATOR_SETTINGS", logging.INFO)
+
     class OpenGlFbType(IntEnum):
         # do not change these values!
         FB_STANDARD = 1
@@ -2208,5 +2280,5 @@ class GCodeSimulatorSettings:
 
     @classmethod
     def set_opengl_fb_type(cls, fb_type: OpenGlFbType):
-        print("OpenGL FB type: ", fb_type)
+        GCodeSimulatorSettings.LOG_SIMULATOR_SETTINGS.info(f"OpenGL FB type: {fb_type}")
         cls.OPENGL_FB_RESOLUTION = fb_type

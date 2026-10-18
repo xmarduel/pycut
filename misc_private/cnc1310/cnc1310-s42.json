@@ -4,7 +4,7 @@
     {
       "name": "outside",
       "type": "Outside",
-      "cut_depth": 3.175,
+      "cut_depth": 5.0,
       "paths": [
         "contour2"
       ],
@@ -13,7 +13,7 @@
       "direction": "Conventional",
       "units": "mm",
       "margin": 0.0,
-      "width": 14.0
+      "width": 6.0
     },
     {
       "name": "op",
@@ -44,7 +44,7 @@
       "units": "mm",
       "diameter": 3.0,
       "angle": 180,
-      "passdepth": 5.0,
+      "passdepth": 1.0,
       "overlap": 0.81,
       "rapid": 500,
       "plunge": 100,

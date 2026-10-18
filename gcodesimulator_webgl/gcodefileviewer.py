@@ -128,7 +128,7 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
 
             # ---------------------------
 
-            print("-> step : curr_line_no", self.curr_line_no)
+            print("-> step: curr_line_no", self.curr_line_no)
 
             block = self.document().findBlockByLineNumber(self.curr_line_no)
             cursor = QtGui.QTextCursor(block)

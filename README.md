@@ -27,14 +27,14 @@ start the program from the installation folder
 ## Dependencies
 
 - Python 3.12.9
-- PySide6 6.9.3
+- PySide6 6.12.0
 - shapely 2.1.2 (and types-shapely)
 - PyOpenGL (latest) [3.1.10]
 - svgelements (latest) [1.9.6]
-- lxml (latest) [6.0.2]
+- lxml (latest) [6.1.3]
 - freetype-py (latest) - used in svgtext2svgpath.py utility [2.5.1]
-- matplotlib (latest) - to debug/view shapely offsets ops [3.10.0]
-- numba (latest) - for python simulator optimization [0.62.0]
+- matplotlib (latest) - to debug/view shapely offsets ops [3.11.2]
+- numba (latest) - for python simulator optimization [0.68.0]
 - pyvoronoi (latest) - for HSM nibbler toolpaths [1.2.4]
 
 ## Features
