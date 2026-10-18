@@ -164,8 +164,9 @@ def make_scene_numba(resolution) -> npt.NDArray[np.float32]:
 class Scene:
 
     LOG_SCENE = make_logger("SCENE", logging.INFO)
+
     class VertexData:
-        # NB_FLOATS_PER_VERTEX = 12
+        NB_FLOATS_PER_VERTEX_V_BIT = 12
         NB_FLOATS_PER_VERTEX = 9
 
         def __init__(self):
@@ -177,7 +178,7 @@ class Scene:
             self.command = sNaN
 
             # VBit
-            # self.rawPos = QVector3D()
+            # self.rawPos = QVector3D() # and def removed from shader MACOSX
 
     def __init__(
         self,
@@ -204,7 +205,7 @@ class Scene:
         self.isVBit = self.cutterAngle < 180
 
         self.pathNumPoints = 0
-        self.pathStride = 9
+        self.pathStride = Scene.VertexData.NB_FLOATS_PER_VERTEX
         self.pathVertexesPerLine = 18
         self.pathNumVertexes = 0
 
@@ -243,10 +244,10 @@ class Scene:
         numHalfCircleSegments = 5
 
         if isVBit:
-            self.pathStride = 12
+            self.pathStride = Scene.VertexData.NB_FLOATS_PER_VERTEX_V_BIT
             self.pathVertexesPerLine = 12 + numHalfCircleSegments * 6
         else:
-            self.pathStride = 9
+            self.pathStride = Scene.VertexData.NB_FLOATS_PER_VERTEX
             self.pathVertexesPerLine = 18
 
         self.pathNumVertexes = self.pathNumPoints * self.pathVertexesPerLine
@@ -839,20 +840,7 @@ class Drawable:
         self.initialize_cutter()
 
     def draw(self, gl: "GLView"):
-        rc1 = self.pathFramebuffer.bind()
-        Drawable.LOG_OPENGL.info(f"draw: self.pathFramebuffer.bind() -> {rc1}")
-        gl.glEnable(GL.GL_DEPTH_TEST)
-
         self.create_path_texture(gl)
-
-        rc2 = self.pathFramebuffer.bindDefault()
-        Drawable.LOG_OPENGL.info(f"draw: self.pathFramebuffer.bindDefault() -> {rc2}")
-
-        '''
-        # SAVE IMAGE: PATH
-        img = self.pathFramebuffer.toImage()
-        img.save("framebuffer_tex.jpg")
-        '''
 
         self.draw_heightmap(gl)
         self.draw_cutter(gl)
@@ -903,23 +891,13 @@ class Drawable:
         self.pathTopZLocation = self.program_path.uniformLocation("pathTopZ")
         self.stopAtTimeLocation = self.program_path.uniformLocation("stopAtTime")
 
-        self.program_path.setUniformValue1f(
-            self.resolutionLocation, float(self.resolution)
-        )
-        self.program_path.setUniformValue1f(
-            self.cutterDiaLocation, float(self.cutterDia)
-        )
-        self.program_path.setUniformValue(
-            self.pathXYOffsetLocation, float(self.pathXOffset), float(self.pathYOffset)
-        )
-        self.program_path.setUniformValue1f(
-            self.pathScaleLocation, float(self.pathScale)
-        )
+        self.program_path.setUniformValue1f(self.resolutionLocation, float(self.resolution))
+        self.program_path.setUniformValue1f(self.cutterDiaLocation, float(self.cutterDia))
+        self.program_path.setUniformValue(self.pathXYOffsetLocation, float(self.pathXOffset), float(self.pathYOffset))
+        self.program_path.setUniformValue1f(self.pathScaleLocation, float(self.pathScale))
         self.program_path.setUniformValue1f(self.pathMinZLocation, float(self.pathMinZ))
         self.program_path.setUniformValue1f(self.pathTopZLocation, float(self.pathTopZ))
-        self.program_path.setUniformValue1f(
-            self.stopAtTimeLocation, float(self.stopAtTime)
-        )
+        self.program_path.setUniformValue1f(self.stopAtTimeLocation, float(self.stopAtTime))
 
         self.vbo_path.bind()
 
@@ -928,7 +906,7 @@ class Drawable:
         self.startTimeLocation = self.program_path.attributeLocation("startTime")
         self.endTimeLocation = self.program_path.attributeLocation("endTime")
         self.commandLocation = self.program_path.attributeLocation("command")
-        self.rawPosLocation = self.program_path.attributeLocation("rawPos")
+        #self.rawPosLocation = self.program_path.attributeLocation("rawPos")
 
         stride = Scene.VertexData.NB_FLOATS_PER_VERTEX * np.float32().itemsize
 
@@ -958,17 +936,20 @@ class Drawable:
         self.program_path.enableAttributeArray(self.commandLocation)
 
         # if self.isVBit:
-        #    self.program_path.setAttributeBuffer(self.rawPosLocation, GL.GL_FLOAT,   9* np.float32().itemsize, 3, stride)
+        #    self.program_path.setAttributeBuffer(self.rawPosLocation, GL.GL_FLOAT, 9 * np.float32().itemsize, 3, stride)
         #    self.program_path.enableAttributeArray(self.rawPosLocation)
 
         # self.vbo_path.release()
 
+        vao_binder.release()
         vao_binder = None
 
         # self.vbo_path.release()
 
     def create_path_texture(self, gl: "GLView"):
         """ """
+        rc1 = self.pathFramebuffer.bind() # yes, at the begining
+
         gl.glClearColor(0.0, 1.0, 0.0, 1.0)
         gl.glEnable(GL.GL_DEPTH_TEST)
         gl.glViewport(
@@ -979,10 +960,15 @@ class Drawable:
         )
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
-        self.program_path.bind()
-        self.vbo_path.bind()
+        rc2 = self.program_path.bind()
+        rc3 = self.vbo_path.bind()
+
+        Drawable.LOG_OPENGL.info(f"create_path_texture: self.pathFramebuffer.bind() -> {rc1}")
+        Drawable.LOG_OPENGL.info(f"create_path_texture: self.program_path.bind()-> {rc2}")
+        Drawable.LOG_OPENGL.info(f"create_path_texture: self.vbo_path.bind() -> {rc3}")
 
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_path)
+        vao_binder.rebind()
 
         self.program_path.setUniformValue1f(
             self.resolutionLocation,
@@ -1016,19 +1002,10 @@ class Drawable:
         Drawable.LOG_OPENGL.info(f"create_path_texture: self.pathFramebuffer.texture() -> {texture}")
         gl.glActiveTexture(self.TEXTURE_INDEX)
         gl.glBindTexture(GL.GL_TEXTURE_2D, texture)
-        
-        rc1 = self.program_path.bind()
-        rc2 = self.vbo_path.bind()
-
-        Drawable.LOG_OPENGL.info(f"create_path_texture: self.program_path.bind() -> {rc1}")
-        Drawable.LOG_OPENGL.info(f"create_path_texture: self.vbo_path.bind() -> {rc2}")
-        
 
         numTriangles = self.scene.pathNumVertexes // 3
         lastTriangle = 0
-        maxTriangles = self.gpuMem // (
-            self.scene.pathStride * 3 * np.float32().itemsize
-        )
+        maxTriangles = self.gpuMem // self.scene.pathStride * 3 * np.float32().itemsize
 
         while lastTriangle < numTriangles:
             n = min(numTriangles - lastTriangle, maxTriangles)
@@ -1064,15 +1041,20 @@ class Drawable:
             # PROTO write(offset, data, size) all in bytes
             bytes = array_window.tobytes()
             Drawable.LOG_OPENGL.debug("create_path_texture: array_window.tobytes() %r" % bytes)
-
+            
             self.vbo_path.write(
                 0, bytes, array_window.size * np.float32().itemsize
             )
 
-            # draw
+            # draw (material removal)
             gl.glDrawArrays(GL.GL_TRIANGLES, 0, n * 3)  # n*3 "strides"
 
+            Drawable.LOG_OPENGL.info(f"create_path_texture: array_window.size() {n}")
+
             lastTriangle += n
+
+            Drawable.LOG_OPENGL.info(f"create_path_texture: numTriangles = {lastTriangle} {numTriangles}")
+
 
         # self.program_path.disableAttributeArray(self.pos1Location)
         # self.program_path.disableAttributeArray(self.pos2Location)
@@ -1082,11 +1064,21 @@ class Drawable:
         # if self.isVBit:
         #    self.program_path.disableAttributeArray(self.rawPosLocation)
 
-        # self.vbo_path.release()
+        vao_binder.release()
         vao_binder = None
 
         self.vbo_path.release()
         self.program_path.release()
+
+        '''
+        rc = self.pathFramebuffer.bindDefault()
+        Drawable.LOG_OPENGL.info(f"create_path_texture: self.pathFramebuffer.bindDefault() -> {rc}")
+
+        # SAVE IMAGE: PATH
+        img = self.pathFramebuffer.toImage()
+        img.save("framebuffer_tex.jpg")
+        '''
+        self.pathFramebuffer.release()
 
     # -----------------------------------------------------------------
 
@@ -1173,21 +1165,21 @@ void main(void) {
     def initialize_heightmap(self):
         """ """
         self.program_heightmap.addShaderFromSourceFile(
-            QOpenGLShader.ShaderTypeBit.Fragment,
-            os.path.join(self.PYCUT_PREFIX, self.height_shader_fs)
-        )
-        # self.program_heightmap.addShaderFromSourceCode(
-        #    QOpenGLShader.ShaderTypeBit.Fragment,
-        #    self.heightmap_fragment_shader_source(),
-        # )
-
-        self.program_heightmap.addShaderFromSourceFile(
             QOpenGLShader.ShaderTypeBit.Vertex,
             os.path.join(self.PYCUT_PREFIX, self.height_shader_vs)
         )
         # self.program_heightmap.addShaderFromSourceCode(
         #    QOpenGLShader.ShaderTypeBit.Vertex,
         #    self.heightmap_vertex_shader_source()
+        # )
+
+        self.program_heightmap.addShaderFromSourceFile(
+            QOpenGLShader.ShaderTypeBit.Fragment,
+            os.path.join(self.PYCUT_PREFIX, self.height_shader_fs)
+        )
+        # self.program_heightmap.addShaderFromSourceCode(
+        #    QOpenGLShader.ShaderTypeBit.Fragment,
+        #    self.heightmap_fragment_shader_source(),
         # )
 
         rc = self.program_heightmap.link()
@@ -1300,10 +1292,11 @@ void main(void) {
         #)
         # self.program_heightmap.enableAttributeArray(self.program_heightmap_vertex)
 
-        # self.vbo_heightmap.release()
+        self.program_heightmap.release()
+        self.vbo_heightmap.release()
 
+        vao_binder.release()
         vao_binder = None
-        # self.vbo_heightmap.release()
 
     def create_heightmap_texture(self):
         self.pathFramebuffer = QOpenGLFramebufferObject(
@@ -1350,7 +1343,7 @@ void main(void) {
         Drawable.LOG_OPENGL.info(f"draw_heightmap: gl.glBindTexture(GL.GL_TEXTURE_2D, {texture})")
 
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_heightmap)
-        # self.vao_heightmap.bind()
+
         rc = self.vbo_heightmap.bind()
         Drawable.LOG_OPENGL.info(f"draw_heightmap: self.vbo_heightmap.bind() -> {rc}")
 
@@ -1397,8 +1390,8 @@ void main(void) {
         self.program_heightmap.disableAttributeArray(self.program_heightmap_thisPos)
         # self.program_heightmap.disableAttributeArray(self.program_heightmap_vertex)
 
+        vao_binder.release()
         vao_binder = None
-        # self.vao_heightmap.release()
 
         gl.glBindTexture(GL.GL_TEXTURE_2D, 0)
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0)

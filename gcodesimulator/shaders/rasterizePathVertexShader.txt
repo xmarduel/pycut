@@ -25,7 +25,7 @@ uniform float stopAtTime;
 
 attribute vec3 pos1;
 attribute vec3 pos2;
-attribute vec3 rawPos;
+//attribute vec3 rawPos;
 attribute float startTime;
 attribute float endTime;
 attribute float command;
@@ -108,10 +108,10 @@ void main(void) {
             gl_Position = vec4(lower.x+delta.y, lower.y-delta.x, lower.z, 1.0);
         else if(i == 17)
             gl_Position = vec4(lower.x-delta.y, lower.y+delta.x, lower.z, 1.0);
-        else if(i == 100)
-            gl_Position = vec4((pos1.xy+rawPos.xy+pathXYOffset)*pathScale, pos1.z+rawPos.z, 1.0);
-        else if(i == 101)
-            gl_Position = vec4((clampedPos2.xy+rawPos.xy+pathXYOffset)*pathScale, clampedPos2.z+rawPos.z, 1.0);
+        //else if(i == 100)
+        //    gl_Position = vec4((pos1.xy+rawPos.xy+pathXYOffset)*pathScale, pos1.z+rawPos.z, 1.0);
+        //else if(i == 101)
+        //    gl_Position = vec4((clampedPos2.xy+rawPos.xy+pathXYOffset)*pathScale, clampedPos2.z+rawPos.z, 1.0);
         else if(i == 200) {
             gl_Position = vec4(0, 0, 0, 1.0);
             enable = 0.0;
