@@ -5,7 +5,7 @@ from typing import List
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QColor
 
-from gcodeviewer.drawers.shaderdrawable import ShaderDrawable, VertexData
+from gcodeviewer.drawers.shaderdrawable import ShaderDrawable
 from gcodeviewer.drawers.shaderdrawable import VertexData
 from gcodeviewer.util.util import Util
 

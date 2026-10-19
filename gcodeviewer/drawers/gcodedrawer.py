@@ -11,7 +11,6 @@ from PySide6.QtCore import QTimer, Slot
 from PySide6.QtCore import qIsNaN
 
 from PySide6.QtOpenGL import QOpenGLTexture
-from PySide6.QtOpenGL import QOpenGLBuffer
 
 from gcodeviewer.parser.linesegment import LineSegment
 from gcodeviewer.parser.gcodeviewparse import GcodeViewParse
@@ -23,7 +22,6 @@ from gcodeviewer.util.util import Util
 from gcodeviewer.util.util import qBound
 
 import numpy as np
-import numpy.typing as npt
 
 sNaN = float("NaN")
 

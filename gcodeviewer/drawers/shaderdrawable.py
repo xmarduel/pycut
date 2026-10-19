@@ -5,8 +5,6 @@ from typing import List
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QOpenGLFunctions
 
-from PySide6.QtCore import qIsNaN
-
 from PySide6.QtOpenGL import QOpenGLShaderProgram
 from PySide6.QtOpenGL import QOpenGLBuffer
 from PySide6.QtOpenGL import QOpenGLVertexArrayObject

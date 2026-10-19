@@ -19,8 +19,6 @@ from PySide6.QtCore import qIsNaN
 from gcodeviewer.parser.pointsegment import PointSegment
 from gcodeviewer.parser.gcodepreprocessorutils import GcodePreprocessorUtils
 
-from gcodeviewer.util.util import qQNaN
-
 
 class GcodeParser:
     """ """

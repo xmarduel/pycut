@@ -7,7 +7,6 @@
 # Copyright 2020-2030 Xavier Marduel
 
 import math
-import re
 
 from typing import List
 from typing import Any

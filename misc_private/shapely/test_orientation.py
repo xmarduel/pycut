@@ -1,5 +1,3 @@
-import sys
-
 import matplotlib.pyplot as plt
 from shapely.geometry import LineString, Polygon, LinearRing
 import shapely

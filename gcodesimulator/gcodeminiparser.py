@@ -20,7 +20,6 @@ import sys
 import time
 
 from typing import List
-from typing import Tuple
 
 from PySide6.QtCore import qIsNaN
 from PySide6.QtGui import QVector3D

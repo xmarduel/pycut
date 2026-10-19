@@ -1,8 +1,7 @@
-import sys
 
-import matplotlib.pyplot as plt
-from shapely.geometry import LineString, Polygon, LinearRing
 import shapely
+from shapely.geometry import Polygon, LinearRing
+
 
 class Poly2Svg:
     '''

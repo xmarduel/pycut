@@ -3,19 +3,14 @@ from typing import List
 from PySide6.QtCore import QElapsedTimer
 from PySide6.QtCore import QTime
 from PySide6.QtCore import Qt
-from PySide6.QtCore import QFile
-from PySide6.QtCore import QTextStream
-from PySide6.QtCore import QIODevice
 from PySide6.QtCore import qIsNaN
 
 from PySide6.QtGui import QVector3D
 
 from PySide6 import QtWidgets
 from PySide6 import QtCore
-from PySide6 import QtGui
 
-from PySide6.QtWidgets import QProgressDialog, QTableView
-from PySide6.QtWidgets import QMessageBox
+from PySide6.QtWidgets import QProgressDialog
 from PySide6.QtWidgets import QApplication
 
 from gcodeviewer.drawers.gcodedrawer import GcodeDrawer
@@ -234,7 +229,9 @@ class GLWidgetContainer(QtWidgets.QWidget):
 
             if progress.isVisible() and (len(data) % PROGRESSSTEP == 0):
                 progress.setValue(progress.maximum() - len(data))
-                QApplication.instance().processEvents()
+                instance = QApplication.instance()
+                if instance:
+                    instance.processEvents()
                 if progress.wasCanceled():
                     break
 
@@ -286,7 +283,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.m_programModel.insertRow(0)
 
     def updateProgramEstimatedTime(self, lines: List[LineSegment]) -> QTime:
-        time = 0
+        time = 0.0
 
         for ls in lines:
             length = (ls.getEnd() - ls.getStart()).length()
@@ -308,7 +305,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
                 """
                 time += length / speed
 
-        time *= 60
+        time = int(time * 60)
 
         t = QTime()
 

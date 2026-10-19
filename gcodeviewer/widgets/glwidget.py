@@ -196,7 +196,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
     def addDrawable(self, drawable: ShaderDrawable):
         self.m_shaderDrawables.append(drawable)
 
-    def fitDrawable(self, drawable: ShaderDrawable = None):
+    def fitDrawable(self, drawable: ShaderDrawable|None = None):
         self.stopViewAnimation()
 
         if drawable != None:
@@ -367,7 +367,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.m_timerPaint.stop()
 
         value = 0 if self.m_vsync else 1000.0 / fps
-        self.m_timerPaint.start(value, QtGui.Qt.PreciseTimer, self)
+        self.m_timerPaint.start(value, QtGui.Qt.TimerType.PreciseTimer, self)
 
     def parserStatus(self) -> str:
         return self.m_parserStatus
@@ -740,9 +740,9 @@ void main()
 
     def mouseMoveEvent(self, event: QtGui.QMouseEvent):
         if (
-            event.buttons() & QtGui.Qt.MiddleButton
-            and (not (event.modifiers() & QtGui.Qt.ShiftModifier))
-        ) or event.buttons() & QtCore.Qt.LeftButton:
+            event.buttons() & QtCore.Qt.MouseButton.MiddleButton
+            and (not (event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier))
+        ) or event.buttons() & QtCore.Qt.MouseButton.LeftButton:
             self.stopViewAnimation()
 
             self.m_yRot = self.normalizeAngle(
@@ -759,9 +759,9 @@ void main()
             self.rotationChanged.emit()
 
         if (
-            event.buttons() & QtCore.Qt.MiddleButton
-            and event.modifiers() & QtGui.Qt.ShiftModifier
-        ) or event.buttons() & QtCore.Qt.RightButton:
+            event.buttons() & QtCore.Qt.MouseButton.MiddleButton
+            and event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier
+        ) or event.buttons() & QtCore.Qt.MouseButton.RightButton:
             self.m_xPan = self.m_xLastPan - (
                 event.pos().x() - self.m_lastPos.x()
             ) * 1 / (float)(self.width())

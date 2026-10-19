@@ -2,8 +2,7 @@
 
 import matplotlib.pyplot as plt
 
-import shapely
-from shapely.geometry import LineString, Polygon, LinearRing, MultiPolygon
+from shapely.geometry import Polygon, MultiPolygon
 from shapely.ops import unary_union
 '''
 

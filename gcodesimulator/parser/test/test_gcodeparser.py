@@ -7,7 +7,6 @@ from PySide6.QtCore import QElapsedTimer
 from PySide6.QtCore import QFile
 from PySide6.QtCore import QTextStream
 from PySide6.QtCore import QIODevice
-from PySide6.QtCore import qIsNaN
 
 from PySide6.QtGui import QVector3D
 

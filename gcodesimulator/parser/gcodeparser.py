@@ -21,8 +21,6 @@ from gcodesimulator.parser.gcodepreprocessorutils import (
     GcodePreprocessorUtils,
 )
 
-from gcodeviewer.util.util import qQNaN
-
 
 class GcodeParser:
     """ """
