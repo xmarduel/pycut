@@ -18,6 +18,7 @@ from typing import List
 from typing import Dict
 from typing import Tuple
 from typing import Any
+from typing import cast
 
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -118,7 +119,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
     RECENT_PROJECTS_FILENAME = "./recent_projects.json"
 
-    def __init__(self, options):
+    def __init__(self, options: Any):
         """ """
         super(PyCutMainWindow, self).__init__()
 
@@ -147,14 +148,14 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.build_recent_projects_submenu()
 
-        self.operations = []
+        self.operations: List[Dict[str, str]] = []
         self.tabs: List[Dict[str, Any]] = []
 
         # a job to keep the generated gcode in memory (and save it)
         self.job = None
 
         # open/read/write project settings
-        self.projfilename = None
+        self.projfilename: str|None = None
 
         self.simulator_webgl_viewer = None
         self.simulator_python_viewer = None
@@ -190,13 +191,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.ui.actionAboutPyCut.triggered.connect(self.cb_show_about_pycut)
 
         self.ui.splitterCentralArea.splitterMoved.connect(self.cb_central_splitter_moved)
-
-        self.aboutQtAct = QtGui.QAction(
-            "About &Qt",
-            self,
-            statusTip="Show the Qt library's About box",
-            triggered=QtWidgets.QApplication.instance().aboutQt,
-        )
 
         # display material thickness/clearance
         self.ui.Material_Thickness.valueChanged.connect(
@@ -287,7 +281,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 msgbox = QtWidgets.QMessageBox()
                 msgbox.setWindowTitle("PyCut")
                 msgbox.setText("Project File %s not found" % options.project)
-                msgbox.setDefaultButton(QtWidgets.QMessageBox.Save)
+                msgbox.setDefaultButton(QtWidgets.QMessageBox.StandardButton.Save)
                 msgbox.exec()
 
         elif options.gcode is not None:
@@ -298,7 +292,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 msgbox = QtWidgets.QMessageBox()
                 msgbox.setWindowTitle("PyCut")
                 msgbox.setText("GCode File %s not found" % options.gcode)
-                msgbox.setDefaultButton(QtWidgets.QMessageBox.Save)
+                msgbox.setDefaultButton(QtWidgets.QMessageBox.StandardButton.Save)
                 msgbox.exec()
 
         elif options.svg is not None:
@@ -309,60 +303,52 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 msgbox = QtWidgets.QMessageBox()
                 msgbox.setWindowTitle("PyCut")
                 msgbox.setText("Svg File %s not found" % options.svg)
-                msgbox.setDefaultButton(QtWidgets.QMessageBox.Save)
+                msgbox.setDefaultButton(QtWidgets.QMessageBox.StandardButton.Save)
                 msgbox.exec()
 
         self.menubarToggleLeftBottomSidesButton = QtGui.QAction(
-            QtGui.QIcon(":/images/left-bottom-areas.png"),
-            "hide/show",
-            self,
-            shortcut=QtGui.QKeySequence.Back,
-            statusTip="Show/Hide Left/Bottom Sides",
-            triggered=self.toggle_left_bottom_sides,
+            icon=QtGui.QIcon(":/images/left-bottom-areas.png"),
+            iconText="hide/show",
+            parent=self
         )
+        self.menubarToggleLeftBottomSidesButton.triggered.connect(self.toggle_left_bottom_sides)
+        self.menubarToggleLeftBottomSidesButton.setShortcut(QtGui.QKeySequence.StandardKey.Back)
+        self.menubarToggleLeftBottomSidesButton.setStatusTip("Show/Hide Left/Bottom Sides")
         self.menubarToggleLeftBottomSidesButton.setCheckable(True)
-        self.menubarToggleLeftBottomSidesButton.setToolTip(
-            "Show/Hide Left/Bottom Sides View"
-        )
+        self.menubarToggleLeftBottomSidesButton.setToolTip("Show/Hide Left/Bottom Sides View")
 
         self.menubarToggleLeftSideButton = QtGui.QAction(
-            QtGui.QIcon(":/images/left-area.png"),
-            "hide/show",
-            self,
-            shortcut=QtGui.QKeySequence.Back,
-            statusTip="Show/Hide Left Side",
-            triggered=self.toggle_left_side,
+            icon=QtGui.QIcon(":/images/left-area.png"),
+            iconText="hide/show",
+            parent=self
         )
+        self.menubarToggleLeftSideButton.triggered.connect(self.toggle_left_side)
+        self.menubarToggleLeftSideButton.setShortcut(QtGui.QKeySequence.StandardKey.Back)
+        self.menubarToggleLeftSideButton.setStatusTip("Show/Hide Left Side")
         self.menubarToggleLeftSideButton.setCheckable(True)
-        self.menubarToggleLeftSideButton.setToolTip(
-            "Show/Hide Left Side View"
-        )  # still not shown
+        self.menubarToggleLeftSideButton.setToolTip("Show/Hide Left Side View")
 
         self.menubarToggleMiddleAreaButton = QtGui.QAction(
-            QtGui.QIcon(":/images/bellow-area.png"),
-            "hide/show",
-            self,
-            shortcut=QtGui.QKeySequence.Forward,
-            statusTip="Show/Hide Op. Table",
-            triggered=self.toggle_middle_area,
+            icon=QtGui.QIcon(":/images/bellow-area.png"),
+            iconText="hide/show",
+            parent=self
         )
+        self.menubarToggleMiddleAreaButton.triggered.connect(self.toggle_middle_area)
+        self.menubarToggleMiddleAreaButton.setShortcut(QtGui.QKeySequence.StandardKey.Forward)
+        self.menubarToggleMiddleAreaButton.setStatusTip("Show/Hide Op. Table")
         self.menubarToggleMiddleAreaButton.setCheckable(True)
-        self.menubarToggleMiddleAreaButton.setToolTip(
-            "Show/Hide Op. Table View"
-        )  # still not shown
+        self.menubarToggleMiddleAreaButton.setToolTip("Show/Hide Op. Table View")
 
         self.menubarToggleRightSideButton = QtGui.QAction(
-            QtGui.QIcon(":/images/right-area.png"),
-            "hide/show",
-            self,
-            shortcut=QtGui.QKeySequence.Forward,
-            statusTip="Show/Hide Right Side",
-            triggered=self.toggle_right_side,
+            icon=QtGui.QIcon(":/images/right-area.png"),
+            iconText="hide/show",
+            parent=self
         )
+        self.menubarToggleRightSideButton.triggered.connect(self.toggle_right_side)
+        self.menubarToggleRightSideButton.setShortcut(QtGui.QKeySequence.StandardKey.Forward)
+        self.menubarToggleRightSideButton.setStatusTip("Show/Hide Right Side")
         self.menubarToggleRightSideButton.setCheckable(True)
-        self.menubarToggleRightSideButton.setToolTip(
-            "Show/Hide Right Side View"
-        )  # still not shown
+        self.menubarToggleRightSideButton.setToolTip("Show/Hide Right Side View")
 
         self.menuBar().addAction(self.menubarToggleLeftBottomSidesButton)
         self.menuBar().addAction(self.menubarToggleLeftSideButton)
@@ -378,7 +364,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         )
         self.ui.GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
 
-        self.setWindowState(QtCore.Qt.WindowMaximized)
+        self.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
 
     def toggle_left_bottom_sides(self):
         """ """
@@ -986,11 +972,11 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         )
         self.ui.GCodeConversion_FlipXY.clicked.connect(self.cb_generate_gcode)
 
-    def open_project(self, projfilename: str):
+    def open_project(self, pprojfilename: str):
         cwd = os.getcwd()
 
-        common_prefix = [os.path.commonprefix([cwd, projfilename])]
-        projfilename = os.path.relpath(projfilename, common_prefix[0])
+        common_prefix = [os.path.commonprefix([cwd, pprojfilename])]
+        projfilename = os.path.relpath(pprojfilename, common_prefix[0])
 
         with open(projfilename) as f:
             self.projfilename = projfilename

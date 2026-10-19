@@ -262,16 +262,16 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
         self.setViewportMargins(self.lineNumberAreaWidth(), 0, 0, 0)
 
     @QtCore.Slot()
-    def highlightCurrentLine(self):
+    def highlightCurrentLine(self) -> None:
         extraSelections: List[QtWidgets.QTextEdit.ExtraSelection] = []
 
         if self.isReadOnly():
             selection = QtWidgets.QTextEdit.ExtraSelection()
 
-            lineColor = QtGui.QColor(QtCore.Qt.yellow).lighter(160)
+            lineColor = QtGui.QColor(QtGui.QColor.yellow).lighter(160)
 
             selection.format.setBackground(lineColor)
-            selection.format.setProperty(QtGui.QTextFormat.FullWidthSelection, True)
+            selection.format.setProperty(QtGui.QTextFormat.Property.FullWidthSelection, True)
             selection.cursor = self.textCursor()
             selection.cursor.clearSelection()
             extraSelections.append(selection)

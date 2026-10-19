@@ -8,7 +8,7 @@ from typing import Dict
 
 from PySide6.QtWidgets import QApplication, QMainWindow
 
-import viewer
+import gcodesimulator.viewer as viewer
 
 
 class MainWindow(QMainWindow):

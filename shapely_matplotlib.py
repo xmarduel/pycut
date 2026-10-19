@@ -18,22 +18,7 @@ class MatplotLibUtils:
     #MAPLOTLIB_DEBUG = False
     MAPLOTLIB_DEBUG = True
 
-    cnt = 0  # matplotlib figures
-
-    @classmethod
-    def plot(cls, pts: npt.NDArray[np.complex128], title: str, style: str = "ro-"):
-        """ """
-        plt.figure(cls.cnt)
-        plt.title(title + f" [{cls.cnt}]")
-
-        xx = [pt.real for pt in pts]
-        yy = [pt.imag for pt in pts]
-
-        plt.plot(xx, yy, style)
-
-        plt.axis("equal")
-        plt.show()
-        plt.pause(1)
+    cnt = 0  # matplotlib figures counter
 
     @classmethod
     def plot_geom(cls, title: str, geom: Any) -> int:
@@ -66,13 +51,6 @@ class MatplotLibUtils:
             pass
 
         return cls.cnt
-
-    @classmethod
-    def rectify_y(cls, y:npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
-        yy = []
-        for v in y:
-            yy.append(-v)
-        return np.array(yy)
     
     @classmethod
     def _display_linestring(cls, title: str, linestring: shapely.geometry.LineString):
@@ -80,12 +58,17 @@ class MatplotLibUtils:
         xs = linestring.coords.xy[0]
         ys = linestring.coords.xy[1]
 
-        ys = cls.rectify_y(ys)
+        npxs = np.array(xs, dtype=np.float64)
+        npys = np.array(ys, dtype=np.float64) * -1.0
 
-        _pts = [complex(x, y) for x, y in zip(xs, ys)]
-        pts = np.array(_pts, dtype=np.complex128)
+        plt.figure(cls.cnt)
+        plt.title(title + f" [{cls.cnt}]")
 
-        cls.plot(pts, title, "bo-")
+        plt.plot(npxs, npys, "bo-")
+
+        plt.axis("equal")
+        plt.show()
+        plt.pause(1)
 
     @classmethod
     def _display_multilinestring(
@@ -111,10 +94,11 @@ class MatplotLibUtils:
             ix = line.coords.xy[0]
             iy = line.coords.xy[1]
 
-            iy = cls.rectify_y(iy)
+            npix = np.array(ix, dtype=np.float64)
+            npiy = np.array(iy, dtype=np.float64) * -1.0
 
-            xx.append(ix)
-            yy.append(iy)
+            xx.append(npix)
+            yy.append(npiy)
 
         for k, (x, y) in enumerate(zip(xx, yy)):
             plt.plot(x, y, style[k % 6])
@@ -134,12 +118,13 @@ class MatplotLibUtils:
 
         ring = polygon.exterior
         
-        x = ring.coords.xy[0]
-        y = ring.coords.xy[1]
+        xs = ring.coords.xy[0]
+        ys = ring.coords.xy[1]
 
-        y = cls.rectify_y(y)
+        npxs = np.array(xs, dtype=np.float64)
+        npys = np.array(ys, dtype=np.float64) * -1.0
 
-        plt.plot(x, y, style_ext[0])
+        plt.plot(npxs, npys, style_ext[0])
 
         interiors_xx = []
         interiors_yy = []
@@ -148,12 +133,13 @@ class MatplotLibUtils:
             ix = interior.coords.xy[0]
             iy = interior.coords.xy[1]
 
-            iy = cls.rectify_y(iy)
+            npix = np.array(ix, dtype=np.float64)
+            npiy = np.array(iy, dtype=np.float64) * -1.0
 
-            interiors_xx.append(ix)
-            interiors_yy.append(iy)
+            interiors_xx.append(npix)
+            interiors_yy.append(npiy)
 
-        for k, (ix, iy) in enumerate(zip(interiors_xx, interiors_yy)):
+        for k, (npix, npiy) in enumerate(zip(interiors_xx, interiors_yy)):
             plt.plot(ix, iy, style_int[k % 2])
 
         plt.axis("equal")
@@ -182,22 +168,24 @@ class MatplotLibUtils:
         yy_int = []
 
         for poly in multipoly.geoms:
-            x = poly.exterior.coords.xy[0]
-            y = poly.exterior.coords.xy[1]
+            xs = poly.exterior.coords.xy[0]
+            ys = poly.exterior.coords.xy[1]
 
-            y = cls.rectify_y(y)
+            npxs = np.array(xs, dtype=np.float64)
+            npys = np.array(ys, dtype=np.float64) * -1.0
 
-            xx_ext.append(x)
-            yy_ext.append(y)
+            xx_ext.append(npxs)
+            yy_ext.append(npys)
 
             for interior in poly.interiors:
                 ix = interior.coords.xy[0]
                 iy = interior.coords.xy[1]
 
-                iy = cls.rectify_y(iy)
+                npix = np.array(ix, dtype=np.float64)
+                npiy = np.array(iy, dtype=np.float64) * -1.0
 
-                xx_int.append(ix)
-                yy_int.append(iy)
+                xx_int.append(npix)
+                yy_int.append(npiy)
 
         # plot
         for k, (x, y) in enumerate(zip(xx_ext, yy_ext)):
@@ -234,22 +222,24 @@ class MatplotLibUtils:
                 yy_int = []
 
                 for ch_geom in geom.geoms:
-                    x = ch_geom.exterior.coords.xy[0]
-                    y = ch_geom.exterior.coords.xy[1]
+                    xs = ch_geom.exterior.coords.xy[0]
+                    ys = ch_geom.exterior.coords.xy[1]
 
-                    y = cls.rectify_y(y)
-
-                    xx_ext.append(x)
-                    yy_ext.append(y)
+                    npxs = np.array(xs, dtype=np.float64)
+                    npys = np.array(ys, dtype=np.float64) * -1.0
+                
+                    xx_ext.append(npxs)
+                    yy_ext.append(npys)
 
                     for interior in ch_geom.interiors:
                         ix = interior.coords.xy[0]
                         iy = interior.coords.xy[1]
 
-                        iy = cls.rectify_y(iy)
+                        npix = np.array(ix, dtype=np.float64)
+                        npiy = np.array(iy, dtype=np.float64) * -1.0
 
-                        xx_int.append(ix)
-                        yy_int.append(iy)
+                        xx_int.append(npix)
+                        yy_int.append(npiy)
 
                 # plot
                 for x, y in zip(xx_ext, yy_ext):
@@ -262,12 +252,13 @@ class MatplotLibUtils:
             if geom.geom_type == "Polygon":
                 geom = cast(shapely.geometry.Polygon, geom)
 
-                x = geom.exterior.coords.xy[0]
-                y = geom.exterior.coords.xy[1]
+                xs = geom.exterior.coords.xy[0]
+                ys = geom.exterior.coords.xy[1]
 
-                y = cls.rectify_y(y)
+                npxs = np.array(xs, dtype=np.float64)
+                npys = np.array(ys, dtype=np.float64) * -1.0
 
-                plt.plot(x, y, style_ext[0])
+                plt.plot(npxs, npys, style_ext[0])
 
                 interiors_xx = []
                 interiors_yy = []
@@ -276,14 +267,15 @@ class MatplotLibUtils:
                     ix = interior.coords.xy[0]
                     iy = interior.coords.xy[1]
 
-                    iy = cls.rectify_y(iy)
+                    npix = np.array(ix, dtype=np.float64)
+                    npiy = np.array(iy, dtype=np.float64) * -1.0
 
-                    interiors_xx.append(ix)
-                    interiors_yy.append(iy)
+                    interiors_xx.append(npix)
+                    interiors_yy.append(npiy)
 
-                for ix, iy in zip(interiors_xx, interiors_yy):
+                for npix, npiy in zip(interiors_xx, interiors_yy):
                     pp += 1
-                    plt.plot(ix, iy, style_int[pp % 3])
+                    plt.plot(npix, npiy, style_int[pp % 3])
 
             if geom.geom_type == "MultiLineString":
                 geom = cast(shapely.geometry.MultiLineString, geom)
@@ -295,24 +287,26 @@ class MatplotLibUtils:
                     ix = line.coords.xy[0]
                     iy = line.coords.xy[1]
 
-                    iy = cls.rectify_y(iy)
+                    npix = np.array(ix, dtype=np.float64)
+                    npiy = np.array(iy, dtype=np.float64) * -1.0
 
-                    xx.append(ix)
-                    yy.append(iy)
+                    xx.append(npix)
+                    yy.append(npiy)
 
                 for x, y in zip(xx, yy):
                     pp += 1
                     plt.plot(x, y, style_ext[pp % 3])
 
             if geom.geom_type == "LineString":
-                x = geom.coords.xy[0]
-                y = geom.coords.xy[1]
+                xs = geom.coords.xy[0]
+                ys = geom.coords.xy[1]
 
-                y = cls.rectify_y(y)
+                npxs = np.array(xs, dtype=np.float64)
+                npys = np.array(ys, dtype=np.float64) * -1.0
 
                 pp += 1
 
-                plt.plot(x, y, style_ext[pp % 3], color="black")
+                plt.plot(npxs, npys, style_ext[pp % 3], color="black")
 
         plt.axis("equal")
         plt.show()

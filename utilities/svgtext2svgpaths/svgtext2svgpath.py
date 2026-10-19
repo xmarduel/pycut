@@ -10,7 +10,7 @@ Convert svg text to svg path(s)
 with inkscape: can inkscape python module do that ? or do I need a subprocess command ?
 
 command line:
-> "C:\Program Files\Inkscape\bin\inkscape.com" in.svg  --export-text-to-path -o out.svg
+> "C:\\Program Files\\Inkscape\\bin\\inkscape.com" in.svg  --export-text-to-path -o out.svg
 
 -> all svg elements are converted! (not only text)
 -> warning: transformations are kept, this is bad for pycut!

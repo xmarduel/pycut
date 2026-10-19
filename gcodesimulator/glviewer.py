@@ -130,11 +130,11 @@ class Scene:
         # make a scene
         self.vertices: List[Scene.VertexData] = self.make_scene()
 
-        self.array: npt.NDArray[np.float32] = None  # all vertices as np float array
+        self.array: npt.NDArray[np.float32] = np.empty(0, dtype=np.float32)  # all vertices as np float array
         # fill the numpy array from the scene ("path") and gets its buffer
         self.pathBufferContent = self.make_buffer()
 
-    def make_scene(self):
+    def make_scene(self) -> List["Scene.VertexData"]:
         vertices: List[Scene.VertexData] = []
 
         # fill the numpy array - each vertex is composed of 9 float
@@ -172,7 +172,7 @@ class Scene:
         maxY = path[0].pos.y()
         minZ = path[0].pos.z()
 
-        total_time = 0
+        total_time = 0.0
         for idx, point in enumerate(path):
             prevIdx = max(idx - 1, 0)
             prevPoint = path[prevIdx]
@@ -210,7 +210,7 @@ class Scene:
                 )
 
                 if x == prevX and y == prevY:
-                    rotAngle = 0
+                    rotAngle = 0.0
                 else:
                     rotAngle = math.atan2(y - prevY, x - prevX)
 
@@ -241,7 +241,7 @@ class Scene:
 
                 # --------------------------------------------------------------------------------------------------
 
-                if math.abs(z - prevZ) >= xyDist * math.pi / 2 * math.cos(
+                if math.fabs(z - prevZ) >= xyDist * math.pi / 2 * math.cos(
                     cutterAngleRad / 2
                 ) / math.sin(cutterAngleRad / 2):
                     # console.log("plunge or retract")
@@ -1042,7 +1042,7 @@ class Drawable:
             Drawable.LOG_OPENGL.debug("create_path_texture: array_window.tobytes() %r" % bytes)
             
             self.vbo_path.write(
-                0, bytes, array_window.size * np.float32().itemsize
+                0, cast(int, bytes), array_window.size * np.float32().itemsize
             )
 
             # draw (material removal)
@@ -1051,9 +1051,6 @@ class Drawable:
             Drawable.LOG_OPENGL.info(f"create_path_texture: array_window.size() {n}")
 
             lastTriangle += n
-
-            Drawable.LOG_OPENGL.info(f"create_path_texture: numTriangles = {lastTriangle} {numTriangles}")
-
 
         # self.program_path.disableAttributeArray(self.pos1Location)
         # self.program_path.disableAttributeArray(self.pos2Location)
@@ -1064,7 +1061,6 @@ class Drawable:
         #    self.program_path.disableAttributeArray(self.rawPosLocation)
 
         vao_binder.release()
-        vao_binder = None
 
         self.vbo_path.release()
         self.program_path.release()
@@ -1390,7 +1386,6 @@ void main(void) {
         # self.program_heightmap.disableAttributeArray(self.program_heightmap_vertex)
 
         vao_binder.release()
-        vao_binder = None
 
         gl.glBindTexture(GL.GL_TEXTURE_2D, 0)
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0)
@@ -1554,7 +1549,7 @@ void main(void) {
         # self.program_cutter.disableAttributeArray(self.posLocation)
         # self.program_cutter.disableAttributeArray(self.colLocation)
 
-        vao_binder = None
+        vao_binder.release()
 
         self.vbo_cutter.release()
         self.program_cutter.release()
@@ -2085,43 +2080,42 @@ class SimulationControls(QtWidgets.QWidget):
 
         loader = QUiLoader(parent)
 
-        self.control = loader.load(os.path.join(Drawable.PYCUT_PREFIX, "gcodesimulator", "simcontrols.ui"))
-        # self.control = cast(QWidget, Ui_SimControlWidget())
+        self.sim_control = cast(Ui_SimulationControls, loader.load(os.path.join(Drawable.PYCUT_PREFIX, "gcodesimulator", "simcontrols.ui")))
 
         self.setLayout(QtWidgets.QHBoxLayout())
-        self.layout().setContentsMargins(0, 6, 0, 0)
-        self.layout().addWidget(self.control)
+        cast(QtWidgets.QLayout, self.layout()).setContentsMargins(0, 6, 0, 0)
+        cast(QtWidgets.QLayout, self.layout()).addWidget(cast(QtWidgets.QWidget, self.sim_control))
 
         self.gl_widget = gl_widget
         self.gcode_textviewer = gcode_textviewer
 
-        self.control.pushButton_ToEnd.clicked.connect(self.OnSimToEnd)
-        self.control.pushButton_Rewind.clicked.connect(self.OnSimAtStart)
-        self.control.pushButton_RunForward.clicked.connect(self.OnSimRunForward)
-        self.control.pushButton_RunBackward.clicked.connect(self.OnSimRunBackward)
-        self.control.pushButton_StepForward.clicked.connect(self.OnSimStepForward)
-        self.control.pushButton_StepBackward.clicked.connect(self.OnSimStepBackward)
-        self.control.pushButton_Pause.clicked.connect(self.OnSimPause)
+        self.sim_control.pushButton_ToEnd.clicked.connect(self.OnSimToEnd)
+        self.sim_control.pushButton_Rewind.clicked.connect(self.OnSimAtStart)
+        self.sim_control.pushButton_RunForward.clicked.connect(self.OnSimRunForward)
+        self.sim_control.pushButton_RunBackward.clicked.connect(self.OnSimRunBackward)
+        self.sim_control.pushButton_StepForward.clicked.connect(self.OnSimStepForward)
+        self.sim_control.pushButton_StepBackward.clicked.connect(self.OnSimStepBackward)
+        self.sim_control.pushButton_Pause.clicked.connect(self.OnSimPause)
 
-        self.control.pushButton_Rewind.setIcon(
+        self.sim_control.pushButton_Rewind.setIcon(
             QtGui.QIcon(":/images/tango/22x22/actions/media-skip-backward.png")
         )
-        self.control.pushButton_ToEnd.setIcon(
+        self.sim_control.pushButton_ToEnd.setIcon(
             QtGui.QIcon(":/images/tango/22x22/actions/media-skip-forward.png")
         )
-        self.control.pushButton_RunForward.setIcon(
+        self.sim_control.pushButton_RunForward.setIcon(
             QtGui.QIcon(":/images/tango/22x22/actions/media-playback-start.png")
         )
-        self.control.pushButton_RunBackward.setIcon(
+        self.sim_control.pushButton_RunBackward.setIcon(
             QtGui.QIcon(":/images/media-playback-back.png")
         )
-        self.control.pushButton_StepBackward.setIcon(
+        self.sim_control.pushButton_StepBackward.setIcon(
             QtGui.QIcon(":/images/tango/22x22/actions/media-seek-backward.png")
         )
-        self.control.pushButton_StepForward.setIcon(
+        self.sim_control.pushButton_StepForward.setIcon(
             QtGui.QIcon(":/images/tango/22x22/actions/media-seek-forward.png")
         )
-        self.control.pushButton_Pause.setIcon(
+        self.sim_control.pushButton_Pause.setIcon(
             QtGui.QIcon(":/images/tango/22x22/actions/media-playback-pause.png")
         )
 
@@ -2130,34 +2124,34 @@ class SimulationControls(QtWidgets.QWidget):
         self.slider_end = int(self.gl_widget.drawable.scene.totalTime * self.TICK_SCALE)
         self.slider_tick = 1
 
-        self.control.horizontalSlider_Position.setMinimum(self.slider_start)
-        self.control.horizontalSlider_Position.setMaximum(self.slider_end)
-        self.control.horizontalSlider_Position.setSingleStep(self.slider_tick)
-        self.control.horizontalSlider_Position.valueChanged.connect(self.OnSimAtTick)
+        self.sim_control.horizontalSlider_Position.setMinimum(self.slider_start)
+        self.sim_control.horizontalSlider_Position.setMaximum(self.slider_end)
+        self.sim_control.horizontalSlider_Position.setSingleStep(self.slider_tick)
+        self.sim_control.horizontalSlider_Position.valueChanged.connect(self.OnSimAtTick)
 
-        self.control.spinBox_SpeedFactor.valueChanged.connect(self.OnSpeedChange)
-        self.control.spinBox_SpeedFactor.setMinimum(1)
-        self.control.spinBox_SpeedFactor.setMaximum(9999)
+        self.sim_control.spinBox_SpeedFactor.valueChanged.connect(self.OnSpeedChange)
+        self.sim_control.spinBox_SpeedFactor.setMinimum(1)
+        self.sim_control.spinBox_SpeedFactor.setMaximum(9999)
 
         self.simulation_runner = SimulationControls.SimulatorRunner(
             self, 0, self.slider_end
         )
 
-        self.control.spinBox_SpeedFactor.setValue(200)
+        self.sim_control.spinBox_SpeedFactor.setValue(200)
 
-        self.control.horizontalSlider_Position.setValue(self.slider_end)
+        self.sim_control.horizontalSlider_Position.setValue(self.slider_end)
 
         # signal
         self.simtime_changed.connect(self.gcode_textviewer.on_simtime_from_js)
 
     def OnSimAtStart(self):
-        self.control.horizontalSlider_Position.setValue(0)
+        self.sim_control.horizontalSlider_Position.setValue(0)
 
     def OnSimToEnd(self):
-        self.control.horizontalSlider_Position.setValue(self.slider_end)
+        self.sim_control.horizontalSlider_Position.setValue(self.slider_end)
 
     def OnSimRewind(self):
-        self.control.horizontalSlider_Position.setValue(0)
+        self.sim_control.horizontalSlider_Position.setValue(0)
 
     def OnSimAtTick(self, tick: int):
         # inform openGL simulation
@@ -2172,7 +2166,7 @@ class SimulationControls(QtWidgets.QWidget):
         # inform openGL simulation
         self.gl_widget.setStopAtTime(tick / self.TICK_SCALE)
         # inform the scrollbar
-        self.control.horizontalSlider_Position.setValue(tick)
+        self.sim_control.horizontalSlider_Position.setValue(tick)
 
     def OnSimAtTickFromTextBrowser(self, tick: int):
         self.simtime_changed.disconnect(self.gcode_textviewer.on_simtime_from_js)
@@ -2180,7 +2174,7 @@ class SimulationControls(QtWidgets.QWidget):
         # inform openGL simulation
         self.gl_widget.setStopAtTime(tick / self.TICK_SCALE)
         # inform the scrollbar
-        self.control.horizontalSlider_Position.setValue(tick)
+        self.sim_control.horizontalSlider_Position.setValue(tick)
 
         self.simtime_changed.connect(self.gcode_textviewer.on_simtime_from_js)
 

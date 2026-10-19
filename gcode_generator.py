@@ -24,8 +24,8 @@ from typing import cast
 
 import math
 
-from shapely import BufferJoinStyle
 import shapely
+from shapely import BufferJoinStyle
 import shapely.geometry
 import shapely.ops
 from shapely.geometry.base import BaseGeometry
@@ -340,7 +340,7 @@ class CncOp:
 
         return True
 
-    def combine_as_drill_or_peck(self):
+    def combine_as_drill_or_peck(self) -> None:
         """
         generate the combinaison of the selected paths
 
@@ -1061,7 +1061,7 @@ class GcodeGenerator:
     def set_use_offset(self, value: bool):
         self.use_offset = value
 
-    def generate_gcode_action(self):
+    def generate_gcode_action(self) -> None:
         cnc_ops: List["CncOp"] = []
         for cnc_op in self.job.operations:
             if cnc_op.enabled:
