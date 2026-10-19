@@ -1,11 +1,10 @@
 VERSION = "0_1_0"
 
 import argparse
-from math import *
+from math import pi, sqrt, acos, atan, sin, cos 
 from typing import List, Tuple
 
 import shapely.geometry
-import shapely.ops
 
 
 def RAD_TO_DEG(val):
@@ -124,7 +123,7 @@ class GCodePatternDressUp:
 
         return gap
 
-    def calc_bisection_angles(self) -> Tuple[float, float]:
+    def calc_bisection_angles(self) -> Tuple[float, float, float]:
         """
         (a1x + b1y + c1 ) / k1 = +/- (a2x + b2y + c2 ) / k2
 
@@ -132,32 +131,32 @@ class GCodePatternDressUp:
         """
         a1 = self.a1
         b1 = self.b1
-        c1 = self.c1
+        # c1 = self.c1
 
         a2 = self.a2
         b2 = self.b2
-        c2 = self.c2
+        # c2 = self.c2
 
         k1 = sqrt(a1 * a1 + b1 * b1)
         k2 = sqrt(a2 * a2 + b2 * b2)
 
         aa1 = a1 / k1 - a2 / k2
         bb1 = b1 / k1 - b2 / k2
-        cc1 = c1 / k1 - c2 / k2
+        # cc1 = c1 / k1 - c2 / k2
 
         aa2 = a1 / k1 + a2 / k2
         bb2 = b1 / k1 + b2 / k2
-        cc2 = c1 / k1 + c2 / k2
+        # cc2 = c1 / k1 + c2 / k2
 
         if bb1 == 0:
-            slope_b1 = 99999999
+            slope_b1 = 99999999.0
             bisect1 = pi / 2.0
         else:
             slope_b1 = -aa1 / bb1
             bisect1 = atan(-aa1 / bb1)
 
         if bb2 == 0:
-            slope_b2 = 99999999
+            slope_b2 = 99999999.0
             bisect2 = pi / 2.0
         else:
             slope_b2 = -aa2 / bb2

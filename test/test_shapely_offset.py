@@ -1,6 +1,4 @@
 import os
-import sys
-import io
 
 from shapely import BufferJoinStyle
 import shapely.geometry

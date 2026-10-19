@@ -199,7 +199,7 @@ class SvgResolver:
                     id_ref = e.values["href"][1:]  # remove the '#'
                     print('... <use href="#%s" id="%s" ...> ' % (id_ref, e.id))
                     self.id_mapping.setdefault(id_ref, []).append(e.id)
-            except Exception as e:
+            except Exception:
                 pass
 
         print("ID MAPPING", self.id_mapping)
@@ -221,7 +221,7 @@ class SvgResolver:
                     self.id_style.setdefault(id_ref, []).append(
                         e.values.get("style", {})
                     )
-            except Exception as e:
+            except Exception:
                 pass
 
         print("STYLE MAPPING", self.id_style)
@@ -234,7 +234,7 @@ class SvgResolver:
         if shape:
             try:
                 print("replacing shape for etree elt =", item.attrib["id"])
-            except Exception as e:
+            except Exception:
                 print("replacing shape for etree elt =", item)
 
             if isinstance(shape, svgelements.Circle):
@@ -267,7 +267,7 @@ class SvgResolver:
         if group:
             try:
                 print("replacing group for etree elt =", item.attrib["id"])
-            except Exception as e:
+            except Exception:
                 print("replacing group for etree elt =", item)
 
             self.make_xml_group(item, group)

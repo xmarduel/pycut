@@ -142,12 +142,12 @@ class TestSum(unittest.TestCase):
         )
 
     def test_7(self):
-        """
+        '''
         *           *
-          \       /
-            \   /
+          |       /
+            |   /
               +
-        """
+        '''
         pt1 = Point(-4.0, 0.0)
         ptc = Point(0.0, -4.0)
         pt2 = Point(4.0, 0.0)
@@ -164,8 +164,8 @@ class TestSum(unittest.TestCase):
     def test_7b(self):
         """
         *           *
-          \       /
-            \   /
+          |       /
+            |   /
               +
         """
         pt1 = Point(-4.0, 0.0).scale(0.01)

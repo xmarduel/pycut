@@ -1,11 +1,8 @@
 # This Python file uses the following encoding: utf-8
 
 from typing import List
-from typing import Dict
-from typing import Any
 
 import math
-import copy
 
 from PySide6 import QtCore
 from PySide6 import QtWidgets

@@ -1,6 +1,4 @@
 import os
-import sys
-import io
 
 from shapely_svgpath_io import SvgPathDiscretizer
 from shapely_svgpath_io import SvgPath
