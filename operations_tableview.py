@@ -310,9 +310,10 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
         checkWidget: QtWidgets.QWidget,
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
-        checkBoxItem = checkWidget.layout().itemAt(0)
-        checkBox = cast(PyCutCheckBox, checkBoxItem.widget())
-        checkBox.set_value()
+        checkBoxItem = cast(QtWidgets.QLayout, checkWidget.layout()).itemAt(0)
+        if checkBoxItem:
+            checkBox = cast(PyCutCheckBox, checkBoxItem.widget())
+            checkBox.set_value()
 
     def setModelData(
         self,
@@ -320,10 +321,10 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
         model,
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
-        checkBoxItem = checkWidget.layout().itemAt(0)
-        checkBox = cast(PyCutCheckBox, checkBoxItem.widget())
-
-        model.handleNewvalue(index, checkBox.isChecked())
+        checkBoxItem = cast(QtWidgets.QLayout, checkWidget.layout()).itemAt(0)
+        if checkBoxItem:
+            checkBox = cast(PyCutCheckBox, checkBoxItem.widget())
+            model.handleNewvalue(index, checkBox.isChecked())
 
     def updateEditorGeometry(
         self, editor, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
