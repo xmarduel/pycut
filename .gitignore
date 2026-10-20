@@ -3,7 +3,7 @@ __pycache__/
 *.py[co]
 *$py.class
 
-gcode/
+#gcodes/
 
 misc_private/cnc1310/backlash.mp4
 misc_private/cnc1419/cnc1419_v2.iges
