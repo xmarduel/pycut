@@ -17,7 +17,9 @@ from PySide6.QtCore import qIsNaN
 
 from gcodesimulator.parser_11_2.linesegment import LineSegment
 from gcodesimulator.parser_11_2.gcodeparser import GcodeParser
-from gcodesimulator.parser_11_2.gcodepreprocessorutils import GcodePreprocessorUtils
+from gcodesimulator.parser_11_2.gcodepreprocessorutils import (
+    GcodePreprocessorUtils,
+)
 
 from gcodesimulator.util.util import Util
 from gcodesimulator.util.util import qQNaN

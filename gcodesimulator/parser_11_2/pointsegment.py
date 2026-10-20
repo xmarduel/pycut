@@ -14,6 +14,7 @@ from enum import Enum
 from PySide6.QtGui import QVector3D
 
 from gcodesimulator.parser_11_2.arcproperties import ArcProperties
+from gcodesimulator.parser_11_2.splineproperties import SplineProperties
 
 
 class PointSegment:
@@ -24,32 +25,38 @@ class PointSegment:
         ZX = 1
         YZ = 2
 
-    def __init__(self, vec: QVector3D | None = None, num: int | None = None):
+    def __init__(self, point: QVector3D | None = None, axes: QVector3D | None = None, num: int | None = None):
         """ """
         self.m_toolhead = 0
         self.m_isMetric = True
         self.m_isAbsolute = True
+        self.m_isInverseTimeFeed = False
         self.m_isZMovement = False
         self.m_isArc = False
+        self.m_isSpline = False
         self.m_isFastTraverse = False
         self.m_lineNumber = -1
         self.m_arcProperties: ArcProperties | None = None
+        self.m_splineProperties: SplineProperties | None = None
         self.m_speed = 0.0
         self.m_spindleSpeed = 0.0
         self.m_dwell = 0.0
         self.m_plane = self.Plane.XY
 
         self.m_point: QVector3D | None = None
+        self.m_axes: QVector3D | None = None
 
-        if vec != None and num != None:
-            v = cast(QVector3D, vec)
+        if point is not None and axes is not None and num != None:
+            p = cast(QVector3D, point)
+            x = cast(QVector3D, axes)
             n = cast(int, num)
-            self.m_point = QVector3D(v.x(), v.y(), v.z())
+            self.m_point = QVector3D(p.x(), p.y(), p.z())
+            self.m_axes = QVector3D(x.x(), x.y(), x.z())
             self.m_lineNumber = n
 
     @classmethod
     def PointSegment_FromSegment(cls, ps: "PointSegment"):
-        this = cls.PointSegment_FromQVector3D(ps.point(), ps.getLineNumber())
+        this = cls.PointSegment_FromQVector3D(ps.point(), ps.axes(), ps.getLineNumber())
 
         this.m_toolhead = ps.getToolhead()
         this.m_speed = ps.getSpeed()
@@ -57,6 +64,8 @@ class PointSegment:
         this.m_isZMovement = ps.isZMovement()
         this.m_isFastTraverse = ps.isFastTraverse()
         this.m_isAbsolute = ps.isAbsolute()
+        this.m_dwell = ps.getDwell()
+        this.m_spindleSpeed = ps.getSpindleSpeed()
 
         if ps.isArc():
             this.setArcCenter(ps.center())
@@ -67,9 +76,10 @@ class PointSegment:
         return this
 
     @classmethod
-    def PointSegment_FromQVector3D(cls, b: QVector3D, num: int):
+    def PointSegment_FromQVector3D(cls, point: QVector3D, axes: QVector3D, num: int):
         this = PointSegment()
-        this.m_point = QVector3D(b.x(), b.y(), b.z())
+        this.m_point = QVector3D(point.x(), point.y(), point.z())
+        this.m_axes = QVector3D(axes.x(), axes.y(), axes.z())
         this.m_lineNumber = num
 
         return this
@@ -78,12 +88,13 @@ class PointSegment:
     def PointSegment_FromVectorQVector3DQVector3D(
         cls,
         point: QVector3D,
+        axes: QVector3D,
         num: int,
         center: QVector3D,
         radius: float,
         clockwise: bool,
     ):
-        this = PointSegment(point, num)
+        this = PointSegment(point, axes, num)
 
         this.m_isArc = True
         this.m_arcProperties = ArcProperties()
@@ -142,6 +153,73 @@ class PointSegment:
 
     def isArc(self) -> bool:
         return self.m_isArc
+
+    def setIsSpline(self, isS: bool):
+        self.m_isSpline = isS
+
+    def isSpline(self) -> bool:
+        return self.m_isSpline
+
+    def setSplineControlPoints(self, cp1: QVector3D, cp2: QVector3D | None):
+        if self.m_splineProperties == None:
+            self.m_splineProperties = SplineProperties()
+
+        self.m_splineProperties.controlPoint1 = QVector3D(cp1.x(), cp1.y(), cp1.z());
+        
+        if cp2 is not None:
+            self.m_splineProperties.controlPoint2 = QVector3D(cp2.x(), cp2.y(), cp2.z())
+    
+        self.setIsSpline(True)
+
+    def getSplineControlPoint1(self) -> QVector3D | None:
+        if self.m_splineProperties != None:
+            return self.m_splineProperties.controlPoint1
+    
+        return None
+
+    def getSplineControlPoint2(self) -> QVector3D | None:
+        if self.m_splineProperties != None:
+             return self.m_splineProperties.controlPoint2
+        
+        return None
+
+    def getSplineType(self) -> SplineProperties.SplineType:
+        if self.m_splineProperties != None:
+            return self.m_splineProperties.type
+     
+        return SplineProperties.SplineType.CUBIC_SPLINE
+
+    def setSplineType(self, type: SplineProperties.SplineType):
+        if self.m_splineProperties == None:
+            self.m_splineProperties = SplineProperties()
+    
+        self.m_splineProperties.type = type;
+
+    def getArcTurns(self) -> int:
+        if self.m_arcProperties != None :
+            return self.m_arcProperties.turns
+        return 1
+    
+    def setArcTurns(self, turns: int):
+        if self.m_arcProperties == None:
+            self.m_arcProperties = ArcProperties()
+
+        if turns > 0:
+            self.m_arcProperties.turns = turns
+        else:
+            self.m_arcProperties.turns = 1
+
+    def setAxes(self, axes: QVector3D):
+        self.m_axes = axes
+     
+    def axes(self) -> QVector3D:
+        return cast(QVector3D, self.m_axes)
+
+    def isInverseTimeFeed(self) -> bool:
+        return self.m_isInverseTimeFeed
+    
+    def setIsInverseTimeFeed(self, isInverseTimeFeed: bool):
+        self.m_isInverseTimeFeed = isInverseTimeFeed
 
     def setIsFastTraverse(self, isF: bool):
         self.m_isFastTraverse = isF

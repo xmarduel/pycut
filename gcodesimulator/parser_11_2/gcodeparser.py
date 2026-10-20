@@ -17,9 +17,7 @@ from PySide6.QtGui import QMatrix4x4
 from PySide6.QtCore import qIsNaN
 
 from gcodesimulator.parser_11_2.pointsegment import PointSegment
-from gcodesimulator.parser_11_2.gcodepreprocessorutils import (
-    GcodePreprocessorUtils,
-)
+from gcodesimulator.parser_11_2.gcodepreprocessorutils import GcodePreprocessorUtils
 
 
 class GcodeParser:
@@ -31,10 +29,12 @@ class GcodeParser:
         self.m_isMetric = True
         self.m_inAbsoluteMode = True
         self.m_inAbsoluteIJKMode = False
+        self.m_isInverseTimeFeed = False
         self.m_lastGcodeCommand = -1
         self.m_commandNumber = 0
 
         self.m_currentPoint = QVector3D(0, 0, 0)
+        self.m_currentAxes = QVector3D(0, 0, 0)
         self.m_currentPlane = PointSegment.Plane.XY
 
         # Settings
@@ -48,6 +48,7 @@ class GcodeParser:
         self.m_lastSpeed = 0
         self.m_traverseSpeed = 300
         self.m_lastSpindleSpeed = 0
+        self.m_lastSplinePQ = QVector3D(0, 0, 0)  # Last P,Q from previous G5 for auto-matching
 
         # The gcode.
         self.m_points: List[PointSegment] = []
@@ -90,20 +91,25 @@ class GcodeParser:
     def setTruncateDecimalLength(self, truncateDecimalLength: int):
         self.m_truncateDecimalLength = truncateDecimalLength
 
-    def reset(self, initialPoint: QVector3D | None = None):
+    def reset(self, initialPoint: QVector3D | None = None, initialAxes: QVector3D | None = None):
         # print("reseting gp %s" % initialPoint)
 
         if initialPoint is None:
             # initialPoint = QVector3D(qQNaN(), qQNaN(), qQNaN()) # CANDLE: this line!
             initialPoint = QVector3D(0.0, 0.0, 0.0)
 
+        if initialAxes is None:
+            # initialPAxes = QVector3D(qQNaN(), qQNaN(), qQNaN()) # CANDLE: this line!
+            initialAxes = QVector3D(0.0, 0.0, 0.0)
+
         self.m_points = []
 
         # The unspoken home location.
         self.m_currentPoint = initialPoint
+        self.m_initialAxes = initialAxes
         self.m_currentPlane = PointSegment.Plane.XY
         self.m_points.append(
-            PointSegment.PointSegment_FromQVector3D(self.m_currentPoint, -1)
+            PointSegment.PointSegment_FromQVector3D(self.m_currentPoint, self.m_initialAxes, -1)
         )
 
     @singledispatchmethod
