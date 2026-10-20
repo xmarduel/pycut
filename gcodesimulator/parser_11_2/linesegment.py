@@ -24,38 +24,37 @@ class LineSegment:
         self.m_first = None
         self.m_second = None
 
+        self.m_modelStart = None
+        self.m_modelEnd = None
+        self.m_axesStart = None
+        self.m_axesEnd = None
+
+        # Segment index
+        self.m_index = -1
+        
+        # G-code program line index
+        self.m_lineIndex = -1
+
+        self.m_vertexIndex = -1
+
         # Line properties
-        self.m_isZMovement = False
-        self.m_isArc = False
-        self.m_isClockwise = True
-        self.m_isFastTraverse = False
-        self.m_lineNumber = True
-        self.m_drawn = False
-        self.m_isMetric = True
-        self.m_isAbsolute = True
-        self.m_isHightlight = False
-        self.m_vertexIndex = 0
+        self.m_flags = {
+            "isAbsolute" : True,
+            "isArc" : False,
+            "isClockwise" : False,
+            "isDrawn" : False,
+            "isFastTraverse" : False,
+            "isHightlight" : False,
+            "isMetric" : True,
+            "isSpline":  False,
+            "isZMovement" : False,
+            "isInverseTimeFeed": False
+        }
 
         self.m_plane = PointSegment.Plane.XY
 
     def getLineNumber(self) -> int:
-        return self.m_lineNumber
-
-    def getPointArray(self) -> List[QVector3D]:
-        pointarr = []
-        pointarr.append(self.m_first)
-        pointarr.append(self.m_second)
-        return pointarr
-
-    def getPoints(self) -> List[float]:
-        points = []
-        points.append(self.m_first.x())
-        points.append(self.m_first.y())
-        points.append(self.m_first.z())
-        points.append(self.m_second.x())
-        points.append(self.m_second.y())
-        points.append(self.m_second.z())
-        return points
+        return self.m_lineIndex
 
     def getStart(self) -> QVector3D:
         return self.m_first
@@ -69,6 +68,30 @@ class LineSegment:
     def setEnd(self, vector: QVector3D):
         self.m_second = vector
 
+    def modelStart(self) -> QVector3D:
+        return self.m_modelStart
+
+    def setModelStart(self,  modelStart: QVector3D):
+        self.m_modelStart = modelStart
+
+    def modelEnd(self) -> QVector3D:
+        return self.m_modelEnd
+
+    def setModelEnd(self, modelEnd: QVector3D):
+        self.m_modelEnd = modelEnd
+
+    def axesStart(self) -> QVector3D:
+        return self.m_axesStart
+
+    def setAxesStart(self, axesStart: QVector3D):
+        self.m_axesStart = axesStart
+
+    def axesEnd(self) -> QVector3D:
+        return self.m_axesEnd
+
+    def setAxesEnd(self, axesEnd: QVector3D):
+        self.m_axesEnd = axesEnd
+
     def setToolHead(self, head: int):
         self.m_toolhead = head
 
@@ -81,55 +104,65 @@ class LineSegment:
     def getSpeed(self) -> float:
         return self.m_speed
 
-    def setIsZMovement(self, isZ: bool):
-        self.m_isZMovement = isZ
-
-    def isZMovement(self) -> bool:
-        return self.m_isZMovement
-
-    def setIsArc(self, isA: bool):
-        self.m_isArc = isA
-
-    def isArc(self) -> bool:
-        return self.m_isArc
-
-    def setIsFastTraverse(self, isF: bool):
-        self.m_isFastTraverse = isF
-
-    def isFastTraverse(self) -> bool:
-        return self.m_isFastTraverse
-
-    def contains(self, point: QVector3D) -> bool:
-        line = self.getEnd() - self.getStart()
-        pt = point - self.getStart()
-
-        delta = (line - pt).length() - (line.length() - pt.length())
-
-        return delta < 0.01
-
-    def drawn(self) -> bool:
-        return self.m_drawn
-
-    def setDrawn(self, drawn: bool):
-        self.m_drawn = drawn
-
-    def isMetric(self) -> bool:
-        return self.m_isMetric
-
-    def setIsMetric(self, isMetric: bool):
-        self.m_isMetric = isMetric
-
     def isAbsolute(self) -> bool:
         return self.m_isAbsolute
 
     def setIsAbsolute(self, isAbsolute: bool):
         self.m_isAbsolute = isAbsolute
 
+    def setIsArc(self, isA: bool):
+        self.m_flags["isArc"] = isA
+
+    def isArc(self) -> bool:
+        return self.m_flags["isArc"]
+
+    def isClockwise(self) -> bool:
+        return self.m_flags["isClockwise"]
+
+    def setIsClockwise(self, isClockwise: bool):
+        self.m_flags["isClockwise"] = isClockwise
+
+    def drawn(self) -> bool:
+        return self.m_flags["isDrawn"]
+
+    def setDrawn(self, drawn: bool):
+        self.m_flags["isDrawn"] = drawn
+
+    def setIsFastTraverse(self, isF: bool):
+        self.m_flags["isFastTraverse"] = isF
+
+    def isFastTraverse(self) -> bool:
+        return self.m_flags["isFastTraverse"]
+
     def isHightlight(self) -> bool:
-        return self.m_isHightlight
+        return self.m_flags["isHightlight"]
 
     def setIsHightlight(self, isHightlight: bool):
-        self.m_isHightlight = isHightlight
+        self.m_flags["isHightlight"] = isHightlight
+
+    def isMetric(self) -> bool:
+        return self.m_flags["isMetric"]
+
+    def setIsMetric(self, isMetric: bool):
+        self.m_flags["isMetric"] = isMetric
+
+    def setIsSpline(self, isS: bool):
+        self.m_flags["isSpline"] = isS
+
+    def isSpline(self) -> bool:
+        return self.m_flags["isSpline"]
+
+    def isZMovement(self) -> bool:
+        return self.m_flags["isZMovement"]
+    
+    def setIsZMovement(self, isZ: bool):
+        self.m_flags["isZMovement"] = isZ
+
+    def isInverseTimeFeed(self) -> bool:
+        return self.m_flags["isInverseTimeFeed"]
+    
+    def setIsInverseTimeFeed(self, isTimeFeed: bool):
+        self.m_flags["isInverseTimeFeed"] = isTimeFeed
 
     def vertexIndex(self) -> int:
         return self.m_vertexIndex
@@ -149,14 +182,39 @@ class LineSegment:
     def setDwell(self, dwell: float):
         self.m_dwell = dwell
 
-    def isClockwise(self) -> bool:
-        return self.m_isClockwise
-
-    def setIsClockwise(self, isClockwise: bool):
-        self.m_isClockwise = isClockwise
-
     def plane(self) -> PointSegment.Plane:
         return self.m_plane
 
     def setPlane(self, plane: PointSegment.Plane):
         self.m_plane = plane
+
+    def index(self) -> int:
+        return self.m_index
+
+    def setIndex(self, index: int):
+        self.m_index = index
+
+    def getPointArray(self) -> List[QVector3D]:
+        pointarr = []
+        pointarr.append(self.m_first)
+        pointarr.append(self.m_second)
+        return pointarr
+
+    def getPoints(self) -> List[float]:
+        points = []
+        points.append(self.m_first.x())
+        points.append(self.m_first.y())
+        points.append(self.m_first.z())
+        points.append(self.m_second.x())
+        points.append(self.m_second.y())
+        points.append(self.m_second.z())
+        return points
+
+    def contains(self, point: QVector3D) -> bool:
+        line = self.getEnd() - self.getStart()
+        pt = point - self.getStart()
+
+        delta = (line - pt).length() - (line.length() - pt.length())
+
+        return delta < 0.01
+

@@ -18,6 +18,9 @@ from PySide6.QtCore import qIsNaN
 
 from gcodesimulator.parser_11_2.pointsegment import PointSegment
 from gcodesimulator.parser_11_2.gcodepreprocessorutils import GcodePreprocessorUtils
+from gcodesimulator.parser_11_2.splineproperties import SplineProperties
+
+from gcodesimulator.util.util import Util
 
 
 class GcodeParser:
@@ -154,7 +157,7 @@ class GcodeParser:
         # Start expansion.
         #
 
-        expandedPoints = GcodePreprocessorUtils.generatePointsAlongArcBDring(
+        expandedPoints = GcodePreprocessorUtils.generatePointsAlongArcBDring_Arc(
             plane,
             start,
             end,
@@ -164,6 +167,7 @@ class GcodeParser:
             self.m_smallArcThreshold,
             self.m_smallArcSegmentLength,
             False,
+            lastSegment.getArcTurns()
         )
 
         # Validate output of expansion.
@@ -182,7 +186,7 @@ class GcodeParser:
         # skip first element.
         for k in range(1, len(expandedPoints) - 1):
             temp = PointSegment.PointSegment_FromQVector3D(
-                expandedPoints[k + 1], self.m_commandNumber
+                expandedPoints[k + 1], QVector3D(), self.m_commandNumber
             )
             self.m_commandNumber += 1
             temp.setIsMetric(lastSegment.isMetric())
@@ -289,6 +293,8 @@ class GcodeParser:
         return self.m_commandNumber - 1
 
     def processCommand(self, args: List[str]) -> PointSegment:
+        movementGCodes: List[float] = [ 0.0, 1.0, 2.0, 3.0, 5.0, 5.1, 38.2 ]
+
         gCodes = []
         ps = None
 
@@ -305,16 +311,16 @@ class GcodeParser:
         if not qIsNaN(spindleSpeed):
             self.m_lastSpindleSpeed = spindleSpeed
 
-        # Handle P code
-        dwell = GcodePreprocessorUtils.parseCoord(args, "P")
-        if not qIsNaN(dwell):
-            self.m_points[-1].setDwell(dwell)
-
         # handle G codes.
         gCodes = GcodePreprocessorUtils.parseCodes(args, "G")
 
         # If there was no command, add the implicit one to the party.
-        if len(gCodes) == 0 and self.m_lastGcodeCommand != -1:
+        S1 = set(movementGCodes)
+        S2 = set(gCodes)
+
+        containsMovementGCode =  len(S1.intersection(S2)) > 0
+        
+        if not containsMovementGCode:
             gCodes.append(self.m_lastGcodeCommand)
 
         for code in gCodes:
@@ -330,20 +336,28 @@ class GcodeParser:
     def handleGCode(self, code: float, args: List[str]) -> PointSegment:
         ps = None
 
-        nextPoint = GcodePreprocessorUtils.updatePointWithCommand(
+        nextPoint = GcodePreprocessorUtils.updatePointWithCommand_FromStringList(
             args, self.m_currentPoint, self.m_inAbsoluteMode
         )
+        nextAxes = GcodePreprocessorUtils.updateAxesWithCommand(
+            args, self.m_currentAxes, self.m_inAbsoluteMode
+        )
+
 
         if code == 0.0:
-            ps = self.addLinearPointSegment(nextPoint, True)
+            ps = self.addLinearPointSegment(nextPoint, nextAxes, True)
         elif code == 1.0:
-            ps = self.addLinearPointSegment(nextPoint, False)
+            ps = self.addLinearPointSegment(nextPoint, nextAxes, False)
         elif code == 38.2:
-            ps = self.addLinearPointSegment(nextPoint, False)
+            ps = self.addLinearPointSegment(nextPoint, nextAxes, False)
         elif code == 2.0:
-            ps = self.addArcPointSegment(nextPoint, True, args)
+            ps = self.addArcPointSegment(nextPoint, nextAxes, True, args)
         elif code == 3.0:
-            ps = self.addArcPointSegment(nextPoint, False, args)
+            ps = self.addArcPointSegment(nextPoint, nextAxes, False, args)
+        elif code == 5.0:
+            ps = self.addSplinePointSegment(nextPoint, nextAxes, SplineProperties.SplineType.CUBIC_SPLINE, args)
+        elif code == 5.1:
+            ps = self.addSplinePointSegment(nextPoint, nextAxes, SplineProperties.SplineType.QUADRATIC_SPLINE, args)
         elif code == 17.0:
             self.m_currentPlane = PointSegment.Plane.XY
         elif code == 18.0:
@@ -362,26 +376,30 @@ class GcodeParser:
             self.m_inAbsoluteMode = False
         elif code == 91.1:
             self.m_inAbsoluteIJKMode = False
+        elif code == 93.0:
+            self.m_isInverseTimeFeed = True
+        elif code == 94.0:
+            self.m_isInverseTimeFeed = False
 
-        if code == 0.0 or code == 1.0 or code == 2.0 or code == 3.0 or code == 38.2:
+        if code == 0.0 or code == 1.0 or code == 2.0 or code == 3.0 or code == 5.0 or code == 5.1 or code == 38.2:
             self.m_lastGcodeCommand = code
 
         return cast(PointSegment, ps)
 
     def addLinearPointSegment(
-        self, nextPoint: QVector3D, fastTraverse: bool
+        self, nextPoint: QVector3D, nextAxes: QVector3D, fastTraverse: bool
     ) -> PointSegment:
-        ps = PointSegment.PointSegment_FromQVector3D(nextPoint, self.m_commandNumber)
+        ps = PointSegment.PointSegment_FromQVector3D(nextPoint, nextAxes, self.m_commandNumber)
 
         self.m_commandNumber += 1
 
         zOnly = False
 
         # Check for z-only
-        if (
-            (self.m_currentPoint.x() == nextPoint.x())
-            and (self.m_currentPoint.y() == nextPoint.y())
-            and (self.m_currentPoint.z() != nextPoint.z())
+        if ( Util.nIsEqual(self.m_currentAxes, nextAxes)
+            and self.m_currentPoint.x() == nextPoint.x()
+            and self.m_currentPoint.y() == nextPoint.y()
+            and self.m_currentPoint.z() != nextPoint.z()
         ):
             zOnly = True
 
@@ -389,19 +407,21 @@ class GcodeParser:
         ps.setIsZMovement(zOnly)
         ps.setIsFastTraverse(fastTraverse)
         ps.setIsAbsolute(self.m_inAbsoluteMode)
+        ps.setIsInverseTimeFeed(self.m_isInverseTimeFeed)
         ps.setSpeed(self.m_traverseSpeed if fastTraverse else self.m_lastSpeed)
         ps.setSpindleSpeed(self.m_lastSpindleSpeed)
         self.m_points.append(ps)
 
         # Save off the endpoint.
         self.m_currentPoint = nextPoint
+        self.m_nextAxes = nextAxes
 
         return ps
 
     def addArcPointSegment(
-        self, nextPoint: QVector3D, clockwise: bool, args: List[str]
+        self, nextPoint: QVector3D, nextAxes: QVector3D, clockwise: bool, args: List[str]
     ) -> PointSegment:
-        ps = PointSegment.PointSegment_FromQVector3D(nextPoint, self.m_commandNumber)
+        ps = PointSegment.PointSegment_FromQVector3D(nextPoint, nextAxes, self.m_commandNumber)
 
         self.m_commandNumber += 1
 
@@ -409,6 +429,7 @@ class GcodeParser:
             args, self.m_currentPoint, nextPoint, self.m_inAbsoluteIJKMode, clockwise
         )
         radius = GcodePreprocessorUtils.parseCoord(args, "R")
+        pValue = GcodePreprocessorUtils.parseCoord(args, 'P')
 
         # Calculate radius if necessary.
         if qIsNaN(radius):
@@ -440,13 +461,89 @@ class GcodeParser:
         ps.setRadius(radius)
         ps.setIsClockwise(clockwise)
         ps.setIsAbsolute(self.m_inAbsoluteMode)
+        ps.setIsInverseTimeFeed(self.m_isInverseTimeFeed)
         ps.setSpeed(self.m_lastSpeed)
         ps.setSpindleSpeed(self.m_lastSpindleSpeed)
         ps.setPlane(self.m_currentPlane)
+        if not qIsNaN(pValue):
+            ps.setArcTurns(int(pValue))
+             
         self.m_points.append(ps)
 
         # Save off the endpoint.
         self.m_currentPoint = nextPoint
+        return ps
+
+    def addSplinePointSegment(self, nextPoint: QVector3D, nextAxes: QVector3D, type: SplineProperties.SplineType, args: List[str]) -> PointSegment:
+        self.m_commandNumber += 1
+
+        ps = PointSegment(nextPoint, nextAxes, self.m_commandNumber)
+
+        # Parse control point offsets
+        I = GcodePreprocessorUtils.parseCoord(args, 'I')
+        J = GcodePreprocessorUtils.parseCoord(args, 'J')
+        P = GcodePreprocessorUtils.parseCoord(args, 'P')
+        Q = GcodePreprocessorUtils.parseCoord(args, 'Q')
+
+        if type == SplineProperties.SplineType.CUBIC_SPLINE:
+            # G5: Two control points
+            if qIsNaN(I) and qIsNaN(J):
+                # Auto-match: I,J = -(previous P,Q) per Marlin/LinuxCNC spec
+                # "as if I and J are the negation of the previous P and Q"
+                if self.m_lastSplinePQ is None:
+                    # No previous spline - use default I,J = (0,0)
+                    cp1 = self.m_currentPoint
+                else:
+                    cp1 = self.m_currentPoint + QVector3D(
+                        -self.m_lastSplinePQ.x(),
+                        -self.m_lastSplinePQ.y(),
+                        0
+                    )
+                
+            else:
+                # Explicit I,J
+                cp1 = self.m_currentPoint + QVector3D(
+                    0 if qIsNaN(I) else I,
+                    0 if qIsNaN(J) else J,
+                    0
+                )
+
+            cp2 = nextPoint + QVector3D(
+                0 if qIsNaN(P) else P,
+                0 if qIsNaN(Q) else Q,
+                0
+            )
+
+            ps.setSplineControlPoints(cp1, cp2)
+
+            # Store P,Q for next auto-match
+            self.m_lastSplinePQ = QVector3D(
+                0 if qIsNaN(P) else P,
+                0 if qIsNaN(Q) else Q,
+                0
+            )
+
+        else:
+            # G5.1: One control point
+            cp1 = self.m_currentPoint + QVector3D(
+                0 if qIsNaN(I) else I,
+                0 if qIsNaN(J) else J,
+                0
+            )
+            ps.setSplineControlPoints(cp1, None)
+
+        ps.setIsSpline(True)
+        ps.setSplineType(type)
+        ps.setIsMetric(self.m_isMetric)
+        ps.setIsAbsolute(self.m_inAbsoluteMode)
+        ps.setIsInverseTimeFeed(self.m_isInverseTimeFeed)
+        ps.setSpeed(self.m_lastSpeed)
+        ps.setSpindleSpeed(self.m_lastSpindleSpeed)
+        ps.setPlane(self.m_currentPlane)
+
+        self.m_points.append(ps)
+        self.m_currentPoint = nextPoint
+
         return ps
 
     def setLastGcodeCommand(self, num: float):
