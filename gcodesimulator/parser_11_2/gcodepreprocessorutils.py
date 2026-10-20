@@ -18,7 +18,7 @@ from PySide6.QtGui import QVector3D
 from PySide6.QtCore import qIsNaN
 from PySide6.QtCore import QRegularExpression
 
-from gcodesimulator.parser.pointsegment import PointSegment
+from gcodesimulator.parser_11_2.pointsegment import PointSegment
 from gcodesimulator.util.util import qQNaN
 
 

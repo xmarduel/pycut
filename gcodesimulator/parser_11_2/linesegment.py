@@ -10,7 +10,7 @@ from typing import List
 
 from PySide6.QtGui import QVector3D
 
-from gcodesimulator.parser.pointsegment import PointSegment
+from gcodesimulator.parser_11_2.pointsegment import PointSegment
 
 
 class LineSegment:

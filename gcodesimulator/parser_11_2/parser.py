@@ -8,13 +8,11 @@ from PySide6.QtCore import QIODevice
 
 from PySide6.QtGui import QVector3D
 
-from gcodesimulator.parser.gcodeviewparse import GcodeViewParse
-from gcodesimulator.parser.gcodepreprocessorutils import (
-    GcodePreprocessorUtils,
-)
-from gcodesimulator.parser.gcodeparser import GcodeParser
+from gcodesimulator.parser_11_2.gcodeviewparse import GcodeViewParse
+from gcodesimulator.parser_11_2.gcodepreprocessorutils import GcodePreprocessorUtils
+from gcodesimulator.parser_11_2.gcodeparser import GcodeParser
+from gcodesimulator.parser_11_2.linesegment import LineSegment
 
-from gcodesimulator.parser.linesegment import LineSegment
 from gcodesimulator.util.util import qQNaN
 
 
