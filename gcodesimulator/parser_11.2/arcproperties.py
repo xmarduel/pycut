@@ -14,4 +14,3 @@ class ArcProperties:
         self.isClockwise = True
         self.radius = 0.0
         self.center = None
-        self.turns = 0
