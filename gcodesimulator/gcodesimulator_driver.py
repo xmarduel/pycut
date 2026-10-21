@@ -30,7 +30,7 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog="driver", description="GCode Simulator (StandAlone)")
+    parser = argparse.ArgumentParser(prog="gcodesimulator_driver", description="GCode Simulator (StandAlone)")
 
     # argument
     parser.add_argument("gcodefile", help="gcode file")
