@@ -1635,7 +1635,7 @@ class GLView(QOpenGLWidget, QOpenGLFunctions):
         self.cmdFront.setToolTip("Front view")
         self.cmdLeft.setToolTip("Left view")
 
-        if Drawable.PYCUT_PREFIX == "":
+        if Drawable.PYCUT_PREFIX == ".":
             self.cmdFit.setIcon(QtGui.QIcon("./pics/fit_1.png"))
             self.cmdIsometric.setIcon(QtGui.QIcon("./pics/cube.png"))
             self.cmdTop.setIcon(QtGui.QIcon("./pics/cubeTop.png"))

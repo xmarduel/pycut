@@ -1,9 +1,8 @@
 G0 G49 G40  G17 G80 G50 G90 
 M6 T0(TOOL DIA.0.75)
 G64
-(G20 (Inch))
-(Error: PyCut GCodeSimulator fails with Inches! - set G21 to test)
-G21 (Mm)
+G20 (Inch)
+;Error: PyCut GCodeSimulator fails : too big !!?? - comment the half, then it works!
 M04 S0
 G00 G43 H0  Z0.1
 X0 Y0
