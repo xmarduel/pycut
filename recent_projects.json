@@ -1,7 +1,7 @@
 [
+  "misc_private/cnc1310/cnc1310-s42.json",
+  "projects/cnc1310_s52_90x110.json",
   "projects/holes.json",
   "projects/cnc_all_letters_tudor.json",
-  "projects/cnc_all_letters_slaine.json",
-  "projects/test_multiline.json",
-  "projects/helix_tests.json"
+  "projects/cnc_all_letters_slaine.json"
 ]

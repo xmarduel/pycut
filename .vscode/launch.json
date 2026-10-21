@@ -13,15 +13,17 @@
 
 
 
+
+
         {
             "name": "SVG RESOLVER",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "svgresolver.py",
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
             "args": [
-                "test\\simple.svg"
+                "test\\cnc1310-sides-horizontal.svg"
             ]
         },
         {
@@ -288,7 +290,26 @@
           "program": "pycut.py",
           "console": "integratedTerminal",
           "cwd": "/Users/xavier/GITHUB/pycut",
-          "args": [ "--proj", "projects/cnc_all_letters_tudor.json" ]
-        },
+          "args": [ "--svg", "misc_private/unimat_cnc_kit/dc_motor_200w_holder.resolved.svg" ]
+      },
+       {
+          "name": "PYCUT OUTSIDE BUGGY  MAC",
+          "type": "debugpy",
+          "request": "launch",
+          "program": "pycut.py",
+          "console": "integratedTerminal",
+          "cwd": "/Users/xavie/Documents/GITHUB/pycut",
+          "args": [ "-p", "misc_private/cnc1310/cnc1310-s42.json" ]
+      },
+
+      {
+        "name": "PYCUT TUDOR",
+        "type": "python",
+        "request": "launch",
+        "program": "pycut.py",
+        "console": "integratedTerminal",
+        "cwd": "/Users/xavier/GITHUB/pycut",
+        "args": [ "--proj", "projects/cnc_all_letters_tudor.json" ]
+    },
     ]
 }
