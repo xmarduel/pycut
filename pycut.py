@@ -1093,39 +1093,46 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         with open(gcodefilename) as f:
             gcode = f.read()
 
-            tool_diameter_keyword_0 = "; Diameter:"
+            units = "mm" # or "inch"
 
-            found = False
-            # try to get the tool diameter from the gcode comments
             lines = gcode.split("\n")
+
+            # try to get the units first
             for line in lines:
-                if line.startswith(tool_diameter_keyword_0):
-                    data = line.split(tool_diameter_keyword_0)[1].strip()
-                    tool_diameter = float(data)
-                    self.ui.Tool_Diameter.setValue(tool_diameter)
-                    found = True
+                if line.startswith("G20"):
+                    units = "inch"
+                    break
+                if line.startswith("G21"):
+                    units = "mm"
                     break
 
-            if not found:
-                tool_diameter_keyword1 = "\\(tool -> ([0-9.]+) mm end mill\\)"
-                tool_diameter_keyword2 = "\\(TOOL DIA.([0-9.]+)\\)"
+            self.ui.Tool_Units.setCurrentText(units)
+                            
+            # then the tool diameter
+            found = False
 
-                res = [
-                    QRegularExpression(tool_diameter_keyword1),
-                    QRegularExpression(tool_diameter_keyword2),
-                ]
-                pos = 0
-                for line in lines:
-                    for re in res:
-                        m = re.match(line, pos)
-                        if m.hasMatch():
-                            data = m.captured(1)
-                            tool_diameter = float(data)
-                            self.ui.Tool_Diameter.setValue(tool_diameter)
-                            found = True
-                            break
-                    if found:
+            tool_diameter_keyword_0 = "; Diameter:([0-9. ]+)" # from pycut
+            tool_diameter_keyword_1 = "\\(tool -> ([0-9.]+) mm (.)*\\)"
+            tool_diameter_keyword_2 = "\\(TOOL DIA.([0-9.]+)\\)"
+
+            res = [
+                QRegularExpression(tool_diameter_keyword_0),
+                QRegularExpression(tool_diameter_keyword_1),
+                QRegularExpression(tool_diameter_keyword_2),
+            ]
+            pos = 0
+            for line in lines:
+                for re in res:
+                    m = re.match(line, pos)
+                    if m.hasMatch():
+                        data = m.captured(1)
+                        tool_diameter = float(data)
+                        #self.ui.Tool_Diameter.setValue(tool_diameter if units == "mm" else tool_diameter * 25.4)
+                        self.ui.Tool_Diameter.setValue(tool_diameter)
+                        found = True
                         break
+                if found:
+                    break
 
             if not found:
                 msgbox = QtWidgets.QMessageBox()

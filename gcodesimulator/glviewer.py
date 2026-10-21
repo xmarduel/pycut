@@ -721,28 +721,28 @@ class SceneCutter:
 
 
 class Drawable:
-    path_shader_vs = os.path.join("gcodesimulator", "shaders", "rasterizePathVertexShader.txt")
-    path_shader_fs = os.path.join("gcodesimulator", "shaders", "rasterizePathFragmentShader.txt")
+    path_shader_vs = os.path.join("shaders", "rasterizePathVertexShader.txt")
+    path_shader_fs = os.path.join("shaders", "rasterizePathFragmentShader.txt")
 
-    height_shader_vs = os.path.join("gcodesimulator", "shaders", "renderHeightMapVertexShader.txt")
-    height_shader_fs = os.path.join("gcodesimulator", "shaders", "renderHeightMapFragmentShader.txt")
+    height_shader_vs = os.path.join("shaders", "renderHeightMapVertexShader.txt")
+    height_shader_fs = os.path.join("shaders", "renderHeightMapFragmentShader.txt")
 
     #  the cutter
-    basic_shader_vs = os.path.join("gcodesimulator", "shaders", "basicVertexShader.txt")
-    basic_shader_fs = os.path.join("gcodesimulator", "shaders", "basicFragmentShader.txt")
+    basic_shader_vs = os.path.join("shaders", "basicVertexShader.txt")
+    basic_shader_fs = os.path.join("shaders", "basicFragmentShader.txt")
 
     TEXTURE_INDEX = 0
 
     GPU_COEFF = 1  # SMALL GPU !
 
-    PYCUT_PREFIX = ""  # standalone: empty
+    PYCUT_PREFIX = "."  # standalone: empty
 
-    LOG_OPENGL = make_logger("OPENGL", logging.INFO)
+    LOG_OPENGL = make_logger("OPENGL", logging.ERROR)
 
     @classmethod
     def set_pycut_prefix(cls):
         """inside pycut"""
-        cls.PYCUT_PREFIX = "."
+        cls.PYCUT_PREFIX = "gcodesimulator"
 
     def __init__(
         self,
@@ -2080,7 +2080,7 @@ class SimulationControls(QtWidgets.QWidget):
 
         loader = QUiLoader(parent)
 
-        self.sim_control = cast(Ui_SimulationControls, loader.load(os.path.join(Drawable.PYCUT_PREFIX, "gcodesimulator", "simcontrols.ui")))
+        self.sim_control = cast(Ui_SimulationControls, loader.load(os.path.join(Drawable.PYCUT_PREFIX, "simcontrols.ui")))
 
         self.setLayout(QtWidgets.QHBoxLayout())
         cast(QtWidgets.QLayout, self.layout()).setContentsMargins(0, 6, 0, 0)

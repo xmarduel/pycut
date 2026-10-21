@@ -26,11 +26,11 @@ class MainWindow(QMainWindow):
         self.simulator = viewer.GCodeViewer(self, options)
         self.setCentralWidget(self.simulator)
 
-        self.setWindowTitle(self.tr("GCode Simulator (QOpenGL)"))
+        self.setWindowTitle(self.tr("GCode Simulator"))
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog="driver", description="Simulate gcode")
+    parser = argparse.ArgumentParser(prog="driver", description="GCode Simulator (StandAlone)")
 
     # argument
     parser.add_argument("gcodefile", help="gcode file")
