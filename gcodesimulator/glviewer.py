@@ -1002,9 +1002,13 @@ class Drawable:
         gl.glActiveTexture(self.TEXTURE_INDEX)
         gl.glBindTexture(GL.GL_TEXTURE_2D, texture)
 
+        Drawable.LOG_OPENGL.info("create_path_texture: GL_MAX_TEXTURE_BUFFER_SIZE -> %d" % GL.GL_MAX_TEXTURE_BUFFER_SIZE)
+
         numTriangles = self.scene.pathNumVertexes // 3
         lastTriangle = 0
         maxTriangles = self.gpuMem // self.scene.pathStride * 3 * np.float32().itemsize
+
+        Drawable.LOG_OPENGL.info("create_path_texture: maxTriangles -> %d" % maxTriangles)
 
         while lastTriangle < numTriangles:
             n = min(numTriangles - lastTriangle, maxTriangles)
