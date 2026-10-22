@@ -302,7 +302,7 @@ class GcodeMiniParser:
                     mvt = GcodeAtomicMvt(first, 100000)
                     self.path.append(mvt)
 
-                    no = ls.m_lineNumber
+                    no = ls.getLineNumber()
                     # self.path_idx_line_no[len(self.path)-1] = ls.m_lineNumber
                     self.path_idx_line_no[len(self.path) - 1] = (
                         get_lineno_for_directiveno(no)
@@ -313,7 +313,7 @@ class GcodeMiniParser:
                 mvt = GcodeAtomicMvt(pt, feedrate)
                 self.path.append(mvt)
 
-                no = ls.m_lineNumber
+                no = ls.getLineNumber()
                 # self.path_idx_line_no[len(self.path)-1] = no
                 self.path_idx_line_no[len(self.path) - 1] = get_lineno_for_directiveno(
                     no

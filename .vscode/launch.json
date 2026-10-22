@@ -72,13 +72,13 @@
             "args": "./tests/g2.gcode --cutterdiameter=19.05 --candleparser"
         },
         {
-            "name": "MACOSX - MILLIMETERS - SIMULATOR_STANDALONE - CANDLE_PARSER",
+            "name": "MACOSX - SIMULATOR STANDALONE - CANDLE_PARSER NEW - G5",
             "type": "python",
             "request": "launch",
             "program": "gcodesimulator_driver.py",
             "console": "integratedTerminal",
             "cwd": "/Users/xavier/GITHUB/pycut/gcodesimulator",
-            "args": "./tests/g2.gcode --cutterdiameter=0.75 --candleparser"
+            "args": "./tests/g5.gcode --cutterdiameter=6.0 --candleparser"
         },
         {
             "name": "SIMULATOR STANDALONE - CANDLE_PARSER - INCHES - G2",
@@ -88,15 +88,6 @@
             "console": "integratedTerminal",
             "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator",
             "args": "./tests/g2.gcode --cutterdiameter=19.05 --candleparser"
-        },
-         {
-            "name": "SIMULATOR STANDALONE - CANDLE_PARSER - MM - G2",
-            "type": "python",
-            "request": "launch",
-            "program": "gcodesimulator_driver.py",
-            "console": "integratedTerminal",
-            "cwd": "C:\\Users\\xavie\\Documents\\GITHUB\\pycut\\gcodesimulator",
-            "args": "./tests/g2mm.gcode --cutterdiameter=19.05 --candleparser"
         },
         {
             "name": "TEST PARSER PROFILER",

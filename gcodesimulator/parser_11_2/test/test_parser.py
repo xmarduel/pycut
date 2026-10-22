@@ -96,7 +96,7 @@ def main(fname):
 
 ffname = None
 
-def main2():
+def main_profiled_run():
     """ """
     global ffname
     
@@ -113,10 +113,10 @@ def main_profiled(fname):
     import pstats
 
     ffname = fname
-    
+
     outfile = "test_parser.bin"
 
-    profile.run("main2()", filename=outfile)
+    profile.run("main_profiled_run()", filename=outfile)
     p = pstats.Stats(outfile)
 
     # 1.

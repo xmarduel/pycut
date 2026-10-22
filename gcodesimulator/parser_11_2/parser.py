@@ -91,6 +91,6 @@ class CandleParser:
         arcPrecision = 0.2  # TODO self.m_settings.arcPrecision()  # default is 0.1
         arcDegreeMode = False  # TODO self.m_settings.arcDegreeMode()
 
-        self.linesegments = self.m_viewParser.getLinesFromParser(
-            gp, arcPrecision, arcDegreeMode
+        self.linesegments = self.m_viewParser.updateFromParser(
+            gp, arcPrecision, arcDegreeMode, False
         )

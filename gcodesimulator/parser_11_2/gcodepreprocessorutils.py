@@ -604,7 +604,7 @@ class GcodePreprocessorUtils:
         return GcodePreprocessorUtils.lerp(q0, q1, t)
     
     @classmethod
-    def generatePointsAlongSpline(cls, start: QVector3D, end: QVector3D, cp1: QVector3D, cp2: QVector3D | None, tolerance: float = 0.1) -> List[QVector3D]:
+    def generatePointsAlongSpline(cls, start: QVector3D, end: QVector3D, cp1: QVector3D, cp2: QVector3D | None, tolerance: float = 0.005) -> List[QVector3D]:
         points: List[QVector3D] = []
 
         MIN_STEP = 0.001
