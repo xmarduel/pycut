@@ -57,7 +57,7 @@ class LineSegment:
             isClockwise = False,
             isDrawn = False,
             isFastTraverse = False,
-            isHightlight = False,
+            isHighlight = False,
             isMetric = True,
             isSpline =  False,
             isZMovement = False,

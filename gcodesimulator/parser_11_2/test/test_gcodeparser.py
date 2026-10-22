@@ -10,10 +10,10 @@ from PySide6.QtCore import QIODevice
 
 from PySide6.QtGui import QVector3D
 
-from gcodeviewer.parser.gcodeviewparse import GcodeViewParse
-from gcodeviewer.parser.gcodepreprocessorutils import GcodePreprocessorUtils
-from gcodeviewer.parser.gcodeparser import GcodeParser
-from gcodeviewer.parser.linesegment import LineSegment
+from gcodesimulator.parser_11_2.gcodeviewparse import GcodeViewParse
+from gcodesimulator.parser_11_2.gcodepreprocessorutils import GcodePreprocessorUtils
+from gcodesimulator.parser_11_2.gcodeparser import GcodeParser
+from gcodesimulator.parser_11_2.linesegment import LineSegment
 
 
 from gcodeviewer.util.util import qQNaN
@@ -80,8 +80,8 @@ class CandleParser:
         arcPrecision = 0.2  # TODO self.m_settings.arcPrecision()  # default is 0.1
         arcDegreeMode = False  # TODO self.m_settings.arcDegreeMode()
 
-        self.linesegments = self.m_viewParser.getLinesFromParser(
-            gp, arcPrecision, arcDegreeMode
+        self.linesegments = self.m_viewParser.updateFromParser(
+            gp, arcPrecision, arcDegreeMode, False
         )
 
 

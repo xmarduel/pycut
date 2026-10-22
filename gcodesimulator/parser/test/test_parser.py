@@ -8,10 +8,10 @@ from PySide6.QtCore import QFile
 from PySide6.QtCore import QTextStream
 from PySide6.QtCore import QIODevice
 
-from gcodeviewer.parser.gcodeviewparse import GcodeViewParse
-from gcodeviewer.parser.gcodepreprocessorutils import GcodePreprocessorUtils
-from gcodeviewer.parser.gcodeparser import GcodeParser
-from gcodeviewer.parser.linesegment import LineSegment
+from gcodesimulator.parser.gcodeviewparse import GcodeViewParse
+from gcodesimulator.parser.gcodepreprocessorutils import GcodePreprocessorUtils
+from gcodesimulator.parser.gcodeparser import GcodeParser
+from gcodesimulator.parser.linesegment import LineSegment
 
 from gcodeviewer.tables.gcodetablemodel import GCodeItem
 

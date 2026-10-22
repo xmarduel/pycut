@@ -10,10 +10,10 @@ from PySide6.QtCore import QIODevice
 
 from PySide6.QtGui import QVector3D
 
-from gcodeviewer.parser.gcodeviewparse import GcodeViewParse
-from gcodeviewer.parser.gcodepreprocessorutils import GcodePreprocessorUtils
-from gcodeviewer.parser.gcodeparser import GcodeParser
-from gcodeviewer.parser.linesegment import LineSegment
+from gcodesimulator.parser.gcodeviewparse import GcodeViewParse
+from gcodesimulator.parser.gcodepreprocessorutils import GcodePreprocessorUtils
+from gcodesimulator.parser.gcodeparser import GcodeParser
+from gcodesimulator.parser.linesegment import LineSegment
 
 
 from gcodeviewer.util.util import qQNaN

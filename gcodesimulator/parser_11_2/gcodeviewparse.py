@@ -49,9 +49,14 @@ class GcodeViewParse:
         self.m_lineSegments: List[LineSegment] = []
         self.m_lineSegmentsIndexes: List[List[int]] = [[]]
 
-        self.setAxisRotationVector(GcodeViewParse.RotationAxis.RotationAxisA, Util.rotationVector(Util.RotationVectorX))
-        self.setAxisRotationVector(GcodeViewParse.RotationAxis.RotationAxisB, Util.rotationVector(Util.RotationVectorX))
-        self.setAxisRotationVector(GcodeViewParse.RotationAxis.RotationAxisC, Util.rotationVector(Util.RotationVectorX))
+        # Parsing state.
+        self.lastPoint: QVector3D = None
+
+        self.m_axesRotationVectors: Dict[GcodeViewParse.RotationAxis, QVector3D] = {}
+
+        self.setAxisRotationVector(GcodeViewParse.RotationAxis.RotationAxisA, Util.rotationVector(Util.RotationVector.RotationVectorX))
+        self.setAxisRotationVector(GcodeViewParse.RotationAxis.RotationAxisB, Util.rotationVector(Util.RotationVector.RotationVectorX))
+        self.setAxisRotationVector(GcodeViewParse.RotationAxis.RotationAxisC, Util.rotationVector(Util.RotationVector.RotationVectorX))
 
         # Parsed object
         self.m_viewLowerBounds = QVector3D(qQNaN(), qQNaN(), qQNaN())
@@ -60,11 +65,6 @@ class GcodeViewParse:
         self.m_modelUpperBounds = QVector3D(qQNaN(), qQNaN(), qQNaN())
 
         self.m_modelMinLineLength = qQNaN()
-
-        # Parsing state.
-        self.lastPoint: QVector3D = None
-
-        self.m_axesRotationVectors :Dict[GcodeViewParse.RotationAxis, QVector3D]= {}
        
         # Debug
         self.debug = True

@@ -8,10 +8,10 @@ from PySide6.QtCore import QFile
 from PySide6.QtCore import QTextStream
 from PySide6.QtCore import QIODevice
 
-from gcodeviewer.parser.gcodeviewparse import GcodeViewParse
-from gcodeviewer.parser.gcodepreprocessorutils import GcodePreprocessorUtils
-from gcodeviewer.parser.gcodeparser import GcodeParser
-from gcodeviewer.parser.linesegment import LineSegment
+from gcodesimulator.parser_11_2.gcodeviewparse import GcodeViewParse
+from gcodesimulator.parser_11_2.gcodepreprocessorutils import GcodePreprocessorUtils
+from gcodesimulator.parser_11_2.gcodeparser import GcodeParser
+from gcodesimulator.parser_11_2.linesegment import LineSegment
 
 from gcodeviewer.tables.gcodetablemodel import GCodeItem
 
@@ -82,17 +82,54 @@ class CandleParser:
         arcPrecision = 0.2  # TODO self.m_settings.arcPrecision()  # default is 0.1
         arcDegreeMode = False  # TODO self.m_settings.arcDegreeMode()
 
-        self.linesegments = self.m_viewParser.getLinesFromParser(
-            gp, arcPrecision, arcDegreeMode
+        self.linesegments = self.m_viewParser.updateFromParser(
+            gp, arcPrecision, arcDegreeMode, False
         )
 
 
-def main(filename):
+def main(fname):
     """ """
-    codeLoader = CandleParser(filename)
+    codeLoader = CandleParser(fname)
     codeLoader.loadFile()
 
     print("DONE!")
+
+ffname = None
+
+def main2():
+    """ """
+    global ffname
+    
+    codeLoader = CandleParser(ffname)
+    codeLoader.loadFile()
+
+    print("DONE!")
+
+
+def main_profiled(fname):
+    """ """
+    global ffname
+    import profile
+    import pstats
+
+    ffname = fname
+    
+    outfile = "test_parser.bin"
+
+    profile.run("main2()", filename=outfile)
+    p = pstats.Stats(outfile)
+
+    # 1.
+    p.sort_stats("cumulative")
+    p.print_stats(100)  # p.print_stats(50)
+
+    # 2.
+    p.sort_stats("time")
+    p.print_stats(100)  # p.print_stats(50)
+
+    # 3.
+    p.sort_stats("time", "cumulative").print_stats(0.5)  # (.5, 'init')
+
 
 
 if __name__ == "__main__":
@@ -105,9 +142,11 @@ if __name__ == "__main__":
 
     options = parser.parse_args()
 
-    main(options.gcodefile)
+    #main(options.gcodefile)
+    main_profiled(options.gcodefile)
+
     sys.exit(0)
 
 """
-python -m cProfile -o test_parser.prof test_parser.py
+python3 -m cProfile -o test_parser.prof test_parser.py  ../../tests/g5.gcode
 """

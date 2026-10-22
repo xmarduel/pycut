@@ -2,8 +2,8 @@
   "svg_file": "./svg/holes.svg",
   "operations": [
     {
-      "name": "op_hole_10.0mm",
-      "type": "Outside",
+      "name": "hsm_op_hole_10.0mm",
+      "type": "Pocket",
       "cut_depth": 8.0,
       "paths": [
         "pocket-10.00mm"
