@@ -95,7 +95,7 @@ class GcodeViewParse:
             end = ps.point()
 
             # start is null for the first iteration.
-            if start != None:
+            if start is not None:
                 # Expand arc for graphics.
                 if ps.isArc():
                     points = GcodePreprocessorUtils.generatePointsAlongArcBDring(

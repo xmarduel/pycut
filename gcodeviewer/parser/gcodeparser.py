@@ -397,7 +397,7 @@ class GcodeParser:
 
         self.m_commandNumber += 1
 
-        center = GcodePreprocessorUtils.updateCenterWithCommand(
+        center: QVector3D = GcodePreprocessorUtils.updateCenterWithCommand(
             args, self.m_currentPoint, nextPoint, self.m_inAbsoluteIJKMode, clockwise
         )
         radius = GcodePreprocessorUtils.parseCoord(args, "R")
@@ -414,11 +414,15 @@ class GcodeParser:
             elif self.m_currentPlane == PointSegment.Plane.YZ:
                 m.rotate(-90, 0.0, 1.0, 0.0)
 
-            x1 = (m * self.m_currentPoint).x()
-            x2 = (m * center).x()
+            # x1 = (m * self.m_currentPoint).x()
+            x1 = m.map(self.m_currentPoint).x()
+            # x2 = (m * center).x()
+            x2 = m.map(center).x()
 
-            y1 = (m * self.m_currentPoint).y()
-            y2 = (m * center).y()
+            # y1 = (m * self.m_currentPoint).y()
+            y1 = m.map(self.m_currentPoint).y()
+            # y2 = (m * center).y()
+            y2 = m.map(center).y()
 
             radius = math.sqrt(math.pow((x1 - x2), 2.0) + math.pow((y1 - y2), 2.0))
 
