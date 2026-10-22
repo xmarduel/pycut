@@ -237,21 +237,21 @@ class GcodeViewParse:
                             #this->updateViewBounds(ls->getEnd());
                             #this->updateModelBounds(nextPoint);
 
-                            ls.m_flags["isArc"] = ps.m_isArc
-                            ls.m_flags["isClockwise"] = ps.isClockwise()
+                            ls.m_flags.isArc = ps.m_isArc
+                            ls.m_flags.isClockwise = ps.isClockwise()
                             ls.m_plane = ps.m_plane
-                            ls.m_flags["isFastTraverse"] = ps.m_isFastTraverse
-                            ls.m_flags["isZMovement"] = ps.m_isZMovement
-                            ls.m_flags["isMetric"] = isMetric
-                            ls.m_flags["isAbsolute"] = ps.m_isAbsolute
-                            ls.m_flags["isInverseTimeFeed"] = ps.m_isInverseTimeFeed
+                            ls.m_flags.isFastTraverse = ps.m_isFastTraverse
+                            ls.m_flags.isZMovement = ps.m_isZMovement
+                            ls.m_flags.isMetric = isMetric
+                            ls.m_flags.isAbsolute = ps.m_isAbsolute
+                            ls.m_flags.isInverseTimeFeed = ps.m_isInverseTimeFeed
                             ls.m_speed = ps.m_speed
                             ls.m_spindleSpeed = ps.m_spindleSpeed
                             ls.m_dwell = ps.m_dwell
                             ls.m_modelStart = startPoint
                             ls.m_modelEnd = nextPoint
-                            ls.m_axesStart = startAxes # FIXME: clone ?
-                            ls.m_axesEnd = endAxes # FIXME: clone ?
+                            ls.m_axesStart = startAxes
+                            ls.m_axesEnd = endAxes
                             index = index + 1 
                             ls.m_index = index
 
@@ -310,19 +310,19 @@ class GcodeViewParse:
                             #this->updateViewBounds(ls->getEnd());
                             #this->updateModelBounds(nextPoint);
 
-                            ls.m_flags["isSpline"] = True
-                            ls.m_flags["isFastTraverse"] = ps.m_isFastTraverse
-                            ls.m_flags["isZMovement"] = ps.m_isZMovement
-                            ls.m_flags["isMetric"] = isMetric
-                            ls.m_flags["isAbsolute"] = ps.m_isAbsolute
-                            ls.m_flags["inverseTimeFeed"] = ps.m_isInverseTimeFeed
+                            ls.m_flags.isSpline = True
+                            ls.m_flags.isFastTraverse = ps.m_isFastTraverse
+                            ls.m_flags.isZMovement = ps.m_isZMovement
+                            ls.m_flags.isMetric = isMetric
+                            ls.m_flags.isAbsolute = ps.m_isAbsolute
+                            ls.m_flags.isInverseTimeFeed = ps.m_isInverseTimeFeed
                             ls.m_speed = ps.m_speed
                             ls.m_spindleSpeed = ps.m_spindleSpeed
                             ls.m_dwell = ps.m_dwell
                             ls.m_modelStart = startPoint
                             ls.m_modelEnd = nextPoint
-                            ls.m_axesStart = startAxes # FIXME: clone ?
-                            ls.m_axesEnd = endAxes # FIXME: clone ?
+                            ls.m_axesStart = startAxes
+                            ls.m_axesEnd = endAxes
                             index = index + 1 
                             ls.m_index = index
 
@@ -373,20 +373,20 @@ class GcodeViewParse:
                         # ls.setSpindleSpeed(ps.getSpindleSpeed())
                         # ls.setDwell(ps.getDwell())
 
-                        ls.m_flags["isArc"] = ps.m_isArc
-                        ls.m_flags["isFastTraverse"] = ps.m_isFastTraverse
-                        ls.m_flags["isZMovement"] = ps.m_isZMovement
-                        ls.m_flags["isMetric"] = isMetric
-                        ls.m_flags["isAbsolute"] = ps.m_isAbsolute
-                        ls.m_flags["inverseTimeFeed"] = ps.m_isInverseTimeFeed
+                        ls.m_flags.isArc = ps.m_isArc
+                        ls.m_flags.isFastTraverse = ps.m_isFastTraverse
+                        ls.m_flags.isZMovement = ps.m_isZMovement
+                        ls.m_flags.isMetric = isMetric
+                        ls.m_flags.isAbsolute = ps.m_isAbsolute
+                        ls.m_flags.isInverseTimeFeed = ps.m_isInverseTimeFeed
                         ls.m_speed = ps.m_speed
                         ls.m_spindleSpeed = ps.m_spindleSpeed
                         ls.m_dwell = ps.m_dwell
 
                         ls.m_modelStart = startPoint
                         ls.m_modelEnd = nextPoint
-                        ls.m_axesStart = startAxes # FIXME: clone ?
-                        ls.m_axesEnd = endAxes # FIXME: clone ?
+                        ls.m_axesStart = startAxes
+                        ls.m_axesEnd = endAxes
                         ls.m_index = index
 
                         self.updateViewBounds(ls.getEnd())

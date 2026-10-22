@@ -170,9 +170,11 @@ Notice that <strong>PyCut</strong> strongly recommends a viewbox origin to be (0
 
 <div class="info">
 <p><strong>Note:</strong> viewbox x and y attributes (origin) are allowed to be non zero! (but then take extra care of the produced
-GCode coordinates and your own machine coordinates). When stucking to the (0,0) origin, all (visible) designs have positive X and Y 
-coordinates (in the svg coordinates system), and thus all produced GCode -when reference is top left of material- have positive X 
-coordinates and negative Y coordinates (standard orientation). Easy to remember!</p>
+GCode coordinates and your own machine coordinates). When stucking to the (0,0) origin, and drawing all shapes in the x > 0 && y > 0 
+quarter, all (visible) designs have positive X and Y coordinates (in the svg coordinates system, that is, the y-axis is "downward"), 
+then all produced GCode -when reference is top left of material- have positive X 
+coordinates and negative Y coordinates (standard orientation) because the <strong>PyCut</strong> GCode writer reverts the y coordinates. 
+Easy to remember!</p>
 </div>
 
 
@@ -377,6 +379,12 @@ saves its generated gcode files with a comment line of the form</p>
 
 <p>that is parsed to retrieve the right tool diameter. Inserting such a line in the external GCode allows
 <strong>PyCut</strong> to properly simulate the GCode.</p>
+
+<p>There is another gcode reader in the folder <code>gcodesimulator</code></p>
+
+<p><code>&gt; python gcodesimulator_driver.py --cutterdiameter=6 --candleparser &lt;gcodefile&gt;</code></p>
+
+<p>Here the Candle parser can be used (when specified). The cutter diameter (in mm) can also be passed.</p>
 
 <h3 id="P-03-01">Loading a SVG file</h3>
 
@@ -1501,10 +1509,11 @@ using a text editor.</p>
 
 <div class="info">
 <p><strong>Note</strong>: To achieve a quadratic bezier from a cubic one, the vector C1C2 from the 2 control points must only be
-a third of the vector AB the start and end points! The quadratic curve control point Q0 is then the intersection of AC1 and BC2.
-And AC1 = 2/3 AQo, BC2 = 2/3 BQ0.  This constraint on the control points could be added in SolveSpace! Or a real
-quadratic entity could be built in (but it won't happen). Note that making the two control points coincident is not a solution, this does not lead to 
-a quadratic bezier although it looks similar</p>
+a third of the vector AB the start and end points! The quadratic curve control point Qo is then the intersection of AC1 and BC2.
+And AC1 = 2/3 AQo, BC2 = 2/3 BQo.  These constraints can be set in solvespace: build 2 construction lines AB and C1C2. Then 
+parallel constraint and length ratio constraint (a third) can be set! Then the virtual quadratic Bezier control point Qo can also be 
+build and manipiulated from a construction line! Or a real quadratic entity could be built in (but it won't happen). 
+Note that making the two control points  coincident is not a solution, this does not lead to a quadratic bezier although it looks similar</p>
 </div>
 
 <div class="info">

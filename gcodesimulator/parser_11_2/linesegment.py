@@ -7,11 +7,24 @@
 # Copyright 2020-2030 Xavier Marduel
 
 from typing import List
+from dataclasses import dataclass
 
 from PySide6.QtGui import QVector3D
 
 from gcodesimulator.parser_11_2.pointsegment import PointSegment
 
+@dataclass
+class Flags:
+    isAbsolute: bool
+    isArc : bool
+    isClockwise: bool
+    isDrawn: bool
+    isFastTraverse: bool
+    isHighlight: bool
+    isMetric: bool
+    isSpline: bool
+    isZMovement: bool
+    isInverseTimeFeed: bool
 
 class LineSegment:
     """ """
@@ -38,18 +51,18 @@ class LineSegment:
         self.m_vertexIndex = -1
 
         # Line properties
-        self.m_flags = {
-            "isAbsolute" : True,
-            "isArc" : False,
-            "isClockwise" : False,
-            "isDrawn" : False,
-            "isFastTraverse" : False,
-            "isHightlight" : False,
-            "isMetric" : True,
-            "isSpline":  False,
-            "isZMovement" : False,
-            "isInverseTimeFeed": False
-        }
+        self.m_flags = Flags(
+            isAbsolute = True,
+            isArc = False,
+            isClockwise = False,
+            isDrawn = False,
+            isFastTraverse = False,
+            isHightlight = False,
+            isMetric = True,
+            isSpline =  False,
+            isZMovement = False,
+            isInverseTimeFeed = False
+        )
 
         self.m_plane = PointSegment.Plane.XY
 
@@ -105,64 +118,64 @@ class LineSegment:
         return self.m_speed
 
     def isAbsolute(self) -> bool:
-        return self.m_isAbsolute
+        return self.m_flags.m_isAbsolute
 
     def setIsAbsolute(self, isAbsolute: bool):
-        self.m_isAbsolute = isAbsolute
+        self.m_flags.m_isAbsolute = isAbsolute
 
-    def setIsArc(self, isA: bool):
-        self.m_flags["isArc"] = isA
+    def setIsArc(self, isArc: bool):
+        self.m_flags.isArc = isArc
 
     def isArc(self) -> bool:
-        return self.m_flags["isArc"]
+        return self.m_flags.isArc
 
     def isClockwise(self) -> bool:
-        return self.m_flags["isClockwise"]
+        return self.m_flags.isClockwise
 
     def setIsClockwise(self, isClockwise: bool):
-        self.m_flags["isClockwise"] = isClockwise
+        self.m_flags.isClockwise = isClockwise
 
     def drawn(self) -> bool:
-        return self.m_flags["isDrawn"]
+        return self.m_flags.isDrawn
 
-    def setDrawn(self, drawn: bool):
-        self.m_flags["isDrawn"] = drawn
+    def setDrawn(self, isDrawn: bool):
+        self.m_flags.isDrawn = isDrawn
 
-    def setIsFastTraverse(self, isF: bool):
-        self.m_flags["isFastTraverse"] = isF
+    def setIsFastTraverse(self, isFastTraverse: bool):
+        self.m_flags.isFastTraverse = isFastTraverse
 
     def isFastTraverse(self) -> bool:
-        return self.m_flags["isFastTraverse"]
+        return self.m_flags.isFastTraverse
 
     def isHightlight(self) -> bool:
-        return self.m_flags["isHightlight"]
+        return self.m_flags.isHightlight
 
     def setIsHightlight(self, isHightlight: bool):
-        self.m_flags["isHightlight"] = isHightlight
+        self.m_flags.isHightlight = isHightlight
 
     def isMetric(self) -> bool:
-        return self.m_flags["isMetric"]
+        return self.m_flags.isMetric
 
     def setIsMetric(self, isMetric: bool):
-        self.m_flags["isMetric"] = isMetric
+        self.m_flags.isMetric = isMetric
 
-    def setIsSpline(self, isS: bool):
-        self.m_flags["isSpline"] = isS
+    def setIsSpline(self, isSpline: bool):
+        self.m_flags.isSpline = isSpline
 
     def isSpline(self) -> bool:
-        return self.m_flags["isSpline"]
+        return self.m_flags.isSpline
 
     def isZMovement(self) -> bool:
-        return self.m_flags["isZMovement"]
+        return self.m_flags.isZMovement
     
-    def setIsZMovement(self, isZ: bool):
-        self.m_flags["isZMovement"] = isZ
+    def setIsZMovement(self, isZMovement: bool):
+        self.m_flags.isZMovement = isZMovement
 
     def isInverseTimeFeed(self) -> bool:
-        return self.m_flags["isInverseTimeFeed"]
+        return self.m_flags.isInverseTimeFeed
     
-    def setIsInverseTimeFeed(self, isTimeFeed: bool):
-        self.m_flags["isInverseTimeFeed"] = isTimeFeed
+    def setIsInverseTimeFeed(self, isInverseTimeFeed: bool):
+        self.m_flags.isInverseTimeFeed = isInverseTimeFeed
 
     def vertexIndex(self) -> int:
         return self.m_vertexIndex
