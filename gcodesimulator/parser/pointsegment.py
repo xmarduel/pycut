@@ -41,7 +41,7 @@ class PointSegment:
 
         self.m_point: QVector3D | None = None
 
-        if vec != None and num != None:
+        if vec is not None and num is not None:
             v = cast(QVector3D, vec)
             n = cast(int, num)
             self.m_point = QVector3D(v.x(), v.y(), v.z())

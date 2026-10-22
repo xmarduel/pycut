@@ -1,3 +1,6 @@
+from enum import Enum
+from typing import Dict
+
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QColor
 
@@ -13,6 +16,29 @@ def qBound(amin, val, amax):
 
 
 class Util:
+    """ """
+    class RotationVector(Enum):
+        RotationVectorX = 0
+        RotationVectorY = 1
+        RotationVectorZ = 2
+        RotationVectorNone = 3
+
+    vectors: Dict[RotationVector, QVector3D] = {}
+
+    @classmethod
+    def nVector(cls) -> QVector3D:
+        return QVector3D(qQNaN(), qQNaN(), qQNaN());
+
+    @classmethod
+    def rotationVector(cls, vector: RotationVector) -> QVector3D:
+        if len(cls.vectors) == 0:
+            cls.vectors[Util.RotationVector.RotationVectorX] = QVector3D(1.0, 0.0, 0.0)
+            cls.vectors[Util.RotationVector.RotationVectorY] = QVector3D(0.0, 1.0, 0.0)
+            cls.vectors[Util.RotationVector.RotationVectorZ] = QVector3D(0.0, 0.0, 1.0)
+            cls.vectors[Util.RotationVector.RotationVectorNone] = cls.nVector()
+    
+        return cls.vectors[vector]
+
     @classmethod
     def nMin(cls, v1: float, v2: float) -> float:
         if (not qIsNaN(v1)) and (not qIsNaN(v2)):
