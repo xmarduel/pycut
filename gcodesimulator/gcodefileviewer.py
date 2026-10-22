@@ -1,5 +1,6 @@
 from typing import List
 import math
+import logging
 
 from PySide6 import QtWidgets
 from PySide6 import QtGui
@@ -8,7 +9,25 @@ from PySide6 import QtCore
 import gcodesimulator.gcode_syntaxhighlighter as gcode_syntaxhighlighter
 from gcodesimulator.gcodeminiparser import GcodeMiniParser
 
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
 
+logging.basicConfig(filename="gcodefileviewer.log")
+
+def make_logger(name: str, level:int):
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    
+    console = logging.StreamHandler()
+    formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
+    console.setFormatter(formatter)
+    
+    logger.addHandler(console)
+
+    return logger
+
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
 class GCodeFileViewerLineNumberArea(QtWidgets.QWidget):
     """ """
 
@@ -26,6 +45,8 @@ class GCodeFileViewerLineNumberArea(QtWidgets.QWidget):
 
 class GCodeFileViewer(QtWidgets.QPlainTextEdit):
     """ """
+
+    LOG_GCODE_FILEVIEWER = make_logger("GCODE_FILEVIEWER", logging.WARNING)
 
     def __init__(self, simulator):
         """ """
@@ -110,11 +131,17 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
         """
         set the cursor on the implied position
         """
-        # print("on_simtime_from_js", simtime)
+        GCodeFileViewer.LOG_GCODE_FILEVIEWER.debug(
+            f"on_simtime_from_js: -> simtime = {simtime}"
+        )
 
         # set cursor at line
         idx = self.miniparser.get_mvt_index_for_time(simtime)
-        # print("-> path_idx", idx)
+
+        GCodeFileViewer.LOG_GCODE_FILEVIEWER.debug(
+           f"on_simtime_from_js: -> path_idx = {idx}"
+        )
+
         try:
             if idx not in self.miniparser.path_idx_line_no:
                 idx0 = idx
@@ -129,19 +156,17 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
             # ---- small fix: if line is a comment, go to the next one
 
             # ---------------------------
-
-            print("-> step: curr_line_no", self.curr_line_no)
+            GCodeFileViewer.LOG_GCODE_FILEVIEWER.debug(
+                f"on_simtime_from_js: -> step: curr_line_no {self.curr_line_no}"
+            )
 
             block = self.document().findBlockByLineNumber(self.curr_line_no)
             cursor = QtGui.QTextCursor(block)
             self.setTextCursor(cursor)
 
             # this is BAD!
-            print(
-                "-> step: cursor pos",
-                cursor.position(),
-                " ==> line_no = ",
-                cursor.blockNumber(),
+            GCodeFileViewer.LOG_GCODE_FILEVIEWER.debug(
+                f"on_simtime_from_js: -> step: cursor pos {cursor.position()} ==> line_no = {cursor.blockNumber()}"
             )
 
             if True:
@@ -150,28 +175,25 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
                 cursor.setPosition(pos)
                 self.setTextCursor(cursor)
 
-            print(
-                "-> step: cursor pos",
-                cursor.position(),
-                " ==> line_no = ",
-                cursor.blockNumber(),
+            GCodeFileViewer.LOG_GCODE_FILEVIEWER.debug(
+                f"on_simtime_from_js: -> step: cursor pos {cursor.position()} ==> line_no = {cursor.blockNumber()}"
             )
 
             self.highligh_current_line()
 
         except Exception as e:
-            print(e)
-            pass
+            GCodeFileViewer.LOG_GCODE_FILEVIEWER.warning(
+                f"on_simtime_from_js: -> exception = {e}"
+            )
 
     def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:
         """ """
         cursor = self.cursorForPosition(event.pos())
-        print(
-            "-> mouse: cursor pos",
-            cursor.position(),
-            " ==> line_no = ",
-            cursor.blockNumber(),
+        
+        GCodeFileViewer.LOG_GCODE_FILEVIEWER.debug(
+            f"mousePressEvent: cursor pos {cursor.position()} ==> line_no = {cursor.blockNumber()}"
         )
+
         self.curr_line_no = cursor.blockNumber()
 
         # from the python "miniparser"
