@@ -6,7 +6,9 @@ import os
 import argparse
 import io
 
-from lxml import etree  # type: ignore [import-untyped]
+from typing import cast
+
+from lxml import etree
 import svgelements  # type: ignore [import-untyped]
 
 
@@ -36,7 +38,7 @@ class SvgSetMissingIds:
         # self.write(root)
         self.get_svg_data()
 
-    def add_id_to_elements(self, item: etree.Element):
+    def add_id_to_elements(self, item: etree._Element):
         """for all shaped without "id", gives one "id" """
         for child in item:
             if not isinstance(child.tag, str):  # a comment ?
@@ -63,7 +65,7 @@ class SvgSetMissingIds:
 
         self.svg = io.StringIO(tree_bytes.decode())
 
-    def write(self, root: etree.Element):
+    def write(self, root: etree._Element):
         """DEBUG"""
         doc = etree.ElementTree(root)
 
@@ -226,7 +228,7 @@ class SvgResolver:
 
         print("STYLE MAPPING", self.id_style)
 
-    def replace_elements(self, item: etree.Element):
+    def replace_elements(self, item: etree._Element):
         """ """
         shape = self.get_svg_shape_for_use_item(item)
         group = self.get_svg_group_for_use_item(item)
@@ -286,7 +288,7 @@ class SvgResolver:
 
             self.replace_elements(ch)
 
-    def remove_defs(self, root: etree.ElementTree):
+    def remove_defs(self, root: etree._Element):
         """ """
         defs = None
 
@@ -300,7 +302,7 @@ class SvgResolver:
         else:
             print("defs not found")
 
-    def remove_auto_ids(self, item: etree.Element):
+    def remove_auto_ids(self, item: etree._Element):
         """"""
         for child in item:
             if not isinstance(child.tag, str):  # a comment ?
@@ -328,13 +330,13 @@ class SvgResolver:
                 "path",
             ]:
                 if "id" in child.attrib:
-                    e_id: str = child.attrib["id"]
-                    if e_id.startswith(SvgSetMissingIds.prefix):
+                    e_id = child.attrib["id"]
+                    if e_id and cast(str, e_id).startswith(SvgSetMissingIds.prefix):
                         del child.attrib["id"]
 
             self.remove_auto_ids(child)
 
-    def write_result(self, root: etree.ElementTree):
+    def write_result(self, root: etree._Element):
         """ """
         if self.drop_defs:
             self.remove_defs(root)
@@ -437,7 +439,7 @@ class SvgResolver:
 
         return (xx, yy)
 
-    def make_xml_group(self, item: etree.Element, group: svgelements.Group):
+    def make_xml_group(self, item: etree._Element, group: svgelements.Group):
         """ """
         print("replacing group items for etree elt =", group.id)
 
@@ -473,9 +475,11 @@ class SvgResolver:
 
         resolve_group_items(item, group)
 
-        item.getparent().remove(item)
+        parent = item.getparent()
+        if parent:
+            parent.remove(item)
 
-    def make_xml_circle(self, item: etree.Element, shape: svgelements.Shape):
+    def make_xml_circle(self, item: etree._Element, shape: svgelements.Shape):
         """ """
         print("Circle!")
 
@@ -503,9 +507,12 @@ class SvgResolver:
             c.attrib["style"] = style
 
         item.addnext(c)
-        item.getparent().remove(item)
 
-    def make_xml_rect(self, item: etree.Element, shape: svgelements.Shape):
+        parent = item.getparent()
+        if parent:
+            parent.remove(item)
+
+    def make_xml_rect(self, item: etree._Element, shape: svgelements.Shape):
         """ """
         print("Rect!")
 
@@ -552,9 +559,12 @@ class SvgResolver:
             r.attrib["y"] = self.lf_format % final_corner.y
 
         item.addnext(r)
-        item.getparent().remove(item)
+       
+        parent = item.getparent()
+        if parent:
+            parent.remove(item)
 
-    def make_xml_ellipse(self, item: etree.Element, shape: svgelements.Shape):
+    def make_xml_ellipse(self, item: etree._Element, shape: svgelements.Shape):
         """ """
         print("Ellipse!")
 
@@ -577,9 +587,12 @@ class SvgResolver:
             e.attrib["style"] = style
 
         item.addnext(e)
-        item.getparent().remove(item)
+        
+        parent = item.getparent()
+        if parent:
+            parent.remove(item)
 
-    def make_xml_polygon(self, item: etree.Element, shape: svgelements.Shape):
+    def make_xml_polygon(self, item: etree._Element, shape: svgelements.Shape):
         """ """
         print("Polygon!")
 
@@ -601,9 +614,12 @@ class SvgResolver:
             p.attrib["style"] = style
 
         item.addnext(p)
-        item.getparent().remove(item)
+        
+        parent = item.getparent()
+        if parent:
+            parent.remove(item)
 
-    def make_xml_line(self, item: etree.Element, shape: svgelements.Shape):
+    def make_xml_line(self, item: etree._Element, shape: svgelements.Shape):
         """ """
         print("SimpleLine!")
 
@@ -631,9 +647,12 @@ class SvgResolver:
             l.attrib["style"] = style
 
         item.addnext(l)
-        item.getparent().remove(item)
+        
+        parent = item.getparent()
+        if parent:
+            parent.remove(item)
 
-    def make_xml_polyline(self, item: etree.Element, shape: svgelements.Shape):
+    def make_xml_polyline(self, item: etree._Element, shape: svgelements.Shape):
         """ """
         print("Polyline!")
 
@@ -655,9 +674,12 @@ class SvgResolver:
             p.attrib["style"] = style
 
         item.addnext(p)
-        item.getparent().remove(item)
+        
+        parent = item.getparent()
+        if parent:
+            parent.remove(item)
 
-    def make_xml_path(self, item: etree.Element, shape: svgelements.Shape):
+    def make_xml_path(self, item: etree._Element, shape: svgelements.Shape):
         """ """
         print("Path!")
 
@@ -677,15 +699,18 @@ class SvgResolver:
             p.attrib["style"] = style
 
         item.addnext(p)
-        item.getparent().remove(item)
+        
+        parent = item.getparent()
+        if parent:
+            parent.remove(item)
 
-    def make_xml_text(self, item: etree.Element, shape: svgelements.Shape):
+    def make_xml_text(self, item: etree._Element, shape: svgelements.Shape):
         """
         BUG: svgelements : shape.x and shape.y are **NOT** calculated!
         """
         print("Text!")
 
-        t = etree.SubElement(item.getparent(), "text")
+        t = etree.SubElement(cast(etree._Element, item.getparent()), "text")
 
         the_id = self.resolve_id(shape)
         the_style = self.resolve_style(shape)
@@ -706,10 +731,13 @@ class SvgResolver:
             t.attrib["style"] = style
 
         item.addnext(t)
-        item.getparent().remove(item)
+        
+        parent = item.getparent()
+        if parent:
+            parent.remove(item)
 
     def get_svg_shape_for_use_item(
-        self, item: etree.Element
+        self, item: etree._Element
     ) -> svgelements.Shape | None:
         """ """
         if item.tag == "{http://www.w3.org/2000/svg}svg":
@@ -739,7 +767,7 @@ class SvgResolver:
         return None
 
     def get_svg_group_for_use_item(
-        self, item: etree.Element
+        self, item: etree._Element
     ) -> svgelements.Shape | None:
         """ """
         if item.tag == "{http://www.w3.org/2000/svg}svg":

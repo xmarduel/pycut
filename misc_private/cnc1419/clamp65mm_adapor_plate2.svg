@@ -1,0 +1,30 @@
+<?xml version="1.0" standalone="no"?>
+<svg id="clamp65mm-adaptor-plate" width="100mm" height="60mm" viewBox="0 0 100 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+	<!--
+    clamp has an height of 40mm, 
+       horizontal distance between screws : 80 mm
+       vertical   distance between screws : 25 mm 
+    -->
+    <defs id="defs">
+        <circle id="plate_screw_3mm" style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="1.5" />
+        <circle id="clamp_screw_8mm" style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="3.25" />
+    </defs>
+  
+    <g id="plate1">
+	    <rect id="plate" x="0" y="0" rx="2" ry="2" width="100" height="60" stroke="blue" stroke-width="0.25" fill="none" /> 
+
+		<use href="#plate_screw_3mm"    x="50" y="20" id="s1" />
+        <use href="#plate_screw_3mm"    x="50" y="40" id="s2" />
+        <use href="#plate_screw_3mm"    x="80" y="20" id="s3" />
+        <use href="#plate_screw_3mm"    x="80" y="40" id="s4" />
+		<use href="#plate_screw_3mm"    x="20" y="20" id="s5" />
+        <use href="#plate_screw_3mm"    x="20" y="40" id="s6" />
+		  
+	    <use href="#clamp_screw_8mm"    x="10" y="17.5" id="clamp_s1" />
+        <use href="#clamp_screw_8mm"    x="10" y="42.5" id="clamp_s2" />
+        <use href="#clamp_screw_8mm"    x="90" y="17.5" id="clamp_s3" />
+        <use href="#clamp_screw_8mm"    x="90" y="42.5" id="clamp_s4" />
+
+        <rect id="clamp_base" x="-1" y="10" rx="2" ry="2" width="102" height="40" stroke="black" stroke-width="0.25" fill="none" /> 
+    </g>	
+</svg>

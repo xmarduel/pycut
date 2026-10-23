@@ -25,19 +25,19 @@ subprocess.call("inkscape.com in.svg --export-text-to-path -o out.svg", shell = 
 """
 
 import os
-import sys
 import io
 import glob
 import argparse
 
 from typing import List
 from typing import Dict
+from typing import cast
 
-from lxml import etree  # type: ignore [import-untyped]
+from lxml import etree
 import numpy as np
 
-import freetype
-import svgpathtools
+import freetype   # type: ignore [import-untyped]
+import svgpathtools   # type: ignore [import-untyped]
 from svgpathtools import wsvg, Line, QuadraticBezier, Path, parse_path
 
 # import ziafont
@@ -51,7 +51,7 @@ class PathWithAttribs:
     Wrapper on Path class to contains the attribs as well
     """
 
-    def __init__(self, path: Path, elt: etree.Element, id: str, attribs: any):
+    def __init__(self, path: Path, elt: etree._Element, id: str, attribs: Dict[str, str]):
         self.path = path
         self.elt = elt
         self.attribs = attribs
@@ -61,7 +61,7 @@ class PathWithAttribs:
 class SvgTextObject:
     """ """
 
-    def __init__(self, elt: etree.Element):
+    def __init__(self, elt: etree._Element):
         """ """
         # the xml element as etree element object
         self.elt = elt
@@ -667,22 +667,23 @@ class FontFiles:
         style = style.lower()
         stretch = stretch.lower()
 
-        if not family in cls.lookup:
-            if family in cls.fonts_family_alias:
-                family = cls.fonts_family_alias[family]
+        if cls.lookup:
+            if not family in cls.lookup:
+                if family in cls.fonts_family_alias:
+                    family = cls.fonts_family_alias[family]
 
-        if family in cls.lookup:
-            font_styles = cls.build_font_styles(style, weight, stretch)
+            if family in cls.lookup:
+                font_styles = cls.build_font_styles(style, weight, stretch)
 
-            for font_style in font_styles:
-                if font_style in cls.lookup[family]:
-                    return cls.lookup[family][font_style]
+                for font_style in font_styles:
+                    if font_style in cls.lookup[family]:
+                        return cls.lookup[family][font_style]
 
-            print("font '%s' style '%s' not found - ignore" % (family, font_styles))
-            return None
+                print("font '%s' style '%s' not found - ignore" % (family, font_styles))
+                return None
 
-        else:
-            print("font '%s' not found - ignore" % family)
+            else:
+                print("font '%s' not found - ignore" % family)
 
         return None
 
