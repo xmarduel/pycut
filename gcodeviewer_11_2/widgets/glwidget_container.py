@@ -13,22 +13,22 @@ from PySide6 import QtCore
 from PySide6.QtWidgets import QProgressDialog
 from PySide6.QtWidgets import QApplication
 
-from gcodeviewer.drawers.gcodedrawer import GcodeDrawer
-from gcodeviewer.drawers.origindrawer import OriginDrawer
-from gcodeviewer.drawers.tooldrawer import ToolDrawer
-from gcodeviewer.drawers.selectiondrawer import SelectionDrawer
+from gcodeviewer_11_2.drawers.gcodedrawer import GcodeDrawer
+from gcodeviewer_11_2.drawers.origindrawer import OriginDrawer
+from gcodeviewer_11_2.drawers.tooldrawer import ToolDrawer
+from gcodeviewer_11_2.drawers.selectiondrawer import SelectionDrawer
 
-from gcodeviewer.parser.gcodeviewparse import GcodeViewParse
-from gcodeviewer.parser.gcodepreprocessorutils import GcodePreprocessorUtils
-from gcodeviewer.parser.gcodeparser import GcodeParser
-from gcodeviewer.parser.linesegment import LineSegment
+from gcodeviewer_11_2.parser.gcodeviewparse import GcodeViewParse
+from gcodeviewer_11_2.parser.gcodepreprocessorutils import GcodePreprocessorUtils
+from gcodeviewer_11_2.parser.gcodeparser import GcodeParser
+from gcodeviewer_11_2.parser.linesegment import LineSegment
 
-from gcodeviewer.tables.gcodetableview import GCodeTableView
-from gcodeviewer.tables.gcodetablemodel import GCodeItem
-from gcodeviewer.tables.gcodetablemodel import GCodeTableModel
+from gcodeviewer_11_2.tables.gcodetableview import GCodeTableView
+from gcodeviewer_11_2.tables.gcodetablemodel import GCodeItem
+from gcodeviewer_11_2.tables.gcodetablemodel import GCodeTableModel
 
-from gcodeviewer.widgets.glwidget import GLWidget
-from gcodeviewer.widgets.glcontrolswidget import GCodeControlsWidget
+from gcodeviewer_11_2.widgets.glwidget import GLWidget
+from gcodeviewer_11_2.widgets.glcontrolswidget import GCodeControlsWidget
 
 sNan = float("NaN")
 
@@ -245,8 +245,8 @@ class GLWidgetContainer(QtWidgets.QWidget):
         arcPrecision = 0.0  # TODO self.m_settings.arcPrecision()
         arcDegreeMode = True  # TODO self.m_settings.arcDegreeMode()
 
-        all_lines = self.m_viewParser.getLinesFromParser(
-            gp, arcPrecision, arcDegreeMode
+        all_lines = self.m_viewParser.updateFromParser(
+            gp, arcPrecision, arcDegreeMode, False
         )
 
         self.updateProgramEstimatedTime(all_lines)
@@ -329,8 +329,8 @@ class GLWidgetContainer(QtWidgets.QWidget):
             idx2 = self.m_currentModel.index(self.m_currentModel.rowCount() - 2, 0)
 
         parser = self.m_currentDrawer.viewParser()
-        list = parser.getLineSegmentList()
-        lineIndexes = parser.getLinesIndexes()
+        list = parser.getLineSegments()
+        lineIndexes = parser.getLineSegmentsIndexes()
 
         # Update linesegments on cell changed
         if not self.m_currentDrawer.geometryUpdated():
@@ -339,7 +339,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
                 jdx2 = int(
                     self.m_currentModel.data(self.m_currentModel.index(idx1.row(), 4))
                 )
-                list[i].setIsHightlight(jdx1 <= jdx2)
+                list[i].setIsHighlight(jdx1 <= jdx2)
 
         # Update vertices on current cell changed
         else:
@@ -355,14 +355,14 @@ class GLWidgetContainer(QtWidgets.QWidget):
             indexes = []
             for i in range(lineFirst + 1, lineLast + 1):
                 for l in lineIndexes[i]:
-                    list[l].setIsHightlight(idx1.row() > idx2.row())
+                    list[l].setIsHighlight(idx1.row() > idx2.row())
                     indexes.append(l)
 
             if len(indexes) == 0:
-                self.m_selectionDrawer.setEndPosition(QVector3D(sNan, sNan, sNan))
+                self.m_selectionDrawer.setPosition(QVector3D(sNan, sNan, sNan))
             else:
                 if self.m_codeDrawer.getIgnoreZ():
-                    self.m_selectionDrawer.setEndPosition(
+                    self.m_selectionDrawer.setPosition(
                         QVector3D(
                             list[indexes[-1]].getEnd().x(),
                             list[indexes[-1]].getEnd().y(),
@@ -370,7 +370,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
                         )
                     )
                 else:
-                    self.m_selectionDrawer.setEndPosition(list[indexes[-1]].getEnd())
+                    self.m_selectionDrawer.setPosition(list[indexes[-1]].getEnd())
             self.m_selectionDrawer.update()
 
             if len(indexes) > 0:
@@ -379,20 +379,22 @@ class GLWidgetContainer(QtWidgets.QWidget):
         # Update selection marker
 
         line = int(self.m_currentModel.data(self.m_currentModel.index(idx1.row(), 4)))
-        if line > 0 and lineIndexes[line] != "":
+        if line > 0 and len(lineIndexes[line]) > 0:
             pos = list[lineIndexes[line][-1]].getEnd()
             if self.m_codeDrawer.getIgnoreZ():
-                self.m_selectionDrawer.setEndPosition(QVector3D(pos.x(), pos.y(), 0))
+                self.m_selectionDrawer.setPosition(QVector3D(pos.x(), pos.y(), 0))
             else:
-                self.m_selectionDrawer.setEndPosition(pos)
+                self.m_selectionDrawer.setPosition(pos)
 
             # >>>> PYCUT: and position the tool at the current position
             self.m_toolDrawer.setToolPosition(pos)
             self.m_toolDrawer.update()
+
+            self.m_codeDrawer.update()
             # >>>> PYCUT: and position the tool at the current position
 
         else:
-            self.m_selectionDrawer.setEndPosition(QVector3D(sNan, sNan, sNan))
+            self.m_selectionDrawer.setPosition(QVector3D(sNan, sNan, sNan))
 
         self.m_selectionDrawer.update()
 

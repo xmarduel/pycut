@@ -147,11 +147,11 @@ class LineSegment:
     def isFastTraverse(self) -> bool:
         return self.m_flags.isFastTraverse
 
-    def isHightlight(self) -> bool:
-        return self.m_flags.isHightlight
+    def isHighlight(self) -> bool:
+        return self.m_flags.isHighlight
 
-    def setIsHightlight(self, isHightlight: bool):
-        self.m_flags.isHightlight = isHightlight
+    def setIsHighlight(self, isHighlight: bool):
+        self.m_flags.isHighlight = isHighlight
 
     def isMetric(self) -> bool:
         return self.m_flags.isMetric

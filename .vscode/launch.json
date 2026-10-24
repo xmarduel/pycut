@@ -270,5 +270,14 @@
           "cwd": "${userHome}/GITHUB/pycut",
           "args": [ "--proj", "projects/cnc_all_letters_tudor.json" ]
         },
+         {
+          "name": "BASIC",
+          "type": "debugpy",
+          "request": "launch",
+          "program": "pycut.py",
+          "console": "integratedTerminal",
+          "cwd": "${userHome}/Documents/GITHUB/pycut",
+          "args": [ "-p", "misc_private\\cnc1310\\cnc1310-s42.json" ]
+        },
     ]
 }

@@ -28,7 +28,7 @@ class ToolDrawer(ShaderDrawable):
         self.m_toolPosition = QVector3D(0, 0, 0)
         self.m_rotationAngle = 0.0
         self.m_toolAngle = 0.0
-        self.m_color = QColor(1.0, 0.6, 4.0)
+        self.m_color = QColor(255, 153, 0)
 
     def toolDiameter(self) -> float:
         return self.m_toolDiameter

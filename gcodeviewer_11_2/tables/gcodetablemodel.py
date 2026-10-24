@@ -18,12 +18,16 @@ class GCodeItem:
         self.command = ""
         self.state = GCodeItem.States.InQueue
         self.response = ""
-        self.line = 0
+        self.line = -1
         self.args = []
 
 
 class GCodeTableModel(QtCore.QAbstractTableModel):
     """ """
+
+    commandChanged = QtCore.Signal() # (int row, const QByteArray &oldValue, const QByteArray &newValue);
+    commandsInserted = QtCore.Signal() # (int row, const QList<QByteArray> &commands);
+    rowAdded = QtCore.Signal() # (int row);
 
     def __init__(self, parent=None):
         super(GCodeTableModel, self).__init__()
@@ -93,20 +97,76 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
             if index.column() == 0:
                 return False
             elif index.column() == 1:
-                self.m_data[index.row()].command = str(value)
+                #self.m_data[index.row()].command = str(value)
+                oldCommand = self.m_data[index.row()].command
+                newCommand = value.toString().toUtf8()
+                
+                if newCommand != oldCommand:
+                    self.m_data[index.row()].command = newCommand
+                    self.m_data[index.row()].command.squeeze()
+                    self.commandChanged.emit(index.row(), oldCommand, newCommand)
+
             elif index.column() == 2:
                 self.m_data[index.row()].state = GCodeItem.States(value)
             elif index.column() == 3:
                 self.m_data[index.row()].response = str(value)
+                self.m_data[index.row()].response.squeeze()
             elif index.column() == 4:
                 self.m_data[index.row()].line = int(value)
             elif index.column() == 5:
-                self.m_data[index.row()].args = [str(value)]  ## FIXME: toStringList()
+                self.m_data[index.row()].args = [str(value)]  ## FIXME: value.value<QList<QByteArray>>();
 
             self.dataChanged.emit(index, index)
             return True
 
         return False
+
+    def setCommand(self, row: int, command: QtCore.QByteArray):
+        self.m_data[row].command = command
+        self.m_data[row].command.squeeze()
+        self.m_data[row].args = []
+
+        #index = self.index(row, 1)
+        self.dataChanged.emit(self.index(row, 1), self.index(row, 5))
+
+    def insertCommands(self, row: int, commands: List[QtCore.QByteArray]):
+        self.insertRows(row, len(commands))
+
+        for i, command in enumerate(commands):
+            self.setCommand(row + i, command)
+
+        self.commandsInserted.emit(row, commands)
+
+    def addRow(self, row: int):
+        self.insertRow(row)
+
+        self.rowAdded.emit(row)
+
+    def insertRows(self, row: int, count: int, parent: QtCore.QModelIndex | QtCore.QPersistentModelIndex = QtCore.QModelIndex()) -> bool:
+
+        if row > self.rowCount():
+            return False
+
+        self.beginInsertRows(parent, row, row + count - 1)
+
+        newData: List[GCodeItem] = []
+
+        for i in range(row):
+            newData.append(self.m_data[i])
+            #self.m_data[i] = None
+
+        for i in range(count):
+            newData.append(GCodeItem())
+
+        for i in range(row, len(self.m_data)):
+            newData.append(self.m_data[i])
+            #self.m_data[i] = None
+
+        self.m_data = newData
+
+        self.endInsertRows()
+
+        return True    
 
     def insertRow(
         self,

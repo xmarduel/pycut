@@ -1,22 +1,27 @@
 import math
 
 from typing import List
+from typing import cast
 
 from PySide6 import QtWidgets
 from PySide6 import QtCore
 from PySide6 import QtGui
+
+from PySide6.QtGui import QVector3D
+
+from PySide6.QtCore import QPointF
+from PySide6.QtCore import Signal, Slot
+from PySide6.QtCore import qFuzzyIsNull
 
 from PySide6 import QtOpenGLWidgets
 from PySide6 import QtOpenGL
 
 from OpenGL import GL  # type: ignore [import-untyped]
 
-from PySide6.QtCore import Signal, Slot
-from PySide6.QtCore import qIsNaN
+from gcodeviewer_11_2.drawers.shaderdrawable import ShaderDrawable
+from gcodeviewer_11_2.util.util import Util
 
-from gcodeviewer.drawers.shaderdrawable import ShaderDrawable
 
-M_PI = math.acos(-1)
 ZOOMSTEP = 1.1
 
 
@@ -32,29 +37,52 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
 
         self.m_shaderProgram = None
 
-        self.m_xRot = 90.0
-        self.m_yRot = 0.0
-        self.m_xLastRot = 0.0
-        self.m_yLastRot = 0.0
-        self.m_xPan = 0.0
-        self.m_yPan = 0.0
-        self.m_xLastPan = 0.0
-        self.m_yLastPan = 0.0
-        self.m_xLookAt = 0.0
-        self.m_yLookAt = 0.0
-        self.m_zLookAt = 0.0
+        self.m_rot = QPointF(90.0, 0.0)
+        self.m_rotAnimationTarget = self.m_rot
+
+        self.m_storedRot = QPointF(0.0, 0.0)
+        self.m_pan = QPointF(0.0, 0.0)
+        self.m_storedPan = QPointF(0.0, 0.0)
+        self.m_lookAt = QVector3D(0.0, 0.0, 0.0)
+        
         self.m_lastPos = QtCore.QPoint(0, 0)
         self.m_zoom = 1
         self.m_distance = 100.0
-        self.m_xMin = 0.0
-        self.m_xMax = 0.0
-        self.m_yMin = 0.0
-        self.m_yMax = 0.0
-        self.m_zMin = 0.0
-        self.m_zMax = 0.0
-        self.m_xSize = 0.0
-        self.m_ySize = 0.0
-        self.m_zSize = 0.0
+        self.m_perspective = False
+        self.m_gestureProcessing = False
+
+        self.m_spendTime = QtCore.QTime()
+        self.m_spendTime.setHMS(0, 0, 0)
+
+        self.m_estimatedTime = QtCore.QTime()
+        self.m_estimatedTime.setHMS(0, 0, 0)
+        
+        self.m_vsync = False
+        self.m_targetFps = 60
+
+        self.m_updating = False
+
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_AcceptTouchEvents, True)
+        self.grabGesture(QtCore.Qt.GestureType.PanGesture)
+        self.grabGesture(QtCore.Qt.GestureType.PinchGesture)
+
+        fmt = QtGui.QSurfaceFormat() # format();
+        fmt.setSamples(8)
+        fmt.setSwapInterval(0)
+        self.setFormat(fmt)
+
+        # self.m_overlay = Overlay(self)
+
+        QtCore.QTimer.singleShot(1000, self, GLWidget.onFramesTimer)
+
+        self.m_viewLowerBounds = QVector3D(0.0, 0.0, 0.0)
+        self.m_viewUpperBounds = QVector3D(0.0, 0.0, 0.0)
+        self.m_viewRanges = QVector3D(0.0, 0.0, 0.0)
+
+        self.m_modelLowerBounds = QVector3D(0.0, 0.0, 0.0)
+        self.m_modelUpperBounds = QVector3D(0.0, 0.0, 0.0)
+        self.m_modelRanges = QVector3D(0.0, 0.0, 0.0)
+
         self.m_lineWidth = 0.0
         self.m_pointSize = 0.0
         self.m_antialiasing = True
@@ -63,38 +91,35 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.m_frames = 0
         self.m_fps = 0
         self.m_animationFrame = 0
+        self.m_vertices = 0
         self.m_timerPaint = QtCore.QBasicTimer()
-        self.m_xRotTarget = 90.0
-        self.m_yRotTarget = 0.0
-        self.m_xRotStored = 0.0
-        self.m_yRotStored = 0.0
+        self.m_rotAnimationStart = QPointF(0.0, 0.0)
+        self.m_rotAnimationTarget = QPointF(0.0, 0.0)
         self.m_animateView = False
         self.m_parserStatus = ""
         self.m_speedState = ""
         self.m_pinState = ""
         self.m_bufferState = ""
+        self.m_cursorPos = QVector3D(0.0, 0.0, 0.0)
         self.m_updatesEnabled = False
 
         self.m_projectionMatrix = QtGui.QMatrix4x4()
         self.m_viewMatrix = QtGui.QMatrix4x4()
 
-        self.m_colorBackground = QtGui.QColor(255, 255, 255)
-        self.m_colorText = QtGui.QColor()
-
-        self.m_shaderDrawables: List[ShaderDrawable] = []
+        self.m_planeDepth = 0.0
+        self.m_windowSizeWorld = 0.0
 
         self.updateProjection()
         self.updateView()
 
-        self.m_spendTime = QtCore.QTime()
-        self.m_spendTime.setHMS(0, 0, 0)
+        self.m_shaderDrawables: List[ShaderDrawable] = []
+        self.m_shaderPrograms: QtOpenGL.QOpenGLShaderProgram|None = None
 
-        self.m_estimatedTime = QtCore.QTime()
-        self.m_estimatedTime.setHMS(0, 0, 0)
+        self.m_colorBackground = QtGui.QColor(255, 255, 255)
+        self.m_colorText = QtGui.QColor()
 
-        self.m_vsync = False
-        self.m_targetFps = 60
-
+        # self.m_overlay = Overlay()
+       
         self.cmdFit = QtWidgets.QToolButton(self)
         self.cmdIsometric = QtWidgets.QToolButton(self)
         self.cmdTop = QtWidgets.QToolButton(self)
@@ -200,45 +225,47 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.stopViewAnimation()
 
         if drawable != None:
-            self.updateExtremes(drawable)
+            self.m_viewLowerBounds = Util.nAssign(drawable.getViewLowerBounds())
+            self.m_viewUpperBounds = Util.nAssign(drawable.getViewUpperBounds())
+            self.m_viewRanges = drawable.getViewRanges()
 
-            a = self.m_ySize / 2 / 0.25 * 1.3 + (self.m_zMax - self.m_zMin) / 2
-            b = (
-                self.m_xSize / 2 / 0.25 * 1.3 / (self.width() / self.height())
-                + (self.m_zMax - self.m_zMin) / 2
-            )
+            self.m_modelLowerBounds = Util.nAssign(drawable.getModelLowerBounds())
+            self.m_modelUpperBounds = Util.nAssign(drawable.getModelUpperBounds())
+            self.m_modelRanges = drawable.getModelRanges()
 
+            a = self.m_viewRanges.y() / 2 / 0.25 * 1.3 + (self.m_viewUpperBounds - self.m_viewLowerBounds).z() / 2;
+            b = self.m_viewRanges.x() / 2 / 0.25 * 1.3 / (self.width() / self.height()) + (self.m_viewUpperBounds - self.m_viewLowerBounds).z() / 2
+            
             self.m_distance = max(a, b)
 
             if self.m_distance == 0:
                 self.m_distance = 200
 
-            self.m_xLookAt = (self.m_xMax - self.m_xMin) / 2 + self.m_xMin
-            self.m_zLookAt = -((self.m_yMax - self.m_yMin) / 2 + self.m_yMin)
-            self.m_yLookAt = (self.m_zMax - self.m_zMin) / 2 + self.m_zMin
+            self.m_lookAt = QVector3D(
+                (self.m_viewUpperBounds.x() - self.m_viewLowerBounds.x()) / 2 + self.m_viewLowerBounds.x(),
+                (self.m_viewUpperBounds.z() - self.m_viewLowerBounds.z()) / 2 + self.m_viewLowerBounds.z(),
+                -((self.m_viewUpperBounds.y() - self.m_viewLowerBounds.y()) / 2 + self.m_viewLowerBounds.y())
+            )
         else:
             self.m_distance = 200
-            self.m_xLookAt = 0
-            self.m_yLookAt = 0
-            self.m_zLookAt = 0
+            self.m_lookAt = QVector3D()
+            self.m_viewLowerBounds = QVector3D()
+            self.m_viewUpperBounds = QVector3D()
+            self.m_viewRanges = QVector3D()
+            self.m_modelLowerBounds = QVector3D()
+            self.m_modelUpperBounds = QVector3D()
+            self.m_modelRanges = QVector3D()
 
-            self.m_xMin = 0
-            self.m_xMax = 0
-            self.m_yMin = 0
-            self.m_yMax = 0
-            self.m_zMin = 0
-            self.m_zMax = 0
-
-            self.m_xSize = 0
-            self.m_ySize = 0
-            self.m_zSize = 0
-
-        self.m_xPan = 0
-        self.m_yPan = 0
+        self.m_xPan = QPointF()
         self.m_zoom = 1
 
         self.updateProjection()
         self.updateView()
+
+    def updateModelBounds(self, drawable: ShaderDrawable):
+        self.m_modelLowerBounds = Util.nAssign(drawable.getModelLowerBounds())
+        self.m_modelUpperBounds = Util.nAssign(drawable.getModelUpperBounds())
+        self.m_modelRanges = drawable.getModelRanges()
 
     def normalizeAngle(self, angle: float) -> float:
         while angle < 0:
@@ -249,48 +276,12 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         return angle
 
     def beginViewAnimation(self):
-        self.m_xRotStored = self.m_xRot
-        self.m_yRotStored = self.m_yRot
+        self.m_rotAnimationStart = self.m_rot
         self.m_animationFrame = 0
         self.m_animateView = True
 
     def stopViewAnimation(self):
         self.m_animateView = False
-
-    def updateExtremes(self, drawable: ShaderDrawable):
-        if not qIsNaN(drawable.getMinimumExtremes().x()):
-            self.m_xMin = drawable.getMinimumExtremes().x()
-        else:
-            self.m_xMin = 0
-
-        if not qIsNaN(drawable.getMaximumExtremes().x()):
-            self.m_xMax = drawable.getMaximumExtremes().x()
-        else:
-            self.m_xMax = 0
-
-        if not qIsNaN(drawable.getMinimumExtremes().y()):
-            self.m_yMin = drawable.getMinimumExtremes().y()
-        else:
-            self.m_yMin = 0
-
-        if not qIsNaN(drawable.getMaximumExtremes().y()):
-            self.m_yMax = drawable.getMaximumExtremes().y()
-        else:
-            self.m_yMax = 0
-
-        if not qIsNaN(drawable.getMinimumExtremes().z()):
-            self.m_zMin = drawable.getMinimumExtremes().z()
-        else:
-            self.m_zMin = 0
-
-        if not qIsNaN(drawable.getMaximumExtremes().z()):
-            self.m_zMax = drawable.getMaximumExtremes().z()
-        else:
-            self.m_zMax = 0
-
-        self.m_xSize = self.m_xMax - self.m_xMin
-        self.m_ySize = self.m_yMax - self.m_yMin
-        self.m_zSize = self.m_zMax - self.m_zMin
 
     def antialiasing(self) -> bool:
         return self.m_antialiasing
@@ -318,41 +309,37 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
 
     def setIsometricView(self):
         """no animation yet"""
-        self.m_xRotTarget = 45
-        self.m_yRotTarget = 405 if self.m_yRot > 180 else 45
+        self.m_rotAnimationTarget = QPointF(45,  405 if self.m_rot.y() > 180 else 45)
 
-        self.m_xRot = 45
-        self.m_yRot = 405 if self.m_yRot > 180 else 45
+        # no animation. then
+        self.m_rot = QPointF(45, 405 if self.m_rot.y() > 180 else 45)
 
         # self.beginViewAnimation()
 
     def setTopView(self):
         """no animation yet"""
-        self.m_xRotTarget = 90
-        self.m_yRotTarget = 360 if self.m_yRot > 180 else 0
+        self.m_rotAnimationTarget = QPointF(90, 360 if self.m_rot.y() > 180 else 0)
 
-        self.m_xRot = 90
-        self.m_yRot = 360 if self.m_yRot > 180 else 0
+        # no animation. then
+        self.m_rot = QPointF(90, 360 if self.m_rot.y() > 180 else 0)
 
         # self.beginViewAnimation()
 
     def setFrontView(self):
         """no animation yet"""
-        self.m_xRotTarget = 0
-        self.m_yRotTarget = 360 if self.m_yRot > 180 else 0
+        self.m_rotAnimationTarget = QPointF(0, 360 if self.m_rot.y() > 180 else  0)
 
-        self.m_xRot = 0
-        self.m_yRot = 360 if self.m_yRot > 180 else 0
+        # no animation. then
+        self.m_rot = QPointF(0, 360 if self.m_rot .y() > 180 else 0)
 
         # self.beginViewAnimation()
 
     def setLeftView(self):
         """no animation yet"""
-        self.m_xRotTarget = 0
-        self.m_yRotTarget = 450 if self.m_yRot > 270 else 90
+        self.m_rotAnimationTarget = QPointF(0, 450 if self.m_rot.y() > 270 else 90)
 
-        self.m_xRot = 0
-        self.m_yRot = 450 if self.m_yRot > 270 else 90
+        # no animation. then
+        self.m_rot = QPointF(0, 450 if self.m_rot.y() > 270 else 90)
 
         # self.beginViewAnimation()
 
@@ -366,8 +353,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.m_targetFps = fps
         self.m_timerPaint.stop()
 
-        value = 0 if self.m_vsync else 1000.0 / fps
-        self.m_timerPaint.start(value, QtGui.Qt.TimerType.PreciseTimer, self)
+        self.setUpdatesEnabled(self.m_updatesEnabled)
 
     def parserStatus(self) -> str:
         return self.m_parserStatus
@@ -381,6 +367,12 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
     def setBufferState(self, bufferState: str):
         self.m_bufferState = bufferState
 
+    def cursorPos(self) -> QVector3D:
+        return self.m_cursorPos
+
+    def setCursorPos(self, cursorPos: QVector3D):
+        self.m_cursorPos = cursorPos
+
     def zBuffer(self) -> bool:
         return self.m_zBuffer
 
@@ -392,6 +384,11 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
 
     def setUpdatesEnabled(self, updatesEnabled: bool):
         self.m_updatesEnabled = updatesEnabled
+
+        if updatesEnabled:
+            self.m_timerPaint.start(0 if self.m_vsync else 1000 / self.m_targetFps, QtCore.Qt.TimerType.PreciseTimer, self)
+        else:
+            self.m_timerPaint.stop()
 
     def msaa(self) -> bool:
         return self.m_msaa
@@ -421,13 +418,32 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         return self.m_vsync
 
     def setVsync(self, vsync: bool):
-        self.m_vsync = vsync
+        if vsync != self.m_vsync:
+            self.m_vsync = vsync
+            fmt = QtGui.QSurfaceFormat()
+            fmt.setSwapInterval(1 if vsync else 0)
+            self.setFormat(fmt)
 
     def speedState(self) -> str:
         return self.m_speedState
 
     def setSpeedState(self, speedState: str):
         self.m_speedState = speedState
+
+    def perspective(self) ->  bool:
+        return self.m_perspective
+
+    def setPerspective(self, perspective: bool):
+        self.m_perspective = perspective
+
+        self.updateProjection()
+        self.updateView()
+
+    def updating(self) -> bool:
+        return self.m_updating
+
+    def setUpdating(self, updating: bool):
+        self.m_updating = updating
 
     def pinState(self) -> str:
         return self.m_pinState
@@ -440,7 +456,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.m_fps = self.m_frames
         self.m_frames = 0
 
-        QtCore.QTimer.singleShot(1000, self.onFramesTimer)
+        QtCore.QTimer.singleShot(1000, GLWidget.onFramesTimer)
 
     @Slot()
     def viewAnimation(self):
@@ -454,8 +470,8 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         ec = QtCore.QEasingCurve(QtCore.QEasingCurve.OutExpo)
         val = ec.valueForProgress(t)
 
-        self.m_xRot = self.m_xRotStored + (self.m_xRotTarget - self.m_xRotStored) * val
-        self.m_yRot = self.m_yRotStored + (self.m_yRotTarget - self.m_yRotStored) * val
+        self.m_rot = self.m_rotAnimationStart + (self.m_rotAnimationTarget - self.m_rotAnimationStart) * val
+
 
         self.updateView()
 
@@ -463,91 +479,97 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         pass
 
     def vertex_shader_source(self):
-        return """#ifdef GL_ES
-// Set default precision to medium
-precision mediump int;
-precision mediump float;
-#endif
+        return """#version 110
+#define DATA_TYPE_LINE 0
+#define DATA_TYPE_DASH 1
+#define DATA_TYPE_DASH_DOT 2
+#define DATA_TYPE_POINT 3
+#define DATA_TYPE_TRIANGLE 4
 
-uniform mat4 mvp_matrix;
-uniform mat4 mv_matrix;
+uniform mat4 p_matrix;
+uniform mat4 v_matrix;
+uniform mat4 m_matrix;
 
 attribute vec4 a_position;
 attribute vec4 a_color;
-attribute vec4 a_start;
+attribute vec4 a_data;
+attribute float a_type;
 
-varying vec4 v_color;
 varying vec2 v_position;
-varying vec2 v_start;
+varying vec4 v_color;
 varying vec2 v_texture;
+varying float v_type;
+varying vec2 v_start;
 
-bool isNan(float val)
-{
-    return (val > 65535.0);
-}
+mat4 mvp_matrix;
+
+int type;
 
 void main()
 {
-    // Calculate interpolated vertex position & line start point
-    v_position = (mv_matrix * a_position).xy;
+    mvp_matrix = p_matrix * v_matrix * m_matrix;
 
-    if (!isNan(a_start.x) && !isNan(a_start.y)) {
-        v_start = (mv_matrix * a_start).xy;
-        v_texture = vec2(65536.0, 0);
-    } else {
-        // v_start.x should be Nan to draw solid lines
-        v_start = a_start.xy;
+    v_type = a_type;
+    type = int(v_type + 0.1);
 
-        // set texture coord
-        v_texture = a_start.yz;
-
-        // set point size
-        if (isNan(a_start.y) && !isNan(a_start.z)) gl_PointSize = a_start.z;
+    if (type == DATA_TYPE_LINE) {
+    } else if (type == DATA_TYPE_DASH) {
+        v_start = (mvp_matrix * a_data).xy;
+        v_position = (mvp_matrix * a_position).xy;
+    } else if (type == DATA_TYPE_DASH_DOT) {
+        v_start = (mvp_matrix * a_data).xy;
+        v_position = (mvp_matrix * a_position).xy;
+    } else if (type == DATA_TYPE_POINT) {
+        gl_PointSize = a_data.x;
+    } else if (type == DATA_TYPE_TRIANGLE) {
+        v_texture = a_data.yz;
     }
 
-    // Calculate vertex position in screen space
-    gl_Position = mvp_matrix * a_position;
-
     v_color = a_color;
+    gl_Position = mvp_matrix * a_position;
 }
 """
 
     def fragment_shader_source(self):
-        return """#ifdef GL_ES
-// Set default precision to medium
-precision mediump int;
-precision mediump float;
-#endif
-
-//Dash grid (px) = factor * pi;
-const float factor = 2.0;
-
-varying vec4 v_color;
-varying vec2 v_position;
-varying vec2 v_start;
-varying vec2 v_texture;
+        return """#version 110
+#define DATA_TYPE_LINE 0
+#define DATA_TYPE_DASH 1
+#define DATA_TYPE_DASH_DOT 2
+#define DATA_TYPE_POINT 3
+#define DATA_TYPE_TRIANGLE 4
 
 uniform sampler2D texture;
 
-bool isNan(float val)
-{
-    return (val > 65535.0);
-}
+varying  vec4 v_color;
+varying  vec2 v_position;
+varying  vec2 v_texture;
+varying  vec2 v_start;
+varying  float v_type;
+
+const float factor = 2.0;
+int type;
 
 void main()
 {
-    // Draw dash lines
-    if (!isNan(v_start.x)) {
+    type = int(v_type + 0.1);
+
+    if (type == DATA_TYPE_LINE) {
+        gl_FragColor = v_color;
+    } else if (type == DATA_TYPE_DASH) {
         vec2 sub = v_position - v_start;
         float coord = length(sub.x) > length(sub.y) ? gl_FragCoord.x : gl_FragCoord.y;
         if (cos(coord / factor) > 0.0) discard;
-    }
-
-    // Set fragment color
-    if (!isNan(v_texture.x)) {
-        gl_FragColor = texture2D(texture, v_texture);
-    } else {
         gl_FragColor = v_color;
+    } else if (type == DATA_TYPE_DASH_DOT) {
+        vec2 sub = v_position - v_start;
+        float coord = length(sub.x) > length(sub.y) ? gl_FragCoord.x : gl_FragCoord.y;
+        float v = cos(coord / factor * 0.5);
+        if (v > 0.0 && v < 0.95) discard;
+        gl_FragColor = v_color;
+    } else if (type == DATA_TYPE_POINT) {
+        gl_FragColor = v_color;
+    } else if (type == DATA_TYPE_TRIANGLE) {
+        gl_FragColor = texture2D(texture, v_texture);
     }
 }"""
 
@@ -577,6 +599,10 @@ void main()
         self.m_shaderProgram.link()
 
     def paintGL(self):
+
+        # if self.m_animateView:
+        #     self.viewAnimation()
+
         # Segment counter
         vertices = 0
 
@@ -613,10 +639,8 @@ void main()
             self.m_shaderProgram.bind()
 
             # Set modelview-projection matrix
-            self.m_shaderProgram.setUniformValue(
-                "mvp_matrix", self.m_projectionMatrix * self.m_viewMatrix
-            )
-            self.m_shaderProgram.setUniformValue("mv_matrix", self.m_viewMatrix)
+            self.m_shaderProgram.setUniformValue("p_matrix", self.m_projectionMatrix)
+            self.m_shaderProgram.setUniformValue("v_matrix", self.m_viewMatrix)
 
             # Update geometries in current opengl context
             for drawable in self.m_shaderDrawables:
@@ -625,57 +649,25 @@ void main()
 
             # Draw geometries
             for drawable in self.m_shaderDrawables:
-                drawable.draw(self.m_shaderProgram)
                 if drawable.visible():
+                    if drawable.windowScaling():
+                        drawable.setWorldScale(self.m_windowSizeWorld * drawable.windowScale())
+                
+                    self.m_shaderProgram.setUniformValue("m_matrix", drawable.modelMatrix())
+                    drawable.draw(self.m_shaderProgram)
                     vertices += drawable.getVertexCount()
 
             self.m_shaderProgram.release()
 
-        # Draw 2D
-        self.glDisable(GL.GL_DEPTH_TEST)
         self.glDisable(GL.GL_MULTISAMPLE)
         self.glDisable(GL.GL_LINE_SMOOTH)
+        self.glDisable(GL.GL_POINT_SMOOTH)
         self.glDisable(GL.GL_BLEND)
+        self.glDisable(GL.GL_DEPTH_TEST)
 
-        if True:  # no timer event because commented (actually crash on painter)
-            pass
-
-            """
-            painter = QtGui.QPainter(self)
-
-            painter.beginNativePainting()
-            painter.endNativePainting()
-
-            pen = QtGui.QPen(self.m_colorText)
-            painter.setPen(pen)
-
-            x = 10
-            y = self.height() - 60
-
-            painter.drawText(QtCore.QPoint(x, y), "X: %0.*f ... %0.*f" % (3, self.m_xMin , 3,self.m_xMax))
-            painter.drawText(QtCore.QPoint(x, y + 15), "Y: %0.*f ... %0.*f" % (3, self.m_yMin, 3, self.m_yMax))
-            painter.drawText(QtCore.QPoint(x, y + 30), "Z: %0.*f ... %0.*f" % (3, self.m_zMin, 3, self.m_zMax))
-            painter.drawText(QtCore.QPoint(x, y + 45), "%0.*f / %0.*f / %0.*f" % (3, self.m_xSize, 3, self.m_ySize, 3, self.m_zSize))
-
-            fm = QtGui.QFontMetrics(painter.font())
-
-            painter.drawText(QtCore.QPoint(x, fm.height() + 10), self.m_parserStatus)
-            painter.drawText(QtCore.QPoint(x, fm.height() * 2 + 10), self.m_speedState)
-            painter.drawText(QtCore.QPoint(x, fm.height() * 3 + 10), self.m_pinState)
-
-            xstr = "Vertices: %d" % vertices
-            painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y + 30), xstr)
-            xstr = "FPS: %d" % self.m_fps
-            painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y + 45), xstr)
-
-            xstr = self.m_spendTime.toString("hh:mm:ss") + " / " + self.m_estimatedTime.toString("hh:mm:ss")
-            painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y), xstr)
-
-            xstr = self.m_bufferState
-            painter.drawText(QtCore.QPoint(self.width() - fm.horizontalAdvance(xstr) - 10, y + 15), xstr)
-
-            self.m_frames += 1
-            """
+        # Draw 2D
+        self.m_vertices = vertices
+        # self.m_overlay.update()
 
         self.m_frames += 1
         self.update()
@@ -683,126 +675,225 @@ void main()
     def resizeGL(self, width: int, height: int):
         self.glViewport(0, 0, width, height)
         self.updateProjection()
+
+        # self.m_overlay.resize(width, height)
+        
         self.resized.emit()
 
     def updateProjection(self):
         # Reset projection
         self.m_projectionMatrix.setToIdentity()
 
-        asp = self.width() / self.height()
-        self.m_projectionMatrix.frustum(
-            (-0.5 + self.m_xPan) * asp,
-            (0.5 + self.m_xPan) * asp,
-            -0.5 + self.m_yPan,
-            0.5 + self.m_yPan,
-            2,
-            self.m_distance * 2,
-        )
+        if self.m_perspective:
+            zNear = 2.0
+            zFar = self.m_distance * 10
+
+            asp = self.width() / self.height()
+            self.m_projectionMatrix.frustum(
+                (-0.5 + self.m_pan.x()) * asp,
+                (0.5 + self.m_pan.x()) * asp,
+                -0.5 + self.m_pan.y(),
+                0.5 + self.m_pan.y(),
+                zNear,
+                zFar
+            )
+
+            z = self.m_distance + (self.m_viewUpperBounds + self.m_viewLowerBounds).z() / 2 * self.m_zoom
+            self.m_planeDepth = (1 / z - 1 / zNear) / (1 / zFar - 1 / zNear) * 2 - 1
+        else:
+            paddingScale = 1.3
+
+            # Rollback plane to view
+            if qFuzzyIsNull(self.m_viewRanges.length()):
+                self.m_viewRanges = QVector3D(100, 100, 0) / paddingScale
+        
+
+            screenToWorld = max(
+                self.m_viewRanges.x() / self.width(),
+                self.m_viewRanges.y() / self.height()
+            ) * paddingScale
+
+            # 1000.0 - maximum z-coordinate
+            clip = max(1000.0, self.m_viewRanges.length())
+
+            self.m_projectionMatrix.ortho(
+                (-self.width() / 2 + self.m_pan.x() * self.width()) * screenToWorld / self.m_zoom,
+                (self.width() / 2 + self.m_pan.x() * self.width()) * screenToWorld / self.m_zoom,
+                (-self.height() / 2 + self.m_pan.y() * self.height()) * screenToWorld / self.m_zoom,
+                (self.height() / 2 + self.m_pan.y() * self.height()) * screenToWorld / self.m_zoom,
+                -clip,
+                clip
+            )
+
+            self.m_planeDepth = 0
 
     def updateView(self):
-        # Set view matrix
-        self.m_viewMatrix.setToIdentity()
 
-        r = self.m_distance
-        angY = M_PI / 180 * self.m_yRot
-        angX = M_PI / 180 * self.m_xRot
+        if self.m_perspective:
 
-        eye = QtGui.QVector3D(
-            r * math.cos(angX) * math.sin(angY) + self.m_xLookAt,
-            r * math.sin(angX) + self.m_yLookAt,
-            r * math.cos(angX) * math.cos(angY) + self.m_zLookAt,
-        )
+            # Set view matrix
+            self.m_viewMatrix.setToIdentity()
 
-        center = QtGui.QVector3D(self.m_xLookAt, self.m_yLookAt, self.m_zLookAt)
+            ang = self.m_rot * math.pi / 180
 
-        xRot = M_PI if self.m_xRot < 0 else 0
+            eye = self.m_lookAt + QVector3D(
+                math.cos(ang.x()) * math.sin(ang.y()),
+                math.sin(ang.x()),
+                math.cos(ang.x()) * math.cos(ang.y())
+            ) * self.m_distance
 
-        up = QtGui.QVector3D(
-            -math.sin(angY + xRot) if math.fabs(self.m_xRot) == 90 else 0,
-            math.cos(angX),
-            -math.cos(angY + xRot) if math.fabs(self.m_xRot) == 90 else 0,
-        )
+            up_x = math.fabs( -math.sin(ang.y() + math.pi if self.m_rot.x() < 0 else 0)) if self.m_rot.x() == 90 else 0
+            up_y = math.cos(ang.x())
+            up_z = math.fabs( -math.cos(ang.y() + math.pi if self.m_rot.x() < 0 else 0)) if self.m_rot.x() == 90 else 0
 
-        self.m_viewMatrix.lookAt(eye, center, up.normalized())
+            up = QVector3D(up_x, up_y, up_z)
 
-        self.m_viewMatrix.translate(self.m_xLookAt, self.m_yLookAt, self.m_zLookAt)
-        self.m_viewMatrix.scale(self.m_zoom, self.m_zoom, self.m_zoom)
-        self.m_viewMatrix.translate(-self.m_xLookAt, -self.m_yLookAt, -self.m_zLookAt)
+            self.m_viewMatrix.lookAt(eye, self.m_lookAt, up.normalized())
 
-        self.m_viewMatrix.rotate(-90, 1.0, 0.0, 0.0)
+            self.m_viewMatrix.translate(self.m_lookAt)
+            self.m_viewMatrix.scale(self.m_zoom)
+            self.m_viewMatrix.translate(-self.m_lookAt)
+
+            self.m_viewMatrix.rotate(-90, 1.0, 0.0, 0.0)
+
+        else:
+           
+            self.m_viewMatrix.setToIdentity()
+
+            ang = self.m_rot * math.pi / 180
+
+            eye = self.m_lookAt + QVector3D(
+                math.cos(ang.x()) * math.sin(ang.y()),
+                math.sin(ang.x()),
+                math.cos(ang.x()) * math.cos(ang.y())
+            )
+
+            up_x = -math.sin(ang.y() + (math.pi if self.m_rot.x() < 0 else 0)) if math.fabs(self.m_rot.x()) == 90 else 0
+            up_y = math.cos(ang.x())
+            up_z = -math.cos(ang.y() + (math.pi if self.m_rot.x() < 0 else 0)) if math.fabs(self.m_rot.x()) == 90 else 0
+
+            up = QVector3D(up_x, up_y, up_z)
+
+            self.m_viewMatrix.lookAt(eye, self.m_lookAt, up.normalized())
+            self.m_viewMatrix.rotate(-90, 1.0, 0.0, 0.0)
+
+
+        ivp, res = (self.m_projectionMatrix * self.m_viewMatrix).inverted()
+        self.m_windowSizeWorld = (ivp.map(QVector3D(0, 1, self.m_planeDepth)) - ivp.map(QVector3D(0, 0, self.m_planeDepth))).length() * 2.0;
 
     def mousePressEvent(self, event: QtGui.QMouseEvent):
         self.m_lastPos = event.pos()
-        self.m_xLastRot = self.m_xRot
-        self.m_yLastRot = self.m_yRot
-        self.m_xLastPan = self.m_xPan
-        self.m_yLastPan = self.m_yPan
+        
+        self.m_storedRot = self.m_rot
+        self.m_storedPan = self.m_pan
 
     def mouseMoveEvent(self, event: QtGui.QMouseEvent):
-        if (
-            event.buttons() & QtCore.Qt.MouseButton.MiddleButton
-            and (not (event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier))
-        ) or event.buttons() & QtCore.Qt.MouseButton.LeftButton:
+        if self.m_gestureProcessing:
+            self.m_lastPos = event.pos()
+            self.m_storedRot = self.m_rot
+            self.m_storedPan = self.m_pan
+
+            return
+
+        if (event.buttons() & QtCore.Qt.MouseButton.MiddleButton and (not (event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier))) or \
+           (event.buttons() & QtCore.Qt.MouseButton.LeftButton and (not (event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier))):
             self.stopViewAnimation()
 
-            self.m_yRot = self.normalizeAngle(
-                self.m_yLastRot - (event.pos().x() - self.m_lastPos.x()) * 0.5
-            )
-            self.m_xRot = self.m_xLastRot + (event.pos().y() - self.m_lastPos.y()) * 0.5
+            self.m_rot.setY(self.normalizeAngle(self.m_storedRot.y() - (event.pos().x() - self.m_lastPos.x()) * 0.5))
+            self.m_rot.setX(self.m_storedRot.x() + (event.pos().y() - self.m_lastPos.y()) * 0.5)
 
-            if self.m_xRot < -90:
-                self.m_xRot = -90
-            if self.m_xRot > 90:
-                self.m_xRot = 90
+            if self.m_rot.x() < -90:
+                self.m_rot.setX(-90)
+            if self.m_rot.x() > 90:
+                self.m_rot.setX(90)
 
             self.updateView()
             self.rotationChanged.emit()
 
-        if (
-            event.buttons() & QtCore.Qt.MouseButton.MiddleButton
-            and event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier
-        ) or event.buttons() & QtCore.Qt.MouseButton.RightButton:
-            self.m_xPan = self.m_xLastPan - (
-                event.pos().x() - self.m_lastPos.x()
-            ) * 1 / (float)(self.width())
-            self.m_yPan = self.m_yLastPan + (
-                event.pos().y() - self.m_lastPos.y()
-            ) * 1 / (float)(self.height())
+        if (event.buttons() & QtCore.Qt.MouseButton.MiddleButton and (event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier)) or \
+           (event.buttons() & QtCore.Qt.MouseButton.RightButton) or \
+           (event.buttons() & QtCore.Qt.MouseButton.LeftButton   and (event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier)):
+            self.m_pan.setX(self.m_storedPan.x() - (event.pos().x() - self.m_lastPos.x()) * 1 / self.width())
+            self.m_pan.setY(self.m_storedPan.y() + (event.pos().y() - self.m_lastPos.y()) * 1 / self.height())
 
             self.updateProjection()
 
     def wheelEvent(self, we: QtGui.QWheelEvent):
-        if self.m_zoom > 0.1 and we.angleDelta().y() < 0:
-            self.m_xPan -= (
-                (float)(we.position().x() / self.width() - 0.5 + self.m_xPan)
-            ) * (1 - 1 / ZOOMSTEP)
-            self.m_yPan += (
-                (float)(we.position().y() / self.height() - 0.5 - self.m_yPan)
-            ) * (1 - 1 / ZOOMSTEP)
+        if True or we.angleDelta().manhattanLength() >= 120: # always zoom
+            if self.m_zoom > 0.1 and we.angleDelta().y() < 0:
+                self.m_pan.setX(self.m_pan.x() - (we.position().x() / self.width() - 0.5 + self.m_pan.x()) * (1 - 1 / ZOOMSTEP))
+                self.m_pan.setY(self.m_pan.y() + (we.position().y() / self.height() - 0.5 - self.m_pan.y()) * (1 - 1 / ZOOMSTEP))
 
-            self.m_zoom /= ZOOMSTEP
-        elif self.m_zoom < 10 and we.angleDelta().y() > 0:
-            self.m_xPan -= (
-                (float)(we.position().x() / self.width() - 0.5 + self.m_xPan)
-            ) * (1 - ZOOMSTEP)
-            self.m_yPan += (
-                (float)(we.position().y() / self.height() - 0.5 - self.m_yPan)
-            ) * (1 - ZOOMSTEP)
+                self.m_zoom /= ZOOMSTEP
 
-            self.m_zoom *= ZOOMSTEP
+            elif self.m_zoom < 10 and we.angleDelta().y() > 0: 
+        
+                self.m_pan.setX(self.m_pan.x() - (we.position().x() / self.width() - 0.5 + self.m_pan.x()) * (1 - ZOOMSTEP))
+                self.m_pan.setY(self.m_pan.y() + (we.position().y() / self.height() - 0.5 - self.m_pan.y()) * (1 - ZOOMSTEP))
 
-        self.updateProjection()
-        self.updateView()
+                self.m_zoom *= ZOOMSTEP
+
+            self.updateProjection()
+            self.updateView()
+        else:
+            self.m_pan.setX(self.m_pan.x() - we.angleDelta().x() * 1 / self.width())
+            self.m_pan.setY(self.m_pan.y() + we.angleDelta().y() * 1 / self.height())
+
+            self.updateProjection()
+
+    def event(self, event: QtCore.QEvent) -> bool:
+        """ """
+        if event.type() == QtCore.QEvent.Type.Gesture:
+            gestureEvent = cast(QtWidgets.QGestureEvent, event)
+            
+            pinGesturePin =  gestureEvent.gesture(QtCore.Qt.GestureType.PinchGesture)
+            panGesturePan = gestureEvent.gesture(QtCore.Qt.GestureType.PanGesture)
+
+            if pinGesturePin:
+                pinchGesture = cast(QtWidgets.QPinchGesture, pinGesturePin)
+  
+                if pinchGesture.state() == QtCore.Qt.GestureState.GestureStarted or pinchGesture.state() == QtCore.Qt.GestureState.GestureUpdated:
+                    self.m_gestureProcessing = True
+
+                    if (self.m_zoom * pinchGesture.scaleFactor()) > 0.1 and (self.m_zoom * pinchGesture.scaleFactor()) < 10.0:
+                        relativeCenterPoint = self.mapFromGlobal(pinchGesture.centerPoint().toPoint())
+
+                        self.m_pan.setX(self.m_pan.x() - (relativeCenterPoint.x() / self.width() - 0.5 + self.m_pan.x()) * (1 - pinchGesture.scaleFactor()))
+                        self.m_pan.setY(self.m_pan.y() + (relativeCenterPoint.y() / self.height() - 0.5 - self.m_pan.y())* (1 - pinchGesture.scaleFactor()))
+
+                        self.m_zoom *= pinchGesture.scaleFactor()
+
+                    self.updateProjection();
+                    self.updateView();
+            
+                elif pinchGesture.state() == QtCore.Qt.GestureState.GestureFinished or pinchGesture.state() == QtCore.Qt.GestureState.GestureCanceled:
+            
+                    self.m_gestureProcessing = False
+            
+            elif panGesturePan:
+                panGesture = cast(QtWidgets.QPanGesture, panGesturePan)
+
+                if panGesture.state() == QtCore.Qt.GestureState.GestureStarted or panGesture.state() == QtCore.Qt.GestureState.GestureUpdated:
+            
+                    self.m_gestureProcessing = True
+
+                    self.m_pan.setX(self.m_pan.x() - (panGesture.delta().x()) * 1 / self.width())
+                    self.m_pan.setY(self.m_pan.y() + (panGesture.delta().y()) * 1 / self.height())
+
+                    self.updateProjection()
+            
+                elif panGesture.state() == QtCore.Qt.GestureState.GestureFinished or panGesture.state() == QtCore.Qt.GestureState.GestureCanceled:
+            
+                    self.m_gestureProcessing = False
+
+
+        return QtOpenGLWidgets.QOpenGLWidget.event(self, event)
 
     def timerEvent(self, te: QtCore.QTimerEvent):
-        # return
         if te.timerId() == self.m_timerPaint.timerId():
-            if self.m_animateView:
-                self.viewAnimation()
-            if self.m_updatesEnabled:
-                self.update()
+            self.update()
         else:
-            self.timerEvent(te)
+            QtOpenGLWidgets.QOpenGLWidget.timerEvent(self, te)
 
     def onVisualizatorRotationChanged(self):
         self.update()

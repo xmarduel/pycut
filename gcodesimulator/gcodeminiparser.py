@@ -25,6 +25,7 @@ from PySide6.QtCore import qIsNaN
 from PySide6.QtGui import QVector3D
 
 from gcodesimulator.parser.parser import CandleParser
+#from gcodesimulator.parser_11_2.parser import CandleParser
 
 sNaN = float("NaN")
 

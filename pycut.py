@@ -1,6 +1,6 @@
 # This Python file uses the following encoding: utf-8
 
-VERSION = "0_8_2"
+VERSION = "0_8_3_alpha"
 
 import sys
 import os
@@ -33,7 +33,9 @@ import shapely_svgpath_io
 from val_with_unit import ValWithUnit
 
 import svgviewer
+
 import gcodeviewer.widgets.glwidget_container as glwidget_container
+#import gcodeviewer_11_2.widgets.glwidget_container as glwidget_container
 
 import gcodesimulator_webgl.viewer as gcodesimulator_webgl_viewer
 import gcodesimulator.viewer as gcodesimulator_viewer

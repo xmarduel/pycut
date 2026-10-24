@@ -254,6 +254,7 @@ class GcodeDrawer(ShaderDrawable):
                 self.m_points.append(VertexData.clone(vertex))
 
                 drawFirstPoint = False
+                #i += 1 # TODO: CHECKME
                 continue
 
             # Prepare vertices

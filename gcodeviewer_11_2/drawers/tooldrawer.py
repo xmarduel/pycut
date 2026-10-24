@@ -5,13 +5,11 @@ from typing import List
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QColor
 
-from gcodeviewer.drawers.shaderdrawable import ShaderDrawable
-from gcodeviewer.drawers.shaderdrawable import VertexData
-from gcodeviewer.util.util import Util
+from gcodeviewer_11_2.drawers.shaderdrawable import ShaderDrawable
+from gcodeviewer_11_2.drawers.shaderdrawable import VertexData
+from gcodeviewer_11_2.util.util import Util
 
 sNaN = float("NaN")
-
-M_PI = math.acos(-1)
 
 
 class ToolDrawer(ShaderDrawable):
@@ -24,17 +22,21 @@ class ToolDrawer(ShaderDrawable):
 
         self.m_toolDiameter = 3.0
         self.m_toolLength = 15.0
-        self.m_endLength = 3.0
         self.m_toolPosition = QVector3D(0, 0, 0)
-        self.m_rotationAngle = 0.0
-        self.m_toolAngle = 0.0
-        self.m_color = QColor(1.0, 0.6, 4.0)
+        self.m_spinAngle = 0.0
+        self.m_toolAngle = 15.0
+        self.m_color = QColor(255, 153, 0) # QColor(1.0, 0.6, 0)
+
+        self.adjustToolEndLength()
 
     def toolDiameter(self) -> float:
         return self.m_toolDiameter
 
     def setToolDiameter(self, toolDiameter: float):
-        self.m_toolDiameter = toolDiameter
+        if self.m_toolDiameter != toolDiameter:
+            self.m_toolDiameter = toolDiameter
+            self.adjustToolEndLength()
+            self.update()
 
     def toolLength(self) -> float:
         return self.m_toolLength
@@ -48,14 +50,14 @@ class ToolDrawer(ShaderDrawable):
     def setToolPosition(self, toolPosition: QVector3D):
         self.m_toolPosition = toolPosition
 
-    def rotationAngle(self) -> float:
-        return self.m_rotationAngle
+    def spinAngle(self) -> float:
+        return self.m_spinAngle
 
-    def setRotationAngle(self, rotationAngle: float):
-        self.m_rotationAngle = rotationAngle
+    def setSpinAngle(self, spinAngle: float):
+        self.m_spinAngle = spinAngle
 
-    def rotate(self, angle: float):
-        self.setRotationAngle(self.normalizeAngle(self.m_rotationAngle + angle))
+    def spin(self, angle: float):
+        self.setSpinAngle(self.normalizeAngle(self.m_spinAngle + angle))
 
     def toolAngle(self) -> float:
         return self.m_toolAngle
@@ -84,16 +86,31 @@ class ToolDrawer(ShaderDrawable):
 
         # Prepare vertex
         vertex = VertexData()
+        vertex.type = VertexData.VertexDataType.VertexDataTypeLine
         vertex.color = Util.colorToVector(self.m_color)  # QVector3D(1.0, 0.6, 0.0)
-        vertex.start = QVector3D(sNaN, sNaN, sNaN)
+
+        # Draw circles
+        # Bottom
+        self.m_lines += self.createCircle(QVector3D(self.m_toolPosition.x(), self.m_toolPosition.y(), self.m_toolPosition.z() + self.m_endLength),
+                            self.m_toolDiameter / 2, 20, vertex.color)
+
+        # Top
+        self.m_lines += self.createCircle(QVector3D(self.m_toolPosition.x(), self.m_toolPosition.y(), self.m_toolPosition.z() + self.m_toolLength),
+                            self.m_toolDiameter / 2, 20, vertex.color)
+
+        # Zero Z circle
+        if self.m_endLength == 0:
+            self.m_lines += self.createCircle(QVector3D(self.m_toolPosition.x(), self.m_toolPosition.y(), 0),
+                                self.m_toolDiameter / 2, 20, vertex.color)
+
 
         # Draw lines
         for i in range(self.arcs):
             x = self.m_toolPosition.x() + self.m_toolDiameter / 2 * math.cos(
-                self.m_rotationAngle / 180 * M_PI + (2 * M_PI / self.arcs) * i
+                self.m_spinAngle / 180 * math.pi + (2 * math.pi / self.arcs) * i
             )
             y = self.m_toolPosition.y() + self.m_toolDiameter / 2 * math.sin(
-                self.m_rotationAngle / 180 * M_PI + (2 * M_PI / self.arcs) * i
+                self.m_spinAngle / 180 * math.pi + (2 * math.pi / self.arcs) * i
             )
 
             # Side lines
@@ -131,7 +148,11 @@ class ToolDrawer(ShaderDrawable):
             )
             self.m_lines.append(VertexData.clone(vertex))
 
-            # Base of Cutter lines
+        for i in range(self.arcs):
+            # Zero Z lines
+            x = self.m_toolPosition.x() + self.m_toolDiameter / 2 * math.cos(self.m_spinAngle / 180 * math.pi + (2 * math.pi / self.arcs) * i)
+            y = self.m_toolPosition.y() + self.m_toolDiameter / 2 * math.sin(self.m_spinAngle / 180 * math.pi + (2 * math.pi / self.arcs) * i)
+
             vertex.position = QVector3D(
                 self.m_toolPosition.x(),
                 self.m_toolPosition.y(),
@@ -143,40 +164,6 @@ class ToolDrawer(ShaderDrawable):
             )
             self.m_lines.append(VertexData.clone(vertex))
 
-        # Draw circles
-        # Bottom
-        self.m_lines += self.createCircle(
-            QVector3D(
-                self.m_toolPosition.x(),
-                self.m_toolPosition.y(),
-                self.m_toolPosition.z() + self.m_endLength,
-            ),
-            self.m_toolDiameter / 2,
-            20,
-            vertex.color,
-        )
-
-        # Top
-        self.m_lines += self.createCircle(
-            QVector3D(
-                self.m_toolPosition.x(),
-                self.m_toolPosition.y(),
-                self.m_toolPosition.z() + self.m_toolLength,
-            ),
-            self.m_toolDiameter / 2,
-            20,
-            vertex.color,
-        )
-
-        # Zero Z circle
-        if self.m_endLength == 0:
-            self.m_lines += self.createCircle(
-                QVector3D(self.m_toolPosition.x(), self.m_toolPosition.y(), 0),
-                self.m_toolDiameter / 2,
-                20,
-                vertex.color,
-            )
-
         return True
 
     def createCircle(
@@ -187,13 +174,11 @@ class ToolDrawer(ShaderDrawable):
 
         # Prepare vertex
         vertex = VertexData()
-
         vertex.color = color
-        vertex.start = QVector3D(sNaN, sNaN, sNaN)
 
         # Create line loop
         for i in range(self.arcs + 1):
-            angle = 2 * M_PI * i / self.arcs
+            angle = 2 * math.pi * i / self.arcs
             x = center.x() + radius * math.cos(angle)
             y = center.y() + radius * math.sin(angle)
 
@@ -206,3 +191,13 @@ class ToolDrawer(ShaderDrawable):
             circle.append(VertexData.clone(vertex))
 
         return circle
+
+
+    def adjustToolEndLength(self):
+        if self.m_toolAngle > 0 and self.m_toolAngle < 180:
+            self.m_endLength = self.m_toolDiameter / 2 / math.tan(self.m_toolAngle / 180 * math.pi / 2)
+        else:
+            self.m_endLength = 0.0
+
+        if self.m_toolLength < self.m_endLength:
+            self.m_toolLength = self.m_endLength

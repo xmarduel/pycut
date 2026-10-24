@@ -1,8 +1,13 @@
 from PySide6.QtGui import QVector3D
+from PySide6.QtGui import QMatrix4x4
 from PySide6.QtGui import QColor
+from PySide6.QtGui import QPainter
+from PySide6.QtGui import QPen
+from PySide6.QtGui import QBrush
+from PySide6.QtGui import QPolygon
+from PySide6.QtCore import QPoint
 
-from gcodeviewer.drawers.shaderdrawable import ShaderDrawable, VertexData
-from gcodeviewer.util.util import Util
+from gcodeviewer_11_2.drawers.shaderdrawable import ShaderDrawable
 
 sNaN = float("NaN")
 
@@ -10,20 +15,21 @@ sNaN = float("NaN")
 class SelectionDrawer(ShaderDrawable):
     """ """
 
+    polygon = QPolygon()
+
     def __init__(self):
         super(SelectionDrawer, self).__init__()
 
         self.m_points = []
 
-        self.m_startPosition = QVector3D(0, 0, 0)
-        self.m_endPosition = QVector3D(0, 0, 0)
+        self.m_position = QVector3D(0, 0, 0)
         self.m_color = QColor(120, 200, 200)
 
-    def startPosition(self) -> QVector3D:
-        return self.m_startPosition
+    def position(self) -> QVector3D:
+        return self.m_position
 
-    def setStartPosition(self, startPosition: QVector3D):
-        self.m_startPosition = startPosition
+    def setPosition(self, position: QVector3D):
+        self.m_position = position
 
     def color(self) -> QColor:
         return self.m_color
@@ -31,20 +37,14 @@ class SelectionDrawer(ShaderDrawable):
     def setColor(self, color: QColor):
         self.m_color = color
 
-    def endPosition(self) -> QVector3D:
-        return self.m_endPosition
 
-    def setEndPosition(self, endPosition: QVector3D):
-        self.m_endPosition = endPosition
+    def drawPainter(self, painter: QPainter, projection: QMatrix4x4, ratio: float):
+        SelectionDrawer.polygon = QPolygon([ QPoint(0, 0), QPoint(-4, 32), QPoint(4, 32), QPoint(0, 0) ])
 
-    def updateData(self) -> bool:
-        self.m_points = []
+        painter.translate((projection.map(self.m_position)).toPoint())
+        painter.scale(1, -1)
 
-        vertex = VertexData()
-
-        vertex.color = Util.colorToVector(self.m_color)
-        vertex.position = self.m_endPosition
-        vertex.start = QVector3D(sNaN, sNaN, self.m_pointSize)
-        self.m_points.append(vertex)
-
-        return True
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.setPen(QPen(self.m_color))
+        painter.setBrush(QBrush(self.m_color))
+        painter.drawPolygon(SelectionDrawer.polygon)

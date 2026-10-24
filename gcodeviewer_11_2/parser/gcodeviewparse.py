@@ -6,60 +6,139 @@
 
 # Copyright 2020-2030 Xavier Marduel
 
-from functools import singledispatchmethod
+import math
+
 from typing import List
+from typing import Dict
+from typing import Any
 from typing import cast
 
+from enum import Enum
+
 from PySide6.QtGui import QVector3D
+from PySide6.QtGui import QMatrix4x4
 
 from PySide6 import QtCore
 from PySide6.QtCore import qIsNaN
 
-from gcodeviewer.parser.linesegment import LineSegment
-from gcodeviewer.parser.gcodeparser import GcodeParser
-from gcodeviewer.parser.gcodepreprocessorutils import GcodePreprocessorUtils
+from gcodeviewer_11_2.parser.linesegment import LineSegment
+from gcodeviewer_11_2.parser.gcodeparser import GcodeParser
+from gcodeviewer_11_2.parser.gcodepreprocessorutils import GcodePreprocessorUtils
 
-from gcodeviewer.util.util import Util
-from gcodeviewer.util.util import qQNaN
+from gcodesimulator.util.util import Util
+from gcodesimulator.util.util import qQNaN
 
 
 class GcodeViewParse:
     """ """
 
+    class RotationAxis(Enum):
+        RotationAxisA = 0
+        RotationAxisB = 1
+        RotationAxisC = 2
+
     def __init__(self, parent=None):
         self.absoluteMode = True
         self.absoluteIJK = False
 
-        # Parsed object
-        self.m_min = QVector3D(qQNaN(), qQNaN(), qQNaN())
-        self.m_max = QVector3D(qQNaN(), qQNaN(), qQNaN())
-        self.m_minLength = qQNaN()
+        self.currentLine = 0  # for assigning line numbers to segments.
 
-        self.m_lines: List[LineSegment] = []
-        self.m_lineIndexes: List[List[int]] = [[]]
+        self.m_lineSegments: List[LineSegment] = []
+        self.m_lineSegmentsIndexes: List[List[int]] = [[]]
 
         # Parsing state.
         self.lastPoint: QVector3D = None
-        self.currentLine = 0  # for assigning line numbers to segments.
 
+        self.m_axesRotationVectors: Dict[GcodeViewParse.RotationAxis, QVector3D] = {}
+
+        self.setAxisRotationVector(GcodeViewParse.RotationAxis.RotationAxisA, Util.rotationVector(Util.RotationVector.RotationVectorX))
+        self.setAxisRotationVector(GcodeViewParse.RotationAxis.RotationAxisB, Util.rotationVector(Util.RotationVector.RotationVectorX))
+        self.setAxisRotationVector(GcodeViewParse.RotationAxis.RotationAxisC, Util.rotationVector(Util.RotationVector.RotationVectorX))
+
+        # Parsed object
+        self.m_viewLowerBounds = QVector3D(qQNaN(), qQNaN(), qQNaN())
+        self.m_viewUpperBounds = QVector3D(qQNaN(), qQNaN(), qQNaN())
+        self.m_modelLowerBounds = QVector3D(qQNaN(), qQNaN(), qQNaN())
+        self.m_modelUpperBounds = QVector3D(qQNaN(), qQNaN(), qQNaN())
+
+        self.m_modelMinLineLength = qQNaN()
+       
         # Debug
         self.debug = True
 
-    def getMinimumExtremes(self) -> QVector3D:
-        return self.m_min
+    def getViewLowerBounds(self) -> QVector3D:
+        return self.m_viewLowerBounds
 
-    def getMaximumExtremes(self) -> QVector3D:
-        return self.m_max
+    def getViewUpperBounds(self) -> QVector3D:
+        return self.m_viewUpperBounds
 
-    def getMinLength(self) -> float:
-        return self.m_minLength
+    def getModelLowerBounds(self) -> QVector3D:
+        return self.m_modelLowerBounds
 
-    def getResolution(self) -> QtCore.QSize:
+    def getModelUpperBounds(self) -> QVector3D:
+        return self.m_modelUpperBounds
+
+    def updateViewBounds(self, point: QVector3D):
+        self.m_viewLowerBounds = Util.nMinVector(self.m_viewLowerBounds, point)
+        self.m_viewUpperBounds = Util.nMaxVector(self.m_viewUpperBounds, point)
+
+    def updateModelBounds(self, point: QVector3D):
+        self.m_modelLowerBounds = Util.nMinVector(self.m_modelLowerBounds, point)
+        self.m_modelUpperBounds = Util.nMaxVector(self.m_modelUpperBounds, point)
+
+    def updateModelMinLineLength(self, start: QVector3D, end: QVector3D):
+        length = (start - end).length()
+
+        if (not qIsNaN(length)) and length != 0:
+            if qIsNaN(self.m_modelMinLineLength):
+                self.m_modelMinLineLength = length
+            else: 
+                self.m_modelMinLineLength = min(self.m_modelMinLineLength, length)
+
+    def reset(self):
+        self.m_lineSegments = []
+        self.m_lineSegmentsIndexes = []
+
+        self.currentLine = 0
+
+        self.m_viewLowerBounds = QVector3D(qQNaN(), qQNaN(), qQNaN())
+        self.m_viewUpperBounds = QVector3D(qQNaN(), qQNaN(), qQNaN())
+
+        self.m_modelLowerBounds = QVector3D(qQNaN(), qQNaN(), qQNaN())
+        self.m_modelUpperBounds = QVector3D(qQNaN(), qQNaN(), qQNaN())
+        
+        self.m_modelMinLineLength = qQNaN()
+
+    def getModelMinLineLength(self) -> float:
+        return self.m_modelMinLineLength
+
+    def getModelResolution(self) -> QtCore.QSize:
         return QtCore.QSize(
-            ((self.m_max.x() - self.m_min.x()) / self.m_minLength) + 1,
-            ((self.m_max.y() - self.m_min.y()) / self.m_minLength) + 1,
+            ((self.m_modelUpperBounds.x() - self.m_modelLowerBounds.x()) / self.m_modelMinLineLength) + 1,
+            ((self.m_modelUpperBounds.y() - self.m_modelLowerBounds.y()) / self.m_modelMinLineLength) + 1,
         )
 
+    def setAxisRotationVector(self, axis: RotationAxis, vector: QVector3D):
+        self.m_axesRotationVectors[axis] = vector
+
+    def getAxisRotationVector(self, axis: RotationAxis) -> QVector3D:
+        return self.m_axesRotationVectors[axis]
+
+    def axisRotationUsed(self, axis: RotationAxis) -> bool:
+        if len(self.m_lineSegments) > 0:
+            if axis == GcodeViewParse.RotationAxis.RotationAxisA:
+                if not qIsNaN(self.m_lineSegments[-1].axesEnd().x()):
+                    return True
+            elif axis == GcodeViewParse.RotationAxis.RotationAxisB:
+                if not qIsNaN(self.m_lineSegments[-1].axesEnd().y()):
+                    return True
+            elif axis == GcodeViewParse.RotationAxis.RotationAxisC:
+                if not qIsNaN(self.m_lineSegments[-1].axesEnd().z()):
+                    return True
+    
+        return False
+
+    '''
     def toObjRedux(
         self, gcode: List[str], arcPrecision: float, arcDegreeMode: bool
     ) -> List[LineSegment]:
@@ -69,36 +148,44 @@ class GcodeViewParse:
             gp.addCommand(s)
 
         return self.getLinesFromParser(gp, arcPrecision, arcDegreeMode)
+    '''
 
-    def getLineSegmentList(self) -> List[LineSegment]:
-        return self.m_lines
-
-    def getLinesFromParser(
-        self, gp: GcodeParser, arcPrecision: float, arcDegreeMode: bool
+    def updateFromParser(
+        self, gp: GcodeParser, arcPrecision: float, arcDegreeMode: bool, isCancelled: Any
     ) -> List[LineSegment]:
         psl = gp.getPointSegmentList()
         # For a line segment list ALL arcs must be converted to lines.
         minArcLength = 0.1
+        rotationDelta = 5.0
 
         start: QVector3D | None = None
         end: QVector3D | None = None
 
-        # Prepare segments indexes
-        self.m_lineIndexes = [[] for _ in range(len(psl))]
+        startAxes: QVector3D | None = None
+        endAxes: QVector3D | None = None
 
+        startRotation = QMatrix4x4()
+        endRotation = QMatrix4x4()
+
+        index = 0
         lineIndex = 0
+
+        # Prepare segments indexes
+        self.m_lineSegmentsIndexes = [[] for _ in range(len(psl))]
+
         for segment in psl:
             ps = segment
             isMetric = ps.isMetric()
             ps.convertToMetric()
 
             end = ps.point()
+            endAxes = ps.axes()
 
             # start is null for the first iteration.
             if start is not None:
                 # Expand arc for graphics.
                 if ps.isArc():
-                    points = GcodePreprocessorUtils.generatePointsAlongArcBDring(
+                    points = GcodePreprocessorUtils.generatePointsAlongArcBDring_Arc(
                         ps.plane(),
                         cast(QVector3D, start),
                         cast(QVector3D, end),
@@ -108,14 +195,25 @@ class GcodeViewParse:
                         minArcLength,
                         arcPrecision,
                         arcDegreeMode,
+                        ps.getArcTurns()
                     )
                     # Create line segments from points.
-                    if len(points) > 0:
+                    segments = len(points)
+                    if segments > 0:
+                        rotation = Util.nAssign(cast(QVector3D, startAxes).x()) - Util.nAssign(endAxes.x())
+                        segmentRotation = rotation / segments
+
                         startPoint = start
                         for nextPoint in points:
                             if nextPoint == startPoint:
                                 continue
+
+                            if not Util.nIsNaN(self.m_axesRotationVectors[GcodeViewParse.RotationAxis.RotationAxisA]):
+                                endRotation.rotate(segmentRotation, self.m_axesRotationVectors[GcodeViewParse.RotationAxis.RotationAxisA])
+                                 
+                            #ls = LineSegment(startRotation * startPoint, endRotation * nextPoint, lineIndex)
                             ls = LineSegment()
+
                             # ls.setIsArc(ps.isArc())
                             # ls.setIsClockwise(ps.isClockwise())
                             # ls.setPlane(ps.plane())
@@ -123,107 +221,194 @@ class GcodeViewParse:
                             # ls.setIsZMovement(ps.isZMovement())
                             # ls.setIsMetric(isMetric)
                             # ls.setIsAbsolute(ps.isAbsolute())
+                            # ls.setIsInverseTimeFeed(ps.isInverseTimeFeed())
                             # ls.setSpeed(ps.getSpeed())
                             # ls.setSpindleSpeed(ps.getSpindleSpeed())
                             # ls.setDwell(ps.getDwell())
-                            # self.testExtremes(nextPoint)
+                            # ls.setModelStart(startPoint)
+                            # ls.setModelEnd(nextPoint)
+                            # ls.setAxesStart(*startAxes)
+                            # ls.setAxesEnd(*endAxes)
+                            # ls.setIndex(index++)
 
-                            ls.m_isArc = ps.m_isArc
-                            ls.m_isClockwise = ps.isClockwise()
+                            #this->updateViewBounds(ls->getEnd());
+                            #this->updateModelBounds(nextPoint);
+
+                            ls.m_flags.isArc = ps.m_isArc
+                            ls.m_flags.isClockwise = ps.isClockwise()
                             ls.m_plane = ps.m_plane
-                            ls.m_isFastTraverse = ps.m_isFastTraverse
-                            ls.m_isZMovement = ps.m_isZMovement
-                            ls.m_isMetric = isMetric
-                            ls.m_isAbsolute = ps.m_isAbsolute
+                            ls.m_flags.isFastTraverse = ps.m_isFastTraverse
+                            ls.m_flags.isZMovement = ps.m_isZMovement
+                            ls.m_flags.isMetric = isMetric
+                            ls.m_flags.isAbsolute = ps.m_isAbsolute
+                            ls.m_flags.isInverseTimeFeed = ps.m_isInverseTimeFeed
                             ls.m_speed = ps.m_speed
                             ls.m_spindleSpeed = ps.m_spindleSpeed
                             ls.m_dwell = ps.m_dwell
+                            ls.m_modelStart = startPoint
+                            ls.m_modelEnd = nextPoint
+                            ls.m_axesStart = startAxes
+                            ls.m_axesEnd = endAxes
+                            index = index + 1 
+                            ls.m_index = index
 
-                            ls.m_first = startPoint
-                            ls.m_second = nextPoint
-                            ls.m_lineNumber = lineIndex
+                            ls.m_first = startPoint * startRotation
+                            ls.m_second = nextPoint * endRotation
+                            ls.m_lineIndex = lineIndex
 
-                            self.testExtremes(nextPoint)
-                            self.m_lines.append(ls)
-                            self.m_lineIndexes[ps.getLineNumber()].append(
-                                len(self.m_lines) - 1
-                            )
+                            self.updateViewBounds(ls.getEnd())
+                            self.updateModelBounds(nextPoint)
+
+                            self.m_lineSegments.append(ls)
+                            self.m_lineSegmentsIndexes[ps.getLineNumber()].append(len(self.m_lineSegments) - 1)
+
                             startPoint = nextPoint
+                            startRotation = endRotation
 
                         lineIndex += 1
 
+                # Expand spline for graphics
+                elif ps.isSpline():
+                    points = GcodePreprocessorUtils.generatePointsAlongSpline(
+                        start, 
+                        end,
+                        cast(QVector3D, ps.getSplineControlPoint1()),
+                        ps.getSplineControlPoint2())
+
+                    # Create line segments from points
+                    segments = len(points)
+                    if segments > 0:
+                        rotation = Util.nAssign(cast(QVector3D, startAxes).x()) - Util.nAssign(endAxes.x())
+                        segmentRotation = rotation / segments
+
+                        startPoint = start
+                        for nextPoint in points:
+                            if not Util.nIsNaN(self.m_axesRotationVectors[GcodeViewParse.RotationAxis.RotationAxisA]):
+                                endRotation.rotate(segmentRotation, self.m_axesRotationVectors[GcodeViewParse.RotationAxis.RotationAxisA])
+
+                            #ls = LineSegment(startRotation * startPoint, endRotation * nextPoint, lineIndex);
+                            ls = LineSegment()
+
+                            #ls->setIsSpline(true);
+                            #ls->setIsFastTraverse(ps->isFastTraverse());
+                            #ls->setIsZMovement(ps->isZMovement());
+                            #ls->setIsMetric(isMetric);
+                            #ls->setIsAbsolute(ps->isAbsolute());
+                            #ls->setIsInverseTimeFeed(ps->isInverseTimeFeed());
+                            #ls->setSpeed(ps->getSpeed());
+                            #ls->setSpindleSpeed(ps->getSpindleSpeed());
+                            #ls->setDwell(ps->getDwell());
+                            #ls->setModelStart(startPoint);
+                            #ls->setModelEnd(nextPoint);
+                            #ls->setAxesStart(*startAxes);
+                            #ls->setAxesEnd(*endAxes);
+                            #ls->setIndex(index++);
+
+                            #this->updateViewBounds(ls->getEnd());
+                            #this->updateModelBounds(nextPoint);
+
+                            ls.m_flags.isSpline = True
+                            ls.m_flags.isFastTraverse = ps.m_isFastTraverse
+                            ls.m_flags.isZMovement = ps.m_isZMovement
+                            ls.m_flags.isMetric = isMetric
+                            ls.m_flags.isAbsolute = ps.m_isAbsolute
+                            ls.m_flags.isInverseTimeFeed = ps.m_isInverseTimeFeed
+                            ls.m_speed = ps.m_speed
+                            ls.m_spindleSpeed = ps.m_spindleSpeed
+                            ls.m_dwell = ps.m_dwell
+                            ls.m_modelStart = startPoint
+                            ls.m_modelEnd = nextPoint
+                            ls.m_axesStart = startAxes
+                            ls.m_axesEnd = endAxes
+                            index = index + 1 
+                            ls.m_index = index
+
+                            ls.m_first = startPoint * startRotation
+                            ls.m_second = nextPoint * endRotation
+                            ls.m_lineIndex = lineIndex
+                      
+                            self.updateViewBounds(ls.getEnd())
+                            self.updateModelBounds(nextPoint)                           
+
+                            self.m_lineSegments.append(ls)
+                            self.m_lineSegmentsIndexes[ps.getLineNumber()].append(len(self.m_lineSegments) - 1)
+
+                            startPoint = nextPoint
+                            startRotation = endRotation
+                    
+                        lineIndex += 1
+                
                 # Line
                 else:
-                    ls = LineSegment()
-                    ls.m_first = start
-                    ls.m_second = end
-                    ls.m_lineNumber = lineIndex
+                    startPoint = start
 
+                    rotation = Util.nAssign(cast(QVector3D, startAxes).x()) - Util.nAssign(endAxes.x())
+                    segments = int(max(math.fabs(rotation / rotationDelta), 1))
+                    segmentVector = (end - startPoint) / segments
+                    segmentRotation = rotation / segments
+
+                    # Create line segments on axis rotation
+                    for i in range(0, segments):
+                
+                        nextPoint =  startPoint + segmentVector if segments > 1 else end
+
+                        if not Util.nIsNaN(self.m_axesRotationVectors[GcodeViewParse.RotationAxis.RotationAxisA]):
+                            endRotation.rotate(segmentRotation, self.m_axesRotationVectors[GcodeViewParse.RotationAxis.RotationAxisA])
+                        
+                        #ls = new LineSegment(startRotation * startPoint, endRotation * nextPoint, lineIndex);
+                        ls = LineSegment()
+                        ls.m_first = startPoint * startRotation
+                        ls.m_second = nextPoint * endRotation
+                        ls.m_lineIndex = lineIndex
+
+                        # ls.setIsArc(ps.isArc())
+                        # ls.setIsFastTraverse(ps.isFastTraverse())
+                        # ls.setIsZMovement(ps.isZMovement())
+                        # ls.setIsMetric(isMetric)
+                        # ls.setIsAbsolute(ps.isAbsolute())
+                        # ls.setSpeed(ps.getSpeed())
+                        # ls.setSpindleSpeed(ps.getSpindleSpeed())
+                        # ls.setDwell(ps.getDwell())
+
+                        ls.m_flags.isArc = ps.m_isArc
+                        ls.m_flags.isFastTraverse = ps.m_isFastTraverse
+                        ls.m_flags.isZMovement = ps.m_isZMovement
+                        ls.m_flags.isMetric = isMetric
+                        ls.m_flags.isAbsolute = ps.m_isAbsolute
+                        ls.m_flags.isInverseTimeFeed = ps.m_isInverseTimeFeed
+                        ls.m_speed = ps.m_speed
+                        ls.m_spindleSpeed = ps.m_spindleSpeed
+                        ls.m_dwell = ps.m_dwell
+
+                        ls.m_modelStart = startPoint
+                        ls.m_modelEnd = nextPoint
+                        ls.m_axesStart = startAxes
+                        ls.m_axesEnd = endAxes
+                        ls.m_index = index
+
+                        self.updateViewBounds(ls.getEnd())
+                        self.updateModelBounds(nextPoint)
+                        self.updateModelMinLineLength(startPoint, nextPoint)
+
+                        self.m_lineSegments.append(ls)
+                        self.m_lineSegmentsIndexes[ps.getLineNumber()].append(len(self.m_lineSegments) - 1)
+
+                        startPoint = nextPoint
+                        startRotation = endRotation
+
+                    index += 1 
                     lineIndex += 1
-                    # ls.setIsArc(ps.isArc())
-                    # ls.setIsFastTraverse(ps.isFastTraverse())
-                    # ls.setIsZMovement(ps.isZMovement())
-                    # ls.setIsMetric(isMetric)
-                    # ls.setIsAbsolute(ps.isAbsolute())
-                    # ls.setSpeed(ps.getSpeed())
-                    # ls.setSpindleSpeed(ps.getSpindleSpeed())
-                    # ls.setDwell(ps.getDwell())
-
-                    ls.m_isArc = ps.m_isArc
-                    ls.m_isFastTraverse = ps.m_isFastTraverse
-                    ls.m_isZMovement = ps.m_isZMovement
-                    ls.m_isMetric = ps.m_isMetric
-                    ls.m_isAbsolute = ps.m_isAbsolute
-                    ls.m_speed = ps.m_speed
-                    ls.m_spindleSpeed = ps.m_spindleSpeed
-                    ls.m_dwell = ps.m_dwell
-
-                    self.testExtremes(end)
-                    self.testLength(cast(QVector3D, start), end)
-                    self.m_lines.append(ls)
-                    self.m_lineIndexes[ps.getLineNumber()].append(len(self.m_lines) - 1)
 
             start = end
+            startAxes = endAxes
 
-        return self.m_lines
+            if isCancelled: #  and isCancelled():
+                return []
 
-    def getLines(self) -> List[LineSegment]:
-        return self.m_lines
+        return self.m_lineSegments
 
-    def getLinesIndexes(self) -> List[List[int]]:
-        return self.m_lineIndexes
+    def getLineSegments(self) -> List[LineSegment]:
+        return self.m_lineSegments
 
-    def reset(self):
-        self.m_lines = []
-        self.m_lineIndexes = []
-
-        self.currentLine = 0
-        self.m_min = QVector3D(qQNaN(), qQNaN(), qQNaN())
-        self.m_max = QVector3D(qQNaN(), qQNaN(), qQNaN())
-        self.m_minLength = qQNaN()
-
-    @singledispatchmethod
-    def testExtremes(self, arg):
-        print("testExtremes : not implemented with this arg type")
-
-    @testExtremes.register
-    def _(self, p3d: QVector3D):
-        self.testExtremes(p3d.x(), p3d.y(), p3d.z())
-
-    @testExtremes.register
-    def _(self, x: float, y: float, z: float):
-        self.m_min.setX(Util.nMin(self.m_min.x(), x))
-        self.m_min.setY(Util.nMin(self.m_min.y(), y))
-        self.m_min.setZ(Util.nMin(self.m_min.z(), z))
-
-        self.m_max.setX(Util.nMax(self.m_max.x(), x))
-        self.m_max.setY(Util.nMax(self.m_max.y(), y))
-        self.m_max.setZ(Util.nMax(self.m_max.z(), z))
-
-    def testLength(self, start: QVector3D, end: QVector3D):
-        length = (start - end).length()
-        if (not qIsNaN(length)) and length != 0:
-            if qIsNaN(self.m_minLength):
-                self.m_minLength = length
-            else:
-                self.m_minLength = min(self.m_minLength, length)
+    def getLineSegmentsIndexes(self) -> List[List[int]]:
+        return self.m_lineSegmentsIndexes

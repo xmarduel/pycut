@@ -9,7 +9,6 @@
 import math
 
 from typing import List
-from typing import Any
 from typing import cast
 
 from PySide6.QtGui import QMatrix4x4
@@ -18,9 +17,9 @@ from PySide6.QtGui import QVector3D
 from PySide6.QtCore import qIsNaN
 from PySide6.QtCore import QRegularExpression
 
-from gcodeviewer.parser.pointsegment import PointSegment
+from gcodeviewer_11_2.parser.pointsegment import PointSegment
 
-from gcodeviewer.util.util import qQNaN
+from gcodeviewer_11_2.util.util import qQNaN
 
 
 class GcodePreprocessorUtils:
@@ -117,7 +116,7 @@ class GcodePreprocessorUtils:
 
     @classmethod
     def parseCodes(cls, args: List[str], code: str) -> List[float]:
-        l = []
+        l: List[float] = []
 
         for s in args:
             if len(s) > 0 and s[0].upper() == code:
@@ -154,23 +153,6 @@ class GcodePreprocessorUtils:
             match = re.match(command, pos)
 
         return codes
-
-    @classmethod
-    def updatePointWithCommand(
-        cls, command: str | List[str], initial: QVector3D, absoluteMode: bool
-    ) -> QVector3D:
-        """
-        Update a point given the arguments of a command.
-        """
-        if command.__class__.__name__ == "str":
-            str_command = cast(str, command)
-            l = cls.splitCommand(str_command)
-            return cls.updatePointWithCommand(l, initial, absoluteMode)
-        else:
-            list_command = cast(List[str], command)
-            return cls.updatePointWithCommand_FromStringList(
-                list_command, initial, absoluteMode
-            )
 
     @classmethod
     def updatePointWithCommand_FromStringList(
@@ -223,6 +205,45 @@ class GcodePreprocessorUtils:
 
         return newPoint
 
+    @classmethod 
+    def updateAxesWithCommand(cls, commandArgs: List[str], initial: QVector3D, absoluteMode: bool) -> QVector3D:
+        a = qQNaN()
+        b = qQNaN()
+        c = qQNaN()
+        code = ""
+
+        for command in commandArgs:
+            if len(command) > 0:
+                # code = command[0].toUpper().toLatin1()
+                code = command[0].upper()
+
+                if code == 'A':
+                    a = float(command[1:])
+                elif code == 'B':
+                    b = float(command[1:])
+                elif code == 'C':
+                    c = float(command[1:])
+                    
+
+        newAxes = QVector3D(initial.x(), initial.y(), initial.z())
+
+        if absoluteMode:
+            if not qIsNaN(a):
+                newAxes.setX(a)
+            if not qIsNaN(b):
+                newAxes.setY(b)
+            if not qIsNaN(c):
+                newAxes.setZ(c)
+        else:
+            if not qIsNaN(a):
+                newAxes.setX(newAxes.x() + a)
+            if not qIsNaN(b):
+                newAxes.setY(newAxes.y() + b)
+            if qIsNaN(c):
+                newAxes.setZ(newAxes.z() + c)
+
+        return newAxes
+   
     @classmethod
     def updateCenterWithCommand(
         cls,
@@ -406,7 +427,7 @@ class GcodePreprocessorUtils:
         return angle
 
     @classmethod
-    def calculateSweep(cls, startAngle: float, endAngle: float, isCw: bool) -> float:
+    def calculateSweep(cls, startAngle: float, endAngle: float, isCw: bool, turns: int = 1) -> float:
         sweep = 0.0
 
         # Full circle
@@ -426,48 +447,11 @@ class GcodePreprocessorUtils:
             else:
                 sweep = math.fabs(endAngle - startAngle)
 
+        # Add extra full circles for P > 1
+        if turns > 1:
+            sweep += (cls.M_PI * 2) * (turns - 1)
+        
         return sweep
-
-    @classmethod
-    def generatePointsAlongArcBDring(
-        cls,
-        plane: PointSegment.Plane,
-        start: QVector3D,
-        end: QVector3D,
-        center: QVector3D,
-        clockwise: bool,
-        R: float,
-        minArcLength: float,
-        arcPrecision: float,
-        LAST_ARG: Any,
-    ) -> List[QVector3D]:
-        """
-        DUMMY DISPATCH
-        """
-        if isinstance(LAST_ARG, bool):
-            return cls.generatePointsAlongArcBDring_Arc(
-                plane,
-                start,
-                end,
-                center,
-                clockwise,
-                R,
-                minArcLength,
-                arcPrecision,
-                LAST_ARG,
-            )
-        else:
-            return cls.generatePointsAlongArcBDring_Num(
-                plane,
-                start,
-                end,
-                center,
-                clockwise,
-                R,
-                minArcLength,
-                arcPrecision,
-                LAST_ARG,
-            )
 
     @classmethod
     def generatePointsAlongArcBDring_Arc(
@@ -481,6 +465,7 @@ class GcodePreprocessorUtils:
         minArcLength: float,
         arcPrecision: float,
         arcDegreeMode: bool,
+        turns: int
     ) -> List[QVector3D]:
         """
         Generates the points along an arc including the start and end points.
@@ -514,7 +499,7 @@ class GcodePreprocessorUtils:
 
         startAngle = cls.getAngle(center, start)
         endAngle = cls.getAngle(center, end)
-        sweep = cls.calculateSweep(startAngle, endAngle, clockwise)
+        sweep = cls.calculateSweep(startAngle, endAngle, clockwise, turns)
 
         # Convert units.
         arcLength = sweep * radius
@@ -593,3 +578,87 @@ class GcodePreprocessorUtils:
         segments.append(m.map(p2))
 
         return segments
+
+    @classmethod
+    def lerp(cls, a: QVector3D, b: QVector3D, t: float) -> QVector3D:
+        return a * (1.0 - t) + b * t
+
+    @classmethod
+    def evalCubicBSpline(cls, t: float, p0: QVector3D, p1: QVector3D, p2: QVector3D, p3: QVector3D) -> QVector3D:
+        # De Casteljau's algorithm - 3 levels
+        q0 = GcodePreprocessorUtils.lerp(p0, p1, t)
+        q1 = GcodePreprocessorUtils.lerp(p1, p2, t)
+        q2 = GcodePreprocessorUtils.lerp(p2, p3, t)
+
+        r0 = GcodePreprocessorUtils.lerp(q0, q1, t)
+        r1 = GcodePreprocessorUtils.lerp(q1, q2, t)
+
+        return GcodePreprocessorUtils.lerp(r0, r1, t)
+    
+    @classmethod
+    def evalQuadraticBSpline(cls, t: float, p0: QVector3D, p1: QVector3D, p2: QVector3D) -> QVector3D:
+        # De Casteljau's algorithm - 2 levels
+        q0 = GcodePreprocessorUtils.lerp(p0, p1, t)
+        q1 = GcodePreprocessorUtils.lerp(p1, p2, t)
+
+        return GcodePreprocessorUtils.lerp(q0, q1, t)
+    
+    @classmethod
+    def generatePointsAlongSpline(cls, start: QVector3D, end: QVector3D, cp1: QVector3D, cp2: QVector3D | None, tolerance: float = 0.005) -> List[QVector3D]:
+        points: List[QVector3D] = []
+
+        MIN_STEP = 0.001
+        MAX_STEP = 0.1
+
+        t = 0.0
+        step = MAX_STEP
+
+        isCubic = cp2 is not None
+
+        while t < 1.0:
+            tNext = min(t + step, 1.0)
+            tMid = t + (tNext - t) / 2.0
+
+            if isCubic:
+                current = GcodePreprocessorUtils.evalCubicBSpline(t, start, cp1, cast(QVector3D, cp2), end)
+                next = GcodePreprocessorUtils.evalCubicBSpline(tNext, start, cp1, cast(QVector3D, cp2), end)
+                mid = GcodePreprocessorUtils.evalCubicBSpline(tMid, start, cp1, cast(QVector3D, cp2), end)
+            else:
+                current = GcodePreprocessorUtils.evalQuadraticBSpline(t, start, cp1, end)
+                next = GcodePreprocessorUtils.evalQuadraticBSpline(tNext, start, cp1, end)
+                mid = GcodePreprocessorUtils.evalQuadraticBSpline(tMid, start, cp1, end)
+
+            # Z interpolates linearly (Marlin compatible)
+            current.setZ(start.z() + t * (end.z() - start.z()))
+            next.setZ(start.z() + tNext * (end.z() - start.z()))
+            mid.setZ(start.z() + tMid * (end.z() - start.z()))
+
+            linearMid = (current + next) * 0.5
+
+            # Error calculation on XY plane only (curve defined in plane, Z interpolates separately)
+            dx = mid.x() - linearMid.x()
+            dy = mid.y() - linearMid.y()
+            error = math.sqrt(dx * dx + dy * dy)
+
+            if error < tolerance:
+                points.append(next)
+                t = tNext
+
+                if step < MAX_STEP:
+                    step = min(step * 2, MAX_STEP)
+            else:
+                step /= 2
+                if step < MIN_STEP:
+                    points.append(next)
+                    t = min(t + MIN_STEP, 1.0)
+                    step = MIN_STEP
+
+            if len(points) > 1000:
+                break
+
+        if len(points) > 0 and (points[-1] - end).length() <= 0.001:
+            points.pop()
+        
+        points.append(end)
+
+        return points

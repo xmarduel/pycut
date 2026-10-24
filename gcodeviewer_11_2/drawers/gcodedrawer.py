@@ -2,24 +2,28 @@ from typing import List
 
 from enum import Enum
 
+from PySide6 import QtGui
 from PySide6.QtGui import QVector3D
+from PySide6.QtGui import QMatrix4x4
+from PySide6.QtGui import QPolygon
 from PySide6.QtGui import QColor
 from PySide6.QtGui import QImage
 
+from PySide6.QtCore import QPoint
 from PySide6.QtCore import QTimer, Slot
 
 from PySide6.QtCore import qIsNaN
 
 from PySide6.QtOpenGL import QOpenGLTexture
 
-from gcodeviewer.parser.linesegment import LineSegment
-from gcodeviewer.parser.gcodeviewparse import GcodeViewParse
+from gcodeviewer_11_2.parser.linesegment import LineSegment
+from gcodeviewer_11_2.parser.gcodeviewparse import GcodeViewParse
 
-from gcodeviewer.drawers.shaderdrawable import ShaderDrawable
-from gcodeviewer.drawers.shaderdrawable import VertexData
+from gcodeviewer_11_2.drawers.shaderdrawable import ShaderDrawable
+from gcodeviewer_11_2.drawers.shaderdrawable import VertexData
 
-from gcodeviewer.util.util import Util
-from gcodeviewer.util.util import qBound
+from gcodeviewer_11_2.util.util import Util
+from gcodeviewer_11_2.util.util import qBound
 
 import numpy as np
 
@@ -37,6 +41,9 @@ class GcodeDrawer(ShaderDrawable):
         Vectors = 0
         Raster = 1
 
+    polygon = QPolygon()
+    
+
     def __init__(self):
         super(GcodeDrawer, self).__init__()
 
@@ -50,6 +57,14 @@ class GcodeDrawer(ShaderDrawable):
         self.m_grayscaleCode = GcodeDrawer.GrayscaleCode.S
         self.m_grayscaleMin = 0
         self.m_grayscaleMax = 255
+
+        self.m_start = Util.nVector()
+        self.m_end = Util.nVector()
+
+        self.m_timerVertexUpdate = QTimer()
+
+        self.m_timerVertexUpdate.timeout.connect(self.onTimerVertexUpdate)
+        self.m_timerVertexUpdate.start(20)
 
         self.m_colorNormal = QColor(255, 0, 0)
         self.m_colorDrawn = QColor(0, 255, 0)
@@ -66,9 +81,6 @@ class GcodeDrawer(ShaderDrawable):
 
         self.m_pointSize = 6
 
-        self.m_timerVertexUpdate.timeout.connect(self.onTimerVertexUpdate)
-        self.m_timerVertexUpdate.start(100)
-
     def update(self):
         self.m_indexes = []
         self.m_geometryUpdated = False
@@ -78,7 +90,7 @@ class GcodeDrawer(ShaderDrawable):
         # Store segments to update
         self.m_indexes += indexes
 
-    def updateData(self):
+    def updateData(self) -> bool:
         if self.m_drawMode == GcodeDrawer.DrawMode.Vectors:
             if len(self.m_indexes) == 0:
                 return self.prepareVectors()
@@ -89,29 +101,61 @@ class GcodeDrawer(ShaderDrawable):
                 return self.prepareRaster()
             else:
                 return self.updateRaster()
+        else:
+            return True
 
-    def getSizes(self) -> QVector3D:
-        ex_min = self.m_viewParser.getMinimumExtremes()
-        ex_max = self.m_viewParser.getMaximumExtremes()
+    def drawPainter(self, painter: QtGui.QPainter, projection: QMatrix4x4, ratio: float):
 
-        return QVector3D(
-            ex_max.x() - ex_min.x(), ex_max.y() - ex_min.y(), ex_max.z() - ex_min.z()
-        )
+        GcodeDrawer.polygon = QPolygon( [QPoint(0, 0), QPoint(-4, 32), QPoint(4, 32), QPoint(0, 0) ] )
 
-    def getMinimumExtremes(self) -> QVector3D:
-        v = self.m_viewParser.getMinimumExtremes()
+        painter.setRenderHint(QtGui.QPainter.RenderHint.Antialiasing)
+
+        if not Util.nIsNaN(self.m_start):
+            painter.save()
+
+            painter.translate((projection.map(self.m_start)).toPoint())
+            painter.scale(1, -1)
+
+            painter.setPen(QtGui.QPen(self.m_colorStart))
+            painter.setBrush(QtGui.QBrush(self.m_colorStart))
+            painter.drawPolygon(GcodeDrawer.polygon)
+
+            painter.restore()
+
+        if not Util.nIsNaN(self.m_end):
+            painter.translate((projection.map(self.m_end)).toPoint())
+            painter.scale(1, -1)
+
+            painter.setPen(QtGui.QPen(self.m_colorEnd))
+            painter.setBrush(QtGui.QBrush(self.m_colorEnd))
+            painter.drawPolygon(GcodeDrawer.polygon)
+
+    def getSegmentType(self, segment: LineSegment) -> int:
+        return segment.isFastTraverse() + segment.isZMovement() * 2
+    
+    def getSegmentLength(self, segment: LineSegment) -> float:
+        return (segment.getEnd() - segment.getStart()).length()
+
+    def getViewLowerBounds(self) -> QVector3D:
+        v = self.m_viewParser.getViewLowerBounds()
         if self.m_ignoreZ:
             v.setZ(0)
 
         return v
 
-    def getMaximumExtremes(self) -> QVector3D:
-        v = self.m_viewParser.getMaximumExtremes()
-        if self.m_ignoreZ:
+    def getViewUpperBounds(self) -> QVector3D:
+        v = self.m_viewParser.getViewUpperBounds()
+        if self.m_ignoreZ: 
             v.setZ(0)
 
         return v
 
+    def getModelLowerBounds(self) -> QVector3D:
+        return self.m_viewParser.getModelLowerBounds()
+
+    def getModelUpperBounds(self) -> QVector3D:
+        return self.m_viewParser.getModelUpperBounds()
+    
     def setViewParser(self, viewParser: GcodeViewParse):
         self.m_viewParser = viewParser
 
@@ -211,110 +255,96 @@ class GcodeDrawer(ShaderDrawable):
             super().update()
 
     def prepareVectors(self) -> bool:
-        print("preparing vectors : %s" % self)
-
-        lines = self.m_viewParser.getLines()
-
-        print("lines count: %d" % len(lines))
-
-        vertex = VertexData()
-
+        """ """
         # Clear all vertex data
         self.m_lines = []
         self.m_points = []
         self.m_triangles = []
+
+        self.m_start = Util.nVector()
+        self.m_end = Util.nVector()
 
         # Delete texture on mode change
         if self.m_texture:
             self.m_texture.destroy()
             self.m_texture = None
 
-        drawFirstPoint = True
+        lineSegments = self.m_viewParser.getLineSegments()
+        isFirstPointAdded = False
+        lineSegmentsCount = len(lineSegments)
+        vertex = VertexData()
+
         i = 0
         # i will be changed in the while-loop!
-        while i < len(lines):
-            line = lines[i]
-
-            if qIsNaN(line.getEnd().z()):
-                i += 1
-                continue
+        while i < len(lineSegments):
+            lineSegmentBegin = lineSegments[i]
+            lineSegmentEnd = lineSegmentBegin
 
             # Find first point of toolpath
-            if drawFirstPoint:
-                if qIsNaN(line.getEnd().x()) or qIsNaN(line.getEnd().y()):
+            if not isFirstPointAdded:
+                if qIsNaN(lineSegmentBegin.getEnd().x()) or qIsNaN(lineSegmentBegin.getEnd().y()):
                     i += 1
                     continue
 
-                # Draw first toolpath point
-                vertex.color = Util.colorToVector(self.m_colorStart)
-                vertex.position = line.getEnd()
-                if self.m_ignoreZ:
-                    vertex.position.setZ(0)
-                vertex.start = QVector3D(sNaN, sNaN, self.m_pointSize)
-                self.m_points.append(VertexData.clone(vertex))
+                # Store toolpath first point
+                self.m_start = lineSegmentBegin.getEnd()
+                if self.m_ignoreZ or qIsNaN(self.m_start.z()):
+                    self.m_start.setZ(0)
 
-                drawFirstPoint = False
+                isFirstPointAdded = True
+                i += 1
                 continue
 
             # Prepare vertices
-            if line.isFastTraverse():
-                vertex.start = line.getStart()
+            if lineSegmentBegin.isFastTraverse():
+                vertex.type = VertexData.VertexDataType.VertexDataTypeDash
+                vertex.data = lineSegmentBegin.getStart()
             else:
-                vertex.start = QVector3D(sNaN, sNaN, sNaN)
+                vertex.type = VertexData.VertexDataType.VertexDataTypeLine
+
+            # Store vertex index
+            lineSegmentBegin.setVertexIndex(len(self.m_lines))
 
             # Simplify geometry
-            j = i
-            if self.m_simplify and i < len(lines) - 1:
-                start = line.getEnd() - line.getStart()
-                next = QVector3D()
-                length = start.length()
-                straight = False
+            lineSegmentType = self.getSegmentType(lineSegmentBegin)
 
-                ddo = True
+            if self.m_simplify and i < len(lineSegments) - 1:
+                length = self.getSegmentLength(lineSegmentBegin)
+                lineSegment = None
 
-                while ddo:
-                    line.setVertexIndex(len(self.m_lines))  # Store vertex index
-                    i += 1
+                for j in range(i+1, lineSegmentsCount):
+                    lineSegment = lineSegments[j]
+                    if self.getSegmentType(lineSegment) != lineSegmentType:
+                        break
 
-                    if i < len(lines) - 1:
-                        next = lines[i].getEnd() - lines[i].getStart()
-                        length += next.length()
-                        # straight = start.crossProduct(start.normalized(), next.normalized()).length() < 0.025
+                    length += self.getSegmentLength(lineSegment)
+                    if length > self.m_simplifyPrecision:
+                        break
 
-                    # Split short & straight lines
-                    ddo = (
-                        (length < self.m_simplifyPrecision or straight)
-                        and i < len(lines)
-                        and self.getSegmentType(lines[i])
-                        == self.getSegmentType(lines[j])
-                    )
-                i -= 1
-            else:
-                line.setVertexIndex(len(self.m_lines))  # Store vertex index
+                    lineSegmentEnd = lineSegment
+                    lineSegmentEnd.setVertexIndex(len(self.m_lines))
+                    i = j
 
             # Set color
-            vertex.color = self.getSegmentColorVector(lines[i])
+            vertex.color = self.getSegmentColorVector(lineSegmentEnd)
 
             # Line start
-            vertex.position = lines[j].getStart()
-            if self.m_ignoreZ:
+            vertex.position = lineSegmentBegin.getStart()
+            if self.m_ignoreZ or qIsNaN(vertex.position.z()):
                 vertex.position.setZ(0)
             self.m_lines.append(VertexData.clone(vertex))
 
             # Line end
-            vertex.position = lines[i].getEnd()
-            if self.m_ignoreZ:
+            vertex.position = lineSegmentEnd.getEnd()
+            if self.m_ignoreZ or qIsNaN(vertex.position.z()):
                 vertex.position.setZ(0)
             self.m_lines.append(VertexData.clone(vertex))
 
-            # Draw last toolpath point
-            if i == len(lines) - 1:
-                vertex.color = Util.colorToVector(self.m_colorEnd)
-                vertex.position = lines[i].getEnd()
-                if self.m_ignoreZ:
-                    vertex.position.setZ(0)
-                vertex.start = QVector3D(sNaN, sNaN, self.m_pointSize)
-                self.m_points.append(VertexData.clone(vertex))
+            # Store last toolpath point
+            if  i == lineSegmentsCount - 1:
+                self.m_end = lineSegmentEnd.getEnd()
+                if self.m_ignoreZ or qIsNaN(self.m_end.z()):
+                    self.m_end.setZ(0)
 
             # do not forget to increment the variable i
             i += 1
@@ -353,8 +383,8 @@ class GcodeDrawer(ShaderDrawable):
 
                     itemsize = np.float32().itemsize
                     # PROTO write(offset, data, size) all in bytes
-                    bufferIndexA = ((vertexIdx + 0) * 9 + 3) * itemsize
-                    bufferIndexB = ((vertexIdx + 1) * 9 + 3) * itemsize
+                    bufferIndexA = ((vertexIdx + 0) * 10 + 3) * itemsize
+                    bufferIndexB = ((vertexIdx + 1) * 10 + 3) * itemsize
 
                     color_bytes = color_data.tobytes()
 
@@ -368,30 +398,22 @@ class GcodeDrawer(ShaderDrawable):
     def prepareRaster(self) -> bool:
         maxImageSize = 8192
 
-        print("preparing raster: %s" % self)
-
         # Generate image
         image = QImage()
 
-        print(
-            "image info: %s %s"
-            % (self.m_viewParser.getResolution(), self.m_viewParser.getMinLength())
-        )
-
         if (
-            self.m_viewParser.getResolution().width() <= maxImageSize
-            and self.m_viewParser.getResolution().height() <= maxImageSize
+            self.m_viewParser.getModelResolution().width() <= maxImageSize
+            and self.m_viewParser.getModelResolution().height() <= maxImageSize
         ):
             image = QImage(
-                self.m_viewParser.getResolution(), QImage.Format.Format_RGB888
+                self.m_viewParser.getModelResolution(), QImage.Format.Format_RGB888
             )
             image.fill(QColor("white"))
 
-            lines = self.m_viewParser.getLines()
-            print("lines count: %d" % len(lines))
+            lines = self.m_viewParser.getLineSegments()
 
-            pixelSize = self.m_viewParser.getMinLength()
-            origin = self.m_viewParser.getMinimumExtremes()
+            pixelSize = self.m_viewParser.getModelMinLineLength()
+            origin = self.m_viewParser.getViewLowerBounds()
 
             for line in lines:
                 if not qIsNaN(line.getEnd().length()):
@@ -418,42 +440,45 @@ class GcodeDrawer(ShaderDrawable):
         # Set color
         vertex.color = Util.colorToVector(QColor("red"))
 
+        # Set data type
+        vertex.type = VertexData.VertexDataType.VertexDataTypeTriangle
+
         # Rect
-        vertex.start = QVector3D(sNaN, 0, 0)
+        vertex.data = QVector3D(0, 0, 0)
         vertex.position = QVector3D(
-            self.getMinimumExtremes().x(), self.getMinimumExtremes().y(), 0
+            self.getViewLowerBounds().x(), self.getViewLowerBounds().y(), 0
         )
-        vertices.append(vertex)
+        vertices.append(VertexData.clone(vertex))
 
-        vertex.start = QVector3D(sNaN, 1, 1)
+        vertex.data = QVector3D(0, 1, 1)
         vertex.position = QVector3D(
-            self.getMaximumExtremes().x(), self.getMaximumExtremes().y(), 0
+            self.getViewUpperBounds().x(), self.getViewUpperBounds().y(), 0
         )
-        vertices.append(vertex)
+        vertices.append(VertexData.clone(vertex))
 
-        vertex.start = QVector3D(sNaN, 0, 1)
+        vertex.data = QVector3D(0, 0, 1)
         vertex.position = QVector3D(
-            self.getMinimumExtremes().x(), self.getMaximumExtremes().y(), 0
+            self.getViewLowerBounds().x(), self.getViewLowerBounds().y(), 0
         )
-        vertices.append(vertex)
+        vertices.append(VertexData.clone(vertex))
 
-        vertex.start = QVector3D(sNaN, 0, 0)
+        vertex.data = QVector3D(0, 0, 0)
         vertex.position = QVector3D(
-            self.getMinimumExtremes().x(), self.getMinimumExtremes().y(), 0
+            self.getViewLowerBounds().x(), self.getViewLowerBounds().y(), 0
         )
-        vertices.append(vertex)
+        vertices.append(VertexData.clone(vertex))
 
-        vertex.start = QVector3D(sNaN, 1, 0)
+        vertex.data = QVector3D(0, 1, 0)
         vertex.position = QVector3D(
-            self.getMaximumExtremes().x(), self.getMinimumExtremes().y(), 0
+            self.getViewUpperBounds().x(), self.getViewUpperBounds().y(), 0
         )
-        vertices.append(vertex)
+        vertices.append(VertexData.clone(vertex))
 
-        vertex.start = QVector3D(sNaN, 1, 1)
+        vertex.data = QVector3D(0, 1, 1)
         vertex.position = QVector3D(
-            self.getMaximumExtremes().x(), self.getMaximumExtremes().y(), 0
+            self.getViewUpperBounds().x(), self.getViewUpperBounds().y(), 0
         )
-        vertices.append(vertex)
+        vertices.append(VertexData.clone(vertex))
 
         if not image.isNull():
             self.m_texture = QOpenGLTexture(image)
@@ -461,7 +486,7 @@ class GcodeDrawer(ShaderDrawable):
             self.m_image = image
         else:
             for i in range(len(vertices)):
-                vertices[i].start = QVector3D(sNaN, sNaN, sNaN)
+                vertices[i].data = QVector3D()
             self.m_lines += vertices
             self.m_image = QImage()
 
@@ -471,10 +496,10 @@ class GcodeDrawer(ShaderDrawable):
 
     def updateRaster(self) -> bool:
         if not self.m_image is None:
-            lines = self.m_viewParser.getLines()
+            lines = self.m_viewParser.getLineSegments()
 
-            pixelSize = self.m_viewParser.getMinLength()
-            origin = self.m_viewParser.getMinimumExtremes()
+            pixelSize = self.m_viewParser.getModelMinLineLength()
+            origin = self.m_viewParser.getViewLowerBounds()
 
             for idx in self.m_indexes:
                 line = lines[idx]
@@ -495,57 +520,43 @@ class GcodeDrawer(ShaderDrawable):
         self.m_indexes = []
         return False
 
-    def getSegmentType(self, segment: LineSegment) -> int:
-        return segment.isFastTraverse() + segment.isZMovement() * 2
-
     def getSegmentColorVector(self, segment: LineSegment) -> QVector3D:
         return Util.colorToVector(self.getSegmentColor(segment))
 
     def getSegmentColor(self, segment: LineSegment) -> QColor:
-        if segment.drawn():
-            return self.m_colorDrawn  # QVector3D(0.85, 0.85, 0.85)
-        elif segment.isHightlight():
-            return self.m_colorHighlight  # QVector3D(0.57, 0.51, 0.9)
-        elif segment.isFastTraverse():
-            return self.m_colorNormal  # QVector3D(0.0, 0.0, 0.0)
-        elif segment.isZMovement():
-            return self.m_colorZMovement  # QVector3D(1.0, 0.0, 0.0)
+        if segment.isHighlight():
+            return self.m_colorHighlight # QVector3D(0.57, 0.51, 0.9);
+        elif segment.isDrawn(): 
+            return self.m_colorDrawn # QVector3D(0.85, 0.85, 0.85);
+        elif segment.isFastTraverse(): 
+            return self.m_colorNormal # QVector3D(0.0, 0.0, 0.0);
+        elif segment.isZMovement(): 
+            return self.m_colorZMovement # QVector3D(1.0, 0.0, 0.0);
         elif self.m_grayscaleSegments:
             if self.m_grayscaleCode == GcodeDrawer.GrayscaleCode.S:
                 return QColor.fromHsl(
-                    0,
-                    0,
+                    0, 
+                    0, 
                     qBound(
-                        0,
-                        255
-                        - 255.0
-                        / (self.m_grayscaleMax - self.m_grayscaleMin)
-                        * segment.getSpindleSpeed(),
-                        255,
-                    ),
-                )
+                        0, 
+                        int(255 - 255.0 / (self.m_grayscaleMax - self.m_grayscaleMin) * segment.getSpindleSpeed()), 
+                    255))
             elif self.m_grayscaleCode == GcodeDrawer.GrayscaleCode.Z:
                 return QColor.fromHsl(
-                    0,
-                    0,
+                    0, 
+                    0, 
                     qBound(
-                        0,
-                        255
-                        - 255.0
-                        / (self.m_grayscaleMax - self.m_grayscaleMin)
-                        * segment.getStart().z(),
-                        255,
-                    ),
-                )
-
-        return self.m_colorNormal  # QVector3D(0.0, 0.0, 0.0)
+                        0, 
+                        int(255 - 255.0 / (self.m_grayscaleMax - self.m_grayscaleMin) * segment.getStart().z()), 
+                        255))
+    
+        return self.m_colorNormal # QVector3D(0.0, 0.0, 0.0);
 
     def setImagePixelColor(self, image: QImage, x: float, y: float, color: int):
         """
         QRgb = int
         """
         if qIsNaN(x) or qIsNaN(y):
-            print("Error updating pixel %d %d" % (x, y))
             return
 
         ix = (int)(x)

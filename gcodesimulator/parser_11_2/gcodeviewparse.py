@@ -405,7 +405,7 @@ class GcodeViewParse:
             start = end
             startAxes = endAxes
 
-            if isCancelled and isCancelled():
+            if isCancelled: # and isCancelled():
                 return []
 
         return self.m_lineSegments
