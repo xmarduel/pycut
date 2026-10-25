@@ -6,6 +6,7 @@ import os
 import argparse
 import io
 
+from typing import Optional
 from typing import cast
 
 from lxml import etree
@@ -25,7 +26,7 @@ class SvgSetMissingIds:
         self.filename = filename
         self.filename_id = os.path.splitext(self.filename)[0] + ".with_ids.svg"
 
-        self.svg: io.StringIO | None = None
+        self.svg: Optional[io.StringIO] = None
         self.tree = None
 
     def process(self):
@@ -359,7 +360,7 @@ class SvgResolver:
         f.write(tree_str.decode("utf-8"))
         f.close()
 
-    def resolve_id(self, shape: svgelements.Shape) -> str | None:
+    def resolve_id(self, shape: svgelements.Shape) -> Optional[str]:
         """
         if not in "id_mapping":
             - return the id of the shape
@@ -738,7 +739,7 @@ class SvgResolver:
 
     def get_svg_shape_for_use_item(
         self, item: etree._Element
-    ) -> svgelements.Shape | None:
+    ) -> Optional[svgelements.Shape]:
         """ """
         if item.tag == "{http://www.w3.org/2000/svg}svg":
             return None
@@ -768,7 +769,7 @@ class SvgResolver:
 
     def get_svg_group_for_use_item(
         self, item: etree._Element
-    ) -> svgelements.Shape | None:
+    ) -> Optional[svgelements.Shape]:
         """ """
         if item.tag == "{http://www.w3.org/2000/svg}svg":
             return None

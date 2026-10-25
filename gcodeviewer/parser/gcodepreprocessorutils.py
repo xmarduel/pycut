@@ -10,6 +10,7 @@ import math
 
 from typing import List
 from typing import Any
+from typing import Optional
 from typing import cast
 
 from PySide6.QtGui import QMatrix4x4
@@ -39,7 +40,7 @@ class GcodePreprocessorUtils:
 
     @classmethod
     def overrideSpeed(
-        cls, command: str, speed: float, original: float | None = None
+        cls, command: str, speed: float, original: Optional[float] = None
     ) -> str:
         """
         Searches the command string for an 'f' and replaces the speed value

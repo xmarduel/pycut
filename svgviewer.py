@@ -3,6 +3,7 @@
 from typing import List
 from typing import Dict
 from typing import Any
+from typing import Optional
 
 import math
 import copy
@@ -98,7 +99,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
     DEFAULT_TOOLPATHS = {"stroke": "#00ff00", "stroke-width": "0.2"}
 
-    def __init__(self, parent: QtWidgets.QWidget | None):
+    def __init__(self, parent: Optional[QtWidgets.QWidget]):
         """ """
         super(SvgViewer, self).__init__(parent)
         self.mainwindow = None
@@ -176,7 +177,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
     def set_mainwindow(self, mainwindow):
         self.mainwindow = mainwindow
 
-    def get_svg_size_x(self) -> ValWithUnit | None:
+    def get_svg_size_x(self) -> Optional[ValWithUnit]:
         """
         get the width of the svg given in units "mm", "cm" or "in" (see Inkscape)
         """
@@ -196,7 +197,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         return None
 
-    def get_svg_size_y(self) -> ValWithUnit | None:
+    def get_svg_size_y(self) -> Optional[ValWithUnit]:
         """
         get the height of the svg given in units "mm", "cm" or "in" (see Inkscape)
         """

@@ -9,6 +9,7 @@
 import math
 
 from typing import List
+from typing import Optional
 from typing import cast
 
 from PySide6.QtGui import QMatrix4x4
@@ -38,7 +39,7 @@ class GcodePreprocessorUtils:
 
     @classmethod
     def overrideSpeed(
-        cls, command: str, speed: float, original: float | None = None
+        cls, command: str, speed: float, original: Optional[float] = None
     ) -> str:
         """
         Searches the command string for an 'f' and replaces the speed value
@@ -604,7 +605,7 @@ class GcodePreprocessorUtils:
         return GcodePreprocessorUtils.lerp(q0, q1, t)
     
     @classmethod
-    def generatePointsAlongSpline(cls, start: QVector3D, end: QVector3D, cp1: QVector3D, cp2: QVector3D | None, tolerance: float = 0.005) -> List[QVector3D]:
+    def generatePointsAlongSpline(cls, start: QVector3D, end: QVector3D, cp1: QVector3D, cp2: Optional[QVector3D], tolerance: float = 0.005) -> List[QVector3D]:
         points: List[QVector3D] = []
 
         MIN_STEP = 0.001

@@ -7,6 +7,7 @@
 # Copyright 2020-2030 Xavier Marduel
 
 from typing import List
+from typing import Optional
 from typing import cast
 
 from enum import Enum
@@ -25,7 +26,7 @@ class PointSegment:
         ZX = 1
         YZ = 2
 
-    def __init__(self, point: QVector3D | None = None, axes: QVector3D | None = None, num: int | None = None):
+    def __init__(self, point: Optional[QVector3D] = None, axes: Optional[QVector3D] = None, num: Optional[int] = None):
         """ """
         self.m_toolhead = 0
         self.m_isMetric = True
@@ -36,15 +37,15 @@ class PointSegment:
         self.m_isSpline = False
         self.m_isFastTraverse = False
         self.m_lineNumber = -1
-        self.m_arcProperties: ArcProperties | None = None
-        self.m_splineProperties: SplineProperties | None = None
+        self.m_arcProperties: Optional[ArcProperties] = None
+        self.m_splineProperties: Optional[SplineProperties] = None
         self.m_speed = 0.0
         self.m_spindleSpeed = 0.0
         self.m_dwell = 0.0
         self.m_plane = self.Plane.XY
 
-        self.m_point: QVector3D | None = None
-        self.m_axes: QVector3D | None = None
+        self.m_point: Optional[QVector3D] = None
+        self.m_axes: Optional[QVector3D] = None
 
         if point is not None and axes is not None and num != None:
             p = cast(QVector3D, point)
@@ -160,7 +161,7 @@ class PointSegment:
     def isSpline(self) -> bool:
         return self.m_isSpline
 
-    def setSplineControlPoints(self, cp1: QVector3D, cp2: QVector3D | None):
+    def setSplineControlPoints(self, cp1: QVector3D, cp2: Optional[QVector3D]):
         if self.m_splineProperties == None:
             self.m_splineProperties = SplineProperties()
 
@@ -171,13 +172,13 @@ class PointSegment:
     
         self.setIsSpline(True)
 
-    def getSplineControlPoint1(self) -> QVector3D | None:
+    def getSplineControlPoint1(self) -> Optional[QVector3D]:
         if self.m_splineProperties != None:
             return self.m_splineProperties.controlPoint1
     
         return None
 
-    def getSplineControlPoint2(self) -> QVector3D | None:
+    def getSplineControlPoint2(self) -> Optional[QVector3D]:
         if self.m_splineProperties != None:
              return self.m_splineProperties.controlPoint2
         

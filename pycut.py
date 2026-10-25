@@ -18,6 +18,7 @@ from typing import List
 from typing import Dict
 from typing import Tuple
 from typing import Any
+from typing import Optional
 from typing import cast
 
 from PySide6 import QtCore
@@ -157,7 +158,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.job = None
 
         # open/read/write project settings
-        self.projfilename: str|None = None
+        self.projfilename: Optional[str] = None
 
         self.simulator_webgl_viewer = None
         self.simulator_python_viewer = None

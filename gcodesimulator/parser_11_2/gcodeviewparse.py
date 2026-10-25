@@ -8,10 +8,10 @@
 
 import math
 
-from functools import singledispatchmethod
 from typing import List
 from typing import Dict
 from typing import Any
+from typing import Optional
 from typing import cast
 
 from enum import Enum
@@ -161,11 +161,11 @@ class GcodeViewParse:
         minArcLength = 0.1
         rotationDelta = 5.0
 
-        start: QVector3D | None = None
-        end: QVector3D | None = None
+        start: Optional[QVector3D] = None
+        end: Optional[QVector3D] = None
 
-        startAxes: QVector3D | None = None
-        endAxes: QVector3D | None = None
+        startAxes: Optional[QVector3D] = None
+        endAxes: Optional[QVector3D] = None
 
         startRotation = QMatrix4x4()
         endRotation = QMatrix4x4()
@@ -415,33 +415,3 @@ class GcodeViewParse:
 
     def getLineSegmentsIndexes(self) -> List[List[int]]:
         return self.m_lineSegmentsIndexes
-
-
-
-    '''
-    @singledispatchmethod
-    def testExtremes(self, arg):
-        print("testExtremes : not implemented with this arg type")
-
-    @testExtremes.register
-    def _(self, p3d: QVector3D):
-        self.testExtremes(p3d.x(), p3d.y(), p3d.z())
-
-    @testExtremes.register
-    def _(self, x: float, y: float, z: float):
-        self.m_min.setX(Util.nMin(self.m_min.x(), x))
-        self.m_min.setY(Util.nMin(self.m_min.y(), y))
-        self.m_min.setZ(Util.nMin(self.m_min.z(), z))
-
-        self.m_max.setX(Util.nMax(self.m_max.x(), x))
-        self.m_max.setY(Util.nMax(self.m_max.y(), y))
-        self.m_max.setZ(Util.nMax(self.m_max.z(), z))
-
-    def testLength(self, start: QVector3D, end: QVector3D):
-        length = (start - end).length()
-        if (not qIsNaN(length)) and length != 0:
-            if qIsNaN(self.m_minLength):
-                self.m_minLength = length
-            else:
-                self.m_minLength = min(self.m_minLength, length)
-   '''

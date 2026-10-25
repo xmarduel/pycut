@@ -7,7 +7,7 @@ class toto:
 
     @singledispatchmethod
     def test(self, arg):
-        raise NotImplementedError("Cannot call toto::test with", arg)
+        raise NotImplementedError("Cannot run 'toto.test' method with %r" % arg)
 
     @test.register
     def _(self, arg: int):

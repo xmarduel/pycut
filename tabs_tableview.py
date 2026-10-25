@@ -1,6 +1,7 @@
 from typing import List
 from typing import Any
 from typing import Dict
+from typing import Optional
 from typing import cast
 
 from PySide6 import QtCore
@@ -492,7 +493,7 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
         col: int,
         orientation: QtCore.Qt.Orientation,
         role: int = QtCore.Qt.ItemDataRole.EditRole,
-    ) -> str | None:
+    ) -> Optional[str]:
         if (
             orientation == QtCore.Qt.Orientation.Horizontal
             and role == QtCore.Qt.ItemDataRole.DisplayRole

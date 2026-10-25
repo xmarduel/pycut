@@ -4,6 +4,7 @@ from enum import Enum
 from functools import singledispatchmethod
 
 from typing import List
+from typing import Optional
 
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QMatrix4x4
@@ -104,7 +105,7 @@ class ShaderDrawable(QOpenGLFunctions):
         self.m_visible = True
         self.m_lineWidth = 1.0
         self.m_pointSize = 1.0
-        self.m_texture: QOpenGLTexture | None = None
+        self.m_texture: Optional[QOpenGLTexture] = None
         self.m_lines: List[VertexData] = []
         self.m_points: List[VertexData] = []
         self.m_triangles: List[VertexData] = []
@@ -353,7 +354,7 @@ class ShaderDrawable(QOpenGLFunctions):
 
     @singledispatchmethod
     def setRotation(self, first, second = None):
-        raise NotImplementedError("Cannot setRotation method")
+        raise NotImplementedError("Cannot run 'setRotation' method with %r" % first)
 
     @setRotation.register
     def _(self, rotation: QMatrix4x4):
@@ -371,7 +372,7 @@ class ShaderDrawable(QOpenGLFunctions):
 
     @singledispatchmethod
     def setTranslation(self, translation):
-        raise NotImplementedError("Cannot setTranslation method")
+        raise NotImplementedError("Cannot run 'setTranslation' method with %r" % translation)
 
     @setTranslation.register
     def _(self, translation: QMatrix4x4):

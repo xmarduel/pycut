@@ -7,7 +7,9 @@
 # Copyright 2020-2030 Xavier Marduel
 
 from functools import singledispatchmethod
+
 from typing import List
+from typing import Optional
 from typing import cast
 
 from PySide6.QtGui import QVector3D
@@ -80,8 +82,8 @@ class GcodeViewParse:
         # For a line segment list ALL arcs must be converted to lines.
         minArcLength = 0.1
 
-        start: QVector3D | None = None
-        end: QVector3D | None = None
+        start: Optional[QVector3D] = None
+        end: Optional[QVector3D] = None
 
         # Prepare segments indexes
         self.m_lineIndexes = [[] for _ in range(len(psl))]
@@ -204,7 +206,7 @@ class GcodeViewParse:
 
     @singledispatchmethod
     def testExtremes(self, arg):
-        print("testExtremes : not implemented with this arg type")
+        print("testExtremes : cannot run 'testExtremes' method with %r" % arg)
 
     @testExtremes.register
     def _(self, p3d: QVector3D):

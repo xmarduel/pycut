@@ -1,6 +1,7 @@
 import math
 
 from typing import List
+from typing import Optional
 
 from PySide6 import QtWidgets
 from PySide6 import QtCore
@@ -196,7 +197,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
     def addDrawable(self, drawable: ShaderDrawable):
         self.m_shaderDrawables.append(drawable)
 
-    def fitDrawable(self, drawable: ShaderDrawable|None = None):
+    def fitDrawable(self, drawable: Optional[ShaderDrawable] = None):
         self.stopViewAnimation()
 
         if drawable != None:

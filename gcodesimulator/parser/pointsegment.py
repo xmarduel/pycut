@@ -7,6 +7,7 @@
 # Copyright 2020-2030 Xavier Marduel
 
 from typing import List
+from typing import Optional
 from typing import cast
 
 from enum import Enum
@@ -24,7 +25,7 @@ class PointSegment:
         ZX = 1
         YZ = 2
 
-    def __init__(self, vec: QVector3D | None = None, num: int | None = None):
+    def __init__(self, vec: Optional[QVector3D] = None, num: Optional[int] = None):
         """ """
         self.m_toolhead = 0
         self.m_isMetric = True
@@ -33,13 +34,13 @@ class PointSegment:
         self.m_isArc = False
         self.m_isFastTraverse = False
         self.m_lineNumber = -1
-        self.m_arcProperties: ArcProperties | None = None
+        self.m_arcProperties: Optional[ArcProperties] = None
         self.m_speed = 0.0
         self.m_spindleSpeed = 0.0
         self.m_dwell = 0.0
         self.m_plane = self.Plane.XY
 
-        self.m_point: QVector3D | None = None
+        self.m_point: Optional[QVector3D] = None
 
         if vec is not None and num is not None:
             v = cast(QVector3D, vec)

@@ -21,7 +21,7 @@ mrdunk@gmail.com
 
 # pylint: disable=attribute-defined-outside-init
 
-from typing import Dict, Generator, List, NamedTuple, Optional, Set, Tuple, Union
+from typing import Dict, Generator, List, NamedTuple, Optional, Set, Tuple, Union, Optional
 
 from enum import Enum
 import math
@@ -376,7 +376,7 @@ def complete_arc(arc_data: ArcData, winding_dir_: ArcDir = None) -> Optional[Arc
 
 
 def arcs_from_circle_diff(
-    circle: ArcData, already_cut: Polygon, debug: str|None = None
+    circle: ArcData, already_cut: Polygon, debug: Optional[str] = None
 ) -> List[ArcData]:
     """Return any sections of circle that do not overlap already_cut."""
     if not already_cut:

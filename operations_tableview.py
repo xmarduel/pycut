@@ -1,6 +1,7 @@
 from typing import List
 from typing import Any
 from typing import Dict
+from typing import Optional
 from typing import cast
 
 from PySide6 import QtCore
@@ -757,7 +758,7 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
 
         self.operations = operations
         self.mainwindow = mainwindow
-        self.view: PyCutSimpleTableView | None = None
+        self.view: Optional[PyCutSimpleTableView] = None
 
         self.header = [
             "name",  # [0] str

@@ -11,6 +11,7 @@ import math
 from typing import List
 from typing import Dict
 from typing import Any
+from typing import Optional
 from typing import cast
 
 from enum import Enum
@@ -158,11 +159,11 @@ class GcodeViewParse:
         minArcLength = 0.1
         rotationDelta = 5.0
 
-        start: QVector3D | None = None
-        end: QVector3D | None = None
+        start: Optional[QVector3D] = None
+        end: Optional[QVector3D] = None
 
-        startAxes: QVector3D | None = None
-        endAxes: QVector3D | None = None
+        startAxes: Optional[QVector3D] = None
+        endAxes: Optional[QVector3D] = None
 
         startRotation = QMatrix4x4()
         endRotation = QMatrix4x4()

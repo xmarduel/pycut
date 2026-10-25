@@ -32,6 +32,7 @@ import argparse
 from typing import List
 from typing import Dict
 from typing import Any
+from typing import Optional
 from typing import cast
 
 from lxml import etree
@@ -768,31 +769,31 @@ class Char2SvgPath:
 
             # TTF/OTF is big-endian (>)
 
-            def readuint32(self, offset: int | None = None) -> int:
+            def readuint32(self, offset: Optional[int] = None) -> int:
                 """Read 32-bit unsigned integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">I", self.read(4))[0]
 
-            def readuint16(self, offset: int | None = None) -> int:
+            def readuint16(self, offset: Optional[int] = None) -> int:
                 """Read 16-bit unsigned integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">H", self.read(2))[0]
 
-            def readuint8(self, offset: int | None = None) -> int:
+            def readuint8(self, offset: Optional[int] = None) -> int:
                 """Read 8-bit unsigned integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">B", self.read(1))[0]
 
-            def readint8(self, offset: int | None = None) -> int:
+            def readint8(self, offset: Optional[int] = None) -> int:
                 """Read 8-bit signed integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">b", self.read(1))[0]
 
-            def readdate(self, offset: int | None = None) -> datetime:
+            def readdate(self, offset: Optional[int] = None) -> datetime:
                 """Read datetime"""
                 if offset:
                     self.seek(offset)
@@ -801,13 +802,13 @@ class Char2SvgPath:
                 mdate = fontepoch + timedelta(seconds=mtime)
                 return mdate
 
-            def readint16(self, offset: int | None = None) -> int:
+            def readint16(self, offset: Optional[int] = None) -> int:
                 """Read 16-bit signed integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">h", self.read(2))[0]
 
-            def readshort(self, offset: int | None = None) -> float:
+            def readshort(self, offset: Optional[int] = None) -> float:
                 """Read "short" fixed point number (S1.14)"""
                 x = self.readint16()
                 return float(x) * 2**-14

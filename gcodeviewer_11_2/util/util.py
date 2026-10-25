@@ -95,7 +95,7 @@ class Util:
     @singledispatchmethod
     @classmethod
     def nAssign(cls, first, second = 0.0):
-        raise NotImplementedError("Cannot nAssign method")
+        raise NotImplementedError("Cannot run 'nAssign' method with %r" % first)
 
     @nAssign.register
     @classmethod
