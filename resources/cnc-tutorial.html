@@ -1275,7 +1275,7 @@ table.active_controller_comparison td.white {background: white;}</style>
       <th style="vertical-align:top;"><img src="cnc-doc/images/22_CnC1419_Upgrade/tmc2209-zoom.jpg"
         width="58px" alt=""><br>
         <a href="/product/2878">TMC-2209</a></th>
-      <th style="vertical-align:top;"><img src="cnc-doc/images/22_CnC1419_Upgrade/tmc5160-zoom.webp"
+      <th style="vertical-align:top;"><img src="cnc-doc/images/22_CnC1419_Upgrade/tmc5160-zoom.png"
         width="78px" alt=""><br>
         <a href="/product/2878">TMC-5160</a></th>
       <th style="vertical-align:top;"><img src="cnc-doc/images/22_CnC1419_Upgrade/tb6600-zoom.jpg"
@@ -1363,19 +1363,27 @@ table.active_controller_comparison td.white {background: white;}</style>
 </div>
 
 <p>As you can see, the <strong>TMC-2209</strong> supports up to 2.0 Amperes (while the
-<strong>A4988</strong> only 2 Amp at peak) it is therefore a perfect driver to run a Nema 17 motor
+<strong>A4988</strong> only 2 Amp at peak and the <strong>DRV8825</strong> 2.2 Amp at its peak ).
+It is therefore a perfect driver to run a Nema 17 motor
 of greater power than those driven by a <strong>A4988</strong>. </p>
 
-<p>Typically, the <strong>A4988</strong> drives small Nema-17 motors. These motors are circa 34 cm
-long and I think they run at 1.2 or 1.5 Amp and have a torque of 42 Ncm.</p>
+<p>Typically, the <strong>A4988</strong> drives small Nema-17 motors. These motors are circa 34 mm
+long and they probably run at less than 1.7 Amp and have a torque of 36 Ncm or less.</p>
 
-<p> Consider the <strong>Nema17 17HS19-2004S1</strong> motor of 48cm (19 inches) length: its holding 
+<p> Consider the <strong>Nema17 17HS19-2004S1</strong> motor of 48mm (19 inches) length: its holding 
 torque is 59 Ncm and runs at 2 Amp, which is the upper limit for a <strong>A4988</strong> and thus 
-not well suited for long jobs. But the <strong>TMC-2209</strong> is perfectly suited.</p>
+not well suited for long jobs. Although roughly suited for the <strong>DRV8825</strong>, 
+the <strong>TMC-2209</strong> seems perfectly suited.</p>
 
 <p>An even more powerful motor could be the <strong>Nema17 17HS24-2104S</strong>, 
-which is 24 inchs long (60cm) and runs at 2.1 Amp. Its holding torque is 65Ncm, and its torque is higher
+which is 24 inchs long (60mm) and runs at 2.1 Amp. Its holding torque is 65Ncm, and its torque is higher
 of about 1 third than the <strong>Nema17 17HS19-2004S1</strong>, but only at low speed (500RPM or less). </p>
+<p>It seems it is used from some cnc machine makers with the DRV8825 drivers and extra big power supply unit
+(not the cheap bricks). So Peak voltage of 2.2 Amp (with cooling) seems to be acceptable for these motors.
+</p>
+
+<div class="info">
+<strong>Info:</strong> I do not know the differences between the "S" and "S1" types.</div>
 
 <div class="info">
 <strong>Info: </strong>See how <strong>Propeller Labs</strong> "prepares" these <strong>Nema17

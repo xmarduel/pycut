@@ -125,7 +125,7 @@
         -->
 
         <file>cnc-doc/images/06_CncOffsets/cartesian2.png</file>
-         <file>cnc-doc/images/06_CncOffsets/front-view-with-arrows.jpg</file>
+        <file>cnc-doc/images/06_CncOffsets/front-view-with-arrows.jpg</file>
         <file>cnc-doc/images/06_CncOffsets/save-work-offsets-1024x759.webp</file>
         <file>cnc-doc/images/06_CncOffsets/Taig-front-view-home-pos.jpg</file>
         <file>cnc-doc/images/06_CncOffsets/top-view-home-pos.jpg</file>
@@ -215,7 +215,8 @@
         <file>cnc-doc/images/22_CnC1419_Upgrade/tb6600.jpg</file>
         <file>cnc-doc/images/22_CnC1419_Upgrade/tmc2209-zoom.jpg</file>
         <file>cnc-doc/images/22_CnC1419_Upgrade/tmc2209.jpg</file>
-        <file>cnc-doc/images/22_CnC1419_Upgrade/tmc5160-zoom.webp</file>
+        <file>cnc-doc/images/22_CnC1419_Upgrade/tmc5160-zoom.png</file>
+        <file>cnc-doc/images/22_CnC1419_Upgrade/tmc5160-platine.webp</file>
 
         <file>cnc-doc/images/99_Arduino_Grbl/arduino.png</file>
         <file>cnc-doc/images/99_Arduino_Grbl/arduino_board_selection.png</file>

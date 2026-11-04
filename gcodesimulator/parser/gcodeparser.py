@@ -119,7 +119,7 @@ class GcodeParser:
         return self.addCommand(args)
 
     @addCommand.register
-    def _(self, command: List[str]) -> Optional[PointSegment]:
+    def _(self, command: list) -> Optional[PointSegment]:
         if len(command) == 0:
             return None
 
