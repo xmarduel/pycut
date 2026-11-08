@@ -1,0 +1,1710 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>PYCUT TUTORIAL</title>
+  <link href="css/prism.css" rel="stylesheet" />
+  <link href="css/pycut.css" rel="stylesheet" />
+  <link href="css/simpletree.css" rel="stylesheet" />
+  <script type="text/javascript" src="js/prism.js" />
+  <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=es6">
+ </script>
+  <script type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+ </script>
+</head>
+
+<body>
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+
+<div class="sidenav">
+<h3 class="title_sidenav">Contents</h3>
+<ul class="tree">
+  <li><a href="#P-01">Introduction</a> </li>
+  <li><a href="#P-02">SVG as input format</a> 
+   <ul>
+      <li><a href="#P-02-00">SVG Documenst</a></li>
+      <li><a href="#P-02-01">SVG ViewBox</a></li>
+	  <li><a href="#P-02-02">SVG Shapes and Paths</a>
+	    <ul>
+          <li><a href="#P-02-02-01">Opened and closed paths</a></li>
+        </ul>
+	  </li>
+	  <li><a href="#P-02-03">SVG Text</a></li>
+	  <li><a href="#P-02-04">SVG special tags: defs and use</a></li>
+	    <ul>
+		  <li><a href="#P-02-04-01">Transformations</a></li>
+        </ul>
+	  </li>
+    </ul></li>
+  <li><a href="#P-03">Basic example</a> 
+    <ul>
+      <li><a href="#P-03-00">PyCut as GCode simulator</a></li>
+	  <li><a href="#P-03-01">Loading a SVG file</a></li>
+      <li><a href="#P-03-02">Creating a PyCut Job</a></li>
+      <li><a href="#P-03-03">Creating CAM operations</a></li>
+      <li><a href="#P-03-04">Generate the GCode</a></li>
+    </ul>
+  </li>
+  <li><a href="#P-04">GUI Components</a> 
+    <ul>
+      <li><a href="#P-04-01">Svg Settings</a></li>
+      <li><a href="#P-04-02">Tool (shared by all Operations)</a></li>
+      <li><a href="#P-04-03">Tabs</a></li>
+      <li><a href="#P-04-04">Material</a></li>
+      <li><a href="#P-04-05">Curve to Line Conversion</a></li>
+      <li><a href="#P-04-06">GCode Conversion</a></li>
+      <li><a href="#P-04-07">GCode Generation</a></li>
+    </ul>
+  </li>
+  <li><a href="#P-05">CAM Operations</a>
+    <ul>
+      <li><a href="#P-05-01">Inside</a></li>
+      <li><a href="#P-05-02">Outside</a></li>
+      <li><a href="#P-05-03">Engrave</a></li>
+      <li><a href="#P-05-04">Helix</a></li>
+      <li><a href="#P-05-05">Pocket</a></li>
+    </ul>
+  </li>
+  <li><a href="#P-06">GCode DressUp</a> </li>
+  <li><a href="#P-07">PyCut Utilities</a>
+    <ul>
+      <li><a href="#P-07-01">SvgResolver</a></li>
+      <li><a href="#P-07-02">SvgText2Svgpath</a></li>
+    </ul>
+  </li>
+  <li><a href="#P-08">Known Bugs</a>
+    <ul>
+      <li><a href="#P-08-01">Offsets at corners</a></li>
+    </ul>
+  </li>
+  
+  <li><a href="#APPENDIX-01">Appendix-1: SVG Editors</a></li>
+  <li><a href="#APPENDIX-02">Appendix-2: SVG Units and Scale Factor</a></li>
+  <li><a href="#APPENDIX-03">Appendix-3: GCODE Viewers</a></li> 
+</ul>
+<script type="text/javascript">
+      var tree = document.querySelectorAll('ul.tree a:not(:last-child)');
+      for (var i = 0; i < tree.length; i++) {
+        tree[i].addEventListener('click', function (e) {
+          var parent = e.target.parentElement;
+          var classList = parent.classList;
+          if (classList.contains("open")) {
+            classList.remove('open');
+            var opensubs = parent.querySelectorAll(':scope .open');
+            for (var i = 0; i < opensubs.length; i++) {
+              opensubs[i].classList.remove('open');
+            }
+          } else {
+            classList.add('open');
+          }
+          if (classList.contains("open")) {
+            //e.preventDefault(); // on open -> jump (default)
+
+          } else {
+            e.preventDefault(); // on close
+          }
+        });
+      }</script>
+</div>
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+
+<div class="main">
+
+<h1 class="etitle">PyCut Tutorial</h1>
+
+<h2 id="P-01">Introduction</h2>
+
+<p>Welcome to <strong>PyCut</strong>, a clone of <strong>jsCut</strong>.
+
+<strong>PyCut</strong> aims to offer all the (minimalistics) functionalities found in <strong>jsCut</strong>, with some improvements.
+Hopefully you will find <strong>PyCut</strong> usefull when learning CNC and producing your first GCode files.</p>
+
+<p>As its name indicates, <strong>PyCut</strong> is written in python and is a desktop application (<strong>jsCut</strong> 
+is written in javascript and is a Web-based application).</p>
+
+<h2 id="P-02">SVG as input format</h2>
+
+<p>Starting point of <strong>PyCut</strong> are <strong>SVG</strong> files, your designs. Indeed, with
+<strong>PyCut</strong>, you do not need to do 3D modelling. For simple milling tasks <strong>SVG</strong> 
+files (2D) are perfectly OK. Granted, while it is easy to define circles, rectangles etc. in <strong>SVG</strong>, 
+SVG paths definitions (for complex shapes) are unfortunately not so straightforward as one could think, 
+and free software lacks good <strong>SVG</strong> paths modelling applications. Infact, writing a <strong>SVG</strong> 
+file with a text editor is sometimes the best way to go. To generate complex svg paths, either 
+understand the svg path syntax and write paths "per hand", or other tools may be used, and the results may be copy/pasted 
+into the hand-written files. The excellent online tool <strong>SvgPathEditor</strong> can be used for this purpose, see Appendix.</p>
+
+<p>In the following, we point out what has to be taken into consideration when creating "usable" <strong>SVG</strong>
+files for <strong>PyCut</strong>. </p>
+
+<h3 id="P-02-00">SVG Documents</h3>
+
+<p><strong>PyCut</strong> can only process svg documents <strong>without transformations</strong>. Should you have
+a document with transformation, try the utility <strong>svgresolver.py</strong> (see later).</p>
+
+<h3 id="P-02-01">SVG ViewBox</h3>
+
+<p><strong>PyCut</strong>, in order to work accurately, needs the SVG document to define its standard
+<strong>width</strong> and <strong>height</strong> attributes with the units "<strong>mm</strong>" or
+"<strong>in</strong>". </p>
+
+<div class="info">
+<p><strong>Note:</strong> The specified units are not necessarely the ones specified in the generated GCode(s). There
+is is another setting to set the GCode units elsewhere in <strong>PyCut</strong>. Admittingly they should correspond
+for the sake of good documentation.</p>
+</div>
+
+<pre><code class="language-html">&lt;svg version="1.1" width="&lt;width&gt;mm" height="&lt;height&gt;mm" ... 
+ ...
+&lt;/svg&gt;</code></pre>
+
+<p>and the <strong>viewbox</strong> definition shall be of the form </p>
+<pre><code class="language-html">viewBox="0 0 &lt;width&gt; &lt;height&gt;"</code></pre>
+
+<p><strong>with the viewbox width and height corresponding to the SVG attributes width</strong> and <strong>height</strong>.
+Notice that <strong>PyCut</strong> strongly recommends a viewbox origin to be (0, 0), although this is not mandatory.</p>
+
+<div class="info">
+<p><strong>Note:</strong> viewbox x and y attributes (origin) are allowed to be non zero! (but then take extra care of the produced
+GCode coordinates and your own machine coordinates). When stucking to the (0,0) origin, and drawing all shapes in the x > 0 && y > 0 
+quarter, all (visible) designs have positive X and Y coordinates (in the svg coordinates system, that is, the y-axis is "downward"), 
+then all produced GCode -when reference is top left of material- have positive X 
+coordinates and negative Y coordinates (standard orientation) because the <strong>PyCut</strong> GCode writer reverts the y coordinates. 
+Easy to remember!</p>
+</div>
+
+
+<p>As an example:</p>
+<pre><code class="language-html">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;svg version="1.1" width="200mm" height="100mm" viewBox="0 0 200 100" id="test" 
+   xmlns="http://www.w3.org/2000/svg" 
+   xmlns:svg="http://www.w3.org/2000/svg"&gt;
+  &lt;g id="root"&gt;
+    &lt;circle id="circle" cx="30" cy="60" r="20" stroke="black" stroke-width="1" fill="red" /&gt;
+    &lt;rect id="rect" x="60" y="40" width="30" height="40" stroke="black" stroke-width="1" fill="green" /&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</code></pre>
+
+<h3 id="P-02-02">SVG Shapes and Paths</h3>
+
+<p>The SVG standard is very large, and <strong>PyCut</strong> cannot simply read a svg file, display it, and allow the
+user to define cnc operations on the "shapes" defined inside the svg file. Of course, the goal of
+<strong>PyCut</strong> is to process as many svg data as possible.</p>
+
+<p>The shapes inside a svg file are the following:</p>
+<ul>
+  <li><code class="svg_tag">&lt;rect&gt;</code></li>
+  <li><code class="svg_tag">&lt;circle&gt;</code></li>
+  <li><code class="svg_tag">&lt;ellipse&gt;</code></li>
+  <li><code class="svg_tag">&lt;polygon&gt;</code></li>
+  <li><code class="svg_tag">&lt;line&gt;</code></li>
+  <li><code class="svg_tag">&lt;polyline&gt;</code></li>
+</ul>
+
+<p>The powerfull</p>
+<ul>
+  <li><code class="svg_tag">&lt;path&gt;</code></li>
+</ul>
+
+<p>can define in a single path definition many closed or opened (sub)paths.</p>
+
+<div class="warning">
+<p><strong>Warning:</strong> Some shapes can completely overlap smaller shapes, depending on the order they are defined
+in the SVG, and thus making the smaller shapes invisible in the viewer. In this case, larger shapes should be defined
+before the smaller ones, so that the smaller ones are on top of the larger ones.</p>
+</div>
+
+<p><strong>PyCut</strong> processes "paths" in order to calculate geometries and cnc tool paths, but thankfully it can
+read out of the box all kind of shapes, so there is <strong>no need</strong> to convert your svg files into "paths
+only" svgs. There is only one exception: for text data.</p>
+
+
+<div class="info">
+<p><strong>Note:</strong> PyCut will only display shapes in its viewer which have an id.</p>
+</div>
+
+<p>In order to reference the shapes in <strong>PyCut</strong>, the shapes must have their own <strong>"id"</strong>, 
+hopefully unique inside the svg document. The user, having edited the svg file "per hand" or not, should not forget 
+to check for the ids and give the shapes he wishes to process unique ids.</p>
+
+<div class="info">
+<p><strong>Note:</strong> These ids play the role of the shapes name, so a good practice is to give them meaningfull
+values (names).</p>
+</div>
+
+<h4 id="P-02-02-01">Opened and closed paths</h4>
+
+<p>A path can be closed or not. This is not a matter if the path's first point is equal to its last point. A closed
+path or subpath contains the annotation <strong>"Z"</strong> or <strong>"z"</strong> at its end. Even if the first
+point of the path is equal to its last point, the path is only considered as closed with the ending
+<strong>"Z"</strong> or <strong>"z"</strong>.</p>
+
+<div class="warning">
+<p><strong>Warning:</strong> PyCut strongly relies on the <strong>[Zz]</strong> annotation to decide if the path is
+closed or not. When not closed, "Pocket" operations will not be allowed for this opened path.</p>
+</div>
+
+<div class="info">
+<p><strong>Note:</strong> It may looks at first sight somehow pedandic, but then there is a clear flag whether the 
+path is closed or not, without further checks.</p>
+</div>
+
+<p><strong>PyCut</strong> imports closed paths as shapely "MultiPolygon", while opened paths are imported as
+"MultiLineString", but here the sake of simplicity, we will only refer them as "Polygon" or "LineString".</p>
+
+<p><strong>PyCut</strong> will import the other svg shapes either as "<span style="color:#0000ff">Polygon</span>" (i.e.
+<strong>closed items</strong>) or as "<span style="color:#0000ff">LineString</span>" (i.e. <strong>opened
+items</strong>). Of course, svg <code class="svg_tag">&lt;rect&gt;</code>, <code class="svg_tag">&lt;circle&gt;</code>,
+<code class="svg_tag">&lt;ellipse&gt;</code> and <code class="svg_tag">&lt;polygon&gt;</code> are closed items, while
+<code class="svg_tag">&lt;line&gt;</code> and <code class="svg_tag">&lt;polyline&gt;</code> are opened items. When
+importing a <span style="color:#0000ff">&lt;path&gt;</span>, things are more complicated, as a path can be composed of
+many subpaths (starting with [<strong>Mm</strong>]) and every subpath can be closed or not (ending with
+[<strong>Zz</strong>]). <strong>PyCut</strong> will try to import these paths definitions right, and in case of closed
+paths will also try to import them as shapely polygons "<strong>with holes</strong>" even if this concept does not
+exist in SVG. <strong>PyCut</strong> will try to do its best for this task. Moreover <strong>PyCut</strong> will try 
+to import a svg path as a valid (shapely) <span style="color:#0000ff">MultiPolygon </span> in the shapely sense, 
+or as a list of valid MultiPolygons if one single
+valid MultiPolygon is not possible. For example, the letters "i" or "j" are defined with a single svg path, defining
+two separates polygons, and it makes sense to consider these paths as a single shapely MultiPolygon entity. The letter
+"a" is a polygon with one hole, the letter "g" is a polygon with two holes (for some fonts). In the freetype
+vocabulary, "a" is formed by 2 "contours", "g" by three "contours".</p>
+
+
+<h3 id="P-02-03">SVG Text</h3>
+
+<p>The user may also want to process the strings written in the svg file. The texts inside a svg file are defined with the tag: </p>
+<ul>
+  <li><code class="svg_tag">&lt;text&gt;</code></li>
+</ul>
+
+<div class="warning">
+<p><strong>Warning:</strong> Strings are not (yet) imported into <string>PyCut</strong> directly. 
+They have first to be converted to paths. </p>
+</div>
+
+<p>As already stated, <strong>PyCut</strong> cannot process yet <code class="svg_tag">&lt;text&gt;</code> items directly. 
+Fortunately, <code class="svg_tag">&lt;text&gt;</code> items can be converted into<code class="svg_tag">&lt;path&gt;</code>
+items, sonce they will be ignored by <strong>PyCut</strong>. <strong>PyCut</strong> also comes with the utiilty
+<strong>svgtext2svgpath.py</strong> which will also convert your <code class="svg_tag">&lt;text&gt;</code> items. How
+to use it? just call the <strong>svgtext2svgpath.py</strong> program which outputs in a new svg the <code
+class="svg_tag">&lt;text&gt;</code> items as <code class="svg_tag">&lt;path&gt;</code> items. Copy/paste the result of
+a <code class="svg_tag">&lt;text&gt;</code> conversion into your own svg. A successfull conversion will only occurs if
+the <code class="svg_tag">&lt;text&gt;</code> item is simple enough: the text "value" should not be splitted into
+several <code class="svg_tag">&lt;tspan&gt;</code> items with different fonts. No <code
+class="svg_tag">&lt;tspan&gt;</code> tag at all is also possible (and simpler). <strong><span style="color:#8000ff">IN
+PROGRESS</span></strong>.</p>
+
+<p>This utility is found in the source code inside the folder "<strong>utilities/svgtext2svgpath</strong>", and there 
+is a small tutorial included.</p>
+
+<p>All in all, if <strong>PyCut</strong> were to display text strings at the wrong positions (after having transformed
+them into paths), the user can always export the svg from <strong>Inkscape</strong> (and write <strong>PyCut</strong> a
+ticket).</p>
+
+<h3 id="P-02-04">SVG special tags: defs and use</h3>
+
+<p><strong>PyCut</strong> cannot import directly the very handy SVG <strong>&lt;defs&gt;</strong> and
+<strong>&lt;use&gt;</strong> feature. The utility <strong>svgresolver.py</strong> delivered with <strong>PyCut</strong>
+will have to be used. The utility <strong>svgresolver.py</strong> takes as input the SVG file containing
+<code>&lt;defs&gt;</code> and <code>&lt;use&gt;</code> tags and outputs a new SVG where all
+<code>&lt;defs&gt;/&lt;use&gt;</code> have been resolved, i.e. turned into real objects.</p>
+
+<p>This utility is found in the source code inside the folder "<strong>utilities/svgresolver</strong>", 
+and there is a small tutorial included. </p>
+
+<p>One drawback is that the user has then to manage 2 svg files: the first one with <strong>&lt;defs&gt;</strong> and
+<strong>&lt;use&gt;</strong>, and a second one, the "resolved" one which is the input file for <strong>PyCut</strong>.
+</p>
+
+<h4 id="P-02-02-01">Transformations</h4>
+
+<div class="info">
+<p><strong>Info:</strong>Transformations can be defined on every shapes or groups, and are often used in combinaison
+with the <strong>&lt;defs&gt;</strong> and <strong>&lt;use&gt;</strong> tags.</p>
+</div>
+
+<p><strong>PyCut</strong> cannot handle "out of the box" svg datas where shapes are defined with "transform" operations
+(translate, rotate etc.).</p>
+
+<p>Nevertheless, it is also possible to "resolve" the shapes transformations with the previously mentioned utility
+<strong>svgresolver.py</strong>. This utility also processes all transformations found in the svg file, while keeping
+the<strong>"id"</strong>s right. It works best in combinaison of the <code><span
+style="color:#0000ff">&lt;use&gt;</span></code> tag, as a single item defined in the <code><span
+style="color:#0000ff">&lt;defs&gt;</span></code> section can then be re-used at many locations. Obviously, not
+everything is possible: for example, transforming a <code><span style="color:#0000ff">&lt;rect&gt;</span></code>
+element with a rotate transformation does not result in a <code><span style="color:#0000ff">&lt;rect&gt;</span></code>
+(but a <code><span style="color:#0000ff">&lt;polygon&gt;</span></code>) and <strong>svgresolver.py</strong> cannot
+handle this.</p>
+
+<p><strong><span style="color:#8000ff">IN PROGRESS</span></strong>: this utility should be integrated into
+<strong>PyCut</strong> so that the user can spare this extra step.</p>
+
+<div style="height:30px">
+</div>
+
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+
+<h2 id="P-03">Basic example</h2>
+
+<h3>Opening the PyCut application</h3>
+
+<p>type in the console:</p>
+
+<p><code>&gt; python pycut.py -h</code></p>
+
+<p><code>&gt; python pycut.py --proj=&lt;projectfile&gt;</code></p>
+
+<p><code>&gt; python pycut.py --gcode=&lt;gcodefile&gt;</code></p>
+
+<p>Without argument, pycut opens without loading any SVG file. With the <code>--proj</code> argument, a previously
+saved project is opened.</p>
+
+<h3 id="P-03-00">PyCut as GCode simulator</h3>
+
+<p><strong>PyCut</strong> can also be used as a GCode viewer or simulator. GCode files can be loaded with the
+argument</p>
+
+<p><code>&gt; python pycut.py --gcode=&lt;gcodefile&gt;</code></p>
+
+<p>Hopefully PyCut can parse it (roughly: what <strong>Candle</strong> can parse - <strong>PyCut</strong> uses a
+similar parser). The toolpaths can then be viewed in the GCode viewer (toolpaths simulation) and GCode simulator
+(material removing simulation). For the GCode simulator, the tool diameter is needed for an accurate simulation. PyCut
+saves its generated gcode files with a comment line of the form</p>
+<pre><code class="language-gcode">; Diameter   &lt;value&gt;</code></pre>
+
+<p>that is parsed to retrieve the right tool diameter. Inserting such a line in the external GCode allows
+<strong>PyCut</strong> to properly simulate the GCode.</p>
+
+<p>There is another gcode reader in the folder <code>gcodesimulator</code></p>
+
+<p><code>&gt; python gcodesimulator_driver.py --cutterdiameter=6 --candleparser &lt;gcodefile&gt;</code></p>
+
+<p>Here the Candle parser can be used (when specified). The cutter diameter (in mm) can also be passed.</p>
+
+<h3 id="P-03-01">Loading a SVG file</h3>
+
+<p>So for the very first time, start <strong>PyCut</strong> without specifying any project.</p>
+
+<p>Import your svg into <strong>PyCut</strong>. It is achieved through the menubar command <strong>SVG | Load
+SVG</strong>. The SVG content should be displayed in the central area. </p>
+
+<h3 id="P-03-02">Creating a PyCut Project</h3>
+
+<p>Then create a new "project" : this is a file that stores uponside the svg file all the CAM operations that the user
+has created or will create, together with all others settings relevant when generating GCode. It can be created, saved
+and loaded again and modified - quite practical.</p>
+
+<h3 id="P-03-03">Creating CAM operations</h3>
+
+<p>Once an empty project is created and a svg file loaded, it is time to create some CAM operations: select 1 or more
+items in SVG window (they should turn beige) and click the button "Create Operation": a new operation in the operation
+table should appear.</p>
+
+<p>Define the properties of the operation: the main one is the CAM operation type: </p>
+<ul>
+  <li><strong>Pocket</strong></li>
+  <li><strong>Engrave</strong></li>
+  <li><strong>Inside</strong></li>
+  <li><strong>Outside</strong></li>
+</ul>
+
+<p>There are also the</p>
+<ul>
+  <li><strong>Drill</strong></li>
+  <li><strong>Peck</strong></li>
+</ul>
+
+<p>operations, for the <span style="color:#0000ff">&lt;circle&gt;</span> shapes whose diameter is smaller or equal to
+the tool diameter, and the </p>
+<ul>
+  <li><strong>Helix</strong></li>
+</ul>
+
+<p>operation for <span style="color:#0000ff">&lt;circle&gt;</span> of any size. </p>
+
+<p>The others options will be discussed later. Default values at this point should be Ok.</p>
+
+<h3 id="P-03-04">Generate the GCode</h3>
+
+<p>Select (enable) one or more CAM operations in the operations table: the "geometry" of the operation(s) should turn
+black in the SVG viewer: this is (are) the region(s) of the material that wil be affected when cutting the material.</p>
+
+<p>Then finish creating the G-Code by pressing the button "Generate GCode" above the operation table: the tool path(s)
+should appear(s) in green in the black regions.</p>
+
+<p>The produced G-Code can be inspected in the "G Code viewer" and the "G Code Simulator" display areas.</p>
+
+<p>You just have to save the G-Code and you're done. The G-Code file should be named as the CAM operation name, or, in
+case of multiple operations enabled, as the project name, with ending suffix "nc".</p>
+
+<div style="height:30px">
+</div>
+
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+
+<h2 id="P-04">GUI Components</h2>
+
+<h3 id="P-04-01">Svg Settings</h3>
+
+<div>
+<img src="images/pycut_svgsettings.png" width="310px"> </div>
+
+<h4>Title</h4>
+
+<p>This will display the SVG title if set</p>
+
+<h4>Width</h4>
+
+<h4>Height</h4>
+
+<p></p>
+
+<h3 id="P-04-02">Tool</h3>
+
+<div>
+<img src="images/pycut_tool.png" width="310"> </div>
+
+<h3 id="P-04-03">Tabs</h3>
+
+<p>It's easy to define tabs with <strong>PyCut</strong>: just click the button "Create Tab" and a red circle is created
+in the svg viewer, of radius 5 and position (10,10). The user can drag 'n drop it from the svg viewer, or set its
+size/postion in the tab table. Yes tabs, for simplicity, are circle. To be effective, the tabs have to be enabled and
+of course placed somewhere on the generated toolpaths. The height of the tabs is shared by all tabs. <strong>They are
+ignored for Pocket operations</strong>.</p>
+
+<div>
+<img src="images/pycut_tabs.png" width="310"> </div>
+
+<p></p>
+
+<p>You can check the Gcode generation in the viewer/simulator if everythings is Ok. </p>
+
+<h3 id="P-04-04">Material</h3>
+
+<p>The Operations "Cut Depth" should not be larger than the material thickness. </p>
+
+<div>
+<img src="images/pycut_material.png" width="310"> </div>
+
+<p></p>
+
+<div class="warning">
+<p><strong>Warning</strong>: The clearance is written in the produced g-code. Thus the user should be sure it does not
+exceed the physical possibilities of the machine when travelling in the z-axis, especially for small machines like the
+1419 or 1310.</p>
+</div>
+
+<div class="warning">
+<p><strong>Warning</strong>: The thickness as none impact on the produced GCode. It is only there to remaind that every
+CAM operation should not exceed this value (no check performed). The depth cut of any operation should not exceed the
+material real thickness, or only exceeding it with a minimal value, only to be sure to cut through, and knowing there
+is a spoilboard that has an acceptable thickness.</p>
+</div>
+
+<h3 id="P-04-05">Curve to Line Conversion</h3>
+
+<p>If your design contain curves (svg "arcs" or "bezier" curves), they have to be discretized in small segments.</p>
+
+<div>
+<img src="images/pycut_curve_to_line_conversion.png" width="300"></div>
+
+<p>The 2 following parameters allow to specified how fine the curve discretization will be:</p>
+<ul>
+  <li>Minimun number of segments</li>
+  <li>Minimum Segments length</li>
+</ul>
+
+<h3 id="P-04-06">GCode Conversion</h3>
+
+<p>The starting location of a milling operation is given by the initial location in the GCode. Per default, PyCut gives
+as starting point the (0,0) coordinates of the SVG file, which is located at the top-left of the material. The SVG
+conventions are opposite to GCode convention considering the Y direction.</p>
+
+<p>So the GCode generation will have to invert the direction of the Y axis coordinates. But still the reference is the
+top-left postion.</p>
+
+<p>It is possible to change the reference location of the generated GCode</p>
+<ul>
+  <li>Zero top left of the material</li>
+  <li>Zero lower left (bottom) of the material</li>
+  <li>Zero lower left (Op) i.e bottom left of the area defined by the Gcode</li>
+  <li>Zero Center (Op) i.e center of the area defined by the Gcode</li>
+</ul>
+
+<div>
+<img src="images/pycut_gcode_conversion.png" width="310"> </div>
+
+<p>Note that these 4 buttons act as radio buttons.</p>
+
+<div class="info">
+<p><strong>Note</strong>: In case of lower left (bottom) of the material, the Y size of the material is extracted form
+the svg file: the svg "height" attribute.</p>
+</div>
+
+<p>These four basic options set the X-Offset and Y-Offset of the GCode calculation. After a GCode generation, it is
+still possible to modify the X-Offset and Y-Offset to fit at best how to user wants to have the origin be located with
+the help of the 2 spin boxes. Infact, modifying "per hand" the X or Y offsets recalculate the GCode, so this is a
+costly operation.</p>
+
+<p>The checkbox "Use Offset" is used, as example, as the following: first, the checkbox is unset. The user selects only
+one CAM operation, with for example the option <strong>Zero Center (Op)</strong>. The X and Y offsets are thus
+automatically evaluated. Then the user checks "on" the <b>"Use Offset"</b> checkbox, so that these offsets are frozen
+and become the references for the further CAM operations and their produced gcodes. </p>
+
+<div class="warning">
+<p><strong>Info</strong>: The two SpinBox entries are "debounced" when entering the values from the keyboard, as each
+change of value calls the GCode generator, which is a costly operation. So only by typing "Enter", the GCode generator
+is then called. Utilizing the spin boxes arrows is not debounced, so at every step the GCode is recalculated.</p>
+</div>
+
+<p>Lets give an example: in a SVG file, two circles are defined, one has to be pocketed with a depth of 10mm, the other
+with 5 mm. So two operations are needed. Imagine the center of the first circle is at (10,15) and the center of the
+second circle is at (20,25). If boths operations are relative from the "Zero top-Left material" reference, no problem.
+You have to position your bit exactly at the "top-left" of your material in order to mill the first hole at exactly
+(10,15) from this initial position. </p>
+
+<p>But imagine you want the reference to be the center of the first circle. After having generated the GCode for the
+first circle, click on "Zero Center (Op)" and observe and carefully note what are the resulting X an Y offsets (it will
+be (-10, 15)). Now select the second operation and generate the GCode. The offsets will certainly chande, but then type
+in the offsets the memorized X and Y offsets. The GCode will be reevaluated with the offsets (-10,15) and thus the
+GCode 0,0 position will be the center of the first circle.</p>
+
+<p>But why would you want to have as reference of the GCode the center of the first circle ? Well when milling the two
+holes in your workpiece maybe you may want to position the bit at a given position on the workpiece and from this
+location mill the second holes, the first hole beeing milled exactly when you have positioned your bit. Because what
+was important was the relative position of the two holes, while the absolute position of the first hole was to be
+determinated by yourself on the workpiece.</p>
+
+<p>An other use case is when 2 oparations have to be performed with a different tool diameter.</p>
+
+<div class="warning">
+<p><strong>Info</strong>: The option <strong>"Zero Center (Op)"</strong> is particularely usefull when the user wants
+to run 2 differents G-Code files produced from 2 different CAM operations. A use case is when these 2 CAM operations
+have 2 different tool diameters. By ensuring that the center of the operations are the same, at the end of the first
+operation (first GCode file), the user can change the tool in the machine and load/start the second G-Code file. This
+occurs when some holes have to be drilled in the first operation and a contour or pocket operation has to be performed
+in the second operation with a much larger tool. Of course the two operations must have the same center. If not the
+case, the XOffset and YOffset can be set to ensure that the centers are coincidents.</p>
+</div>
+
+<p></p>
+
+<p>And further:</p>
+<ul>
+  <li>Flip X/Y </li>
+</ul>
+
+<p>In the generated G Code, X and Y are switched.This can be helpfull, for example in the case your
+<strong>CNC</strong> is the "<strong>1419</strong>" model (mine!) which is not as large as deep. So this option allows
+to carve something like 16x10 cm without rotating all items in the source svg. </p>
+
+<p></p>
+
+<h3 id="P-04-07">GCode Generation</h3>
+
+<p>Some useful options can be set up:</p>
+<ul>
+  <li>Return at initial location at end of the Job</li>
+  <li>Spindle Start/Stop (<strong>M3</strong>/<strong>M5</strong> codes)</li>
+  <li><strong>M2</strong> code</li>
+</ul>
+
+<p>Note that the generated GCode is meant to be used for a GRBL control board, so only "lines" are generated, no "arcs"
+or other fancy GCode directives.</p>
+
+<div>
+<img src="images/pycut_gcode_generation.png" width="310"></div>
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+
+<p></p>
+
+<h3>Create Operations</h3>
+
+<p>This is where the user defined its cam operations, thus this is where the action takes place.</p>
+
+<div>
+<img src="images/pycut_ops.png" width="1170"> </div>
+
+<p>First one or more item(s) have to be selected in the svgviewer, click on "Create Operation" and a default operation
+is created. When more than one item has been selected, the user can perform logical operations on this set of item </p>
+<ul>
+  <li>diff</li>
+  <li>intersect</li>
+  <li>union</li>
+  <li>xor</li>
+</ul>
+
+<p>When "enabling" this op, the resulting geometry will be displayed ion the svgviewer</p>
+
+<div class="info">
+<p><strong>Note:</strong> The geometry is highlighted in red. The highlight color can be setup in the settings dialog,
+or from the menu bar (these 3 strange colored buttons). It is useful to choose a color different from the color of your
+shapes.</p>
+</div>
+
+<p>Then the cam operation can be chosen</p>
+<ul>
+  <li>pocket - only for closed shapes</li>
+  <li>inside</li>
+  <li>outside</li>
+  <li>engrave</li>
+  <li>drill <strong><span style="color:#0000ff">- ONLY</span> <span style="color:#0000ff">for circle
+    shapes</span></strong></li>
+  <li>peck <strong><span style="color:#0000ff">- ONLY for circle shapes</span></strong></li>
+  <li>helix <strong style="color:#0000ff">- <span style="color:#8000ff"><span style="color:#000000"></span></span>ONLY
+    for circle/ellipse/rectangle/polygon/closed path shapes</strong></li>
+</ul>
+
+<p>For opened paths, the pocket/drill/peck operations are not available.</p>
+
+<p><strong><span style="color:#8000ff">NEW</span></strong>: for <strong>circles</strong>, "<span
+style="color:#8000ff"><strong>drill</strong></span>" and "<strong><span style="color:#8000ff">peck</span></strong>"
+operations are available. Infact, for a pocket operation with a circle of diameter smaller than the cutter diameter, no
+tool path would be generated.<strong>In case of the</strong> <strong>circle diameter is smaller or equal than the
+cutter diameter</strong>, in order to have toolpath, "<strong><span style="color:#8000ff">drill</span></strong>" or
+"<strong><span style="color:#8000ff">peck</span></strong>" is the way to go. </p>
+
+<p><strong style="color:#8000ff">NEW</strong>: for
+<strong>circles</strong>/<strong>ellipses</strong>/<strong>rectangles</strong>/<strong>polygons and more generatly
+closed paths</strong>, the "<strong style="color:#8000ff">helix</strong>" operation is available. This cut "smoothly"
+in the center of the shape an hole or a donut, depending on the radius of the helix and the cutter diameter. The helix
+has always the tickness of the cutter diameter.</p>
+
+<p>In order to generate G code, enable one or many operations and click on "Generate G code". <strong>PyCut</strong>
+will try to do its best... The resulting G code is displayed in the G code viewer and G code simulator.</p>
+
+<p>Finally, clicking on "Save G code" will produce a valid G code file. <strong>Candle</strong> can be used to send the
+G code to your machine. Have fun...</p>
+
+<div style="height:30px">
+</div>
+
+<!-- ----------------------------------------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------->
+
+<h2 id="P-05">CAM Operations</h2>
+
+<h3 id="P-05-01">Inside</h3>
+
+<h3 id="P-05-02">Outside</h3>
+
+<p>While the name speaks for itself, be aware that it is possible to make a cut from a virtual "stock" by setting the
+"width" of the operation. This does not however allow to cut any kind of stock as the "width" is constant all over the
+coutour we wish to cut from the ouside. Nevertheless, knowing the exact dimensions of the material you are cutting, it
+is possible to define fake shapes in order to cut them as a virtual stocks.</p>
+
+<h3 id="P-05-03">Engrave</h3>
+
+<p>This cuts exactly on the shapes borders. Be aware that the cutter has a diameter!.</p>
+
+<h3 id="P-05-04">Helix</h3>
+
+<p>The helix's center will be the <strong>center of the (closed) shape</strong>. For a circle, this is obviously the
+center of the circle shape. Considering the case where the center of the helix is [0,0], <strong>on which "orbit" will
+move the cutter</strong>? Well in case of an Helix operation, the "<strong>width</strong>" operation corresponds to the
+helix outer radius. This means that the <strong>radius</strong> of the orbit, the circle on which the cutter center
+travels, is <code>width - cutter_radius</code>. So the width has to be larger than the cutter radius, sonce the helix
+will be infact a drill operation. A value larger than the cutter diameter generates a ring (with an inner hole), and
+the helix is then simular to an "Inside" or "Outside"operation for an imaginary circle shape, however with a "smoother"
+cut. </p>
+
+<p>The helix pitch (revolution depth) is the most important parameter. Theoretically, the Helix operation could perform
+threads cutting by generating first an hole, then an helix "inside the hole" where the outer radius of the helix would
+be smaller than the hole radius, and utilizing a dedicated cutter.</p>
+
+<h3 id="P-05-05">Pockets</h3>
+
+<p>The standard pocket algorithm is the so-called "<strong>contour</strong>" algorithm. Starting from the outside
+border, offset curves are generated one after the other until the whole pocket "space" is processed. At the end,
+ordering of the offsets is reversed, thus starting from the middle of the pocket.</p>
+
+<p>There are others algorithms, for example the "<strong>spirale</strong>" algorithm. Here we start fom the center of
+the pocket and go towards the outside in spirales, hence the name. It is easy to calculate the toolpaths for
+<strong>circles</strong> and <strong>ellipses</strong>. For the other shapes, <strong>PyCut</strong> utilizes the
+external (free) library <strong style="color:#8000ff">HSM_nibblers</strong> which produces very nice
+toolpaths<strong>.</strong></p>
+
+<p><strong>PyCut</strong> will try to implement this <strong>pocket</strong> algorithm in two steps: first an
+"<strong>Helix</strong>" operation, then a "<strong>Pocket</strong>" operation.</p>
+
+<p></p>
+
+<p><strong style="color:#8000ff">Trick</strong>: to "activate" the spirale algorithm, just name the pocket operation
+with a "<strong>sp_</strong>" prefix! </p>
+
+<p><strong style="color:#8000ff">Trick</strong>: to "activate" the HSM_nibbler algorithm, just name the pocket
+operation with a "<strong>hsm_</strong>" prefix! </p>
+
+<div class="info">
+<p><strong>Note:</strong> To enable the Spirale pocket toolpaths, prefix the pocket operation with "sp_"</p>
+</div>
+
+<div class="info">
+<p><strong>Note:</strong> To enable the HSM pocket toolpaths, prefix the pocket operation with "hsm_"</p>
+</div>
+
+<p>The helix will be cut in the "center" of the shape (the shapely polygon "centroid)", and we pass this location to
+the HSM nibbler, thus ensuring a good start of the pocket "hsm_nibbler" operation.</p>
+
+<p>The spirales will be for <strong>circles, ellipses</strong> shapes only -something admittingly rather restrictive-
+because these cases are more or less trivial. There is then no "isles" that neccessarely occur in the corners of the
+pocket for non-trivial geometries. But the HSM_nibblers toopaths are there for the others shapes.</p>
+
+<div class="info">
+<p><strong>Note:</strong> Having succesfully created an helix (hole) into the center of a basic shape
+(<strong>circle</strong>, <strong>ellipse</strong>, <strong>rectangle</strong>, <strong>polygon</strong> or
+<strong>closed path</strong>), then the "standard" pocket algorithm can be used with a <strong>very large
+overlap</strong> (value close to 1) and <strong>a larger pass depth</strong> (rather than a standard overlap and a tiny
+pass depth that is used for standard pockets)</p>
+</div>
+
+<h4>Pocket/Spirale</h4>
+
+<p>With a Pocket/Spirale operation, the cutter will plunge automatically with a <strong>depth</strong> equal to the
+specified standard <strong>pass depth</strong>. Hopefully a hole has previously been cut at this place... At best, an
+Helix operation precedes a Spirale operation. The spirale will mainly cut into the material "sideways". It seems it is
+a better way to mill pockets, as the bit is then used mainly from the side, preserving its drilling bottom side if the
+<strong>pass depth</strong> is equal to the <strong>full cut depth</strong>.</p>
+
+<p>For a Pocket/Spirale operation to work best, as the pass depth is large, a very big overlap is required (example:
+0.975). This way, the spirale only "attacks" the material on a rather limited side surface, thus preserving the bit and
+allowing greather depth passes. If you wish for example that at each spirale arm 1mm is milled, then the overlap has to
+be chosen accordingly. Denoting A the size of the material beeing cut at each spirale arm : A = cutter_radius *
+(1-overlap) =&gt; overlap = 1 - A / cutter_radius.</p>
+
+<p>So a combined "Helix+Pocket/Spirale" operation is somehow similar to the normal "pocket" operation when a very large
+pass depth and an overlap near to 1.0 are chosen. Nevertheless, with the "contour" algorithm , the cutter would plunge
+into the material without helix (even if a ramp is still possible) for a large pass depth at the given plunge rate,
+which would be quite dangerous even if the plunge rate would be small. </p>
+
+<p>Note that for an Helix or Pocket/Spirale operation, cam paths are calculated "per hand" without the help of the
+shapely library and its "offset curve" functionality. But the <strong>Spirale</strong> can only be used when
+considering <strong>circle/ellipse</strong> or <strong>rectangle</strong> shapes.</p>
+
+<p>The <strong>ellipse and rectangle</strong> cases are derived from the circle case by mapping the coordinated of the
+path points from a circle to an ellipse/rectangle. The middle of these shaped has to be evaluated first, and the
+mapping between circle and ellipses/rectangles as well.</p>
+
+<div style="height:30px">
+</div>
+
+<h2 id="P-06">GCode DressUp (TODO)</h2>
+
+<h3>DogBones</h3>
+
+<div class="warning">
+<p><strong>Warning:</strong> I am a CAM beginner, so for sure my solution is for sure sub-optimal.</p>
+</div>
+
+<p>When milling a pocket or a contour, the cutter is not able to mill into convex angles perfectly (yes the cutter is
+round). </p>
+
+<img src="images/dogbones1.svg" />
+
+<p>Note that the amount of material not removed by the cutter depends on the angle of the corner and the radius of the
+cutter.</p>
+
+<div class="info">
+<p><strong>Note:</strong> For concave angles, the generated toolpaths around such corners are smooth and do not need
+any fixups.</p>
+</div>
+
+<p>Fixing the GCode "per hand" is absolutely no solution, so an automatic handling has to be perfomed.</p>
+
+<div class="warning">
+<p><strong>Warning:</strong> Having had a look at (the doc of) some other tools (<strong>BlenderCam</strong>,
+<strong>Fusion360</strong>), I have noticed that these tools, in order to perform dogbones correction, "actualize" the
+geometry, or rather said the geometry contour so that this contour get bones. After that, the "inside" or "pocket"
+operations are performed "as usual". I will try to take a different approach : only the generated GCode will be "fixed"
+when encountering "angles". </p>
+</div>
+
+<div class="warning">
+<p><strong>Warning:</strong> A drawback of this approach is that the user has 0 influence on the dogbones generation.
+On the other side, he does not have to specify them at all </p>
+</div>
+
+<h3>A first try</h3>
+
+<p>Let's get a taste how dogbone handling look like. Here we suppose the cutter radius is <strong>3mm</strong>. We wish
+to mill an inner square hole, so the "convex angle" corner problem occurs. We have 2 (or more!) strategies to allow a
+square to fit in the milled hole. Strategy "1" is shown on the left, strategy "2" on the right: the extra tool path is
+displayed with the cutter at the end of the extra tool path (as well as the standard cutter position at the toolpath
+corner).</p>
+
+<img src="images/dogbones2.svg"/>
+
+<p>We see that the strategy "1" removes far less extra material than the strategy "2", so we will concentrate only on
+the strategy "1". </p>
+
+<p>At every G01 instruction, there is certainly a direction change, which can be tiny (consider milling an inner
+circle, not as G02 or G03 but with a list of GO1 instructions) or big, here in our case a 90 degrees direction
+change.</p>
+<pre><code class="language-gcode">G1 X10.00 Y5.00
+G1 X10.00 Y20.00  (go up to A)
+G1 X31.00 Y20.00  (change of direction to the right)</code></pre>
+
+<p>We shall insert a GCode block before changing the direction</p>
+<pre><code class="language-gcode">G1 X10.00 Y5.00
+G1 X10.00 Y20.00 (go up)
+; fix up begin ------------------------
+G1 X09.00 Y21.00 (goes 1mm top left)
+G1 X10.00 Y20.00 (and back)
+; fix up end --------------------------
+G1 X15.00 Y20.00 (change of direction to the right)</code></pre>
+
+<p>or, using incremental distance mode for the fix-up:</p>
+<pre><code class="language-gcode">G1 X10.00 Y5.00
+G1 X10.00 Y20.00 (go up)
+; fix up begin ------------------------
+G91           (incremental distance mode) 
+X-1.00 Y1.00  (goes 1mm top left)
+X1.00 Y-1.00  (and back)
+G90           (absolute distance mode) 
+; fix up end --------------------------
+G1 X15.00 Y20.00 (change of direction to the right)</code></pre>
+
+<p>In the following, I will prefer switching to incremental distance mode (G91) and back (G90) for the fixups.</p>
+
+<p>In this first try, we "naively" gave at the left corner an extra travel of 1 mm in the NE direction. We can
+certainly do better.</p>
+
+<p><strong>Example-1</strong>: exact fixup, same geometry with a cutter of radius 3.0 mm</p>
+We wish to calculate the cutter extra travel exactly in order to minimize the extra stock removal while achieving the
+corner beeing milled completely as shown on the picture. 
+
+<p>The right corner on the left is at coordinate [7.0, 23.0] and the cutter reaches the coordinate [10.0, 20.0]
+position for it (see GCode). Thus there is a gap of </p>
+
+<p><code>gap = sqrt(3.0*3.0 + 3.0*3.0) - 3.0 = 1.2426</code></p>
+
+<p>between the corner C and the border of the cutter at point A.</p>
+
+<p>So we know which extra travel <code>dx</code> and <code>dy</code> the cutter must travel in order to its border
+reaches C: </p>
+<pre><code>dx = gap * cos(3 *pi / 4) = -0.8786
+dy = gap * sin(3 *pi / 4) = +0.8786</code></pre>
+
+<p>The angle <code>3*pi/4</code> here is the direction of the outer corner (concave) angle bisection line, let's call
+it the "orientation" of the corner. It is of course identical to the direction of AC, but in practice C is not known,
+only the position of the cutter. not that the cutter "trajectory" makes exactly the same angle as the real geometry
+when encountering a convex angle. So lets try to generalize for any corner "orientation". We denote this orientation
+"bisect".</p>
+<pre><code>dx = gap * cos(bisect) = -0.8786
+dy = gap * sin(bisect) = +0.8786</code></pre>
+
+<p>So the fixup is</p>
+<pre><code class="language-gcode">; fix up begin ------------------------
+G91 
+G1 X-0.8786 Y0.8786 ( goes 0.8786 mm top left )
+G1 X0.8786 Y-0.8786 ( back )
+G90
+; fix up end --------------------------</code></pre>
+
+<p><strong>Example-2</strong>: exact fixup, same geometry but at the corner D on the right</p>
+
+<p>The corner coordinate is [34.0, 23.0] and the cutter reaches the coordinate [31.0, 23.0] from the left. Remember,
+the cutter radius is 3mm. The gap between the corner and the cutter border remains the same, as the angle is still a
+right angle.</p>
+
+<p>But the orientation of the corner is this time <code>pi/4</code>. </p>
+<pre><code>dx = offset * cos(bisect) = 0.8786
+dy = offset * sin(bisect) = 0.8786</code></pre>
+
+<p>So the fixup for this corner is </p>
+<pre><code class="language-gcode">; fix up begin ------------------------
+G91
+G1 X0.8786  Y0.8786   ( goes 0.8786 mm top right )
+G1 X-0.8786 Y-0.8786  ( and back )
+G90
+; fix up end --------------------------</code></pre>
+
+<p>Easy!</p>
+
+<div class="info">
+<p><strong>Info:</strong> For this particular case (cutter radius 3mm, angle 90 deg.), the gap is <code>1.2426 mm</code> 
+and the fixups (angles orientations <code>pi/4</code> or <code>3pi/4</code>) <code>dx = 0.8786</code>, <code>dy = 0.8786 mm</code>.
+For different cutter radiuses, the ratio gap / cutter radius (1.2426 / 3.0 = 0.41) shall remain the same.</p>
+</div>
+
+<h4>General case / automatic fixups</h4>
+
+<p>Knowing only the GCode, the theoretical corner on the stock could be calculated in order to evaluate the gap between
+the cutter border and the stock corner. Infact the stock corner does not have to be calculated at all, as the gap is
+infact only function of the cutter diameter and the angle of the corner of the toolpath. The orientation of the corner
+indeed does not play a role (for the gap size). </p>
+
+<img src="images/dogbones3.svg" />
+
+<p>The \(gap\) (distance between corner and cutter border) is </p>
+
+<p>\(gap = \displaystyle \frac{cutter_R}{sin(a)} - cutter_R = \frac{1 - sin(a)}{sin(a)} . cutter_R\)</p>
+
+<p>where \(a\) is the <strong>half the size of the corner's angle</strong>. So for a cutter radius of 1:</p>
+<ul>
+  <li>\(a = 60^{\circ} \implies gap = 0.15 \)</li>
+  <li>\(a = 45^{\circ} \implies gap = 0.41 \)</li>
+  <li>\(a = 30^{\circ} \implies gap = 1.00 \)</li>
+</ul>
+
+<p>Considering the GCode pattern (constitued of 3 G1 lines) </p>
+<pre><code class="language-gcode">G1 X&lt;x1&gt;  Y&lt;y1&gt;
+G1 X&lt;xm&gt;  Y&lt;ym&gt;
+G1 X&lt;x2&gt;  Y&lt;y2&gt;</code></pre>
+
+<p>we wish to generate a fixup for this GCode pattern, this means at the points \([x_m:y_m]\). As it turns out, we do
+not need to know if we are milling for an "Inside" or "Outside" operation, we do not need to check either if the angle
+is concave or convex! Consider the following example: a spade. We would like to mill "Inside" or "Outside"</p>
+
+<p>For an "<strong>Inside</strong>" operation, around the sharp corner "A", the angle in is concave and the size of the
+angle "inside" is larger than 180°. The Gcode path of the "Inside" operation will be smooth around A, a fixup is thus
+not needed; the GCode near A will be a succession of small G1 increments without sharp transitions. At corner "B", the
+angle is convex and the size of the angle "inside" is smaller than 180° . A fixup will be needed as the GCode path
+will also present a sharp corner of the same magnitide as the stock corner itself. </p>
+
+<p>For an "<strong>Outside</strong>" operation, at corner A, the angle is convex and the size of the angle "outside" is
+smaller than 180° and thus the GCode at "A" will need to have a fix-up, while the GCode at corner "B" (where the size
+of the angle "outside" is larger than 180°) will be smooth, consisting again of a succession of small G1 increments
+without sharp angles.</p>
+
+<p>At the locations where the GCode path is not smooth the fixups have to be performed. We set as
+<strong>threshold</strong> an angle of <strong>120 degrees</strong>, slightly larger than a right angle. Above this
+threshold (from 120° to 180°), no fixup is needed at all as the gap if about only one tenth of the cutter radius or
+less, or it is simply an "exterior travel". Between 0° and 120°, we have to calculate the right direction of the
+angle bissection, the "orientation" of the corner. The "orientation" must be "outside the corner" in order to mill
+"inside" the corner.</p>
+
+<p><svg width="1000" height="500" viewBox="0 0 1000 500" version="1.1" id="svg_spade">
+  <path
+        d="m213.23 502.9c-195.31 199.54-5.3525 344.87 149.07 249.6.84137 49.146-37.692 95.028-61.394 138.9h166.73c-24.41-42.64-65.17-89.61-66.66-138.9 157.66 90.57 325.33-67.37 150.39-249.6-91.22-100.08-148.24-177.95-169.73-204.42-19.602 25.809-71.82 101.7-168.41 204.42z"
+        stroke="#000000" transform="translate(0 -200) scale(0.7)"/>
+  <text x="235" y="350">A</text>
+  <text x="330" y="420">B</text>
+</svg>
+ </p>
+
+<p></p>
+
+<p>Let's do some maths! the slope of the GCode incoming segment is \( m_1 = (y_m - y_1) \ (x_m - x_1) \) and the slope
+of the GCode outcoming segment is \( m_2 = (y_2 - y_m) \ (x_2 - x_m) \) </p>
+
+<p>incoming segment equation: \( y = m_1 x + k_1 \) or, in another form \( a_1 x + b_1 y + c_1 = 0\) </p>
+
+<p>outcoming segment equation: \( y = m_2 x + k_2 \) or, in another form \( a_2 x + b_2 y + c_2 = 0\) </p>
+
+<p>The angle at the toolpath mid point is calculated with</p>
+
+<p>\(cos(\beta) = \displaystyle \frac{ u \cdot v}{ \| u \| \cdot \|v\| } \) </p>
+
+<p>and the internal and external bisections line equations of the corner are given by the two equations</p>
+
+<p>\( \displaystyle \frac{ a_1x + b_1y + c_1}{ \sqrt{a_1^2 + b_1^2} } = +/- \frac{ a_2x + b_2y + c_2}{ \sqrt{a_2^2 +
+b_2^2} } \implies A_i x + B_i y + C_i = 0 \)</p>
+
+<p>so the angles of these two bisections lines is given with \( tan(\alpha_i) = - A_i / B_i\) with \( \alpha_i \) in
+\([-\pi/2:\pi/2]\)</p>
+
+<p>The correct bisection is the one such that its slope is contained in the slopes of the two corner's segments, and
+the orientation must look "outside" the corner.</p>
+
+<p></p>
+
+<p>Let's try our formulas for a sharp angle. Let's say the cutter radius is 1mm. The GCode encountered is</p>
+<svg width="70" height="55" viewBox="0 0 70 55" version="1.1">
+  <polyline points="10,30  60,0  30,50" stroke-width="0.75" fill="none" stroke="black"/>
+</svg>
+<pre><code class="language-gcode">G1 X-2  Y2
+G1 X4   Y4
+G1 X2   Y-2</code></pre>
+
+<p>So obviously there is a sharp corner at \([4, 4] \). The corner angle is \( \beta = 53.13\)°.</p>
+
+<p>The slopes of the incoming and outcoming segments are : \(m_1 = 1/3 \) and \( m_2 = 3 \) and the two bisections
+slopes are \( -1\) and \(1;\) so the correct bisection is the second one, and its correct orientation is +45°</p>
+
+<h5>Gap</h5>
+
+<p>\( gap = 0.414 \)</p>
+
+<h5>Extra Travel</h5>
+
+<p>\( dx = 0.874 \)</p>
+
+<p>\( dy = 0.874 \)</p>
+
+<h4>Example 2</h4>
+<svg width="50" height="45" viewBox="0 0 50 45" version="1.1">
+  <polyline points="10,40  10,2  50,2" stroke-width="0.75" fill="none" stroke="black"/>
+</svg>
+<pre><code class="language-gcode">G1 X0.0  Y0.0
+G1 X0.0  Y4.0
+G1 X4.0  Y4.0</code></pre>
+
+<p>So obviously there is a sharp (right) corner at \([0, 4] \). The corner angle is \( \beta = 90\)°.</p>
+
+<p>The slopes of the incoming and outcoming segments are \(m_1 = -\inf \) and \( m_2 = 0 \) and the slopes of the
+bisections are \( -1\) and \(1\). The correct bisection is the first one (slope -1), and its correct orientation is
++135° (not -45°) pointing "outside" the corner.</p>
+
+<h5>Gap</h5>
+
+<p>\( gap = 0.414 \)</p>
+
+<h5>Extra Travel</h5>
+
+<p>\( dx = -0.88 \)</p>
+
+<p>\( dy = 0.88 \)</p>
+
+<p><strong>PyCut GCode Dressup GUI</strong></p>
+
+<p>How to integrate this handling into <strong>PyCut</strong> ? There is a setting option "<strong>GCode DogBones
+threshold</strong>" which is per default 120°. A completely separate utility "gcode_dressup.py" will be called upon
+GCode generation completion to transform the GCode for the operations requiring it.</p>
+
+<p>In the operations table, we add a column "fixups" as a checkbox, which, for every operation, can be set on or off.
+Moreover, in the GCode Viewer/GCode simulator GCode browsers, lines corresponding to added fixups (comprised between
+the comment lines </p>
+<pre><code class="language-gcode">; start fixup</code></pre>
+
+<p>and </p>
+<pre><code class="language-gcode">; end fixup</code></pre>
+
+<p>will have a blue background in order to clearly identify them.</p>
+
+<div style="height:30px">
+</div>
+
+<h2 id="P-07">PyCut Utilities</h2>
+   
+<h3 id="P-07-01">SvgRevolver</h3>
+
+<p>The SVG standard is huge and there are many ways to write a svg data. One
+very useful feature is to define basic shapes info the <code>defs</code>
+part, and re-use these items many times, applying different transformation
+for a given element. This is performed with the <code>use</code> tag.</p>
+
+<pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;svg version="1.1" id="svg" width="100mm" height="200mm" viewBox="0 0 100 200"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg"&gt;
+  &lt;defs id="defs"&gt;
+    &lt;circle id="my_circle" cx="0" cy="0" r="2.25"             style="opacity:1;fill:#880088;stroke:#00ffff;stroke-width:0.2;" /&gt;
+    &lt;rect   id="my_rect"   x="0" y="0" width="10" height="20" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-width:0.6;" /&gt;
+  &lt;/defs&gt;
+  &lt;g id="layer1"&gt;
+    &lt;g id="layer_circle"&gt;
+      &lt;use href="#my_circle" transform="translate(10,10)"  id="circle_left"  style="opacity:0.5;" /&gt;
+      &lt;use href="#my_circle" x="10" y="15"                 id="circle_right" style="opacity:0.9;"/&gt;
+    &lt;/g&gt;
+    &lt;g id="layer_rect"&gt;
+      &lt;use href="#my_rect"   x="30" y="10"                 id="rect_1" /&gt;
+      &lt;use href="#my_rect"   transform="translate(50,10)"  id="rect_2" /&gt;
+    &lt;/g&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</code></pre>
+
+<p>But at the end of the day, an application (like <strong>PyCut</strong>)
+prefers to (or can only) work with a svg data where all elements (shapes)
+are defined without transformations, because evaluatings such
+transformations is not an easy task (indeed...).</p>
+
+<p>Fortunately, the package <code><strong>svgelements</strong></code> does the job...</p>
+
+<p>This utility uses <code><strong>svgelements</strong></code>, "resolves" all transformations
+and writes the result to a svg file as output (what <code><strong>svgelements</strong></code>
+does not). It also manages to preserve the <code>id</code>s of the
+resolved items as well as merging the styles of the referenced items with
+the used items.</p>
+
+<p><em>Note: Styles attributes defined in the use do not overwrite those defined in the defs (fill, stroke). But
+<ul>
+<li>opacity</li>
+</ul>
+does.
+</em></p>
+
+    
+<h4>Usage</h4>
+
+<p>From the command line</p>
+
+<pre><code class="language-shell">&gt; python svgresolver.py -h
+&gt; python svgresolver.py --drop-defs test_basic.svg</code></pre>
+
+<p>A file named <code>test_basic.resolved.svg</code> is created</p>
+
+<pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;svg version="1.1" id="svg" width="100mm" height="200mm" viewBox="0 0 100 200"
+  xmlns="http://www.w3.org/2000/svg" 
+  xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xmlns:svg="http://www.w3.org/2000/svg" &gt;
+  &lt;g id="layer1"&gt;
+    &lt;g id="layer_circle"&gt;
+      &lt;circle id="circle_left"  cx="10.000" cy="10.000" r="2.250" style="opacity:0.5;fill:#880088;stroke:#00ffff;stroke-width:0.2;"/&gt;
+      &lt;circle id="circle_right" cx="10.000" cy="15.000" r="2.250" style="opacity:0.9;fill:#880088;stroke:#00ffff;stroke-width:0.2;"/&gt;
+    &lt;/g&gt;
+    &lt;g id="layer_rect"&gt;
+      &lt;rect id="rect_1" width="10.000" height="20.000" x="30.000" y="10.000" rx="0.000" ry="0.000" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-width:0.6;"/&gt;
+      &lt;rect id="rect_2" width="10.000" height="20.000" x="50.000" y="10.000" rx="0.000" ry="0.000" style="opacity:1;fill:#880088;stroke:#00ffff;stroke-width:0.6;"/&gt;
+    &lt;/g&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</pre></code>
+
+<p>and <strong>PyCut</strong> can use this "resolved" svg data as valid input. Note how the <code>id</code>s of the 
+<code>use</code> elements are passed to the "resolved" items. 
+Also note how the opacity values in the styles are merged in the resolved items's styles.</p>
+
+<h4>ToDo</h4>
+
+<ul>
+  <li><p>integrate the converter in <strong>PyCut</strong>.</p></li>
+</ul>
+
+<h4>Bugs</h4>
+
+<ul>
+  <li><p>rotate</p>
+    <ul>
+      <li>circles : ok </li>
+	    <li>rectangle : NO ROTATION (transform into a polygon ?)</li>
+	    <li>polygon : ok</li>
+	    <li>line : ok</li>
+	    <li>polyline : ok</li>
+	    <li>ellipse : NO ROTATION (transform into a polygon ?)</li>
+      <li>path : ok</li>
+	  </ul>
+  </li>
+  <li><p>scale</p>
+    <ul>
+      <li>rectangle: no transformation when the scale transformation is given with y coefficient negative (-1 for example) there the 
+      rectangle is flipped. <strong>FIXED</strong>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<div style="height:15px">
+</div>
+
+<h3 id="P-07-02">SvgText2Svgpath</h3>
+   
+<p>The conversion of text (<code>&lt;text&gt;</code> elements) given in svg files to paths (<code>&lt;path&gt;</code>
+elements) is a often a concern for applications manipulating text in svg files. There are in Internet plenty of
+projects/discussions on the topic.</p>
+
+<p>For every language it seems that many solutions are given. Unfortunately, as far as I could observe, there is plenty
+of crap (unfinished packages, or deprecated etc.). This is especially the case when searching for solutions for the
+python language (which is quite a shame)!</p>
+
+<p>I finally found only <strong>1 (!)</strong> python package that seems to make the conversion in a reasonable way:</p>
+<ul>
+  <li><strong>ziafont (version 0.2)</strong> (as 15.01.2022)</li>
+</ul>
+
+<p>This package reads the true type font binary files (which is a whole task in its own) and thus has access to every
+bit of the files. Paths can then be calculated and exported. A quick try shown me how good this package is. Diving into
+the code shows how deep the author of the package knows true type stuff. I only found one drawback: the output is full
+of "viewbox" fitting exactly the size of the output paths, and these viewboxes are often with negative values. This is
+because this package is not meant to transform <code>text</code> elements into <code>path</code> elements, but to
+directly generate <code>path</code> data from a given string. And because of this, it is not so straightforward to use
+the <code>path</code> data output and to plug it into the user own svg file as one would wish.</p>
+
+<p>An other method would be to use the python package "<strong>freetype-py</strong>". This package performs the task of
+reading the binary files, and it is possible to generate the paths from the structures/objects that freetype-py offers.
+These are infact ctypes wrappers, and as a good (excellent) wrapper, many functions of the freetype c library are
+accessible as methods of these objects. Hopefully all informations of the fonts are accessible! No! freetype-py
+performs only 'kern' kerning, not 'GPOS' kerning (as far as I understand). The GPOS table seems not to be accessible
+from freetype-py, so I use <strong>ziafont</strong> code to load this table. <strong>Thank you ziafont!</strong> So
+eventually I pick from ziafont the following files for my task: gpos.py and fontread.py.</p>
+
+<p>This is the approach that I follow in my package, and because of this, my code is much smaller than the
+<strong>ziafont</strong> one. But I am quite sure that <strong>ziafont</strong> is much more robust/bug free as my
+<strong>svgtext2svgpaths</strong> package.</p>
+
+<h4>The svgtext2svgpaths package</h4>
+
+<p>The features of my package are directly dictated from the need to convert svg <code>&lt;text&gt;</code> to svg
+<code>&lt;path&gt;</code> elements inside a svg file. How does the result of the conversion has to look like?</p>
+<ul>
+  <li>It must be <strong>without</strong> any "<strong>transforms</strong>" attributes. (so use my utility
+    <strong>svgresolver</strong>)</li>
+  <li>the <strong>location</strong> of the text described by the path(s) must match exactly the same input
+    <code>&lt;text&gt;</code> which is given in svg by the "<strong>x</strong>" and "<strong>y</strong>"
+  attributes.</li>
+  <li>the <strong>size</strong> of the letters described by the paths must be exactly the same as the one given in the
+    <code>&lt;text&gt;</code> data: the "<strong>font-size</strong>" expressed in units "<strong>px</strong>".</li>
+  <li>and of course, font <strong>family</strong> and others (<strong>font-style</strong>, <strong>font-weight</strong>
+    and <strong>font-stretch</strong>) must be respected, as far as possible.</li>
+</ul>
+
+<p>It cannot handle the following strings:</p>
+<ul>
+  <li><strong>strings splitted on many lines (ziafont can)</strong></li>
+  <li><strong>strings with different styles for separate chars in the string</strong></li>
+</ul>
+
+<h4>Fonts in svg</h4>
+
+<p>From the Inkscape App, a text is entered, for example <code>BB CC AA BB</code>. The font family / type can be chosen
+as well as the font-size, given in "<strong>pt</strong>" in the Inkscpae App GUI. Saving this file, we can observe in
+the svg file that the text size is given in "<strong>px</strong>" units.</p>
+
+<p><a href="https://oreillymedia.github.io/Using_SVG/guide/units.html">Units conversion </a> is as following:</p>
+<ul>
+  <li>1 px = 3/4 pt</li>
+  <li>1 inch = 25.4 mm</li>
+  <li>Inkscape resolution: 96 px per inch</li>
+</ul>
+
+<p>So when giving in Inkscape a font size of <strong>30 pt</strong>: 30 pt are 40 px are (40/96) * 25.4 mm =
+<strong>10.5833</strong>. This is the value found in the svg file, with units "<strong>px</strong>".</p>
+
+<p>A <code>&lt;text&gt;</code> definition in svg from Inkscape looks like: </p>
+<pre><code class="language-xml">
+  &lt;text
+       xml:space="preserve"
+       style="<strong>font-style</strong>:normal;font-variant:normal;<strong>font-weight</strong>:normal;<strong>font-stretch</strong>:normal;<strong>font-size</strong>:10.5833px;line-height:1.25;<strong>font-family:Arial;</strong>-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="9.7133684"
+       y="41.712864"
+       id="text1314"&gt;
+    &lt;tspan
+         sodipodi:role="line"
+         id="tspan1312"
+         style="<strong>font-style</strong>:normal;font-variant:normal;<strong>font-weight</strong>:normal;<strong>font-stretch</strong>:normal;<strong>font-size</strong>:10.5833px;<strong>font-family:Arial;</strong>-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         x="9.7133684"
+         y="41.712864"&gt;BB  CC  AA  BB
+    &lt;tspan&gt;
+  &lt;/text&gt;</code></pre>
+
+<p>but one could simplify it per hand:</p>
+
+<pre><code class="language-xml">
+  &lt;text style="<strong>font-style</strong>:normal;<strong>font-weight</strong>:normal;<strong>font-stretch</strong>:normal;<strong>font-size</strong>:10.5833px;<strong>font-family:Arial;</strong>fill:#000000;fill-opacity:1;"
+       x="9.7133684"
+       y="41.712864"
+       id="text1314"&gt;BB  CC  AA  BB&lt;/text&gt;</code></pre>
+
+<p>The color (fill) and opacity do not play a role when cutting, but it is nice to have these properties in the
+resulting paths. Infact, the path elements resulting from the conversion will be shown in the svg viewer, so eventually
+they should have at least the same color as the original text, as well as all other properties.</p>
+
+<p>The value of the text is found as value of the XML <code>&lt;text&gt;</code> element, or as value(s) of the XML
+<code>&lt;tspan&gt;</code> element(s) found inside the <code>&lt;text&gt;</code> element. So a converter has to
+correctly parse the XML <code>&lt;text&gt;</code> element with its embedded <code>&lt;tspan&gt;</code> elements.</p>
+
+<h5>Fonts style</h5>
+
+<p>Whatever the conversion is, we have anyway the <strong>font-size</strong> property in the svg file and we will use
+it for the conversion to familyand other font properties (in the svg text "style" attribute): the
+<strong>font-style</strong>, <strong>font-weight</strong> and <strong>font-stretch</strong> attributes will also be
+taken into account when possible.</p>
+
+<h4>Font Files</h4>
+
+<p>Next, we need something like a "lookup" to find the <strong>ttf</strong> files with the given font family and style.
+In order to simplify the lookup of the fonts, a python module named <code>svgtext2svgpaths_fonts_specs.py</code> is
+given describing where to find the fonts files.</p>
+
+<p>This module can be edited in order to find the fonts on the user computer</p>
+
+<p>All the font files found in the specified font directories are read to extract the font family and others font
+styles. As example of a <code>svgtext2svgpaths_fonts_specs.py</code>:</p>
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+ 
+fonts_dirs = [
+    "C:\\Windows\\Fonts",
+    "./fonts/slaine",
+    "./fonts/boere-tudor",
+    "./fonts/pacmania_6918891",
+]
+
+fonts_family_alias = {
+    "sans-serif": "microsoft sans serif",
+
+    #'Sláine': 'Sláine Standard'
+    'sláine': 'sl?ine'
+}
+</code></pre>
+
+<p>The <code>fonts_dirs</code> usage is obious: where to find the font files.</p>
+
+<p>The <code>fonts_family_alias</code> dictionary is used to map the font family name from the svg text style (in
+UTF-8) to the 'real' (?) font family name, when there is not match. In this case we see that the "sans-serif" font
+family does not exist in all the font files found in the <code>"C:\\Windows\\Fonts"</code> folder, but there is a quite
+similar font named "microsoft sans serif". The font "Slaine" is also not found in the <code>slaine.ttf</code> font
+file, but in it it describes the font <code>'sl?ine'</code> : the ascii repr of the utf-8 name (i did not succeeded to
+read the utf-8 name from the freetype-py lib)</p>
+
+<p>In case of the svg font family and style are not found in the lookup data, an error is printed and no conversion
+occurs.</p>
+
+<h4>Usage</h4>
+
+<h4>Example</h4>
+
+<p>Inside python code:</p>
+<pre><code class="language-python"># -- from a "raw" svg file
+converter = SvgText2SvgPathsConverter("./examples/slaine.svg")
+svg = converter.convert_svg()
+print(svg)</code></pre>
+
+<p>or from the command line:</p>
+<pre><code class="shell">&gt; python svgtext2svgpaths.py -h
+&gt; python svgtext2svgpaths.py ./examples/slaine.svg</code></pre>
+
+<p>The input svg was</p>
+<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;svg width="210mm" height="60mm" viewBox="0 0 210 60" version="1.1" id="slaine_test"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg"&gt;
+  &lt;g id="layer1"&gt;
+    &lt;text id="mytext"
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5778px;line-height:1.25;font-family:Sl�ine;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+      x="40.99437"
+      y="30.954929" &gt;
+      &lt;tspan id="mytspan"
+        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5778px;font-family:Sl�ine;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+        x="40.99437"
+        y="30.954929"&gt;CHAbpk
+      &lt;/tspan&gt;
+    &lt;/text&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;
+</code></pre>
+
+<p>... and the resulting one </p>
+<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;svg width="210mm" height="60mm" viewBox="0 0 210 60" version="1.1" id="slaine_test"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg"&gt;
+  &lt;g id="layer1"&gt;
+    &lt;text id="mytext"
+      xml:space="preserve"
+      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5778px;line-height:1.25;font-family:Sl�ine;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+      x="40.99437"
+      y="30.954929" &gt;
+      &lt;tspan id="mytspan"
+        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5778px;font-family:Sl�ine;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+        x="40.99437"
+        y="30.954929"&gt;CHAbpk
+      &lt;/tspan&gt;
+    &lt;/text&gt;
+    &lt;path id="mytext_0" fill="#000000" fill-opacity="0.1" d="M 52.90063171875,26.721591500000002 L 53.914868828125,28.3090930625 Q 52.150978203125,30.954929 48.9980237109375,31.0210748984375 Q 45.84506921875,31.087220796875002 43.6402059375,29.191038375 Q 41.43534265625,27.294855953125 41.4132940234375,24.340339156250003 Q 41.391245390625,21.385822359375002 43.155136015625004,19.004570015625 Q 44.919026640625,16.623317671875 48.446807890625,16.579220406250002 Q 51.974589140625,16.535123140625 54.179452421875,20.371585250000003 L 51.710005546875,21.2535305625 Q 50.651671171875,17.064290328125 48.182224296875,17.1304362265625 Q 45.712777421875,17.196582125 44.588297148437505,20.3936338828125 Q 43.463816875,23.590685640625 44.6985403125,27.0523209921875 Q 45.93326375,30.51395634375 48.799586015625,30.51395634375 Q 51.66590828125,30.51395634375 52.90063171875,26.721591500000002 Z"/>
+    &lt;path id="mytext_1" fill="#000000" fill-opacity="0.1" d="M 59.8679996875,20.151098921875 Q 59.647513359375,24.60492275 59.779805156250006,26.3908620078125 Q 59.912096953125,28.176801265625002 60.529458671875005,30.954929 L 57.001677421875,30.954929 Q 57.266261015625005,26.148327046875004 57.244212382812506,22.4221081015625 Q 57.22216375,18.69588915625 56.9796287890625,17.6155061484375 Q 56.737093828125,16.535123140625 55.414175859375,16.535123140625 Q 57.795428203125,15.212205171875 58.015914531250004,14.065676265625001 Q 59.8679996875,14.374357125000001 59.823902421875005,18.96047275 Q 61.323209453125,16.579220406250002 63.880850859375,16.579220406250002 Q 66.438492265625,16.579220406250002 68.0921397265625,18.9825213828125 Q 69.7457871875,21.385822359375002 68.731550078125,24.9797495078125 Q 67.71731296875001,28.57367665625 65.51244968750001,30.4257618125 Q 67.452729375,30.24937275 69.3930090625,29.235135640625003 L 68.731550078125,30.954929 L 63.48397546875,30.954929 Q 67.849604765625,27.294855953125 67.0338053515625,23.3040534140625 Q 66.21800593750001,19.313250875 63.7265104296875,18.6297432578125 Q 61.235014921875006,17.946235640625 59.8679996875,20.151098921875 Z"/&gt;
+    &lt;path id="mytext_2" fill="#000000" fill-opacity="1" d="M 71.59787234375,30.96595331640625 Q 73.6263465625,28.000412203125002 78.82982390625,16.535123140625 L 80.59371453125,16.535123140625 Q 84.959343828125,28.088606734375 87.29649890625001,30.954929 L 83.63642585937501,30.954929 Q 83.460036796875,29.896594625 82.974966875,28.92645478125 Q 81.607951640625,30.69034540625 79.226699296875,30.8005885703125 Q 76.84544695312499,30.910831734375 75.12565359375,28.75006571875 Q 74.464194609375,29.676108296875 74.59648640625,30.954929 L 71.59787234375,30.96595331640625 M 76.00759890625,26.721591500000002 Q 77.286419609375,30.072983687500003 79.11094397460937,30.078495845703127 Q 80.93546833984375,30.084008003906252 82.137118828125,27.16256415625 Q 80.6819090625,21.429919625 79.491282890625,19.40144540625 Q 78.2124621875,21.34172509375 76.00759890625,26.721591500000002 Z"/>
+    &lt;path id="mytext_3" fill="#000000" fill-opacity="1" d="M 88.88400046875,18.828180953125 Q 90.515599296875,18.210819234375002 91.309350078125,16.446928609375 Q 92.6763653125,17.99033290625 92.632268046875,20.98894696875 Q 93.85596716796874,19.80934511328125 96.00570886718751,19.825881587890628 Q 98.15545056640624,19.842418062500002 99.64924543945313,21.4078709921875 Q 101.1430403125,22.973323921875 100.74616492187499,26.15935136328125 Q 100.34928953125,29.3453788046875 98.2546694140625,30.348591597656252 Q 96.160049296875,31.351804390625002 93.75123616210936,30.8446858359375 Q 91.34242302734376,30.33756728125 90.50457498046875,28.32011737890625 Q 89.66672693359375,26.3026674765625 90.15730901367186,23.750538228515627 Q 90.64789109374999,21.198408980468752 90.3171616015625,20.16763539648438 Q 89.98643210937499,19.1368618125 88.88400046875,18.828180953125 M 92.6763653125,22.179573140625003 Q 92.191295390625,26.192424312500002 92.9189002734375,28.22089853125 Q 93.64650515625,30.24937275 95.3001526171875,30.33756728125 Q 96.953800078125,30.4257618125 97.70345359375,28.441384859375 Q 98.453107109375,26.45700790625 98.05623171875,23.9655123984375 Q 97.659356328125,21.474016890625002 96.04429397460937,20.851143013671877 Q 94.42923162109375,20.22826913671875 92.6763653125,22.179573140625003 Z"/&gt;
+    &lt;path id="mytext_4" fill="#000000" fill-opacity="1" d="M 106.214225859375,22.003184078125003 Q 106.037836796875,26.060132515625 106.0598854296875,28.353190328125002 Q 106.0819340625,30.646248140625 105.99373953125,34.174029390625 Q 104.22984890625,35.055974703125 103.18253884765625,36.246600875 Q 103.7227303515625,31.09824511328125 103.82194919921875,27.168076314453124 Q 103.92116804687501,23.237907515625 103.75029114257813,22.5984971640625 Q 103.57941423828126,21.9590868125 102.9069309375,21.815770699218753 Q 104.64877292968751,20.84563085546875 105.5307182421875,19.80934511328125 Q 105.99373953125,20.371585250000003 106.12603132812501,21.121238765625 Q 107.537143828125,19.710126265625 110.09478523437501,19.666029 Q 112.65242664062501,19.621931734375 113.534371953125,23.3922479453125 Q 114.41631726562501,27.16256415625 112.67447527343751,29.168989742187502 Q 110.93263328125,31.175415328125002 109.16874265625,31.087220796875002 Q 107.40485203125,30.999026265625 106.47880945312501,30.24937275 Q 106.919782109375,29.587913765625 107.096171171875,28.441384859375 Q 108.1986028125,30.51395634375 109.6317639453125,30.1391295859375 Q 111.064925078125,29.764302828125 111.52794636718751,28.22089853125 Q 111.99096765625,26.677494234375 111.19721687500001,23.9655123984375 Q 110.40346609375,21.2535305625 108.8821104296875,20.8346065390625 Q 107.360754765625,20.415682515625 106.214225859375,22.003184078125003 Z"/&gt;
+    &lt;path id="mytext_5" fill="#000000" fill-opacity="1" d="M 119.22291921875001,26.412910640625 Q 119.002432890625,29.5438165 119.443405546875,30.954929 L 116.6432291796875,30.954929 Q 116.9519100390625,28.45240917578125 116.9960073046875,25.69633007421875 Q 117.04010457031251,22.94025097265625 116.82513040039062,22.262255513671874 Q 116.61015623046875,21.5842600546875 115.651040703125,20.97792265234375 Q 117.44800427734376,20.64719316015625 118.385071171875,19.4896399375 Q 119.1347246875,19.886515328125 119.2449678515625,20.592071578125 Q 119.355211015625,21.297627828125 119.267016484375,25.1340899375 Q 122.44201960937501,22.708740328125003 123.19167312500001,21.6063086875 Q 123.94132664062501,20.503877046875 124.29410476562501,19.445542671875 Q 124.735077421875,20.062904390625 125.57292546875,20.547974312500003 Q 123.0152840625,23.458393843750002 120.98680984375,25.089992671875002 Q 122.2876791796875,27.68070702734375 123.19718528320313,29.0146493125 Q 124.10669138671875,30.348591597656252 125.60599841796875,30.954929 L 121.86875515625,30.954929 Q 120.66710466796876,28.56265233984375 119.22291921875001,26.412910640625 Z"/&gt;
+    &lt;/g&gt;
+&lt;/svg&gt;
+</code></pre>
+
+<p>As you can see, conversion is straightforward. Especially, there are no spurious viewboxes around. All characters,
+the ones from the <code>text</code> elements and the ones from the <code>path</code> elements, should overlap! fill and
+opacity properties were changed per hand to view the perfect overlapping.</p>
+
+<h4>ToDo</h4>
+<ul>
+  <li><p>integrate the converter in <strong>PyCut</string>.</strong></p>
+  </li>
+</ul>
+  
+<div style="height:30px">
+</div>
+  
+  
+ <h3 id="P-08">Known Bugs</h3>
+
+<p>Among the various bugs of <strong>PyCut</strong>, some are related to <strong>shapely</strong> shortcoming
+(the library on which PyCut relies on) for calculating offsets. Let's describe in details:</p>
+
+<h4  id="P-08-01">Offsets at corners</h4>
+
+<p>Offsets with closed shapes having sharp corners (well they generally have somes) 
+may be not well calculated at the first corner of the shape definition. A simple work-around 
+is to divide the first segment of your shape (if it is a straight line) into two segments A and B, and start 
+the definition of your shape with the "new" second segment B, and end the definition of the shape
+with segment A. 
+This way, the last segment (B) of your shape definition will "joins" nicely the first one (A), 
+and at the start of the shape definition there is no corner at all. Shapely will ensure then a perfect 
+offset, as well as further offsets in case of many offsets are needed by the cam operation. 
+<strong>PyCut</strong> tries of perform this step internally, but sometimes missed it. When you 
+experience a strange tool path or preview geometry at the first corner of your shape, remember 
+this work-around and change your svg path definition accordingly.</p>
+
+
+<h3 id="APPENDIX-01">Appendix-1: SVG Editors</h3>
+
+<p>It seems there are plenty of free SVG editors around there. I have spent a lot, lot of time trying them
+in order to catch the ones(s) best suited for my purpose. </p>
+
+<p>I will simply try <strong>to edit and save a closed path</strong> composed of lines, arcs and bezier curves similar
+to what I've edited per hand: about 20 segments representing my workpiece, with mixed straight lines, arcs and bezier
+curves. <strong>I know that every app has its own learning curve</strong>, but I try use the apps without investing to much
+time. This means, I act as a very basic user. If I do not succeed, this is due in part to my inexperience, but also in
+part to the difficulty of use of the app.</p>
+
+<p>What are my requirements ? 
+  <ul>
+    <li>The output svg is human readable for easy modification with a simple text editor</li>
+    <li>Shapes and particularly paths (closed or not) can be easily created</li>
+    <li>The shapes coordinates as given in the app are the ones that are outputed in the svg files 
+      (at best no transformations)</li>
+  </ul>
+</p>
+
+<p>Finally, <strong>after having tried quite a lot of them</strong>, I give here only the ones worth a mention, and ingore
+the ones that where not suitable at all (example: Inkspace, LibreCad, etc).</p>
+
+<h3>Free software</h3>
+
+<h4>FreeCAD <span style="color:#008000">****BEST****</span></h4>
+
+<p>As of version 1.0 (2025), the sketcher has dramatically improved compared to previous versions and has an SVG export which 
+works quite nicely. I found nevertheless the following caveats: </p>
+<ul>
+  <li>The viewbox is calculated on the base of the items in the sketcher, and thus typically will not be from 0,0.
+    Width and height are also calculated from theses items</li>
+  <li>The svg root layer has a transformation with a translate (to view all items nicely in a browser) and a scale (1,-1)
+    so that the Y coordinates of all items are "inversed" (and thus follow the natural direction, the opposite of the
+    SVG standard. X coordinates are the real ones. <strong>This means that the output will have to pass through the "svgresolver" 
+    utility to remove all transformations in order to be used by PyCut. Or simply remove the transformation and adapt per hand
+    the viewbox and width/height of the document!</strong>.</li>
+    utility to remove all transformations in order to be used by PyCut, or simply erase the transform stuff!</strong>.</li>
+    utility to remove all transformations in order to be used by PyCut. Or simply remove the transformation and adapt per hand
+    the viewbox and width/height of the document!</strong>.</li>
+  <li>Circles are exported as <code>circle</code> (Ok). Lines, Rectangles, Polygons and Ellipses are exported as
+    <code>path</code> (not Ok). The exporter should recognize when a "shape" is formed only with straight lines,
+	so that it is exported as polygon, polyline, line or even rectangle when it is the case.</li>
+  <li>Quadratic bezier and cubic bezier are supported</li>
+  <li>No <strong>Z</strong> at the end of a closed path</li>
+</ul>
+
+<p>Conclusion: <strong style="color:#008000">A very promising SVG generator/exporter </strong>that could be better if
+Lines were to be exported as <code>line</code>, Polylines as <code>polyline</code>, Rectangles as <code>rect</code>, 
+Polygons as <code>polygon</code>. I also would rather like an output without transformation, but it can be removed
+using a text editor.</p>
+
+<h4>SolveSpace <span style="color:#ff00ff">****VERY GOOD****</span></h4>
+
+<p><strong>SVG export perfect (well, nearly perfect)</strong>. I found nevertheless the following caveats:</p>
+
+<ul>
+<li>The paths have no id, but ids are mandatory for <strong>PyCut</strong>.</li>
+<li>Always be sure to hide the constraints so that they are not exported in the svg.</li>
+<li>There are only cubic bezier curves, quadratic bezier curves are missing.</li>
+<li>Entities coordinates are not the true ones, but are shifted (translated) in X and Y directions. <strong>Very ennoying</strong>.</li>
+</ul>
+</p>
+
+<div class="info">
+<p><strong>Note</strong>: To achieve a quadratic bezier from a cubic one, the vector C1C2 from the 2 control points must only be
+a third of the vector AB the start and end points! The quadratic curve control point Qo is then the intersection of AC1 and BC2.
+And AC1 = 2/3 AQo, BC2 = 2/3 BQo.  These constraints can be set in solvespace: build 2 construction lines AB and C1C2. Then 
+parallel constraint and length ratio constraint (a third) can be set! Then the virtual quadratic Bezier control point Qo can also be 
+build and manipiulated from a construction line! Or a real quadratic entity could be built in (but it won't happen). 
+For many segments, making them C2 is even easier, as 2 control points of 2 adjacents segments must be such that their middle is the
+point common to the 2 segments (the middle point). Construction lines here help too.</p>
+</div>
+
+<div class="info">
+<p><strong>Note</strong>: in 2026, a <strong>Blender</strong> add-on called <strong>CAD Sketcher</strong> is in
+development, which utilizes the SolveSpace library for sketching. Maybe the user interface will be there even better.</p>
+</div>
+
+<h4>Fusion 360</h4>
+
+<p>There is no SVG export per default, but it seems there is an add-on that costs about 15$, 
+but I did not buy/try.</p>
+
+<h4>XFig</h4>
+
+<p>My beloved drawing editor during my youth! Completely outdated, but still the best! Unfortunately the SVG export is
+deficient. There are Bezier curves (really?) i.e. splines with control points (it looks like Bezier) but the SVG export
+outputs them as polylines (with many points). <strong>Conclusion: unusable</strong></p>
+
+<p></p>
+
+<h3><strong>Online editors:</strong></h3>
+
+<p>There are plenty of them, but they all seem to be meant for painting (like Inkscape), not for CAD. Finally found
+this one:</p>
+
+<h4>SvgPathEditor <span style="color:#ff00ff"><span style="color:#ff00ff"></span></span><span
+style="color:#ff00ff">****EXCELLENT****</span></h4>
+
+<p>It is solely focused on editing svg paths. You can try it at <a
+href="https://yqnn.github.io/svg-path-editor/">https://yqnn.github.io/svg-path-editor/</a>.</p>
+
+<p>Of course it cannot compare to <strong>FreeCAD</strong> or <strong>SolveSpace</strong>, but its concept is excellent, 
+which makes it so easy to generate a path, segment after segment. The result can then be copy/pasted into your SVGs,
+editted per hand.</p>
+
+<h4>Others:</h4>
+
+<p>I do not mention them because the list would be too long... but I did not find something I was pleased of.</p>
+
+<p></p>
+
+<h3>Non-free software</h3>
+
+<h4>DesignCAD</h4>
+
+<p>The free version has the same capabilities as the full version, excepted the exports to other formats. Bad!</p>
+
+<h4>Solid Edge 2D Drafting (Siemens)</h4>
+
+<p>The 3.8 GB big app from Siemens is <strong>free of charge</strong>. But It seems there is no SVG export at all. "Schade".</p>
+
+<h4>Draftsight 2D (Dassault)</h4>
+
+<p>Only a 30 days trial version. It has a "Power Tool" named "2D G-Code generator"! Should I forget
+PyCut? (No). SVG export seems to be more meant as a picture for display only purpose.</p>
+
+<h4>What else?</h4>
+
+<p>...</p>
+
+<h3>Conclusion</h3>
+
+<p>The fact that it is so difficult to find an acceptable SVG path "writer" free program let me wonder why it is the case.
+And why does only <strong>FreeCAD</strong> and <strong>SolveSpace</strong> perform the task correctly?</p>
+
+<p>The primary usage of SVG is displaying images, not being a format for CAM input. So why bother exporting it clean.
+The svg standard is huge, the svg path definition is quite complicated, parsing it is a difficult task, and thus in 
+return exporting a custom data format as svg data in a right and clean manner is also not straightforward (when the
+data format is not well suited for such an export). 
+But who else would want to import svg files as a kind of CAM format? Response: the applications that do not want to use 
+an other (maybe more complicated) format, because yes, SVG can be indeed simple when utilizing only its basic features.</p>
+
+<p>The SVG format, sure, can be viewed in a browser and can be edited with a text editor. Unfortunately it completely
+ignores the concept of multiline/multipolygon etc. Polygons have no "interiors" so they must be defined as such in a path 
+composed of 2 or more subpaths for this purpose. Not very practicable.</p>
+
+<p><strong>All in all very desapointing, excepted <span style="color:#008000">FreeCAD</span>, <span
+style="color:#008000">SolveSpace</span> and <span style="color:#008000">SvgPathEditor</span>!</strong></p>
+
+<h4><strong><span style="color:#0000ff">Per hand</span></strong></h4>
+
+<p>Finally my prefered method! Per hand you can also write items in the <code>&lt;defs&gt;</code> section, and use
+these items repeatidly with transformations with the <code>&lt;use&gt;</code> tag. My utility
+<strong>svgresolver.py</strong> then transforms this svg file into another one, usable for <strong>PyCut. Not the
+perfect toolchain I admit, but well my svgs are not that complicated</strong>. One has to understand how to write an
+arc/bezier curve per hand, it is not that difficult and can always use the <strong>SvgPathEditor</strong> tool. And
+your hand written svgs are then "<strong>clean</strong>" and easily modificable. </p>
+
+<p></p>
+
+<h3 id="APPENDIX-02">Appendix-2: SVG Units and Scale Factor</h3>
+
+<div class="info">
+<p><strong>Info</strong>: When creating a svg "per hand" (with a text editor), the user does not even have to care
+about this units scale factor.</p>
+</div>
+
+<p>What is this? Let's take an example: in <strong>Inkscape</strong>, the user would set the document's size to
+<strong>100x40 mm</strong>, supposedly the size of the material to work on. Inkscape automatically sets the
+<strong>user units scale </strong><strong>to 1</strong>. Note that the user units are not "px" or whatever. This means,
+<strong>1 "user unit" is equal to 1 mm (and the viewbox is "0 0 100 40" while width="100mm" and
+height="40mm")</strong></p>
+
+<div>
+<img src="images/Inkscape_settings_mm.png" width="563"> </div>
+
+<p>Of course when editing the svg (in Inkscape or in a text editor), <strong>the user is only concerned with the user
+units</strong> : he draws a rectangle of size 20x30 at the location 10x10. The users may simply even not be aware of
+this fact. When choosing mm, conversion from <strong>user units</strong> to <strong>mm</strong> is absolutely
+straightforward as, as said, the user units scale is 1 per default .</p>
+
+<p>Let's consider now the case where the user switches to <strong>inches</strong> for the document size. The size of
+the document becomes then <strong>3,93701x1,57480 inches</strong> (yes, 100 / 25.4 is 3.93701). Note that
+<strong>Inkscape</strong> automatically change the <strong>user units scale to 25.4</strong>. Because of this, the
+<strong>view box remains at "0 0 100 40"</strong>. That way, a rectangle filling the full document size is still
+100x40.</p>
+
+<div>
+<img src="images/Inkscape_settings_in.png" width="563"> </div>
+
+<p>Filling a box half the size of the document is 50x20, right, but what are real physical dimensions of that box ? The
+user would have to steadily calculate from fancy user units (ex: 50x20) in inches</p>
+
+<p>But why would a user use inches and work with user units scale factor 25.4 (leading infact to work in mm) ? The user
+can set the user units scale factor to 1. The effect of this is that now, in order to fill the whole document with a
+rectangle, the rectangle has to be of the size user unit size of 3.93701x1.57480. </p>
+
+<p>Of course the size of the material is certainly not 3.93701x1.57480 inches, but something like 5x3 inches: an human
+readable size. The user knows that he has to draw a rectangle inside the material of size let say 1.5x1.2 inches. And
+these dimensions are the ones that are effectively saved in the svg document. So the user units are exactly the same as
+the "physical units" when choosing a scale of 1.</p>
+
+<p>Now how can <strong>PyCut</strong> handles these settings? <strong>PyCut</strong> only works with the <strong>user
+units</strong>. <strong>PyCut</strong> will calculate toolpaths in the same order of magnitude of the user units values
+of the svg. If you choose "<strong>mm</strong>" for the gcode output, you would have set your svg document size in
+"<strong>mm</strong>", and the <strong>user unit scale to 1</strong>. Because of this, the gcode X,Y and Z values are
+the same as the one of the paths values.</p>
+
+<p>If you choose "<strong>in</strong>" for the gcode output, then certainly you have set your svg document size in
+"<strong>in</strong>", and the <strong>with user unit scale equals to 1</strong>,no conversion is either needed. </p>
+
+<p>Note that this scale factor is not explicitely given in the svg file. It is calculated from the ratio viewbox /
+width. It is eventually the task of the user to know what is the user units scale value, and, theorically, to set it in
+<strong>PyCut</strong>. But my opinion is, working with a user unit scal of 1 is preferably. </p>
+
+<p><strong><span style="color:#0000ff">I personnaly stick to svg document units in "mm" with user units scale factor of
+1, and output my gcode in mm. No confusion! </span></strong></p>
+
+<div class="warning">
+<p><strong>Warning</strong>: The user could use "mm", and set a scale factor of 10 or whatever, but it certainly makes
+no sense.</p>
+</div>
+
+<p>The further <strong>PyCut Gcode Units</strong> setting is not only a flag to set the code <strong>G20</strong>
+(inches) or <strong>G21</strong> (mm) inside the gcode file: it also allows the proper conversion of the tool diameter
+physical size (inch or mm) in user units.</p>
+
+<p>The rule is:</p>
+<ul>
+  <li><strong>Gcode Units</strong> in "mm": tool diameter is transformed to mm - the same as the user units</li>
+  <li><strong>Gcode Units</strong> in "in": tool diameter is transformed to inch - the same as the user units</li>
+</ul>
+
+<div class="warning">
+<p><strong>Warning</strong>: <strong>PyCut</strong> assumes that for "<strong>mm</strong>" or "<strong>in</strong>",
+the <strong>user unit scale factor is always 1</strong> .</p>
+</div>
+
+<p></p>
+
+<h3 id="APPENDIX-03">Appendix-3: GCODE Viewers</h3>
+
+<p>Of course, CANDLE offers a GCODE viewer. There nevertheless a few ones (to my knowledge) worth a mention:</p>
+<ul>
+  <li>NCnetic <span style="color:#ff00ff"><strong>****EXCELLENT****</strong></span></li>
+  <li>PlanetCNC (which is a GCode sender -with dedicated hardware- as well)</li>
+  <li>what else ?</li>
+</ul>
+
+<p>Just search in the Internet for them.</p>
+
+<p>Real GCODE simulators (with material removal) are on the other way seldom.</p>
+<ul>
+  <li>Camotics: unfortunately very resources intensive and not so accurate in the details</li>
+  <li>CNCSimulator PRO (not free)</li>
+  <li>FreeCAD ? how to import gcode into it ?</li>
+  <li>Blender ? see BlenderCAM add-on - not sure if there is a simulation</li>
+  <li>what else ?</li>
+</ul>
+
+</div>
+</body>
+</html>
