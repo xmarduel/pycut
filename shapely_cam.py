@@ -189,59 +189,108 @@ class cam:
         cls,
         geometry: shapely.geometry.MultiPolygon,
         cutter_dia: float,
-        is_inside: bool,
+        cam_op: str, # "Inside" or "Outside"
         width: float,
         overlap: float,
         climb: bool,
     ) -> List[CamPath]:
         """
-        Compute paths for outline operation on Shapely geometry "MultiPolygon".
+        Compute paths for outline operation ("Inside" or "Outside")
+        on Shapely geometry "MultiPolygon".
 
         Returns array of CamPath.
-
-        cutter_dia and width are in Shapely units.
-        overlap is in the  range [0, 1).
         """
+        def get_cut_direction() -> str:
+            ''' hard coded '''
+            if cam_op == "Inside":
+                return "inner2outer" # start from the stock border -> go "inside" the material
+                #return "outer2inner" # start from the inside -> go "outside" to the stock border
+            else:
+                #return "inner2outer" # start from the stock border -> go "outside"
+                return "outer2inner" # start from outside -> go "inside" towards the stock border
+
+        def get_shapely_offset_direction(direction: str) -> str:
+            if cam_op == "Inside":
+                if direction == "inner2outer":
+                    return "left"
+                else:
+                    return "right"
+            else:
+                if direction == "inner2outer":
+                    return "right"
+                else:
+                    return "left"
+       
+
+        direction = get_cut_direction()
+        offset_dir = get_shapely_offset_direction(direction)
+
         # use lines, not polygons
-        multiline = ShapelyUtils.multipoly_exteriors_to_multiline(geometry)
+        if cam_op == "Inside":
+            if direction == "inner2outer":
+                # start from the workpiece boundary
+                multiline = ShapelyUtils.multipoly_exteriors_to_multiline(geometry)
+            else:
+                # start from the inner (the workpiece "stock")
+                geometry_inner = ShapelyUtils.offset_multipolygon(
+                        geometry,
+                        width,
+                        "left",
+                        resolution=16,
+                        join_style=BufferJoinStyle.round,
+                        mitre_limit=5,
+                )
+                multiline = ShapelyUtils.multipoly_exteriors_to_multiline(geometry_inner)
+        else:
+            if direction == "inner2outer":
+                # start from the inner (the workpiece boundary)
+                multiline = ShapelyUtils.multipoly_exteriors_to_multiline(geometry)
+            else:
+                # start from the outer (the workpiece "stock")
+                geometry_outer = ShapelyUtils.offset_multipolygon(
+                        geometry,
+                        width,
+                        "right",
+                        resolution=16,
+                        join_style=BufferJoinStyle.round,
+                        mitre_limit=5,
+                    )
+                multiline = ShapelyUtils.multipoly_exteriors_to_multiline(geometry_outer)
 
         current_width = cutter_dia
         step_width = cutter_dia * (1 - overlap)
 
         all_paths: List[shapely.geometry.LineString] = []
 
-        if is_inside:
-            # because we always start from the outer ring -> we go "inside"
-            current = ShapelyUtils.offset_multiline(multiline, cutter_dia / 2, "left")
-            offset = ShapelyUtils.offset_multiline(
-                multiline, width - cutter_dia / 2, "left"
-            )
-            # bounds = ShapelyUtils.diff(current, offset)
-            bounds = current
-            each_offset = step_width
-            need_reverse = climb
-        else:
-            direction = "inner2outer"
-            # direction = "outer2inner"
-
+        if cam_op == "Inside":
             if direction == "inner2outer":
-                # because we always start from the inner ring -> we go "outside"
+                # because we start from the inner ring -> go "inside" into the workpiece
+                current = ShapelyUtils.offset_multiline(multiline, cutter_dia / 2, "left")
+                # bounds = ShapelyUtils.diff(current, offset)
+                bounds = current
+                each_offset = step_width
+                need_reverse = climb
+            else:
+                current = ShapelyUtils.offset_multiline(multiline, cutter_dia / 2, "right")
+                # bounds = ShapelyUtils.diff(current, offset)
+                bounds = current
+                each_offset = step_width
+                need_reverse = climb 
+        else:
+            if direction == "inner2outer":
+                # because we start from the inner ring -> go "outside" into the workpiece stock
                 current = ShapelyUtils.offset_multiline(
                     multiline, cutter_dia / 2, "right"
                 )
-                offset = ShapelyUtils.offset_multiline(
-                    multiline, width - cutter_dia / 2, "right"
-                )
+
                 # bounds = ShapelyUtils.diff(current, offset)
                 bounds = current
             else:
-                # because we always start from the outer ring -> we go "inside"
+                # because we start from the outer ring -> go "inside" until the workpiece border
                 current = ShapelyUtils.offset_multiline(
                     multiline, cutter_dia / 2, "left"
                 )
-                offset = ShapelyUtils.offset_multiline(
-                    multiline, width - cutter_dia / 2, "left"
-                )
+
                 # bounds = ShapelyUtils.diff(current, offset)
                 bounds = current
 
@@ -264,12 +313,14 @@ class cam:
             else:
                 all_paths = [p for p in current.geoms] + all_paths
 
+            # the "width" corresponds to the width of the material removed
             next_width = current_width + step_width
+
             if next_width > width and (width - current_width) > 0:
                 # >>> XAM fix
-                last_delta = width - current_width
+                last_delta = width - current_width # last cut
                 # <<< XAM fix
-                current = ShapelyUtils.offset_multiline(current, last_delta,  "left" if is_inside else "right")
+                current = ShapelyUtils.offset_multiline(current, last_delta,  offset_dir)
                 if current:
                     current = ShapelyUtils.simplify_multiline(current, 0.01)
 
@@ -293,7 +344,7 @@ class cam:
                 break
 
             current = ShapelyUtils.offset_multiline(
-                current, each_offset, "left" if is_inside else "right", resolution=16
+                current, each_offset, offset_dir, resolution=16
             )
             if current:
                 current = ShapelyUtils.simplify_multiline(current, 0.01)
@@ -302,11 +353,14 @@ class cam:
                 break
 
         if len(all_paths) == 0:
-            # no possible paths! TODO . inform user
+            # no possible paths! inform user
             return []
 
         # merge_paths need MultiPolygon
         poly_bounds = ShapelyUtils.multiline_to_multipoly(bounds)
+
+        if  direction == "outer2inner":
+            all_paths.reverse()
 
         return cls.merge_paths(poly_bounds, all_paths)
 
@@ -315,58 +369,90 @@ class cam:
         cls,
         geometry: shapely.geometry.MultiLineString,
         cutter_dia: float,
-        is_inside: bool,
+        cam_op: str,
         margin: float,
         width: float,
         overlap: float,
         climb: bool,
     ) -> List[CamPath]:
         """
-        Compute paths for outline operation on Shapely geometry "MultiLineString".
+        Compute paths for outline operation  ("Inside" or "Outside")
+        on Shapely geometry "MultiLineString".
 
         Returns array of CamPath.
-
-        cutter_dia and width are in Shapely units.
-        overlap is in the  range [0, 1).
         """
+        def get_cut_direction() -> str:
+            if cam_op == "Inside":
+                #return "inner2outer" if climb else "outer2inner" 
+                return "outer2inner" 
+            else:
+                #return "inner2outer" if climb else "outer2inner" 
+                return "outer2inner" # start from the outer ring -> go "inside"
+        
+        def get_shapely_offset_direction(direction: str) -> str:
+            if cam_op == "Inside":
+                if direction == "inner2outer":
+                    return "left"
+                else:
+                    return "right"
+            else:
+                if direction == "inner2outer":
+                    return "right"
+                else:
+                    return "left"
+
+        direction = get_cut_direction()
+        offset_dir = get_shapely_offset_direction(direction)
+
         # use lines, not polygons
         multiline = geometry
 
-        current_width = (
-            margin + cutter_dia / 2.0
+        '''
+        Warning: 
+        --------
+        
+        Here the "width" correspond to the distance to the line we are cutting (Inside or Outside)
+
+        This is different from the "current_width" for the closed paths where the geometry is the preview (multi)polygon.
+        Here means the width exactly the width of the cut.
+        '''
+        
+        current_dist = (
+            margin + cutter_dia / 2.0   # so the "distance" from the line
         )  # to cut just at the border (+ margin)
+
+        if direction == "inner2outer":
+            # because we start from the outer ring -> go "inside"
+            current_dist = margin + cutter_dia / 2.0 
+        else:
+            current_dist = margin + width - cutter_dia / 2.0 
+                   
+
         step_width = cutter_dia * (1 - overlap)
 
         all_paths: List[shapely.geometry.LineString] = []
 
-        if is_inside:
-            # because we always start from the outer ring -> we go "inside"
-            current = ShapelyUtils.offset_multiline(multiline, current_width, "left")
-
-            std_offset = step_width
-            need_reverse = climb
+        # use lines, not polygons
+        if cam_op == "Inside":
+            current = ShapelyUtils.offset_multiline(multiline, current_dist, "left")
         else:
-            direction = "inner2outer"
-            # direction = "outer2inner"
+            # because we start from the inner ring -> go "outside"
+            current = ShapelyUtils.offset_multiline(multiline, current_dist, "right")
 
+        std_offset = step_width
+        need_reverse = climb
+
+        def condition_next_cut(current_dist):
             if direction == "inner2outer":
-                # because we always start from the inner ring -> we go "outside"
-                current = ShapelyUtils.offset_multiline(
-                    multiline, current_width, "right"
-                )
+                # i.e. current_dist + cutter_dia / 2.0 <= margin + width
+                return current_dist <= margin + width - cutter_dia / 2.0  # go away from line
             else:
-                # because we always start from the outer ring -> we go "inside"
-                current = ShapelyUtils.offset_multiline(
-                    multiline, current_width, "left"
-                )
+                return current_dist >= margin + cutter_dia / 2.0 # go "toward" the line
 
-            std_offset = step_width
-            need_reverse = not climb
-
-            # TEST
-            # all_paths = [p for p in current.geoms]
-
-        while True and current_width <= width - cutter_dia / 2.0:
+        while condition_next_cut(current_dist):
+            '''
+            ie current_dist + cutter_dia / 2.0 <= margin + width
+            '''
             if need_reverse:
                 reversed_paths = []
                 for path in current.geoms:
@@ -379,12 +465,33 @@ class cam:
             else:
                 all_paths = [p for p in current.geoms] + all_paths
 
-            next_width = current_width + step_width
-            if next_width > width - cutter_dia / 2.0 and (width - current_width) > 0:
+            if direction == "inner2outer":
+                next_dist = current_dist + step_width
+            else:
+                next_dist = current_dist - step_width
+            
+            # --------------------------------------------------------------------
+            def last_offset_condition(next_dist, current_dist):
+                if direction == "inner2outer":
+                    # i.e. next_dist + cutter_dia / 2.0 > margin + width  > too far
+                    return next_dist > margin + width - cutter_dia / 2.0 and (current_dist < (margin + width))
+                else:
+                    return next_dist < margin + cutter_dia / 2.0
+            # --------------------------------------------------------------------
+                
+            if last_offset_condition(next_dist, current_dist):
+                
                 # >>> XAM fix
-                last_offset = width - cutter_dia / 2.0 - current_width
+                if direction == "inner2outer":
+                    last_offset = margin + width - cutter_dia / 2.0 - current_dist  # last cut
+                else:
+                    last_offset = - (margin + cutter_dia / 2.0) + current_dist  # last cut
                 # <<< XAM fix
-                current = ShapelyUtils.offset_multiline(current, last_offset, "left")
+
+                if last_offset == 0:
+                    break
+
+                current = ShapelyUtils.offset_multiline(current, last_offset, offset_dir)
                 if current:
                     current = ShapelyUtils.simplify_multiline(current, 0.01)
 
@@ -402,13 +509,13 @@ class cam:
                         all_paths = [p for p in current.geoms] + all_paths
                     break
 
-            current_width = next_width
+            current_dist = next_dist
 
             if not current:
                 break
 
             current = ShapelyUtils.offset_multiline(
-                current, std_offset, "left", resolution=16
+                current, std_offset, offset_dir, resolution=16
             )
             if current:
                 current = ShapelyUtils.simplify_multiline(current, 0.01)
@@ -417,8 +524,11 @@ class cam:
                 break
 
         if len(all_paths) == 0:
-            # no possible paths! TODO . inform user
+            # no possible paths!  inform user
             return []
+
+        # always!
+        all_paths.reverse()
 
         # merge_paths need MultiPolygon
         bounds = shapely.geometry.MultiPolygon()

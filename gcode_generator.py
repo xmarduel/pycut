@@ -809,7 +809,7 @@ class CncOp:
                     self.cam_paths = cam.outline(
                         geometry,
                         tool_data["diameter_tool"],
-                        cam_op == "Inside",
+                        cam_op,
                         width,
                         tool_data["overlap"],
                         direction == "Climb",
@@ -831,7 +831,7 @@ class CncOp:
                     self.cam_paths = cam.outline_opened_paths(
                         geometry,
                         tool_data["diameter_tool"],
-                        cam_op == "Inside",
+                        cam_op,
                         margin,
                         width,
                         tool_data["overlap"],

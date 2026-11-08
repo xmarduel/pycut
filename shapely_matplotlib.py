@@ -55,11 +55,10 @@ class MatplotLibUtils:
     @classmethod
     def _display_linestring(cls, title: str, linestring: shapely.geometry.LineString):
         """ """
-        xs = linestring.coords.xy[0]
-        ys = linestring.coords.xy[1]
+        np_coords = np.array(linestring.coords)
 
-        npxs = np.array(xs, dtype=np.float64)
-        npys = np.array(ys, dtype=np.float64) * -1.0
+        npxs = np_coords[:, 0]
+        npys = np_coords[:, 1] * -1.0
 
         plt.figure(cls.cnt)
         plt.title(title + f" [{cls.cnt}]")
@@ -91,11 +90,10 @@ class MatplotLibUtils:
         yy = []
 
         for line in multilinestring.geoms:
-            ix = line.coords.xy[0]
-            iy = line.coords.xy[1]
-
-            npix = np.array(ix, dtype=np.float64)
-            npiy = np.array(iy, dtype=np.float64) * -1.0
+            np_coords = np.array(line.coords)
+            
+            npix = np_coords[:, 0]
+            npiy = np_coords[:, 1] * -1.0
 
             xx.append(npix)
             yy.append(npiy)
@@ -117,12 +115,11 @@ class MatplotLibUtils:
         style_int = {0: "r+--", 1: "go-"}
 
         ring = polygon.exterior
-        
-        xs = ring.coords.xy[0]
-        ys = ring.coords.xy[1]
 
-        npxs = np.array(xs, dtype=np.float64)
-        npys = np.array(ys, dtype=np.float64) * -1.0
+        np_coords = np.array(ring.coords)
+
+        npxs = np_coords[:, 0]
+        npys = np_coords[:, 1] * -1.0
 
         plt.plot(npxs, npys, style_ext[0])
 
@@ -130,17 +127,16 @@ class MatplotLibUtils:
         interiors_yy = []
 
         for interior in polygon.interiors:
-            ix = interior.coords.xy[0]
-            iy = interior.coords.xy[1]
+            npi_coords = np.array(ring.coords)
 
-            npix = np.array(ix, dtype=np.float64)
-            npiy = np.array(iy, dtype=np.float64) * -1.0
+            npix = npi_coords[:, 0]
+            npiy = npi_coords[:, 1] * -1.0
 
             interiors_xx.append(npix)
             interiors_yy.append(npiy)
 
         for k, (npix, npiy) in enumerate(zip(interiors_xx, interiors_yy)):
-            plt.plot(ix, iy, style_int[k % 2])
+            plt.plot(npix, npiy, style_int[k % 2])
 
         plt.axis("equal")
         plt.show()
