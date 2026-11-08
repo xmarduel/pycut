@@ -1,62 +1,43 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
-<svg
-   width="300mm"
-   height="200mm"
-   viewBox="0 0 300 200"
-   version="1.1"
-   id="svg1"
-   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
-   sodipodi:docname="New.svg"
-   inkscape:export-filename="New_clean.svg"
-   inkscape:export-xdpi="96"
-   inkscape:export-ydpi="96"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <sodipodi:namedview
-     id="namedview1"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:document-units="mm"
-     inkscape:zoom="0.4204826"
-     inkscape:cx="617.14801"
-     inkscape:cy="373.38049"
-     inkscape:window-width="1305"
-     inkscape:window-height="676"
-     inkscape:window-x="2032"
-     inkscape:window-y="145"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="layer1" />
-  <defs
-     id="defs1" />
-  <g
-     inkscape:label="Ebene 1"
-     inkscape:groupmode="layer"
-     id="layer1">
-    <path
-       style="fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:0.453588px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 78.926288,142.78046 12.623074,115.13825 59.158351,103.6411 37.881442,57.642439 82.083592,65.382256 V 20.049021 l 50.516738,33.170662 58.9362,-39.804794 -5.26217,33.170661 89.45672,3.317066 -52.65493,29.206264 45.28792,13.987966 -34.73026,28.675544 49.46429,38.69909 -72.6178,-14.37394 -21.04863,37.5934 -16.83892,-33.17064 -50.51674,34.27634 5.26214,-36.48773 -65.250775,25.43084 16.827807,-30.33005"
-       id="path1"
-       sodipodi:nodetypes="ccccccccccccccccccccc" />
-    <text
-       transform="translate(-10 40) rotate(-20)"
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.8px;line-height:1.25;font-family:Sans;-inkscape-font-specification:'Sans, Bold';font-variant-ligatures:none;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#ffff00;stroke-width:0.264583"
-       x="75.508476"
-       y="122.07203"
-       id="text1"><tspan
-         sodipodi:role="line"
-         id="tspan1"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.8px;font-family:Sans;-inkscape-font-specification:'Sans, Bold';font-variant-ligatures:none;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffff00;stroke-width:0.264583"
-         x="75.508476"
-         y="122.07203">New! </tspan></text>
-  </g>
+<?xml version="1.0" standalone="no"?>
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="366" height="298" viewBox="0 0 366 298">
+<g>
+    <g transform="translate(0.0,298.0) scale(0.10,-0.10)" fill="#ce2020" stroke="black">
+    <path d="M1815 2488 c-7 -23 -66 -221 -97 -326 -36 -124 -55 -172 -68 -172 -6
+0 -67 54 -138 119 -196 183 -226 211 -234 211 -8 0 -4 -34 17 -125 8 -33 19
+-96 25 -140 7 -44 16 -89 20 -101 19 -49 -9 -53 -130 -18 -137 39 -251 66
+-256 61 -4 -3 0 -18 8 -34 8 -15 36 -70 62 -120 26 -51 44 -98 40 -104 -5 -9
+-56 -10 -191 -5 -100 3 -183 3 -183 -1 1 -5 49 -44 107 -88 59 -44 108 -86
+111 -94 5 -15 -46 -11 -198 15 -47 9 -116 20 -155 25 -38 5 -94 13 -123 18
+-28 4 -52 5 -52 1 0 -3 106 -73 235 -155 225 -142 264 -170 253 -180 -5 -5
+-120 -33 -243 -59 -44 -9 -98 -21 -120 -26 -22 -5 -83 -19 -135 -30 -120 -27
+-142 -39 -73 -40 29 0 96 -4 150 -9 54 -6 172 -15 263 -21 220 -14 250 -19
+250 -34 0 -8 -24 -24 -52 -36 -29 -12 -71 -30 -93 -40 -22 -10 -136 -59 -254
+-110 -118 -50 -233 -100 -255 -110 -185 -84 -217 -101 -191 -95 17 4 66 13
+110 20 44 8 106 19 138 24 31 6 81 15 110 20 28 6 90 17 137 26 47 9 108 20
+135 25 139 24 176 31 250 45 111 22 195 30 195 18 0 -5 -33 -58 -73 -118 -174
+-263 -281 -420 -287 -425 -10 -7 -32 -51 -28 -55 2 -2 55 37 118 86 63 49 135
+105 160 124 285 221 357 275 371 275 22 0 26 -33 39 -270 6 -106 13 -197 16
+-202 7 -11 49 44 99 128 19 33 40 66 45 74 39 58 80 123 80 127 0 17 64 93 78
+93 9 -1 64 -45 122 -100 58 -55 108 -100 111 -100 4 0 27 60 51 132 40 121 46
+133 67 130 12 -1 88 -34 168 -72 80 -39 150 -70 156 -70 11 0 8 16 -32 148
+-17 57 -29 107 -26 113 8 12 34 12 87 -1 168 -40 327 -69 332 -61 2 3 -39 57
+-91 120 -82 99 -93 116 -79 126 8 6 75 17 148 24 186 17 218 21 218 30 0 5
+-55 42 -122 82 -68 40 -131 81 -141 90 -18 17 -18 18 0 27 10 5 43 12 73 15
+57 7 139 19 250 37 36 5 115 17 175 25 61 8 124 19 140 24 l30 9 -32 1 c-17 1
+-53 5 -80 11 -50 10 -323 52 -453 71 -95 13 -150 27 -150 39 0 5 172 95 383
+199 210 105 376 190 368 191 -20 0 -178 -28 -221 -40 -19 -5 -98 -21 -175 -36
+-77 -14 -217 -41 -312 -60 -95 -19 -177 -34 -183 -34 -23 0 -8 39 28 72 20 19
+125 126 232 238 107 112 201 209 208 216 6 7 12 15 12 18 0 5 -234 -112 -602
+-301 -80 -42 -153 -73 -161 -70 -12 4 -16 43 -22 206 -5 140 -11 201 -19 200
+-6 0 -29 -24 -51 -53 -76 -101 -220 -274 -233 -280 -20 -9 -30 25 -107 347
+-35 144 -49 178 -60 145z"/>
+    </g>
+    <g>
+        <text xml:space="preserve"><tspan
+            style="font-weight:bold;font-size:56px;font-family:Sans;fill:#ffff00;stroke-width:0.25"
+            x="130"
+            y="180">New!
+        </tspan></text>
+    </g>
+</g>
 </svg>
