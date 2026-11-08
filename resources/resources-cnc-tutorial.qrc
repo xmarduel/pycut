@@ -220,6 +220,15 @@
 
         <file>cnc-doc/images/99_Arduino_Grbl/arduino.png</file>
         <file>cnc-doc/images/99_Arduino_Grbl/arduino_board_selection.png</file>
-        <file>cnc-tutorial.html</file>
+
+        <file>cnc-doc/js/prism.js</file>
+        <file>cnc-doc/css/prism.css</file>
+        <file>cnc-doc/css/simpletree.css</file>
+
+        <file>cnc-doc/css/folder-new.png</file>
+        <file>cnc-doc/css/document-open.png</file>
+        <file>cnc-doc/css/bookmark-new.png</file>
+
+        <file>cnc-doc/cnc-tutorial.html</file>
     </qresource>
 </RCC>

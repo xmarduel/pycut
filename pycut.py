@@ -63,7 +63,8 @@ from gcode_generator import Tab
 from gcode_generator import GcodeGenerator
 
 import resources_rc
-import resources_doc_rc
+import resources_cnc_tutorial_rc
+import resources_tutorial_rc
 
 from ui_mainwindow import Ui_mainwindow
 
@@ -417,7 +418,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         dlg.setWindowTitle("PyCut Tutorial")
         dlg.setModal(True)
 
-        filename = ":/tutorial.html"
+        filename = ":/doc/tutorial.html"
         file = QtCore.QFile(filename)
         if file.open(QtCore.QIODevice.ReadOnly):
             data = str(file.readAll(), "utf-8")  # explicit encoding
@@ -444,7 +445,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         dlg.setWindowTitle("CnC Tutorial")
         dlg.setModal(True)
 
-        filename = ":/cnc-tutorial.html"
+        filename = ":/cnc-doc/cnc-tutorial.html"
         file = QtCore.QFile(filename)
         if file.open(QtCore.QIODevice.ReadOnly):
             data = str(file.readAll(), "utf-8")  # explicit encoding
