@@ -31,7 +31,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>303</width>
+         <width>318</width>
          <height>975</height>
         </rect>
        </property>
@@ -943,7 +943,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>323</width>
+         <width>333</width>
          <height>989</height>
         </rect>
        </property>
@@ -1752,7 +1752,7 @@
      <x>0</x>
      <y>0</y>
      <width>1226</width>
-     <height>43</height>
+     <height>39</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSvg">
@@ -1812,6 +1812,9 @@
    </property>
   </action>
   <action name="actionNewProject">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentNew"/>
+   </property>
    <property name="text">
     <string>New Project</string>
    </property>
@@ -1820,6 +1823,9 @@
    </property>
   </action>
   <action name="actionOpenProject">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentOpen"/>
+   </property>
    <property name="text">
     <string>Open Project...</string>
    </property>
@@ -1828,6 +1834,9 @@
    </property>
   </action>
   <action name="actionSaveProjectAs">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentSaveAs"/>
+   </property>
    <property name="text">
     <string>Save Project As...</string>
    </property>
@@ -1836,6 +1845,9 @@
    </property>
   </action>
   <action name="actionSaveProject">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentSave"/>
+   </property>
    <property name="text">
     <string>Save Project</string>
    </property>
@@ -1854,6 +1866,9 @@
    </property>
   </action>
   <action name="actionAboutPyCut">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::HelpAbout"/>
+   </property>
    <property name="text">
     <string>About PyCut</string>
    </property>
@@ -1874,6 +1889,9 @@
    </property>
   </action>
   <action name="actionQuit">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::ApplicationExit"/>
+   </property>
    <property name="text">
     <string>Quit</string>
    </property>

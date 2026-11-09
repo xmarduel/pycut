@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.9.3
+## Created by: Qt User Interface Compiler version 6.11.3
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -35,18 +35,28 @@ class Ui_mainwindow(object):
         self.actionOpenSvg.setObjectName(u"actionOpenSvg")
         self.actionNewProject = QAction(mainwindow)
         self.actionNewProject.setObjectName(u"actionNewProject")
+        icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentNew))
+        self.actionNewProject.setIcon(icon)
         self.actionOpenProject = QAction(mainwindow)
         self.actionOpenProject.setObjectName(u"actionOpenProject")
+        icon1 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentOpen))
+        self.actionOpenProject.setIcon(icon1)
         self.actionSaveProjectAs = QAction(mainwindow)
         self.actionSaveProjectAs.setObjectName(u"actionSaveProjectAs")
+        icon2 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSaveAs))
+        self.actionSaveProjectAs.setIcon(icon2)
         self.actionSaveProject = QAction(mainwindow)
         self.actionSaveProject.setObjectName(u"actionSaveProject")
+        icon3 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSave))
+        self.actionSaveProject.setIcon(icon3)
         self.actionTutorial = QAction(mainwindow)
         self.actionTutorial.setObjectName(u"actionTutorial")
         self.actionAboutQt = QAction(mainwindow)
         self.actionAboutQt.setObjectName(u"actionAboutQt")
         self.actionAboutPyCut = QAction(mainwindow)
         self.actionAboutPyCut.setObjectName(u"actionAboutPyCut")
+        icon4 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.HelpAbout))
+        self.actionAboutPyCut.setIcon(icon4)
         self.actionSettings = QAction(mainwindow)
         self.actionSettings.setObjectName(u"actionSettings")
         self.actionOpenGCode = QAction(mainwindow)
@@ -55,6 +65,8 @@ class Ui_mainwindow(object):
         self.actionCnCTutorial.setObjectName(u"actionCnCTutorial")
         self.actionQuit = QAction(mainwindow)
         self.actionQuit.setObjectName(u"actionQuit")
+        icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ApplicationExit))
+        self.actionQuit.setIcon(icon5)
         self.centralwidget = QWidget(mainwindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout_2 = QHBoxLayout(self.centralwidget)
@@ -65,7 +77,7 @@ class Ui_mainwindow(object):
         self.scrollArea_left.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 303, 975))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 318, 975))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSpacing(22)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -549,7 +561,7 @@ class Ui_mainwindow(object):
         self.scrollArea_right.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 323, 989))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 333, 989))
         self.verticalLayout_5 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_5.setSpacing(22)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
@@ -805,8 +817,8 @@ class Ui_mainwindow(object):
         self.buttonGroup_GCodeConversion.addButton(self.GCodeConversion_ZeroTopLeftOfMaterial)
         self.GCodeConversion_ZeroTopLeftOfMaterial.setObjectName(u"GCodeConversion_ZeroTopLeftOfMaterial")
         self.GCodeConversion_ZeroTopLeftOfMaterial.setFont(font1)
-        icon = QIcon(QIcon.fromTheme(u":/images/tango/22x22/actions/view-refresh.png"))
-        self.GCodeConversion_ZeroTopLeftOfMaterial.setIcon(icon)
+        icon6 = QIcon(QIcon.fromTheme(u":/images/tango/22x22/actions/view-refresh.png"))
+        self.GCodeConversion_ZeroTopLeftOfMaterial.setIcon(icon6)
         self.GCodeConversion_ZeroTopLeftOfMaterial.setCheckable(True)
         self.GCodeConversion_ZeroTopLeftOfMaterial.setChecked(True)
 
@@ -816,7 +828,7 @@ class Ui_mainwindow(object):
         self.buttonGroup_GCodeConversion.addButton(self.GCodeConversion_ZeroLowerLeftOfMaterial)
         self.GCodeConversion_ZeroLowerLeftOfMaterial.setObjectName(u"GCodeConversion_ZeroLowerLeftOfMaterial")
         self.GCodeConversion_ZeroLowerLeftOfMaterial.setFont(font1)
-        self.GCodeConversion_ZeroLowerLeftOfMaterial.setIcon(icon)
+        self.GCodeConversion_ZeroLowerLeftOfMaterial.setIcon(icon6)
         self.GCodeConversion_ZeroLowerLeftOfMaterial.setCheckable(True)
 
         self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_ZeroLowerLeftOfMaterial, 2, 0, 1, 3)
@@ -825,7 +837,7 @@ class Ui_mainwindow(object):
         self.buttonGroup_GCodeConversion.addButton(self.GCodeConversion_ZeroLowerLeftOfOp)
         self.GCodeConversion_ZeroLowerLeftOfOp.setObjectName(u"GCodeConversion_ZeroLowerLeftOfOp")
         self.GCodeConversion_ZeroLowerLeftOfOp.setFont(font1)
-        self.GCodeConversion_ZeroLowerLeftOfOp.setIcon(icon)
+        self.GCodeConversion_ZeroLowerLeftOfOp.setIcon(icon6)
         self.GCodeConversion_ZeroLowerLeftOfOp.setCheckable(True)
 
         self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_ZeroLowerLeftOfOp, 3, 0, 1, 3)
@@ -834,7 +846,7 @@ class Ui_mainwindow(object):
         self.buttonGroup_GCodeConversion.addButton(self.GCodeConversion_ZeroCenterOfOp)
         self.GCodeConversion_ZeroCenterOfOp.setObjectName(u"GCodeConversion_ZeroCenterOfOp")
         self.GCodeConversion_ZeroCenterOfOp.setFont(font1)
-        self.GCodeConversion_ZeroCenterOfOp.setIcon(icon)
+        self.GCodeConversion_ZeroCenterOfOp.setIcon(icon6)
         self.GCodeConversion_ZeroCenterOfOp.setCheckable(True)
 
         self.gridLayout_GCodeConversion.addWidget(self.GCodeConversion_ZeroCenterOfOp, 4, 0, 1, 3)
@@ -979,7 +991,7 @@ class Ui_mainwindow(object):
         mainwindow.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(mainwindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1226, 43))
+        self.menubar.setGeometry(QRect(0, 0, 1226, 39))
         self.menuSvg = QMenu(self.menubar)
         self.menuSvg.setObjectName(u"menuSvg")
         self.menuFile = QMenu(self.menubar)

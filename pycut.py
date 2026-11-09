@@ -4,6 +4,7 @@ VERSION = "0_8_3_alpha"
 
 import sys
 import os
+import platform
 import json
 import argparse
 import pathlib
@@ -310,54 +311,63 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
                 msgbox.setDefaultButton(QtWidgets.QMessageBox.StandardButton.Save)
                 msgbox.exec()
 
-        self.menubarToggleLeftBottomSidesButton = QtGui.QAction(
-            icon=QtGui.QIcon(":/images/left-bottom-areas.png"),
+
+        self.toggleLeftSideButton = QtGui.QAction(icon=QtGui.QIcon(":/images/left-area.png"),
             iconText="hide/show",
             parent=self
         )
-        self.menubarToggleLeftBottomSidesButton.triggered.connect(self.toggle_left_bottom_sides)
-        self.menubarToggleLeftBottomSidesButton.setShortcut(QtGui.QKeySequence.StandardKey.Back)
-        self.menubarToggleLeftBottomSidesButton.setStatusTip("Show/Hide Left/Bottom Sides")
-        self.menubarToggleLeftBottomSidesButton.setCheckable(True)
-        self.menubarToggleLeftBottomSidesButton.setToolTip("Show/Hide Left/Bottom Sides View")
+        self.toggleLeftSideButton.triggered.connect(self.toggle_left_side)
+        self.toggleLeftSideButton.setShortcut(QtGui.QKeySequence.StandardKey.MoveToPreviousWord)
+        self.toggleLeftSideButton.setStatusTip("Show/Hide Left Side")
+        self.toggleLeftSideButton.setCheckable(True)
+        self.toggleLeftSideButton.setToolTip("Show/Hide Left Side View")
 
-        self.menubarToggleLeftSideButton = QtGui.QAction(
-            icon=QtGui.QIcon(":/images/left-area.png"),
+        self.toggleRightSideButton = QtGui.QAction(icon=QtGui.QIcon(":/images/right-area.png"),
             iconText="hide/show",
             parent=self
         )
-        self.menubarToggleLeftSideButton.triggered.connect(self.toggle_left_side)
-        self.menubarToggleLeftSideButton.setShortcut(QtGui.QKeySequence.StandardKey.Back)
-        self.menubarToggleLeftSideButton.setStatusTip("Show/Hide Left Side")
-        self.menubarToggleLeftSideButton.setCheckable(True)
-        self.menubarToggleLeftSideButton.setToolTip("Show/Hide Left Side View")
+        self.toggleRightSideButton.triggered.connect(self.toggle_right_side)
+        self.toggleRightSideButton.setShortcut(QtGui.QKeySequence.StandardKey.MoveToNextWord)
+        self.toggleRightSideButton.setStatusTip("Show/Hide Right Side")
+        self.toggleRightSideButton.setCheckable(True)
+        self.toggleRightSideButton.setToolTip("Show/Hide Right Side View")
 
-        self.menubarToggleMiddleAreaButton = QtGui.QAction(
-            icon=QtGui.QIcon(":/images/bellow-area.png"),
+        self.toggleMiddleBottomAreaButton = QtGui.QAction(icon=QtGui.QIcon(":/images/bellow-area.png"),
             iconText="hide/show",
             parent=self
         )
-        self.menubarToggleMiddleAreaButton.triggered.connect(self.toggle_middle_area)
-        self.menubarToggleMiddleAreaButton.setShortcut(QtGui.QKeySequence.StandardKey.Forward)
-        self.menubarToggleMiddleAreaButton.setStatusTip("Show/Hide Op. Table")
-        self.menubarToggleMiddleAreaButton.setCheckable(True)
-        self.menubarToggleMiddleAreaButton.setToolTip("Show/Hide Op. Table View")
+        self.toggleMiddleBottomAreaButton.triggered.connect(self.toggle_middle_area)
+        self.toggleMiddleBottomAreaButton.setShortcut(QtGui.QKeySequence.StandardKey.MoveToEndOfBlock)
+        self.toggleMiddleBottomAreaButton.setStatusTip("Show/Hide Op. Table")
+        self.toggleMiddleBottomAreaButton.setCheckable(True)
+        self.toggleMiddleBottomAreaButton.setToolTip("Show/Hide Op. Table View")
 
-        self.menubarToggleRightSideButton = QtGui.QAction(
-            icon=QtGui.QIcon(":/images/right-area.png"),
+        self.toggleLeftMiddleBottomSidesButton = QtGui.QAction(icon=QtGui.QIcon(":/images/left-bottom-areas.png"),
             iconText="hide/show",
             parent=self
         )
-        self.menubarToggleRightSideButton.triggered.connect(self.toggle_right_side)
-        self.menubarToggleRightSideButton.setShortcut(QtGui.QKeySequence.StandardKey.Forward)
-        self.menubarToggleRightSideButton.setStatusTip("Show/Hide Right Side")
-        self.menubarToggleRightSideButton.setCheckable(True)
-        self.menubarToggleRightSideButton.setToolTip("Show/Hide Right Side View")
+        self.toggleLeftMiddleBottomSidesButton.triggered.connect(self.toggle_left_bottom_sides)
+        self.toggleLeftMiddleBottomSidesButton.setShortcut(QtGui.QKeySequence.StandardKey.MoveToEndOfDocument)
+        self.toggleLeftMiddleBottomSidesButton.setStatusTip("Show/Hide Left/Bottom Sides")
+        self.toggleLeftMiddleBottomSidesButton.setCheckable(True)
+        self.toggleLeftMiddleBottomSidesButton.setToolTip("Show/Hide Left/Bottom Sides View")
 
-        self.menuBar().addAction(self.menubarToggleLeftBottomSidesButton)
-        self.menuBar().addAction(self.menubarToggleLeftSideButton)
-        self.menuBar().addAction(self.menubarToggleMiddleAreaButton)
-        self.menuBar().addAction(self.menubarToggleRightSideButton)
+
+        if platform.system() == "Darwin":
+            toggleViewsMenu = QtWidgets.QMenu(self.menuBar()) 
+            toggleViewsMenu.setTitle("Toggle Views")
+        
+            toggleViewsMenu.addAction(self.toggleLeftSideButton)
+            toggleViewsMenu.addAction(self.toggleRightSideButton)
+            toggleViewsMenu.addAction(self.toggleMiddleBottomAreaButton)
+            toggleViewsMenu.addAction(self.toggleLeftMiddleBottomSidesButton)
+
+            self.menuBar().insertAction(self.ui.menuHelp.menuAction(), toggleViewsMenu.menuAction())              
+        else:
+            self.menuBar().addAction(self.toggleLeftMiddleBottomSidesButton)
+            self.menuBar().addAction(self.toggleLeftSideButton)
+            self.menuBar().addAction(self.toggleMiddleBottomAreaButton)
+            self.menuBar().addAction(self.toggleRightSideButton)
 
         # these callbacks only after have loading a project
         self.ui.GCodeConversion_XOffset.valueChanged.connect(
@@ -372,7 +382,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
     def toggle_left_bottom_sides(self):
         """ """
-        if self.menubarToggleLeftBottomSidesButton.isChecked():
+        if self.toggleLeftMiddleBottomSidesButton.isChecked():
             self.ui.scrollArea_left.hide()
             self.ui.operationsview_manager.hide()
         else:
@@ -381,21 +391,21 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
     def toggle_left_side(self):
         """ """
-        if self.menubarToggleLeftSideButton.isChecked():
+        if self.toggleLeftSideButton.isChecked():
             self.ui.scrollArea_left.hide()
         else:
             self.ui.scrollArea_left.show()
 
     def toggle_middle_area(self):
         """ """
-        if self.menubarToggleMiddleAreaButton.isChecked():
+        if self.toggleMiddleBottomAreaButton.isChecked():
             self.ui.operationsview_manager.hide()
         else:
             self.ui.operationsview_manager.show()
 
     def toggle_right_side(self):
         """ """
-        if self.menubarToggleRightSideButton.isChecked():
+        if self.toggleRightSideButton.isChecked():
             self.ui.scrollArea_right.hide()
         else:
             self.ui.scrollArea_right.show()
