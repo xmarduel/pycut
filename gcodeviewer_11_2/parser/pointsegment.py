@@ -172,7 +172,7 @@ class PointSegment:
     
         self.setIsSpline(True)
 
-    def getSplineControlPoint1(self) -> Optiomnal[QVector3D]:
+    def getSplineControlPoint1(self) -> Optional[QVector3D]:
         if self.m_splineProperties != None:
             return self.m_splineProperties.controlPoint1
     

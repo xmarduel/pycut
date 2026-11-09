@@ -249,13 +249,33 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
             )
         else:
             self.m_distance = 200
-            self.m_lookAt = QVector3D()
-            self.m_viewLowerBounds = QVector3D()
-            self.m_viewUpperBounds = QVector3D()
-            self.m_viewRanges = QVector3D()
-            self.m_modelLowerBounds = QVector3D()
-            self.m_modelUpperBounds = QVector3D()
-            self.m_modelRanges = QVector3D()
+            self.m_lookAt.setX(0)
+            self.m_lookAt.setY(0)
+            self.m_lookAt.setZ(0)
+
+            self.m_viewLowerBounds.setX(0)
+            self.m_viewLowerBounds.setY(0)
+            self.m_viewLowerBounds.setZ(0)
+
+            self.m_viewUpperBounds.setX(0)
+            self.m_viewUpperBounds.setY(0)
+            self.m_viewUpperBounds.setZ(0)
+
+            self.m_viewRanges.setX(0)
+            self.m_viewRanges.setY(0)
+            self.m_viewRanges.setZ(0)
+
+            self.m_modelLowerBounds.setX(0)
+            self.m_modelLowerBounds.setY(0)
+            self.m_modelLowerBounds.setZ(0)
+
+            self.m_modelUpperBounds.setX(0)
+            self.m_modelUpperBounds.setY(0)
+            self.m_modelUpperBounds.setZ(0)
+
+            self.m_modelRanges.setZ(0)
+            self.m_modelRanges.setZ(0)
+            self.m_modelRanges.setZ(0)
 
         self.m_xPan = QPointF()
         self.m_zoom = 1
@@ -743,9 +763,9 @@ void main()
                 math.cos(ang.x()) * math.cos(ang.y())
             ) * self.m_distance
 
-            up_x = math.fabs( -math.sin(ang.y() + math.pi if self.m_rot.x() < 0 else 0)) if self.m_rot.x() == 90 else 0
+            up_x = -math.sin(ang.y() + (math.pi if self.m_rot.x() < 0 else 0)) if math.fabs(self.m_rot.x()) == 90 else 0
             up_y = math.cos(ang.x())
-            up_z = math.fabs( -math.cos(ang.y() + math.pi if self.m_rot.x() < 0 else 0)) if self.m_rot.x() == 90 else 0
+            up_z = -math.cos(ang.y() + (math.pi if self.m_rot.x() < 0 else 0)) if math.fabs(self.m_rot.x()) == 90 else 0
 
             up = QVector3D(up_x, up_y, up_z)
 
@@ -780,24 +800,24 @@ void main()
 
 
         ivp, res = (self.m_projectionMatrix * self.m_viewMatrix).inverted()
-        self.m_windowSizeWorld = (ivp.map(QVector3D(0, 1, self.m_planeDepth)) - ivp.map(QVector3D(0, 0, self.m_planeDepth))).length() * 2.0;
+        self.m_windowSizeWorld = (ivp.map(QVector3D(0, 1, self.m_planeDepth)) - ivp.map(QVector3D(0, 0, self.m_planeDepth))).length() * 2.0
 
     def mousePressEvent(self, event: QtGui.QMouseEvent):
         self.m_lastPos = event.pos()
         
-        self.m_storedRot = self.m_rot
-        self.m_storedPan = self.m_pan
+        Util.copyQVector3D(self.m_storedRot, self.m_rot)
+        Util.copyQPointF(self.m_storedPan, self.m_pan)
 
     def mouseMoveEvent(self, event: QtGui.QMouseEvent):
-        if self.m_gestureProcessing:
+        if False and self.m_gestureProcessing:
             self.m_lastPos = event.pos()
-            self.m_storedRot = self.m_rot
-            self.m_storedPan = self.m_pan
+            Util.copyQVector3D(self.m_storedRot, self.m_rot)
+            Util.copyQVector3D(self.m_storedPan, self.m_pan)
 
             return
 
-        if (event.buttons() & QtCore.Qt.MouseButton.MiddleButton and (not (event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier))) or \
-           (event.buttons() & QtCore.Qt.MouseButton.LeftButton and (not (event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier))):
+        if (event.buttons() & QtCore.Qt.MouseButton.MiddleButton and not (event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier)) or \
+                (event.buttons() & QtCore.Qt.MouseButton.LeftButton  and not (event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier)):
             self.stopViewAnimation()
 
             self.m_rot.setY(self.normalizeAngle(self.m_storedRot.y() - (event.pos().x() - self.m_lastPos.x()) * 0.5))
@@ -812,8 +832,8 @@ void main()
             self.rotationChanged.emit()
 
         if (event.buttons() & QtCore.Qt.MouseButton.MiddleButton and (event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier)) or \
-           (event.buttons() & QtCore.Qt.MouseButton.RightButton) or \
-           (event.buttons() & QtCore.Qt.MouseButton.LeftButton   and (event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier)):
+            (event.buttons() & QtCore.Qt.MouseButton.RightButton) or \
+            (event.buttons() & QtCore.Qt.MouseButton.LeftButton  and (event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier)):
             self.m_pan.setX(self.m_storedPan.x() - (event.pos().x() - self.m_lastPos.x()) * 1 / self.width())
             self.m_pan.setY(self.m_storedPan.y() + (event.pos().y() - self.m_lastPos.y()) * 1 / self.height())
 

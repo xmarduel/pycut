@@ -5,6 +5,7 @@ from functools import singledispatchmethod
 
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QColor
+from PySide6.QtCore import QPointF
 
 from PySide6.QtCore import qIsNaN
 
@@ -80,6 +81,19 @@ class Util:
         """faster than deepcopy"""
         return QVector3D(v.x(), v.y(), v.z())
 
+    @classmethod
+    def copyQVector3D(cls, v: QVector3D, w: QVector3D):
+            """faster than deepcopy"""
+            v.setX(w.x())
+            v.setY(w.y())
+            v.setZ(w.z())
+
+    @classmethod
+    def copyQPointF(cls, v: QPointF, w: QPointF):
+        """faster than deepcopy"""
+        v.setX(w.x())
+        v.setY(w.y())
+            
     @classmethod
     def nIsNaN(cls, vector: QVector3D) -> bool:
         return qIsNaN(vector.x()) and qIsNaN(vector.y()) and qIsNaN(vector.z())
