@@ -805,14 +805,14 @@ void main()
     def mousePressEvent(self, event: QtGui.QMouseEvent):
         self.m_lastPos = event.pos()
         
-        Util.copyQVector3D(self.m_storedRot, self.m_rot)
+        Util.copyQPointF(self.m_storedRot, self.m_rot)
         Util.copyQPointF(self.m_storedPan, self.m_pan)
 
     def mouseMoveEvent(self, event: QtGui.QMouseEvent):
         if False and self.m_gestureProcessing:
             self.m_lastPos = event.pos()
-            Util.copyQVector3D(self.m_storedRot, self.m_rot)
-            Util.copyQVector3D(self.m_storedPan, self.m_pan)
+            Util.copyQPointF(self.m_storedRot, self.m_rot)
+            Util.copyQPointF(self.m_storedPan, self.m_pan)
 
             return
 

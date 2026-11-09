@@ -1,5 +1,6 @@
 G90 G17
 G21 (Mm)
+; Diameter:    0.1
 G0 X0 Y0 F30
 G01 Z-0.25 F1
 G5 I0 J3 P0 Q-3 X1 Y1
