@@ -3,6 +3,6 @@
 
 # generate qt resources
 
-pyside6-rcc -o ../resources_rc.py resources.qrc
-pyside6-rcc -o ../resources_tutorial_rc.py resources-tutorial.qrc
-pyside6-rcc -o ../resources_cnc_tutorial_rc.py resources-cnc-tutorial.qrc
+pyside6-rcc -o ../pycut_rc.py pycut.qrc
+pyside6-rcc -o ../tutorial_rc.py tutorial.qrc
+pyside6-rcc -o ../cnc_tutorial_rc.py cnc-tutorial.qrc

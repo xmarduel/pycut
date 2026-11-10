@@ -9,7 +9,7 @@ from PySide6.QtWidgets import QApplication, QMainWindow
 
 import viewer
 
-import resources_rc
+import pycut_rc
 
 
 class MainWindow(QMainWindow):

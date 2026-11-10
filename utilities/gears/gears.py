@@ -17,7 +17,7 @@ import gears_mainwindow as gears_mainwindow
 import svgviewer
 import generate_gear_svg
 
-import resources_rc
+import gears_rc
 
 
 class GearMainWindow(QtWidgets.QMainWindow):

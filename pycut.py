@@ -63,9 +63,9 @@ from gcode_generator import Tab
 
 from gcode_generator import GcodeGenerator
 
-import resources_rc
-import resources_cnc_tutorial_rc
-import resources_tutorial_rc
+import pycut_rc
+import tutorial_rc
+import cnc_tutorial_rc
 
 from ui_mainwindow import Ui_mainwindow
 

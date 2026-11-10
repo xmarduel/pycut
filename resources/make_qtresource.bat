@@ -2,6 +2,6 @@
 REM in RESOURCES
 
 REM generate qt resources
-pyside6-rcc.exe -o ..\resources_rc.py resources.qrc
-pyside6-rcc.exe -o ..\resources_tutorial_rc.py resources-tutorial.qrc
-pyside6-rcc.exe -o ..\resources_cnc_tutorial_rc.py resources-cnc-tutorial.qrc
+pyside6-rcc.exe -o ..\pycut_rc.py pycut.qrc
+pyside6-rcc.exe -o ..\tutorial_rc.py tutorial.qrc
+pyside6-rcc.exe -o ..\cnc_tutorial_rc.py cnc-tutorial.qrc
