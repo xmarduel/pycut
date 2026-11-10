@@ -624,13 +624,13 @@ class CncOp:
                 self.geometry, offset, "left", consider_interiors_offsets=True
             )
 
-            # cnt = MatplotLibUtils.display("preview pocket", self.preview_geometry)
+            # cnt = ShapelyMatplotlib.display("preview pocket", self.preview_geometry)
 
             self.preview_geometry = ShapelyUtils.orient_multipolygon(
                 self.preview_geometry
             )
 
-            # cnt = MatplotLibUtils.display("preview pocket - oriented", self.preview_geometry)
+            # cnt = ShapelyMatplotlib.display("preview pocket - oriented", self.preview_geometry)
 
             self.geometry_svg_paths = []
 

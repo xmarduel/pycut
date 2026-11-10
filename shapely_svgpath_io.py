@@ -19,7 +19,6 @@ import shapely.geometry
 from shapely.validation import make_valid
 from shapely.validation import explain_validity
 
-from shapely_matplotlib import MatplotLibUtils
 from shapely_utils import ShapelyUtils
 
 """

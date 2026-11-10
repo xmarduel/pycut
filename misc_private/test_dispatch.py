@@ -7,16 +7,16 @@ class toto:
 
     @singledispatchmethod
     def test(self, arg):
-        raise NotImplementedError("Cannot run 'toto.test' method with %r" % arg)
+        raise NotImplementedError(f"Cannot run 'toto.test' method with {arg}")
 
     @test.register
     def _(self, arg: int):
-         print("test - int", arg)
+         print(f"test - int {arg}")
 
     @test.register
     def _(self, arg: float):
-        print("test - float", arg)
+        print(f"test - float {arg}")
 
     @test.register
     def _(self, arg: bool):
-        print("test - bool", arg)
+        print(f"test - bool {arg}")

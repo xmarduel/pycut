@@ -618,7 +618,7 @@ class cam:
         """
         Try to merge paths. A merged path doesn't cross outside of bounds AND the interior polygons
         """
-        # cnt = MatplotLibUtils.display("mergePath", shapely.geometry.MultiLineString(paths))
+        # cnt = ShapelyMatplotlib.display("mergePath", shapely.geometry.MultiLineString(paths))
 
         if _bounds and len(_bounds.geoms) > 0:
             bounds = _bounds
@@ -1376,14 +1376,14 @@ class PocketCalculator:
         # use polygons exteriors lines - offset them and and diff with the offseted interiors if any
         multipoly = ShapelyUtils.orient_multipolygon(self.multipoly)
 
-        # cnt = MatplotLibUtils.display("multipoly pocket init", multipoly)
+        # cnt = ShapelyMatplotlib.display("multipoly pocket init", multipoly)
 
         # the exterior
         current = self.offset_multipolygon(
             multipoly, self.cutter_dia / 2, "left", consider_interiors_offsets=True
         )
 
-        # cnt = MatplotLibUtils.display(
+        # cnt = ShapelyMatplotlib.display(
         #    "multipoly pocket first offset", current
         # )
 
@@ -1469,7 +1469,7 @@ class PocketCalculator:
 
             current = ShapelyUtils.orient_multipolygon(current)
 
-            # cnt = MatplotLibUtils.display("multipoly pocket <%d> offset" % cnt, current)
+            # cnt = ShapelyMatplotlib.display("multipoly pocket <%d> offset" % cnt, current)
 
         # last: make beautiful interiors, only 1 step
         interiors = self.offset_multipolygon_interiors(
@@ -1539,7 +1539,7 @@ class PocketCalculator:
         """
         Try to merge paths. A merged path doesn't cross outside of bounds AND the interior polygons
         """
-        # cnt = MatplotLibUtils.display("mergePath", shapely.geometry.MultiLineString(thepaths))
+        # cnt = ShapelyMatplotlib.display("mergePath", shapely.geometry.MultiLineString(thepaths))
 
         if _bounds and len(_bounds.geoms) > 0:
             bounds = _bounds

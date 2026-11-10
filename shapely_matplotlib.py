@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import shapely.geometry
 
 
-class MatplotLibUtils:
+class ShapelyMatplotlib:
     """
     Plot Shapely objects
     """
@@ -18,63 +18,76 @@ class MatplotLibUtils:
     #MAPLOTLIB_DEBUG = False
     MAPLOTLIB_DEBUG = True
 
+    COEFF_Y = -1.0 # for svg
+
     cnt = 0  # matplotlib figures counter
 
     @classmethod
-    def plot_geom(cls, title: str, geom: Any) -> int:
+    def plot_geom(cls, title: str, geom: Any,) -> int:
         """ """
         return cls.display(title, geom)
 
     @classmethod
-    def display(cls, title: str, geom: Any) -> int:
+    def display(cls, title: str, geom: Any, figure=True) -> int:
         """ """
         # a counter
-        cls.cnt += 1
+        #cls.cnt += 1
 
         if cls.MAPLOTLIB_DEBUG == False:
             return cls.cnt
 
         # dispatch
         if geom.geom_type == "LineString":
-            cls._display_linestring(title, geom)
+            cls._display_linestring(title, geom, figure)
         if geom.geom_type == "LinearRing":
-            cls._display_linestring(title, geom)
+            cls._display_linestring(title, geom, figure)
         if geom.geom_type == "MultiLineString":
-            cls._display_multilinestring(title, geom)
+            cls._display_multilinestring(title, geom, figure)
         if geom.geom_type == "Polygon":
-            cls._display_polygon(title, geom)
+            cls._display_polygon(title, geom, figure)
         if geom.geom_type == "MultiPolygon":
-            cls._display_multipolygon(title, geom)
+            cls._display_multipolygon(title, geom, figure)
         if geom.geom_type == "GeometryCollection":
-            cls._display_geometrycollection(title, geom)
+            cls._display_geometrycollection(title, geom, figure)
         else:
             pass
 
         return cls.cnt
-    
+
     @classmethod
-    def _display_linestring(cls, title: str, linestring: shapely.geometry.LineString):
+    def linestring_np_coords(cls, linestring: shapely.geometry.LineString | shapely.geometry.LinearRing):
         """ """
         np_coords = np.array(linestring.coords)
-
+    
         npxs = np_coords[:, 0]
-        npys = np_coords[:, 1] * -1.0
-
-        plt.figure(cls.cnt)
-        plt.title(title + f" [{cls.cnt}]")
-
-        plt.plot(npxs, npys, "bo-")
-
-        plt.axis("equal")
-        plt.show()
-        plt.pause(1)
+        npys = np_coords[:, 1] * cls.COEFF_Y
+    
+        return npxs, npys
 
     @classmethod
-    def _display_multilinestring(
-        cls, title: str, multilinestring: shapely.geometry.MultiLineString
-    ):
+    def _display_linestring(cls, title: str, linestring: shapely.geometry.LineString | shapely.geometry.LinearRing, figure=True, pause=True):
         """ """
-        plt.figure(cls.cnt)
+        if figure:
+            plt.figure(cls.cnt)
+            
+        plt.title(title + f" [{cls.cnt}]")
+
+        npx, npy = cls.linestring_np_coords(linestring)
+        
+        plt.plot(npx, npy, "bo-")
+        plt.axis("equal")
+        plt.show()
+        
+        if pause:
+            plt.pause(1)
+            #plt.close()
+
+    @classmethod
+    def _display_multilinestring(cls, title: str, multilinestring: shapely.geometry.MultiLineString, figure=True, pause=True):
+        """ """
+        if figure:
+            plt.figure(cls.cnt)
+            
         plt.title(title + f" [{cls.cnt}]")
 
         style = {
@@ -86,68 +99,49 @@ class MatplotLibUtils:
             5: "b+-",
         }
 
-        xx = []
-        yy = []
+        for k, linestring in enumerate(multilinestring.geoms):
+            npx, npy = cls.linestring_np_coords(linestring)
 
-        for line in multilinestring.geoms:
-            np_coords = np.array(line.coords)
-            
-            npix = np_coords[:, 0]
-            npiy = np_coords[:, 1] * -1.0
-
-            xx.append(npix)
-            yy.append(npiy)
-
-        for k, (x, y) in enumerate(zip(xx, yy)):
-            plt.plot(x, y, style[k % 6])
+            plt.plot(npx, npy, style[k % 6])
 
         plt.axis("equal")
         plt.show()
-        plt.pause(1)
+
+        if pause:
+            plt.pause(1)
+            #plt.close()
 
     @classmethod
-    def _display_polygon(cls, title: str, polygon: shapely.geometry.Polygon):
+    def _display_polygon(cls, title: str, polygon: shapely.geometry.Polygon, figure=True, pause=True):
         """ """
-        plt.figure(cls.cnt)
+        if figure:
+            plt.figure(cls.cnt)
+
         plt.title(title + f" [{cls.cnt}]")
 
         style_ext = {0: "bo-"}
         style_int = {0: "r+--", 1: "go-"}
 
-        ring = polygon.exterior
+        npx, npy = cls.linestring_np_coords(polygon.exterior)
+        plt.plot(npx, npy, style_ext[0])
 
-        np_coords = np.array(ring.coords)
-
-        npxs = np_coords[:, 0]
-        npys = np_coords[:, 1] * -1.0
-
-        plt.plot(npxs, npys, style_ext[0])
-
-        interiors_xx = []
-        interiors_yy = []
-
-        for interior in polygon.interiors:
-            npi_coords = np.array(ring.coords)
-
-            npix = npi_coords[:, 0]
-            npiy = npi_coords[:, 1] * -1.0
-
-            interiors_xx.append(npix)
-            interiors_yy.append(npiy)
-
-        for k, (npix, npiy) in enumerate(zip(interiors_xx, interiors_yy)):
-            plt.plot(npix, npiy, style_int[k % 2])
+        for k, interior in enumerate(polygon.interiors):
+            npx, npy = cls.linestring_np_coords(interior)
+            plt.plot(npx, npy, style_int[k % 2])
 
         plt.axis("equal")
         plt.show()
-        plt.pause(1)
+
+        if pause:
+            plt.pause(1)
+            #plt.close()
 
     @classmethod
-    def _display_multipolygon(
-        cls, title: str, multipoly: shapely.geometry.MultiPolygon
-    ):
+    def _display_multipolygon(cls, title: str, multipoly: shapely.geometry.MultiPolygon, figure=True, pause=True):
         """ """
-        plt.figure(cls.cnt)
+        if figure:
+            plt.figure(cls.cnt)
+            
         plt.title(title + f" [{cls.cnt}]")
 
         style_ext = {
@@ -155,155 +149,53 @@ class MatplotLibUtils:
             1: "ro-",
             2: "go-",
         }
-        style_int = {0: "b+--", 1: "r+--", 2: "g+--"}
+        style_int = {
+            0: "b+--",
+            1: "r+--", 
+            2: "g+--"
+        }
 
-        xx_ext = []
-        yy_ext = []
+        for k, poly in enumerate(multipoly.geoms):
+            npx, npy = cls.linestring_np_coords(poly.exterior)
+            plt.plot(npx, npy, style_ext[k % 3])
 
-        xx_int = []
-        yy_int = []
-
-        for poly in multipoly.geoms:
-            xs = poly.exterior.coords.xy[0]
-            ys = poly.exterior.coords.xy[1]
-
-            npxs = np.array(xs, dtype=np.float64)
-            npys = np.array(ys, dtype=np.float64) * -1.0
-
-            xx_ext.append(npxs)
-            yy_ext.append(npys)
-
-            for interior in poly.interiors:
-                ix = interior.coords.xy[0]
-                iy = interior.coords.xy[1]
-
-                npix = np.array(ix, dtype=np.float64)
-                npiy = np.array(iy, dtype=np.float64) * -1.0
-
-                xx_int.append(npix)
-                yy_int.append(npiy)
-
-        # plot
-        for k, (x, y) in enumerate(zip(xx_ext, yy_ext)):
-            plt.plot(x, y, style_ext[k % 2])
-        for k, (x, y) in enumerate(zip(xx_int, yy_int)):
-            plt.plot(x, y, style_int[k % 2])
+            for q, interior in enumerate(poly.interiors):
+                npx, npy = cls.linestring_np_coords(interior)
+                plt.plot(npx, npy, style_int[q % 3])
 
         plt.axis("equal")
         plt.show()
-        plt.pause(1)
+
+        if pause:
+            plt.pause(1)
+            #plt.close()
 
     @classmethod
-    def _display_geometrycollection(
-        cls, title: str, collection: shapely.geometry.GeometryCollection
-    ):
+    def _display_geometrycollection(cls, title: str, collection: shapely.geometry.GeometryCollection, figure=True, pause=True):
         """ """
         plt.figure(cls.cnt)
         plt.title(title + f" [{cls.cnt}]")
 
-        style_ext = {0: "ro-", 1: "go-", 2: "bo-"}
-        style_int = {0: "r+-", 1: "g+-", 2: "b+-"}
-
-        pp = 0
-
         for geom in collection.geoms:
             if geom.geom_type == "MultiPolygon":
                 geom = cast(shapely.geometry.MultiPolygon, geom)
-
-
-                xx_ext = []
-                yy_ext = []
-
-                xx_int = []
-                yy_int = []
-
-                for ch_geom in geom.geoms:
-                    xs = ch_geom.exterior.coords.xy[0]
-                    ys = ch_geom.exterior.coords.xy[1]
-
-                    npxs = np.array(xs, dtype=np.float64)
-                    npys = np.array(ys, dtype=np.float64) * -1.0
-                
-                    xx_ext.append(npxs)
-                    yy_ext.append(npys)
-
-                    for interior in ch_geom.interiors:
-                        ix = interior.coords.xy[0]
-                        iy = interior.coords.xy[1]
-
-                        npix = np.array(ix, dtype=np.float64)
-                        npiy = np.array(iy, dtype=np.float64) * -1.0
-
-                        xx_int.append(npix)
-                        yy_int.append(npiy)
-
-                # plot
-                for x, y in zip(xx_ext, yy_ext):
-                    pp += 1
-                    plt.plot(x, y, style_ext[pp % 3])
-                for x, y in zip(xx_int, yy_int):
-                    pp += 1
-                    plt.plot(x, y, style_int[pp % 3])
+                cls._display_multipolygon(title, geom, figure=False, pause=False)
 
             if geom.geom_type == "Polygon":
                 geom = cast(shapely.geometry.Polygon, geom)
-
-                xs = geom.exterior.coords.xy[0]
-                ys = geom.exterior.coords.xy[1]
-
-                npxs = np.array(xs, dtype=np.float64)
-                npys = np.array(ys, dtype=np.float64) * -1.0
-
-                plt.plot(npxs, npys, style_ext[0])
-
-                interiors_xx = []
-                interiors_yy = []
-
-                for interior in geom.interiors:
-                    ix = interior.coords.xy[0]
-                    iy = interior.coords.xy[1]
-
-                    npix = np.array(ix, dtype=np.float64)
-                    npiy = np.array(iy, dtype=np.float64) * -1.0
-
-                    interiors_xx.append(npix)
-                    interiors_yy.append(npiy)
-
-                for npix, npiy in zip(interiors_xx, interiors_yy):
-                    pp += 1
-                    plt.plot(npix, npiy, style_int[pp % 3])
+                cls._display_polygon(title, geom, figure=False, pause=False)
 
             if geom.geom_type == "MultiLineString":
                 geom = cast(shapely.geometry.MultiLineString, geom)
+                cls._display_multilinestring(title, geom, figure=False, pause=False)
 
-                xx = []
-                yy = []
-
-                for line in geom.geoms:
-                    ix = line.coords.xy[0]
-                    iy = line.coords.xy[1]
-
-                    npix = np.array(ix, dtype=np.float64)
-                    npiy = np.array(iy, dtype=np.float64) * -1.0
-
-                    xx.append(npix)
-                    yy.append(npiy)
-
-                for x, y in zip(xx, yy):
-                    pp += 1
-                    plt.plot(x, y, style_ext[pp % 3])
-
-            if geom.geom_type == "LineString":
-                xs = geom.coords.xy[0]
-                ys = geom.coords.xy[1]
-
-                npxs = np.array(xs, dtype=np.float64)
-                npys = np.array(ys, dtype=np.float64) * -1.0
-
-                pp += 1
-
-                plt.plot(npxs, npys, style_ext[pp % 3], color="black")
+            if  geom.geom_type =="LineString" or geom.geom_type == "LinearRing":
+                geom = cast(shapely.geometry.LineString, geom)
+                cls._display_linestring(title, geom, figure=False, pause=False)
 
         plt.axis("equal")
         plt.show()
-        plt.pause(1)
+
+        if pause:
+            plt.pause(1)
+            #plt.close()

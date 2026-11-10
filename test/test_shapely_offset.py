@@ -7,7 +7,7 @@ import shapely
 from shapely_svgpath_io import SvgPathDiscretizer
 from shapely_svgpath_io import SvgPath
 
-from shapely_matplotlib import MatplotLibUtils as pltutils
+from shapely_matplotlib import ShapelyMatplotlib as pltutils
 
 import unittest
 from shapely_utils import ShapelyUtils
