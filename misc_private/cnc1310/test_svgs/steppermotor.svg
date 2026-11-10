@@ -7,6 +7,7 @@
   xmlns="http://www.w3.org/2000/svg"
   xmlns:svg="http://www.w3.org/2000/svg"
 >
+  <title>NEMA 17</title>
   <defs id="defs">
     <rect id="motor_base_ref" rx="4" ry="4" width="42" height="42" style="fill:rgb(0,0,0);opacity:0.4;" />
     

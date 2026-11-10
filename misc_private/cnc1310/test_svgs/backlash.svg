@@ -6,6 +6,7 @@
   id="backlash-item"
   xmlns="http://www.w3.org/2000/svg"
   xmlns:svg="http://www.w3.org/2000/svg">
+  <title>backlash</title>
   <defs id="defs">
     <circle id="backlash_item_hole_10mm" style="fill:#ff00ff;fill-opacity:1;" cx="0" cy="0" r="5.0" />
     <circle id="backlash_item_screw_3mm" style="fill:#ff00ff;fill-opacity:1;" cx="0" cy="0" r="1.5" />

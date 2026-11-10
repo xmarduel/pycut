@@ -32,7 +32,7 @@
          <x>0</x>
          <y>0</y>
          <width>318</width>
-         <height>975</height>
+         <height>991</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,1">
@@ -62,7 +62,13 @@
              <string notr="true">background-color: rgb(198, 198, 198);</string>
             </property>
             <property name="text">
-             <string> Svg Settings</string>
+             <string>Svg</string>
+            </property>
+            <property name="margin">
+             <number>2</number>
+            </property>
+            <property name="indent">
+             <number>4</number>
             </property>
            </widget>
           </item>
@@ -163,11 +169,11 @@
             </item>
             <item row="1" column="1" colspan="2">
              <widget class="QLabel" name="SvgTitle">
-              <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;[title]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(222, 222, 222);</string>
               </property>
-              <property name="indent">
-               <number>2</number>
+              <property name="text">
+               <string>[title]</string>
               </property>
              </widget>
             </item>
@@ -192,7 +198,13 @@
              <string notr="true">background-color: rgb(198, 198, 198);</string>
             </property>
             <property name="text">
-             <string> Tool (shared for all operations)</string>
+             <string>Tool (shared for all operations)</string>
+            </property>
+            <property name="margin">
+             <number>2</number>
+            </property>
+            <property name="indent">
+             <number>4</number>
             </property>
            </widget>
           </item>
@@ -510,7 +522,13 @@
              <string notr="true">background-color: rgb(196, 196, 196);</string>
             </property>
             <property name="text">
-             <string> Curve To Line Conversion</string>
+             <string>Curve To Line Conversion</string>
+            </property>
+            <property name="margin">
+             <number>2</number>
+            </property>
+            <property name="indent">
+             <number>4</number>
             </property>
            </widget>
           </item>
@@ -617,7 +635,13 @@
              <string notr="true">background-color: rgb(198, 198, 198);</string>
             </property>
             <property name="text">
-             <string> Tabs</string>
+             <string>Tabs</string>
+            </property>
+            <property name="margin">
+             <number>2</number>
+            </property>
+            <property name="indent">
+             <number>4</number>
             </property>
            </widget>
           </item>
@@ -944,7 +968,7 @@
          <x>0</x>
          <y>0</y>
          <width>333</width>
-         <height>989</height>
+         <height>1005</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,0,0,0,1">
@@ -971,7 +995,13 @@
              <string notr="true">background-color: rgb(200, 200, 200);</string>
             </property>
             <property name="text">
-             <string> Material</string>
+             <string>Material</string>
+            </property>
+            <property name="margin">
+             <number>2</number>
+            </property>
+            <property name="indent">
+             <number>4</number>
             </property>
            </widget>
           </item>
@@ -1167,7 +1197,13 @@
              <string notr="true">background-color: rgb(198, 198, 198);</string>
             </property>
             <property name="text">
-             <string> GCode Conversion</string>
+             <string>GCode Conversion</string>
+            </property>
+            <property name="margin">
+             <number>2</number>
+            </property>
+            <property name="indent">
+             <number>4</number>
             </property>
            </widget>
           </item>
@@ -1539,7 +1575,13 @@
              <string notr="true">background-color: rgb(188, 188, 188);</string>
             </property>
             <property name="text">
-             <string> GCode Generation</string>
+             <string>GCode Generation</string>
+            </property>
+            <property name="margin">
+             <number>2</number>
+            </property>
+            <property name="indent">
+             <number>4</number>
             </property>
            </widget>
           </item>
@@ -1676,7 +1718,13 @@
              <string notr="true">background-color: rgb(188, 188, 188);</string>
             </property>
             <property name="text">
-             <string> GCode Statistics</string>
+             <string>GCode Statistics</string>
+            </property>
+            <property name="margin">
+             <number>2</number>
+            </property>
+            <property name="indent">
+             <number>4</number>
             </property>
            </widget>
           </item>
@@ -1760,7 +1808,6 @@
      <string>SVG</string>
     </property>
     <addaction name="actionOpenSvg"/>
-    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
@@ -1801,8 +1848,8 @@
     <addaction name="actionOpenGCode"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuSvg"/>
    <addaction name="menuSettings"/>
+   <addaction name="menuSvg"/>
    <addaction name="menuGCode"/>
    <addaction name="menuHelp"/>
   </widget>

@@ -77,7 +77,7 @@ class Ui_mainwindow(object):
         self.scrollArea_left.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 318, 975))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 318, 991))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSpacing(22)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -92,6 +92,8 @@ class Ui_mainwindow(object):
         font.setBold(True)
         self.label_SvgSettings.setFont(font)
         self.label_SvgSettings.setStyleSheet(u"background-color: rgb(198, 198, 198);")
+        self.label_SvgSettings.setMargin(2)
+        self.label_SvgSettings.setIndent(4)
 
         self.verticalLayoutSettingsContent.addWidget(self.label_SvgSettings)
 
@@ -148,7 +150,7 @@ class Ui_mainwindow(object):
 
         self.SvgTitle = QLabel(self.scrollAreaWidgetContents)
         self.SvgTitle.setObjectName(u"SvgTitle")
-        self.SvgTitle.setIndent(2)
+        self.SvgTitle.setStyleSheet(u"background-color: rgb(222, 222, 222);")
 
         self.gridLayout.addWidget(self.SvgTitle, 1, 1, 1, 2)
 
@@ -165,6 +167,8 @@ class Ui_mainwindow(object):
         self.label_Tool.setObjectName(u"label_Tool")
         self.label_Tool.setFont(font)
         self.label_Tool.setStyleSheet(u"background-color: rgb(198, 198, 198);")
+        self.label_Tool.setMargin(2)
+        self.label_Tool.setIndent(4)
 
         self.verticalLayoutToolContent.addWidget(self.label_Tool)
 
@@ -347,6 +351,8 @@ class Ui_mainwindow(object):
         self.labelCurveToLineConversion.setObjectName(u"labelCurveToLineConversion")
         self.labelCurveToLineConversion.setFont(font)
         self.labelCurveToLineConversion.setStyleSheet(u"background-color: rgb(196, 196, 196);")
+        self.labelCurveToLineConversion.setMargin(2)
+        self.labelCurveToLineConversion.setIndent(4)
 
         self.verticalLayoutCurveToLineConversion.addWidget(self.labelCurveToLineConversion)
 
@@ -400,6 +406,8 @@ class Ui_mainwindow(object):
         self.label_Tabs.setEnabled(True)
         self.label_Tabs.setFont(font)
         self.label_Tabs.setStyleSheet(u"background-color: rgb(198, 198, 198);")
+        self.label_Tabs.setMargin(2)
+        self.label_Tabs.setIndent(4)
 
         self.verticalLayoutTabsContent.addWidget(self.label_Tabs)
 
@@ -561,7 +569,7 @@ class Ui_mainwindow(object):
         self.scrollArea_right.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 333, 989))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 333, 1005))
         self.verticalLayout_5 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_5.setSpacing(22)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
@@ -573,6 +581,8 @@ class Ui_mainwindow(object):
         self.labelMaterial.setObjectName(u"labelMaterial")
         self.labelMaterial.setFont(font)
         self.labelMaterial.setStyleSheet(u"background-color: rgb(200, 200, 200);")
+        self.labelMaterial.setMargin(2)
+        self.labelMaterial.setIndent(4)
 
         self.verticalLayoutMaterial.addWidget(self.labelMaterial)
 
@@ -673,6 +683,8 @@ class Ui_mainwindow(object):
         self.label_GCcodeConversion.setObjectName(u"label_GCcodeConversion")
         self.label_GCcodeConversion.setFont(font)
         self.label_GCcodeConversion.setStyleSheet(u"background-color: rgb(198, 198, 198);")
+        self.label_GCcodeConversion.setMargin(2)
+        self.label_GCcodeConversion.setIndent(4)
 
         self.verticalLayoutGCodeConversion.addWidget(self.label_GCcodeConversion)
 
@@ -877,6 +889,8 @@ class Ui_mainwindow(object):
         self.labelGCodeGeneration.setObjectName(u"labelGCodeGeneration")
         self.labelGCodeGeneration.setFont(font)
         self.labelGCodeGeneration.setStyleSheet(u"background-color: rgb(188, 188, 188);")
+        self.labelGCodeGeneration.setMargin(2)
+        self.labelGCodeGeneration.setIndent(4)
 
         self.verticalLayoutGCodeGeneration.addWidget(self.labelGCodeGeneration)
 
@@ -948,6 +962,8 @@ class Ui_mainwindow(object):
         self.labelGCodeStatistics.setObjectName(u"labelGCodeStatistics")
         self.labelGCodeStatistics.setFont(font)
         self.labelGCodeStatistics.setStyleSheet(u"background-color: rgb(188, 188, 188);")
+        self.labelGCodeStatistics.setMargin(2)
+        self.labelGCodeStatistics.setIndent(4)
 
         self.verticalLayoutGCodeStatistics.addWidget(self.labelGCodeStatistics)
 
@@ -1007,12 +1023,11 @@ class Ui_mainwindow(object):
         mainwindow.setMenuBar(self.menubar)
 
         self.menubar.addAction(self.menuFile.menuAction())
-        self.menubar.addAction(self.menuSvg.menuAction())
         self.menubar.addAction(self.menuSettings.menuAction())
+        self.menubar.addAction(self.menuSvg.menuAction())
         self.menubar.addAction(self.menuGCode.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
         self.menuSvg.addAction(self.actionOpenSvg)
-        self.menuSvg.addSeparator()
         self.menuFile.addAction(self.actionNewProject)
         self.menuFile.addAction(self.menuOpen_Recent_Jobs.menuAction())
         self.menuFile.addAction(self.actionOpenProject)
@@ -1061,15 +1076,15 @@ class Ui_mainwindow(object):
         self.actionOpenGCode.setText(QCoreApplication.translate("mainwindow", u"Load GCode", None))
         self.actionCnCTutorial.setText(QCoreApplication.translate("mainwindow", u"CnC Tutorial", None))
         self.actionQuit.setText(QCoreApplication.translate("mainwindow", u"Quit", None))
-        self.label_SvgSettings.setText(QCoreApplication.translate("mainwindow", u" Svg Settings", None))
+        self.label_SvgSettings.setText(QCoreApplication.translate("mainwindow", u"Svg", None))
         self.SvgModelWidth.setSuffix(QCoreApplication.translate("mainwindow", u"mm", None))
         self.label_title.setText(QCoreApplication.translate("mainwindow", u"Title", None))
         self.label_SvgModelHeight.setText(QCoreApplication.translate("mainwindow", u"Height", None))
         self.label_SvgModelWidth.setText(QCoreApplication.translate("mainwindow", u"Width", None))
         self.label_PxPerInch.setText(QCoreApplication.translate("mainwindow", u"user u sfact", None))
         self.SvgModelHeight.setSuffix(QCoreApplication.translate("mainwindow", u"mm", None))
-        self.SvgTitle.setText(QCoreApplication.translate("mainwindow", u"<html><head/><body><p>[title]</p></body></html>", None))
-        self.label_Tool.setText(QCoreApplication.translate("mainwindow", u" Tool (shared for all operations)", None))
+        self.SvgTitle.setText(QCoreApplication.translate("mainwindow", u"[title]", None))
+        self.label_Tool.setText(QCoreApplication.translate("mainwindow", u"Tool (shared for all operations)", None))
         self.label_Tool_Diameter_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_Tool_Cut_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
 #if QT_CONFIG(tooltip)
@@ -1099,10 +1114,10 @@ class Ui_mainwindow(object):
         self.label_Tool_Overlap.setText(QCoreApplication.translate("mainwindow", u"Overlap", None))
         self.label_Tool_HelixPitch.setText(QCoreApplication.translate("mainwindow", u"Helix Pitch ", None))
         self.label_Tool_HelixPitch_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
-        self.labelCurveToLineConversion.setText(QCoreApplication.translate("mainwindow", u" Curve To Line Conversion", None))
+        self.labelCurveToLineConversion.setText(QCoreApplication.translate("mainwindow", u"Curve To Line Conversion", None))
         self.label_CurveToLineConversion_MinimumNbSegments.setText(QCoreApplication.translate("mainwindow", u"Minimum Segments", None))
         self.label_CurveToLineConversion_MinimumSegmentsLength.setText(QCoreApplication.translate("mainwindow", u"Minimum Segments Length", None))
-        self.label_Tabs.setText(QCoreApplication.translate("mainwindow", u" Tabs", None))
+        self.label_Tabs.setText(QCoreApplication.translate("mainwindow", u"Tabs", None))
         self.label_TabsUnits.setText(QCoreApplication.translate("mainwindow", u"Units", None))
         self.Tabs_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
         self.Tabs_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
@@ -1118,7 +1133,7 @@ class Ui_mainwindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.simulator_webgl), QCoreApplication.translate("mainwindow", u"GCode Simulator", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.simulator_python), QCoreApplication.translate("mainwindow", u"GCode Simulator", None))
         self.SaveGcode.setText(QCoreApplication.translate("mainwindow", u"Save Gcode", None))
-        self.labelMaterial.setText(QCoreApplication.translate("mainwindow", u" Material", None))
+        self.labelMaterial.setText(QCoreApplication.translate("mainwindow", u"Material", None))
         self.label_Material_Units.setText(QCoreApplication.translate("mainwindow", u"Units", None))
         self.Material_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
         self.Material_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
@@ -1129,7 +1144,7 @@ class Ui_mainwindow(object):
         self.Material_ZOrigin.setItemText(1, QCoreApplication.translate("mainwindow", u"Bottom", None))
 
         self.label_Material_Clearance.setText(QCoreApplication.translate("mainwindow", u"Cleareance    ", None))
-        self.label_GCcodeConversion.setText(QCoreApplication.translate("mainwindow", u" GCode Conversion", None))
+        self.label_GCcodeConversion.setText(QCoreApplication.translate("mainwindow", u"GCode Conversion", None))
         self.label_GCodeConversion_YOffset_UnitsDescr.setText(QCoreApplication.translate("mainwindow", u"__units__", None))
         self.label_GCodeConversion_YOffset.setText(QCoreApplication.translate("mainwindow", u"Y Offset", None))
         self.label_GCodeConversion_GCodeUnits.setText(QCoreApplication.translate("mainwindow", u"Gcode Units", None))
@@ -1152,7 +1167,7 @@ class Ui_mainwindow(object):
         self.GCodeConversion_Units.setItemText(0, QCoreApplication.translate("mainwindow", u"inch", None))
         self.GCodeConversion_Units.setItemText(1, QCoreApplication.translate("mainwindow", u"mm", None))
 
-        self.labelGCodeGeneration.setText(QCoreApplication.translate("mainwindow", u" GCode Generation", None))
+        self.labelGCodeGeneration.setText(QCoreApplication.translate("mainwindow", u"GCode Generation", None))
         self.label_GCodeGeneration_ReturnToZeroAtEnd.setText(QCoreApplication.translate("mainwindow", u"Return to 0,0 at end", None))
         self.GCodeGeneration_ReturnToZeroAtEnd.setText("")
         self.label_GCodeGeneration_SpindleControl.setText(QCoreApplication.translate("mainwindow", u"Spindle automatic", None))
@@ -1160,7 +1175,7 @@ class Ui_mainwindow(object):
         self.label_GCodeGeneration_SpindleSpeed.setText(QCoreApplication.translate("mainwindow", u"Spindle speed", None))
         self.label_GCodeGeneration_ProgramEnd.setText(QCoreApplication.translate("mainwindow", u"Program End", None))
         self.GCodeGeneration_ProgramEnd.setText(QCoreApplication.translate("mainwindow", u"[M2]", None))
-        self.labelGCodeStatistics.setText(QCoreApplication.translate("mainwindow", u" GCode Statistics", None))
+        self.labelGCodeStatistics.setText(QCoreApplication.translate("mainwindow", u"GCode Statistics", None))
         self.label_GCodeStatistics_RunTime.setText(QCoreApplication.translate("mainwindow", u"Run Time", None))
         self.GCodeStatistics_RunTime.setText("")
         self.menuSvg.setTitle(QCoreApplication.translate("mainwindow", u"SVG", None))
