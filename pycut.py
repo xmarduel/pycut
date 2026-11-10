@@ -342,17 +342,6 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.toggleMiddleBottomAreaButton.setCheckable(True)
         self.toggleMiddleBottomAreaButton.setToolTip("Show/Hide Op. Table View")
 
-        self.toggleLeftMiddleBottomSidesButton = QtGui.QAction(icon=QtGui.QIcon(":/images/left-bottom-areas.png"),
-            iconText="hide/show",
-            parent=self
-        )
-        self.toggleLeftMiddleBottomSidesButton.triggered.connect(self.toggle_left_bottom_sides)
-        self.toggleLeftMiddleBottomSidesButton.setShortcut(QtGui.QKeySequence.StandardKey.MoveToEndOfDocument)
-        self.toggleLeftMiddleBottomSidesButton.setStatusTip("Show/Hide Left/Bottom Sides")
-        self.toggleLeftMiddleBottomSidesButton.setCheckable(True)
-        self.toggleLeftMiddleBottomSidesButton.setToolTip("Show/Hide Left/Bottom Sides View")
-
-
         if platform.system() == "Darwin":
             toggleViewsMenu = QtWidgets.QMenu(self.menuBar()) 
             toggleViewsMenu.setTitle("Toggle Views")
@@ -360,11 +349,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             toggleViewsMenu.addAction(self.toggleLeftSideButton)
             toggleViewsMenu.addAction(self.toggleRightSideButton)
             toggleViewsMenu.addAction(self.toggleMiddleBottomAreaButton)
-            toggleViewsMenu.addAction(self.toggleLeftMiddleBottomSidesButton)
 
             self.menuBar().insertAction(self.ui.menuHelp.menuAction(), toggleViewsMenu.menuAction())              
         else:
-            self.menuBar().addAction(self.toggleLeftMiddleBottomSidesButton)
             self.menuBar().addAction(self.toggleLeftSideButton)
             self.menuBar().addAction(self.toggleMiddleBottomAreaButton)
             self.menuBar().addAction(self.toggleRightSideButton)
