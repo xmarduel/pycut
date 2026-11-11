@@ -32,18 +32,19 @@ import argparse
 from typing import List
 from typing import Dict
 from typing import cast
+from typing import Optional
 
 from lxml import etree
 import numpy as np
 
 import freetype   # type: ignore [import-untyped]
-import svgpathtools   # type: ignore [import-untyped]
+import svgpathtools   # type: ignore
 from svgpathtools import wsvg, Line, QuadraticBezier, Path, parse_path
 
 # import ziafont
-import gpos
+import gpos   # type: ignore
 
-import svgtext2svgpaths_fonts_specs
+import svgtext2svgpaths_fonts_specs   # type: ignore
 
 
 class PathWithAttribs:
@@ -208,7 +209,7 @@ class SvgText2SvgPathsConverter:
         #        parent_elt.remove(text_path.elt)
         #        break
 
-        new_svg = etree.tostring(root)
+        new_svg = etree.tostring(root).decode()
 
         return new_svg
 
@@ -632,15 +633,15 @@ class FontFiles:
 
         def build_font_style(style: str, weight: str, stretch: str) -> str:
             # resulting font style
-            font_style = []
+            font_styles = []
             if stretch not in ["", "normal"]:
-                font_style.append(stretch)
+                font_styles.append(stretch)
             if weight not in ["", "normal"]:
-                font_style.append(weight)
+                font_styles.append(weight)
             if style not in ["", "normal"]:
-                font_style.append(style)
+                font_styles.append(style)
 
-            font_style = " ".join(font_style)
+            font_style = " ".join(font_styles)
 
             return font_style
 
@@ -766,31 +767,31 @@ class Char2SvgPath:
 
             # TTF/OTF is big-endian (>)
 
-            def readuint32(self, offset: int = None) -> int:
+            def readuint32(self, offset: Optional[int] = None) -> int:
                 """Read 32-bit unsigned integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">I", self.read(4))[0]
 
-            def readuint16(self, offset: int = None) -> int:
+            def readuint16(self, offset: Optional[int] = None) -> int:
                 """Read 16-bit unsigned integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">H", self.read(2))[0]
 
-            def readuint8(self, offset: int = None) -> int:
+            def readuint8(self, offset: Optional[int] = None) -> int:
                 """Read 8-bit unsigned integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">B", self.read(1))[0]
 
-            def readint8(self, offset: int = None) -> int:
+            def readint8(self, offset: Optional[int] = None) -> int:
                 """Read 8-bit signed integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">b", self.read(1))[0]
 
-            def readdate(self, offset: int = None) -> datetime:
+            def readdate(self, offset: Optional[int] = None) -> datetime:
                 """Read datetime"""
                 if offset:
                     self.seek(offset)
@@ -799,13 +800,13 @@ class Char2SvgPath:
                 mdate = fontepoch + timedelta(seconds=mtime)
                 return mdate
 
-            def readint16(self, offset: int = None) -> int:
+            def readint16(self, offset: Optional[int] = None) -> int:
                 """Read 16-bit signed integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">h", self.read(2))[0]
 
-            def readshort(self, offset: int = None) -> float:
+            def readshort(self, offset: Optional[int] = None) -> float:
                 """Read "short" fixed point number (S1.14)"""
                 x = self.readint16()
                 return float(x) * 2**-14

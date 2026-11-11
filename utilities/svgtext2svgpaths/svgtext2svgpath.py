@@ -43,9 +43,9 @@ import freetype  # type: ignore [import-untyped]
 from svgelements import Line, QuadraticBezier, Path, Move, Close, Matrix  # type: ignore [import-untyped]
 
 # import ziafont
-import gpos
+import gpos # type: ignore
 
-import svgtext2svgpaths_fonts_specs  # type: ignore [import-untyped]
+import svgtext2svgpaths_fonts_specs  # type: ignore
 
 
 class PathWithAttribs:
@@ -213,7 +213,7 @@ class SvgText2SvgPathsConverter:
         #        parent_elt.remove(text_path.elt)
         #        break
 
-        new_svg = etree.tostring(root)
+        new_svg = etree.tostring(root).decode()
 
         return new_svg
 
