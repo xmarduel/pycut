@@ -562,7 +562,7 @@ class SvgResolver:
         item.addnext(r)
        
         parent = item.getparent()
-        if parent:
+        if parent is not None:
             parent.remove(item)
 
     def make_xml_ellipse(self, item: etree._Element, shape: svgelements.Shape):
@@ -650,7 +650,7 @@ class SvgResolver:
         item.addnext(l)
         
         parent = item.getparent()
-        if parent:
+        if parent is not None:
             parent.remove(item)
 
     def make_xml_polyline(self, item: etree._Element, shape: svgelements.Shape):

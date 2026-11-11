@@ -124,20 +124,13 @@ Also note how the opacity values in the styles are merged in the resolved items'
   <li><p>rotate</p>
     <ul>
       <li>circles : ok </li>
-	    <li>rectangle : NO ROTATION (transform into a polygon ?)</li>
+	    <li>rectangle : NO ROTATION (transform into a polygon or path -if rounded corners- ?)</li>
 	    <li>polygon : ok</li>
 	    <li>line : ok</li>
 	    <li>polyline : ok</li>
 	    <li>ellipse : NO ROTATION (transform into a polygon ?)</li>
       <li>path : ok</li>
 	  </ul>
-  </li>
-  <li><p>scale</p>
-    <ul>
-      <li>rectangle: no transformation when the scale transformation is given with y coefficient negative (-1 for example) there the 
-      rectangle is flipped. <strong>FIXED</strong>FIXED
-      </li>
-    </ul>
   </li>
 </ul>
 
