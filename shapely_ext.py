@@ -21,6 +21,13 @@ from typing import cast
 from shapely import BufferJoinStyle
 import shapely.geometry
 
+from shapely.geometry import LinearRing
+from shapely.geometry import LineString
+from shapely.geometry import MultiLineString
+from shapely.geometry import Polygon
+from shapely.geometry import MultiPolygon
+from shapely.geometry import GeometryCollection
+
 from shapely_matplotlib import ShapelyMatplotlib
 from shapely_utils import ShapelyUtils
 
@@ -31,7 +38,7 @@ class ShapelyMultiPolygonOffset:
     It has to take care of the possible offseted interiors of the polygon
     """
 
-    def __init__(self, multipoly: shapely.geometry.MultiPolygon):
+    def __init__(self, multipoly: MultiPolygon):
         """ """
         # input
         self.multipoly = multipoly
@@ -44,7 +51,7 @@ class ShapelyMultiPolygonOffset:
         resolution: int,
         join_style: BufferJoinStyle,
         mitre_limit: float,
-    ) -> shapely.geometry.MultiPolygon:
+    ) -> MultiPolygon:
         """
         Generate offseted polygons.
         """
@@ -53,13 +60,13 @@ class ShapelyMultiPolygonOffset:
         for poly in self.multipoly.geoms:
             if False:
                 # old method
-                linestring = shapely.geometry.LineString(poly.exterior)
+                linestring = LineString(poly.exterior)
 
                 # buggy for non-convex shapes
 
             else:
                 # new method
-                linearring = shapely.geometry.LinearRing(poly.exterior)
+                linearring = LinearRing(poly.exterior)
 
                 # cnt = ShapelyMatplotlib.display(
                 #    "poly/linearring to offset", linearring
@@ -73,7 +80,7 @@ class ShapelyMultiPolygonOffset:
                     # ex: tudor "j" small point which is a poly of only 3/4 points
                     # its offset as LineString is "bad"
 
-                    linestring = shapely.geometry.LineString(linearring)
+                    linestring = LineString(linearring)
 
             # cnt = ShapelyMatplotlib.display(
             #    "poly/linestring to offset", linestring
@@ -95,7 +102,7 @@ class ShapelyMultiPolygonOffset:
             # simplfy resulting offset  !WICHTIG!
             # print("offset: ", ext_offset)
             if offset.geom_type == "LineString":
-                offset = cast(shapely.geometry.LineString, offset)
+                offset = cast(LineString, offset)
 
                 # cnt = ShapelyMatplotlib.display(
                 #    f"offset {side} - as LineString|MultiLineString (from linearring)",
@@ -117,7 +124,7 @@ class ShapelyMultiPolygonOffset:
                 #    ext_offset,
                 # )
             elif offset.geom_type == "MultiLineString":
-                offset = cast(shapely.geometry.MultiLineString, offset)
+                offset = cast(MultiLineString, offset)
                 offset = ShapelyUtils.simplify_multiline(offset, 0.005)
 
             # from the offseted lines, build a multipolygon that we diff with the interiors
@@ -131,7 +138,7 @@ class ShapelyMultiPolygonOffset:
             if poly.interiors:
                 interior_polys = []
                 for interior in poly.interiors:
-                    ipoly = shapely.geometry.Polygon(interior)
+                    ipoly = Polygon(interior)
 
                     # simplify the polygon
                     # this may be important so that the offset becomes Ok (example: tudor [AD])
@@ -139,7 +146,7 @@ class ShapelyMultiPolygonOffset:
                     simp_poly = ipoly.simplify(0.001)
 
                     if simp_poly.geom_type == "Polygon":
-                        simp_poly = cast(shapely.geometry.Polygon, simp_poly)
+                        simp_poly = cast(Polygon, simp_poly)
                         ipoly = shapely.geometry.polygon.orient(simp_poly)
 
                         interior_polys.append(ipoly)
@@ -183,20 +190,20 @@ class ShapelyMultiPolygonOffset:
                     raise
 
                 if sol_poly.geom_type == "Polygon":
-                    poly = cast(shapely.geometry.Polygon, sol_poly)
+                    poly = cast(Polygon, sol_poly)
                     polys.append(poly)
                 elif sol_poly.geom_type == "MultiPolygon":
-                    multi_poly = cast(shapely.geometry.MultiPolygon, sol_poly)
+                    multi_poly = cast(MultiPolygon, sol_poly)
                     for poly in multi_poly.geoms:
                         polys.append(poly)
                 elif sol_poly.geom_type == "GeometryCollection":
-                    collection = cast(shapely.geometry.GeometryCollection, sol_poly)
+                    collection = cast(GeometryCollection, sol_poly)
                     for geom in collection.geoms:
                         if geom.geom_type == "Polygon":
-                            poly = cast(shapely.geometry.Polygon, geom)
+                            poly = cast(Polygon, geom)
                             polys.append(poly)
                         elif geom.geom_type == "MultiPolygon":
-                            multi_poly = cast(shapely.geometry.MultiPolygon, geom)
+                            multi_poly = cast(MultiPolygon, geom)
                             for poly in multi_poly.geoms:
                                 polys.append(poly)
 
@@ -219,7 +226,7 @@ class ShapelyMultiPolygonOffsetInteriors:
     It has to take care of the offseted exterior of the polygon
     """
 
-    def __init__(self, multipoly: shapely.geometry.MultiPolygon):
+    def __init__(self, multipoly: MultiPolygon):
         """ """
         self.multipoly = multipoly
 
@@ -231,11 +238,11 @@ class ShapelyMultiPolygonOffsetInteriors:
         resolution: int,
         join_style: BufferJoinStyle,
         mitre_limit: float,
-    ) -> shapely.geometry.MultiPolygon:
+    ) -> MultiPolygon:
         """
         main method
         """
-        polys: list[shapely.geometry.Polygon] = []
+        polys: list[Polygon] = []
 
         # ShapelyMatplotlib.display("geometry", self.multipoly)
 
@@ -245,7 +252,7 @@ class ShapelyMultiPolygonOffsetInteriors:
 
             linestrings = []
             for interior in poly.interiors:
-                linestring = shapely.geometry.LineString(interior)
+                linestring = LineString(interior)
                 linestrings.append(linestring)
 
             int_offsets = []
@@ -313,27 +320,27 @@ class ShapelyMultiPolygonOffsetInteriors:
                     raise
 
                 if sol_poly.geom_type == "Polygon":
-                    poly = cast(shapely.geometry.Polygon, sol_poly)
+                    poly = cast(Polygon, sol_poly)
                     polys.append(poly)
                 elif sol_poly.geom_type == "MultiPolygon":
-                    multi_poly = cast(shapely.geometry.MultiPolygon, sol_poly)
+                    multi_poly = cast(MultiPolygon, sol_poly)
                     for poly in multi_poly.geoms:
                         polys.append(poly)
                 elif sol_poly.geom_type == "GeometryCollection":
-                    collection = cast(shapely.geometry.GeometryCollection, sol_poly)
+                    collection = cast(GeometryCollection, sol_poly)
                     for geom in collection.geoms:
                         if geom.geom_type == "Polygon":
-                            poly = cast(shapely.geometry.Polygon, geom)
+                            poly = cast(Polygon, geom)
                             polys.append(poly)
                         elif geom.geom_type == "MultiPolygon":
-                            xgeom = cast(shapely.geometry.MultiPolygon, geom)
+                            xgeom = cast(MultiPolygon, geom)
                             for poly in xgeom.geoms:
                                 polys.append(poly)
 
             else:  # without exterior
                 for poly in interior_multipoly.geoms:
                     if poly.geom_type == "Polygon":
-                        poly = cast(shapely.geometry.Polygon, poly)
+                        poly = cast(Polygon, poly)
                         polys.append(poly)
 
         o_multipoly = ShapelyUtils.build_multipoly_from_list_of_polygons(polys)
