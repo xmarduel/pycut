@@ -21,6 +21,7 @@ class ShapelyMatplotlib:
     COEFF_Y = -1.0 # for svg
 
     cnt = 0  # matplotlib figures counter
+    style_index = 0
 
     @classmethod
     def plot_geom(cls, title: str, geom: Any,) -> int:
@@ -31,7 +32,7 @@ class ShapelyMatplotlib:
     def display(cls, title: str, geom: Any, figure=True) -> int:
         """ """
         # a counter
-        #cls.cnt += 1
+        cls.cnt += 1
 
         if cls.MAPLOTLIB_DEBUG == False:
             return cls.cnt
@@ -39,15 +40,15 @@ class ShapelyMatplotlib:
         # dispatch
         if geom.geom_type == "LineString":
             cls._display_linestring(title, geom, figure)
-        if geom.geom_type == "LinearRing":
+        elif geom.geom_type == "LinearRing":
             cls._display_linestring(title, geom, figure)
-        if geom.geom_type == "MultiLineString":
+        elif geom.geom_type == "MultiLineString":
             cls._display_multilinestring(title, geom, figure)
-        if geom.geom_type == "Polygon":
+        elif geom.geom_type == "Polygon":
             cls._display_polygon(title, geom, figure)
-        if geom.geom_type == "MultiPolygon":
+        elif geom.geom_type == "MultiPolygon":
             cls._display_multipolygon(title, geom, figure)
-        if geom.geom_type == "GeometryCollection":
+        elif geom.geom_type == "GeometryCollection":
             cls._display_geometrycollection(title, geom, figure)
         else:
             pass
@@ -65,6 +66,23 @@ class ShapelyMatplotlib:
         return npxs, npys
 
     @classmethod
+    def _get_style(cls):
+        styles = {
+            0: "ro-",
+            1: "g+-",
+            2: "bo-",
+            3: "r+-",
+            4: "go-",
+            5: "b+-",
+        }
+
+        style = styles[cls.style_index % 6]
+
+        cls.style_index += 1
+
+        return style
+
+    @classmethod
     def _display_linestring(cls, title: str, linestring: shapely.geometry.LineString | shapely.geometry.LinearRing, figure=True, pause=True):
         """ """
         if figure:
@@ -74,7 +92,7 @@ class ShapelyMatplotlib:
 
         npx, npy = cls.linestring_np_coords(linestring)
         
-        plt.plot(npx, npy, "bo-")
+        plt.plot(npx, npy, cls._get_style())
         plt.axis("equal")
         plt.show()
         
@@ -90,19 +108,10 @@ class ShapelyMatplotlib:
             
         plt.title(title + f" [{cls.cnt}]")
 
-        style = {
-            0: "ro-",
-            1: "g+-",
-            2: "bo-",
-            3: "r+-",
-            4: "go-",
-            5: "b+-",
-        }
-
-        for k, linestring in enumerate(multilinestring.geoms):
+        for linestring in multilinestring.geoms:
             npx, npy = cls.linestring_np_coords(linestring)
 
-            plt.plot(npx, npy, style[k % 6])
+            plt.plot(npx, npy, cls._get_style())
 
         plt.axis("equal")
         plt.show()
@@ -119,15 +128,12 @@ class ShapelyMatplotlib:
 
         plt.title(title + f" [{cls.cnt}]")
 
-        style_ext = {0: "bo-"}
-        style_int = {0: "r+--", 1: "go-"}
-
         npx, npy = cls.linestring_np_coords(polygon.exterior)
-        plt.plot(npx, npy, style_ext[0])
+        plt.plot(npx, npy, cls._get_style())
 
-        for k, interior in enumerate(polygon.interiors):
+        for interior in polygon.interiors:
             npx, npy = cls.linestring_np_coords(interior)
-            plt.plot(npx, npy, style_int[k % 2])
+            plt.plot(npx, npy, cls._get_style())
 
         plt.axis("equal")
         plt.show()
@@ -144,24 +150,14 @@ class ShapelyMatplotlib:
             
         plt.title(title + f" [{cls.cnt}]")
 
-        style_ext = {
-            0: "bo-",
-            1: "ro-",
-            2: "go-",
-        }
-        style_int = {
-            0: "b+--",
-            1: "r+--", 
-            2: "g+--"
-        }
 
-        for k, poly in enumerate(multipoly.geoms):
+        for poly in multipoly.geoms:
             npx, npy = cls.linestring_np_coords(poly.exterior)
-            plt.plot(npx, npy, style_ext[k % 3])
+            plt.plot(npx, npy, cls._get_style())
 
             for q, interior in enumerate(poly.interiors):
                 npx, npy = cls.linestring_np_coords(interior)
-                plt.plot(npx, npy, style_int[q % 3])
+                plt.plot(npx, npy, cls._get_style())
 
         plt.axis("equal")
         plt.show()
