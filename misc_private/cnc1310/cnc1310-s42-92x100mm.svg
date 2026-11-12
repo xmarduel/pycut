@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg version="1.1"
-  width="92mm"
+  width="200mm"
   height="100mm"
-  viewBox="0 0 92 100"
+  viewBox="0 0 200 100"
   id="cnc1310-spindle-plate"
   xmlns="http://www.w3.org/2000/svg"
   xmlns:svg="http://www.w3.org/2000/svg">
@@ -16,7 +16,7 @@
    	<circle id="spindle_screw_hole_3.0mm"  style="fill:#008080;fill-opacity:1" cx="0" cy="0" r="1.50" />
   </defs>
    
-  <g id="layer1" transform="translate(0,0)">
+  <g id="bottom" transform="translate(0,0)">
     <path id="contour" 
       style="fill:none;stroke:#0000ff;stroke-width:0.10;opacity:1"
       d="M 0.0,0.0 h 92 v 68 h -15.6 a 32.0 32.0 0 0 1  -60.8 0 h -15.6 z" />
@@ -61,27 +61,75 @@
     <use href="#spacer_screw_5.0mm" transform="translate( 9 72)" id="spacer_screw_SW" />
     <use href="#spacer_screw_5.0mm" transform="translate(83 72)" id="spacer_screw_SE" />
 	
-	<circle  id="spindle_shaft" style="fill:#0000ff;fill-opacity:0.5"
+	  <circle  id="spindle_shaft" style="fill:#0000ff;fill-opacity:0.5"
       cx="46"
       cy="58"
-      r="10.1" />
+      r="10.0" />
 	  
-	<g id="spindle_screw_holes" transform="translate(46,58)">
-	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(0)   translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_NN" />
-	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(60)  translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_1" />
-	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(120) translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_2" />
-	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(180) translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_SS" />
-	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(240) translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_3" />
-	  <use href="#spindle_screw_hole_3.0mm" transform="rotate(300) translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_4" />
-	</g>
-			
-
+	  <g id="spindle_screw_holes" transform="translate(46,58)">
+	    <use href="#spindle_screw_hole_3.0mm" transform="rotate(0)   translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_NN" />
+	    <use href="#spindle_screw_hole_3.0mm" transform="rotate(60)  translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_1" />
+	    <use href="#spindle_screw_hole_3.0mm" transform="rotate(120) translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_2" />
+	    <use href="#spindle_screw_hole_3.0mm" transform="rotate(180) translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_SS" />
+	    <use href="#spindle_screw_hole_3.0mm" transform="rotate(240) translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_3" />
+	    <use href="#spindle_screw_hole_3.0mm" transform="rotate(300) translate(0.0 17.5)" id="spindle_screw_hole_3.0mm_4" />
+	  </g>
     <text id="legend"
       xml:space="preserve"
       style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
       x="10" y="55" >
       Diameter Spindle: 42 mm
     </text>
+
+    <path id="horizontal_line" style="fill:none;stroke:#000000;stroke-width:0.1"      d="M 0,58 92,58"  />
+    <path id="vertical_line" style="fill:none;stroke:#000000;stroke-width:0.1"        d="M 46,0  46,90" />
+  </g>
+
+  <g id="top" transform="translate(100,0)">
+     
+    <path id="contour" 
+      style="fill:none;stroke:#0000ff;stroke-width:0.10;opacity:1"
+      d="M 0.0,0.0 h 92 v 68 a 32.0 20.0 0 0 1  -92 0 z" />
+
+    <g id="lead_screw_screw_screws" transform="translate(46,16)">
+      <circle id="lead_screw_main_screw" style="fill:#ff0000;fill-opacity:1" cx="0" cy="0" r="5.0" />
+
+	    <use href="#spindle_screw_hole_3.0mm" transform="rotate(0)   translate(0 8)" id="lead_screw_screw_3.0mm_N" />
+	    <use href="#spindle_screw_hole_3.0mm" transform="rotate(90)  translate(0 8)" id="lead_screw_screw_3.0mm_E" />
+	    <use href="#spindle_screw_hole_3.0mm" transform="rotate(180) translate(0 8)" id="lead_screw_screw_3.0mm_S" />
+	    <use href="#spindle_screw_hole_3.0mm" transform="rotate(270) translate(0 8)" id="lead_screw_screw_3.0mm_W" />
+	  </g>
+
+
+    <use href="#bearing_base"        x="1"  y="0"  id="bearing_base_left" />
+    <use href="#bearing_cylinder"    x="17" y="16" id="bearing_cylinder_left" />
+    <use href="#bearing_base"        x="59" y="0"  id="bearing_base_right" />
+    <use href="#bearing_cylinder"    x="75" y="16" id="bearing_cylinder_right" />
+
+    <g transform="translate(17,16)">
+      <use href="#bearing_screw_4.0mm" transform="rotate(-45)   translate(0.0 16)" id="bearing_screw_4.0mm_use28" />
+      <use href="#bearing_screw_4.0mm" transform="rotate(-135)  translate(0.0 16)" id="bearing_screw_4.0mm_use30" />
+      <use href="#bearing_screw_4.0mm" transform="rotate(-225)  translate(0.0 16)" id="bearing_screw_4.0mm_use36" />
+      <use href="#bearing_screw_4.0mm" transform="rotate(-315)  translate(0.0 16)" id="bearing_screw_4.0mm_use38" />
+    </g>
+	
+	  <g transform="translate(75,16)">
+      <use href="#bearing_screw_4.0mm" transform="rotate(-45)   translate(0.0 16)" id="bearing_screw_4.0mm_use32" />
+      <use href="#bearing_screw_4.0mm" transform="rotate(-135)  translate(0.0 16)" id="bearing_screw_4.0mm_use34" />
+      <use href="#bearing_screw_4.0mm" transform="rotate(-225)  translate(0.0 16)" id="bearing_screw_4.0mm_use40" />
+      <use href="#bearing_screw_4.0mm" transform="rotate(-315)  translate(0.0 16)" id="bearing_screw_4.0mm_use42" />
+    </g>
+
+
+    <circle  id="spindle-hole" style="fill:#ff0000;fill-opacity:1"
+      cx="46"
+      cy="58"
+      r="21.0" />
+      
+    <use href="#spacer_screw_5.0mm" transform="translate( 9 44)" id="spacer_screw_NW" />
+    <use href="#spacer_screw_5.0mm" transform="translate(83 44)" id="spacer_screw_NE" />
+    <use href="#spacer_screw_5.0mm" transform="translate( 9 72)" id="spacer_screw_SW" />
+    <use href="#spacer_screw_5.0mm" transform="translate(83 72)" id="spacer_screw_SE" />
 
     <path id="horizontal_line" style="fill:none;stroke:#000000;stroke-width:0.1"      d="M 0,58 92,58"  />
     <path id="vertical_line" style="fill:none;stroke:#000000;stroke-width:0.1"        d="M 46,0  46,90" />

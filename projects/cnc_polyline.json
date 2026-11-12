@@ -28,6 +28,20 @@
       "units": "mm",
       "margin": 2.0,
       "width": 4.8
+    },
+    {
+      "name": "op",
+      "type": "Inside",
+      "cut_depth": 5.0,
+      "paths": [
+        "polyline2"
+      ],
+      "ramp_plunge": false,
+      "combinaison": "Union",
+      "direction": "Conventional",
+      "units": "mm",
+      "margin": 0.0,
+      "width": 3.0
     }
   ],
   "settings": {
@@ -82,8 +96,8 @@
       "units": "mm",
       "flip_xy": false,
       "use_offset": false,
-      "x_offset": -75.0,
-      "y_offset": 48.0,
+      "x_offset": 0.0,
+      "y_offset": 0.0,
       "xy_reference": "ZERO_CENTER_OF_OP"
     },
     "GCodeGeneration": {
