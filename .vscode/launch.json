@@ -10,9 +10,9 @@
             "request": "launch",
             "program": "svgresolver.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut\\utilities\\svgresolver",
+            "cwd": "${workspaceFolder}/utilities/svgresolver",
             "args": [
-                "test\\cnc1310-sides-horizontal.svg"
+                "test/rect_rotated.svg"
             ]
         },
         {
@@ -21,7 +21,7 @@
             "request": "launch",
             "program": "gcode_dressup.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut\\utilities\\gcodefixup",
+            "cwd": "${workspaceFolder}/utilities/gcodefixup",
         },
         {
             "name": "CODE DRESSUP - UNITTEST",
@@ -29,15 +29,37 @@
             "request": "launch",
             "program": "test_dressup.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut\\utilities\\gcodefixup",
+            "cwd": "${workspaceFolder}/utilities/gcodefixup",
         },
         {
-            "name": "MACOSX - CNC1310 PROJECT",
+            "name": "MOTOR PLATE PROJECT",
             "type": "debugpy",
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}/GITHUB/pycut",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "-p", "misc_private/unimat_cnc_kit/dc_motor_200w_holder.json"
+            ]
+        },
+        {
+            "name": "POLYLINE PROJECT",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "-p", "projects/cnc_polyline.json"
+            ]
+        },
+        {
+            "name": "CNC1310 PROJECT",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pycut.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
             "args": [
                 "-p", "misc_private/cnc1310/cnc1310-s42.json"
             ]
@@ -48,25 +70,25 @@
             "request": "launch",
             "program": "driver.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut\\gcodesimulator_python",
+            "cwd": "${workspaceFolder}/gcodesimulator",
             "args": "./tests/jscut_mini.gcode --cutterdiameter=6.0 --cutterheight=30.0"
         },
         {
-            "name": "MACOSX - SIMULATOR_STANDALONE - CANDLE_PARSER -  G2",
+            "name": "SIMULATOR_STANDALONE - CANDLE_PARSER -  G2",
             "type": "debugpy",
             "request": "launch",
             "program": "gcodesimulator_driver.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}/GITHUB/pycut/gcodesimulator",
+            "cwd": "${workspaceFolder}/gcodesimulator",
             "args": "./tests/g2.gcode --cutterdiameter=19.05 --cutterheight=33.0 --candleparser"
         },
         {
-            "name": "MACOSX - SIMULATOR STANDALONE - CANDLE_PARSER NEW - G5",
+            "name": "SIMULATOR STANDALONE - CANDLE_PARSER NEW - G5",
             "type": "debugpy",
             "request": "launch",
             "program": "gcodesimulator_driver.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}/GITHUB/pycut/gcodesimulator",
+            "cwd": "${workspaceFolder}/gcodesimulator",
             "args": ["./tests/g5.gcode", "--cutterdiameter=6.0", "--cutterheight=13.0", "--candleparser"]
         },
         {
@@ -75,7 +97,7 @@
             "request": "launch",
             "program": "gcodesimulator_driver.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut\\gcodesimulator",
+            "cwd": "${workspaceFolder}/gcodesimulator",
             "args": ["./tests/g2.gcode", "--cutterdiameter=19.05", "--candleparser"]
         },
         {
@@ -84,7 +106,7 @@
             "request": "launch",
             "program": "test_parser.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut\\gcodeviewer"
+            "cwd": "${workspaceFolder}/gcodeviewer"
         },
         {
             "name": "CONTROL PANEL",
@@ -92,7 +114,7 @@
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut",
+            "cwd": "${workspaceFolder}",
             "args": [ "-p",
                 "./jobs/cnc_control_panel.json"
             ]
@@ -103,7 +125,7 @@
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut",
+            "cwd": "${workspaceFolder}",
             "args": []
         },
         {
@@ -112,7 +134,7 @@
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut",
+            "cwd": "${workspaceFolder}",
             "args": ["-p", "vise2-front_and_back_parts.json"]
         },
         {
@@ -121,8 +143,8 @@
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut",
-            "args": ["-p", "misc_private\\unimat_cnc_kit\\dc_motor_holder.json"]
+            "cwd": "${workspaceFolder}",
+            "args": ["-p", "misc_private/unimat_cnc_kit/dc_motor_holder.json"]
         },
         {
             "name": "OPENED PATH POLYLINE",
@@ -130,8 +152,8 @@
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut",
-            "args": ["-p", "jobs\\cnc_polyline.json" ]
+            "cwd": "${workspaceFolder}",
+            "args": ["-p", "jobs/cnc_polyline.json" ]
         },
         {
           "name": "OPENED PATH MULTILINE",
@@ -139,8 +161,8 @@
           "request": "launch",
           "program": "pycut.py",
           "console": "integratedTerminal",
-          "cwd": "${userHome}\\Documents\\GITHUB\\pycut",
-          "args": ["-p", "projects\\test_multiline.json" ]
+          "cwd": "${workspaceFolder}",
+          "args": ["-p", "projects/test_multiline.json" ]
         },
         {
             "name": "CONTROL PANEL",
@@ -148,8 +170,8 @@
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut",
-            "args": ["-p", "jobs\\cnc_control_panel.json" ]
+            "cwd": "${workspaceFolder}",
+            "args": ["-p", "jobs/cnc_control_panel.json" ]
         },
         {
             "name": "KASTEN",
@@ -157,8 +179,8 @@
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut",
-            "args": ["-p", "misc_private\\others_stuff\\kasten.json" ]
+            "cwd": "${workspaceFolder}",
+            "args": ["-p", "misc_private/others_stuff/kasten.json" ]
         },
         {
             "name": "SMALL KASTEN",
@@ -166,8 +188,8 @@
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut",
-            "args": ["-p", "misc_private\\others_stuff\\small_kasten.json"]
+            "cwd": "${workspaceFolder}",
+            "args": ["-p", "misc_private/others_stuff/small_kasten.json"]
             
         },
         {
@@ -176,9 +198,9 @@
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut",
+            "cwd": "${workspaceFolder}",
             "args": [
-                "misc_private\\qkg38\\qkg38.json"
+                "misc_private/qkg38/qkg38.json"
             ]
         },
         {
@@ -187,10 +209,8 @@
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut",
-            "args": ["-p", 
-                "jobs\\cnc1310_horizontal_plate.json"
-            ]
+            "cwd": "${workspaceFolder}",
+            "args": ["-p", "jobs/cnc1310_horizontal_plate.json"]
         },
         {
             "name": "BEARING TEST",
@@ -198,10 +218,8 @@
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut",
-            "args": ["-p", 
-                "jobs\\cnc_test_bearing.json"
-            ]
+            "cwd": "${workspaceFolder}",
+            "args": ["-p", "jobs/cnc_test_bearing.json"]
         },
         {
             "name": "BACKLASH TEST",
@@ -209,7 +227,7 @@
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut",
+            "cwd": "${workspaceFolder}",
             "args": [
                 "jobs\\cnc1310_backlash_test.json"
             ]
@@ -220,9 +238,9 @@
             "request": "launch",
             "program": "pycut.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut",
+            "cwd": "${workspaceFolder}",
             "args": ["-p", 
-                "misc_private\\svg\\hobbymat\\hobbymat_gear_40.json"
+                "misc_private/svg/hobbymat/hobbymat_gear_40.json"
             ]
         },
         {
@@ -231,7 +249,7 @@
             "request": "launch",
             "program": "text_to_path.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut\\svgtext2svgpaths",
+            "cwd": "${workspaceFolder}/svgtext2svgpaths",
             "args": []
         },
         {
@@ -240,7 +258,7 @@
             "request": "launch",
             "program": "test_svgpath_discretisation.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut\\test",
+            "cwd": "${workspaceFolder}/test",
             "args": []
         },
         {
@@ -249,17 +267,8 @@
             "request": "launch",
             "program": "test_shapely_offset.py",
             "console": "integratedTerminal",
-            "cwd": "${userHome}\\Documents\\GITHUB\\pycut\\test",
+            "cwd": "${workspaceFolder}/test",
             "args": []
-        },
-        {
-          "name": "MACOSX - DC MOTOR HOLDER SVG",
-          "type": "debugpy",
-          "request": "launch",
-          "program": "pycut.py",
-          "console": "integratedTerminal",
-          "cwd": "${userHome}/GITHUB/pycut",
-          "args": [ "--svg", "misc_private/unimat_cnc_kit/dc_motor_200w_holder.resolved.svg" ]
         },
         {
           "name": "PYCUT ALL LETTERS TUDOR",
@@ -267,17 +276,8 @@
           "request": "launch",
           "program": "pycut.py",
           "console": "integratedTerminal",
-          "cwd": "${userHome}/GITHUB/pycut",
+          "cwd": "${workspaceFolder}",
           "args": [ "--proj", "projects/cnc_all_letters_tudor.json" ]
-        },
-         {
-          "name": "BASIC",
-          "type": "debugpy",
-          "request": "launch",
-          "program": "pycut.py",
-          "console": "integratedTerminal",
-          "cwd": "${userHome}/Documents/GITHUB/pycut",
-          "args": [ "-p", "misc_private\\cnc1310\\cnc1310-s42.json" ]
         },
     ]
 }
