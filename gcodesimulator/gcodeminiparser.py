@@ -24,8 +24,8 @@ from typing import List
 from PySide6.QtCore import qIsNaN
 from PySide6.QtGui import QVector3D
 
-from gcodesimulator.parser.parser import CandleParser
-#from gcodesimulator.parser_11_2.parser import CandleParser
+#from gcodesimulator.parser.parser import CandleParser
+from gcodesimulator.parser_11_2.parser import CandleParser
 
 sNaN = float("NaN")
 
@@ -121,7 +121,7 @@ class GcodeMiniParser:
                 end = self.char_no
                 return float(self.gcode[begin:end])
             except Exception:
-                return None  # important ! keep it like this ! FIXME later
+                return sNaN  # None ? important ! keep it like this ! FIXME later
 
         self.char_no = 0
         self.line_no = 0
