@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with pycut.  If not, see <http:#www.gnu.org/licenses/>.
 
-from typing import Literal
 from typing import cast
 
 from shapely import BufferJoinStyle
@@ -58,35 +57,28 @@ class ShapelyMultiPolygonOffset:
         polys = []
 
         for poly in self.multipoly.geoms:
-            if False:
-                # old method
-                linestring = LineString(poly.exterior)
 
-                # buggy for non-convex shapes
+            linearring = LinearRing(poly.exterior)
 
-            else:
-                # new method
-                linearring = LinearRing(poly.exterior)
+            o_to_offset = LineString(linearring)
 
-                # cnt = ShapelyMatplotlib.display(
-                #    "poly/linearring to offset", linearring
-                # )
+            # for very small polygons of only a few points, removing 1 point
+            # can be catastrophic
+            # ex: tudor "j" small point which is a poly of only 3/4 points
+            # its offset as LineString is "bad"
+            # so simplify only for large polygons (more than 6 pts)
 
-                if len(linearring.coords) > 6:
-                    linestring = ShapelyUtils.linearring_to_linestring(linearring)
+            if len(linearring.coords) > 6:
+                o_to_offset = linearring.simplify(0.002) 
+
+                if o_to_offset.geom_type in ["LinearRing", "LineString"]:
+                    pass # ok
                 else:
-                    # for very small polygons of only a few points, removing 1 point
-                    # can be catastrophic
-                    # ex: tudor "j" small point which is a poly of only 3/4 points
-                    # its offset as LineString is "bad"
+                    # it did not go well...
+                    o_to_offset = ShapelyUtils.linearring_to_linestring(linearring)
+                
 
-                    linestring = LineString(linearring)
-
-            # cnt = ShapelyMatplotlib.display(
-            #    "poly/linestring to offset", linestring
-            # )
-
-            offset = linestring.parallel_offset(
+            offset = o_to_offset.parallel_offset(
                 amount,
                 side,
                 resolution=resolution,
@@ -94,44 +86,33 @@ class ShapelyMultiPolygonOffset:
                 mitre_limit=mitre_limit,
             )
 
-            # cnt = ShapelyMatplotlib.display(
-            #    f"offset {side} - as LineString|MultiLineString (from linearring)",
-            #    ext_offset,
-            # )
+            #cnt = ShapelyMatplotlib.display(
+            #    f"offset {side} - as LineString|MultiLineString (from linestring)",
+            #    GeometryCollection([o_to_offset, offset])
+            #)
 
             # simplfy resulting offset  !WICHTIG!
-            # print("offset: ", ext_offset)
-            if offset.geom_type == "LineString":
+
+            if offset.geom_type == "LineString" or offset.geom_type == "LinearRing":
                 offset = cast(LineString, offset)
 
-                # cnt = ShapelyMatplotlib.display(
-                #    f"offset {side} - as LineString|MultiLineString (from linearring)",
-                #    offset,
-                # )
-                print("(1) offset length = ", offset.length, len(list(offset.coords)))
+                offset = ShapelyUtils.simplify_line(offset, 0.002)
 
-                offset = ShapelyUtils.simplify_line(offset, 0.005)
+                #cnt = ShapelyMatplotlib.display(
+                #    f"offset {side} - simplified (from linestring)", offset)
 
-                if offset.geom_type == "LineString":
-                    print(
-                        "(2) offset length = ", offset.length, len(list(offset.coords))
-                    )
-                if offset.geom_type == "MultiLineString":
-                    pass
-
-                # cnt = ShapelyMatplotlib.display(
-                #    f"offset {side} - as LineString|MultiLineString (from linestring)",
-                #    ext_offset,
-                # )
             elif offset.geom_type == "MultiLineString":
                 offset = cast(MultiLineString, offset)
-                offset = ShapelyUtils.simplify_multiline(offset, 0.005)
+                offset = ShapelyUtils.simplify_multiline(offset, 0.002)
+
+                #cnt = ShapelyMatplotlib.display(
+                #    f"offset {side} - simplified (from linestring)", offset)
 
             # from the offseted lines, build a multipolygon that we diff with the interiors
             exterior_multipoly = ShapelyUtils.build_multipoly_from_offsets([offset])
             # print("exterior_multipoly VALID ? ", exterior_multipoly.is_valid)
 
-            # ShapelyMatplotlib.display(
+            #cnt = ShapelyMatplotlib.display(
             #    "geom multipoly from ext offset", exterior_multipoly)
 
             # now consider the interiors
@@ -143,7 +124,7 @@ class ShapelyMultiPolygonOffset:
                     # simplify the polygon
                     # this may be important so that the offset becomes Ok (example: tudor [AD])
                     # where of offset is a MultiLineString instead of a Linestring
-                    simp_poly = ipoly.simplify(0.001)
+                    simp_poly = ipoly.simplify(0.002)
 
                     if simp_poly.geom_type == "Polygon":
                         simp_poly = cast(Polygon, simp_poly)
@@ -250,14 +231,9 @@ class ShapelyMultiPolygonOffsetInteriors:
             if not poly.interiors:
                 continue
 
-            linestrings = []
-            for interior in poly.interiors:
-                linestring = LineString(interior)
-                linestrings.append(linestring)
-
             int_offsets = []
-            for linestring in linestrings:
-                int_offset = linestring.parallel_offset(
+            for interior in poly.interiors:
+                int_offset = interior.parallel_offset(
                     amount,
                     side,
                     resolution=resolution,
@@ -267,7 +243,7 @@ class ShapelyMultiPolygonOffsetInteriors:
 
                 int_offsets.append(int_offset)
 
-            # from the offseted lines, build a multipolygon that we will diff with the exterior
+            # from the offseted interiors, build a multipolygon that we will diff with the exterior
             interior_multipoly = ShapelyUtils.build_multipoly_from_offsets(int_offsets)
 
             # ShapelyMatplotlib.display("interior_multipoly", interior_multipoly)
@@ -286,7 +262,7 @@ class ShapelyMultiPolygonOffsetInteriors:
 
             # this simplify may be important so that the offset becomes Ok (example: letter "B")
             exterior_multipoly = ShapelyUtils.simplify_multipoly(
-                exterior_multipoly, 0.001
+                exterior_multipoly, 0.002
             )
             exterior_multipoly = ShapelyUtils.orient_multipolygon(exterior_multipoly)
 

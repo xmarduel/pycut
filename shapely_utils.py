@@ -88,7 +88,7 @@ class ShapelyUtils:
 
     @classmethod
     def simplify_line(
-        cls, line: LineString, tol: float
+        cls, line: LineString | LinearRing, tol: float
     ) -> MultiLineString:
         """
         Ensure the simplification of a Line is a MultiLine (possibly empty)
@@ -101,7 +101,12 @@ class ShapelyUtils:
             res = cast(LineString, res)
             if not res.is_empty:
                 lines.append(res)
-        if res.geom_type == "MultiLineString":
+        elif res.geom_type == "LinearRing":
+            res = cast(LinearRing, res)
+            res = LineString(res)
+            if not res.is_empty:
+                lines.append(res)
+        elif res.geom_type == "MultiLineString":
             res = cast(MultiLineString, res)
             for xline in res.geoms:
                 if not xline.is_empty:
@@ -275,7 +280,7 @@ class ShapelyUtils:
     def build_multipoly_from_offsets(
         cls,
         multi_offset: List[
-            LineString | MultiLineString
+            LineString | LinearRing | MultiLineString
         ],
     ) -> MultiPolygon:
         """
@@ -301,6 +306,12 @@ class ShapelyUtils:
             lines_ok: list[LineString] = []
 
             if offset.geom_type == "LineString":
+                offset = cast(LineString, offset)
+                # if not offset.is_empty:
+                if len(list(offset.coords)) > 2:
+                    lines_ok.append(offset)
+            if offset.geom_type == "LinearRing":
+                offset = cast(LinearRing, offset)
                 offset = cast(LineString, offset)
                 # if not offset.is_empty:
                 if len(list(offset.coords)) > 2:

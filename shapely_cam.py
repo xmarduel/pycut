@@ -330,7 +330,7 @@ class cam:
                 # <<< XAM fix
                 current = ShapelyUtils.offset_multiline(current, last_delta,  offset_dir)
                 if current:
-                    current = ShapelyUtils.simplify_multiline(current, 0.01)
+                    current = ShapelyUtils.simplify_multiline(current, 0.002)
 
                 if not current.is_empty:
                     if need_reverse:
@@ -355,7 +355,7 @@ class cam:
                 current, each_offset, offset_dir, resolution=16
             )
             if current:
-                current = ShapelyUtils.simplify_multiline(current, 0.01)
+                current = ShapelyUtils.simplify_multiline(current, 0.002)
                 print("--- next toolpath")
             else:
                 break
@@ -501,7 +501,7 @@ class cam:
 
                 current = ShapelyUtils.offset_multiline(current, last_offset, offset_dir)
                 if current:
-                    current = ShapelyUtils.simplify_multiline(current, 0.01)
+                    current = ShapelyUtils.simplify_multiline(current, 0.002)
 
                 if not current.is_empty:
                     if need_reverse:
@@ -526,7 +526,7 @@ class cam:
                 current, std_offset, offset_dir, resolution=16
             )
             if current:
-                current = ShapelyUtils.simplify_multiline(current, 0.01)
+                current = ShapelyUtils.simplify_multiline(current, 0.002)
                 print("--- next toolpath")
             else:
                 break
@@ -1470,7 +1470,7 @@ class PocketCalculator:
             if not current:
                 break
 
-            current = ShapelyUtils.simplify_multipoly(current, 0.001)
+            current = ShapelyUtils.simplify_multipoly(current, 0.002)
 
             if current.is_empty:
                 break
