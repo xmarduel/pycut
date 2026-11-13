@@ -455,13 +455,11 @@ case of multiple operations enabled, as the project name, with ending suffix "nc
 <div>
 <img src="qrc:/doc/images/pycut_svgsettings.png" width="310px"> </div>
 
-<h4>Title</h4>
-
-<p>This will display the SVG title if set</p>
-
-<h4>Width</h4>
-
-<h4>Height</h4>
+<ul>
+  <li><strong>Title</strong>: the SVG title if set in the svg file (can be empty)</li>
+  <li><strong>Width</strong>:  the SVG width set in the svg file</li>
+  <li><strong>Height</strong>: the SVG height set in the svg file</li>
+</ul>
 
 <p></p>
 
@@ -469,6 +467,31 @@ case of multiple operations enabled, as the project name, with ending suffix "nc
 
 <div>
 <img src="qrc:/doc/images/pycut_tool.png" width="310"> </div>
+
+<ul>
+  <li><strong>Overlap</strong>: <p>The <strong>Overlap</strong> setting is akind the standard "Stepover" value</p>
+<code> Overlap = 1 - Stepover</code>
+<p>although the overlap meaning is easier to remember to me...</p></li>
+  <li><strong>Helix Pitch</strong>:<p>The revolution depth of the helix. During an Helix operation, the cutter goes continously
+    downwards, performing at the same time a circle. Theoretically, the Helix operation could perform threads cutting 
+    (utilizing a dedicated cutter) by generating first an hole, then an helix "inside the hole" where the outer radius of the 
+    helix would be a bit larger than the hole radius.</p></li>
+</ul>
+
+<h3 id="P-04-05">Curve to Line Conversion</h3>
+
+<p>If your design contain curves (svg "arcs" or "bezier" curves), they have to be discretized in small segments.</p>
+
+<div>
+<img src="qrc:/doc/images/pycut_curve_to_line_conversion.png" width="300"></div>
+
+<p>The 2 following parameters allow to specified how fine the curve discretization from the SVG shape will be:</p>
+<ul>
+  <li>Minimun number of segments</li>
+  <li>Minimum Segments length</li>
+</ul>
+
+<p>Nevertheless, a Shapely "simplify" will also occur at the beginning of the CAM operations.</p>
 
 <h3 id="P-04-03">Tabs</h3>
 
@@ -481,9 +504,10 @@ ignored for Pocket operations</strong>.</p>
 <div>
 <img src="qrc:/doc/images/pycut_tabs.png" width="310"> </div>
 
-<p></p>
+<p>The option <strong>Retract</strong> is set per default to "REtract to Clearance", but this can be unchecked and the tool will
+  retract only to the tab height, which is potentially wrong if the travel on the tab go through the material.</p>
 
-<p>You can check the Gcode generation in the viewer/simulator if everythings is Ok. </p>
+<p>You can check the Gcode generation in the viewer/simulator if everythings is Ok.</p>
 
 <h3 id="P-04-04">Material</h3>
 
@@ -506,19 +530,6 @@ CAM operation should not exceed this value (no check performed). The depth cut o
 material real thickness, or only exceeding it with a minimal value, only to be sure to cut through, and knowing there
 is a spoilboard that has an acceptable thickness.</p>
 </div>
-
-<h3 id="P-04-05">Curve to Line Conversion</h3>
-
-<p>If your design contain curves (svg "arcs" or "bezier" curves), they have to be discretized in small segments.</p>
-
-<div>
-<img src="qrc:/doc/images/pycut_curve_to_line_conversion.png" width="300"></div>
-
-<p>The 2 following parameters allow to specified how fine the curve discretization will be:</p>
-<ul>
-  <li>Minimun number of segments</li>
-  <li>Minimum Segments length</li>
-</ul>
 
 <h3 id="P-04-06">GCode Conversion</h3>
 
@@ -717,7 +728,7 @@ cut. </p>
 
 <p>The helix pitch (revolution depth) is the most important parameter. Theoretically, the Helix operation could perform
 threads cutting by generating first an hole, then an helix "inside the hole" where the outer radius of the helix would
-be smaller than the hole radius, and utilizing a dedicated cutter.</p>
+be smaller (or larger ?) than the hole radius, and utilizing a dedicated cutter.</p>
 
 <h3 id="P-05-05">Pockets</h3>
 
