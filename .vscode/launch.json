@@ -5,17 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "SVG RESOLVER",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "svgresolver.py",
-            "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}/utilities/svgresolver",
-            "args": [
-                "test/rect_rotated.svg"
-            ]
-        },
-        {
             "name": "GCODE DRESSUP",
             "type": "debugpy",
             "request": "launch",
