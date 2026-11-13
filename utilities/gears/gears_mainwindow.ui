@@ -32,7 +32,7 @@
          <x>0</x>
          <y>0</y>
          <width>318</width>
-         <height>694</height>
+         <height>679</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1">
@@ -50,7 +50,6 @@
           <property name="font">
            <font>
             <pointsize>14</pointsize>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -59,6 +58,9 @@
           </property>
           <property name="text">
            <string>Svg</string>
+          </property>
+          <property name="margin">
+           <number>4</number>
           </property>
          </widget>
         </item>
@@ -77,7 +79,6 @@
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -110,7 +111,6 @@
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -143,7 +143,6 @@
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -176,7 +175,6 @@
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -209,7 +207,6 @@
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -241,7 +238,6 @@
           <property name="font">
            <font>
             <pointsize>14</pointsize>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -250,6 +246,9 @@
           </property>
           <property name="text">
            <string>Basics</string>
+          </property>
+          <property name="margin">
+           <number>4</number>
           </property>
          </widget>
         </item>
@@ -268,7 +267,6 @@
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -313,7 +311,6 @@
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -352,7 +349,6 @@
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -397,7 +393,6 @@
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -426,7 +421,6 @@
           <property name="font">
            <font>
             <pointsize>14</pointsize>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -435,6 +429,9 @@
           </property>
           <property name="text">
            <string>Teeths Sizes</string>
+          </property>
+          <property name="margin">
+           <number>4</number>
           </property>
          </widget>
         </item>
@@ -453,7 +450,6 @@
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -489,6 +485,12 @@
             <property name="text">
              <string>...</string>
             </property>
+            <property name="iconSize">
+             <size>
+              <width>12</width>
+              <height>12</height>
+             </size>
+            </property>
            </widget>
           </item>
          </layout>
@@ -508,7 +510,6 @@
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -556,7 +557,6 @@
           <property name="font">
            <font>
             <pointsize>14</pointsize>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -565,6 +565,9 @@
           </property>
           <property name="text">
            <string>Teeths Shape</string>
+          </property>
+          <property name="margin">
+           <number>4</number>
           </property>
          </widget>
         </item>
@@ -583,7 +586,6 @@
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -635,7 +637,6 @@
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -693,7 +694,6 @@
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -733,10 +733,10 @@
         <item>
          <spacer name="verticalSpacer">
           <property name="orientation">
-           <enum>Qt::Vertical</enum>
+           <enum>Qt::Orientation::Vertical</enum>
           </property>
           <property name="sizeType">
-           <enum>QSizePolicy::Expanding</enum>
+           <enum>QSizePolicy::Policy::Expanding</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -845,7 +845,7 @@
      <x>0</x>
      <y>0</y>
      <width>1007</width>
-     <height>26</height>
+     <height>39</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp">

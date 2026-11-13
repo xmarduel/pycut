@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'gears_mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.11.3
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -42,7 +42,7 @@ class Ui_mainwindow(object):
         self.scrollArea_GearProperties.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 318, 694))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 318, 679))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSpacing(4)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -54,6 +54,7 @@ class Ui_mainwindow(object):
         font.setBold(True)
         self.label_GearSvg.setFont(font)
         self.label_GearSvg.setStyleSheet(u"background-color: rgb(198, 198, 198);")
+        self.label_GearSvg.setMargin(4)
 
         self.verticalLayout_2.addWidget(self.label_GearSvg)
 
@@ -165,6 +166,7 @@ class Ui_mainwindow(object):
         self.label_GearBasics.setObjectName(u"label_GearBasics")
         self.label_GearBasics.setFont(font)
         self.label_GearBasics.setStyleSheet(u"background-color: rgb(198, 198, 198);")
+        self.label_GearBasics.setMargin(4)
 
         self.verticalLayout_2.addWidget(self.label_GearBasics)
 
@@ -264,6 +266,7 @@ class Ui_mainwindow(object):
         self.label_GearTeethsSizes.setObjectName(u"label_GearTeethsSizes")
         self.label_GearTeethsSizes.setFont(font)
         self.label_GearTeethsSizes.setStyleSheet(u"background-color: rgb(196, 196, 196);")
+        self.label_GearTeethsSizes.setMargin(4)
 
         self.verticalLayout_2.addWidget(self.label_GearTeethsSizes)
 
@@ -332,6 +335,7 @@ class Ui_mainwindow(object):
         self.label_GearTeethsShape.setEnabled(True)
         self.label_GearTeethsShape.setFont(font)
         self.label_GearTeethsShape.setStyleSheet(u"background-color: rgb(198, 198, 198);")
+        self.label_GearTeethsShape.setMargin(4)
 
         self.verticalLayout_2.addWidget(self.label_GearTeethsShape)
 
@@ -492,7 +496,7 @@ class Ui_mainwindow(object):
         mainwindow.setCentralWidget(self.centralwidget)
         self.menuBar = QMenuBar(mainwindow)
         self.menuBar.setObjectName(u"menuBar")
-        self.menuBar.setGeometry(QRect(0, 0, 1007, 26))
+        self.menuBar.setGeometry(QRect(0, 0, 1007, 39))
         self.menuHelp = QMenu(self.menuBar)
         self.menuHelp.setObjectName(u"menuHelp")
         mainwindow.setMenuBar(self.menuBar)
