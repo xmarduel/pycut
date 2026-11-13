@@ -121,7 +121,7 @@ class GcodeMiniParser:
                 end = self.char_no
                 return float(self.gcode[begin:end])
             except Exception:
-                return sNaN  # None ? important ! keep it like this ! FIXME later
+                return None # sNaN  # None ? important ! keep it like this ! FIXME later
 
         self.char_no = 0
         self.line_no = 0
