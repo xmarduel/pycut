@@ -1,0 +1,5 @@
+PRODUCT=PYCUT
+RELEASE=0.8.3
+SUMMARY="PYCUT - Gcode builder and viewer"
+DESCRIPTION="PYCUT - Gcode builder and viewer"
+COMMENT=

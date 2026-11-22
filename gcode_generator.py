@@ -25,9 +25,9 @@ from typing import cast
 import math
 
 import shapely
-from shapely import BufferJoinStyle
 import shapely.geometry
 import shapely.ops
+from shapely import BufferJoinStyle
 from shapely.geometry.base import BaseGeometry
 
 from shapely_utils import ShapelyUtils
@@ -1194,7 +1194,7 @@ class GcodeGenerator:
             gcode.append("; Program End")
             gcode.append("M2")
 
-        gcode = "\n".join(gcode)
+        gcode_full = "\n".join(gcode)
 
-        self.gcode = gcode
-        self.job.gcode = gcode
+        self.gcode = gcode_full
+        self.job.gcode = gcode_full
