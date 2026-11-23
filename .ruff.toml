@@ -42,9 +42,7 @@ target-version = "py312"
 # SIM222 Use `True` instead of `... or True`
 # SIM223 Use `False` instead of `False and ...`
 
-# UP006 [*] Use `dict` instead of `Dict` for type annotation
 # UP031 Use format specifiers instead of percent format
-# UP035 `typing.Dict` is deprecated, use `dict` instead
 
 ignore = [
     "B008", "B018", "B023", "BLE001",
@@ -58,7 +56,7 @@ ignore = [
     "RUF012", "RUF015", "RUF059",
     "S110",
     "SIM102", "SIM114", "SIM115", "SIM210", "SIM222", "SIM223",
-    "UP006", "UP031", "UP035"
+    "UP031",
 ]
 
-# --> 30 rules ignored to eliminate!
+# --> 24 rules ignored to eliminate!

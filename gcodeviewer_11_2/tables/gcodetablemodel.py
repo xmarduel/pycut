@@ -1,6 +1,5 @@
 from enum import Enum
 
-from typing import List
 from typing import Any
 
 from PySide6 import QtCore
@@ -32,7 +31,7 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
     def __init__(self, parent=None):
         super().__init__()
 
-        self.m_data: List[GCodeItem] = []
+        self.m_data: list[GCodeItem] = []
         self.m_headers = ["#", "Command", "State", "Response", "Line", "Args"]
 
     def data(
@@ -129,7 +128,7 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
         #index = self.index(row, 1)
         self.dataChanged.emit(self.index(row, 1), self.index(row, 5))
 
-    def insertCommands(self, row: int, commands: List[QtCore.QByteArray]):
+    def insertCommands(self, row: int, commands: list[QtCore.QByteArray]):
         self.insertRows(row, len(commands))
 
         for i, command in enumerate(commands):
@@ -149,7 +148,7 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
 
         self.beginInsertRows(parent, row, row + count - 1)
 
-        newData: List[GCodeItem] = []
+        newData: list[GCodeItem] = []
 
         for i in range(row):
             newData.append(self.m_data[i])

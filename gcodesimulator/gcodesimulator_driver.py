@@ -4,8 +4,6 @@ VERSION = "1_0_0"
 import sys
 import argparse
 
-from typing import Dict
-
 from PySide6.QtWidgets import QApplication, QMainWindow
 
 import gcodesimulator.viewer as viewer
@@ -14,7 +12,7 @@ import gcodesimulator.viewer as viewer
 class MainWindow(QMainWindow):
     """ """
 
-    def __init__(self, options: Dict[str, str]):
+    def __init__(self, options: dict[str, str]):
         QMainWindow.__init__(self)
 
         fp = open(options["gcodefile"], "r")

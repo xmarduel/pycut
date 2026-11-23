@@ -1,5 +1,3 @@
-from typing import List
-
 from PySide6.QtCore import QElapsedTimer
 from PySide6.QtCore import QTime
 from PySide6.QtCore import Qt
@@ -282,7 +280,7 @@ class GLWidgetContainer(QtWidgets.QWidget):
         self.m_programModel.clear()
         self.m_programModel.insertRow(0)
 
-    def updateProgramEstimatedTime(self, lines: List[LineSegment]) -> QTime:
+    def updateProgramEstimatedTime(self, lines: list[LineSegment]) -> QTime:
         time = 0.0
 
         for ls in lines:

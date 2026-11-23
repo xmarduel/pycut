@@ -8,7 +8,6 @@
 
 import math
 
-from typing import List
 from typing import cast
 
 from PySide6.QtGui import QMatrix4x4
@@ -114,8 +113,8 @@ class GcodePreprocessorUtils:
         return command.replace(" ", "")
 
     @classmethod
-    def parseCodes(cls, args: List[str], code: str) -> List[float]:
-        l: List[float] = []
+    def parseCodes(cls, args: list[str], code: str) -> list[float]:
+        l: list[float] = []
 
         for s in args:
             if len(s) > 0 and s[0].upper() == code:
@@ -124,7 +123,7 @@ class GcodePreprocessorUtils:
         return l
 
     @classmethod
-    def parseGCodes(cls, command: str) -> List[int]:
+    def parseGCodes(cls, command: str) -> list[int]:
         re = QRegularExpression("[Gg]0*(\\d+)")
 
         codes = []
@@ -139,7 +138,7 @@ class GcodePreprocessorUtils:
         return codes
 
     @classmethod
-    def parseMCodes(cls, command: str) -> List[int]:
+    def parseMCodes(cls, command: str) -> list[int]:
         re = QRegularExpression("[Mm]0*(\\d+)")
 
         codes = []
@@ -155,7 +154,7 @@ class GcodePreprocessorUtils:
 
     @classmethod
     def updatePointWithCommand_FromStringList(
-        cls, commandArgs: List[str], initial: QVector3D, absoluteMode: bool
+        cls, commandArgs: list[str], initial: QVector3D, absoluteMode: bool
     ) -> QVector3D:
         """
         Update a point given the arguments of a command, using a pre-parsed list.
@@ -205,7 +204,7 @@ class GcodePreprocessorUtils:
         return newPoint
 
     @classmethod 
-    def updateAxesWithCommand(cls, commandArgs: List[str], initial: QVector3D, absoluteMode: bool) -> QVector3D:
+    def updateAxesWithCommand(cls, commandArgs: list[str], initial: QVector3D, absoluteMode: bool) -> QVector3D:
         a = qQNaN()
         b = qQNaN()
         c = qQNaN()
@@ -246,7 +245,7 @@ class GcodePreprocessorUtils:
     @classmethod
     def updateCenterWithCommand(
         cls,
-        commandArgs: List[str],
+        commandArgs: list[str],
         initial: QVector3D,
         nextPoint: QVector3D,
         absoluteIJKMode: bool,
@@ -304,7 +303,7 @@ class GcodePreprocessorUtils:
         return sb
 
     @classmethod
-    def splitCommand(cls, command: str) -> List[str]:
+    def splitCommand(cls, command: str) -> list[str]:
         """
         Splits a gcode command by each word/argument, doesn't care about spaces.
         This command is about the same speed as the string.split(" ") command,
@@ -337,7 +336,7 @@ class GcodePreprocessorUtils:
         return l
 
     @classmethod
-    def parseCoord(cls, argList: List[str], c: str) -> float:
+    def parseCoord(cls, argList: list[str], c: str) -> float:
         """
         TODO: Replace everything that uses this with a loop that loops through
         the string and creates a hash with all the values.
@@ -465,7 +464,7 @@ class GcodePreprocessorUtils:
         arcPrecision: float,
         arcDegreeMode: bool,
         turns: int
-    ) -> List[QVector3D]:
+    ) -> list[QVector3D]:
         """
         Generates the points along an arc including the start and end points.
         """
@@ -529,7 +528,7 @@ class GcodePreprocessorUtils:
         startAngle: float,
         sweep: float,
         numPoints: int,
-    ) -> List[QVector3D]:
+    ) -> list[QVector3D]:
         """
         Generates the points along an arc including the start and end points.
         """
@@ -603,8 +602,8 @@ class GcodePreprocessorUtils:
         return GcodePreprocessorUtils.lerp(q0, q1, t)
     
     @classmethod
-    def generatePointsAlongSpline(cls, start: QVector3D, end: QVector3D, cp1: QVector3D, cp2: QVector3D | None, tolerance: float = 0.005) -> List[QVector3D]:
-        points: List[QVector3D] = []
+    def generatePointsAlongSpline(cls, start: QVector3D, end: QVector3D, cp1: QVector3D, cp2: QVector3D | None, tolerance: float = 0.005) -> list[QVector3D]:
+        points: list[QVector3D] = []
 
         MIN_STEP = 0.001
         MAX_STEP = 0.1

@@ -1,6 +1,4 @@
-from typing import List
 from typing import Any
-from typing import Dict
 from typing import cast
 
 from PySide6 import QtCore
@@ -42,7 +40,7 @@ class OpItem:
             self.cut_depth,
         )
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """ """
         return {
             "name": self.name,
@@ -454,7 +452,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
         self.svg_viewer = svg_viewer
         self.mainwindow = svg_viewer.mainwindow
 
-    def set_operations(self, operations: List[Dict[str, str]]):
+    def set_operations(self, operations: list[dict[str, str]]):
         """ """
         cnc_ops = []
         for op in operations:
@@ -470,7 +468,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
 
         self.vbox.addWidget(self.table)
 
-    def get_operations(self) -> List[Dict]:
+    def get_operations(self) -> list[dict]:
         """
         returns the list of operations ready to br saved as json data
         """
@@ -490,7 +488,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
         """ """
         return self.table.model()
 
-    def get_model_operations(self) -> List[OpItem]:
+    def get_model_operations(self) -> list[OpItem]:
         """ """
         return self.get_model().operations
 
@@ -752,7 +750,7 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
     model for the table view
     """
 
-    def __init__(self, operations: List[OpItem], mainwindow):
+    def __init__(self, operations: list[OpItem], mainwindow):
         super().__init__()
 
         self.operations = operations

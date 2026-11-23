@@ -20,9 +20,6 @@ import math
 
 from math import sqrt
 
-from typing import List
-from typing import Dict
-from typing import Tuple
 from typing import Any
 from typing import cast
 
@@ -76,7 +73,7 @@ class cam:
     @classmethod
     def drill(
         cls, multipoint: MultiPoint, cutter_dia: float
-    ) -> List[CamPath]:
+    ) -> list[CamPath]:
         """
         Compute paths for drill operation on Shapely multipoint
         """
@@ -93,7 +90,7 @@ class cam:
     @classmethod
     def peck(
         cls, multipoint: MultiPoint, cutter_dia: float
-    ) -> List[CamPath]:
+    ) -> list[CamPath]:
         """
         Compute paths for peck operation on Shapely multipoint
         """
@@ -112,7 +109,7 @@ class cam:
         cls,
         multipolygon: MultiPolygon,
         cutter_dia: float,
-    ) -> List[CamPath]:
+    ) -> list[CamPath]:
         """
         It will be performed from the center of the shape.
 
@@ -138,7 +135,7 @@ class cam:
         cutter_dia: float,
         overlap: float,
         climb: bool,
-    ) -> List[CamPath]:
+    ) -> list[CamPath]:
         """
         Compute paths for pocket operation on Shapely multipolygon.
 
@@ -159,7 +156,7 @@ class cam:
         cutter_dia: float,
         overlap: float,
         climb: bool,
-    ) -> List[CamPath]:
+    ) -> list[CamPath]:
         """
         Compute paths for pocket operation on Shapely multipolygon.
 
@@ -179,7 +176,7 @@ class cam:
         cutter_dia: float,
         overlap: float,
         climb: bool,
-    ) -> List[CamPath]:
+    ) -> list[CamPath]:
         """
         Compute paths for pocket operation on Shapely multipolygon.
 
@@ -201,7 +198,7 @@ class cam:
         width: float,
         overlap: float,
         climb: bool,
-    ) -> List[CamPath]:
+    ) -> list[CamPath]:
         """
         Compute paths for outline operation ("Inside" or "Outside")
         on Shapely geometry "MultiPolygon".
@@ -268,7 +265,7 @@ class cam:
         current_width = cutter_dia
         step_width = cutter_dia * (1 - overlap)
 
-        all_paths: List[LineString] = []
+        all_paths: list[LineString] = []
 
         if cam_op == "Inside":
             if direction == "inner2outer":
@@ -382,7 +379,7 @@ class cam:
         width: float,
         overlap: float,
         climb: bool,
-    ) -> List[CamPath]:
+    ) -> list[CamPath]:
         """
         Compute paths for outline operation  ("Inside" or "Outside")
         on Shapely geometry "MultiLineString".
@@ -438,7 +435,7 @@ class cam:
 
         step_width = cutter_dia * (1 - overlap)
 
-        all_paths: List[LineString] = []
+        all_paths: list[LineString] = []
 
         # use lines, not polygons
         if cam_op == "Inside":
@@ -546,7 +543,7 @@ class cam:
     @classmethod
     def engrave(
         cls, geometry: MultiPolygon, climb: bool
-    ) -> List[CamPath]:
+    ) -> list[CamPath]:
         """
         Compute paths for engrave operation on Shapely multipolygon.
 
@@ -581,7 +578,7 @@ class cam:
     @classmethod
     def engrave_opened_paths(
         cls, geometry: MultiLineString, climb: bool
-    ) -> List[CamPath]:
+    ) -> list[CamPath]:
         """
         Compute paths for engrave operation on Shapely multiplinestring.
 
@@ -603,13 +600,13 @@ class cam:
     def create_paths(
         cls,
         _bounds: MultiPolygon,
-        paths: List[LineString],
+        paths: list[LineString],
         closed_path=True,
-    ) -> List[CamPath]:
+    ) -> list[CamPath]:
         """
         for opened path - no merge of paths
         """
-        cam_paths: List[CamPath] = []
+        cam_paths: list[CamPath] = []
         for path in paths:
             safe_to_close = False
             cam_paths.append(CamPath(LineString(path), safe_to_close))
@@ -620,9 +617,9 @@ class cam:
     def merge_paths(
         cls,
         _bounds: MultiPolygon,
-        thepaths: List[LineString],
+        thepaths: list[LineString],
         closed_path=True,
-    ) -> List[CamPath]:
+    ) -> list[CamPath]:
         """
         Try to merge paths. A merged path doesn't cross outside of bounds AND the interior polygons
         """
@@ -664,7 +661,7 @@ class cam:
         current_point = current_path[-1]
         paths[0] = []  # empty
 
-        merged_paths: List[List[Tuple[float, ...]]] = []
+        merged_paths: list[list[tuple[float, ...]]] = []
         num_left = len(paths) - 1
 
         while num_left > 0:
@@ -704,7 +701,7 @@ class cam:
 
         merged_paths.append(current_path)
 
-        cam_paths: List[CamPath] = []
+        cam_paths: list[CamPath] = []
         for path in merged_paths:
             safe_to_close = not ShapelyUtils.crosses(bounds, path[0], path[-1])
 
@@ -722,13 +719,13 @@ class cam:
         return dx * dx + dy * dy
 
     @staticmethod
-    def distP(p1: Tuple[float, ...], p2: Tuple[float, ...]) -> float:
+    def distP(p1: tuple[float, ...], p2: tuple[float, ...]) -> float:
         dx = p2[0] - p1[0]
         dy = p2[1] - p1[1]
         return dx * dx + dy * dy
 
     @classmethod
-    def get_gcode(cls, args) -> List[str]:
+    def get_gcode(cls, args) -> list[str]:
         """
         Convert paths to gcode. the function assumes that the current Z position is at safeZ.
         get_gcode()'s gcode returns Z to this position at the end.
@@ -757,7 +754,7 @@ class cam:
           flip_xy            Toggle X with Y
         """
         optype = args["optype"]
-        paths: List[CamPath] = args["paths"]
+        paths: list[CamPath] = args["paths"]
         ramp = args["ramp"]
         x_offset = args["x_offset"]
         y_offset = args["y_offset"]
@@ -803,13 +800,13 @@ class cam:
             "G1 Z" + peckZ.to_fixed(decimal) + f"{rapid_feed_gcode}",
         ]
 
-        def get_x(p: Tuple[float, ...]):
+        def get_x(p: tuple[float, ...]):
             return p[0] + x_offset
 
-        def get_y(p: Tuple[float, ...]):
+        def get_y(p: tuple[float, ...]):
             return -p[1] + y_offset
 
-        def convert_point(p: Tuple[float, ...] | Tuple[float, float, float]):
+        def convert_point(p: tuple[float, ...] | tuple[float, float, float]):
             x = p[0] + x_offset
             y = -p[1] + y_offset
 
@@ -830,7 +827,7 @@ class cam:
 
             return result
 
-        def convert_point_3D(p: Tuple[float, float, float]):
+        def convert_point_3D(p: tuple[float, float, float]):
             x = p[0] + x_offset
             y = -p[1] + y_offset
             z = p[2]
@@ -883,7 +880,7 @@ class cam:
                 helix_pitch_last = cut_depth - nb_helixes * helix_pitch
 
                 # calculate all the pts with z component
-                pts: List[Tuple[float, float, float]] = []
+                pts: list[tuple[float, float, float]] = []
 
                 # the helix revolutions
                 for i in range(nb_helixes):
@@ -1187,10 +1184,10 @@ class cam:
 class TabsSeparator:
     """ """
 
-    def __init__(self, tabs: List[Dict[str, Any]]):
+    def __init__(self, tabs: list[dict[str, Any]]):
         self.tabs = tabs
 
-        self.separated_paths: List[LineString] = []
+        self.separated_paths: list[LineString] = []
         self.crosses_tabs = False  # init
 
     def separate(self, path: LineString):
@@ -1208,7 +1205,7 @@ class TabsSeparator:
 
         shapely_openpath = LineString(pts)
 
-        shapely_tabs_: List[Polygon] = []
+        shapely_tabs_: list[Polygon] = []
         # 1. from the tabs, build shapely tab polygons
         for tab_def in self.tabs:
             tab = Tab(tab_def)
@@ -1246,7 +1243,7 @@ class TabsSeparator:
         # 3. that's it
         # print("splitted_paths", shapely_splitted_paths)
 
-        paths: List[LineString] = []
+        paths: list[LineString] = []
 
         if shapely_splitted_paths.geom_type == "LineString":
             line = cast(LineString, shapely_splitted_paths)
@@ -1260,8 +1257,8 @@ class TabsSeparator:
         self.separated_paths = paths
 
     def merge_compatible_paths(
-        self, paths: List[LineString]
-    ) -> List[LineString]:
+        self, paths: list[LineString]
+    ) -> list[LineString]:
         """
         This is a post-processing step to shapely where calculated separated paths can be merged together,
         leading to less separated paths
@@ -1287,7 +1284,7 @@ class TabsSeparator:
 
         def merge_path_into_path(
             path1: LineString, path2: LineString
-        ) -> Tuple[bool, LineString]:
+        ) -> tuple[bool, LineString]:
             """
             merge the 2 paths if their end point/start point are compatible (ie the same)
             """
@@ -1301,12 +1298,12 @@ class TabsSeparator:
             return False, path1
 
         def build_paths_compatibility_table(
-            paths: List[LineString],
-        ) -> Dict[int, List]:
+            paths: list[LineString],
+        ) -> dict[int, list]:
             """
             for all paths in the list of paths, check first which ones can be merged
             """
-            compatibility_table: Dict[int, List] = {}
+            compatibility_table: dict[int, list] = {}
 
             for i, path in enumerate(paths):
                 for j, other_path in enumerate(paths):
@@ -1372,10 +1369,10 @@ class PocketCalculator:
         self.mitre_limit = 5.0
 
         # result of a the calculation
-        self.cam_paths: List[CamPath] = []
+        self.cam_paths: list[CamPath] = []
 
         # temp variables
-        self.all_paths: List[LineString] = []
+        self.all_paths: list[LineString] = []
 
     def pocket(self):
         """
@@ -1542,8 +1539,8 @@ class PocketCalculator:
     def merge_paths(
         self,
         _bounds: MultiPolygon,
-        thepaths: List[LineString],
-    ) -> List[CamPath]:
+        thepaths: list[LineString],
+    ) -> list[CamPath]:
         """
         Try to merge paths. A merged path doesn't cross outside of bounds AND the interior polygons
         """
@@ -1584,7 +1581,7 @@ class PocketCalculator:
         current_point = current_path[-1]
         paths[0] = []  # empty
 
-        merged_paths: List[List[Tuple[float, ...]]] = []
+        merged_paths: list[list[tuple[float, ...]]] = []
         num_left = len(paths) - 1
 
         while num_left > 0:
@@ -1624,7 +1621,7 @@ class PocketCalculator:
 
         merged_paths.append(current_path)
 
-        cam_paths: List[CamPath] = []
+        cam_paths: list[CamPath] = []
         for path in merged_paths:
             safe_to_close = not ShapelyUtils.crosses(bounds, path[0], path[-1])
 
@@ -1663,10 +1660,10 @@ class SpiralePocketCalculator:
         self.mitre_limit = 5.0
 
         # result of a the calculation
-        self.cam_paths: List[CamPath] = []
+        self.cam_paths: list[CamPath] = []
 
         # temp variables
-        self.pts: List[Tuple] = []
+        self.pts: list[tuple] = []
 
     def pocket(self):
         """
@@ -1785,11 +1782,11 @@ class SpiralePocketCalculator:
                 self.pocket_radius_minus_cutter * self.pocket_radius_minus_cutter
             )
 
-            self.x: List[float] = []
-            self.y: List[float] = []
-            self.z: List[float] = []
+            self.x: list[float] = []
+            self.y: list[float] = []
+            self.z: list[float] = []
 
-        def calc_path(self) -> List[Tuple[float, float]]:
+        def calc_path(self) -> list[tuple[float, float]]:
             """
             Prepare arrays x, y
             """
@@ -2107,10 +2104,10 @@ class NibblerPocketCalculator:
         self.mitre_limit = 5.0
 
         # result of a the calculation
-        self.cam_paths: List[CamPath] = []
+        self.cam_paths: list[CamPath] = []
 
         # temp variables
-        self.all_paths: List[LineString] = []
+        self.all_paths: list[LineString] = []
 
     def pocket(self):
         """

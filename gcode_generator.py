@@ -16,13 +16,10 @@
 # along with pycut.  If not, see <http:#www.gnu.org/licenses/>.
 
 import sys
+import math
 
-from typing import List
-from typing import Dict
 from typing import Any
 from typing import cast
-
-import math
 
 import shapely
 import shapely.geometry
@@ -202,7 +199,7 @@ class Tab:
 
     height = ValWithUnit(2.0, "mm")
 
-    def __init__(self, tab: Dict[str, Any]):
+    def __init__(self, tab: dict[str, Any]):
         """ """
         self.center = tab["center"]
         self.radius = tab["radius"]
@@ -241,8 +238,8 @@ class Tab:
 class TabsModel:
     """ """
 
-    def __init__(self, tabs: List[Dict[str, Any]]):
-        self.tabs: List[Dict[str, Any]] = tabs
+    def __init__(self, tabs: list[dict[str, Any]]):
+        self.tabs: list[dict[str, Any]] = tabs
 
         self.units = "mm"  # default
         self.height = ValWithUnit(2.0, self.units)  # default
@@ -272,10 +269,10 @@ class TabsModel:
 class CncOp:
     """ """
 
-    def __init__(self, operation: Dict[str, Any]):
+    def __init__(self, operation: dict[str, Any]):
         self.units: str = operation["units"]
         self.name: str = operation["name"]
-        self.paths: List[str] = operation["paths"]
+        self.paths: list[str] = operation["paths"]
         self.combinaison: str = operation["combinaison"]
         self.ramp_plunge: bool = operation["ramp_plunge"]
         self.cam_op: str = operation["type"]  # "Pocket" ...
@@ -295,17 +292,17 @@ class CncOp:
             self.width = ValWithUnit(0.0, self.units)
 
         # the input
-        self.svg_paths: List[SvgPath] = []  # to fill at "setup"
+        self.svg_paths: list[SvgPath] = []  # to fill at "setup"
         # and the resulting svg paths from the combinaison, to be displayed in the svg viewer
-        self.geometry_svg_paths: List[SvgPath] = []
+        self.geometry_svg_paths: list[SvgPath] = []
 
         # the resulting paths from the op type & combinaison setting + enabled svg paths
         self.geometry: BaseGeometry = None
 
         # the resulting tool paths
-        self.cam_paths: List[CamPath] = []
+        self.cam_paths: list[CamPath] = []
         # and the resulting tool paths, to be displayed in the svg viewer
-        self.cam_paths_svg_paths: List[SvgPath] = []
+        self.cam_paths_svg_paths: list[SvgPath] = []
 
     def put_value(self, attr: str, value: Any):
         """ """
@@ -315,7 +312,7 @@ class CncOp:
         """ """
         return f"op: {self.name} {self.cam_op} [{self.cut_depth}] {self.enabled}"
 
-    def setup(self, svg_shapes: Dict[str, SvgPath]):
+    def setup(self, svg_shapes: dict[str, SvgPath]):
         """ """
         self.svg_paths = [svg_shapes[svg_path_id] for svg_path_id in self.paths]
 
@@ -341,7 +338,7 @@ class CncOp:
 
         the generated geometry is a MultiPoint
         """
-        shapely_points: List[shapely.geometry.Point] = []
+        shapely_points: list[shapely.geometry.Point] = []
 
         for svgpath in self.svg_paths:
             # consider only circles
@@ -357,8 +354,8 @@ class CncOp:
 
         the generated geometry is a MultiPolygon
         """
-        self.shapely_polygons: List[shapely.geometry.Polygon] = []
-        self.shapely_lines: List[shapely.geometry.LineString] = []
+        self.shapely_polygons: list[shapely.geometry.Polygon] = []
+        self.shapely_lines: list[shapely.geometry.LineString] = []
 
         for svg_path in self.svg_paths:
             shapely_polygons = svg_path.import_as_polygons_list()
@@ -549,7 +546,7 @@ class CncOp:
         as a pocket of diameter exactly cutter_dia
         """
         if self.geometry is not None:
-            shapely_polygons: List[shapely.geometry.Polygon] = []
+            shapely_polygons: list[shapely.geometry.Polygon] = []
             for pt in self.geometry.geoms:
                 center = pt.coords[0]
                 radius = tool_model.diameter / 2.0
@@ -568,7 +565,7 @@ class CncOp:
     def calculate_preview_geometry_helix(self, tool_model: ToolModel):
         """ """
         if self.geometry is not None:
-            shapely_polygons: List[shapely.geometry.Polygon] = []
+            shapely_polygons: list[shapely.geometry.Polygon] = []
             for poly in self.geometry.geoms:
                 center_pt = poly.centroid
 
@@ -874,8 +871,8 @@ class JobModel:
 
     def __init__(
         self,
-        svg_shapes: Dict[str, SvgPath],
-        cnc_ops: List[CncOp],
+        svg_shapes: dict[str, SvgPath],
+        cnc_ops: list[CncOp],
         material_model: MaterialModel,
         svg_model: SvgModel,
         tool_model: ToolModel,
@@ -1057,7 +1054,7 @@ class GcodeGenerator:
         self.use_offset = value
 
     def generate_gcode_action(self) -> None:
-        cnc_ops: List[CncOp] = []
+        cnc_ops: list[CncOp] = []
         for cnc_op in self.job.operations:
             if cnc_op.enabled:
                 if len(cnc_op.cam_paths) > 0:

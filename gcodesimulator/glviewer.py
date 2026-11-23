@@ -9,8 +9,6 @@ from enum import IntEnum
 import numpy as np
 import numpy.typing as npt
 
-from typing import List
-from typing import Dict
 from typing import Any
 from typing import cast
 
@@ -123,14 +121,14 @@ class Scene:
         self.pathMinZ = 0.0
 
         # make a scene
-        self.vertices: List[Scene.VertexData] = self.make_scene()
+        self.vertices: list[Scene.VertexData] = self.make_scene()
 
         self.array: npt.NDArray[np.float32] = np.empty(0, dtype=np.float32)  # all vertices as np float array
         # fill the numpy array from the scene ("path") and gets its buffer
         self.pathBufferContent = self.make_buffer()
 
-    def make_scene(self) -> List["Scene.VertexData"]:
-        vertices: List[Scene.VertexData] = []
+    def make_scene(self) -> list["Scene.VertexData"]:
+        vertices: list[Scene.VertexData] = []
 
         # fill the numpy array - each vertex is composed of 9 float
         startTime = time.time()
@@ -468,7 +466,7 @@ class SceneHeightMap:
 
         # make a scene (eval vertices) -> much too slow
         """
-        self.vertices: List[SceneHeightMap.VertexData] = self.make_scene()
+        self.vertices: list[SceneHeightMap.VertexData] = self.make_scene()
 
         self.buffer = self.make_buffer()
         """
@@ -563,8 +561,8 @@ class SceneHeightMap:
         return array
 
     """
-    def make_scene(self) -> List[VertexData]:
-        vertices : List[SceneHeightMap.VertexData] = []
+    def make_scene(self) -> list[VertexData]:
+        vertices : list[SceneHeightMap.VertexData] = []
 
         def addVertex(x0: float, y0: float, x1: float, y1: float, x2: float, y2: float, x3: float, y3: float, idx: int):
             vertex = SceneHeightMap.VertexData(x0, y0, x1, y1, x2, y2, x3, y3, idx)
@@ -637,18 +635,18 @@ class SceneCutter:
         self.numTriangles = self.numDivisions * 4
 
         # make a scene
-        self.vertices: List[SceneCutter.VertexData] = self.make_scene()
+        self.vertices: list[SceneCutter.VertexData] = self.make_scene()
 
         # fill the numpy array from the scene and gets its buffer
         self.buffer = self.make_buffer()
 
-    def make_scene(self) -> List[VertexData]:
+    def make_scene(self) -> list[VertexData]:
         Color = namedtuple("Color", ["r", "g", "b"])
 
         cyl_color = Color(0.2, 0.5, 0.3)
         top_color = Color(0.0, 0.0, 0.0)
 
-        vertices: List[SceneCutter.VertexData] = []
+        vertices: list[SceneCutter.VertexData] = []
 
         def addVertex(x: float, y: float, z: float, color=cyl_color):
             vertex = SceneCutter.VertexData()
@@ -2202,7 +2200,7 @@ class GCodeSimulator(QtWidgets.QWidget):
 
     TICK_SCALE = 1000.0
 
-    def __init__(self, parent: QtWidgets.QWidget, options: Dict[str, Any]):
+    def __init__(self, parent: QtWidgets.QWidget, options: dict[str, Any]):
         QtWidgets.QWidget.__init__(self)
 
         use_candle_parser = True

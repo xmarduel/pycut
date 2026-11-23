@@ -19,8 +19,6 @@ import math
 import sys
 import time
 
-from typing import List
-
 from PySide6.QtCore import qIsNaN
 from PySide6.QtGui import QVector3D
 
@@ -69,8 +67,8 @@ class GcodeMiniParser:
         self.char_no = 0  # index of the character in the whole gcode text
         self.line_no = 0  # related line no in the whole gcode text
 
-        self.path: List[GcodeAtomicMvt] = []
-        self.path_time_map: List[float] = []  # idx -> time
+        self.path: list[GcodeAtomicMvt] = []
+        self.path_time_map: list[float] = []  # idx -> time
 
         self.path_time = 0  # in seconds
 
@@ -89,7 +87,7 @@ class GcodeMiniParser:
         self.path_idx_line_no = {}
         self.line_no_time_map = {}
 
-    def get_path(self) -> List[GcodeAtomicMvt]:
+    def get_path(self) -> list[GcodeAtomicMvt]:
         return self.path
 
     def get_path_time(self) -> float:

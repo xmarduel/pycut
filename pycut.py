@@ -11,12 +11,10 @@ import math
 import posixpath
 import ntpath
 
+from typing import Any
+
 import xml.etree.ElementTree as etree
 
-from typing import List
-from typing import Dict
-from typing import Tuple
-from typing import Any
 
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -148,8 +146,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.build_recent_projects_submenu()
 
-        self.operations: List[Dict[str, str]] = []
-        self.tabs: List[Dict[str, Any]] = []
+        self.operations: list[dict[str, str]] = []
+        self.tabs: list[dict[str, Any]] = []
 
         # a job to keep the generated gcode in memory (and save it)
         self.job = None
@@ -1447,7 +1445,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
             return ""
 
-        def extract_svg_dimensions(svg: str) -> Tuple[str, str]:
+        def extract_svg_dimensions(svg: str) -> tuple[str, str]:
             """
             Dimension of the svg are of importance when making gcode from the lower left
             side of the material
@@ -1505,12 +1503,12 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # and the tabs if any
         self.svg_viewer.set_tabs(self.tabs)
 
-    def assign_tabs(self, tabs: List[Dict[str, Any]]):
+    def assign_tabs(self, tabs: list[dict[str, Any]]):
         """ """
         self.tabs = tabs
         self.ui.tabsview_manager.set_tabs(self.tabs)
 
-    def display_cnc_tabs(self, tabs: List[Dict[str, Any]]):
+    def display_cnc_tabs(self, tabs: list[dict[str, Any]]):
         """ """
         self.tabs = tabs
         self.svg_viewer.set_tabs(self.tabs)
@@ -1529,7 +1527,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         # val = self.ui.Tabs_RetractToSafe.isChecked()
         pass
 
-    def display_cnc_ops_geometry(self, operations: List[operations_tableview.OpItem]):
+    def display_cnc_ops_geometry(self, operations: list[operations_tableview.OpItem]):
         """ """
         settings = self.get_current_settings()
 
@@ -1552,7 +1550,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             settings["Tool"]["helix_pitch"], tool_model.units
         )
 
-        cnc_ops: List[CncOp] = []
+        cnc_ops: list[CncOp] = []
 
         for op_model in operations:
             if not op_model.enabled:
@@ -1583,9 +1581,9 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_viewer.reinit()
         self.svg_viewer.display_job_preview_geometry(cnc_ops)
 
-    def get_jobmodel_operations(self) -> List[CncOp]:
+    def get_jobmodel_operations(self) -> list[CncOp]:
         """ """
-        cnc_ops: List[CncOp] = []
+        cnc_ops: list[CncOp] = []
 
         for op_model in self.ui.operationsview_manager.get_model_operations():
             if not op_model.enabled:
@@ -1810,7 +1808,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
         self.display_gcode(gcode)
 
-    def read_recent_projects(self) -> List[str]:
+    def read_recent_projects(self) -> list[str]:
         """
         Returns the list of recent projects from the rlevant file
         """

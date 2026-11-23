@@ -6,7 +6,6 @@
 
 # Copyright 2020-2030 Xavier Marduel
 
-from typing import List
 from dataclasses import dataclass
 
 from PySide6.QtGui import QVector3D
@@ -207,13 +206,13 @@ class LineSegment:
     def setIndex(self, index: int):
         self.m_index = index
 
-    def getPointArray(self) -> List[QVector3D]:
+    def getPointArray(self) -> list[QVector3D]:
         pointarr = []
         pointarr.append(self.m_first)
         pointarr.append(self.m_second)
         return pointarr
 
-    def getPoints(self) -> List[float]:
+    def getPoints(self) -> list[float]:
         points = []
         points.append(self.m_first.x())
         points.append(self.m_first.y())

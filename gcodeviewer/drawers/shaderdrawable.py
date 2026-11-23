@@ -1,7 +1,5 @@
 ﻿import ctypes
 
-from typing import List
-
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QOpenGLFunctions
 
@@ -42,7 +40,7 @@ class VertexData:
         return vd
 
     @classmethod
-    def VertexDataListToNumPy(cls, alist: List["VertexData"]):
+    def VertexDataListToNumPy(cls, alist: list["VertexData"]):
         """
         https://nrotella.github.io/journal/first-steps-python-qt-opengl.html
         """
@@ -85,9 +83,9 @@ class ShaderDrawable(QOpenGLFunctions):
         self.m_lineWidth = 1.0
         self.m_pointSize = 1.0
         self.m_texture: QOpenGLTexture | None = None
-        self.m_lines: List[VertexData] = []
-        self.m_points: List[VertexData] = []
-        self.m_triangles: List[VertexData] = []
+        self.m_lines: list[VertexData] = []
+        self.m_points: list[VertexData] = []
+        self.m_triangles: list[VertexData] = []
 
         self.m_vbo = QOpenGLBuffer(QOpenGLBuffer.Type.VertexBuffer)
         self.m_vao = QOpenGLVertexArrayObject()

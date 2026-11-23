@@ -10,7 +10,6 @@ from functools import singledispatchmethod
 
 import math
 
-from typing import List
 from typing import cast
 
 from PySide6.QtGui import QVector3D
@@ -55,7 +54,7 @@ class GcodeParser:
         self.m_lastSplinePQ = QVector3D(0, 0, 0)  # Last P,Q from previous G5 for auto-matching
 
         # The gcode.
-        self.m_points: List[PointSegment] = []
+        self.m_points: list[PointSegment] = []
 
         self.reset()
 
@@ -136,11 +135,11 @@ class GcodeParser:
     def getCurrentPoint(self) -> QVector3D:
         return self.m_currentPoint
 
-    def expandArc(self) -> List[PointSegment]:
+    def expandArc(self) -> list[PointSegment]:
         startSegment = self.m_points[-2]
         lastSegment = self.m_points[-1]
 
-        empty: List[PointSegment] = []
+        empty: list[PointSegment] = []
 
         # Can only expand arcs.
         if not lastSegment.isArc():
@@ -201,16 +200,16 @@ class GcodeParser:
 
         return psl
 
-    def preprocessCommands(self, commands: List[str]) -> List[str]:
-        result: List[str] = []
+    def preprocessCommands(self, commands: list[str]) -> list[str]:
+        result: list[str] = []
 
         for command in commands:
             result.extend(self.preprocessCommand(command))
 
         return result
 
-    def preprocessCommand(self, command: str) -> List[str]:
-        result: List[str] = []
+    def preprocessCommand(self, command: str) -> list[str]:
+        result: list[str] = []
         hasComment = False
 
         # Remove comments from command.
@@ -253,8 +252,8 @@ class GcodeParser:
 
         return result
 
-    def convertArcsToLines(self, command: str) -> List[str]:
-        result: List[str] = []
+    def convertArcsToLines(self, command: str) -> list[str]:
+        result: list[str] = []
 
         start = self.m_currentPoint
 
@@ -281,7 +280,7 @@ class GcodeParser:
 
         return result
 
-    def getPointSegmentList(self) -> List[PointSegment]:
+    def getPointSegmentList(self) -> list[PointSegment]:
         return self.m_points
 
     def getTraverseSpeed(self) -> float:
@@ -293,8 +292,8 @@ class GcodeParser:
     def getCommandNumber(self) -> int:
         return self.m_commandNumber - 1
 
-    def processCommand(self, args: List[str]) -> PointSegment:
-        movementGCodes: List[float] = [ 0.0, 1.0, 2.0, 3.0, 5.0, 5.1, 38.2 ]
+    def processCommand(self, args: list[str]) -> PointSegment:
+        movementGCodes: list[float] = [ 0.0, 1.0, 2.0, 3.0, 5.0, 5.1, 38.2 ]
 
         gCodes = []
         ps = None
@@ -329,12 +328,12 @@ class GcodeParser:
 
         return cast(PointSegment, ps)
 
-    def handleMCode(self, code: float, args: List[str]):
+    def handleMCode(self, code: float, args: list[str]):
         spindleSpeed = GcodePreprocessorUtils.parseCoord(args, "S")
         if not qIsNaN(spindleSpeed):
             self.m_lastSpindleSpeed = spindleSpeed
 
-    def handleGCode(self, code: float, args: List[str]) -> PointSegment:
+    def handleGCode(self, code: float, args: list[str]) -> PointSegment:
         ps = None
 
         nextPoint = GcodePreprocessorUtils.updatePointWithCommand_FromStringList(
@@ -420,7 +419,7 @@ class GcodeParser:
         return ps
 
     def addArcPointSegment(
-        self, nextPoint: QVector3D, nextAxes: QVector3D, clockwise: bool, args: List[str]
+        self, nextPoint: QVector3D, nextAxes: QVector3D, clockwise: bool, args: list[str]
     ) -> PointSegment:
         ps = PointSegment.PointSegment_FromQVector3D(nextPoint, nextAxes, self.m_commandNumber)
 
@@ -475,7 +474,7 @@ class GcodeParser:
         self.m_currentPoint = nextPoint
         return ps
 
-    def addSplinePointSegment(self, nextPoint: QVector3D, nextAxes: QVector3D, type: SplineProperties.SplineType, args: List[str]) -> PointSegment:
+    def addSplinePointSegment(self, nextPoint: QVector3D, nextAxes: QVector3D, type: SplineProperties.SplineType, args: list[str]) -> PointSegment:
         self.m_commandNumber += 1
 
         ps = PointSegment(nextPoint, nextAxes, self.m_commandNumber)

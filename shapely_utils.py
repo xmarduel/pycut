@@ -1,11 +1,8 @@
-from typing import List
-from typing import Tuple
 from typing import cast
 
-
-from shapely import BufferJoinStyle
 import shapely.geometry
 import shapely.ops
+from shapely import BufferJoinStyle
 from shapely.validation import make_valid
 from shapely.validation import explain_validity
 
@@ -47,8 +44,8 @@ class ShapelyUtils:
     def crosses(
         cls,
         bounds: MultiLineString | MultiPolygon,
-        p1: Tuple[float, ...],
-        p2: Tuple[float, ...],
+        p1: tuple[float, ...],
+        p2: tuple[float, ...],
     ) -> bool:
         """
         Does the line from p1 to p2 cross outside of bounds?
@@ -276,7 +273,7 @@ class ShapelyUtils:
     @classmethod
     def build_multipoly_from_offsets(
         cls,
-        multi_offset: List[
+        multi_offset: list[
             LineString | LinearRing | MultiLineString
         ],
     ) -> MultiPolygon:
@@ -362,7 +359,7 @@ class ShapelyUtils:
 
     @classmethod
     def build_multipoly_from_list_of_polygons(
-        cls, polygons: List[Polygon]
+        cls, polygons: list[Polygon]
     ) -> MultiPolygon:
         """ """
         union = shapely.ops.unary_union(polygons)
@@ -618,7 +615,7 @@ class ShapelyUtils:
 
             fixed_poly = Polygon(ext_linestring)
         else:
-            fixed_interiors: List[Polygon] = []
+            fixed_interiors: list[Polygon] = []
             for interior in interiors:
                 int_poly = Polygon(interior)
 
@@ -662,7 +659,7 @@ class ShapelyUtils:
         return LineString(linearring)
 
     @classmethod
-    def dist(cls, p1: Tuple[float, float], p2: Tuple[float, float]) -> float:
+    def dist(cls, p1: tuple[float, float], p2: tuple[float, float]) -> float:
         dx = p2[0] - p1[0]
         dy = p2[1] - p1[1]
         return dx * dx + dy * dy

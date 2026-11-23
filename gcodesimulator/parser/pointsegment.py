@@ -6,7 +6,6 @@
 
 # Copyright 2020-2030 Xavier Marduel
 
-from typing import List
 from typing import cast
 
 from enum import Enum
@@ -97,7 +96,7 @@ class PointSegment:
     def point(self) -> QVector3D:
         return cast(QVector3D, self.m_point)
 
-    def points(self) -> List[float]:
+    def points(self) -> list[float]:
         points = []
 
         pt = cast(QVector3D, self.m_point)
@@ -155,7 +154,7 @@ class PointSegment:
 
         self.m_arcProperties.center = center
 
-    def centerPoints(self) -> List[float]:
+    def centerPoints(self) -> list[float]:
         points = []
 
         if self.m_arcProperties != None:

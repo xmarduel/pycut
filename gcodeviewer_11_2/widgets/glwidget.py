@@ -1,6 +1,5 @@
 import math
 
-from typing import List
 from typing import cast
 
 from PySide6 import QtWidgets
@@ -112,7 +111,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.updateProjection()
         self.updateView()
 
-        self.m_shaderDrawables: List[ShaderDrawable] = []
+        self.m_shaderDrawables: list[ShaderDrawable] = []
         self.m_shaderPrograms: QtOpenGL.QOpenGLShaderProgram | None = None
 
         self.m_colorBackground = QtGui.QColor(255, 255, 255)

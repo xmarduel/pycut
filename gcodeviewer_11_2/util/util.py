@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Dict
 
 from functools import singledispatchmethod
 
@@ -26,7 +25,7 @@ class Util:
         RotationVectorZ = 2
         RotationVectorNone = 3
 
-    vectors: Dict[RotationVector, QVector3D] = {}
+    vectors: dict[RotationVector, QVector3D] = {}
 
     @classmethod
     def nVector(cls) -> QVector3D:

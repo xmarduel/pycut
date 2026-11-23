@@ -1,5 +1,3 @@
-from typing import List
-
 from enum import Enum
 
 from PySide6 import QtGui
@@ -76,7 +74,7 @@ class GcodeDrawer(ShaderDrawable):
         self.m_timerVertexUpdate = QTimer()
 
         self.m_image = QImage()
-        self.m_indexes: List[int] = []
+        self.m_indexes: list[int] = []
         self.m_geometryUpdated = False
 
         self.m_pointSize = 6
@@ -86,7 +84,7 @@ class GcodeDrawer(ShaderDrawable):
         self.m_geometryUpdated = False
         super().update()
 
-    def update_indexes(self, indexes: List[int]):
+    def update_indexes(self, indexes: list[int]):
         # Store segments to update
         self.m_indexes += indexes
 
@@ -434,7 +432,7 @@ class GcodeDrawer(ShaderDrawable):
             self.m_texture.destroy()
             self.m_texture = None
 
-        vertices: List[VertexData] = []
+        vertices: list[VertexData] = []
         vertex = VertexData()
 
         # Set color

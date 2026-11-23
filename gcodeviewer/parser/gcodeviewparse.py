@@ -8,7 +8,6 @@
 
 from functools import singledispatchmethod
 
-from typing import List
 from typing import cast
 
 from PySide6.QtGui import QVector3D
@@ -36,8 +35,8 @@ class GcodeViewParse:
         self.m_max = QVector3D(qQNaN(), qQNaN(), qQNaN())
         self.m_minLength = qQNaN()
 
-        self.m_lines: List[LineSegment] = []
-        self.m_lineIndexes: List[List[int]] = [[]]
+        self.m_lines: list[LineSegment] = []
+        self.m_lineIndexes: list[list[int]] = [[]]
 
         # Parsing state.
         self.lastPoint: QVector3D = None
@@ -62,8 +61,8 @@ class GcodeViewParse:
         )
 
     def toObjRedux(
-        self, gcode: List[str], arcPrecision: float, arcDegreeMode: bool
-    ) -> List[LineSegment]:
+        self, gcode: list[str], arcPrecision: float, arcDegreeMode: bool
+    ) -> list[LineSegment]:
         gp = GcodeParser()
 
         for s in gcode:
@@ -71,12 +70,12 @@ class GcodeViewParse:
 
         return self.getLinesFromParser(gp, arcPrecision, arcDegreeMode)
 
-    def getLineSegmentList(self) -> List[LineSegment]:
+    def getLineSegmentList(self) -> list[LineSegment]:
         return self.m_lines
 
     def getLinesFromParser(
         self, gp: GcodeParser, arcPrecision: float, arcDegreeMode: bool
-    ) -> List[LineSegment]:
+    ) -> list[LineSegment]:
         psl = gp.getPointSegmentList()
         # For a line segment list ALL arcs must be converted to lines.
         minArcLength = 0.1
@@ -188,10 +187,10 @@ class GcodeViewParse:
 
         return self.m_lines
 
-    def getLines(self) -> List[LineSegment]:
+    def getLines(self) -> list[LineSegment]:
         return self.m_lines
 
-    def getLinesIndexes(self) -> List[List[int]]:
+    def getLinesIndexes(self) -> list[list[int]]:
         return self.m_lineIndexes
 
     def reset(self):

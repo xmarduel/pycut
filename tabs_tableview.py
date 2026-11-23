@@ -1,6 +1,4 @@
-from typing import List
 from typing import Any
-from typing import Dict
 from typing import cast
 
 from PySide6 import QtCore
@@ -25,7 +23,7 @@ class TabItem:
         """ """
         return "tab: [%f:%f] %f - %s" % (self.x, self.y, self.radius, self.enabled)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """ """
         return {
             "center": [self.x, self.y],
@@ -302,11 +300,11 @@ class PyCutTabsTableViewManager(QtWidgets.QWidget):
 
         self.vbox.addWidget(self.table)
 
-    def get_tabs(self) -> List[Dict]:
+    def get_tabs(self) -> list[dict]:
         """
         returns the list of tabs ready to be saved as json data
         """
-        tabs: List[Dict] = []
+        tabs: list[dict] = []
 
         for tab in self.get_model_tabs():
             atab = tab.to_dict()
@@ -322,7 +320,7 @@ class PyCutTabsTableViewManager(QtWidgets.QWidget):
         """ """
         return self.table.model()
 
-    def get_model_tabs(self) -> List[TabItem]:
+    def get_model_tabs(self) -> list[TabItem]:
         """ """
         return self.get_model().tabs
 
@@ -444,7 +442,7 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
     model for the table view
     """
 
-    def __init__(self, tabs: List[Any], mainwindow):
+    def __init__(self, tabs: list[Any], mainwindow):
         super().__init__()
 
         self.tabs = tabs

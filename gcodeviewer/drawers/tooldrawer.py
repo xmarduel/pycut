@@ -1,7 +1,5 @@
 import math
 
-from typing import List
-
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QColor
 
@@ -181,9 +179,9 @@ class ToolDrawer(ShaderDrawable):
 
     def createCircle(
         self, center: QVector3D, radius: float, arcs: int, color: QVector3D
-    ) -> List[VertexData]:
+    ) -> list[VertexData]:
         # Vertices
-        circle: List[VertexData] = []
+        circle: list[VertexData] = []
 
         # Prepare vertex
         vertex = VertexData()

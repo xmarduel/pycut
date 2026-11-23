@@ -1,9 +1,7 @@
-from typing import List
-from typing import Dict
-from typing import Any
-
 import copy
 import math
+
+from typing import Any
 
 from PySide6 import QtCore
 from PySide6 import QtWidgets
@@ -110,19 +108,19 @@ class SvgViewer(QtWidgets.QGraphicsView):
         # the content of the svg file as string
         self.svg = ""
         # and the extra tabs contained in the job description
-        self.tabs: List[Dict[str, Any]] = []
+        self.tabs: list[dict[str, Any]] = []
 
         # when loading a svg with shapes
-        self.svg_shapes: Dict[str, SvgPath] = {}  # path id -> SvgPath
+        self.svg_shapes: dict[str, SvgPath] = {}  # path id -> SvgPath
 
         # the graphical items in the view
-        self.svg_items: List[SvgItem] = []
+        self.svg_items: list[SvgItem] = []
         # ordered list of selected items
-        self.selected_items: List[SvgItem] = []
+        self.selected_items: list[SvgItem] = []
 
         # extra items (geometry selections / tabs / toolpaths)
-        self.extra_items: List[SvgItem] = []
-        self.extra_renderers: List[QtSvg.QSvgRenderer] = []
+        self.extra_items: list[SvgItem] = []
+        self.extra_renderers: list[QtSvg.QSvgRenderer] = []
 
         # self.setDragMode(QtWidgets.QGraphicsView.DragMode.ScrollHandDrag)
         self.setViewportUpdateMode(
@@ -214,7 +212,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         return None
 
-    def get_selected_items_ids(self) -> List[str]:
+    def get_selected_items_ids(self) -> list[str]:
         """
         return list of selected svg paths
         """
@@ -306,11 +304,11 @@ class SvgViewer(QtWidgets.QGraphicsView):
             "polyline",
         ]
 
-        shapes: List[etree.Element] = []
+        shapes: list[etree.Element] = []
 
         images_types = ["image"]
 
-        images: List[etree.Element] = []
+        images: list[etree.Element] = []
 
         for element in elements:
             tag = element.tag
@@ -381,7 +379,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
             "polyline",
         ]
 
-        shapes: List[etree.Element] = []
+        shapes: list[etree.Element] = []
 
         for element in elements:
             if not element.tag.startswith("{http://www.w3.org/2000/svg}"):
@@ -418,7 +416,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
                     QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable, False
                 )
 
-    def set_tabs(self, tabs: List[Dict[str, Any]]):
+    def set_tabs(self, tabs: list[dict[str, Any]]):
         """ """
         if not self.in_dnd:
             # remove tabs
@@ -550,7 +548,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.storeZoomFactor()
         self.zoomChanged.emit()
 
-    def make_tabs_svg_paths(self, tabs: List[Dict[str, Any]]) -> List[SvgPath]:
+    def make_tabs_svg_paths(self, tabs: list[dict[str, Any]]) -> list[SvgPath]:
         """ """
         from gcode_generator import Tab
 
@@ -587,8 +585,8 @@ class SvgViewer(QtWidgets.QGraphicsView):
         return tabs_svg_paths
 
     def make_cnc_ops_preview_geometry_svg_paths(
-        self, cnc_ops: List[CncOp]
-    ) -> List[SvgPath]:
+        self, cnc_ops: list[CncOp]
+    ) -> list[SvgPath]:
         """ """
         geometry_svg_paths = []
 
@@ -644,7 +642,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         return geometry_svg_paths
 
-    def make_toolpaths_svg_paths(self, cnc_ops: List["CncOp"]) -> List[SvgPath]:
+    def make_toolpaths_svg_paths(self, cnc_ops: list["CncOp"]) -> list[SvgPath]:
         """ """
         cam_paths_svg_paths = []
 
@@ -660,14 +658,14 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         return cam_paths_svg_paths
 
-    def display_tabs(self, tabs: List[Dict[str, Any]]):
+    def display_tabs(self, tabs: list[dict[str, Any]]):
         """ """
         # the tabs as paths
         svg_paths = self.make_tabs_svg_paths(tabs)
 
         self.display_extra_paths(svg_paths)
 
-    def display_job_preview_geometry(self, cnc_ops: List["CncOp"]):
+    def display_job_preview_geometry(self, cnc_ops: list["CncOp"]):
         """
         The list of "preview geometries" results of the geometries calculation for given ops
         The resulting geometries will the displayed in black together with the original svg and tabs
@@ -677,7 +675,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
         self.display_extra_paths(svg_paths)
 
-    def display_job_toolpaths(self, cnc_ops: List["CncOp"]):
+    def display_job_toolpaths(self, cnc_ops: list["CncOp"]):
         """
         The list of svg_paths results of the toolpath calculation for given ops
         The resulting svg_paths will the displayed in green together with the original svg, tabs and preview geometries
@@ -692,7 +690,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
         self.display_job_preview_geometry(job.operations)
         self.display_job_toolpaths(job.operations)
 
-    def display_extra_paths(self, svg_paths: List[SvgPath]):
+    def display_extra_paths(self, svg_paths: list[SvgPath]):
         """to display extra items in the viewer: paths calculated from
         - tabs
         - preview geometries
@@ -801,7 +799,7 @@ class SvgMaker:
         """the initial svg"""
         self.initial_svg = initial_svg
 
-    def build(self, svg_paths: List[SvgPath]) -> str:
+    def build(self, svg_paths: list[SvgPath]) -> str:
         """ """
         paths_str = []
 

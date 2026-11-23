@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Dict
 
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QColor
@@ -23,7 +22,7 @@ class Util:
         RotationVectorZ = 2
         RotationVectorNone = 3
 
-    vectors: Dict[RotationVector, QVector3D] = {}
+    vectors: dict[RotationVector, QVector3D] = {}
 
     @classmethod
     def nVector(cls) -> QVector3D:

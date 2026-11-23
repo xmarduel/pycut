@@ -1,6 +1,5 @@
 from enum import Enum
 
-from typing import List
 from typing import Any
 
 from PySide6 import QtCore
@@ -28,7 +27,7 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
     def __init__(self, parent=None):
         super().__init__()
 
-        self.m_data: List[GCodeItem] = []
+        self.m_data: list[GCodeItem] = []
         self.m_headers = ["#", "Command", "State", "Response", "Line", "Args"]
 
     def data(

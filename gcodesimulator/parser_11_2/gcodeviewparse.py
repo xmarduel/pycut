@@ -8,8 +8,6 @@
 
 import math
 
-from typing import List
-from typing import Dict
 from typing import Any
 from typing import cast
 
@@ -45,13 +43,13 @@ class GcodeViewParse:
 
         self.currentLine = 0  # for assigning line numbers to segments.
 
-        self.m_lineSegments: List[LineSegment] = []
-        self.m_lineSegmentsIndexes: List[List[int]] = [[]]
+        self.m_lineSegments: list[LineSegment] = []
+        self.m_lineSegmentsIndexes: list[list[int]] = [[]]
 
         # Parsing state.
         self.lastPoint: QVector3D = None
 
-        self.m_axesRotationVectors: Dict[GcodeViewParse.RotationAxis, QVector3D] = {}
+        self.m_axesRotationVectors: dict[GcodeViewParse.RotationAxis, QVector3D] = {}
 
         self.setAxisRotationVector(GcodeViewParse.RotationAxis.RotationAxisA, Util.rotationVector(Util.RotationVector.RotationVectorX))
         self.setAxisRotationVector(GcodeViewParse.RotationAxis.RotationAxisB, Util.rotationVector(Util.RotationVector.RotationVectorX))
@@ -142,8 +140,8 @@ class GcodeViewParse:
 
     '''
     def toObjRedux(
-        self, gcode: List[str], arcPrecision: float, arcDegreeMode: bool
-    ) -> List[LineSegment]:
+        self, gcode: list[str], arcPrecision: float, arcDegreeMode: bool
+    ) -> list[LineSegment]:
         gp = GcodeParser()
 
         for s in gcode:
@@ -154,7 +152,7 @@ class GcodeViewParse:
 
     def updateFromParser(
         self, gp: GcodeParser, arcPrecision: float, arcDegreeMode: bool, isCancelled: Any
-    ) -> List[LineSegment]:
+    ) -> list[LineSegment]:
         psl = gp.getPointSegmentList()
         # For a line segment list ALL arcs must be converted to lines.
         minArcLength = 0.1
@@ -409,8 +407,8 @@ class GcodeViewParse:
 
         return self.m_lineSegments
 
-    def getLineSegments(self) -> List[LineSegment]:
+    def getLineSegments(self) -> list[LineSegment]:
         return self.m_lineSegments
 
-    def getLineSegmentsIndexes(self) -> List[List[int]]:
+    def getLineSegmentsIndexes(self) -> list[list[int]]:
         return self.m_lineSegmentsIndexes

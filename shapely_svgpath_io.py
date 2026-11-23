@@ -1,9 +1,4 @@
 import copy
-
-from typing import List
-from typing import Tuple
-from typing import Dict
-
 import io
 
 import numpy as np
@@ -87,7 +82,7 @@ class SvgPath:
             return (0.0, 0.0)
 
     @classmethod
-    def svg_paths_from_svg_string(cls, svg_str: str) -> List["SvgPath"]:
+    def svg_paths_from_svg_string(cls, svg_str: str) -> list["SvgPath"]:
         """
         From a svg file content, read all paths (and those from the std svg shapes)
         """
@@ -125,7 +120,7 @@ class SvgPath:
         return [SvgPath(path, orig_svg_str=svg_str) for path in paths]
 
     @classmethod
-    def read_svg_shapes_and_paths(cls, svg_str: str) -> Dict[str, "SvgPath"]:
+    def read_svg_shapes_and_paths(cls, svg_str: str) -> dict[str, "SvgPath"]:
         """
         From a svg file content, read all paths and their attributes
         and organize them as dictionary with key <path_id>, value SvgPath object
@@ -149,7 +144,7 @@ class SvgPath:
 
     @classmethod
     def from_svg_path_def(
-        cls, d_def: str, p_id: str, shape_tag: str, shape_attrs: Dict[str, str]
+        cls, d_def: str, p_id: str, shape_tag: str, shape_attrs: dict[str, str]
     ) -> "SvgPath":
         """
         Create a SvgPath
@@ -215,9 +210,9 @@ class SvgPath:
                 pass
 
         # the result of the import
-        self.lines: List[shapely.geometry.LineString] = []
-        self.polys: List[shapely.geometry.Polygon] = []
-        self.points: List[shapely.geometry.Point] = []
+        self.lines: list[shapely.geometry.LineString] = []
+        self.polys: list[shapely.geometry.Polygon] = []
+        self.points: list[shapely.geometry.Point] = []
 
     def eval_closed(self):
         """ """
@@ -252,7 +247,7 @@ class SvgPath:
 
         return nb_z != 0
 
-    def _generate_simple_svgpaths(self) -> List["SvgPath"]:
+    def _generate_simple_svgpaths(self) -> list["SvgPath"]:
         """
         From an instance of SvgPath, generate a list of SvgPath
         where all subpaths of the object list are a 'simple' paths
@@ -298,7 +293,7 @@ class SvgPath:
 
         return poly
 
-    def import_as_lines_list(self) -> List[shapely.geometry.LineString]:
+    def import_as_lines_list(self) -> list[shapely.geometry.LineString]:
         """ """
         self.lines = []
 
@@ -336,7 +331,7 @@ class SvgPath:
 
         return shapely.geometry.Point(center)
 
-    def import_as_polygons_list(self) -> List[shapely.geometry.Polygon]:
+    def import_as_polygons_list(self) -> list[shapely.geometry.Polygon]:
         """ """
         self.polys = []
 
@@ -344,7 +339,7 @@ class SvgPath:
 
         return self.polys
 
-    def import_as_multipolygons_list(self) -> List[shapely.geometry.MultiPolygon]:
+    def import_as_multipolygons_list(self) -> list[shapely.geometry.MultiPolygon]:
         """
         we pack separated polys into multipolys
 
@@ -568,7 +563,7 @@ class SvgPath:
         return path
 
     @classmethod
-    def from_circle_def(cls, center: Tuple[float, float], radius: float) -> "SvgPath":
+    def from_circle_def(cls, center: tuple[float, float], radius: float) -> "SvgPath":
         """
         PyCut Tab import in svg viewer
         """
