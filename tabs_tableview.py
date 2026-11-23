@@ -287,7 +287,7 @@ class PyCutTabsTableViewManager(QtWidgets.QWidget):
         self.svg_viewer = svg_viewer
         self.mainwindow = svg_viewer.mainwindow
 
-    def set_tabs(self, tabs):
+    def set_tabs(self, tabs: list[dict]):
         """ """
         cnc_tabs = []
         for tab in tabs:

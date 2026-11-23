@@ -8,7 +8,6 @@
 
 import math
 
-from typing import Any
 from typing import cast
 
 from enum import Enum
@@ -151,7 +150,7 @@ class GcodeViewParse:
     '''
 
     def updateFromParser(
-        self, gp: GcodeParser, arcPrecision: float, arcDegreeMode: bool, isCancelled: Any
+        self, gp: GcodeParser, arcPrecision: float, arcDegreeMode: bool, isCancelled: bool
     ) -> list[LineSegment]:
         psl = gp.getPointSegmentList()
         # For a line segment list ALL arcs must be converted to lines.

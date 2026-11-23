@@ -117,7 +117,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
     RECENT_PROJECTS_FILENAME = "./recent_projects.json"
 
-    def __init__(self, options: Any):
+    def __init__(self, options: argparse.Namespace):
         """ """
         super().__init__()
 

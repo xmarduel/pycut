@@ -1,12 +1,11 @@
-from typing import Any
 from typing import cast
 
 import numpy as np
 
 import matplotlib.pyplot as plt
 
-import shapely.geometry
-
+from shapely.geometry.base import BaseGeometry
+from shapely.geometry import LineString, LinearRing, Polygon, MultiLineString, MultiPolygon, GeometryCollection
 
 class ShapelyMatplotlib:
     """
@@ -22,12 +21,12 @@ class ShapelyMatplotlib:
     style_index = 0
 
     @classmethod
-    def plot_geom(cls, title: str, geom: Any,) -> int:
+    def plot_geom(cls, title: str, geom: BaseGeometry) -> int:
         """ """
         return cls.display(title, geom)
 
     @classmethod
-    def display(cls, title: str, geom: Any, figure=True) -> int:
+    def display(cls, title: str, geom: BaseGeometry, figure=True) -> int:
         """ """
         # a counter
         cls.cnt += 1
@@ -54,7 +53,7 @@ class ShapelyMatplotlib:
         return cls.cnt
 
     @classmethod
-    def linestring_np_coords(cls, linestring: shapely.geometry.LineString | shapely.geometry.LinearRing):
+    def linestring_np_coords(cls, linestring: LineString | LinearRing):
         """ """
         np_coords = np.array(linestring.coords)
     
@@ -81,7 +80,7 @@ class ShapelyMatplotlib:
         return style
 
     @classmethod
-    def _display_linestring(cls, title: str, linestring: shapely.geometry.LineString | shapely.geometry.LinearRing, figure=True, pause=True):
+    def _display_linestring(cls, title: str, linestring: LineString | LinearRing, figure=True, pause=True):
         """ """
         if figure:
             plt.figure(cls.cnt)
@@ -99,7 +98,7 @@ class ShapelyMatplotlib:
             #plt.close()
 
     @classmethod
-    def _display_multilinestring(cls, title: str, multilinestring: shapely.geometry.MultiLineString, figure=True, pause=True):
+    def _display_multilinestring(cls, title: str, multilinestring: MultiLineString, figure=True, pause=True):
         """ """
         if figure:
             plt.figure(cls.cnt)
@@ -119,7 +118,7 @@ class ShapelyMatplotlib:
             #plt.close()
 
     @classmethod
-    def _display_polygon(cls, title: str, polygon: shapely.geometry.Polygon, figure=True, pause=True):
+    def _display_polygon(cls, title: str, polygon: Polygon, figure=True, pause=True):
         """ """
         if figure:
             plt.figure(cls.cnt)
@@ -141,7 +140,7 @@ class ShapelyMatplotlib:
             #plt.close()
 
     @classmethod
-    def _display_multipolygon(cls, title: str, multipoly: shapely.geometry.MultiPolygon, figure=True, pause=True):
+    def _display_multipolygon(cls, title: str, multipoly: MultiPolygon, figure=True, pause=True):
         """ """
         if figure:
             plt.figure(cls.cnt)
@@ -165,26 +164,26 @@ class ShapelyMatplotlib:
             #plt.close()
 
     @classmethod
-    def _display_geometrycollection(cls, title: str, collection: shapely.geometry.GeometryCollection, figure=True, pause=True):
+    def _display_geometrycollection(cls, title: str, collection: GeometryCollection, figure=True, pause=True):
         """ """
         plt.figure(cls.cnt)
         plt.title(title + f" [{cls.cnt}]")
 
         for geom in collection.geoms:
             if geom.geom_type == "MultiPolygon":
-                geom = cast(shapely.geometry.MultiPolygon, geom)
+                geom = cast(MultiPolygon, geom)
                 cls._display_multipolygon(title, geom, figure=False, pause=False)
 
             if geom.geom_type == "Polygon":
-                geom = cast(shapely.geometry.Polygon, geom)
+                geom = cast(Polygon, geom)
                 cls._display_polygon(title, geom, figure=False, pause=False)
 
             if geom.geom_type == "MultiLineString":
-                geom = cast(shapely.geometry.MultiLineString, geom)
+                geom = cast(MultiLineString, geom)
                 cls._display_multilinestring(title, geom, figure=False, pause=False)
 
             if  geom.geom_type =="LineString" or geom.geom_type == "LinearRing":
-                geom = cast(shapely.geometry.LineString, geom)
+                geom = cast(LineString, geom)
                 cls._display_linestring(title, geom, figure=False, pause=False)
 
         plt.axis("equal")
