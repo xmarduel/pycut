@@ -19,9 +19,6 @@ import math
 import sys
 import time
 
-from typing import List
-from typing import Tuple
-
 from PySide6.QtCore import qIsNaN
 
 sNaN = float("NaN")
@@ -39,8 +36,8 @@ class GcodeMiniParser:
         self.char_no = 0  # index of the character in the whole gcode text
         self.line_no = 0  # related line no in the whole gcode text
 
-        self.path: List[Tuple[float, float, float, float]] = []
-        self.path_time_map: List[float] = []  # idx -> time
+        self.path: list[tuple[float, float, float, float]] = []
+        self.path_time_map: list[float] = []  # idx -> time
 
         self.path_time = None
 
@@ -61,7 +58,7 @@ class GcodeMiniParser:
 
         self.path_time_map = []
 
-    def get_path(self) -> List[Tuple[float, float, float, float]]:
+    def get_path(self) -> list[tuple[float, float, float, float]]:
         return self.path
 
     def get_path_time(self) -> float:

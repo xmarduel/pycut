@@ -3,8 +3,6 @@ Helper methods for converting .dxf source files into shapely Polygons.
 Used by the test implementation main.py.
 """
 
-from typing import List, Tuple
-
 from math import *
 
 from ezdxf.entities.lwpolyline import LWPolyline as DxfPolyline
@@ -46,7 +44,7 @@ def circle_to_linestring(circle) -> LineString:
     return Point(center).buffer(radius).simplify(0.1).boundary
 
 def polyline_to_linestring(entity) -> LineString:
-    points: List[Tuple[float, float]] = []
+    points: list[tuple[float, float]] = []
     lastx, lasty = entity[-1][0:2]
     lastbulge = entity[-1][4]
     for point in entity:
@@ -83,7 +81,7 @@ def dxf_to_polygon(modelspace) -> MultiPolygon:
         else:
             print(f"Unsupported dxf entity: {entity.dxftype()}")
 
-    parents : List[LineString] = []
+    parents : list[LineString] = []
     for ring in rings:
         coveres = []
         covered_by = False

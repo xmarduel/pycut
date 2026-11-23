@@ -1,8 +1,6 @@
 import sys
 
-from typing import List
 from typing import Any
-from typing import Dict
 from typing import cast
 
 from PySide6 import QtCore
@@ -91,7 +89,7 @@ class CncOp:
             self.cut_depth,
         )
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """ """
         return {
             "name": self.name,
@@ -513,7 +511,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
         # set layout on the window
         self.setLayout(vbox)
 
-    def set_operations(self, operations: List[Dict[str, str]]):
+    def set_operations(self, operations: list[dict[str, str]]):
         """ """
         cnc_ops = []
         for op in operations:
@@ -526,7 +524,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
 
         self.vbox.addWidget(self.table)
 
-    def get_operations(self) -> List[Dict]:
+    def get_operations(self) -> list[dict]:
         """
         returns the list of operations ready to br saved as json data
         """
@@ -546,7 +544,7 @@ class PMFTableViewManager(QtWidgets.QWidget):
         """ """
         return self.table.model()
 
-    def get_model_operations(self) -> List[CncOp]:
+    def get_model_operations(self) -> list[CncOp]:
         """ """
         return self.get_model().operations
 
@@ -725,7 +723,7 @@ class PMFSimpleTableModel(QtCore.QAbstractTableModel):
     model for the table view
     """
 
-    def __init__(self, operations: List[OpItem], mainwindow):
+    def __init__(self, operations: list[OpItem], mainwindow):
         super().__init__()
 
         self.operations = operations

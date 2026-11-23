@@ -1,7 +1,3 @@
-# This Python file uses the following encoding: utf-8
-
-from typing import List
-
 import math
 
 from PySide6 import QtCore
@@ -186,7 +182,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
             "polyline",
         ]
 
-        shapes: List[etree.Element] = []
+        shapes: list[etree.Element] = []
 
         for element in elements:
             if not element.tag.startswith("{http://www.w3.org/2000/svg}"):

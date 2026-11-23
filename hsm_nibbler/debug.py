@@ -11,8 +11,6 @@ Recognises the following environment variables:
 
 import os
 
-from typing import List, Optional, Union, Any
-
 try:
     import matplotlib.pyplot as plt  # type: ignore
 except ImportError:
@@ -33,7 +31,7 @@ class Display:
     screen: bool = False
     initialised: bool = False
     count: int = 0
-    colours: List[str] = [
+    colours: list[str] = [
         "blue",
         "orange",
         "green",
@@ -74,9 +72,9 @@ class Display:
 
     def display(
         self,
-        polygons: Optional[List[Union[Polygon, MultiPolygon]]] = None,
-        voronoi: Optional[VoronoiCenters] = None,
-        path: Optional[List] = None,
+        polygons: list[Polygon | MultiPolygon] | None = None,
+        voronoi: VoronoiCenters | None = None,
+        path: list | None = None,
     ) -> None:
         if not self.initialised:
             return

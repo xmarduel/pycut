@@ -19,21 +19,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 mrdunk@gmail.com
 """
 
-from typing import Dict, List, Optional, Set, Tuple, Union
 from typing import cast
 
 import math
 
-from shapely.geometry.base import BaseGeometry  # type: ignore
-from shapely.geometry import box, LineString, Point, Polygon, MultiPolygon  # type: ignore
-from shapely.ops import linemerge, nearest_points  # type: ignore
-from shapely.validation import make_valid  # type: ignore
+from shapely.geometry.base import BaseGeometry
+from shapely.geometry import box, LineString, Point, Polygon, MultiPolygon
+from shapely.ops import linemerge, nearest_points
+from shapely.validation import make_valid
 
-import pyvoronoi  # type: ignore
+import pyvoronoi
 
-from hsm_nibbler.helpers import log  # type: ignore
+from hsm_nibbler.helpers import log
 
-Vertex = Tuple[float, float]
+Vertex = tuple[float, float]
 
 # Number of decimal places resolution for coordinates.
 ROUND_DP = 5
@@ -52,7 +51,7 @@ class PointOutsidePart(Exception):
     pass
 
 
-def round_coord(value: Tuple[float, float], dp: int = ROUND_DP) -> Tuple[float, float]:
+def round_coord(value: tuple[float, float], dp: int = ROUND_DP) -> tuple[float, float]:
     return (round(value[0], dp), round(value[1], dp))
 
 
@@ -67,7 +66,7 @@ class VoronoiCenters:
 
     def __init__(
         self,
-        polygon: Optional[Polygon] = None,
+        polygon: Polygon | None = None,
         tolerence: float = 1.01,
         preserve_widest: bool = False,
         preserve_edge: bool = False,
@@ -96,7 +95,7 @@ class VoronoiCenters:
         )
 
         # Collect polygon segments to populate voronoi with.
-        geom_primatives: List[Tuple[Vertex, Vertex]] = []
+        geom_primatives: list[tuple[Vertex, Vertex]] = []
         outlines = [self.polygon.exterior] + list(self.polygon.interiors)
         for outline in outlines:
             prev_point = None
@@ -124,12 +123,12 @@ class VoronoiCenters:
         cells = pv.GetCells()
 
         # Parse voronoi diagram. Store data as shapely LineSegment.
-        self.edges: Dict[int, LineString] = {}
-        self.vertex_to_edges: Dict[Vertex, List[int]] = {}
-        self.edge_to_vertex: Dict[int, Tuple[Vertex, Vertex]] = {}
+        self.edges: dict[int, LineString] = {}
+        self.vertex_to_edges: dict[Vertex, list[int]] = {}
+        self.edge_to_vertex: dict[int, tuple[Vertex, Vertex]] = {}
 
         self.edge_count = 0
-        visited_edges: Set[int] = set()
+        visited_edges: set[int] = set()
         for edge_index, edge in enumerate(edges):
             if edge_index in visited_edges:
                 continue
@@ -344,7 +343,7 @@ class VoronoiCenters:
             distance = min(distance, ring.distance(point))
         return distance
 
-    def _combine_edges(self, dont_merge: Set[Tuple[float, float]]) -> None:
+    def _combine_edges(self, dont_merge: set[tuple[float, float]]) -> None:
         """
         For any voronoi vertex with only 2 edges meeting there, combine the
         voronoi edges, removing the vertex.
@@ -385,7 +384,7 @@ class VoronoiCenters:
             edge_combined = linemerge([edge_a, edge_b])
             self._store_edge(edge_combined, edge_i_a)
 
-    def _remove_trivial(self, preserve: Set[Tuple[float, float]]):
+    def _remove_trivial(self, preserve: set[tuple[float, float]]):
         """Collapse any edge that is too short to care about."""
         # First the easy cases: The short edges with no connections at one end.
         further_consideration = set()
@@ -413,7 +412,7 @@ class VoronoiCenters:
 
         # Some edges are duplicates of each other, joined at both ends.
         # Like tiny loops.
-        still_to_remove: Dict[Tuple[Vertex, Vertex], Set[int]] = {}
+        still_to_remove: dict[tuple[Vertex, Vertex], set[int]] = {}
         for edge_i in further_consideration:
             vert_a, vert_b = self.edge_to_vertex[edge_i]
 
@@ -479,7 +478,7 @@ class VoronoiCenters:
             self._store_edge(LineString([edge_0.coords[0], vertex_updated_0]), edge_i_0)
             self._store_edge(LineString([edge_1.coords[0], vertex_updated_1]), edge_i_1)
 
-    def _vertexes_to_edge(self, vert_a: Vertex, vert_b: Vertex) -> Optional[int]:
+    def _vertexes_to_edge(self, vert_a: Vertex, vert_b: Vertex) -> int | None:
         """
         Args:
             vert_a: First vertex.
@@ -495,7 +494,7 @@ class VoronoiCenters:
             return edge.pop()
         return None
 
-    def _get_cleanup_candidates(self, edge_i: int) -> Set[int]:
+    def _get_cleanup_candidates(self, edge_i: int) -> set[int]:
         """Given an edge as a starting point, follow connected voronoi edges if they are likely candidates to delete.
         Args:
             edge_i: An edge index to start at. One end of the starting edge should have no other edge attached.
@@ -591,7 +590,7 @@ class VoronoiCenters:
 
         # Convert vertexes to edges.
         last_vertex = None
-        to_cleanup: Set[int] = set()
+        to_cleanup: set[int] = set()
         for vertex in vertices_to_cleanup:
             if last_vertex:
                 assert self._vertexes_to_edge(last_vertex, vertex) is not None
@@ -600,7 +599,7 @@ class VoronoiCenters:
 
         return to_cleanup
 
-    def _drop_irrelevant_edges(self, preserve: Set[Tuple[float, float]]) -> None:
+    def _drop_irrelevant_edges(self, preserve: set[tuple[float, float]]) -> None:
         """
         If any geometry resulting from a voronoi edge will be covered by the
         geometry of some other voronoi edge it is deemed irrelevant and pruned
@@ -608,7 +607,7 @@ class VoronoiCenters:
         Args:
             preserve: A set of vertexes to be left somewhere in the diagram despite pruning.
         """
-        to_prune: Set[int] = set()
+        to_prune: set[int] = set()
         for edge_i in self.edges:
             to_prune |= self._get_cleanup_candidates(edge_i)
 
@@ -655,7 +654,7 @@ class VoronoiCenters:
             to_prune.remove(prune_edge)
             self._remove_edge(prune_edge)
 
-    def widest_gap(self) -> Tuple[Point, float]:
+    def widest_gap(self) -> tuple[Point, float]:
         """
         Find the point inside self.polygon but furthest from an edge.
 
@@ -671,7 +670,7 @@ class VoronoiCenters:
             + 1
         )
 
-        widest_dist = 0
+        widest_dist = 0.0
         widest_point = None
         for vertex in self.vertex_to_edges:
             nearest_dist = max_dist
@@ -684,7 +683,7 @@ class VoronoiCenters:
                 widest_point = Point(vertex)
         return (widest_point, widest_dist)
 
-    def vertex_on_perimiter(self) -> Point:
+    def vertex_on_perimiter(self) -> Point | None:
         """
         Find a point as close to the perimeter as possible.
         """
@@ -767,10 +766,10 @@ class VoronoiCenters:
 
 
 def start_point_widest(
-    desired_radius: Optional[float],
+    desired_radius: float | None,
     step: float,
     pocket: BaseGeometry,
-    already_cut: Optional[Polygon] = None,
+    already_cut: Polygon | None = None,
 ) -> VoronoiCenters:
     """
     Calculate voronoi diagram with the start point to be in the widest space,

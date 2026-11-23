@@ -2,7 +2,6 @@ VERSION = "0_1_0"
 
 import argparse
 from math import pi, sqrt, acos, atan, sin, cos 
-from typing import List, Tuple
 
 import shapely.geometry
 
@@ -34,7 +33,7 @@ class Point:
     def norm(self) -> float:
         return sqrt(self.x * self.x + self.y * self.y)
 
-    def coordinates(self) -> List[float]:
+    def coordinates(self) -> list[float]:
         return [self.x, self.y]
 
 
@@ -123,7 +122,7 @@ class GCodePatternDressUp:
 
         return gap
 
-    def calc_bisection_angles(self) -> Tuple[float, float, float]:
+    def calc_bisection_angles(self) -> tuple[float, float, float]:
         """
         (a1x + b1y + c1 ) / k1 = +/- (a2x + b2y + c2 ) / k2
 

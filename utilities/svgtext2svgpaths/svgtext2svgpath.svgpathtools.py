@@ -29,10 +29,7 @@ import io
 import glob
 import argparse
 
-from typing import List
-from typing import Dict
 from typing import cast
-from typing import Optional
 
 from lxml import etree
 import numpy as np
@@ -52,7 +49,7 @@ class PathWithAttribs:
     Wrapper on Path class to contains the attribs as well
     """
 
-    def __init__(self, path: Path, elt: etree._Element, id: str, attribs: Dict[str, str]):
+    def __init__(self, path: Path, elt: etree._Element, id: str, attribs: dict[str, str]):
         self.path = path
         self.elt = elt
         self.attribs = attribs
@@ -131,7 +128,7 @@ class SvgTextObject:
 
         return id
 
-    def to_paths(self) -> List[PathWithAttribs]:
+    def to_paths(self) -> list[PathWithAttribs]:
         """ """
         fontfile = FontFiles.get_fontfile(
             self.font_family, self.font_style, self.font_weight, self.font_stretch
@@ -163,7 +160,7 @@ class SvgText2SvgPathsConverter:
         self.tree = etree.parse(svgfile, parser)
         self.svgtextobjects = self.collect_svgtext_objects()
 
-    def collect_svgtext_objects(self) -> Dict[etree.Element, SvgTextObject]:
+    def collect_svgtext_objects(self) -> dict[etree._Element, SvgTextObject]:
         """ """
         svgtextobjects = {}
 
@@ -175,7 +172,7 @@ class SvgText2SvgPathsConverter:
 
         return svgtextobjects
 
-    def convert_texts(self) -> Dict[etree.Element, List[Path]]:
+    def convert_texts(self) -> dict[etree._Element, list[Path]]:
         """ """
         paths = {}
 
@@ -213,7 +210,7 @@ class SvgText2SvgPathsConverter:
 
         return new_svg
 
-    def make_xml_etree_element(self, idx: int, wpath: PathWithAttribs) -> etree.Element:
+    def make_xml_etree_element(self, idx: int, wpath: PathWithAttribs) -> etree._Element:
         """ """
         element = etree.Element("path")
         element.attrib["id"] = "%s_%d" % (wpath.id, idx)
@@ -624,7 +621,7 @@ class FontFiles:
                 print("    %-20s  -> %s" % (style, cls.lookup[family][style]))
 
     @classmethod
-    def build_font_styles(cls, style: str, weight: str, stretch: str) -> List[str]:
+    def build_font_styles(cls, style: str, weight: str, stretch: str) -> list[str]:
         """
         to improve
         """
@@ -767,31 +764,31 @@ class Char2SvgPath:
 
             # TTF/OTF is big-endian (>)
 
-            def readuint32(self, offset: Optional[int] = None) -> int:
+            def readuint32(self, offset: int | None = None) -> int:
                 """Read 32-bit unsigned integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">I", self.read(4))[0]
 
-            def readuint16(self, offset: Optional[int] = None) -> int:
+            def readuint16(self, offset: int | None = None) -> int:
                 """Read 16-bit unsigned integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">H", self.read(2))[0]
 
-            def readuint8(self, offset: Optional[int] = None) -> int:
+            def readuint8(self, offset: int | None = None) -> int:
                 """Read 8-bit unsigned integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">B", self.read(1))[0]
 
-            def readint8(self, offset: Optional[int] = None) -> int:
+            def readint8(self, offset: int | None = None) -> int:
                 """Read 8-bit signed integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">b", self.read(1))[0]
 
-            def readdate(self, offset: Optional[int] = None) -> datetime:
+            def readdate(self, offset: int | None = None) -> datetime:
                 """Read datetime"""
                 if offset:
                     self.seek(offset)
@@ -800,13 +797,13 @@ class Char2SvgPath:
                 mdate = fontepoch + timedelta(seconds=mtime)
                 return mdate
 
-            def readint16(self, offset: Optional[int] = None) -> int:
+            def readint16(self, offset: int | None = None) -> int:
                 """Read 16-bit signed integer"""
                 if offset:
                     self.seek(offset)
                 return struct.unpack(">h", self.read(2))[0]
 
-            def readshort(self, offset: Optional[int] = None) -> float:
+            def readshort(self, offset: int | None = None) -> float:
                 """Read "short" fixed point number (S1.14)"""
                 x = self.readint16()
                 return float(x) * 2**-14
@@ -1138,7 +1135,7 @@ class Char2SvgPath:
         def cubic_to(a, b, c, ctx):
             ctx.append("C {},{} {},{} {},{}".format(a.x, a.y, b.x, b.y, c.x, c.y))
 
-        ctx: List[str] = []
+        ctx: list[str] = []
 
         outline.decompose(
             ctx, move_to=move_to, line_to=line_to, conic_to=conic_to, cubic_to=cubic_to
@@ -1202,7 +1199,7 @@ class String2SvgPaths:
         self.string_top = 0
         self.string_leftmargin = 0
 
-        self.paths: List[Path] = []
+        self.paths: list[Path] = []
 
     def calc_string_position(self, fontsize, text_pos):
         self.text_position = list(text_pos)
@@ -1230,12 +1227,12 @@ class String2SvgPaths:
 
         self.string_leftmargin = o.bbox.xMin
 
-    def calc_paths(self, fontsize: float, position=(0, 0)) -> List[Path]:
+    def calc_paths(self, fontsize: float, position=(0, 0)) -> list[Path]:
         """ """
         self.calc_string_leftmargin()
         self.calc_string_top()
 
-        paths: List[Path] = []
+        paths: list[Path] = []
 
         shifts = []
         shift = 0

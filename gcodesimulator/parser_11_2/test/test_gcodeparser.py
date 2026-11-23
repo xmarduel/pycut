@@ -1,8 +1,6 @@
 import argparse
 import sys
 
-from typing import List
-
 from PySide6.QtCore import QElapsedTimer
 from PySide6.QtCore import QFile
 from PySide6.QtCore import QTextStream
@@ -29,7 +27,7 @@ class CandleParser:
     def __init__(self, filename: str):
         self.filename = filename
         self.m_viewParser = GcodeViewParse()
-        self.linesegments: List[LineSegment] = []
+        self.linesegments: list[LineSegment] = []
 
     def loadFile(self):
         file = QFile(self.filename)
@@ -49,7 +47,7 @@ class CandleParser:
         # Load lines
         self.loadData(data)
 
-    def loadData(self, data: List[str]):
+    def loadData(self, data: list[str]):
         time = QElapsedTimer()
         time.start()
 

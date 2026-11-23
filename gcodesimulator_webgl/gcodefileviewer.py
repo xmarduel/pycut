@@ -1,4 +1,3 @@
-from typing import List
 import math
 
 from PySide6 import QtWidgets
@@ -261,7 +260,7 @@ class GCodeFileViewer(QtWidgets.QPlainTextEdit):
 
     @QtCore.Slot()
     def highlightCurrentLine(self):
-        extraSelections: List[QtWidgets.QTextEdit.ExtraSelection] = []
+        extraSelections: list[QtWidgets.QTextEdit.ExtraSelection] = []
 
         if self.isReadOnly():
             selection = QtWidgets.QTextEdit.ExtraSelection()
