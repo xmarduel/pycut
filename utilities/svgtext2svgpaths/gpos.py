@@ -1,10 +1,8 @@
 """ Glyph Positioning System (GPOS) tables """
 
-from __future__ import annotations
-from typing import Optional
 from collections import namedtuple
 
-from fontread import FontReader
+from .fontread import FontReader
 
 
 class Gpos:
@@ -56,8 +54,8 @@ class Gpos:
             )
 
     def kern(
-        self, glyph1: int, glyph2: int, script: str = None, lang: str = None
-    ) -> tuple[Optional[dict], Optional[dict]]:
+        self, glyph1: int, glyph2: int, script: str | None = None, lang: str | None= None
+    ) -> tuple[dict | None, dict | None]:
         """Get kerning adjustmnet for glyph1 and glyph2"""
         scr = self.scripts.get(script, self.scripts.get("DFLT", self.scripts.get("latn")))  # type: ignore
         langsys = scr.languages.get(lang, scr.languages.get("DFLT"))  # type: ignore
@@ -266,7 +264,7 @@ class PairAdjustmentTable:
 
     def get_adjust(
         self, glyph1: int, glyph2: int
-    ) -> tuple[Optional[dict], Optional[dict]]:
+    ) -> tuple[dict | None, dict | None]:
         """Get kerning adjustment for glyph1 and glyph2 pair"""
         v1 = v2 = None
 
@@ -327,11 +325,11 @@ class Coverage:
 
         self.fontfile.seek(fileptr)  # Put file pointer back
 
-    def covidx(self, glyph: int) -> Optional[int]:
+    def covidx(self, glyph: int) -> int | None:
         """Get coverage index for this glyph, or None if not in the coverage range"""
         if self.format == 1:
             try:
-                idx: Optional[int] = self.glyphs.index(glyph)
+                idx: int | None = self.glyphs.index(glyph)
             except (ValueError, IndexError):
                 idx = None
         else:

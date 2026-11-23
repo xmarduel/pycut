@@ -1,12 +1,9 @@
-# This Python file uses the following encoding: utf-8
-
 VERSION = "1_1_0_alpha"
 
 import os
 import argparse
 import io
 
-from typing import Optional
 from typing import cast
 
 from lxml import etree
@@ -26,7 +23,7 @@ class SvgSetMissingIds:
         self.filename = filename
         self.filename_id = os.path.splitext(self.filename)[0] + ".with_ids.svg"
 
-        self.svg: Optional[io.StringIO] = None
+        self.svg: io.StringIO | None = None
         self.tree = None
 
     def process(self):
@@ -360,7 +357,7 @@ class SvgResolver:
         f.write(tree_str.decode("utf-8"))
         f.close()
 
-    def resolve_id(self, shape: svgelements.Shape) -> Optional[str]:
+    def resolve_id(self, shape: svgelements.Shape) -> str | None:
         """
         if not in "id_mapping":
             - return the id of the shape
@@ -739,7 +736,7 @@ class SvgResolver:
 
     def get_svg_shape_for_use_item(
         self, item: etree._Element
-    ) -> Optional[svgelements.Shape]:
+    ) -> svgelements.Shape | None:
         """ """
         if item.tag == "{http://www.w3.org/2000/svg}svg":
             return None
@@ -767,9 +764,7 @@ class SvgResolver:
 
         return None
 
-    def get_svg_group_for_use_item(
-        self, item: etree._Element
-    ) -> Optional[svgelements.Shape]:
+    def get_svg_group_for_use_item(self, item: etree._Element) -> svgelements.Shape | None:
         """ """
         if item.tag == "{http://www.w3.org/2000/svg}svg":
             return None

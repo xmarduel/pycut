@@ -1,7 +1,6 @@
 ''' Read font file and write glyphs to SVG '''
 
-from __future__ import annotations
-from typing import Literal, Sequence, Union, Optional
+from typing import Literal, Sequence
 from collections import namedtuple
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -15,6 +14,41 @@ from .fonttypes import GlyphComp, GlyphPath, BBox, AdvanceWidth, Layout, Header,
 
 DEBUG = False
 
+class SVGdraw:
+    ''' Convert XML Element to SVG text with Jupyter representer.
+
+        Args:
+            svgxml: Element tree containing SVG elements
+    '''
+    def __init__(self, svgxml: ET.Element):
+        self._svgxml = svgxml
+        x, y, w, h = svgxml.attrib['viewBox'].split()
+        if DEBUG:  # Debug viewbox
+            rect = ET.SubElement(self._svgxml, 'rect')
+            rect.attrib['x'] = f'{x}'
+            rect.attrib['y'] = f'{y}'
+            rect.attrib['width'] = str(w)
+            rect.attrib['height'] = str(h)
+            rect.attrib['fill'] = 'none'
+            rect.attrib['stroke'] = 'red'
+            circ = ET.SubElement(self._svgxml, 'circle')
+            circ.attrib['cx'] = '0'
+            circ.attrib['cy'] = '0'
+            circ.attrib['r'] = '5'
+            circ.attrib['fill'] = 'red'
+            circ.attrib['stroke'] = 'red'
+
+    def svgxml(self) -> ET.Element:
+        ''' Get SVG XML element '''
+        return self._svgxml
+
+    def svg(self) -> str:
+        ''' Get SVG string '''
+        return ET.tostring(self._svgxml, encoding='unicode')
+
+    def _repr_svg_(self):
+        ''' Jupyter representer '''
+        return self.svg()
 
 class Font:
     ''' Class to read/parse a OpenType/TTF and write glyphs to SVG
@@ -23,7 +57,7 @@ class Font:
             fname: File name of the font
             svg2: Use SVG Version 2.0. Disable for better compatibility.
     '''
-    def __init__(self, fname: Union[str, Path], svg2: bool=True):
+    def __init__(self, fname: str | Path, svg2: bool=True):
         self.fname = fname
         with open(fname, 'rb') as f:
             self.fontfile = FontReader(f.read())
@@ -152,9 +186,9 @@ class Font:
                 self.fontfile.readuint16(),
                 self.fontfile.readuint32()))
 
-        self.cmap: Optional[Union[Cmap12, Cmap4]] = None  # Active cmap
-        self.cmaps: list[Union[Cmap12, Cmap4]] = []
-        cmap: Union[Cmap12, Cmap4]
+        self.cmap: Cmap12 | Cmap4 | None = None  # Active cmap
+        self.cmaps: list[Cmap12 | Cmap4] = []
+        cmap: Cmap12 | Cmap4
         for ctable in cmaptables:
             cmapformat = self.fontfile.readuint16(self.tables['cmap'].offset + ctable.offset)
             if cmapformat == 4:
@@ -218,7 +252,7 @@ class Font:
         ''' Get index of character glyph '''
         return self.cmap.glyphid(char)  # type: ignore
 
-    def _glyphoffset(self, index: int) -> Optional[int]:
+    def _glyphoffset(self, index: int) -> int | None:
         ''' Get offset (from beginning of file) of glyph,
             Return None if no glyph (empty/space) at this index.
         '''
@@ -240,7 +274,7 @@ class Font:
         index = self.glyphindex(char)        # Glyph Number
         return self.glyph_fromid(index)
 
-    def glyph_fromid(self, glyphid: int) -> Union[SimpleGlyph, CompoundGlyph]:
+    def glyph_fromid(self, glyphid: int) -> SimpleGlyph | CompoundGlyph:
         ''' Read a glyph from the "glyf" table
 
             Args:
@@ -248,7 +282,7 @@ class Font:
         '''
         return read_glyph(glyphid, self)
 
-    def advance(self, glyph1: int, glyph2: int=None, kern: bool=True):
+    def advance(self, glyph1: int, glyph2: int | None = None, kern: bool=True):
         ''' Get advance width in font units, including kerning adjustment if glyph2 is defined '''
         try:
             adv = self.info.advwidths[glyph1].width
@@ -260,8 +294,8 @@ class Font:
             adv += self.gpos.kern(glyph1, glyph2)[0].get('xadvance', 0)
         return adv
     
-    def _buildstring(self, s: str, fontsize: float=None, linespacing: float=1,
-                     halign: str='left', kern=True) -> tuple[ET.Element, list[ET.Element], float, float]:
+    def _buildstring(self, s: str, fontsize: float | None = None, linespacing: float = 1,
+                     halign: str = 'left', kern = True) -> tuple[ET.Element, list[ET.Element], float, float]:
         ''' Create symbols and svg word in a <g> group tag, for placing in an svg '''
         fontsize = fontsize if fontsize else dflt_fontsize()
         scale = fontsize / self.info.layout.unitsperem
@@ -316,10 +350,10 @@ class Font:
         _, _, width, height = self._buildstring(s, fontsize=fontsize, linespacing=linespacing)
         return width, height
 
-    def str2svg(self, s: str, fontsize: float=None, linespacing: float=1,
-                halign: Literal['left', 'center', 'right']='left',
-                valign: Literal['base', 'center', 'top']='base',
-                canvas: Union[ET.Element, SVGdraw]=None,
+    def str2svg(self, s: str, fontsize: float = 1.0, linespacing: float = 1,
+                halign: Literal['left', 'center', 'right'] = 'left',
+                valign: Literal['base', 'center', 'top'] = 'base',
+                canvas: ET.Element | SVGdraw | None = None,
                 xy: Sequence[float]=(0,0),
                kern=True,
                ) -> SVGdraw:
@@ -412,38 +446,3 @@ class Font:
         return SVGdraw(svg)
 
 
-class SVGdraw:
-    ''' Convert XML Element to SVG text with Jupyter representer.
-
-        Args:
-            svgxml: Element tree containing SVG elements
-    '''
-    def __init__(self, svgxml: ET.Element):
-        self._svgxml = svgxml
-        x, y, w, h = svgxml.attrib['viewBox'].split()
-        if DEBUG:  # Debug viewbox
-            rect = ET.SubElement(self._svgxml, 'rect')
-            rect.attrib['x'] = f'{x}'
-            rect.attrib['y'] = f'{y}'
-            rect.attrib['width'] = str(w)
-            rect.attrib['height'] = str(h)
-            rect.attrib['fill'] = 'none'
-            rect.attrib['stroke'] = 'red'
-            circ = ET.SubElement(self._svgxml, 'circle')
-            circ.attrib['cx'] = '0'
-            circ.attrib['cy'] = '0'
-            circ.attrib['r'] = '5'
-            circ.attrib['fill'] = 'red'
-            circ.attrib['stroke'] = 'red'
-
-    def svgxml(self) -> ET.Element:
-        ''' Get SVG XML element '''
-        return self._svgxml
-
-    def svg(self) -> str:
-        ''' Get SVG string '''
-        return ET.tostring(self._svgxml, encoding='unicode')
-
-    def _repr_svg_(self):
-        ''' Jupyter representer '''
-        return self.svg()
