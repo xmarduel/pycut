@@ -9,7 +9,7 @@ export WITH_RUFF=YES
 
 include $(MKINC)/mk.defaults
 
-SUBDIRS = gcodesimulator gcodeviewer
+SUBDIRS = gcodesimulator gcodeviewer gcodeviewer_11_2 viewers_settings
 
 PYTHON_SOURCES = \
 	gcode_generator.py \
@@ -25,8 +25,11 @@ PYTHON_SOURCES = \
 	tabs_tableview.py \
 	val_with_unit.py
 
-PYTHON_LIBFILES = $(PYTHON_SOURCES:%.py=%.pyc)
+PYTHON_UIS = mainwindow.ui
 
-all:: $(PYTHON_LIBFILES)
+PYTHON_LIBFILES = $(PYTHON_SOURCES:%.py=%.pyc)
+PYTHON_UICFILES = $(PYTHON_UIS:%.ui=%_ui.py)
+
+all:: $(PYTHON_LIBFILES) $(PYTHON_UICFILES)
 
 include $(MKINC)/mk.rules

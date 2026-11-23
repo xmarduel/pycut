@@ -89,8 +89,8 @@ ignore = [
     "PLR0402", "PLR1711", "PLR1730",
     "RUF012", "RUF015", "RUF059",
     "S110",
-    "SIM102", "SIM114", "SIM115", "SIM201", "SIM210",
+    "SIM102", "SIM114", "SIM115", "SIM201", "SIM210", "SIM222", "SIM223",
     "UP006", "UP008", "UP009", "UP031", "UP035", "UP037", "UP045"
 ]
 
-# --> 33 rules ignored to eliminate!
+# --> 35 rules ignored to eliminate!
