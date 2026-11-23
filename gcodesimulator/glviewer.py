@@ -17,7 +17,10 @@ from typing import cast
 # works great !
 from numba import jit  # type: ignore [import-untyped]
 
-from PySide6.QtWidgets import QWidget
+from PySide6 import QtWidgets
+from PySide6 import QtCore
+from PySide6 import QtGui
+
 from PySide6.QtCore import QSize, QPoint
 from PySide6.QtGui import (
     QOpenGLFunctions,
@@ -25,11 +28,6 @@ from PySide6.QtGui import (
     QVector3D,
     QMatrix4x4,
 )
-
-from PySide6 import QtWidgets
-from PySide6 import QtCore
-from PySide6 import QtGui
-
 from PySide6.QtOpenGL import (
     QOpenGLVertexArrayObject,
     QOpenGLBuffer,
@@ -38,16 +36,13 @@ from PySide6.QtOpenGL import (
     QOpenGLShader,
 )
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
+from PySide6.QtUiTools import QUiLoader
 
 from OpenGL import GL  # type: ignore [import-untyped]
 
-from PySide6.QtUiTools import QUiLoader
 
-from gcodesimulator.gcodeminiparser import GcodeAtomicMvt
 from gcodesimulator.gcodeminiparser import GcodeMiniParser
-
 from gcodesimulator.gcodefileviewer import GCodeFileViewer
-
 from gcodesimulator.simcontrols_ui import Ui_SimulationControls
 
 sNaN = float("NaN")
@@ -238,7 +233,6 @@ class Scene:
                         )
 
                     vertices.append(vertex)
-
                 # --------------------------------------------------------------------------------------------------
 
                 if math.fabs(z - prevZ) >= xyDist * math.pi / 2 * math.cos(

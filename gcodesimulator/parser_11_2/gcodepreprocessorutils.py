@@ -9,7 +9,6 @@
 import math
 
 from typing import List
-from typing import Any
 from typing import Optional
 from typing import cast
 

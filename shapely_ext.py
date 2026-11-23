@@ -27,7 +27,6 @@ from shapely.geometry import Polygon
 from shapely.geometry import MultiPolygon
 from shapely.geometry import GeometryCollection
 
-from shapely_matplotlib import ShapelyMatplotlib
 from shapely_utils import ShapelyUtils
 
 

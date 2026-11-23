@@ -11,22 +11,14 @@ target-version = "py312"
 
 # B008 Do not perform function call `QtCore.QModelIndex` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
 # B009 [*] Do not call `getattr` with a constant attribute value. It is not any safer than normal property access.
-# B018 Found useless expression. Either assign it to a variable or remove it.
-# B020 Loop control variable `elem` overrides iterable it iterates
 # B023 Function definition does not bind loop variable `total_time`
 
-# C405 Unnecessary list literal (rewrite as a set literal)
-
 # D419 Docstring is empty
-
-# E722 Do not use bare `except`
-# EXE001 Shebang is present but file is not executable
 
 # F401 [*] `typing.Any` imported but unused
 # F541 [*] f-string without any placeholders
 # F841 Local variable `ALLOW_DND` is assigned to but never used
 
-# FURB122 [*] Use of `f.write` in a for loop
 # FURB136 [*] Replace `b if b > 0.0 else 0.0` with `max(0.0, b)`
 # FURB188 [*] Prefer `str.removeprefix()` over conditionally replacing with slice.
 
@@ -37,52 +29,38 @@ target-version = "py312"
 # PIE808 [*] Unnecessary `start` argument in `range`
 
 # PLC0206 Extracting value from dictionary without calling `.items()`
-# PLE0704 Bare `raise` statement is not inside an exception handler
 
 # PLR0402 [*] Use `from lxml import etree` in lieu of alias
-# PLR1704 Redefining argument with the local name `elem`
 # PLR1711 [*] Useless `return` statement at end of function
-# PLR1716 [*] Contains chained boolean comparison that can be simplified
 # PLR1730 [*] Replace `if` statement with `calculated_default = min(calculated_default, amax)`
-# PLW0604 `global` at module level is redundant
 
 # RUF012 Mutable default value for class attribute
 # RUF015 Prefer `next(iter(possibleContainersAndTags.values()))` over single element slice
 # RUF059 Unpacked variable `tag` is never used
 
 # S110 `try`-`except`-`pass` detected, consider logging the exception
-# S112 `try`-`except`-`continue` detected, consider logging the exception
 
-# SIM101 Multiple `isinstance` calls for `classname`, merge into a single call
 # SIM102 Use a single `if` statement instead of nested `if` statements
-# SIM103 Return the condition directly
 # SIM114 [*] Combine `if` branches using logical `or` operator
 # SIM115 Use a context manager for opening files
-# SIM118 Use `key in dict` instead of `key in dict.keys()`
 # SIM201 Use `poly.geom_type != "Polygon"` instead of `not poly.geom_type == "Polygon"`
 # SIM210 Use `bool(...)` instead of `True if ... else False`
 # SIM222 Use `True` instead of `... or True`
 # SIM223 Use `False` instead of `False and ...`
 
-# TRY002 Create your own exception
-# TRY203 Remove exception handler; error is immediately re-raised Remove exception handler; error is immediately re-raised
-
 # UP006 [*] Use `dict` instead of `Dict` for type annotation
 # UP008 [*] Use `super()` instead of `super(__class__, self)`
 # UP009 [*] UTF-8 encoding declaration is unnecessary
-# UP028 Replace `yield` over `for` loop with `yield from`
-# UP030 Use implicit references for positional format fields
 # UP031 Use format specifiers instead of percent format
 # UP032 [*] Use f-string instead of `format` call
 # UP035 `typing.Dict` is deprecated, use `dict` instead
-# UP036 Version block is outdated for minimum Python version
 # UP037 [*] Remove quotes from type annotation
 # UP045 [*] Use `X | None` for type annotations
 
 ignore = [
     "B008", "B018", "B023", "BLE001",
     "D419",
-    "F401", "F541", "F841",
+    "F541", "F841",
     "FURB136", "FURB188",
     "I001",
     "PERF402",

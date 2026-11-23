@@ -20,7 +20,6 @@ from typing import Dict
 from typing import Tuple
 from typing import Any
 from typing import Optional
-from typing import cast
 
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -59,13 +58,12 @@ from gcode_generator import MaterialModel
 from gcode_generator import TabsModel
 from gcode_generator import CncOp
 from gcode_generator import JobModel
-from gcode_generator import Tab
 
 from gcode_generator import GcodeGenerator
 
-import pycut_rc
-import tutorial_rc
-import cnc_tutorial_rc
+import pycut_rc  # noqa
+import tutorial_rc  # noqa
+import cnc_tutorial_rc  # noqa
 
 from mainwindow_ui import Ui_mainwindow
 

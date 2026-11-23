@@ -1,9 +1,7 @@
-from typing import List
 from typing import Any
 from typing import cast
 
 import numpy as np
-import numpy.typing as npt
 
 import matplotlib.pyplot as plt
 

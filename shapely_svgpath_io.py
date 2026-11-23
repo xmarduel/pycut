@@ -1,11 +1,8 @@
-import os
-import math
 import copy
 
 from typing import List
 from typing import Tuple
 from typing import Dict
-from typing import cast
 
 import io
 
@@ -16,8 +13,6 @@ import svgelements  # type: ignore [import-untyped]
 import xml.etree.ElementTree as etree
 
 import shapely.geometry
-from shapely.validation import make_valid
-from shapely.validation import explain_validity
 
 from shapely_utils import ShapelyUtils
 
