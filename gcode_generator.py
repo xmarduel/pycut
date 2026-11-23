@@ -26,6 +26,7 @@ import shapely.geometry
 import shapely.ops
 from shapely import BufferJoinStyle
 from shapely.geometry.base import BaseGeometry
+from shapely.geometry import Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon
 
 from shapely_utils import ShapelyUtils
 from shapely_svgpath_io import SvgPath
@@ -338,7 +339,7 @@ class CncOp:
 
         the generated geometry is a MultiPoint
         """
-        shapely_points: list[shapely.geometry.Point] = []
+        shapely_points: list[Point] = []
 
         for svgpath in self.svg_paths:
             # consider only circles
@@ -346,7 +347,7 @@ class CncOp:
                 shapely_point = svgpath.import_as_point()
                 shapely_points.append(shapely_point)
 
-        self.geometry = shapely.geometry.MultiPoint(shapely_points)
+        self.geometry = MultiPoint(shapely_points)
 
     def combine(self) -> None:
         """
@@ -354,8 +355,8 @@ class CncOp:
 
         the generated geometry is a MultiPolygon
         """
-        self.shapely_polygons: list[shapely.geometry.Polygon] = []
-        self.shapely_lines: list[shapely.geometry.LineString] = []
+        self.shapely_polygons: list[Polygon] = []
+        self.shapely_lines: list[LineString] = []
 
         for svg_path in self.svg_paths:
             shapely_polygons = svg_path.import_as_polygons_list()
@@ -365,7 +366,7 @@ class CncOp:
             return
 
         if len(self.shapely_polygons) == 1:
-            self.geometry = shapely.geometry.MultiPolygon(self.shapely_polygons)
+            self.geometry = MultiPolygon(self.shapely_polygons)
             return
 
         o = self.shapely_polygons[0]
@@ -385,14 +386,14 @@ class CncOp:
         # what!! result may be not well orienteted!!
         if self.geometry.geom_type == "Polygon":
             # fix orientation
-            poly = cast(shapely.geometry.Polygon, self.geometry)
+            poly = cast(Polygon, self.geometry)
             self.geometry = ShapelyUtils.reorder_poly_points(poly)
 
             self.geometry = shapely.geometry.polygon.orient(self.geometry)
-            self.geometry = shapely.geometry.MultiPolygon([self.geometry])
+            self.geometry = MultiPolygon([self.geometry])
         else:
             # fix orientation
-            multi_poly = cast(shapely.geometry.MultiPolygon, self.geometry)
+            multi_poly = cast(MultiPolygon, self.geometry)
             fixed_polys = []
 
             for poly in multi_poly.geoms:
@@ -403,7 +404,7 @@ class CncOp:
 
                 fixed_poly = shapely.geometry.polygon.orient(poly)
                 fixed_polys.append(fixed_poly)
-            self.geometry = shapely.geometry.MultiPolygon(fixed_polys)
+            self.geometry = MultiPolygon(fixed_polys)
 
     def combine_opened_paths(self) -> None:
         """
@@ -419,7 +420,7 @@ class CncOp:
             self.shapely_lines += shapely_lines
 
         if len(self.shapely_lines) == 1:
-            self.geometry = shapely.geometry.MultiLineString(self.shapely_lines)
+            self.geometry = MultiLineString(self.shapely_lines)
             return
 
         o = self.shapely_lines[0]
@@ -477,7 +478,7 @@ class CncOp:
 
     def calculate_opened_paths_preview_geometry_engrave(self, tool_model: ToolModel):
         """ """
-        multiline = cast(shapely.geometry.MultiLineString, self.geometry)
+        multiline = cast(MultiLineString, self.geometry)
         for line in multiline.geoms:
             svg_path = SvgPath.from_shapely_linestring_for_preview_opened_path(
                 "pycut_geometry_opened_path_engrave", line, tool_model.diameter
@@ -487,7 +488,7 @@ class CncOp:
     def calculate_opened_paths_preview_geometry_inside(self, tool_model: ToolModel):
         """ """
         if self.geometry is not None:
-            multiline = cast(shapely.geometry.MultiLineString, self.geometry)
+            multiline = cast(MultiLineString, self.geometry)
 
             margin = self.margin.to_mm()
             width = self.width.to_mm()
@@ -501,9 +502,9 @@ class CncOp:
                 self.preview_geometry = multiline
 
             if self.preview_geometry.geom_type == "LineString":
-                line = cast(shapely.geometry.LineString, self.preview_geometry)
+                line = cast(LineString, self.preview_geometry)
 
-                self.preview_geometry = shapely.geometry.MultiLineString([line])
+                self.preview_geometry = MultiLineString([line])
 
         self.geometry_svg_paths = []
 
@@ -529,7 +530,7 @@ class CncOp:
 
             # 'right' in 'inside', and 'left' is 'outside'  hopefully
             if self.preview_geometry.geom_type == "LineString":
-                self.preview_geometry = shapely.geometry.MultiLineString(
+                self.preview_geometry = MultiLineString(
                     [self.preview_geometry]
                 )
 
@@ -546,7 +547,7 @@ class CncOp:
         as a pocket of diameter exactly cutter_dia
         """
         if self.geometry is not None:
-            shapely_polygons: list[shapely.geometry.Polygon] = []
+            shapely_polygons: list[Polygon] = []
             for pt in self.geometry.geoms:
                 center = pt.coords[0]
                 radius = tool_model.diameter / 2.0
@@ -554,7 +555,7 @@ class CncOp:
                 svgpath = SvgPath.from_circle_def(center, radius)
                 shapely_polygons += svgpath.import_as_polygons_list()
 
-            self.preview_geometry = shapely.geometry.MultiPolygon(shapely_polygons)
+            self.preview_geometry = MultiPolygon(shapely_polygons)
 
             for poly in self.preview_geometry.geoms:
                 geometry_svg_path = SvgPath.from_shapely_polygon(
@@ -565,7 +566,7 @@ class CncOp:
     def calculate_preview_geometry_helix(self, tool_model: ToolModel):
         """ """
         if self.geometry is not None:
-            shapely_polygons: list[shapely.geometry.Polygon] = []
+            shapely_polygons: list[Polygon] = []
             for poly in self.geometry.geoms:
                 center_pt = poly.centroid
 
@@ -591,13 +592,13 @@ class CncOp:
                     poly_ext = svgpath.import_as_polygons_list()
                     poly_int = hole.import_as_polygons_list()
 
-                    poly_with_hole = shapely.geometry.Polygon(
+                    poly_with_hole = Polygon(
                         poly_ext[0].exterior, holes=[poly_int[0].exterior]
                     )
 
                     shapely_polygons += [poly_with_hole]
 
-            self.preview_geometry = shapely.geometry.MultiPolygon(shapely_polygons)
+            self.preview_geometry = MultiPolygon(shapely_polygons)
 
             for poly in self.preview_geometry.geoms:
                 geometry_svg_path = SvgPath.from_shapely_polygon(
@@ -655,7 +656,7 @@ class CncOp:
             self.preview_geometry = geometry.difference(innergeometry)
 
             if self.preview_geometry.geom_type == "Polygon":
-                self.preview_geometry = shapely.geometry.MultiPolygon(
+                self.preview_geometry = MultiPolygon(
                     [self.preview_geometry]
                 )
 
@@ -703,7 +704,7 @@ class CncOp:
             self.preview_geometry = geometry_outer.difference(geometry_inner)
 
             if self.preview_geometry.geom_type == "Polygon":
-                self.preview_geometry = shapely.geometry.MultiPolygon(
+                self.preview_geometry = MultiPolygon(
                     [self.preview_geometry]
                 )
 
@@ -835,7 +836,7 @@ class CncOp:
         if cam_op == "Helix":
             for cam_path in self.cam_paths:
                 path = cam_path.path
-                linestring = cast(shapely.geometry.LineString, path)
+                linestring = cast(LineString, path)
 
                 center = (linestring.coords.xy[0][0], linestring.coords.xy[1][0])
 
@@ -849,7 +850,7 @@ class CncOp:
                 polys = svgpath.import_as_polygons_list()
 
                 helix_path = CamPath(polys[0].exterior, False)
-                helix_line = cast(shapely.geometry.LineString, helix_path.path)
+                helix_line = cast(LineString, helix_path.path)
 
                 svg_path = SvgPath.from_shapely_linestring(
                     "pycut_toolpath", helix_line, helix_path.safe_to_close
@@ -858,7 +859,7 @@ class CncOp:
         else:
             for cam_path in self.cam_paths:
                 path = cam_path.path
-                linestring = cast(shapely.geometry.LineString, path)
+                linestring = cast(LineString, path)
                 if len(linestring.coords.xy[0]) > 0:
                     svg_path = SvgPath.from_shapely_linestring(
                         "pycut_toolpath", linestring, cam_path.safe_to_close
