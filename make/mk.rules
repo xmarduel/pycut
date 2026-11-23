@@ -1,0 +1,113 @@
+
+.SUFFIXES: .py .pyc .ui .qrc
+
+#-----------------------------------------------------------------------------
+# generic implicit rules
+#-----------------------------------------------------------------------------
+
+ifeq ($(WITH_FLAKES),YES) 
+ifeq ($(WITH_MYPY),YES)
+ifeq ($(WITH_RUFF),YES)
+%.pyc : %.py
+	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
+	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
+	$(PYTHON) $(PYFLAKES) $<
+	$(PYTHON) $(MYPY) $(MYPY_OPTIONS) $<
+	$(RUFF) $(RUFF_OPTIONS) $<
+	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
+else
+%.pyc : %.py
+	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
+	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
+	$(PYTHON) $(PYFLAKES) $<
+	$(PYTHON) $(MYPY) $(MYPY_OPTIONS) $<
+	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
+endif
+else
+ifeq ($(WITH_RUFF),YES)
+%.pyc : %.py
+	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
+	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
+	$(PYTHON) $(PYFLAKES) $<
+	$(RUFF) $(RUFF_OPTIONS) $<
+	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
+else
+%.pyc : %.py
+	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
+	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
+	$(PYTHON) $(PYFLAKES) $<
+	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
+endif
+endif
+else
+ifeq ($(WITH_MYPY),YES)
+ifeq ($(WITH_RUFF),YES)
+%.pyc : %.py
+	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
+	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
+	$(PYTHON) $(MYPY) $(MYPY_OPTIONS) $<
+	$(RUFF) $(RUFF_OPTIONS) $<
+	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
+else
+%.pyc : %.py
+	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
+	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
+	$(PYTHON) $(MYPY) $(MYPY_OPTIONS) $<
+	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
+endif
+else
+ifeq ($(WITH_RUFF),YES)
+%.pyc : %.py
+	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
+	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
+	$(RUFF) $(RUFF_OPTIONS) $<
+	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
+else
+%.pyc : %.py
+	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
+	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
+	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
+endif
+endif
+endif
+
+# -----------------------------------
+# qt ui files
+# -----------------------------------
+
+%_ui.py : %.ui 
+	@rm -f $@
+	$(PYSIDE_UIC) $< > $@
+
+# -----------------------------------
+# qt rc files
+# -----------------------------------
+
+%_rc.py : %.qrc 
+	@rm -f $@
+	$(PYSIDE_RCC) -o $@ $<
+	mv $@ $(INSTALL_RCC)
+
+#-----------------------------------------------------------------------------
+# targets for creating or deleting the object-directories
+#-----------------------------------------------------------------------------
+
+cclean::
+	  $(RM) -rf $(PYCACHE) $(MYPY_CACHE) $(RUFF_CACHE) *.pyc
+
+clean::
+	  $(RM) -rf $(PYCACHE) $(MYPY_CACHE) $(RUFF_CACHE) *.pyc
+
+fullclean::
+	  $(RM) -rf $(PYCACHE) $(MYPY_CACHE) $(RUFF_CACHE) *.pyc *_ui.py *_rc.py
+
+
+ERROR_EXIT      = exit 1
+
+all uic rcc doc fullclean cclean clean::
+
+	@for D in $(SUBDIRS); do \
+		echo "Entering $$D"; \
+		$(MAKE) -C $$D -f Makefile $@ || $(ERROR_EXIT) ; \
+		echo "Leaving $$D"; \
+	done
