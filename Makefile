@@ -9,7 +9,7 @@ export WITH_RUFF=YES
 
 include $(MKINC)/mk.defaults
 
-SUBDIRS = gcodesimulator gcodeviewer gcodeviewer_11_2 viewers_settings
+SUBDIRS = gcodesimulator gcodeviewer gcodeviewer_11_2 viewers_settings resources
 
 PYTHON_SOURCES = \
 	gcode_generator.py \
