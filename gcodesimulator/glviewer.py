@@ -48,7 +48,7 @@ from gcodesimulator.gcodeminiparser import GcodeMiniParser
 
 from gcodesimulator.gcodefileviewer import GCodeFileViewer
 
-from gcodesimulator.ui_simcontrols import Ui_SimulationControls
+from gcodesimulator.simcontrols_ui import Ui_SimulationControls
 
 sNaN = float("NaN")
 

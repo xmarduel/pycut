@@ -67,7 +67,7 @@ import pycut_rc
 import tutorial_rc
 import cnc_tutorial_rc
 
-from ui_mainwindow import Ui_mainwindow
+from mainwindow_ui import Ui_mainwindow
 
 
 class PyCutMainWindow(QtWidgets.QMainWindow):
