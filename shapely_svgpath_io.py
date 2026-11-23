@@ -703,7 +703,7 @@ class SvgPathDiscretizer:
 
                 _pts = []
                 if first_seg:
-                    for p in range(0, nb_samples + 1):
+                    for p in range(nb_samples + 1):
                         _pts.append(segment.point(float(p) / float(nb_samples)))
                 else:
                     # not the first one
@@ -722,7 +722,7 @@ class SvgPathDiscretizer:
                 nb_samples = max(nb_samples, self.PYCUT_SAMPLE_MIN_NB_SEGMENTS)
 
                 if first_seg:
-                    for p in range(0, nb_samples + 1):
+                    for p in range(nb_samples + 1):
                         _pts.append(segment.point(float(p) / float(nb_samples)))
                 else:
                     # not the first one
@@ -833,7 +833,7 @@ class SvgPathDiscretizer:
                 _pts = []
 
                 if first_seg:
-                    for p in range(0, nb_samples + 1):
+                    for p in range(nb_samples + 1):
                         _pts.append(segment.point(float(p) / float(nb_samples)))
                 else:
                     # not the first one
@@ -852,7 +852,7 @@ class SvgPathDiscretizer:
                 _pts = []
 
                 if first_seg:
-                    for p in range(0, nb_samples + 1):
+                    for p in range(nb_samples + 1):
                         _pts.append(segment.point(float(p) / float(nb_samples)))
                 else:
                     # not the first one

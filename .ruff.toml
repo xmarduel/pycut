@@ -15,12 +15,9 @@ target-version = "py312"
 
 # D419 Docstring is empty
 
-# F401 [*] `typing.Any` imported but unused
-# F541 [*] f-string without any placeholders
 # F841 Local variable `ALLOW_DND` is assigned to but never used
 
 # FURB136 [*] Replace `b if b > 0.0 else 0.0` with `max(0.0, b)`
-# FURB188 [*] Prefer `str.removeprefix()` over conditionally replacing with slice.
 
 # I001 [*] Import block is un-sorted or un-formatted
 
@@ -60,11 +57,11 @@ target-version = "py312"
 ignore = [
     "B008", "B018", "B023", "BLE001",
     "D419",
-    "F541", "F841",
-    "FURB136", "FURB188",
+    "F841",
+    "FURB136",
     "I001",
     "PERF402",
-    "PIE790", "PIE808", "PLC0206",
+    "PIE790",  "PLC0206",
     "PLR0402", "PLR1711", "PLR1730",
     "RUF012", "RUF015", "RUF059",
     "S110",

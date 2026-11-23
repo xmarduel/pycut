@@ -886,7 +886,7 @@ class cam:
                 pts: List[Tuple[float, float, float]] = []
 
                 # the helix revolutions
-                for i in range(0, nb_helixes):
+                for i in range(nb_helixes):
                     for k in range(nb_pts_per_revolution):
                         x = math.cos(2 * PI * k / nb_pts_per_revolution)
                         y = math.sin(2 * PI * k / nb_pts_per_revolution)
@@ -1066,11 +1066,11 @@ class cam:
 
                         if total_dist > 0:
                             ramp_path_forw = [
-                                list(selected_path.coords)[k] for k in range(0, end)
+                                list(selected_path.coords)[k] for k in range(end)
                             ]
 
                             ramp_path_backw = [
-                                list(selected_path.coords)[k] for k in range(0, end - 1)
+                                list(selected_path.coords)[k] for k in range(end - 1)
                             ]
                             ramp_path_backw.reverse()
 

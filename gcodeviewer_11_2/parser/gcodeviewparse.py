@@ -349,7 +349,7 @@ class GcodeViewParse:
                     segmentRotation = rotation / segments
 
                     # Create line segments on axis rotation
-                    for i in range(0, segments):
+                    for i in range(segments):
                 
                         nextPoint =  startPoint + segmentVector if segments > 1 else end
 

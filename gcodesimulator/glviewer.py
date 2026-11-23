@@ -1332,7 +1332,7 @@ void main(void) {
         gl.glActiveTexture(self.TEXTURE_INDEX)
         gl.glBindTexture(GL.GL_TEXTURE_2D, texture)
 
-        Drawable.LOG_OPENGL.info(f"draw_heightmap: gl.glActiveTexture(self.TEXTURE_INDEX)")
+        Drawable.LOG_OPENGL.info("draw_heightmap: gl.glActiveTexture(self.TEXTURE_INDEX)")
         Drawable.LOG_OPENGL.info(f"draw_heightmap: gl.glBindTexture(GL.GL_TEXTURE_2D, {texture})")
 
         vao_binder = QOpenGLVertexArrayObject.Binder(self.vao_heightmap)

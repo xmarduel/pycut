@@ -1529,7 +1529,8 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.svg_viewer.reinit()
 
     def cb_tabs_retract_to_safe(self):
-        val = self.ui.Tabs_RetractToSafe.isChecked()
+        # val = self.ui.Tabs_RetractToSafe.isChecked()
+        pass
 
     def display_cnc_ops_geometry(self, operations: List[operations_tableview.OpItem]):
         """ """
@@ -1844,7 +1845,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
             projfile_unix = projfile
 
         if projfile_unix.startswith("./"):
-            projfile_unix = projfile_unix[2:]
+            projfile_unix = projfile_unix.removeprefix["./"]
 
         # remove duplicated
         if projfile_unix in self.recent_projects:
