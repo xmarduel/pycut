@@ -7,11 +7,12 @@ include $(MKINC)/mk.defaults
 SUBDIRS = 
 
 PYTHON_SOURCES = colorpicker.py
-PYSIDE_UIS = viewers_settings.ui
+PYTHON_UIS = viewers_settings.ui
 
 PYTHON_LIBFILES = $(PYTHON_SOURCES:%.py=%.pyc)
-PYTHON_UIS = $(PYSIDE_UIS:%.ui=%_ui.py)
+PYTHON_UICFILES = $(PYTHON_UIS:%.ui=%_ui.py)
 
-all:: $(PYTHON_LIBFILES) $(PYTHON_UIS)
+all:: $(PYTHON_LIBFILES) $(PYTHON_UICFILES)
+uic:: $(PYTHON_UICFILES)
 
 include $(MKINC)/mk.rules
