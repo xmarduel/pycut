@@ -395,7 +395,6 @@ class PyCutComboBoxDelegate(QtWidgets.QStyledItemDelegate):
         index: QtCore.QModelIndex | QtCore.QPersistentModelIndex,
     ):
         model.handleNewvalue(index, comboBox.currentText())
-        return
 
     def updateEditorGeometry(
         self,

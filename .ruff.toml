@@ -23,15 +23,12 @@ target-version = "py312"
 
 # PERF402 Use `list` or `list.copy` to create a copy of a list
 # PIE790: Unnecessary `pass` statement
-# PIE808 [*] Unnecessary `start` argument in `range`
 
 # PLR0402 [*] Use `from lxml import etree` in lieu of alias
-# PLR1711 [*] Useless `return` statement at end of function
 # PLR1730 [*] Replace `if` statement with `calculated_default = min(calculated_default, amax)`
 
 # RUF012 Mutable default value for class attribute
 # RUF015 Prefer `next(iter(possibleContainersAndTags.values()))` over single element slice
-# RUF059 Unpacked variable `tag` is never used
 
 # S110 `try`-`except`-`pass` detected, consider logging the exception
 
@@ -52,11 +49,11 @@ ignore = [
     "I001",
     "PERF402",
     "PIE790", 
-    "PLR0402", "PLR1711", "PLR1730",
-    "RUF012", "RUF015", "RUF059",
+    "PLR0402", "PLR1730",
+    "RUF012", "RUF015",
     "S110",
     "SIM102", "SIM114", "SIM115", "SIM210", "SIM222", "SIM223",
     "UP031",
 ]
 
-# --> 24 rules ignored to eliminate!
+# --> 22 rules ignored to eliminate!

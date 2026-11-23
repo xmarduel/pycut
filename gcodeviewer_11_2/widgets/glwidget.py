@@ -797,7 +797,7 @@ void main()
             self.m_viewMatrix.rotate(-90, 1.0, 0.0, 0.0)
 
 
-        ivp, res = (self.m_projectionMatrix * self.m_viewMatrix).inverted()
+        ivp, _ = (self.m_projectionMatrix * self.m_viewMatrix).inverted()
         self.m_windowSizeWorld = (ivp.map(QVector3D(0, 1, self.m_planeDepth)) - ivp.map(QVector3D(0, 0, self.m_planeDepth))).length() * 2.0
 
     def mousePressEvent(self, event: QtGui.QMouseEvent):

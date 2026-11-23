@@ -181,13 +181,13 @@ class SvgViewer(QtWidgets.QGraphicsView):
         width = root.attrib["width"]
 
         if "mm" in width:
-            w, units = width.split("mm")
+            w, _ = width.split("mm")
             return ValWithUnit(int(w), "mm")
         elif "in" in width:
-            w, units = width.split("in")
+            w, _ = width.split("in")
             return ValWithUnit(int(w), "inch")
         elif "cm" in width:
-            w, units = width.split("cm")
+            w, _ = width.split("cm")
             return ValWithUnit(int(w * 10), "mm")
 
         return None
@@ -201,13 +201,13 @@ class SvgViewer(QtWidgets.QGraphicsView):
         height = root.attrib["height"]
 
         if "mm" in height:
-            h, units = height.split("mm")
+            h, _ = height.split("mm")
             return ValWithUnit(int(h), "mm")
         elif "in" in height:
-            h, units = height.split("in")
+            h, _ = height.split("in")
             return ValWithUnit(int(h), "inch")
         elif "cm" in height:
-            h, units = height.split("cm")
+            h, _ = height.split("cm")
             return ValWithUnit(int(h * 10), "mm")
 
         return None
