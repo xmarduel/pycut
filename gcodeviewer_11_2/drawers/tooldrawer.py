@@ -18,7 +18,7 @@ class ToolDrawer(ShaderDrawable):
     arcs = 12
 
     def __init__(self):
-        super(ToolDrawer, self).__init__()
+        super().__init__()
 
         self.m_toolDiameter = 3.0
         self.m_toolLength = 15.0

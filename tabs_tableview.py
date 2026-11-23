@@ -446,7 +446,7 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
     """
 
     def __init__(self, tabs: List[Any], mainwindow):
-        super(PyCutSimpleTableModel, self).__init__()
+        super().__init__()
 
         self.tabs = tabs
         self.mainwindow = mainwindow
@@ -554,7 +554,7 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
     def flags(
         self, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
     ) -> QtCore.Qt.ItemFlag:
-        flags = super(PyCutSimpleTableModel, self).flags(index)
+        flags = super().flags(index)
 
         flags |= QtCore.Qt.ItemFlag.ItemIsEditable
         flags |= QtCore.Qt.ItemFlag.ItemIsSelectable

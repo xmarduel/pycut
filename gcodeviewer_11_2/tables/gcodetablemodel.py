@@ -30,7 +30,7 @@ class GCodeTableModel(QtCore.QAbstractTableModel):
     rowAdded = QtCore.Signal() # (int row);
 
     def __init__(self, parent=None):
-        super(GCodeTableModel, self).__init__()
+        super().__init__()
 
         self.m_data: List[GCodeItem] = []
         self.m_headers = ["#", "Command", "State", "Response", "Line", "Args"]

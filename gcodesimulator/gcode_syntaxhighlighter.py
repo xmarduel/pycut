@@ -37,7 +37,7 @@ class GCodeSyntaxHighlighter(QSyntaxHighlighter):
     """
 
     def __init__(self, document):
-        super(GCodeSyntaxHighlighter, self).__init__(document)
+        super().__init__(document)
 
         # The rules
         rules = [

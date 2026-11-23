@@ -101,7 +101,7 @@ class SvgViewer(QtWidgets.QGraphicsView):
 
     def __init__(self, parent: Optional[QtWidgets.QWidget]):
         """ """
-        super(SvgViewer, self).__init__(parent)
+        super().__init__(parent)
         self.mainwindow = None
         self.renderer = QtSvg.QSvgRenderer()
 
@@ -718,7 +718,7 @@ class SvgItem(QtSvgWidgets.QGraphicsSvgItem):
     def __init__(
         self, id: str, view: SvgViewer, renderer: QtSvg.QSvgRenderer, parent=None
     ):
-        super(SvgItem, self).__init__(parent)
+        super().__init__(parent)
         self.view = view
         self.setSharedRenderer(renderer)
         self.setElementId(id)

@@ -25,7 +25,7 @@ class MaterialWidget(QtSvgWidgets.QSvgWidget):
     """
 
     def __init__(self, parent: QtWidgets.QWidget):
-        super(MaterialWidget, self).__init__(parent)
+        super().__init__(parent)
 
         renderer = self.renderer()
         renderer.setAspectRatioMode(QtCore.Qt.AspectRatioMode.KeepAspectRatio)

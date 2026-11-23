@@ -18,7 +18,7 @@ class SelectionDrawer(ShaderDrawable):
     polygon = QPolygon()
 
     def __init__(self):
-        super(SelectionDrawer, self).__init__()
+        super().__init__()
 
         self.m_points = []
 

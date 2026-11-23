@@ -157,11 +157,11 @@ class SvgPath:
         path_data = ' d="%(value)s"' % {"value": d_def}
         path_data += ' id="%(value)s"' % {"value": p_id}
 
-        for key in shape_attrs:
+        for key, value in shape_attrs.items():
             if not (key == "d" or key == "id"):
                 path_data += ' %(key)s="%(value)s"' % {
                     "key": key,
-                    "value": shape_attrs[key],
+                    "value": value,
                 }
 
         svg_str = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -437,8 +437,8 @@ class SvgPath:
                     }
 
             subpaths_db_sorted = []
-            for p_id in subpaths_db:
-                subpaths_db_sorted.append(subpaths_db[p_id])
+            for value in subpaths_db.values():
+                subpaths_db_sorted.append(value)
 
             # sort from the largest area first
             subpaths_db_sorted.sort(key=lambda x: -x.get("area"))

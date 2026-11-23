@@ -404,7 +404,7 @@ class CncOp:
             fixed_polys = []
 
             for poly in multi_poly.geoms:
-                if not poly.geom_type == "Polygon":
+                if poly.geom_type != "Polygon":
                     continue
                 # fix - do not start a poly from a convex corner
                 poly = ShapelyUtils.reorder_poly_points(poly)

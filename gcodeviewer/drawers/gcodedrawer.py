@@ -38,7 +38,7 @@ class GcodeDrawer(ShaderDrawable):
         Raster = 1
 
     def __init__(self):
-        super(GcodeDrawer, self).__init__()
+        super().__init__()
 
         self.m_viewParser = None  # GcodeViewParse(self)
 

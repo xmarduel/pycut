@@ -124,7 +124,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, options: Any):
         """ """
-        super(PyCutMainWindow, self).__init__()
+        super().__init__()
 
         self.recent_projects = self.read_recent_projects()
 

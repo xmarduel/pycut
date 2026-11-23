@@ -483,7 +483,7 @@ class ShapelyUtils:
         Solution: start the list of points at a point in the middle of a segment
         (if there is one)
         """
-        if not polygon.geom_type == "Polygon":
+        if polygon.geom_type != "Polygon":
             return polygon
 
         # -----------------------------------------------------

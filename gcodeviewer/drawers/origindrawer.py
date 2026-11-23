@@ -10,7 +10,7 @@ class OriginDrawer(ShaderDrawable):
     """ """
 
     def __init__(self):
-        super(OriginDrawer, self).__init__()
+        super().__init__()
 
         self.m_lines = []
 
