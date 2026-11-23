@@ -183,7 +183,7 @@ class SvgText2SvgPathsConverter:
         """ """
         paths = {}
 
-        for elt in self.svgtextobjects.keys():
+        for elt in self.svgtextobjects:
             o = self.svgtextobjects[elt]
             paths[elt] = o.to_paths()
 
@@ -217,7 +217,7 @@ class SvgText2SvgPathsConverter:
 
         return new_svg
 
-    def make_xml_etree_element(self, idx: int, wpath: PathWithAttribs) -> etree.Element:
+    def make_xml_etree_element(self, idx: int, wpath: PathWithAttribs) -> etree._Element:
         """ """
         element = etree.Element("path")
         element.attrib["id"] = "%s_%d" % (wpath.id, idx)
