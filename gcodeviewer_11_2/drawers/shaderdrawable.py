@@ -4,7 +4,6 @@ from enum import Enum
 from functools import singledispatchmethod
 
 from typing import List
-from typing import Optional
 
 from PySide6.QtGui import QVector3D
 from PySide6.QtGui import QMatrix4x4
@@ -105,7 +104,7 @@ class ShaderDrawable(QOpenGLFunctions):
         self.m_visible = True
         self.m_lineWidth = 1.0
         self.m_pointSize = 1.0
-        self.m_texture: Optional[QOpenGLTexture] = None
+        self.m_texture: QOpenGLTexture | None = None
         self.m_lines: List[VertexData] = []
         self.m_points: List[VertexData] = []
         self.m_triangles: List[VertexData] = []

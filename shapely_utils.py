@@ -1,6 +1,5 @@
 from typing import List
 from typing import Tuple
-from typing import Optional
 from typing import cast
 
 
@@ -258,7 +257,7 @@ class ShapelyUtils:
         resolution=16,
         join_style=BufferJoinStyle.round,
         mitre_limit=5.0,
-    ) -> Optional[MultiPolygon]:
+    ) -> MultiPolygon | None:
         """
         Generate offseted polygons.
         """

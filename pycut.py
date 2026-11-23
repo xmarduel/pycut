@@ -1,5 +1,3 @@
-# This Python file uses the following encoding: utf-8
-
 VERSION = "0_8_3_rc1"
 
 import sys
@@ -19,7 +17,6 @@ from typing import List
 from typing import Dict
 from typing import Tuple
 from typing import Any
-from typing import Optional
 
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -158,7 +155,7 @@ class PyCutMainWindow(QtWidgets.QMainWindow):
         self.job = None
 
         # open/read/write project settings
-        self.projfilename: Optional[str] = None
+        self.projfilename: str | None = None
 
         self.simulator_webgl_viewer = None
         self.simulator_python_viewer = None

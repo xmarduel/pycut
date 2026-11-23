@@ -7,11 +7,9 @@
 # Copyright 2020-2030 Xavier Marduel
 
 from functools import singledispatchmethod
-
 import math
 
 from typing import List
-from typing import Optional
 from typing import cast
 
 from PySide6.QtGui import QVector3D
@@ -96,7 +94,7 @@ class GcodeParser:
     def setTruncateDecimalLength(self, truncateDecimalLength: int):
         self.m_truncateDecimalLength = truncateDecimalLength
 
-    def reset(self, initialPoint: Optional[QVector3D] = None, initialAxes: Optional[QVector3D] = None):
+    def reset(self, initialPoint: QVector3D | None = None, initialAxes: QVector3D | None = None):
         # print("reseting gp %s" % initialPoint)
 
         if initialPoint is None:
@@ -118,17 +116,17 @@ class GcodeParser:
         )
 
     @singledispatchmethod
-    def addCommand(self, command) -> Optional[PointSegment]:
+    def addCommand(self, command) -> PointSegment | None:
         raise NotImplementedError("Cannot run 'addCommand' method with %r" % command)
 
     @addCommand.register
-    def _(self, command: str) -> Optional[PointSegment]:
+    def _(self, command: str) -> PointSegment | None:
         stripped = GcodePreprocessorUtils.removeComment(command)
         args = GcodePreprocessorUtils.splitCommand(stripped)
         return self.addCommand(args)
 
     @addCommand.register
-    def _(self, command: list) -> Optional[PointSegment]:
+    def _(self, command: list) -> PointSegment | None:
         if len(command) == 0:
             return None
 

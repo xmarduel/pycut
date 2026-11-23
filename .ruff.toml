@@ -43,12 +43,8 @@ target-version = "py312"
 # SIM223 Use `False` instead of `False and ...`
 
 # UP006 [*] Use `dict` instead of `Dict` for type annotation
-# UP009 [*] UTF-8 encoding declaration is unnecessary
 # UP031 Use format specifiers instead of percent format
-# UP032 [*] Use f-string instead of `format` call
 # UP035 `typing.Dict` is deprecated, use `dict` instead
-# UP037 [*] Remove quotes from type annotation
-# UP045 [*] Use `X | None` for type annotations
 
 ignore = [
     "B008", "B018", "B023", "BLE001",
@@ -62,7 +58,7 @@ ignore = [
     "RUF012", "RUF015", "RUF059",
     "S110",
     "SIM102", "SIM114", "SIM115", "SIM210", "SIM222", "SIM223",
-    "UP006", "UP009", "UP031", "UP032", "UP035", "UP037", "UP045"
+    "UP006", "UP031", "UP035"
 ]
 
-# --> 34 rules ignored to eliminate!
+# --> 30 rules ignored to eliminate!

@@ -313,12 +313,7 @@ class CncOp:
 
     def __str__(self):
         """ """
-        return "op: %s %s [%f] %s" % (
-            self.name,
-            self.cam_op,
-            self.cut_depth,
-            self.enabled,
-        )
+        return f"op: {self.name} {self.cam_op} [{self.cut_depth}] {self.enabled}"
 
     def setup(self, svg_shapes: Dict[str, SvgPath]):
         """ """
@@ -1062,7 +1057,7 @@ class GcodeGenerator:
         self.use_offset = value
 
     def generate_gcode_action(self) -> None:
-        cnc_ops: List["CncOp"] = []
+        cnc_ops: List[CncOp] = []
         for cnc_op in self.job.operations:
             if cnc_op.enabled:
                 if len(cnc_op.cam_paths) > 0:

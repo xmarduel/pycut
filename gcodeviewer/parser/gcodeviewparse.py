@@ -9,7 +9,6 @@
 from functools import singledispatchmethod
 
 from typing import List
-from typing import Optional
 from typing import cast
 
 from PySide6.QtGui import QVector3D
@@ -82,8 +81,8 @@ class GcodeViewParse:
         # For a line segment list ALL arcs must be converted to lines.
         minArcLength = 0.1
 
-        start: Optional[QVector3D] = None
-        end: Optional[QVector3D] = None
+        start: QVector3D | None = None
+        end: QVector3D | None = None
 
         # Prepare segments indexes
         self.m_lineIndexes = [[] for _ in range(len(psl))]
