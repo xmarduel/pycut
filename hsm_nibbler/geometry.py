@@ -28,13 +28,12 @@ import math
 import time
 
 from shapely.affinity import rotate  # type: ignore
-from shapely.geometry import box, LinearRing, LineString, MultiLineString, MultiPolygon, Point, Polygon  # type: ignore
-from shapely.ops import linemerge, split, unary_union  # type: ignore
+from shapely.geometry import LinearRing, LineString, MultiLineString, MultiPolygon, Point, Polygon  # type: ignore
+from shapely.ops import linemerge, split  # type: ignore
 from shapely.errors import GeometryTypeError
 
 from hsm_nibbler.debug import Display
 from hsm_nibbler.voronoi_centers import (
-    round_coord,
     start_point_perimeter,
     start_point_widest,
     VoronoiCenters,
@@ -88,9 +87,9 @@ class StartPointTactic(Enum):
     PERIMETER = 0  # Starting point hint for outer peel. On the outer perimeter.
     WIDEST = 1  # Starting point hint for inner pockets.
 
-
+'''
 ArcData = NamedTuple(
-    "Arc",
+    "ArcData",
     [
         ("origin", Point),
         ("radius", float | None),
@@ -107,9 +106,21 @@ ArcData = NamedTuple(
         ("debug", str | None),
     ],
 )
+'''
+class ArcData(NamedTuple):
+    origin: Point
+    radius: float | None
+    start: Point | None
+    end: Point | None
+    start_angle: float | None
+    span_angle: float | None
+    winding_dir: ArcDir | None
+    path: LineString
+    debug: str | None
 
+'''
 LineData = NamedTuple(
-    "Line",
+    "LineData",
     [
         ("start", Point),
         ("end", Point),
@@ -117,6 +128,13 @@ LineData = NamedTuple(
         ("move_style", MoveStyle),
     ],
 )
+'''
+
+class LineData(NamedTuple):
+    start: Point
+    end: Point
+    path: LineString
+    move_style: MoveStyle
 
 
 def clean_linear_ring(ring: LinearRing) -> LinearRing:
@@ -309,7 +327,7 @@ def mirror_arc(
     )
 
 
-def complete_arc(arc_data: ArcData, winding_dir_: ArcDir = None) -> ArcData | None:
+def complete_arc(arc_data: ArcData, winding_dir_: ArcDir | None = None) -> ArcData | None:
     """
     Calculate start_angle, span_angle and radius.
     Fix start, end and path direction based on winding_dir.
@@ -450,7 +468,7 @@ def split_line_by_poly(
         new_lines = []
 
     # Check for gaps caused by line being co-linear to poly.
-    last_new_line = None
+    last_new_line: LineString | None = None
     checked_lines = []
     for new_line in lines:
         if last_new_line is None:
@@ -463,7 +481,7 @@ def split_line_by_poly(
                 )
         checked_lines.append(new_line)
         last_new_line = new_line
-    if last_new_line.coords[-1] != line.coords[-1]:
+    if isinstance(last_new_line, LineString) and last_new_line.coords[-1] != line.coords[-1]:
         checked_lines.append(LineString([last_new_line.coords[-1], line.coords[-1]]))
 
     return MultiLineString(checked_lines)
@@ -1532,7 +1550,7 @@ class EntryCircle(BaseGeometry):
                 offset[0] += self.step / 4
                 section_radius = loop * self.step
             else:
-                raise
+                raise RuntimeError(f"Unexpected orientation: {orientation}")
 
             section_center = Point(self.center.x + offset[0], self.center.y + offset[1])
             new_arc = create_arc(

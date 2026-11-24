@@ -591,8 +591,9 @@ class VoronoiCenters:
         to_cleanup: set[int] = set()
         for vertex in vertices_to_cleanup:
             if last_vertex:
-                assert self._vertexes_to_edge(last_vertex, vertex) is not None
-                to_cleanup.add(self._vertexes_to_edge(last_vertex, vertex))
+                connecting_edge = self._vertexes_to_edge(last_vertex, vertex)
+                assert connecting_edge is not None
+                to_cleanup.add(connecting_edge)
             last_vertex = vertex
 
         return to_cleanup
@@ -681,20 +682,22 @@ class VoronoiCenters:
                 widest_point = Point(vertex)
         return (widest_point, widest_dist)
 
-    def vertex_on_perimiter(self) -> Point | None:
+    def vertex_on_perimiter(self) -> Point:
         """
         Find a point as close to the perimeter as possible.
         """
         bounding_box = box(*self.polygon.bounds).exterior
-        closest = None
+        closest: Point | None = None
         distance = self.max_dist
         for vertex in self.vertex_to_edges:
-            if bounding_box.intersects(Point(vertex)):
-                return Point(vertex)
-            dist = bounding_box.distance(Point(vertex))
+            p = Point(vertex)
+            if bounding_box.intersects(p):
+                return p
+            dist = bounding_box.distance(p)
             if dist < distance:
                 distance = dist
-                closest = Point(vertex)
+                closest = p
+        assert closest is not None
         return closest
 
     def set_starting_point(self, point: Point) -> None:
