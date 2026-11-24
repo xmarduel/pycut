@@ -47,8 +47,9 @@ from shapely_ext import ShapelyMultiPolygonOffsetInteriors
 
 PI = math.pi
 
-from hsm_nibbler import geometry
-
+#from hsm_nibbler import geometry
+from hsm_nibble import geometry
+from hsm_nibble import arc_utils
 
 class CamPath:
     """
@@ -2157,7 +2158,7 @@ class NibblerPocketCalculator:
 
         for k, element in enumerate(toolpath.path):
 
-            if type(element).__name__ == "Arc":
+            if type(element).__name__ == "ArcData":
                 print("k = ", k, type(element).__name__)
 
                 x, y = element.path.xy
@@ -2165,19 +2166,19 @@ class NibblerPocketCalculator:
                 xx.extend(x)
                 yy.extend(y)
 
-            elif type(element).__name__ == "Line":
+            elif type(element).__name__ == "LinesData":
                 elt = cast(geometry.LineData, element)
                 print("k = ", k, type(elt).__name__, elt.move_style)
 
                 x, y = element.path.xy
 
-                if elt.move_style == geometry.MoveStyle.RAPID_INSIDE:
+                if elt.move_style == arc_utils.MoveStyle.RAPID_INSIDE:
                     # plt.plot(x, y, linestyle="--", c=rapid_inside_colour, linewidth=1)
 
                     xx.extend(x)
                     yy.extend(y)
 
-                elif elt.move_style == geometry.MoveStyle.RAPID_OUTSIDE:
+                elif elt.move_style == arc_utils.MoveStyle.RAPID_OUTSIDE:
                     # plt.plot(x, y, c=rapid_outside_colour, linewidth=1)
 
                     self.add_campath(xx, yy, True)
@@ -2186,7 +2187,7 @@ class NibblerPocketCalculator:
                     yy = []
 
                 else:
-                    assert elt.move_style == geometry.MoveStyle.CUT
+                    assert elt.move_style == arc_utils.MoveStyle.CUT
 
                     # actually the beginning of a new "path"
                     # so the old path is finished, but it should only be

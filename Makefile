@@ -2,14 +2,14 @@
 TOP = .
 MKINC = $(TOP)/make
 
-# warning: my modified pyflakes for makefiles
+# warning: modified pyflakes for makefiles (return code)
 export WITH_FLAKES=YES
 export WITH_MYPY=YES
 export WITH_RUFF=YES
 
 include $(MKINC)/mk.defaults
 
-SUBDIRS = gcodesimulator gcodeviewer gcodeviewer_11_2 viewers_settings resources
+SUBDIRS = gcodesimulator gcodeviewer gcodeviewer_11_2 viewers_settings resources hsm_nibble
 
 PYTHON_SOURCES = \
 	gcode_generator.py \

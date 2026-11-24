@@ -8,6 +8,7 @@
 %.pyc : %.py
 	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
 	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
+	@[  -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
 # pyflakes command - no options
 	@if [ $(WITH_FLAKES) = "YES" ]; then\
 		echo $(PYTHON) $(PYFLAKES) $<;\
@@ -23,7 +24,6 @@
 		echo $(RUFF) $(RUFF_OPTIONS) $<;\
 		$(RUFF) $(RUFF_OPTIONS) $<;\
 	fi
-	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
 
 # -----------------------------------
 # qt ui files

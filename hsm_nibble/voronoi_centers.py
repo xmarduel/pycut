@@ -199,7 +199,8 @@ class VoronoiCenters:
         # Generate voronoi diagram.
         pv = pyvoronoi.Pyvoronoi(VORONOI_RES)
         for segment in geom_primatives:
-            pv.AddSegment(segment)
+            #pv.AddSegment(segment)
+            pv.AddSegment(list(segment)) # PyVoronoi-1.2.4
         pv.Construct()
 
         edges = pv.GetEdges()
