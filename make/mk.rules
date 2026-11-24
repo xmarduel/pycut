@@ -5,71 +5,25 @@
 # generic implicit rules
 #-----------------------------------------------------------------------------
 
-ifeq ($(WITH_FLAKES),YES) 
-ifeq ($(WITH_MYPY),YES)
-ifeq ($(WITH_RUFF),YES)
 %.pyc : %.py
 	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
 	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
-	$(PYTHON) $(PYFLAKES) $<
-	$(PYTHON) $(MYPY) $(MYPY_OPTIONS) $<
-	$(RUFF) $(RUFF_OPTIONS) $<
+# pyflakes command - no options
+	@if [ $(WITH_FLAKES) = "YES" ]; then\
+		echo $(PYTHON) $(PYFLAKES) $<;\
+		$(PYTHON) $(PYFLAKES) $<;\
+	fi
+# mypy command (using .mypy.imi)
+	@if [ $(WITH_MYPY) = "YES" ]; then\
+		echo $(PYTHON) $(MYPY) $(MYPY_OPTIONS) $<;\
+		$(PYTHON) $(MYPY) $(MYPY_OPTIONS) $<;\
+	fi
+# ruff command (using .ruff.toml)
+	@if [ $(WITH_RUFF) = "YES" ]; then\
+		echo $(RUFF) $(RUFF_OPTIONS) $<;\
+		$(RUFF) $(RUFF_OPTIONS) $<;\
+	fi
 	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
-else
-%.pyc : %.py
-	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
-	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
-	$(PYTHON) $(PYFLAKES) $<
-	$(PYTHON) $(MYPY) $(MYPY_OPTIONS) $<
-	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
-endif
-else
-ifeq ($(WITH_RUFF),YES)
-%.pyc : %.py
-	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
-	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
-	$(PYTHON) $(PYFLAKES) $<
-	$(RUFF) $(RUFF_OPTIONS) $<
-	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
-else
-%.pyc : %.py
-	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
-	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
-	$(PYTHON) $(PYFLAKES) $<
-	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
-endif
-endif
-else
-ifeq ($(WITH_MYPY),YES)
-ifeq ($(WITH_RUFF),YES)
-%.pyc : %.py
-	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
-	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
-	$(PYTHON) $(MYPY) $(MYPY_OPTIONS) $<
-	$(RUFF) $(RUFF_OPTIONS) $<
-	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
-else
-%.pyc : %.py
-	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
-	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
-	$(PYTHON) $(MYPY) $(MYPY_OPTIONS) $<
-	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
-endif
-else
-ifeq ($(WITH_RUFF),YES)
-%.pyc : %.py
-	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
-	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
-	$(RUFF) $(RUFF_OPTIONS) $<
-	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
-else
-%.pyc : %.py
-	@rm -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc
-	$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
-	@[ -f $(PYCACHE)/$(basename $@)$(PYCOMP_VER).pyc ] || exit 1
-endif
-endif
-endif
 
 # -----------------------------------
 # qt ui files
