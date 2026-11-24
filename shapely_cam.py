@@ -47,7 +47,6 @@ from shapely_ext import ShapelyMultiPolygonOffsetInteriors
 
 PI = math.pi
 
-#from hsm_nibbler import geometry
 from hsm_nibble import geometry
 from hsm_nibble import arc_utils
 

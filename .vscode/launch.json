@@ -105,7 +105,7 @@
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
             "args": [ "-p",
-                "./jobs/cnc_control_panel.json"
+                "./projects/cnc_control_panel.json"
             ]
         },
         {
