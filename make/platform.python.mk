@@ -16,7 +16,7 @@ PYTHON				:= $(PYTHON_HOST)
 
 PYFLAKES			:= $(PYTHON_HOST_HOME)/bin/pyflakes
 MYPY				:= $(PYTHON_HOST_HOME)/bin/mypy
-MYPY_OPTIONS		:= --no-strict-optional --ignore-missing-imports --show-error-codes
+MYPY_OPTIONS		:= 
 RUFF				:= $(PYTHON_HOST_HOME)/bin/ruff
 RUFF_OPTIONS		:= check
 

@@ -1,0 +1,34 @@
+#-----------------------------------------------------------------------------
+#
+# sets default variables and includes the platform settings
+#
+#-----------------------------------------------------------------------------
+
+HOST_OS         := $(shell uname -s)
+HOST_OS_RELEASE	:= $(shell a=$$(uname -r); echo $${a%%.*})
+HOST_OS_BITS	:= $(shell uname -m)
+
+$(info HOST_OS $(HOST_OS))
+$(info HOST_OS_RELEASE $(HOST_OS_RELEASE))
+$(info HOST_OS_BITS $(HOST_OS_BITS))
+
+ifeq ($(HOST_OS),Linux)
+    HOST_ARCH = x86-linux
+ifeq ($(HOST_OS_BITS), x86_64)
+    HOST_ARCH = x86-linux64
+endif
+endif
+
+ifeq ($(HOST_OS),Darwin)
+    HOST_ARCH = darwin
+endif
+
+include $(TOP)/make/platform.python.mk
+
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+all::	$(PYTHON_LIBFILES) $(PYTHON_UICFILES) $(PYTHON_RCCFILES)
+lib::   $(PYTHON_LIBFILES)
+uic::   $(PYTHON_UICFILES)
+rcc::   $(PYTHON_RCCFILES)
