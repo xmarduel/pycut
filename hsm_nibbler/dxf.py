@@ -3,11 +3,9 @@ Helper methods for converting .dxf source files into shapely Polygons.
 Used by the test implementation main.py.
 """
 
-from math import *
+from math import atan, atan2, ceil, cos, pi, sin, sqrt, tan
 
-from ezdxf.entities.lwpolyline import LWPolyline as DxfPolyline
-from ezdxf.query import EntityQuery as DxfPolylines
-from shapely.geometry import LineString, MultiLineString, Point, Polygon, LinearRing, MultiPoint, MultiPolygon  # type: ignore
+from shapely.geometry import LineString, MultiPolygon, Point, Polygon  # type: ignore
 
 CIRCLE_RES = 500
 
@@ -27,10 +25,10 @@ def weighted(p1, p2, alpha):
 
 def circle(x, y, r, n=None, sa=0, ea=2*pi):
     if n is None:
-        n = pi * r * GeometrySettings.RESOLUTION
+        n = pi * r * CIRCLE_RES
     n *= abs((ea - sa) / (2 * pi))
     n = ceil(n)
-    res = []
+    res: list[tuple[float, float]] = []
     for i in range(n + 1):
         a = sa + i * (ea - sa) / n
         newpt = (x + r * cos(a), y + r * sin(a))
@@ -81,27 +79,29 @@ def dxf_to_polygon(modelspace) -> MultiPolygon:
         else:
             print(f"Unsupported dxf entity: {entity.dxftype()}")
 
-    parents : list[LineString] = []
+    parents: list[LineString] = []
     for ring in rings:
-        coveres = []
+        ring_poly = Polygon(ring)
+        covers = []
         covered_by = False
         for parent_index, parent in enumerate(parents):
-            if Polygon(ring).covers(parent):
-                coveres.append(parent_index)
+            if ring_poly.covers(parent):
+                covers.append(parent_index)
             if Polygon(parent).covers(ring):
                 covered_by = True
-        for not_parent in sorted(coveres, reverse=True):
+        for not_parent in sorted(covers, reverse=True):
             parents.pop(not_parent)
         if not covered_by:
             parents.append(ring)
 
     polygons = []
     for parent in parents:
+        parent_poly = Polygon(parent)
         holes = []
         for ring in rings:
             if ring is parent:
                 continue
-            if Polygon(parent).covers(ring):
+            if parent_poly.covers(ring):
                 holes.append(ring)
         polygon = Polygon(parent, holes=holes)
         if not polygon.is_valid:

@@ -10,11 +10,9 @@ Recognises the following environment variables:
 """
 
 import os
+from typing import Any
 
-try:
-    import matplotlib.pyplot as plt  # type: ignore
-except ImportError:
-    pass
+import matplotlib.pyplot as plt
 
 from shapely.geometry import MultiPolygon, Polygon  # type: ignore
 
@@ -72,7 +70,7 @@ class Display:
 
     def display(
         self,
-        polygons: list[Polygon | MultiPolygon] | None = None,
+        polygons: dict[Any, Polygon | MultiPolygon] | None = None,
         voronoi: VoronoiCenters | None = None,
         path: list | None = None,
     ) -> None:
@@ -85,7 +83,7 @@ class Display:
         print(self.count)
 
         if polygons is None:
-            polygons = []
+            polygons = {}
 
         for index, key in enumerate(polygons.keys()):
             multi = polygons[key]

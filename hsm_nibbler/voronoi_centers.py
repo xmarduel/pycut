@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 mrdunk@gmail.com
 """
-
 from typing import cast
 
 import math
@@ -38,13 +37,12 @@ Vertex = tuple[float, float]
 ROUND_DP = 5
 
 # Resolution of voronoi algorithm.
-# See C++ Boost documentation.
 # Set it to 1 better than the geometry resolution.
 VORONOI_RES = 10 ** (ROUND_DP + 1)
 
 # A small number for comparing things that should touch if not for floating-point error.
 # EPS = 5.96e-08
-EPS = 1 / (10**ROUND_DP)
+EPS = 1 / (10 ** ROUND_DP)
 
 
 class PointOutsidePart(Exception):
@@ -70,7 +68,7 @@ class VoronoiCenters:
         tolerence: float = 1.01,
         preserve_widest: bool = False,
         preserve_edge: bool = False,
-        starting_point: Point = None,
+        starting_point: Point | None = None,
     ) -> None:
         """
         Arguments:
