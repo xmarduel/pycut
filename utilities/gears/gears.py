@@ -6,8 +6,6 @@ VERSION = "1_0_0"
 import sys
 import argparse
 
-from typing import Tuple
-
 from PySide6 import QtCore
 from PySide6 import QtGui
 from PySide6 import QtWidgets
@@ -172,7 +170,7 @@ class GearMainWindow(QtWidgets.QMainWindow):
 
         self.cb_generate_svg()
     
-    def cb_generate_svg(self) -> Tuple[str, str, str]:
+    def cb_generate_svg(self) -> tuple[str, str, str]:
         """ """
         maker = generate_gear_svg.GearMaker()
         generate_gear_svg.GearMaker.set_params(
