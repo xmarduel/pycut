@@ -59,11 +59,11 @@ class OpItem:
 class PyCutDoubleSpinBox(QtWidgets.QDoubleSpinBox):
     """ """
 
-    def __init__(self, parent):
+    def __init__(self, parent: QtWidgets.QWidget):
         """ """
         QtWidgets.QDoubleSpinBox.__init__(self, parent)
 
-        self.o = None
+        self.op: OpItem | None = None
         self.attribute = ""
 
         self.setMinimum(0)
@@ -81,11 +81,11 @@ class PyCutDoubleSpinBox(QtWidgets.QDoubleSpinBox):
         """ """
         self.valueChanged.connect(self.cb_spinbox)
 
-    def assign_object(self, o):
+    def assign_cam_op(self, op: OpItem):
         """ """
-        self.o = o
+        self.op = op
 
-    def assign_object_attribute(self, attribute):
+    def assign_cam_op_attribute(self, attribute: str):
         """ """
         self.attribute = attribute
 
@@ -94,7 +94,7 @@ class PyCutDoubleSpinBox(QtWidgets.QDoubleSpinBox):
         self.cb_disconnect()
 
         try:
-            val = getattr(self.o, self.attribute)
+            val = getattr(self.op, self.attribute)
         except Exception:
             val = 0
 
@@ -105,17 +105,17 @@ class PyCutDoubleSpinBox(QtWidgets.QDoubleSpinBox):
     def cb_spinbox(self):
         """ """
         val = self.value()
-        self.o.put_value(self.attribute, val)
+        self.op.put_value(self.attribute, val)
 
 
 class PyCutCheckBox(QtWidgets.QCheckBox):
     """ """
 
-    def __init__(self, parent):
+    def __init__(self, parent: QtWidgets.QWidget):
         """ """
         QtWidgets.QCheckBox.__init__(self, parent)
 
-        self.o = None
+        self.op: OpItem | None = None
         self.attribute = ""
 
         self.stateChanged.connect(self.cb_checkbox)
@@ -128,11 +128,11 @@ class PyCutCheckBox(QtWidgets.QCheckBox):
         """ """
         self.stateChanged.connect(self.cb_checkbox)
 
-    def assign_object(self, o):
+    def assign_cam_op(self, op: OpItem):
         """ """
-        self.o = o
+        self.op = op
 
-    def assign_object_attribute(self, attribute):
+    def assign_cam_op_attribute(self, attribute: str):
         """ """
         self.attribute = attribute
 
@@ -141,7 +141,7 @@ class PyCutCheckBox(QtWidgets.QCheckBox):
         self.cb_disconnect()
 
         uival = {True: QtCore.Qt.Checked, False: QtCore.Qt.Unchecked}[
-            getattr(self.o, self.attribute)
+            getattr(self.op, self.attribute)
         ]
 
         self.setCheckState(uival)
@@ -151,20 +151,20 @@ class PyCutCheckBox(QtWidgets.QCheckBox):
     def cb_checkbox(self, index):
         """ """
         val = {QtCore.Qt.Checked: True, QtCore.Qt.Unchecked: False}[self.checkState()]
-        self.o.put_value(self.attribute, val)
+        self.op.put_value(self.attribute, val)
 
 
 class PyCutComboBox(QtWidgets.QComboBox):
     """ """
 
-    def __init__(self, parent, items):
+    def __init__(self, parent: QtWidgets.QWidget, items: list[str]):
         """ """
         QtWidgets.QComboBox.__init__(self, parent)
 
-        self.o = None
+        self.op: OpItem | None = None
         self.attribute = ""
 
-        self.items = items
+        self.items: list[str] = items
 
         self.currentIndexChanged.connect(self.cb_combobox)
 
@@ -176,11 +176,11 @@ class PyCutComboBox(QtWidgets.QComboBox):
         """ """
         self.currentIndexChanged.connect(self.cb_combobox)
 
-    def assign_object(self, o):
+    def assign_cam_op(self, op: OpItem):
         """ """
-        self.o = o
+        self.op = op
 
-    def assign_object_attribute(self, attribute):
+    def assign_cam_op_attribute(self, attribute: str):
         """ """
         self.attribute = attribute
 
@@ -196,7 +196,7 @@ class PyCutComboBox(QtWidgets.QComboBox):
         self.cb_disconnect()
 
         # values can be strings or integers or of any other type -> use only strings in control
-        val = str(getattr(self.o, self.attribute))
+        val = str(getattr(self.op, self.attribute))
 
         # basic check
         if val not in self.items:
@@ -212,13 +212,13 @@ class PyCutComboBox(QtWidgets.QComboBox):
         """ """
         val = self.itemText(index)
 
-        self.o.put_value(self.attribute, val)
+        self.op.put_value(self.attribute, val)
 
 
 class PyCutDoubleSpinBoxDelegate(QtWidgets.QStyledItemDelegate):
-    def __init__(self, parent):
+    def __init__(self, parent: QtWidgets.QWidget):
         super().__init__(parent)
-        self.xeditors = {}
+        self.xeditors: dict[tuple[int, int], PyCutDoubleSpinBox] = {}
 
     def createEditor(
         self, parent, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
@@ -230,8 +230,8 @@ class PyCutDoubleSpinBoxDelegate(QtWidgets.QStyledItemDelegate):
         op = model.get_operation(index)
         attr = model.get_operation_attr(index)
 
-        editor.assign_object(op)
-        editor.assign_object_attribute(attr)
+        editor.assign_cam_op(op)
+        editor.assign_cam_op_attribute(attr)
 
         # to flush an "setModelData" in place - it works!
         editor.valueChanged.connect(self.onEditorValueChanged)
@@ -271,7 +271,7 @@ class PyCutDoubleSpinBoxDelegate(QtWidgets.QStyledItemDelegate):
 
 class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
     def createEditor(
-        self, parent, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
+        self, parent: QtWidgets.QWidget, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
     ):
         editor = PyCutCheckBox(parent)
 
@@ -280,8 +280,8 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
         op = model.get_operation(index)
         attr = model.get_operation_attr(index)
 
-        editor.assign_object(op)
-        editor.assign_object_attribute(attr)
+        editor.assign_cam_op(op)
+        editor.assign_cam_op_attribute(attr)
 
         # return editor # -> ugly checkbox on the left of the cell
 
@@ -331,12 +331,12 @@ class PyCutCheckBoxDelegate(QtWidgets.QStyledItemDelegate):
 
 
 class PyCutComboBoxDelegate(QtWidgets.QStyledItemDelegate):
-    def __init__(self, parent):
+    def __init__(self, parent: QtWidgets.QWidget):
         super().__init__(parent)
-        self.xeditors = {}
+        self.xeditors: dict[tuple[int, int], PyCutComboBox]  = {}
 
     def createEditor(
-        self, parent, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
+        self, parent: QtWidgets.QWidget, option, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex
     ):
         col = index.column()
 
@@ -365,8 +365,8 @@ class PyCutComboBoxDelegate(QtWidgets.QStyledItemDelegate):
         op = model.get_operation(index)
         attr = model.get_operation_attr(index)
 
-        editor.assign_object(op)
-        editor.assign_object_attribute(attr)
+        editor.assign_cam_op(op)
+        editor.assign_cam_op_attribute(attr)
         editor.fill_control()
 
         # to flush a "setModelData" in place - it works! but model still has old value -
@@ -406,14 +406,14 @@ class PyCutComboBoxDelegate(QtWidgets.QStyledItemDelegate):
 
 
 class PyCutOperationsTableViewManager(QtWidgets.QWidget):
-    def __init__(self, parent):
+    def __init__(self, parent: QtWidgets.QWidget):
         """ """
         super().__init__(parent)
 
-        self.mainwindow = None
-        self.svg_viewer: SvgViewer = None
+        self.mainwindow: Any | None = None
+        self.svg_viewer: SvgViewer | None = None
 
-        self.model = None
+        self.model: PyCutSimpleTableModel | None = None
 
         # main section of the window
         vbox = self.vbox = QtWidgets.QVBoxLayout()
@@ -458,7 +458,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
             cnc_op = OpItem(op)
             cnc_ops.append(cnc_op)
 
-        self.model = PyCutSimpleTableModel(cnc_ops, self.mainwindow)
+        self.model = PyCutSimpleTableModel(cnc_ops, cast(Any, self.mainwindow))
         # so that the model known the view
         self.model.set_view(self.table)
 
@@ -485,7 +485,7 @@ class PyCutOperationsTableViewManager(QtWidgets.QWidget):
 
     def get_model(self) -> "PyCutSimpleTableModel":
         """ """
-        return self.table.model()
+        return cast("PyCutSimpleTableModel", self.table.model())
 
     def get_model_operations(self) -> list[OpItem]:
         """ """
@@ -582,7 +582,7 @@ class PyCutSimpleTableView(QtWidgets.QTableView):
         """ """
         # Make the combo boxes / check boxes / others specials always displayed.
         for k in range(self.model().rowCount(None)):
-            self.openPersistentEditor(self.model().index(k, 1))  # cam_op
+            self.openPersistentEditor(self.model().index(k, 1))  # cam_op type
             self.openPersistentEditor(self.model().index(k, 2))  #   enabled
 
             # self.openPersistentEditor(self.model().index(k, 3))  #   paths
@@ -872,17 +872,14 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
         # for check box, data is displayed in the "editor"
         col = index.column()
 
-        if col == 11:  # button
-            return None
-        if col == 12:  # button
-            return None
-        if col == 13:  # button
+        if col in [11, 12, 13]:  # button
             return None
 
         # for checkboxes only
-        if col == 2:  # checkbox
+        if col in [2, 6]:  # checkbox
             return None
-        if col == 6:  # checkbox
+
+        if col in [1, 4, 7, 8]:  # combobox
             return None
 
         if role == QtCore.Qt.ItemDataRole.DisplayRole:
@@ -913,7 +910,8 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
             paths = op.paths
             for path_id in paths:
                 view = cast(PyCutSimpleTableView, self.view)
-                if not path_id in view.manager.svg_viewer.svg_shapes:
+                svg_viewer = cast(SvgViewer, view.manager.svg_viewer)
+                if svg_viewer and not path_id in svg_viewer.svg_shapes:
                     return QtGui.QBrush(QtCore.Qt.GlobalColor.red)  # red background
 
         return None
@@ -955,7 +953,7 @@ class PyCutSimpleTableModel(QtCore.QAbstractTableModel):
         )
         self.endResetModel()
 
-    def get_operation(self, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex):
+    def get_operation(self, index: QtCore.QModelIndex | QtCore.QPersistentModelIndex) -> OpItem:
         return self.operations[index.row()]
 
     def get_operation_attr(

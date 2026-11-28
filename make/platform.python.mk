@@ -24,7 +24,7 @@ PYCACHE				:= __pycache__
 MYPY_CACHE			:= .mypy_cache
 RUFF_CACHE			:= .ruff_cache
 
-PYSIDE_VERSION		= 6.12.0
+PYSIDE_VERSION		= 6.11.3
 
 PYSIDE_RCC = ${PYTHON_HOST_HOME}/bin/pyside6-rcc
 PYSIDE_UIC = ${PYTHON_HOST_HOME}/bin/pyside6-uic

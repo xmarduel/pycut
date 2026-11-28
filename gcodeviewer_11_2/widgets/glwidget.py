@@ -72,7 +72,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
 
         # self.m_overlay = Overlay(self)
 
-        QtCore.QTimer.singleShot(1000, self, GLWidget.onFramesTimer)
+        QtCore.QTimer.singleShot(1000, self, self.onFramesTimer)
 
         self.m_viewLowerBounds = QVector3D(0.0, 0.0, 0.0)
         self.m_viewUpperBounds = QVector3D(0.0, 0.0, 0.0)
@@ -158,7 +158,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.rotationChanged.connect(self.onVisualizatorRotationChanged)
         self.resized.connect(self.placeVisualizerButtons)
 
-        QtCore.QTimer.singleShot(1000, self.onFramesTimer)
+        QtCore.QTimer.singleShot(1000, self, self.onFramesTimer)
 
     def placeVisualizerButtons(self):
         w = self.width()
@@ -475,7 +475,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.m_fps = self.m_frames
         self.m_frames = 0
 
-        QtCore.QTimer.singleShot(1000, GLWidget.onFramesTimer)
+        QtCore.QTimer.singleShot(1000, self, self.onFramesTimer)
 
     @Slot()
     def viewAnimation(self):

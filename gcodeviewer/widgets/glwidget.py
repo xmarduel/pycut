@@ -132,7 +132,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.rotationChanged.connect(self.onVisualizatorRotationChanged)
         self.resized.connect(self.placeVisualizerButtons)
 
-        QtCore.QTimer.singleShot(1000, self.onFramesTimer)
+        QtCore.QTimer.singleShot(1000, self, self.onFramesTimer)
 
     def placeVisualizerButtons(self):
         w = self.width()
@@ -438,7 +438,7 @@ class GLWidget(QtOpenGLWidgets.QOpenGLWidget, QtGui.QOpenGLFunctions):
         self.m_fps = self.m_frames
         self.m_frames = 0
 
-        QtCore.QTimer.singleShot(1000, self.onFramesTimer)
+        QtCore.QTimer.singleShot(1000, self, self.onFramesTimer)
 
     @Slot()
     def viewAnimation(self):
